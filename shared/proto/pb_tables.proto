@@ -1,0 +1,364 @@
+
+syntax = "proto3";
+option java_package = "ir.ms.pb";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+
+message PB_Action {
+    int64 ActionId = 1;
+    int32 ActorUserId = 2;
+    int32 ActionTypeEnum = 3;
+    int32 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 Murmur64Hash = 7;
+    int32 CreatedTime = 8;
+    int32 Seq = 9;
+}
+message PB_Chat {
+    string ChatKey = 1;
+    string RoomKey = 2;
+    int32 RoomTypeEnum = 3;
+    int32 UserId = 4;
+    int32 PeerUserId = 5;
+    int64 GroupId = 6;
+    int32 CreatedTime = 7;
+    int64 StartMessageIdFrom = 8;
+    int64 LastMessageId = 9;
+    int64 LastSeenMessageId = 10;
+    int64 UpdatedMs = 11;
+}
+message PB_Comment {
+    int64 CommentId = 1;
+    int32 UserId = 2;
+    int32 PostId = 3;
+    string Text = 4;
+    int32 LikesCount = 5;
+    int32 CreatedTime = 6;
+    int32 Seq = 7;
+}
+message PB_DirectMessage {
+    int64 MessageId = 1;
+    string MessageKey = 2;
+    string RoomKey = 3;
+    int32 UserId = 4;
+    int64 MessageFileId = 5;
+    int32 MessageTypeEnumId = 6;
+    string Text = 7;
+    int32 CreatedSe = 8;
+    int32 PeerReceivedTime = 9;
+    int32 PeerSeenTime = 10;
+    int32 DeliviryStatusEnumId = 11;
+}
+message PB_DirectOffline {
+    int64 DirectOfflineId = 1;
+    int32 ToUserId = 2;
+    string ChatKey = 3;
+    int64 MessageId = 4;
+    int64 MessageFileId = 5;
+    string PBClass = 6;
+    bytes DataPB = 7;
+    string DataJson = 8;
+    string DataTemp = 9;
+    int64 AtTimeMs = 10;
+}
+message PB_DirectToMessage {
+    int64 Id = 1;
+    string ChatKey = 2;
+    int64 MessageId = 3;
+    int32 SourceEnumId = 4;
+}
+message PB_Feed {
+    int64 UserId = 1;
+    int64 PostId = 2;
+    int32 FeedId = 3;
+}
+message PB_FollowingList {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 ListType = 3;
+    string Name = 4;
+    int32 Count = 5;
+    int32 IsAuto = 6;
+    int32 IsPimiry = 7;
+    int32 CreatedTime = 8;
+}
+message PB_FollowingListMember {
+    int64 Id = 1;
+    int32 ListId = 2;
+    int32 UserId = 3;
+    int32 FollowedUserId = 4;
+    int32 FollowType = 5;
+    int64 UpdatedTimeMs = 6;
+}
+message PB_FollowingListMemberHistory {
+    int64 Id = 1;
+    int32 ListId = 2;
+    int32 UserId = 3;
+    int32 FollowedUserId = 4;
+    int32 FollowType = 5;
+    int64 UpdatedTimeMs = 6;
+    int32 FollowId = 7;
+}
+message PB_GeneralLog {
+    int64 Id = 1;
+    int32 ToUserId = 2;
+    int32 TargetId = 3;
+    int32 LogTypeId = 4;
+    bytes ExtraPB = 5;
+    string ExtraJson = 6;
+    int64 CreatedMs = 7;
+}
+message PB_Group {
+    int64 GroupId = 1;
+    string GroupName = 2;
+    int32 MembersCount = 3;
+    int32 GroupPrivacyEnum = 4;
+    int32 CreatorUserId = 5;
+    int32 CreatedTime = 6;
+    int64 UpdatedMs = 7;
+    int32 CurrentSeq = 8;
+}
+message PB_GroupMember {
+    int64 Id = 1;
+    int64 GroupId = 2;
+    string GroupKey = 3;
+    int32 UserId = 4;
+    int32 ByUserId = 5;
+    int32 GroupRoleEnumId = 6;
+    int32 CreatedTime = 7;
+}
+message PB_GroupMessage {
+    int64 MessageId = 1;
+    string RoomKey = 2;
+    int32 UserId = 3;
+    int64 MessageFileId = 4;
+    int32 MessageTypeEnum = 5;
+    string Text = 6;
+    int64 CreatedMs = 7;
+    int32 DeliveryStatusEnum = 8;
+}
+message PB_Like {
+    int64 Id = 1;
+    int64 PostId = 2;
+    int32 PostTypeEnum = 3;
+    int32 UserId = 4;
+    int32 LikeEnum = 5;
+    int32 CreatedTime = 6;
+}
+message PB_Media {
+    int64 MediaId = 1;
+    int32 UserId = 2;
+    int32 PostId = 3;
+    int32 AlbumId = 4;
+    int32 MediaTypeEnum = 5;
+    int32 Width = 6;
+    int32 Height = 7;
+    int32 Size = 8;
+    int32 Duration = 9;
+    string Md5Hash = 10;
+    string Color = 11;
+    int32 CreatedTime = 12;
+}
+message PB_MessageFile {
+    int64 MessageFileId = 1;
+    string MessageFileKey = 2;
+    int32 UserId = 3;
+    string Title = 4;
+    int32 Size = 5;
+    int32 FileTypeEnum = 6;
+    int32 Width = 7;
+    int32 Height = 8;
+    int32 Duration = 9;
+    string Extension = 10;
+    string Md5Hash = 11;
+    int32 CreatedTime = 12;
+}
+message PB_Notify {
+    int64 NotifyId = 1;
+    int32 ForUserId = 2;
+    int32 ActorUserId = 3;
+    int32 NotiyTypeEnum = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int32 PeerUserId = 7;
+    int64 Murmur64Hash = 8;
+    int32 SeenStatus = 9;
+    int32 CreatedTime = 10;
+    int32 Seq = 11;
+}
+message PB_NotifyRemoved {
+    int64 Murmur64Hash = 1;
+    int32 ForUserId = 2;
+    int64 Id = 3;
+}
+message PB_PhoneContact {
+    int32 Id = 1;
+    string PhoneDisplayName = 2;
+    string PhoneFamilyName = 3;
+    string PhoneNumber = 4;
+    string PhoneNormalizedNumber = 5;
+    int32 PhoneContactRowId = 6;
+    int32 UserId = 7;
+    int32 DeviceUuidId = 8;
+    int32 CreatedTime = 9;
+    int32 UpdatedTime = 10;
+}
+message PB_Post {
+    int64 PostId = 1;
+    int32 UserId = 2;
+    int32 PostTypeEnum = 3;
+    int32 MediaId = 4;
+    string Text = 5;
+    string RichText = 6;
+    int32 MediaCount = 7;
+    int32 SharedTo = 8;
+    int32 DisableComment = 9;
+    int32 HasTag = 10;
+    int32 CommentsCount = 11;
+    int32 LikesCount = 12;
+    int32 ViewsCount = 13;
+    int32 EditedTime = 14;
+    int32 CreatedTime = 15;
+    int64 ReSharedPostId = 16;
+}
+message PB_RecommendUser {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 TargetId = 3;
+    float Weight = 4;
+    int32 CreatedTime = 5;
+}
+message PB_SearchClicked {
+    int64 Id = 1;
+    string Query = 2;
+    int32 ClickType = 3;
+    int32 TargetId = 4;
+    int32 UserId = 5;
+    int32 CreatedTime = 6;
+}
+message PB_Session {
+    int64 Id = 1;
+    int32 UserId = 2;
+    string SessionUuid = 3;
+    string ClientUuid = 4;
+    string DeviceUuid = 5;
+    int32 LastActivityTime = 6;
+    string LastIpAddress = 7;
+    string LastWifiMacAddress = 8;
+    string LastNetworkType = 9;
+    int32 LastNetworkTypeEnumId = 10;
+    int32 AppVersion = 11;
+    int32 UpdatedTime = 12;
+    int32 CreatedTime = 13;
+}
+message PB_SettingClient {
+    int32 UserId = 1;
+    int32 AutoDownloadWifiVoice = 2;
+    int32 AutoDownloadWifiImage = 3;
+    int32 AutoDownloadWifiVideo = 4;
+    int32 AutoDownloadWifiFile = 5;
+    int32 AutoDownloadWifiMusic = 6;
+    int32 AutoDownloadWifiGif = 7;
+    int32 AutoDownloadCellularVoice = 8;
+    int32 AutoDownloadCellularImage = 9;
+    int32 AutoDownloadCellularVideo = 10;
+    int32 AutoDownloadCellularFile = 11;
+    int32 AutoDownloadCellularMusic = 12;
+    int32 AutoDownloadCellularGif = 13;
+    int32 AutoDownloadRoamingVoice = 14;
+    int32 AutoDownloadRoamingImage = 15;
+    int32 AutoDownloadRoamingVideo = 16;
+    int32 AutoDownloadRoamingFile = 17;
+    int32 AutoDownloadRoamingMusic = 18;
+    int32 AutoDownloadRoamingGif = 19;
+    int32 SaveToGallery = 20;
+}
+message PB_SettingNotification {
+    int32 UserId = 1;
+    int32 SocialLedOn = 2;
+    string SocialLedColor = 3;
+    int32 ReqestToFollowYou = 4;
+    int32 FollowedYou = 5;
+    int32 AccptedYourFollowRequest = 6;
+    int32 YourPostLiked = 7;
+    int32 YourPostCommented = 8;
+    int32 MenthenedYouInPost = 9;
+    int32 MenthenedYouInComment = 10;
+    int32 YourContactsJoined = 11;
+    int32 DirectMessage = 12;
+    int32 DirectAlert = 13;
+    int32 DirectPerview = 14;
+    int32 DirectLedOn = 15;
+    int32 DirectLedColor = 16;
+    int32 DirectVibrate = 17;
+    int32 DirectPopup = 18;
+    int32 DirectSound = 19;
+    int32 DirectPriority = 20;
+}
+message PB_Tag {
+    int64 TagId = 1;
+    string Name = 2;
+    int32 Count = 3;
+    int32 TagStatusEnum = 4;
+    int32 CreatedTime = 5;
+}
+message PB_TagsPost {
+    int64 Id = 1;
+    int32 TagId = 2;
+    int32 PostId = 3;
+    int32 PostTypeEnum = 4;
+    int32 CreatedTime = 5;
+}
+message PB_TriggerLog {
+    int64 Id = 1;
+    string ModelName = 2;
+    string ChangeType = 3;
+    int64 TargetId = 4;
+    string TargetStr = 5;
+    int32 CreatedSe = 6;
+}
+message PB_User {
+    int32 UserId = 1;
+    string UserName = 2;
+    string UserNameLower = 3;
+    string FirstName = 4;
+    string LastName = 5;
+    int32 UserTypeEnum = 6;
+    int32 UserLevelEnum = 7;
+    int64 AvatarId = 8;
+    int32 ProfilePrivacyEnum = 9;
+    int64 Phone = 10;
+    string About = 11;
+    string Email = 12;
+    string PasswordHash = 13;
+    string PasswordSalt = 14;
+    int32 FollowersCount = 15;
+    int32 FollowingCount = 16;
+    int32 PostsCount = 17;
+    int32 MediaCount = 18;
+    int32 LikesCount = 19;
+    int32 ResharedCount = 20;
+    int32 LastActionTime = 21;
+    int32 LastPostTime = 22;
+    int32 PrimaryFollowingList = 23;
+    int32 CreatedSe = 24;
+    int64 UpdatedMs = 25;
+    int32 OnlinePrivacyEnum = 26;
+    int32 LastActivityTime = 27;
+    string Phone2 = 28;
+}
+message PB_UserMetaInfo {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 IsNotificationDirty = 3;
+    int32 LastUserRecGen = 4;
+}
+message PB_UserPassword {
+    int32 UserId = 1;
+    string Password = 2;
+    int32 CreatedTime = 3;
+}

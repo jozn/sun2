@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+
+import "pb_enums.proto";
+//import "google/protobuf/descriptor.proto";
+
+
+////////////// Views /////////////
+
+///*
+//extend google.protobuf.MessageOptions {
+//    string foo = 50001;
+//}
+//
+//extend google.protobuf.MessageOptions {
+//     string realm = 51234;
+//}
+//*/
+
+//message MyMessage {
+//    option (my_option) = "Hello world!";
+//}
+
+// {realm} ,
+message PB_ChatView {
+    //option realm = "1";
+    string ChatKey = 1;
+    string RoomKey = 3;
+    int32 RoomTypeEnumId = 5;
+    int32 UserId = 7;
+    int32 PeerUserId = 9;
+    int64 GroupId = 11;
+    int32 CreatedSe = 13;
+    int64 UpdatedMs = 15;
+    int64 LastMessageId = 17;
+    int64 LastDeletedMessageId = 19;
+    int64 LastSeenMessageId = 21;
+    int32 LastSeqSeen = 23;
+    int32 LastSeqDelete = 25;
+    int32 CurrentSeq = 27;
+
+    PB_UserView3 UserView = 100;
+
+    //local
+    int32 SharedMediaCount = 200;
+    int32 UnseenCount = 205;
+
+    PB_MessageView FirstUnreadMessage = 210;
+    PB_MessageView LastMessage = 212;
+
+}
+
+// {realm} ,
+message PB_MessageView {
+//    option realm = "1";
+
+    int64 MessageId = 1;
+    string MessageKey = 3;
+    string RoomKey = 5;
+    int32 UserId = 7;
+    int64 MessageFileId = 9;
+    int32 MessageTypeEnumId = 11;
+    string Text = 13;
+    int32 CreatedSe = 15;
+    int32 PeerReceivedTime = 17;
+    int32 PeerSeenTime = 19;
+    int32 DeliviryStatusEnumId = 21;
+
+    string ChatKey = 30;
+    int32 RoomTypeEnumId = 31;
+    bool IsByMe = 33;
+
+    int64 RemoteId = 50;
+
+    PB_MessageFileView MessageFileView = 100;
+}
+
+// {realm} ,
+message PB_MessageFileView {
+//    option realm = "1";
+    int64 MessageFileId = 1;
+    string MessageFileKey = 32;
+    int32 OriginalUserId = 2;
+    string Name = 3;
+    int32 Size = 5;
+    int32 FileTypeEnumId = 7;
+    int32 Width = 9;
+    int32 Height = 11;
+    int32 Duration = 13;
+    string Extension = 15;
+    string HashMd5 = 17;
+    int64 HashAccess = 19;
+    int32 CreatedSe = 21;
+    string ServerSrc = 23;
+
+    //del???
+    string ServerPath = 25;
+    string ServerThumbPath = 27;
+    string BucketId = 29;
+    int32 ServerId = 31;
+    int32 CanDel = 33;
+
+    //just views
+    string ServerThumbLocalSrc = 50;
+
+    //local
+    int64 RemoteMessageFileId = 100;
+    string LocalSrc = 101;
+    string ThumbLocalSrc = 104;
+    string MessageFileStatusId = 106;
+
+}
+
+// {realm} ,
+message PB_UserView3 {
+//    option realm = "1";
+
+    int32 UserId = 1;
+    string UserName = 3;
+    string FirstName = 7;
+    string LastName = 9;
+    string About = 11;
+    string FullName = 13;
+    string AvatarUrl = 15;
+    int32 PrivacyProfile = 17;
+    //string Phone = 19;
+    //string Email = 21;
+    int32 IsDeleted = 23;
+    int32 FollowersCount = 29;
+    int32 FollowingCount = 31;
+    int32 PostsCount = 33;
+    int32 UpdatedTime = 49;
+    int32 AppVersion = 59;
+    int32 LastActivityTime = 61;
+    int32 FollowingType = 62;
+}

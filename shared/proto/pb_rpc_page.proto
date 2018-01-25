@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+option java_package = "ir.ms.pb";
+//option java_outer_classname = "PB2";
+option java_multiple_files = true;
+option optimize_for = LITE_RUNTIME; //CODE_SIZE;
+
+option go_package = "x";
+import "pb_global.proto";
+import "pb_view_social.proto";
+
+
+message PB_PageParam_GetCommentsPage {
+    int64 PostId = 1;
+    PB_Pager Pager = 2;
+
+}
+message PB_PageResponse_GetCommentsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_CommentView CommentViewList = 2;
+}
+//
+
+message PB_PageParam_GetHomePage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetHomePage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_PostView PostViewList = 2;
+}
+//
+message PB_PageParam_GetProfilePage {
+
+}
+message PB_PageResponse_GetProfilePage {
+    PB_ResponseExtra Extra = 1;
+}
+//
+message PB_PageParam_GetLikesPage {
+    int64 PostId = 1;
+    PB_Pager Pager = 2;
+}
+message PB_PageResponse_GetLikesPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
+}
+//
+message PB_PageParam_GetFollowersPage {
+    int64 UserId = 1;
+    PB_Pager Pager = 2;
+}
+message PB_PageResponse_GetFollowersPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
+}
+//
+message PB_PageParam_GetFollowingsPage {
+    int64 UserId = 1;
+    PB_Pager Pager = 2;
+}
+message PB_PageResponse_GetFollowingsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
+}
+//
+
+message PB_PageParam_GetNotifiesPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetNotifiesPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_NotifyView NotifyViewList = 2;
+    repeated int64 RemoveIdsList = 3;
+}
+//
+
+message PB_PageParam_GetUserActionsPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetUserActionsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_ActionView ActionViewList =2;
+}
+//
+
+message PB_PageParam_GetSuggestedPostsPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetSuggestedPostsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_PostView PostViewList = 2;
+}
+//
+message PB_PageParam_GetSuggestedUsrsPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetSuggestedUsrsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
+}
+//
+message PB_PageParam_GetSuggestedTagsPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetSuggestedTagsPage {
+    PB_ResponseExtra Extra = 1;
+}
+//
+message PB_PageParam_GetLastPostsPage {
+    PB_Pager Pager = 1;
+}
+message PB_PageResponse_GetLastPostsPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
+}
+//
+message PB_PageParam_GetTagPage {
+    PB_Pager Pager = 2;
+}
+message PB_PageResponse_GetTagPage {
+    PB_ResponseExtra Extra = 1;
+    repeated PB_PostView PostViewList = 2;
+}
+//
+message PB_PageParam_SearchTagsPage {
+
+}
+message PB_PageResponse_SearchTagsPage {
+    PB_ResponseExtra Extra = 1;
+}
+//
+message PB_PageParam_SearchUsersPage {
+
+}
+message PB_PageResponse_SearchUsersPage {
+    PB_ResponseExtra Extra = 1;
+}
+//
+message PB_PageParam_ {
+
+}
+message PB_PageResponse_ {
+    PB_ResponseExtra Extra = 1;
+}
+
+service RPC_Page{
+    rpc GetCommentsPage(PB_PageParam_GetCommentsPage) returns (PB_PageResponse_GetCommentsPage);
+    rpc GetHomePage (PB_PageParam_GetHomePage) returns (PB_PageResponse_GetHomePage);
+    rpc GetProfilePage (PB_PageParam_GetProfilePage) returns (PB_PageResponse_GetProfilePage);
+    rpc GetLikesPage (PB_PageParam_GetLikesPage) returns (PB_PageResponse_GetLikesPage);
+    rpc GetFollowersPage (PB_PageParam_GetFollowersPage) returns (PB_PageResponse_GetFollowersPage);
+    rpc GetFollowingsPage (PB_PageParam_GetFollowingsPage) returns (PB_PageResponse_GetFollowingsPage);
+    rpc GetNotifiesPage(PB_PageParam_GetNotifiesPage) returns (PB_PageResponse_GetNotifiesPage);
+    rpc GetUserActionsPage(PB_PageParam_GetUserActionsPage) returns (PB_PageResponse_GetUserActionsPage);
+    rpc GetSuggestedPostsPage(PB_PageParam_GetSuggestedPostsPage) returns (PB_PageResponse_GetSuggestedPostsPage);
+    rpc GetSuggestedUsrsPage(PB_PageParam_GetSuggestedUsrsPage) returns (PB_PageResponse_GetSuggestedUsrsPage);
+    rpc GetSuggestedTagsPage(PB_PageParam_GetSuggestedTagsPage) returns (PB_PageResponse_GetSuggestedTagsPage);
+    rpc GetLastPostsPage(PB_PageParam_GetLastPostsPage) returns (PB_PageResponse_GetLastPostsPage);
+    rpc GetTagPage(PB_PageParam_GetTagPage) returns (PB_PageResponse_GetTagPage);
+    rpc SearchTagsPage(PB_PageParam_SearchTagsPage) returns (PB_PageResponse_SearchTagsPage);
+    rpc SearchUsersPage (PB_PageParam_SearchUsersPage) returns (PB_PageResponse_SearchUsersPage);
+
+    //screans - partial pages
+}
