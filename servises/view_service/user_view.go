@@ -1,8 +1,8 @@
 package view_service
 
 import (
+	"ms/sun2/servises/memcache_service"
 	"ms/sun2/shared/x"
-    "ms/sun2/servises/memcache_service"
 )
 
 func UserViewAndMe(UserId, MeId int) *x.PB_UserView {
@@ -34,7 +34,17 @@ func UserViewAndMe(UserId, MeId int) *x.PB_UserView {
 		//LastActiveTime: int32(user.LastActiveTime),
 	}
 
-	view.MyFollwing =  memcache_service.DoesUserFollows(MeId, UserId)
+	view.MyFollwing = memcache_service.DoesUserFollows(MeId, UserId)
 
 	return view
+}
+
+func UserSliceViewAndMe(UserIds []int, MeId int) (res []*x.PB_UserView) {
+	x.Store.PreLoadUserByUserIds(UserIds)
+	x.Store.PreLoadUserByUserIds(UserIds)
+
+	for _, uid := range UserIds {
+		res = append(res, UserViewAndMe(uid, MeId))
+	}
+	return
 }

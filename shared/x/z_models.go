@@ -158,21 +158,6 @@ type DirectToMessage struct {
 	MessageId: 0,
 	SourceEnumId: 0,
 */
-// feed 'Feed'.
-type Feed struct {
-	UserId int
-	PostId int
-	FeedId int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &Feed {
-	UserId: 0,
-	PostId: 0,
-	FeedId: 0,
-*/
 // following_list 'FollowingList'.
 type FollowingList struct {
 	Id          int
@@ -204,8 +189,7 @@ type FollowingListMember struct {
 	ListId         int
 	UserId         int
 	FollowedUserId int
-	FollowType     int
-	UpdatedTimeMs  int
+	CreatedTime    int
 
 	_exists, _deleted bool
 }
@@ -216,8 +200,7 @@ type FollowingListMember struct {
 	ListId: 0,
 	UserId: 0,
 	FollowedUserId: 0,
-	FollowType: 0,
-	UpdatedTimeMs: 0,
+	CreatedTime: 0,
 */
 // following_list_member_history 'FollowingListMemberHistory'.
 type FollowingListMemberHistory struct {

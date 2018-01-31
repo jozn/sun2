@@ -12,7 +12,8 @@ import "pb_view_social.proto";
 
 message PB_PageParam_GetCommentsPage {
     int64 PostId = 1;
-    PB_Pager Pager = 2;
+    int64 Limit = 2;
+    int64 Last = 3;
 
 }
 message PB_PageResponse_GetCommentsPage {
@@ -22,7 +23,8 @@ message PB_PageResponse_GetCommentsPage {
 //
 
 message PB_PageParam_GetHomePage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetHomePage {
     PB_ResponseExtra Extra = 1;
@@ -38,34 +40,41 @@ message PB_PageResponse_GetProfilePage {
 //
 message PB_PageParam_GetLikesPage {
     int64 PostId = 1;
-    PB_Pager Pager = 2;
+    int64 Limit = 2;
+    int64 Last = 3;
 }
 message PB_PageResponse_GetLikesPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_UserView UserViewList = 2;
+//    repeated PB_UserView UserViewList = 2;
+    repeated PB_UserViewRowify UserViewRowifyList = 2;
 }
 //
 message PB_PageParam_GetFollowersPage {
     int64 UserId = 1;
-    PB_Pager Pager = 2;
+    int64 Limit = 2;
+    int64 Last = 3;
 }
 message PB_PageResponse_GetFollowersPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_UserView UserViewList = 2;
+//    repeated PB_UserView UserViewList = 2;
+    repeated PB_UserViewRowify UserViewRowifyList = 2;
 }
 //
 message PB_PageParam_GetFollowingsPage {
     int64 UserId = 1;
-    PB_Pager Pager = 2;
+    int64 Limit = 2;
+    int64 Last = 3;
 }
 message PB_PageResponse_GetFollowingsPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_UserView UserViewList = 2;
+//    repeated PB_UserView UserViewList = 2;
+    repeated PB_UserViewRowify UserViewRowifyList = 2;
 }
 //
 
 message PB_PageParam_GetNotifiesPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetNotifiesPage {
     PB_ResponseExtra Extra = 1;
@@ -75,7 +84,8 @@ message PB_PageResponse_GetNotifiesPage {
 //
 
 message PB_PageParam_GetUserActionsPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetUserActionsPage {
     PB_ResponseExtra Extra = 1;
@@ -84,7 +94,8 @@ message PB_PageResponse_GetUserActionsPage {
 //
 
 message PB_PageParam_GetSuggestedPostsPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetSuggestedPostsPage {
     PB_ResponseExtra Extra = 1;
@@ -92,7 +103,8 @@ message PB_PageResponse_GetSuggestedPostsPage {
 }
 //
 message PB_PageParam_GetSuggestedUsrsPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetSuggestedUsrsPage {
     PB_ResponseExtra Extra = 1;
@@ -100,14 +112,16 @@ message PB_PageResponse_GetSuggestedUsrsPage {
 }
 //
 message PB_PageParam_GetSuggestedTagsPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetSuggestedTagsPage {
     PB_ResponseExtra Extra = 1;
 }
 //
 message PB_PageParam_GetLastPostsPage {
-    PB_Pager Pager = 1;
+    int64 Limit = 1;
+    int64 Last = 2;
 }
 message PB_PageResponse_GetLastPostsPage {
     PB_ResponseExtra Extra = 1;
@@ -115,7 +129,9 @@ message PB_PageResponse_GetLastPostsPage {
 }
 //
 message PB_PageParam_GetTagPage {
-    PB_Pager Pager = 2;
+    string Tag = 1;
+    int64 Limit = 2;
+    int64 Last = 3;
 }
 message PB_PageResponse_GetTagPage {
     PB_ResponseExtra Extra = 1;

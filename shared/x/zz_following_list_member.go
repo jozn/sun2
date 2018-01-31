@@ -17,8 +17,7 @@ type FollowingListMember__ struct {
 	ListId         int `json:"ListId"`         // ListId -
 	UserId         int `json:"UserId"`         // UserId -
 	FollowedUserId int `json:"FollowedUserId"` // FollowedUserId -
-	FollowType     int `json:"FollowType"`     // FollowType -
-	UpdatedTimeMs  int `json:"UpdatedTimeMs"`  // UpdatedTimeMs -
+	CreatedTime    int `json:"CreatedTime"`    // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -44,14 +43,14 @@ func (flm *FollowingListMember) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO ms.following_list_member (` +
-		`ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs` +
+		`ListId, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs)
-	res, err := db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs)
+	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime)
+	res, err := db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -80,14 +79,14 @@ func (flm *FollowingListMember) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO ms.following_list_member (` +
-		`ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs` +
+		`ListId, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs)
-	res, err := db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs)
+	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime)
+	res, err := db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -125,12 +124,12 @@ func (flm *FollowingListMember) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE ms.following_list_member SET ` +
-		`ListId = ?, UserId = ?, FollowedUserId = ?, FollowType = ?, UpdatedTimeMs = ?` +
+		`ListId = ?, UserId = ?, FollowedUserId = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs, flm.Id)
-	_, err = db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.FollowType, flm.UpdatedTimeMs, flm.Id)
+	XOLog(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime, flm.Id)
+	_, err = db.Exec(sqlstr, flm.ListId, flm.UserId, flm.FollowedUserId, flm.CreatedTime, flm.Id)
 
 	XOLogErr(err)
 	OnFollowingListMember_AfterUpdate(flm)
@@ -651,211 +650,106 @@ func (d *__FollowingListMember_Deleter) FollowedUserId_GE(val int) *__FollowingL
 	return d
 }
 
-func (u *__FollowingListMember_Deleter) FollowType_In(ins []int) *__FollowingListMember_Deleter {
+func (u *__FollowingListMember_Deleter) CreatedTime_In(ins []int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Deleter) FollowType_Ins(ins ...int) *__FollowingListMember_Deleter {
+func (u *__FollowingListMember_Deleter) CreatedTime_Ins(ins ...int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Deleter) FollowType_NotIn(ins []int) *__FollowingListMember_Deleter {
+func (u *__FollowingListMember_Deleter) CreatedTime_NotIn(ins []int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_Eq(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_Eq(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_NotEq(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_NotEq(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_LT(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_LT(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_LE(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_LE(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_GT(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_GT(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Deleter) FollowType_GE(val int) *__FollowingListMember_Deleter {
+func (d *__FollowingListMember_Deleter) CreatedTime_GE(val int) *__FollowingListMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__FollowingListMember_Deleter) UpdatedTimeMs_In(ins []int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Deleter) UpdatedTimeMs_Ins(ins ...int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Deleter) UpdatedTimeMs_NotIn(ins []int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_Eq(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_NotEq(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_LT(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_LE(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_GT(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Deleter) UpdatedTimeMs_GE(val int) *__FollowingListMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1287,211 +1181,106 @@ func (d *__FollowingListMember_Updater) FollowedUserId_GE(val int) *__FollowingL
 	return d
 }
 
-func (u *__FollowingListMember_Updater) FollowType_In(ins []int) *__FollowingListMember_Updater {
+func (u *__FollowingListMember_Updater) CreatedTime_In(ins []int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Updater) FollowType_Ins(ins ...int) *__FollowingListMember_Updater {
+func (u *__FollowingListMember_Updater) CreatedTime_Ins(ins ...int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Updater) FollowType_NotIn(ins []int) *__FollowingListMember_Updater {
+func (u *__FollowingListMember_Updater) CreatedTime_NotIn(ins []int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__FollowingListMember_Updater) FollowType_Eq(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_Eq(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Updater) FollowType_NotEq(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_NotEq(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Updater) FollowType_LT(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_LT(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Updater) FollowType_LE(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_LE(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Updater) FollowType_GT(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_GT(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Updater) FollowType_GE(val int) *__FollowingListMember_Updater {
+func (d *__FollowingListMember_Updater) CreatedTime_GE(val int) *__FollowingListMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__FollowingListMember_Updater) UpdatedTimeMs_In(ins []int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Updater) UpdatedTimeMs_Ins(ins ...int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Updater) UpdatedTimeMs_NotIn(ins []int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_Eq(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_NotEq(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_LT(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_LE(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_GT(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Updater) UpdatedTimeMs_GE(val int) *__FollowingListMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1923,211 +1712,106 @@ func (d *__FollowingListMember_Selector) FollowedUserId_GE(val int) *__Following
 	return d
 }
 
-func (u *__FollowingListMember_Selector) FollowType_In(ins []int) *__FollowingListMember_Selector {
+func (u *__FollowingListMember_Selector) CreatedTime_In(ins []int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Selector) FollowType_Ins(ins ...int) *__FollowingListMember_Selector {
+func (u *__FollowingListMember_Selector) CreatedTime_Ins(ins ...int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__FollowingListMember_Selector) FollowType_NotIn(ins []int) *__FollowingListMember_Selector {
+func (u *__FollowingListMember_Selector) CreatedTime_NotIn(ins []int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__FollowingListMember_Selector) FollowType_Eq(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_Eq(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Selector) FollowType_NotEq(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_NotEq(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Selector) FollowType_LT(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_LT(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Selector) FollowType_LE(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_LE(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Selector) FollowType_GT(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_GT(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__FollowingListMember_Selector) FollowType_GE(val int) *__FollowingListMember_Selector {
+func (d *__FollowingListMember_Selector) CreatedTime_GE(val int) *__FollowingListMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowType >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__FollowingListMember_Selector) UpdatedTimeMs_In(ins []int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Selector) UpdatedTimeMs_Ins(ins ...int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__FollowingListMember_Selector) UpdatedTimeMs_NotIn(ins []int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_Eq(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_NotEq(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_LT(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_LE(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_GT(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__FollowingListMember_Selector) UpdatedTimeMs_GE(val int) *__FollowingListMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UpdatedTimeMs >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2231,39 +1915,18 @@ func (u *__FollowingListMember_Updater) FollowedUserId_Increment(count int) *__F
 
 //ints
 
-func (u *__FollowingListMember_Updater) FollowType(newVal int) *__FollowingListMember_Updater {
-	u.updates[" FollowType = ? "] = newVal
+func (u *__FollowingListMember_Updater) CreatedTime(newVal int) *__FollowingListMember_Updater {
+	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__FollowingListMember_Updater) FollowType_Increment(count int) *__FollowingListMember_Updater {
+func (u *__FollowingListMember_Updater) CreatedTime_Increment(count int) *__FollowingListMember_Updater {
 	if count > 0 {
-		u.updates[" FollowType = FollowType+? "] = count
+		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" FollowType = FollowType-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__FollowingListMember_Updater) UpdatedTimeMs(newVal int) *__FollowingListMember_Updater {
-	u.updates[" UpdatedTimeMs = ? "] = newVal
-	return u
-}
-
-func (u *__FollowingListMember_Updater) UpdatedTimeMs_Increment(count int) *__FollowingListMember_Updater {
-	if count > 0 {
-		u.updates[" UpdatedTimeMs = UpdatedTimeMs+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" UpdatedTimeMs = UpdatedTimeMs-? "] = -(count) //make it positive
+		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -2336,33 +1999,18 @@ func (u *__FollowingListMember_Selector) Select_FollowedUserId() *__FollowingLis
 	return u
 }
 
-func (u *__FollowingListMember_Selector) OrderBy_FollowType_Desc() *__FollowingListMember_Selector {
-	u.orderBy = " ORDER BY FollowType DESC "
+func (u *__FollowingListMember_Selector) OrderBy_CreatedTime_Desc() *__FollowingListMember_Selector {
+	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__FollowingListMember_Selector) OrderBy_FollowType_Asc() *__FollowingListMember_Selector {
-	u.orderBy = " ORDER BY FollowType ASC "
+func (u *__FollowingListMember_Selector) OrderBy_CreatedTime_Asc() *__FollowingListMember_Selector {
+	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__FollowingListMember_Selector) Select_FollowType() *__FollowingListMember_Selector {
-	u.selectCol = "FollowType"
-	return u
-}
-
-func (u *__FollowingListMember_Selector) OrderBy_UpdatedTimeMs_Desc() *__FollowingListMember_Selector {
-	u.orderBy = " ORDER BY UpdatedTimeMs DESC "
-	return u
-}
-
-func (u *__FollowingListMember_Selector) OrderBy_UpdatedTimeMs_Asc() *__FollowingListMember_Selector {
-	u.orderBy = " ORDER BY UpdatedTimeMs ASC "
-	return u
-}
-
-func (u *__FollowingListMember_Selector) Select_UpdatedTimeMs() *__FollowingListMember_Selector {
-	u.selectCol = "UpdatedTimeMs"
+func (u *__FollowingListMember_Selector) Select_CreatedTime() *__FollowingListMember_Selector {
+	u.selectCol = "CreatedTime"
 	return u
 }
 
@@ -2639,12 +2287,12 @@ func MassInsert_FollowingListMember(rows []FollowingListMember, db XODB) error {
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO ms.following_list_member (" +
-		"ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs" +
+		"ListId, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2655,8 +2303,7 @@ func MassInsert_FollowingListMember(rows []FollowingListMember, db XODB) error {
 		vals = append(vals, row.ListId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.FollowedUserId)
-		vals = append(vals, row.FollowType)
-		vals = append(vals, row.UpdatedTimeMs)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
@@ -2674,12 +2321,12 @@ func MassInsert_FollowingListMember(rows []FollowingListMember, db XODB) error {
 func MassReplace_FollowingListMember(rows []FollowingListMember, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO ms.following_list_member (" +
-		"ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs" +
+		"ListId, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2690,8 +2337,7 @@ func MassReplace_FollowingListMember(rows []FollowingListMember, db XODB) error 
 		vals = append(vals, row.ListId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.FollowedUserId)
-		vals = append(vals, row.FollowType)
-		vals = append(vals, row.UpdatedTimeMs)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
@@ -2707,8 +2353,6 @@ func MassReplace_FollowingListMember(rows []FollowingListMember, db XODB) error 
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

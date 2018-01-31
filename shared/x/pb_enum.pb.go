@@ -133,7 +133,6 @@ It has these top-level messages:
 	PB_DirectMessage
 	PB_DirectOffline
 	PB_DirectToMessage
-	PB_Feed
 	PB_FollowingList
 	PB_FollowingListMember
 	PB_FollowingListMemberHistory
@@ -166,6 +165,7 @@ It has these top-level messages:
 	PB_CommentView
 	PB_UserView
 	PB_TopProfileView
+	PB_UserViewRowify
 	PB_ChatView
 	PB_MessageView
 	PB_MessageFileView

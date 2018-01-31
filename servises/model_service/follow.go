@@ -3,7 +3,7 @@ package model_service
 import (
 	"ms/sun/base"
 	"ms/sun/helper"
-	"ms/sun/models/x"
+	"ms/sun2/shared/x"
 	"ms/sun2/servises/memcache_service"
 )
 
@@ -21,8 +21,7 @@ func Follow(UserId, FollowedPeerUserId int) int {
 		ListId:         UserId,
 		UserId:         UserId,
 		FollowedUserId: FollowedPeerUserId,
-		FollowType:     1, //remove
-		UpdatedTimeMs:  helper.TimeNowMs(),
+		CreatedTime:  helper.TimeNowMs(),
 	}
 
 	err := flm.Insert(base.DB)

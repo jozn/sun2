@@ -84,7 +84,7 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
      n := &PB_Comment{
       CommentId: int64 ( o.CommentId ),
       UserId: int32 ( o.UserId ),
-      PostId: int32 ( o.PostId ),
+      PostId: int64 ( o.PostId ),
       Text: string ( o.Text ),
       LikesCount: int32 ( o.LikesCount ),
       CreatedTime: int32 ( o.CreatedTime ),
@@ -183,25 +183,6 @@ func PBConvPB_DirectToMessage_To_DirectToMessage ( o *DirectToMessage) *PB_Direc
 }
 */
 /*
-func PBConvPB__Feed_To_Feed( o *PB_Feed) *Feed {
-     n := &Feed{
-      UserId: int ( o.UserId ),
-      PostId: int ( o.PostId ),
-      FeedId: int ( o.FeedId ),
-    }
-    return n
-}
-
-func PBConvPB_Feed_To_Feed ( o *Feed) *PB_Feed {
-     n := &PB_Feed{
-      UserId: int64 ( o.UserId ),
-      PostId: int64 ( o.PostId ),
-      FeedId: int32 ( o.FeedId ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__FollowingList_To_FollowingList( o *PB_FollowingList) *FollowingList {
      n := &FollowingList{
       Id: int ( o.Id ),
@@ -237,8 +218,7 @@ func PBConvPB__FollowingListMember_To_FollowingListMember( o *PB_FollowingListMe
       ListId: int ( o.ListId ),
       UserId: int ( o.UserId ),
       FollowedUserId: int ( o.FollowedUserId ),
-      FollowType: int ( o.FollowType ),
-      UpdatedTimeMs: int ( o.UpdatedTimeMs ),
+      CreatedTime: int ( o.CreatedTime ),
     }
     return n
 }
@@ -249,8 +229,7 @@ func PBConvPB_FollowingListMember_To_FollowingListMember ( o *FollowingListMembe
       ListId: int32 ( o.ListId ),
       UserId: int32 ( o.UserId ),
       FollowedUserId: int32 ( o.FollowedUserId ),
-      FollowType: int32 ( o.FollowType ),
-      UpdatedTimeMs: int64 ( o.UpdatedTimeMs ),
+      CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
 }

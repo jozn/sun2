@@ -6,6 +6,7 @@ type rpc_chat int
 
 func (rpc_chat) AddNewMessage(param *x.PB_ChatParam_AddNewMessage, userParam x.RPC_UserParam) (res x.PB_ChatResponse_AddNewMessage, err error) {
     panic("implement me:::: RpcAll")
+
 }
 
 func (rpc_chat) SetRoomActionDoing(param *x.PB_ChatParam_SetRoomActionDoing, userParam x.RPC_UserParam) (res x.PB_ChatResponse_SetRoomActionDoing, err error) {

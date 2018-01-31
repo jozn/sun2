@@ -173,35 +173,6 @@ $$
 
 
  #### delimiter ;*/
-################################ Feed ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS feed_OnCreateLogger $$
-CREATE TRIGGER feed_OnCreateLogger AFTER INSERT ON feed
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Feed","INSERT",NEW.FeedId, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS feed_OnUpdateLogger $$
-CREATE TRIGGER feed_OnUpdateLogger AFTER UPDATE ON feed
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Feed","UPDATE",NEW.FeedId, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS feed_OnDeleteLogger $$
-CREATE TRIGGER feed_OnDeleteLogger AFTER DELETE ON feed
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Feed","DELETE",OLD.FeedId, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ FollowingList ######################################
 
 /* #### delimiter $$
@@ -956,10 +927,6 @@ DROP TRIGGER IF EXISTS direct_offline_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS direct_to_message_OnCreateLogger ;
 DROP TRIGGER IF EXISTS direct_to_message_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS direct_to_message_OnDeleteLogger ;
-### Feed ##
-DROP TRIGGER IF EXISTS feed_OnCreateLogger ;
-DROP TRIGGER IF EXISTS feed_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS feed_OnDeleteLogger ;
 ### FollowingList ##
 DROP TRIGGER IF EXISTS following_list_OnCreateLogger ;
 DROP TRIGGER IF EXISTS following_list_OnUpdateLogger ;

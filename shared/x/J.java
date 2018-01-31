@@ -71,13 +71,7 @@ public class J {
 		public int SourceEnumId;
 	}
 
-	public static class Feed {//oridnal: 6
-		public int UserId;
-		public int PostId;
-		public int FeedId;
-	}
-
-	public static class FollowingList {//oridnal: 7
+	public static class FollowingList {//oridnal: 6
 		public int Id;
 		public int UserId;
 		public int ListType;
@@ -88,16 +82,15 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class FollowingListMember {//oridnal: 8
+	public static class FollowingListMember {//oridnal: 7
 		public int Id;
 		public int ListId;
 		public int UserId;
 		public int FollowedUserId;
-		public int FollowType;
-		public int UpdatedTimeMs;
+		public int CreatedTime;
 	}
 
-	public static class FollowingListMemberHistory {//oridnal: 9
+	public static class FollowingListMemberHistory {//oridnal: 8
 		public int Id;
 		public int ListId;
 		public int UserId;
@@ -107,7 +100,7 @@ public class J {
 		public int FollowId;
 	}
 
-	public static class GeneralLog {//oridnal: 10
+	public static class GeneralLog {//oridnal: 9
 		public int Id;
 		public int ToUserId;
 		public int TargetId;
@@ -117,7 +110,7 @@ public class J {
 		public int CreatedMs;
 	}
 
-	public static class Group {//oridnal: 11
+	public static class Group {//oridnal: 10
 		public int GroupId;
 		public String GroupName;
 		public int MembersCount;
@@ -128,7 +121,7 @@ public class J {
 		public int CurrentSeq;
 	}
 
-	public static class GroupMember {//oridnal: 12
+	public static class GroupMember {//oridnal: 11
 		public int Id;
 		public int GroupId;
 		public String GroupKey;
@@ -138,7 +131,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class GroupMessage {//oridnal: 13
+	public static class GroupMessage {//oridnal: 12
 		public int MessageId;
 		public String RoomKey;
 		public int UserId;
@@ -149,7 +142,7 @@ public class J {
 		public int DeliveryStatusEnum;
 	}
 
-	public static class Like {//oridnal: 14
+	public static class Like {//oridnal: 13
 		public int Id;
 		public int PostId;
 		public int PostTypeEnum;
@@ -158,7 +151,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class Media {//oridnal: 15
+	public static class Media {//oridnal: 14
 		public int MediaId;
 		public int UserId;
 		public int PostId;
@@ -173,7 +166,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class MessageFile {//oridnal: 16
+	public static class MessageFile {//oridnal: 15
 		public int MessageFileId;
 		public String MessageFileKey;
 		public int UserId;
@@ -188,7 +181,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class Notify {//oridnal: 17
+	public static class Notify {//oridnal: 16
 		public int NotifyId;
 		public int ForUserId;
 		public int ActorUserId;
@@ -202,13 +195,13 @@ public class J {
 		public int Seq;
 	}
 
-	public static class NotifyRemoved {//oridnal: 18
+	public static class NotifyRemoved {//oridnal: 17
 		public int Murmur64Hash;
 		public int ForUserId;
 		public int Id;
 	}
 
-	public static class PhoneContact {//oridnal: 19
+	public static class PhoneContact {//oridnal: 18
 		public int Id;
 		public String PhoneDisplayName;
 		public String PhoneFamilyName;
@@ -221,7 +214,7 @@ public class J {
 		public int UpdatedTime;
 	}
 
-	public static class Post {//oridnal: 20
+	public static class Post {//oridnal: 19
 		public int PostId;
 		public int UserId;
 		public int PostTypeEnum;
@@ -240,7 +233,7 @@ public class J {
 		public int ReSharedPostId;
 	}
 
-	public static class RecommendUser {//oridnal: 21
+	public static class RecommendUser {//oridnal: 20
 		public int Id;
 		public int UserId;
 		public int TargetId;
@@ -248,7 +241,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SearchClicked {//oridnal: 22
+	public static class SearchClicked {//oridnal: 21
 		public int Id;
 		public String Query;
 		public int ClickType;
@@ -257,7 +250,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class Session {//oridnal: 23
+	public static class Session {//oridnal: 22
 		public int Id;
 		public int UserId;
 		public String SessionUuid;
@@ -273,7 +266,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SettingClient {//oridnal: 24
+	public static class SettingClient {//oridnal: 23
 		public int UserId;
 		public int AutoDownloadWifiVoice;
 		public int AutoDownloadWifiImage;
@@ -296,7 +289,7 @@ public class J {
 		public int SaveToGallery;
 	}
 
-	public static class SettingNotification {//oridnal: 25
+	public static class SettingNotification {//oridnal: 24
 		public int UserId;
 		public int SocialLedOn;
 		public String SocialLedColor;
@@ -319,7 +312,7 @@ public class J {
 		public int DirectPriority;
 	}
 
-	public static class Tag {//oridnal: 26
+	public static class Tag {//oridnal: 25
 		public int TagId;
 		public String Name;
 		public int Count;
@@ -327,7 +320,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TagsPost {//oridnal: 27
+	public static class TagsPost {//oridnal: 26
 		public int Id;
 		public int TagId;
 		public int PostId;
@@ -335,7 +328,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TriggerLog {//oridnal: 28
+	public static class TriggerLog {//oridnal: 27
 		public int Id;
 		public String ModelName;
 		public String ChangeType;
@@ -344,7 +337,7 @@ public class J {
 		public int CreatedSe;
 	}
 
-	public static class User {//oridnal: 29
+	public static class User {//oridnal: 28
 		public int UserId;
 		public String UserName;
 		public String UserNameLower;
@@ -375,14 +368,14 @@ public class J {
 		public String Phone2;
 	}
 
-	public static class UserMetaInfo {//oridnal: 30
+	public static class UserMetaInfo {//oridnal: 29
 		public int Id;
 		public int UserId;
 		public int IsNotificationDirty;
 		public int LastUserRecGen;
 	}
 
-	public static class UserPassword {//oridnal: 31
+	public static class UserPassword {//oridnal: 30
 		public int UserId;
 		public String Password;
 		public int CreatedTime;

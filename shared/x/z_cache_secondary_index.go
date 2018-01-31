@@ -187,8 +187,6 @@ func (c _StoreImpl) PreLoadDirectOffline_ByToUserIds(ToUserIds []int) {
 
 // DirectToMessage - ChatKey
 
-// Feed - PRIMARY
-
 // FollowingList - PRIMARY
 
 // FollowingListMember - PRIMARY

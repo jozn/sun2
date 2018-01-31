@@ -843,25 +843,29 @@ public class PBFlatTypes {
 
 	public class PB_PageParam_GetCommentsPage {
 	   public long PostId;
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetCommentsPage t = new PBFlatTypes.PB_PageParam_GetCommentsPage();
     t.setPostId();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetCommentsPage t = new PBFlatTypes.PB_PageParam_GetCommentsPage();
 	t.PostId = ;
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetCommentsPage t = new PB_PageParam_GetCommentsPage();
 	t.PostId = m.getPostId() ;
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetCommentsPage {
@@ -888,22 +892,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetHomePage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetHomePage t = new PBFlatTypes.PB_PageParam_GetHomePage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetHomePage t = new PBFlatTypes.PB_PageParam_GetHomePage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetHomePage t = new PB_PageParam_GetHomePage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetHomePage {
@@ -965,159 +973,175 @@ public class PBFlatTypes {
 
 	public class PB_PageParam_GetLikesPage {
 	   public long PostId;
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetLikesPage t = new PBFlatTypes.PB_PageParam_GetLikesPage();
     t.setPostId();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetLikesPage t = new PBFlatTypes.PB_PageParam_GetLikesPage();
 	t.PostId = ;
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetLikesPage t = new PB_PageParam_GetLikesPage();
 	t.PostId = m.getPostId() ;
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetLikesPage {
 	   public PB_ResponseExtra Extra;
-	   public PB_UserView UserViewList;
+	   public PB_UserViewRowify UserViewRowifyList;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageResponse_GetLikesPage t = new PBFlatTypes.PB_PageResponse_GetLikesPage();
     t.setExtra();
-    t.setUserViewList();
+    t.setUserViewRowifyList();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageResponse_GetLikesPage t = new PBFlatTypes.PB_PageResponse_GetLikesPage();
 	t.Extra = ;
-	t.UserViewList = ;
+	t.UserViewRowifyList = ;
 	*/
 
 	/*
 	PB_PageResponse_GetLikesPage t = new PB_PageResponse_GetLikesPage();
 	t.Extra = m.getExtra() ;
-	t.UserViewList = m.getUserViewList() ;
+	t.UserViewRowifyList = m.getUserViewRowifyList() ;
 	*/
 
 	public class PB_PageParam_GetFollowersPage {
 	   public long UserId;
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetFollowersPage t = new PBFlatTypes.PB_PageParam_GetFollowersPage();
     t.setUserId();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetFollowersPage t = new PBFlatTypes.PB_PageParam_GetFollowersPage();
 	t.UserId = ;
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetFollowersPage t = new PB_PageParam_GetFollowersPage();
 	t.UserId = m.getUserId() ;
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetFollowersPage {
 	   public PB_ResponseExtra Extra;
-	   public PB_UserView UserViewList;
+	   public PB_UserViewRowify UserViewRowifyList;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageResponse_GetFollowersPage t = new PBFlatTypes.PB_PageResponse_GetFollowersPage();
     t.setExtra();
-    t.setUserViewList();
+    t.setUserViewRowifyList();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageResponse_GetFollowersPage t = new PBFlatTypes.PB_PageResponse_GetFollowersPage();
 	t.Extra = ;
-	t.UserViewList = ;
+	t.UserViewRowifyList = ;
 	*/
 
 	/*
 	PB_PageResponse_GetFollowersPage t = new PB_PageResponse_GetFollowersPage();
 	t.Extra = m.getExtra() ;
-	t.UserViewList = m.getUserViewList() ;
+	t.UserViewRowifyList = m.getUserViewRowifyList() ;
 	*/
 
 	public class PB_PageParam_GetFollowingsPage {
 	   public long UserId;
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetFollowingsPage t = new PBFlatTypes.PB_PageParam_GetFollowingsPage();
     t.setUserId();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetFollowingsPage t = new PBFlatTypes.PB_PageParam_GetFollowingsPage();
 	t.UserId = ;
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetFollowingsPage t = new PB_PageParam_GetFollowingsPage();
 	t.UserId = m.getUserId() ;
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetFollowingsPage {
 	   public PB_ResponseExtra Extra;
-	   public PB_UserView UserViewList;
+	   public PB_UserViewRowify UserViewRowifyList;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageResponse_GetFollowingsPage t = new PBFlatTypes.PB_PageResponse_GetFollowingsPage();
     t.setExtra();
-    t.setUserViewList();
+    t.setUserViewRowifyList();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageResponse_GetFollowingsPage t = new PBFlatTypes.PB_PageResponse_GetFollowingsPage();
 	t.Extra = ;
-	t.UserViewList = ;
+	t.UserViewRowifyList = ;
 	*/
 
 	/*
 	PB_PageResponse_GetFollowingsPage t = new PB_PageResponse_GetFollowingsPage();
 	t.Extra = m.getExtra() ;
-	t.UserViewList = m.getUserViewList() ;
+	t.UserViewRowifyList = m.getUserViewRowifyList() ;
 	*/
 
 	public class PB_PageParam_GetNotifiesPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetNotifiesPage t = new PBFlatTypes.PB_PageParam_GetNotifiesPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetNotifiesPage t = new PBFlatTypes.PB_PageParam_GetNotifiesPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetNotifiesPage t = new PB_PageParam_GetNotifiesPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetNotifiesPage {
@@ -1148,22 +1172,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetUserActionsPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetUserActionsPage t = new PBFlatTypes.PB_PageParam_GetUserActionsPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetUserActionsPage t = new PBFlatTypes.PB_PageParam_GetUserActionsPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetUserActionsPage t = new PB_PageParam_GetUserActionsPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetUserActionsPage {
@@ -1190,22 +1218,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetSuggestedPostsPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetSuggestedPostsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedPostsPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetSuggestedPostsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedPostsPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetSuggestedPostsPage t = new PB_PageParam_GetSuggestedPostsPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetSuggestedPostsPage {
@@ -1232,22 +1264,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetSuggestedUsrsPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetSuggestedUsrsPage t = new PB_PageParam_GetSuggestedUsrsPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetSuggestedUsrsPage {
@@ -1274,22 +1310,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetSuggestedTagsPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetSuggestedTagsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedTagsPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetSuggestedTagsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedTagsPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetSuggestedTagsPage t = new PB_PageParam_GetSuggestedTagsPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetSuggestedTagsPage {
@@ -1312,22 +1352,26 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetLastPostsPage {
-	   public PB_Pager Pager;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetLastPostsPage t = new PBFlatTypes.PB_PageParam_GetLastPostsPage();
-    t.setPager();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetLastPostsPage t = new PBFlatTypes.PB_PageParam_GetLastPostsPage();
-	t.Pager = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetLastPostsPage t = new PB_PageParam_GetLastPostsPage();
-	t.Pager = m.getPager() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetLastPostsPage {
@@ -1354,22 +1398,30 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_PageParam_GetTagPage {
-	   public PB_Pager Pager;
+	   public String Tag;
+	   public long Limit;
+	   public long Last;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageParam_GetTagPage t = new PBFlatTypes.PB_PageParam_GetTagPage();
-    t.setPager();
+    t.setTag();
+    t.setLimit();
+    t.setLast();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageParam_GetTagPage t = new PBFlatTypes.PB_PageParam_GetTagPage();
-	t.Pager = ;
+	t.Tag = ;
+	t.Limit = ;
+	t.Last = ;
 	*/
 
 	/*
 	PB_PageParam_GetTagPage t = new PB_PageParam_GetTagPage();
-	t.Pager = m.getPager() ;
+	t.Tag = m.getTag() ;
+	t.Limit = m.getLimit() ;
+	t.Last = m.getLast() ;
 	*/
 
 	public class PB_PageResponse_GetTagPage {
@@ -2396,7 +2448,7 @@ public class PBFlatTypes {
 	public class PB_Comment {
 	   public long CommentId;
 	   public int UserId;
-	   public int PostId;
+	   public long PostId;
 	   public String Text;
 	   public int LikesCount;
 	   public int CreatedTime;
@@ -2581,33 +2633,6 @@ public class PBFlatTypes {
 	t.SourceEnumId = m.getSourceEnumId() ;
 	*/
 
-	public class PB_Feed {
-	   public long UserId;
-	   public long PostId;
-	   public int FeedId;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_Feed t = new PBFlatTypes.PB_Feed();
-    t.setUserId();
-    t.setPostId();
-    t.setFeedId();
-	*/
-
-	/*
-	PBFlatTypes.PB_Feed t = new PBFlatTypes.PB_Feed();
-	t.UserId = ;
-	t.PostId = ;
-	t.FeedId = ;
-	*/
-
-	/*
-	PB_Feed t = new PB_Feed();
-	t.UserId = m.getUserId() ;
-	t.PostId = m.getPostId() ;
-	t.FeedId = m.getFeedId() ;
-	*/
-
 	public class PB_FollowingList {
 	   public int Id;
 	   public int UserId;
@@ -2660,8 +2685,7 @@ public class PBFlatTypes {
 	   public int ListId;
 	   public int UserId;
 	   public int FollowedUserId;
-	   public int FollowType;
-	   public long UpdatedTimeMs;
+	   public int CreatedTime;
 	}
 	/*
 	folding
@@ -2670,8 +2694,7 @@ public class PBFlatTypes {
     t.setListId();
     t.setUserId();
     t.setFollowedUserId();
-    t.setFollowType();
-    t.setUpdatedTimeMs();
+    t.setCreatedTime();
 	*/
 
 	/*
@@ -2680,8 +2703,7 @@ public class PBFlatTypes {
 	t.ListId = ;
 	t.UserId = ;
 	t.FollowedUserId = ;
-	t.FollowType = ;
-	t.UpdatedTimeMs = ;
+	t.CreatedTime = ;
 	*/
 
 	/*
@@ -2690,8 +2712,7 @@ public class PBFlatTypes {
 	t.ListId = m.getListId() ;
 	t.UserId = m.getUserId() ;
 	t.FollowedUserId = m.getFollowedUserId() ;
-	t.FollowType = m.getFollowType() ;
-	t.UpdatedTimeMs = m.getUpdatedTimeMs() ;
+	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
 	public class PB_FollowingListMemberHistory {
@@ -4222,7 +4243,7 @@ public class PBFlatTypes {
 	public class PB_CommentView {
 	   public long CommentId;
 	   public int UserId;
-	   public int PostId;
+	   public long PostId;
 	   public String Text;
 	   public int LikesCount;
 	   public int CreatedTime;
@@ -4370,6 +4391,33 @@ public class PBFlatTypes {
 	/*
 	PB_TopProfileView t = new PB_TopProfileView();
 	t.User = m.getUser() ;
+	*/
+
+	public class PB_UserViewRowify {
+	   public long Id;
+	   public int CreatedTime;
+	   public PB_UserView UserView;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_UserViewRowify t = new PBFlatTypes.PB_UserViewRowify();
+    t.setId();
+    t.setCreatedTime();
+    t.setUserView();
+	*/
+
+	/*
+	PBFlatTypes.PB_UserViewRowify t = new PBFlatTypes.PB_UserViewRowify();
+	t.Id = ;
+	t.CreatedTime = ;
+	t.UserView = ;
+	*/
+
+	/*
+	PB_UserViewRowify t = new PB_UserViewRowify();
+	t.Id = m.getId() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	t.UserView = m.getUserView() ;
 	*/
 
 	public class PB_ChatView {

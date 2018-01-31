@@ -13,8 +13,6 @@ const (
 	DirectOffline_TableGo              = "DirectOffline"
 	DirectToMessage_Table              = "direct_to_message"
 	DirectToMessage_TableGo            = "DirectToMessage"
-	Feed_Table                         = "feed"
-	Feed_TableGo                       = "Feed"
 	FollowingList_Table                = "following_list"
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
@@ -201,17 +199,6 @@ var DirectToMessage = struct {
 	SourceEnumId: "SourceEnumId",
 }
 
-var Feed = struct {
-	UserId string
-	PostId string
-	FeedId string
-}{
-
-	UserId: "UserId",
-	PostId: "PostId",
-	FeedId: "FeedId",
-}
-
 var FollowingList = struct {
 	Id          string
 	UserId      string
@@ -238,16 +225,14 @@ var FollowingListMember = struct {
 	ListId         string
 	UserId         string
 	FollowedUserId string
-	FollowType     string
-	UpdatedTimeMs  string
+	CreatedTime    string
 }{
 
 	Id:             "Id",
 	ListId:         "ListId",
 	UserId:         "UserId",
 	FollowedUserId: "FollowedUserId",
-	FollowType:     "FollowType",
-	UpdatedTimeMs:  "UpdatedTimeMs",
+	CreatedTime:    "CreatedTime",
 }
 
 var FollowingListMemberHistory = struct {

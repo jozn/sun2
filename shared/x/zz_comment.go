@@ -43,21 +43,30 @@ func (c *Comment) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key must be provided
+	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO ms.comment (` +
-		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
+		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
-	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	res, err := db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
 	if err != nil {
+		XOLogErr(err)
 		return err
 	}
 
-	// set existence
+	// retrieve id
+	id, err := res.LastInsertId()
+	if err != nil {
+		XOLogErr(err)
+		return err
+	}
+
+	// set primary key and existence
+	c.CommentId = int(id)
 	c._exists = true
 
 	OnComment_AfterInsert(c)
@@ -72,19 +81,28 @@ func (c *Comment) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO ms.comment (` +
-		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
+		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
-	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	res, err := db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
+	// retrieve id
+	id, err := res.LastInsertId()
+	if err != nil {
+		XOLogErr(err)
+		return err
+	}
+
+	// set primary key and existence
+	c.CommentId = int(id)
 	c._exists = true
 
 	OnComment_AfterInsert(c)
@@ -2824,13 +2842,13 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO ms.comment (" +
-		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
+		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
 		") VALUES " + insVals
 
 	// run query
@@ -2838,7 +2856,6 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.CommentId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)
@@ -2862,12 +2879,12 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 func MassReplace_Comment(rows []Comment, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO ms.comment (" +
-		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
+		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
 		") VALUES " + insVals
 
 	// run query
@@ -2875,7 +2892,6 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.CommentId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)

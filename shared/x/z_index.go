@@ -148,30 +148,6 @@ func DirectToMessageById(db *sqlx.DB, id int) (*DirectToMessage, error) {
 	return &dtm, nil
 }
 
-// FeedByFeedId Generated from index 'PRIMARY' -- retrieves a row from 'ms.feed' as a Feed.
-func FeedByFeedId(db *sqlx.DB, feedId int) (*Feed, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM ms.feed ` +
-		`WHERE FeedId = ?`
-
-	XOLog(sqlstr, feedId)
-	f := Feed{
-		_exists: true,
-	}
-
-	err = db.Get(&f, sqlstr, feedId)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnFeed_LoadOne(&f)
-
-	return &f, nil
-}
-
 // FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'ms.following_list' as a FollowingList.
 func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	var err error

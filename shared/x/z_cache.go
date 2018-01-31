@@ -197,38 +197,6 @@ func (c _StoreImpl) PreLoadDirectToMessageByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetFeedByFeedId(FeedId int) (*Feed, bool) {
-	o, ok := RowCache.Get("Feed:" + strconv.Itoa(FeedId))
-	if ok {
-		if obj, ok := o.(*Feed); ok {
-			return obj, true
-		}
-	}
-	obj2, err := FeedByFeedId(base.DB, FeedId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadFeedByFeedIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("Feed:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewFeed_Selector().FeedId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
 	if ok {

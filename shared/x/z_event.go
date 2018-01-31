@@ -149,30 +149,6 @@ func OnDirectToMessage_LoadMany(rows []*DirectToMessage) {
 	}
 }
 
-//Feed Events
-
-func OnFeed_AfterInsert(row *Feed) {
-	RowCache.Set("Feed:"+strconv.Itoa(row.FeedId), row, time.Hour*0)
-}
-
-func OnFeed_AfterUpdate(row *Feed) {
-	RowCache.Set("Feed:"+strconv.Itoa(row.FeedId), row, time.Hour*0)
-}
-
-func OnFeed_AfterDelete(row *Feed) {
-	RowCache.Delete("Feed:" + strconv.Itoa(row.FeedId))
-}
-
-func OnFeed_LoadOne(row *Feed) {
-	RowCache.Set("Feed:"+strconv.Itoa(row.FeedId), row, time.Hour*0)
-}
-
-func OnFeed_LoadMany(rows []*Feed) {
-	for _, row := range rows {
-		RowCache.Set("Feed:"+strconv.Itoa(row.FeedId), row, time.Hour*0)
-	}
-}
-
 //FollowingList Events
 
 func OnFollowingList_AfterInsert(row *FollowingList) {

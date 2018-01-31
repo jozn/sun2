@@ -89,7 +89,7 @@ message PB_NotifyView {
 message PB_CommentView {
     int64 CommentId = 1;
     int32 UserId = 2;
-    int32 PostId = 3;
+    int64 PostId = 3;
     string Text = 4;
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
@@ -127,4 +127,11 @@ message PB_UserView {
 message PB_TopProfileView {
     PB_UserView User  = 1;
 
+}
+
+//used for list of users in like/followings/followers list
+message PB_UserViewRowify {
+    int64 Id = 1;
+    int32 CreatedTime = 2;
+    PB_UserView UserView = 10;
 }

@@ -34,7 +34,7 @@ message PB_Chat {
 message PB_Comment {
     int64 CommentId = 1;
     int32 UserId = 2;
-    int32 PostId = 3;
+    int64 PostId = 3;
     string Text = 4;
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
@@ -71,11 +71,6 @@ message PB_DirectToMessage {
     int64 MessageId = 3;
     int32 SourceEnumId = 4;
 }
-message PB_Feed {
-    int64 UserId = 1;
-    int64 PostId = 2;
-    int32 FeedId = 3;
-}
 message PB_FollowingList {
     int32 Id = 1;
     int32 UserId = 2;
@@ -91,8 +86,7 @@ message PB_FollowingListMember {
     int32 ListId = 2;
     int32 UserId = 3;
     int32 FollowedUserId = 4;
-    int32 FollowType = 5;
-    int64 UpdatedTimeMs = 6;
+    int32 CreatedTime = 5;
 }
 message PB_FollowingListMemberHistory {
     int64 Id = 1;

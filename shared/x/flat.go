@@ -1018,13 +1018,16 @@ var PB_OtherResponse_Echo__FOlD = &PB_OtherResponse_Echo{
 
 type PB_PageParam_GetCommentsPage_Flat struct {
 	PostId int
-	Pager  PB_Pager
+	Limit  int
+	Last   int
 }
 
 //ToPB
 func (m *PB_PageParam_GetCommentsPage) ToFlat() *PB_PageParam_GetCommentsPage_Flat {
 	r := &PB_PageParam_GetCommentsPage_Flat{
 		PostId: int(m.PostId),
+		Limit:  int(m.Limit),
+		Last:   int(m.Last),
 	}
 	return r
 }
@@ -1033,6 +1036,8 @@ func (m *PB_PageParam_GetCommentsPage) ToFlat() *PB_PageParam_GetCommentsPage_Fl
 func (m *PB_PageParam_GetCommentsPage_Flat) ToPB() *PB_PageParam_GetCommentsPage {
 	r := &PB_PageParam_GetCommentsPage{
 		PostId: int64(m.PostId),
+		Limit:  int64(m.Limit),
+		Last:   int64(m.Last),
 	}
 	return r
 }
@@ -1040,6 +1045,8 @@ func (m *PB_PageParam_GetCommentsPage_Flat) ToPB() *PB_PageParam_GetCommentsPage
 //folding
 var PB_PageParam_GetCommentsPage__FOlD = &PB_PageParam_GetCommentsPage{
 	PostId: 0,
+	Limit:  0,
+	Last:   0,
 }
 
 type PB_PageResponse_GetCommentsPage_Flat struct {
@@ -1063,23 +1070,33 @@ func (m *PB_PageResponse_GetCommentsPage_Flat) ToPB() *PB_PageResponse_GetCommen
 var PB_PageResponse_GetCommentsPage__FOlD = &PB_PageResponse_GetCommentsPage{}
 
 type PB_PageParam_GetHomePage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetHomePage) ToFlat() *PB_PageParam_GetHomePage_Flat {
-	r := &PB_PageParam_GetHomePage_Flat{}
+	r := &PB_PageParam_GetHomePage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetHomePage_Flat) ToPB() *PB_PageParam_GetHomePage {
-	r := &PB_PageParam_GetHomePage{}
+	r := &PB_PageParam_GetHomePage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetHomePage__FOlD = &PB_PageParam_GetHomePage{}
+var PB_PageParam_GetHomePage__FOlD = &PB_PageParam_GetHomePage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetHomePage_Flat struct {
 	Extra        PB_ResponseExtra
@@ -1140,13 +1157,16 @@ var PB_PageResponse_GetProfilePage__FOlD = &PB_PageResponse_GetProfilePage{}
 
 type PB_PageParam_GetLikesPage_Flat struct {
 	PostId int
-	Pager  PB_Pager
+	Limit  int
+	Last   int
 }
 
 //ToPB
 func (m *PB_PageParam_GetLikesPage) ToFlat() *PB_PageParam_GetLikesPage_Flat {
 	r := &PB_PageParam_GetLikesPage_Flat{
 		PostId: int(m.PostId),
+		Limit:  int(m.Limit),
+		Last:   int(m.Last),
 	}
 	return r
 }
@@ -1155,6 +1175,8 @@ func (m *PB_PageParam_GetLikesPage) ToFlat() *PB_PageParam_GetLikesPage_Flat {
 func (m *PB_PageParam_GetLikesPage_Flat) ToPB() *PB_PageParam_GetLikesPage {
 	r := &PB_PageParam_GetLikesPage{
 		PostId: int64(m.PostId),
+		Limit:  int64(m.Limit),
+		Last:   int64(m.Last),
 	}
 	return r
 }
@@ -1162,11 +1184,13 @@ func (m *PB_PageParam_GetLikesPage_Flat) ToPB() *PB_PageParam_GetLikesPage {
 //folding
 var PB_PageParam_GetLikesPage__FOlD = &PB_PageParam_GetLikesPage{
 	PostId: 0,
+	Limit:  0,
+	Last:   0,
 }
 
 type PB_PageResponse_GetLikesPage_Flat struct {
-	Extra        PB_ResponseExtra
-	UserViewList []PB_UserView
+	Extra              PB_ResponseExtra
+	UserViewRowifyList []PB_UserViewRowify
 }
 
 //ToPB
@@ -1186,13 +1210,16 @@ var PB_PageResponse_GetLikesPage__FOlD = &PB_PageResponse_GetLikesPage{}
 
 type PB_PageParam_GetFollowersPage_Flat struct {
 	UserId int
-	Pager  PB_Pager
+	Limit  int
+	Last   int
 }
 
 //ToPB
 func (m *PB_PageParam_GetFollowersPage) ToFlat() *PB_PageParam_GetFollowersPage_Flat {
 	r := &PB_PageParam_GetFollowersPage_Flat{
 		UserId: int(m.UserId),
+		Limit:  int(m.Limit),
+		Last:   int(m.Last),
 	}
 	return r
 }
@@ -1201,6 +1228,8 @@ func (m *PB_PageParam_GetFollowersPage) ToFlat() *PB_PageParam_GetFollowersPage_
 func (m *PB_PageParam_GetFollowersPage_Flat) ToPB() *PB_PageParam_GetFollowersPage {
 	r := &PB_PageParam_GetFollowersPage{
 		UserId: int64(m.UserId),
+		Limit:  int64(m.Limit),
+		Last:   int64(m.Last),
 	}
 	return r
 }
@@ -1208,11 +1237,13 @@ func (m *PB_PageParam_GetFollowersPage_Flat) ToPB() *PB_PageParam_GetFollowersPa
 //folding
 var PB_PageParam_GetFollowersPage__FOlD = &PB_PageParam_GetFollowersPage{
 	UserId: 0,
+	Limit:  0,
+	Last:   0,
 }
 
 type PB_PageResponse_GetFollowersPage_Flat struct {
-	Extra        PB_ResponseExtra
-	UserViewList []PB_UserView
+	Extra              PB_ResponseExtra
+	UserViewRowifyList []PB_UserViewRowify
 }
 
 //ToPB
@@ -1232,13 +1263,16 @@ var PB_PageResponse_GetFollowersPage__FOlD = &PB_PageResponse_GetFollowersPage{}
 
 type PB_PageParam_GetFollowingsPage_Flat struct {
 	UserId int
-	Pager  PB_Pager
+	Limit  int
+	Last   int
 }
 
 //ToPB
 func (m *PB_PageParam_GetFollowingsPage) ToFlat() *PB_PageParam_GetFollowingsPage_Flat {
 	r := &PB_PageParam_GetFollowingsPage_Flat{
 		UserId: int(m.UserId),
+		Limit:  int(m.Limit),
+		Last:   int(m.Last),
 	}
 	return r
 }
@@ -1247,6 +1281,8 @@ func (m *PB_PageParam_GetFollowingsPage) ToFlat() *PB_PageParam_GetFollowingsPag
 func (m *PB_PageParam_GetFollowingsPage_Flat) ToPB() *PB_PageParam_GetFollowingsPage {
 	r := &PB_PageParam_GetFollowingsPage{
 		UserId: int64(m.UserId),
+		Limit:  int64(m.Limit),
+		Last:   int64(m.Last),
 	}
 	return r
 }
@@ -1254,11 +1290,13 @@ func (m *PB_PageParam_GetFollowingsPage_Flat) ToPB() *PB_PageParam_GetFollowings
 //folding
 var PB_PageParam_GetFollowingsPage__FOlD = &PB_PageParam_GetFollowingsPage{
 	UserId: 0,
+	Limit:  0,
+	Last:   0,
 }
 
 type PB_PageResponse_GetFollowingsPage_Flat struct {
-	Extra        PB_ResponseExtra
-	UserViewList []PB_UserView
+	Extra              PB_ResponseExtra
+	UserViewRowifyList []PB_UserViewRowify
 }
 
 //ToPB
@@ -1277,23 +1315,33 @@ func (m *PB_PageResponse_GetFollowingsPage_Flat) ToPB() *PB_PageResponse_GetFoll
 var PB_PageResponse_GetFollowingsPage__FOlD = &PB_PageResponse_GetFollowingsPage{}
 
 type PB_PageParam_GetNotifiesPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetNotifiesPage) ToFlat() *PB_PageParam_GetNotifiesPage_Flat {
-	r := &PB_PageParam_GetNotifiesPage_Flat{}
+	r := &PB_PageParam_GetNotifiesPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetNotifiesPage_Flat) ToPB() *PB_PageParam_GetNotifiesPage {
-	r := &PB_PageParam_GetNotifiesPage{}
+	r := &PB_PageParam_GetNotifiesPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetNotifiesPage__FOlD = &PB_PageParam_GetNotifiesPage{}
+var PB_PageParam_GetNotifiesPage__FOlD = &PB_PageParam_GetNotifiesPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetNotifiesPage_Flat struct {
 	Extra          PB_ResponseExtra
@@ -1323,23 +1371,33 @@ func (m *PB_PageResponse_GetNotifiesPage_Flat) ToPB() *PB_PageResponse_GetNotifi
 var PB_PageResponse_GetNotifiesPage__FOlD = &PB_PageResponse_GetNotifiesPage{}
 
 type PB_PageParam_GetUserActionsPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetUserActionsPage) ToFlat() *PB_PageParam_GetUserActionsPage_Flat {
-	r := &PB_PageParam_GetUserActionsPage_Flat{}
+	r := &PB_PageParam_GetUserActionsPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetUserActionsPage_Flat) ToPB() *PB_PageParam_GetUserActionsPage {
-	r := &PB_PageParam_GetUserActionsPage{}
+	r := &PB_PageParam_GetUserActionsPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetUserActionsPage__FOlD = &PB_PageParam_GetUserActionsPage{}
+var PB_PageParam_GetUserActionsPage__FOlD = &PB_PageParam_GetUserActionsPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetUserActionsPage_Flat struct {
 	Extra          PB_ResponseExtra
@@ -1362,23 +1420,33 @@ func (m *PB_PageResponse_GetUserActionsPage_Flat) ToPB() *PB_PageResponse_GetUse
 var PB_PageResponse_GetUserActionsPage__FOlD = &PB_PageResponse_GetUserActionsPage{}
 
 type PB_PageParam_GetSuggestedPostsPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedPostsPage) ToFlat() *PB_PageParam_GetSuggestedPostsPage_Flat {
-	r := &PB_PageParam_GetSuggestedPostsPage_Flat{}
+	r := &PB_PageParam_GetSuggestedPostsPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedPostsPage_Flat) ToPB() *PB_PageParam_GetSuggestedPostsPage {
-	r := &PB_PageParam_GetSuggestedPostsPage{}
+	r := &PB_PageParam_GetSuggestedPostsPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetSuggestedPostsPage__FOlD = &PB_PageParam_GetSuggestedPostsPage{}
+var PB_PageParam_GetSuggestedPostsPage__FOlD = &PB_PageParam_GetSuggestedPostsPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetSuggestedPostsPage_Flat struct {
 	Extra        PB_ResponseExtra
@@ -1401,23 +1469,33 @@ func (m *PB_PageResponse_GetSuggestedPostsPage_Flat) ToPB() *PB_PageResponse_Get
 var PB_PageResponse_GetSuggestedPostsPage__FOlD = &PB_PageResponse_GetSuggestedPostsPage{}
 
 type PB_PageParam_GetSuggestedUsrsPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedUsrsPage) ToFlat() *PB_PageParam_GetSuggestedUsrsPage_Flat {
-	r := &PB_PageParam_GetSuggestedUsrsPage_Flat{}
+	r := &PB_PageParam_GetSuggestedUsrsPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedUsrsPage_Flat) ToPB() *PB_PageParam_GetSuggestedUsrsPage {
-	r := &PB_PageParam_GetSuggestedUsrsPage{}
+	r := &PB_PageParam_GetSuggestedUsrsPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetSuggestedUsrsPage__FOlD = &PB_PageParam_GetSuggestedUsrsPage{}
+var PB_PageParam_GetSuggestedUsrsPage__FOlD = &PB_PageParam_GetSuggestedUsrsPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetSuggestedUsrsPage_Flat struct {
 	Extra        PB_ResponseExtra
@@ -1440,23 +1518,33 @@ func (m *PB_PageResponse_GetSuggestedUsrsPage_Flat) ToPB() *PB_PageResponse_GetS
 var PB_PageResponse_GetSuggestedUsrsPage__FOlD = &PB_PageResponse_GetSuggestedUsrsPage{}
 
 type PB_PageParam_GetSuggestedTagsPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedTagsPage) ToFlat() *PB_PageParam_GetSuggestedTagsPage_Flat {
-	r := &PB_PageParam_GetSuggestedTagsPage_Flat{}
+	r := &PB_PageParam_GetSuggestedTagsPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedTagsPage_Flat) ToPB() *PB_PageParam_GetSuggestedTagsPage {
-	r := &PB_PageParam_GetSuggestedTagsPage{}
+	r := &PB_PageParam_GetSuggestedTagsPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{}
+var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetSuggestedTagsPage_Flat struct {
 	Extra PB_ResponseExtra
@@ -1478,23 +1566,33 @@ func (m *PB_PageResponse_GetSuggestedTagsPage_Flat) ToPB() *PB_PageResponse_GetS
 var PB_PageResponse_GetSuggestedTagsPage__FOlD = &PB_PageResponse_GetSuggestedTagsPage{}
 
 type PB_PageParam_GetLastPostsPage_Flat struct {
-	Pager PB_Pager
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetLastPostsPage) ToFlat() *PB_PageParam_GetLastPostsPage_Flat {
-	r := &PB_PageParam_GetLastPostsPage_Flat{}
+	r := &PB_PageParam_GetLastPostsPage_Flat{
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetLastPostsPage_Flat) ToPB() *PB_PageParam_GetLastPostsPage {
-	r := &PB_PageParam_GetLastPostsPage{}
+	r := &PB_PageParam_GetLastPostsPage{
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetLastPostsPage__FOlD = &PB_PageParam_GetLastPostsPage{}
+var PB_PageParam_GetLastPostsPage__FOlD = &PB_PageParam_GetLastPostsPage{
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetLastPostsPage_Flat struct {
 	Extra        PB_ResponseExtra
@@ -1517,23 +1615,37 @@ func (m *PB_PageResponse_GetLastPostsPage_Flat) ToPB() *PB_PageResponse_GetLastP
 var PB_PageResponse_GetLastPostsPage__FOlD = &PB_PageResponse_GetLastPostsPage{}
 
 type PB_PageParam_GetTagPage_Flat struct {
-	Pager PB_Pager
+	Tag   string
+	Limit int
+	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetTagPage) ToFlat() *PB_PageParam_GetTagPage_Flat {
-	r := &PB_PageParam_GetTagPage_Flat{}
+	r := &PB_PageParam_GetTagPage_Flat{
+		Tag:   m.Tag,
+		Limit: int(m.Limit),
+		Last:  int(m.Last),
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetTagPage_Flat) ToPB() *PB_PageParam_GetTagPage {
-	r := &PB_PageParam_GetTagPage{}
+	r := &PB_PageParam_GetTagPage{
+		Tag:   m.Tag,
+		Limit: int64(m.Limit),
+		Last:  int64(m.Last),
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_GetTagPage__FOlD = &PB_PageParam_GetTagPage{}
+var PB_PageParam_GetTagPage__FOlD = &PB_PageParam_GetTagPage{
+	Tag:   "",
+	Limit: 0,
+	Last:  0,
+}
 
 type PB_PageResponse_GetTagPage_Flat struct {
 	Extra        PB_ResponseExtra
@@ -2759,7 +2871,7 @@ func (m *PB_Comment_Flat) ToPB() *PB_Comment {
 	r := &PB_Comment{
 		CommentId:   int64(m.CommentId),
 		UserId:      int32(m.UserId),
-		PostId:      int32(m.PostId),
+		PostId:      int64(m.PostId),
 		Text:        m.Text,
 		LikesCount:  int32(m.LikesCount),
 		CreatedTime: int32(m.CreatedTime),
@@ -2942,39 +3054,6 @@ var PB_DirectToMessage__FOlD = &PB_DirectToMessage{
 	SourceEnumId: 0,
 }
 
-type PB_Feed_Flat struct {
-	UserId int
-	PostId int
-	FeedId int
-}
-
-//ToPB
-func (m *PB_Feed) ToFlat() *PB_Feed_Flat {
-	r := &PB_Feed_Flat{
-		UserId: int(m.UserId),
-		PostId: int(m.PostId),
-		FeedId: int(m.FeedId),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_Feed_Flat) ToPB() *PB_Feed {
-	r := &PB_Feed{
-		UserId: int64(m.UserId),
-		PostId: int64(m.PostId),
-		FeedId: int32(m.FeedId),
-	}
-	return r
-}
-
-//folding
-var PB_Feed__FOlD = &PB_Feed{
-	UserId: 0,
-	PostId: 0,
-	FeedId: 0,
-}
-
 type PB_FollowingList_Flat struct {
 	Id          int
 	UserId      int
@@ -3033,8 +3112,7 @@ type PB_FollowingListMember_Flat struct {
 	ListId         int
 	UserId         int
 	FollowedUserId int
-	FollowType     int
-	UpdatedTimeMs  int
+	CreatedTime    int
 }
 
 //ToPB
@@ -3044,8 +3122,7 @@ func (m *PB_FollowingListMember) ToFlat() *PB_FollowingListMember_Flat {
 		ListId:         int(m.ListId),
 		UserId:         int(m.UserId),
 		FollowedUserId: int(m.FollowedUserId),
-		FollowType:     int(m.FollowType),
-		UpdatedTimeMs:  int(m.UpdatedTimeMs),
+		CreatedTime:    int(m.CreatedTime),
 	}
 	return r
 }
@@ -3057,8 +3134,7 @@ func (m *PB_FollowingListMember_Flat) ToPB() *PB_FollowingListMember {
 		ListId:         int32(m.ListId),
 		UserId:         int32(m.UserId),
 		FollowedUserId: int32(m.FollowedUserId),
-		FollowType:     int32(m.FollowType),
-		UpdatedTimeMs:  int64(m.UpdatedTimeMs),
+		CreatedTime:    int32(m.CreatedTime),
 	}
 	return r
 }
@@ -3069,8 +3145,7 @@ var PB_FollowingListMember__FOlD = &PB_FollowingListMember{
 	ListId:         0,
 	UserId:         0,
 	FollowedUserId: 0,
-	FollowType:     0,
-	UpdatedTimeMs:  0,
+	CreatedTime:    0,
 }
 
 type PB_FollowingListMemberHistory_Flat struct {
@@ -4752,7 +4827,7 @@ func (m *PB_CommentView_Flat) ToPB() *PB_CommentView {
 	r := &PB_CommentView{
 		CommentId:   int64(m.CommentId),
 		UserId:      int32(m.UserId),
-		PostId:      int32(m.PostId),
+		PostId:      int64(m.PostId),
 		Text:        m.Text,
 		LikesCount:  int32(m.LikesCount),
 		CreatedTime: int32(m.CreatedTime),
@@ -4879,6 +4954,36 @@ func (m *PB_TopProfileView_Flat) ToPB() *PB_TopProfileView {
 
 //folding
 var PB_TopProfileView__FOlD = &PB_TopProfileView{}
+
+type PB_UserViewRowify_Flat struct {
+	Id          int
+	CreatedTime int
+	UserView    PB_UserView
+}
+
+//ToPB
+func (m *PB_UserViewRowify) ToFlat() *PB_UserViewRowify_Flat {
+	r := &PB_UserViewRowify_Flat{
+		Id:          int(m.Id),
+		CreatedTime: int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UserViewRowify_Flat) ToPB() *PB_UserViewRowify {
+	r := &PB_UserViewRowify{
+		Id:          int64(m.Id),
+		CreatedTime: int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
+	Id:          0,
+	CreatedTime: 0,
+}
 
 type PB_ChatView_Flat struct {
 	ChatKey              string
@@ -5554,7 +5659,8 @@ return r
 func(m *PB_PageParam_GetCommentsPage)ToFlat() *PB_PageParam_GetCommentsPage_Flat {
 r := &PB_PageParam_GetCommentsPage_Flat{
     PostId:  int(m.PostId) ,
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5569,7 +5675,8 @@ return r
 
 func(m *PB_PageParam_GetHomePage)ToFlat() *PB_PageParam_GetHomePage_Flat {
 r := &PB_PageParam_GetHomePage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5598,7 +5705,8 @@ return r
 func(m *PB_PageParam_GetLikesPage)ToFlat() *PB_PageParam_GetLikesPage_Flat {
 r := &PB_PageParam_GetLikesPage_Flat{
     PostId:  int(m.PostId) ,
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5614,7 +5722,8 @@ return r
 func(m *PB_PageParam_GetFollowersPage)ToFlat() *PB_PageParam_GetFollowersPage_Flat {
 r := &PB_PageParam_GetFollowersPage_Flat{
     UserId:  int(m.UserId) ,
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5630,7 +5739,8 @@ return r
 func(m *PB_PageParam_GetFollowingsPage)ToFlat() *PB_PageParam_GetFollowingsPage_Flat {
 r := &PB_PageParam_GetFollowingsPage_Flat{
     UserId:  int(m.UserId) ,
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5645,7 +5755,8 @@ return r
 
 func(m *PB_PageParam_GetNotifiesPage)ToFlat() *PB_PageParam_GetNotifiesPage_Flat {
 r := &PB_PageParam_GetNotifiesPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5661,7 +5772,8 @@ return r
 
 func(m *PB_PageParam_GetUserActionsPage)ToFlat() *PB_PageParam_GetUserActionsPage_Flat {
 r := &PB_PageParam_GetUserActionsPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5676,7 +5788,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedPostsPage)ToFlat() *PB_PageParam_GetSuggestedPostsPage_Flat {
 r := &PB_PageParam_GetSuggestedPostsPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5691,7 +5804,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedUsrsPage)ToFlat() *PB_PageParam_GetSuggestedUsrsPage_Flat {
 r := &PB_PageParam_GetSuggestedUsrsPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5706,7 +5820,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedTagsPage)ToFlat() *PB_PageParam_GetSuggestedTagsPage_Flat {
 r := &PB_PageParam_GetSuggestedTagsPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5720,7 +5835,8 @@ return r
 
 func(m *PB_PageParam_GetLastPostsPage)ToFlat() *PB_PageParam_GetLastPostsPage_Flat {
 r := &PB_PageParam_GetLastPostsPage_Flat{
-
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -5735,7 +5851,9 @@ return r
 
 func(m *PB_PageParam_GetTagPage)ToFlat() *PB_PageParam_GetTagPage_Flat {
 r := &PB_PageParam_GetTagPage_Flat{
-
+    Tag:  m.Tag ,
+    Limit:  int(m.Limit) ,
+    Last:  int(m.Last) ,
 }
 return r
 }
@@ -6157,15 +6275,6 @@ r := &PB_DirectToMessage_Flat{
 return r
 }
 
-func(m *PB_Feed)ToFlat() *PB_Feed_Flat {
-r := &PB_Feed_Flat{
-    UserId:  int(m.UserId) ,
-    PostId:  int(m.PostId) ,
-    FeedId:  int(m.FeedId) ,
-}
-return r
-}
-
 func(m *PB_FollowingList)ToFlat() *PB_FollowingList_Flat {
 r := &PB_FollowingList_Flat{
     Id:  int(m.Id) ,
@@ -6186,8 +6295,7 @@ r := &PB_FollowingListMember_Flat{
     ListId:  int(m.ListId) ,
     UserId:  int(m.UserId) ,
     FollowedUserId:  int(m.FollowedUserId) ,
-    FollowType:  int(m.FollowType) ,
-    UpdatedTimeMs:  int(m.UpdatedTimeMs) ,
+    CreatedTime:  int(m.CreatedTime) ,
 }
 return r
 }
@@ -6679,6 +6787,15 @@ r := &PB_TopProfileView_Flat{
 return r
 }
 
+func(m *PB_UserViewRowify)ToFlat() *PB_UserViewRowify_Flat {
+r := &PB_UserViewRowify_Flat{
+    Id:  int(m.Id) ,
+    CreatedTime:  int(m.CreatedTime) ,
+
+}
+return r
+}
+
 func(m *PB_ChatView)ToFlat() *PB_ChatView_Flat {
 r := &PB_ChatView_Flat{
     ChatKey:  m.ChatKey ,
@@ -7078,7 +7195,8 @@ return r
 func(m *PB_PageParam_GetCommentsPage_Flat)ToPB() *PB_PageParam_GetCommentsPage {
 r := &PB_PageParam_GetCommentsPage{
     PostId:  int64(m.PostId) ,
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7093,7 +7211,8 @@ return r
 
 func(m *PB_PageParam_GetHomePage_Flat)ToPB() *PB_PageParam_GetHomePage {
 r := &PB_PageParam_GetHomePage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7122,7 +7241,8 @@ return r
 func(m *PB_PageParam_GetLikesPage_Flat)ToPB() *PB_PageParam_GetLikesPage {
 r := &PB_PageParam_GetLikesPage{
     PostId:  int64(m.PostId) ,
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7138,7 +7258,8 @@ return r
 func(m *PB_PageParam_GetFollowersPage_Flat)ToPB() *PB_PageParam_GetFollowersPage {
 r := &PB_PageParam_GetFollowersPage{
     UserId:  int64(m.UserId) ,
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7154,7 +7275,8 @@ return r
 func(m *PB_PageParam_GetFollowingsPage_Flat)ToPB() *PB_PageParam_GetFollowingsPage {
 r := &PB_PageParam_GetFollowingsPage{
     UserId:  int64(m.UserId) ,
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7169,7 +7291,8 @@ return r
 
 func(m *PB_PageParam_GetNotifiesPage_Flat)ToPB() *PB_PageParam_GetNotifiesPage {
 r := &PB_PageParam_GetNotifiesPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7185,7 +7308,8 @@ return r
 
 func(m *PB_PageParam_GetUserActionsPage_Flat)ToPB() *PB_PageParam_GetUserActionsPage {
 r := &PB_PageParam_GetUserActionsPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7200,7 +7324,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedPostsPage_Flat)ToPB() *PB_PageParam_GetSuggestedPostsPage {
 r := &PB_PageParam_GetSuggestedPostsPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7215,7 +7340,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedUsrsPage_Flat)ToPB() *PB_PageParam_GetSuggestedUsrsPage {
 r := &PB_PageParam_GetSuggestedUsrsPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7230,7 +7356,8 @@ return r
 
 func(m *PB_PageParam_GetSuggestedTagsPage_Flat)ToPB() *PB_PageParam_GetSuggestedTagsPage {
 r := &PB_PageParam_GetSuggestedTagsPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7244,7 +7371,8 @@ return r
 
 func(m *PB_PageParam_GetLastPostsPage_Flat)ToPB() *PB_PageParam_GetLastPostsPage {
 r := &PB_PageParam_GetLastPostsPage{
-
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7259,7 +7387,9 @@ return r
 
 func(m *PB_PageParam_GetTagPage_Flat)ToPB() *PB_PageParam_GetTagPage {
 r := &PB_PageParam_GetTagPage{
-
+    Tag:  m.Tag ,
+    Limit:  int64(m.Limit) ,
+    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7629,7 +7759,7 @@ func(m *PB_Comment_Flat)ToPB() *PB_Comment {
 r := &PB_Comment{
     CommentId:  int64(m.CommentId) ,
     UserId:  int32(m.UserId) ,
-    PostId:  int32(m.PostId) ,
+    PostId:  int64(m.PostId) ,
     Text:  m.Text ,
     LikesCount:  int32(m.LikesCount) ,
     CreatedTime:  int32(m.CreatedTime) ,
@@ -7681,15 +7811,6 @@ r := &PB_DirectToMessage{
 return r
 }
 
-func(m *PB_Feed_Flat)ToPB() *PB_Feed {
-r := &PB_Feed{
-    UserId:  int64(m.UserId) ,
-    PostId:  int64(m.PostId) ,
-    FeedId:  int32(m.FeedId) ,
-}
-return r
-}
-
 func(m *PB_FollowingList_Flat)ToPB() *PB_FollowingList {
 r := &PB_FollowingList{
     Id:  int32(m.Id) ,
@@ -7710,8 +7831,7 @@ r := &PB_FollowingListMember{
     ListId:  int32(m.ListId) ,
     UserId:  int32(m.UserId) ,
     FollowedUserId:  int32(m.FollowedUserId) ,
-    FollowType:  int32(m.FollowType) ,
-    UpdatedTimeMs:  int64(m.UpdatedTimeMs) ,
+    CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
 }
@@ -8162,7 +8282,7 @@ func(m *PB_CommentView_Flat)ToPB() *PB_CommentView {
 r := &PB_CommentView{
     CommentId:  int64(m.CommentId) ,
     UserId:  int32(m.UserId) ,
-    PostId:  int32(m.PostId) ,
+    PostId:  int64(m.PostId) ,
     Text:  m.Text ,
     LikesCount:  int32(m.LikesCount) ,
     CreatedTime:  int32(m.CreatedTime) ,
@@ -8198,6 +8318,15 @@ return r
 
 func(m *PB_TopProfileView_Flat)ToPB() *PB_TopProfileView {
 r := &PB_TopProfileView{
+
+}
+return r
+}
+
+func(m *PB_UserViewRowify_Flat)ToPB() *PB_UserViewRowify {
+r := &PB_UserViewRowify{
+    Id:  int64(m.Id) ,
+    CreatedTime:  int32(m.CreatedTime) ,
 
 }
 return r
@@ -8527,7 +8656,8 @@ var PB_OtherResponse_Echo__FOlD = &PB_OtherResponse_Echo{
 
 var PB_PageParam_GetCommentsPage__FOlD = &PB_PageParam_GetCommentsPage{
         PostId:  0 ,
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8538,7 +8668,8 @@ var PB_PageResponse_GetCommentsPage__FOlD = &PB_PageResponse_GetCommentsPage{
 
 
 var PB_PageParam_GetHomePage__FOlD = &PB_PageParam_GetHomePage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8559,7 +8690,8 @@ var PB_PageResponse_GetProfilePage__FOlD = &PB_PageResponse_GetProfilePage{
 
 var PB_PageParam_GetLikesPage__FOlD = &PB_PageParam_GetLikesPage{
         PostId:  0 ,
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8571,7 +8703,8 @@ var PB_PageResponse_GetLikesPage__FOlD = &PB_PageResponse_GetLikesPage{
 
 var PB_PageParam_GetFollowersPage__FOlD = &PB_PageParam_GetFollowersPage{
         UserId:  0 ,
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8583,7 +8716,8 @@ var PB_PageResponse_GetFollowersPage__FOlD = &PB_PageResponse_GetFollowersPage{
 
 var PB_PageParam_GetFollowingsPage__FOlD = &PB_PageParam_GetFollowingsPage{
         UserId:  0 ,
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8594,7 +8728,8 @@ var PB_PageResponse_GetFollowingsPage__FOlD = &PB_PageResponse_GetFollowingsPage
 
 
 var PB_PageParam_GetNotifiesPage__FOlD = &PB_PageParam_GetNotifiesPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8606,7 +8741,8 @@ var PB_PageResponse_GetNotifiesPage__FOlD = &PB_PageResponse_GetNotifiesPage{
 
 
 var PB_PageParam_GetUserActionsPage__FOlD = &PB_PageParam_GetUserActionsPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8617,7 +8753,8 @@ var PB_PageResponse_GetUserActionsPage__FOlD = &PB_PageResponse_GetUserActionsPa
 
 
 var PB_PageParam_GetSuggestedPostsPage__FOlD = &PB_PageParam_GetSuggestedPostsPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8628,7 +8765,8 @@ var PB_PageResponse_GetSuggestedPostsPage__FOlD = &PB_PageResponse_GetSuggestedP
 
 
 var PB_PageParam_GetSuggestedUsrsPage__FOlD = &PB_PageParam_GetSuggestedUsrsPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8639,7 +8777,8 @@ var PB_PageResponse_GetSuggestedUsrsPage__FOlD = &PB_PageResponse_GetSuggestedUs
 
 
 var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8649,7 +8788,8 @@ var PB_PageResponse_GetSuggestedTagsPage__FOlD = &PB_PageResponse_GetSuggestedTa
 
 
 var PB_PageParam_GetLastPostsPage__FOlD = &PB_PageParam_GetLastPostsPage{
-
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8660,7 +8800,9 @@ var PB_PageResponse_GetLastPostsPage__FOlD = &PB_PageResponse_GetLastPostsPage{
 
 
 var PB_PageParam_GetTagPage__FOlD = &PB_PageParam_GetTagPage{
-
+        Tag:  "" ,
+        Limit:  0 ,
+        Last:  0 ,
 }
 
 
@@ -8979,13 +9121,6 @@ var PB_DirectToMessage__FOlD = &PB_DirectToMessage{
 }
 
 
-var PB_Feed__FOlD = &PB_Feed{
-        UserId:  0 ,
-        PostId:  0 ,
-        FeedId:  0 ,
-}
-
-
 var PB_FollowingList__FOlD = &PB_FollowingList{
         Id:  0 ,
         UserId:  0 ,
@@ -9003,8 +9138,7 @@ var PB_FollowingListMember__FOlD = &PB_FollowingListMember{
         ListId:  0 ,
         UserId:  0 ,
         FollowedUserId:  0 ,
-        FollowType:  0 ,
-        UpdatedTimeMs:  0 ,
+        CreatedTime:  0 ,
 }
 
 
@@ -9431,6 +9565,13 @@ var PB_UserView__FOlD = &PB_UserView{
 
 
 var PB_TopProfileView__FOlD = &PB_TopProfileView{
+
+}
+
+
+var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
+        Id:  0 ,
+        CreatedTime:  0 ,
 
 }
 
