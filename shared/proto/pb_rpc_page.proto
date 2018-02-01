@@ -125,7 +125,7 @@ message PB_PageParam_GetLastPostsPage {
 }
 message PB_PageResponse_GetLastPostsPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_UserView UserViewList = 2;
+    repeated PB_PostView PostViewList = 2;
 }
 //
 message PB_PageParam_GetTagPage {

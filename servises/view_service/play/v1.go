@@ -17,7 +17,7 @@ func main() {
 	//DB.Exec("SET NAMES 'utf8mb4';")
 	helper.NoErr(err)
 	base.DB.MapperFunc(func(s string) string { return s })
-	res := view_service.Action_GetLastsViews(6, 1, 100, 0)
+	res := view_service.Action_GetLastsViews(6, 100, 0)
 	helper.PertyPrint(res)
 
 	r := memcache_service.DoesUserFollows(6, 753)

@@ -7,19 +7,17 @@ import (
 )
 
 //page >= 1
-func Action_GetLastsViews(MeId, Page, Limit, Last int) []x.PB_ActionView {
+func Action_GetLastsViews(MeId, Limit, Last int) []*x.PB_ActionView {
 	uids := memcache_service.GetUserFollowsSlice(MeId)
 
 	selector := x.NewAction_Selector().ActorUserId_In(uids).OrderBy_ActionId_Desc().Limit(Limit)
 	if Last > 0 {
 		selector.ActionId_LT(Last)
-	} else if Page >= 1 {
-		selector.Offset((Page - 1) * Limit)
-	}
+	} 
 
 	nots, err := selector.GetRows(base.DB)
 
-	res := make([]x.PB_ActionView, 0, len(nots))
+	res := make([]*x.PB_ActionView, 0, len(nots))
 	if err != nil {
 		return res
 	}
@@ -28,7 +26,7 @@ func Action_GetLastsViews(MeId, Page, Limit, Last int) []x.PB_ActionView {
 	action_fillCaches(nots)
 
 	for _, act := range nots {
-		av := x.PB_ActionView{
+		av := &x.PB_ActionView{
 			ActionId:       int64(act.ActionId),
 			ActorUserId:    int32(act.ActorUserId),
 			ActionTypeEnum: int32(act.ActionTypeEnum),

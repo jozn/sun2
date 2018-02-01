@@ -1596,7 +1596,7 @@ var PB_PageParam_GetLastPostsPage__FOlD = &PB_PageParam_GetLastPostsPage{
 
 type PB_PageResponse_GetLastPostsPage_Flat struct {
 	Extra        PB_ResponseExtra
-	UserViewList []PB_UserView
+	PostViewList []PB_PostView
 }
 
 //ToPB

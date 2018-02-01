@@ -1376,25 +1376,25 @@ public class PBFlatTypes {
 
 	public class PB_PageResponse_GetLastPostsPage {
 	   public PB_ResponseExtra Extra;
-	   public PB_UserView UserViewList;
+	   public PB_PostView PostViewList;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PageResponse_GetLastPostsPage t = new PBFlatTypes.PB_PageResponse_GetLastPostsPage();
     t.setExtra();
-    t.setUserViewList();
+    t.setPostViewList();
 	*/
 
 	/*
 	PBFlatTypes.PB_PageResponse_GetLastPostsPage t = new PBFlatTypes.PB_PageResponse_GetLastPostsPage();
 	t.Extra = ;
-	t.UserViewList = ;
+	t.PostViewList = ;
 	*/
 
 	/*
 	PB_PageResponse_GetLastPostsPage t = new PB_PageResponse_GetLastPostsPage();
 	t.Extra = m.getExtra() ;
-	t.UserViewList = m.getUserViewList() ;
+	t.PostViewList = m.getPostViewList() ;
 	*/
 
 	public class PB_PageParam_GetTagPage {
