@@ -1468,14 +1468,14 @@ func (m *PB_PageResponse_GetSuggestedPostsPage_Flat) ToPB() *PB_PageResponse_Get
 //folding
 var PB_PageResponse_GetSuggestedPostsPage__FOlD = &PB_PageResponse_GetSuggestedPostsPage{}
 
-type PB_PageParam_GetSuggestedUsrsPage_Flat struct {
+type PB_PageParam_GetSuggestedUsersPage_Flat struct {
 	Limit int
 	Last  int
 }
 
 //ToPB
-func (m *PB_PageParam_GetSuggestedUsrsPage) ToFlat() *PB_PageParam_GetSuggestedUsrsPage_Flat {
-	r := &PB_PageParam_GetSuggestedUsrsPage_Flat{
+func (m *PB_PageParam_GetSuggestedUsersPage) ToFlat() *PB_PageParam_GetSuggestedUsersPage_Flat {
+	r := &PB_PageParam_GetSuggestedUsersPage_Flat{
 		Limit: int(m.Limit),
 		Last:  int(m.Last),
 	}
@@ -1483,8 +1483,8 @@ func (m *PB_PageParam_GetSuggestedUsrsPage) ToFlat() *PB_PageParam_GetSuggestedU
 }
 
 //ToPB
-func (m *PB_PageParam_GetSuggestedUsrsPage_Flat) ToPB() *PB_PageParam_GetSuggestedUsrsPage {
-	r := &PB_PageParam_GetSuggestedUsrsPage{
+func (m *PB_PageParam_GetSuggestedUsersPage_Flat) ToPB() *PB_PageParam_GetSuggestedUsersPage {
+	r := &PB_PageParam_GetSuggestedUsersPage{
 		Limit: int64(m.Limit),
 		Last:  int64(m.Last),
 	}
@@ -1492,30 +1492,30 @@ func (m *PB_PageParam_GetSuggestedUsrsPage_Flat) ToPB() *PB_PageParam_GetSuggest
 }
 
 //folding
-var PB_PageParam_GetSuggestedUsrsPage__FOlD = &PB_PageParam_GetSuggestedUsrsPage{
+var PB_PageParam_GetSuggestedUsersPage__FOlD = &PB_PageParam_GetSuggestedUsersPage{
 	Limit: 0,
 	Last:  0,
 }
 
-type PB_PageResponse_GetSuggestedUsrsPage_Flat struct {
+type PB_PageResponse_GetSuggestedUsersPage_Flat struct {
 	Extra        PB_ResponseExtra
 	UserViewList []PB_UserView
 }
 
 //ToPB
-func (m *PB_PageResponse_GetSuggestedUsrsPage) ToFlat() *PB_PageResponse_GetSuggestedUsrsPage_Flat {
-	r := &PB_PageResponse_GetSuggestedUsrsPage_Flat{}
+func (m *PB_PageResponse_GetSuggestedUsersPage) ToFlat() *PB_PageResponse_GetSuggestedUsersPage_Flat {
+	r := &PB_PageResponse_GetSuggestedUsersPage_Flat{}
 	return r
 }
 
 //ToPB
-func (m *PB_PageResponse_GetSuggestedUsrsPage_Flat) ToPB() *PB_PageResponse_GetSuggestedUsrsPage {
-	r := &PB_PageResponse_GetSuggestedUsrsPage{}
+func (m *PB_PageResponse_GetSuggestedUsersPage_Flat) ToPB() *PB_PageResponse_GetSuggestedUsersPage {
+	r := &PB_PageResponse_GetSuggestedUsersPage{}
 	return r
 }
 
 //folding
-var PB_PageResponse_GetSuggestedUsrsPage__FOlD = &PB_PageResponse_GetSuggestedUsrsPage{}
+var PB_PageResponse_GetSuggestedUsersPage__FOlD = &PB_PageResponse_GetSuggestedUsersPage{}
 
 type PB_PageParam_GetSuggestedTagsPage_Flat struct {
 	Limit int
@@ -5802,16 +5802,16 @@ r := &PB_PageResponse_GetSuggestedPostsPage_Flat{
 return r
 }
 
-func(m *PB_PageParam_GetSuggestedUsrsPage)ToFlat() *PB_PageParam_GetSuggestedUsrsPage_Flat {
-r := &PB_PageParam_GetSuggestedUsrsPage_Flat{
+func(m *PB_PageParam_GetSuggestedUsersPage)ToFlat() *PB_PageParam_GetSuggestedUsersPage_Flat {
+r := &PB_PageParam_GetSuggestedUsersPage_Flat{
     Limit:  int(m.Limit) ,
     Last:  int(m.Last) ,
 }
 return r
 }
 
-func(m *PB_PageResponse_GetSuggestedUsrsPage)ToFlat() *PB_PageResponse_GetSuggestedUsrsPage_Flat {
-r := &PB_PageResponse_GetSuggestedUsrsPage_Flat{
+func(m *PB_PageResponse_GetSuggestedUsersPage)ToFlat() *PB_PageResponse_GetSuggestedUsersPage_Flat {
+r := &PB_PageResponse_GetSuggestedUsersPage_Flat{
 
 
 }
@@ -7338,16 +7338,16 @@ r := &PB_PageResponse_GetSuggestedPostsPage{
 return r
 }
 
-func(m *PB_PageParam_GetSuggestedUsrsPage_Flat)ToPB() *PB_PageParam_GetSuggestedUsrsPage {
-r := &PB_PageParam_GetSuggestedUsrsPage{
+func(m *PB_PageParam_GetSuggestedUsersPage_Flat)ToPB() *PB_PageParam_GetSuggestedUsersPage {
+r := &PB_PageParam_GetSuggestedUsersPage{
     Limit:  int64(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
 }
 
-func(m *PB_PageResponse_GetSuggestedUsrsPage_Flat)ToPB() *PB_PageResponse_GetSuggestedUsrsPage {
-r := &PB_PageResponse_GetSuggestedUsrsPage{
+func(m *PB_PageResponse_GetSuggestedUsersPage_Flat)ToPB() *PB_PageResponse_GetSuggestedUsersPage {
+r := &PB_PageResponse_GetSuggestedUsersPage{
 
 
 }
@@ -8764,13 +8764,13 @@ var PB_PageResponse_GetSuggestedPostsPage__FOlD = &PB_PageResponse_GetSuggestedP
 }
 
 
-var PB_PageParam_GetSuggestedUsrsPage__FOlD = &PB_PageParam_GetSuggestedUsrsPage{
+var PB_PageParam_GetSuggestedUsersPage__FOlD = &PB_PageParam_GetSuggestedUsersPage{
         Limit:  0 ,
         Last:  0 ,
 }
 
 
-var PB_PageResponse_GetSuggestedUsrsPage__FOlD = &PB_PageResponse_GetSuggestedUsrsPage{
+var PB_PageResponse_GetSuggestedUsersPage__FOlD = &PB_PageResponse_GetSuggestedUsersPage{
 
 
 }

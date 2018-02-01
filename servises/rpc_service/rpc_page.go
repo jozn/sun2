@@ -78,23 +78,6 @@ func (rpc_page) GetLikesPage(param *x.PB_PageParam_GetLikesPage, userParam x.RPC
 	res.UserViewRowifyList = r
 
 	return
-	/*pid := int(param.PostId)
-	if pid < 1 {
-		return
-	}
-
-	selector := x.NewLike_Selector().Select_UserId().PostId_Eq(pid)
-	if param.Last > 0 {
-		selector.Id_LT(int(param.Last))
-	}
-	UserIds, err := selector.OrderBy_Id_Desc().Limit(int(param.Limit)).GetIntSlice(base.DB)
-	if err != nil {
-		helper.DebugErr(err)
-		return
-	}
-	res.UserViewList = view_service.UserSliceViewAndMe(UserIds, userParam.GetUserId())*/
-
-	return
 }
 
 func (rpc_page) GetFollowersPage(param *x.PB_PageParam_GetFollowersPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetFollowersPage, err error) {
@@ -199,7 +182,7 @@ func (rpc_page) GetSuggestedPostsPage(param *x.PB_PageParam_GetSuggestedPostsPag
 	panic("implement me")
 }
 
-func (rpc_page) GetSuggestedUsrsPage(param *x.PB_PageParam_GetSuggestedUsrsPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetSuggestedUsrsPage, err error) {
+func (rpc_page) GetSuggestedUsersPage(param *x.PB_PageParam_GetSuggestedUsersPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetSuggestedUsersPage, err error) {
 	panic("implement me")
 }
 

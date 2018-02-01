@@ -106,7 +106,7 @@ func (EmptyRPC_RPC_Page) GetUserActionsPage(i *PB_PageParam_GetUserActionsPage, 
 func (EmptyRPC_RPC_Page) GetSuggestedPostsPage(i *PB_PageParam_GetSuggestedPostsPage, p RPC_UserParam) (*PB_PageResponse_GetSuggestedPostsPage, error) {
 	return nil, nil
 }
-func (EmptyRPC_RPC_Page) GetSuggestedUsrsPage(i *PB_PageParam_GetSuggestedUsrsPage, p RPC_UserParam) (*PB_PageResponse_GetSuggestedUsrsPage, error) {
+func (EmptyRPC_RPC_Page) GetSuggestedUsersPage(i *PB_PageParam_GetSuggestedUsersPage, p RPC_UserParam) (*PB_PageResponse_GetSuggestedUsersPage, error) {
 	return nil, nil
 }
 func (EmptyRPC_RPC_Page) GetSuggestedTagsPage(i *PB_PageParam_GetSuggestedTagsPage, p RPC_UserParam) (*PB_PageResponse_GetSuggestedTagsPage, error) {

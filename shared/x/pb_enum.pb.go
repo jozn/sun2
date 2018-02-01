@@ -75,8 +75,8 @@ It has these top-level messages:
 	PB_PageResponse_GetUserActionsPage
 	PB_PageParam_GetSuggestedPostsPage
 	PB_PageResponse_GetSuggestedPostsPage
-	PB_PageParam_GetSuggestedUsrsPage
-	PB_PageResponse_GetSuggestedUsrsPage
+	PB_PageParam_GetSuggestedUsersPage
+	PB_PageResponse_GetSuggestedUsersPage
 	PB_PageParam_GetSuggestedTagsPage
 	PB_PageResponse_GetSuggestedTagsPage
 	PB_PageParam_GetLastPostsPage

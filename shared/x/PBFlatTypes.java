@@ -1263,48 +1263,48 @@ public class PBFlatTypes {
 	t.PostViewList = m.getPostViewList() ;
 	*/
 
-	public class PB_PageParam_GetSuggestedUsrsPage {
+	public class PB_PageParam_GetSuggestedUsersPage {
 	   public long Limit;
 	   public long Last;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage();
+	PBFlatTypes.PB_PageParam_GetSuggestedUsersPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsersPage();
     t.setLimit();
     t.setLast();
 	*/
 
 	/*
-	PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsrsPage();
+	PBFlatTypes.PB_PageParam_GetSuggestedUsersPage t = new PBFlatTypes.PB_PageParam_GetSuggestedUsersPage();
 	t.Limit = ;
 	t.Last = ;
 	*/
 
 	/*
-	PB_PageParam_GetSuggestedUsrsPage t = new PB_PageParam_GetSuggestedUsrsPage();
+	PB_PageParam_GetSuggestedUsersPage t = new PB_PageParam_GetSuggestedUsersPage();
 	t.Limit = m.getLimit() ;
 	t.Last = m.getLast() ;
 	*/
 
-	public class PB_PageResponse_GetSuggestedUsrsPage {
+	public class PB_PageResponse_GetSuggestedUsersPage {
 	   public PB_ResponseExtra Extra;
 	   public PB_UserView UserViewList;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_PageResponse_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageResponse_GetSuggestedUsrsPage();
+	PBFlatTypes.PB_PageResponse_GetSuggestedUsersPage t = new PBFlatTypes.PB_PageResponse_GetSuggestedUsersPage();
     t.setExtra();
     t.setUserViewList();
 	*/
 
 	/*
-	PBFlatTypes.PB_PageResponse_GetSuggestedUsrsPage t = new PBFlatTypes.PB_PageResponse_GetSuggestedUsrsPage();
+	PBFlatTypes.PB_PageResponse_GetSuggestedUsersPage t = new PBFlatTypes.PB_PageResponse_GetSuggestedUsersPage();
 	t.Extra = ;
 	t.UserViewList = ;
 	*/
 
 	/*
-	PB_PageResponse_GetSuggestedUsrsPage t = new PB_PageResponse_GetSuggestedUsrsPage();
+	PB_PageResponse_GetSuggestedUsersPage t = new PB_PageResponse_GetSuggestedUsersPage();
 	t.Extra = m.getExtra() ;
 	t.UserViewList = m.getUserViewList() ;
 	*/

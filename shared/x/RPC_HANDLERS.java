@@ -40,7 +40,7 @@ public interface RPC_Page {
     void GetNotifiesPage( PB_PageResponse_GetNotifiesPage pb, boolean handled);
     void GetUserActionsPage( PB_PageResponse_GetUserActionsPage pb, boolean handled);
     void GetSuggestedPostsPage( PB_PageResponse_GetSuggestedPostsPage pb, boolean handled);
-    void GetSuggestedUsrsPage( PB_PageResponse_GetSuggestedUsrsPage pb, boolean handled);
+    void GetSuggestedUsersPage( PB_PageResponse_GetSuggestedUsersPage pb, boolean handled);
     void GetSuggestedTagsPage( PB_PageResponse_GetSuggestedTagsPage pb, boolean handled);
     void GetLastPostsPage( PB_PageResponse_GetLastPostsPage pb, boolean handled);
     void GetTagPage( PB_PageResponse_GetTagPage pb, boolean handled);
@@ -194,8 +194,8 @@ public interface RPC_User {
     	Log.d("RPC", " default empty handler for RPC 'RPC_Page.GetSuggestedPostsPage' ");
     }
   	@Override
-    public void GetSuggestedUsrsPage( PB_PageResponse_GetSuggestedUsrsPage pb, boolean handled){
-    	Log.d("RPC", " default empty handler for RPC 'RPC_Page.GetSuggestedUsrsPage' ");
+    public void GetSuggestedUsersPage( PB_PageResponse_GetSuggestedUsersPage pb, boolean handled){
+    	Log.d("RPC", " default empty handler for RPC 'RPC_Page.GetSuggestedUsersPage' ");
     }
   	@Override
     public void GetSuggestedTagsPage( PB_PageResponse_GetSuggestedTagsPage pb, boolean handled){
@@ -551,11 +551,11 @@ public interface RPC_User {
 				}
 			});
 	  
-			router.put("RPC_Page.GetSuggestedUsrsPage", (pb, handled)->{
-				if(pb instanceof PB_PageResponse_GetSuggestedUsrsPage){
-					RPC_Page_Default_Handler.GetSuggestedUsrsPage((PB_PageResponse_GetSuggestedUsrsPage) pb, handled);
+			router.put("RPC_Page.GetSuggestedUsersPage", (pb, handled)->{
+				if(pb instanceof PB_PageResponse_GetSuggestedUsersPage){
+					RPC_Page_Default_Handler.GetSuggestedUsersPage((PB_PageResponse_GetSuggestedUsersPage) pb, handled);
 				}else{
-					Log.d("RPC", " can not convert response object to PB_PageResponse_GetSuggestedUsrsPage in rpc: .GetSuggestedUsrsPage -- class: " + pb );//.getClass().getName());
+					Log.d("RPC", " can not convert response object to PB_PageResponse_GetSuggestedUsersPage in rpc: .GetSuggestedUsersPage -- class: " + pb );//.getClass().getName());
 				}
 			});
 	  

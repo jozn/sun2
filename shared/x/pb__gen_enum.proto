@@ -46,7 +46,7 @@ enum RPC_Page_Enum {
     GetNotifiesPage = 2286;
     GetUserActionsPage = 2670;
     GetSuggestedPostsPage = 6948;
-    GetSuggestedUsrsPage = 9749;
+    GetSuggestedUsersPage = 6523;
     GetSuggestedTagsPage = 8958;
     GetLastPostsPage = 6093;
     GetTagPage = 85;

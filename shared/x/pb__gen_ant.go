@@ -82,7 +82,7 @@ type RPC_Page interface {
 	GetNotifiesPage(param *PB_PageParam_GetNotifiesPage, userParam RPC_UserParam) (res PB_PageResponse_GetNotifiesPage, err error)
 	GetUserActionsPage(param *PB_PageParam_GetUserActionsPage, userParam RPC_UserParam) (res PB_PageResponse_GetUserActionsPage, err error)
 	GetSuggestedPostsPage(param *PB_PageParam_GetSuggestedPostsPage, userParam RPC_UserParam) (res PB_PageResponse_GetSuggestedPostsPage, err error)
-	GetSuggestedUsrsPage(param *PB_PageParam_GetSuggestedUsrsPage, userParam RPC_UserParam) (res PB_PageResponse_GetSuggestedUsrsPage, err error)
+	GetSuggestedUsersPage(param *PB_PageParam_GetSuggestedUsersPage, userParam RPC_UserParam) (res PB_PageResponse_GetSuggestedUsersPage, err error)
 	GetSuggestedTagsPage(param *PB_PageParam_GetSuggestedTagsPage, userParam RPC_UserParam) (res PB_PageResponse_GetSuggestedTagsPage, err error)
 	GetLastPostsPage(param *PB_PageParam_GetLastPostsPage, userParam RPC_UserParam) (res PB_PageResponse_GetLastPostsPage, err error)
 	GetTagPage(param *PB_PageParam_GetTagPage, userParam RPC_UserParam) (res PB_PageResponse_GetTagPage, err error)
@@ -814,22 +814,22 @@ func HandleRpcs(cmd PB_CommandToServer, params RPC_UserParam, rpcHandler RPC_All
 			} else {
 				responseHandler.HandelError(err)
 			}
-		case "GetSuggestedUsrsPage": //each pb_service_method
-			load := &PB_PageParam_GetSuggestedUsrsPage{}
+		case "GetSuggestedUsersPage": //each pb_service_method
+			load := &PB_PageParam_GetSuggestedUsersPage{}
 			err := proto.Unmarshal(cmd.Data, load)
 			if err == nil {
-				res, err := rpc.GetSuggestedUsrsPage(load, params)
+				res, err := rpc.GetSuggestedUsersPage(load, params)
 				if err == nil {
 					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetSuggestedUsrsPage",
+						RpcName:         "RPC_Page.GetSuggestedUsersPage",
 						UserParam:       params,
 						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetSuggestedUsrsPage",
+						PBClassName:     "PB_PageResponse_GetSuggestedUsersPage",
 						ResponseData:    &res,
 						RpcParamPassed:  load,
 					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsrsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsrsPage","RPC_Page.GetSuggestedUsrsPage",cmd, params , load)
+					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsersPage",cmd, params)
+					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsersPage","RPC_Page.GetSuggestedUsersPage",cmd, params , load)
 					responseHandler.HandleOfflineResult(out)
 				} else {
 					responseHandler.HandelError(err)
@@ -1482,7 +1482,7 @@ func HandleRpcs(cmd PB_CommandToServer, params RPC_UserParam, rpcHandler RPC_All
  RPC_Page.GetNotifiesPage
  RPC_Page.GetUserActionsPage
  RPC_Page.GetSuggestedPostsPage
- RPC_Page.GetSuggestedUsrsPage
+ RPC_Page.GetSuggestedUsersPage
  RPC_Page.GetSuggestedTagsPage
  RPC_Page.GetLastPostsPage
  RPC_Page.GetTagPage

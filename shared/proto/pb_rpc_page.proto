@@ -102,11 +102,11 @@ message PB_PageResponse_GetSuggestedPostsPage {
     repeated PB_PostView PostViewList = 2;
 }
 //
-message PB_PageParam_GetSuggestedUsrsPage {
+message PB_PageParam_GetSuggestedUsersPage {
     int64 Limit = 1;
     int64 Last = 2;
 }
-message PB_PageResponse_GetSuggestedUsrsPage {
+message PB_PageResponse_GetSuggestedUsersPage {
     PB_ResponseExtra Extra = 1;
     repeated PB_UserView UserViewList = 2;
 }
@@ -169,7 +169,7 @@ service RPC_Page{
     rpc GetNotifiesPage(PB_PageParam_GetNotifiesPage) returns (PB_PageResponse_GetNotifiesPage);
     rpc GetUserActionsPage(PB_PageParam_GetUserActionsPage) returns (PB_PageResponse_GetUserActionsPage);
     rpc GetSuggestedPostsPage(PB_PageParam_GetSuggestedPostsPage) returns (PB_PageResponse_GetSuggestedPostsPage);
-    rpc GetSuggestedUsrsPage(PB_PageParam_GetSuggestedUsrsPage) returns (PB_PageResponse_GetSuggestedUsrsPage);
+    rpc GetSuggestedUsersPage(PB_PageParam_GetSuggestedUsersPage) returns (PB_PageResponse_GetSuggestedUsersPage);
     rpc GetSuggestedTagsPage(PB_PageParam_GetSuggestedTagsPage) returns (PB_PageResponse_GetSuggestedTagsPage);
     rpc GetLastPostsPage(PB_PageParam_GetLastPostsPage) returns (PB_PageResponse_GetLastPostsPage);
     rpc GetTagPage(PB_PageParam_GetTagPage) returns (PB_PageResponse_GetTagPage);
