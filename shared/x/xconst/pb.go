@@ -147,6 +147,8 @@ const (
 	PB_UserView                                   = "PB_UserView"
 	PB_TopProfileView                             = "PB_TopProfileView"
 	PB_UserViewRowify                             = "PB_UserViewRowify"
+	PB_TagView                                    = "PB_TagView"
+	PB_TopTagWithSamplePosts                      = "PB_TopTagWithSamplePosts"
 	PB_ChatView                                   = "PB_ChatView"
 	PB_MessageView                                = "PB_MessageView"
 	PB_MessageFileView                            = "PB_MessageFileView"

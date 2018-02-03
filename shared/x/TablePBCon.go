@@ -530,6 +530,39 @@ func PBConvPB_NotifyRemoved_To_NotifyRemoved ( o *NotifyRemoved) *PB_NotifyRemov
 func PBConvPB__PhoneContact_To_PhoneContact( o *PB_PhoneContact) *PhoneContact {
      n := &PhoneContact{
       Id: int ( o.Id ),
+      UserId: int ( o.UserId ),
+      Phone: int ( o.Phone ),
+      PhoneDisplayName: string ( o.PhoneDisplayName ),
+      PhoneFamilyName: string ( o.PhoneFamilyName ),
+      PhoneNumber: string ( o.PhoneNumber ),
+      PhoneNormalizedNumber: string ( o.PhoneNormalizedNumber ),
+      PhoneContactRowId: int ( o.PhoneContactRowId ),
+      DeviceUuidId: int ( o.DeviceUuidId ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PhoneContact_To_PhoneContact ( o *PhoneContact) *PB_PhoneContact {
+     n := &PB_PhoneContact{
+      Id: int32 ( o.Id ),
+      UserId: int32 ( o.UserId ),
+      Phone: int64 ( o.Phone ),
+      PhoneDisplayName: string ( o.PhoneDisplayName ),
+      PhoneFamilyName: string ( o.PhoneFamilyName ),
+      PhoneNumber: string ( o.PhoneNumber ),
+      PhoneNormalizedNumber: string ( o.PhoneNormalizedNumber ),
+      PhoneContactRowId: int32 ( o.PhoneContactRowId ),
+      DeviceUuidId: int32 ( o.DeviceUuidId ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PhoneContactsCopy_To_PhoneContactsCopy( o *PB_PhoneContactsCopy) *PhoneContactsCopy {
+     n := &PhoneContactsCopy{
+      Id: int ( o.Id ),
       PhoneDisplayName: string ( o.PhoneDisplayName ),
       PhoneFamilyName: string ( o.PhoneFamilyName ),
       PhoneNumber: string ( o.PhoneNumber ),
@@ -543,8 +576,8 @@ func PBConvPB__PhoneContact_To_PhoneContact( o *PB_PhoneContact) *PhoneContact {
     return n
 }
 
-func PBConvPB_PhoneContact_To_PhoneContact ( o *PhoneContact) *PB_PhoneContact {
-     n := &PB_PhoneContact{
+func PBConvPB_PhoneContactsCopy_To_PhoneContactsCopy ( o *PhoneContactsCopy) *PB_PhoneContactsCopy {
+     n := &PB_PhoneContactsCopy{
       Id: int32 ( o.Id ),
       PhoneDisplayName: string ( o.PhoneDisplayName ),
       PhoneFamilyName: string ( o.PhoneFamilyName ),

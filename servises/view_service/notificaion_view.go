@@ -44,18 +44,18 @@ func Notify_notifyToView(nf *x.Notify, MeId int) *x.PB_NotifyView {
 		CreatedTime:   int32(nf.CreatedTime),
 	}
 
-	nv.ActorUser = UserViewAndMe(nf.ActorUserId, MeId)
+	nv.ActorUserView = UserViewAndMe(nf.ActorUserId, MeId)
 
 	switch x.NotifyEnum(nf.NotiyTypeEnum) {
 
 	case x.NotifyEnum_NOTIFY_FOLLOWED_YOU:
 
 	case x.NotifyEnum_NOTIFY_POST_LIKED:
-		nv.Post, _ = PostSingleViewForPostId(nf.PostId, MeId)
+		nv.PostView, _ = PostSingleViewForPostId(nf.PostId, MeId)
 
 	case x.NotifyEnum_NOTIFY_POST_COMMENTED:
-		nv.Post, _ = PostSingleViewForPostId(nf.PostId, MeId)
-		nv.Comment = SingleCommentView(nf.CommentId)
+		nv.PostView, _ = PostSingleViewForPostId(nf.PostId, MeId)
+		nv.CommentView = SingleCommentView(nf.CommentId)
 	}
 
 	return nv

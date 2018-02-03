@@ -512,22 +512,24 @@ func (c _StoreImpl) PreLoadMedia_ByPostIds(PostIds []int) {
 
 // PhoneContact - PRIMARY
 
-// PhoneContact - PhoneContactRowId
+// PhoneContactsCopy - PRIMARY
+
+// PhoneContactsCopy - PhoneContactRowId
 
 //field//field//field
 
 ///// Generated from index 'PhoneNumber'.
-func (c _StoreImpl) PhoneContact_ByPhoneNumber(PhoneNumber string) (*PhoneContact, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContact_PhoneNumber:" + fmt.Sprintf("%v", PhoneNumber))
+func (c _StoreImpl) PhoneContactsCopy_ByPhoneNumber(PhoneNumber string) (*PhoneContactsCopy, bool) {
+	o, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNumber:" + fmt.Sprintf("%v", PhoneNumber))
 	if ok {
-		if obj, ok := o.(*PhoneContact); ok {
+		if obj, ok := o.(*PhoneContactsCopy); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewPhoneContact_Selector().PhoneNumber_Eq(PhoneNumber).GetRow(base.DB)
+	row, err := NewPhoneContactsCopy_Selector().PhoneNumber_Eq(PhoneNumber).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("PhoneContact_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
+		RowCacheIndex.Set("PhoneContactsCopy_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
 		return row, true
 	}
 
@@ -535,21 +537,21 @@ func (c _StoreImpl) PhoneContact_ByPhoneNumber(PhoneNumber string) (*PhoneContac
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPhoneContact_ByPhoneNumbers(PhoneNumbers []string) {
+func (c _StoreImpl) PreLoadPhoneContactsCopy_ByPhoneNumbers(PhoneNumbers []string) {
 	not_cached := make([]string, 0, len(PhoneNumbers))
 
 	for _, id := range PhoneNumbers {
-		_, ok := RowCacheIndex.Get("PhoneContact_PhoneNumber:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNumber:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewPhoneContact_Selector().PhoneNumber_In(not_cached).GetRows(base.DB)
+		rows, err := NewPhoneContactsCopy_Selector().PhoneNumber_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContact_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
+				RowCacheIndex.Set("PhoneContactsCopy_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
 			}
 		}
 	}
@@ -558,17 +560,17 @@ func (c _StoreImpl) PreLoadPhoneContact_ByPhoneNumbers(PhoneNumbers []string) {
 //field//field//field
 
 ///// Generated from index 'UserId'.
-func (c _StoreImpl) PhoneContact_ByUserId(UserId int) (*PhoneContact, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContact_UserId:" + fmt.Sprintf("%v", UserId))
+func (c _StoreImpl) PhoneContactsCopy_ByUserId(UserId int) (*PhoneContactsCopy, bool) {
+	o, ok := RowCacheIndex.Get("PhoneContactsCopy_UserId:" + fmt.Sprintf("%v", UserId))
 	if ok {
-		if obj, ok := o.(*PhoneContact); ok {
+		if obj, ok := o.(*PhoneContactsCopy); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewPhoneContact_Selector().UserId_Eq(UserId).GetRow(base.DB)
+	row, err := NewPhoneContactsCopy_Selector().UserId_Eq(UserId).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("PhoneContact_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+		RowCacheIndex.Set("PhoneContactsCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
 		return row, true
 	}
 
@@ -576,42 +578,42 @@ func (c _StoreImpl) PhoneContact_ByUserId(UserId int) (*PhoneContact, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPhoneContact_ByUserIds(UserIds []int) {
+func (c _StoreImpl) PreLoadPhoneContactsCopy_ByUserIds(UserIds []int) {
 	not_cached := make([]int, 0, len(UserIds))
 
 	for _, id := range UserIds {
-		_, ok := RowCacheIndex.Get("PhoneContact_UserId:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("PhoneContactsCopy_UserId:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewPhoneContact_Selector().UserId_In(not_cached).GetRows(base.DB)
+		rows, err := NewPhoneContactsCopy_Selector().UserId_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContact_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+				RowCacheIndex.Set("PhoneContactsCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
 			}
 		}
 	}
 }
 
-// PhoneContact - UserId_Time
+// PhoneContactsCopy - UserId_Time
 
 //field//field//field
 
 ///// Generated from index 'PhoneNormalizedNumber'.
-func (c _StoreImpl) PhoneContact_ByPhoneNormalizedNumber(PhoneNormalizedNumber string) (*PhoneContact, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContact_PhoneNormalizedNumber:" + fmt.Sprintf("%v", PhoneNormalizedNumber))
+func (c _StoreImpl) PhoneContactsCopy_ByPhoneNormalizedNumber(PhoneNormalizedNumber string) (*PhoneContactsCopy, bool) {
+	o, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNormalizedNumber:" + fmt.Sprintf("%v", PhoneNormalizedNumber))
 	if ok {
-		if obj, ok := o.(*PhoneContact); ok {
+		if obj, ok := o.(*PhoneContactsCopy); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewPhoneContact_Selector().PhoneNormalizedNumber_Eq(PhoneNormalizedNumber).GetRow(base.DB)
+	row, err := NewPhoneContactsCopy_Selector().PhoneNormalizedNumber_Eq(PhoneNormalizedNumber).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("PhoneContact_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
+		RowCacheIndex.Set("PhoneContactsCopy_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
 		return row, true
 	}
 
@@ -619,21 +621,21 @@ func (c _StoreImpl) PhoneContact_ByPhoneNormalizedNumber(PhoneNormalizedNumber s
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPhoneContact_ByPhoneNormalizedNumbers(PhoneNormalizedNumbers []string) {
+func (c _StoreImpl) PreLoadPhoneContactsCopy_ByPhoneNormalizedNumbers(PhoneNormalizedNumbers []string) {
 	not_cached := make([]string, 0, len(PhoneNormalizedNumbers))
 
 	for _, id := range PhoneNormalizedNumbers {
-		_, ok := RowCacheIndex.Get("PhoneContact_PhoneNormalizedNumber:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNormalizedNumber:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewPhoneContact_Selector().PhoneNormalizedNumber_In(not_cached).GetRows(base.DB)
+		rows, err := NewPhoneContactsCopy_Selector().PhoneNormalizedNumber_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContact_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
+				RowCacheIndex.Set("PhoneContactsCopy_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
 			}
 		}
 	}

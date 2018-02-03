@@ -16,7 +16,8 @@ func main() {
 	fmt.Println("")
 	fmt.Println(strings.Join(args, " * "))
 	// cmd := exec.Command(`xox`, args...)
-	cmd := exec.Command(`snake`, args...)
+	// cmd := exec.Command(`snake`, args...)
+	cmd := exec.Command(`db_walker`, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout

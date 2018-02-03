@@ -166,6 +166,8 @@ It has these top-level messages:
 	PB_UserView
 	PB_TopProfileView
 	PB_UserViewRowify
+	PB_TagView
+	PB_TopTagWithSamplePosts
 	PB_ChatView
 	PB_MessageView
 	PB_MessageFileView

@@ -9,53 +9,53 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContact represents a row from 'ms.phone_contacts'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContactsCopy represents a row from 'ms.phone_contacts_copy'.
 
 // Manualy copy this to project
-type PhoneContact__ struct {
+type PhoneContactsCopy__ struct {
 	Id                    int    `json:"Id"`                    // Id -
-	UserId                int    `json:"UserId"`                // UserId -
-	Phone                 int    `json:"Phone"`                 // Phone -
 	PhoneDisplayName      string `json:"PhoneDisplayName"`      // PhoneDisplayName -
 	PhoneFamilyName       string `json:"PhoneFamilyName"`       // PhoneFamilyName -
 	PhoneNumber           string `json:"PhoneNumber"`           // PhoneNumber -
 	PhoneNormalizedNumber string `json:"PhoneNormalizedNumber"` // PhoneNormalizedNumber -
 	PhoneContactRowId     int    `json:"PhoneContactRowId"`     // PhoneContactRowId -
+	UserId                int    `json:"UserId"`                // UserId -
 	DeviceUuidId          int    `json:"DeviceUuidId"`          // DeviceUuidId -
 	CreatedTime           int    `json:"CreatedTime"`           // CreatedTime -
+	UpdatedTime           int    `json:"UpdatedTime"`           // UpdatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the PhoneContact exists in the database.
-func (pc *PhoneContact) Exists() bool {
-	return pc._exists
+// Exists determines if the PhoneContactsCopy exists in the database.
+func (pcc *PhoneContactsCopy) Exists() bool {
+	return pcc._exists
 }
 
-// Deleted provides information if the PhoneContact has been deleted from the database.
-func (pc *PhoneContact) Deleted() bool {
-	return pc._deleted
+// Deleted provides information if the PhoneContactsCopy has been deleted from the database.
+func (pcc *PhoneContactsCopy) Deleted() bool {
+	return pcc._deleted
 }
 
-// Insert inserts the PhoneContact to the database.
-func (pc *PhoneContact) Insert(db XODB) error {
+// Insert inserts the PhoneContactsCopy to the database.
+func (pcc *PhoneContactsCopy) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if pc._exists {
+	if pcc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.phone_contacts (` +
-		`UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime` +
+	const sqlstr = `INSERT INTO ms.phone_contacts_copy (` +
+		`PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime)
-	res, err := db.Exec(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime)
+	XOLog(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime)
+	res, err := db.Exec(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -69,29 +69,29 @@ func (pc *PhoneContact) Insert(db XODB) error {
 	}
 
 	// set primary key and existence
-	pc.Id = int(id)
-	pc._exists = true
+	pcc.Id = int(id)
+	pcc._exists = true
 
-	OnPhoneContact_AfterInsert(pc)
+	OnPhoneContactsCopy_AfterInsert(pcc)
 
 	return nil
 }
 
-// Insert inserts the PhoneContact to the database.
-func (pc *PhoneContact) Replace(db XODB) error {
+// Insert inserts the PhoneContactsCopy to the database.
+func (pcc *PhoneContactsCopy) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.phone_contacts (` +
-		`UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime` +
+	const sqlstr = `REPLACE INTO ms.phone_contacts_copy (` +
+		`PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime)
-	res, err := db.Exec(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime)
+	XOLog(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime)
+	res, err := db.Exec(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -105,81 +105,81 @@ func (pc *PhoneContact) Replace(db XODB) error {
 	}
 
 	// set primary key and existence
-	pc.Id = int(id)
-	pc._exists = true
+	pcc.Id = int(id)
+	pcc._exists = true
 
-	OnPhoneContact_AfterInsert(pc)
+	OnPhoneContactsCopy_AfterInsert(pcc)
 
 	return nil
 }
 
-// Update updates the PhoneContact in the database.
-func (pc *PhoneContact) Update(db XODB) error {
+// Update updates the PhoneContactsCopy in the database.
+func (pcc *PhoneContactsCopy) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !pc._exists {
+	if !pcc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if pc._deleted {
+	if pcc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.phone_contacts SET ` +
-		`UserId = ?, Phone = ?, PhoneDisplayName = ?, PhoneFamilyName = ?, PhoneNumber = ?, PhoneNormalizedNumber = ?, PhoneContactRowId = ?, DeviceUuidId = ?, CreatedTime = ?` +
+	const sqlstr = `UPDATE ms.phone_contacts_copy SET ` +
+		`PhoneDisplayName = ?, PhoneFamilyName = ?, PhoneNumber = ?, PhoneNormalizedNumber = ?, PhoneContactRowId = ?, UserId = ?, DeviceUuidId = ?, CreatedTime = ?, UpdatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime, pc.Id)
-	_, err = db.Exec(sqlstr, pc.UserId, pc.Phone, pc.PhoneDisplayName, pc.PhoneFamilyName, pc.PhoneNumber, pc.PhoneNormalizedNumber, pc.PhoneContactRowId, pc.DeviceUuidId, pc.CreatedTime, pc.Id)
+	XOLog(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime, pcc.Id)
+	_, err = db.Exec(sqlstr, pcc.PhoneDisplayName, pcc.PhoneFamilyName, pcc.PhoneNumber, pcc.PhoneNormalizedNumber, pcc.PhoneContactRowId, pcc.UserId, pcc.DeviceUuidId, pcc.CreatedTime, pcc.UpdatedTime, pcc.Id)
 
 	XOLogErr(err)
-	OnPhoneContact_AfterUpdate(pc)
+	OnPhoneContactsCopy_AfterUpdate(pcc)
 
 	return err
 }
 
-// Save saves the PhoneContact to the database.
-func (pc *PhoneContact) Save(db XODB) error {
-	if pc.Exists() {
-		return pc.Update(db)
+// Save saves the PhoneContactsCopy to the database.
+func (pcc *PhoneContactsCopy) Save(db XODB) error {
+	if pcc.Exists() {
+		return pcc.Update(db)
 	}
 
-	return pc.Replace(db)
+	return pcc.Replace(db)
 }
 
-// Delete deletes the PhoneContact from the database.
-func (pc *PhoneContact) Delete(db XODB) error {
+// Delete deletes the PhoneContactsCopy from the database.
+func (pcc *PhoneContactsCopy) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !pc._exists {
+	if !pcc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if pc._deleted {
+	if pcc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.phone_contacts WHERE Id = ?`
+	const sqlstr = `DELETE FROM ms.phone_contacts_copy WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, pc.Id)
-	_, err = db.Exec(sqlstr, pc.Id)
+	XOLog(sqlstr, pcc.Id)
+	_, err = db.Exec(sqlstr, pcc.Id)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
 	// set deleted
-	pc._deleted = true
+	pcc._deleted = true
 
-	OnPhoneContact_AfterDelete(pc)
+	OnPhoneContactsCopy_AfterDelete(pcc)
 
 	return nil
 }
@@ -190,18 +190,18 @@ func (pc *PhoneContact) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __PhoneContact_Deleter struct {
+type __PhoneContactsCopy_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __PhoneContact_Updater struct {
+type __PhoneContactsCopy_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __PhoneContact_Selector struct {
+type __PhoneContactsCopy_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -210,19 +210,19 @@ type __PhoneContact_Selector struct {
 	offset    int
 }
 
-func NewPhoneContact_Deleter() *__PhoneContact_Deleter {
-	d := __PhoneContact_Deleter{whereSep: " AND "}
+func NewPhoneContactsCopy_Deleter() *__PhoneContactsCopy_Deleter {
+	d := __PhoneContactsCopy_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewPhoneContact_Updater() *__PhoneContact_Updater {
-	u := __PhoneContact_Updater{whereSep: " AND "}
+func NewPhoneContactsCopy_Updater() *__PhoneContactsCopy_Updater {
+	u := __PhoneContactsCopy_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewPhoneContact_Selector() *__PhoneContact_Selector {
-	u := __PhoneContact_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPhoneContactsCopy_Selector() *__PhoneContactsCopy_Selector {
+	u := __PhoneContactsCopy_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -230,12 +230,12 @@ func NewPhoneContact_Selector() *__PhoneContact_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__PhoneContact_Deleter) Or() *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) Or() *__PhoneContactsCopy_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PhoneContact_Deleter) Id_In(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) Id_In(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -248,7 +248,7 @@ func (u *__PhoneContact_Deleter) Id_In(ins []int) *__PhoneContact_Deleter {
 	return u
 }
 
-func (u *__PhoneContact_Deleter) Id_Ins(ins ...int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) Id_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -261,7 +261,7 @@ func (u *__PhoneContact_Deleter) Id_Ins(ins ...int) *__PhoneContact_Deleter {
 	return u
 }
 
-func (u *__PhoneContact_Deleter) Id_NotIn(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) Id_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -274,7 +274,7 @@ func (u *__PhoneContact_Deleter) Id_NotIn(ins []int) *__PhoneContact_Deleter {
 	return u
 }
 
-func (d *__PhoneContact_Deleter) Id_Eq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_Eq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -285,7 +285,7 @@ func (d *__PhoneContact_Deleter) Id_Eq(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (d *__PhoneContact_Deleter) Id_NotEq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_NotEq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -296,7 +296,7 @@ func (d *__PhoneContact_Deleter) Id_NotEq(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (d *__PhoneContact_Deleter) Id_LT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_LT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -307,7 +307,7 @@ func (d *__PhoneContact_Deleter) Id_LT(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (d *__PhoneContact_Deleter) Id_LE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_LE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -318,7 +318,7 @@ func (d *__PhoneContact_Deleter) Id_LE(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (d *__PhoneContact_Deleter) Id_GT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_GT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -329,7 +329,7 @@ func (d *__PhoneContact_Deleter) Id_GT(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (d *__PhoneContact_Deleter) Id_GE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) Id_GE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -340,217 +340,7 @@ func (d *__PhoneContact_Deleter) Id_GE(val int) *__PhoneContact_Deleter {
 	return d
 }
 
-func (u *__PhoneContact_Deleter) UserId_In(ins []int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Deleter) UserId_Ins(ins ...int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Deleter) UserId_NotIn(ins []int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Deleter) UserId_Eq(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) UserId_NotEq(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) UserId_LT(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) UserId_LE(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) UserId_GT(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) UserId_GE(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Deleter) Phone_In(ins []int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Deleter) Phone_Ins(ins ...int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Deleter) Phone_NotIn(ins []int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Deleter) Phone_Eq(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) Phone_NotEq(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) Phone_LT(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) Phone_LE(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) Phone_GT(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Deleter) Phone_GE(val int) *__PhoneContact_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Deleter) PhoneContactRowId_In(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneContactRowId_In(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -563,7 +353,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_In(ins []int) *__PhoneContact
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneContactRowId_Ins(ins ...int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneContactRowId_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -576,7 +366,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_Ins(ins ...int) *__PhoneConta
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneContactRowId_NotIn(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneContactRowId_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -589,7 +379,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_NotIn(ins []int) *__PhoneCont
 	return u
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_Eq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_Eq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -600,7 +390,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_Eq(val int) *__PhoneContact_D
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_NotEq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_NotEq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -611,7 +401,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_NotEq(val int) *__PhoneContac
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_LT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_LT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -622,7 +412,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_LT(val int) *__PhoneContact_D
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_LE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_LE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -633,7 +423,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_LE(val int) *__PhoneContact_D
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_GT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_GT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -644,7 +434,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_GT(val int) *__PhoneContact_D
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneContactRowId_GE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneContactRowId_GE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -655,7 +445,112 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_GE(val int) *__PhoneContact_D
 	return d
 }
 
-func (u *__PhoneContact_Deleter) DeviceUuidId_In(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) UserId_In(ins []int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Deleter) UserId_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Deleter) UserId_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_Eq(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_NotEq(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_LT(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_LE(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_GT(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UserId_GE(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Deleter) DeviceUuidId_In(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -668,7 +563,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_In(ins []int) *__PhoneContact_Dele
 	return u
 }
 
-func (u *__PhoneContact_Deleter) DeviceUuidId_Ins(ins ...int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) DeviceUuidId_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -681,7 +576,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_Ins(ins ...int) *__PhoneContact_De
 	return u
 }
 
-func (u *__PhoneContact_Deleter) DeviceUuidId_NotIn(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) DeviceUuidId_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -694,7 +589,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_NotIn(ins []int) *__PhoneContact_D
 	return u
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_Eq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_Eq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -705,7 +600,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_Eq(val int) *__PhoneContact_Delete
 	return d
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_NotEq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_NotEq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -716,7 +611,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_NotEq(val int) *__PhoneContact_Del
 	return d
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_LT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_LT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -727,7 +622,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_LT(val int) *__PhoneContact_Delete
 	return d
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_LE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_LE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -738,7 +633,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_LE(val int) *__PhoneContact_Delete
 	return d
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_GT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_GT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -749,7 +644,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_GT(val int) *__PhoneContact_Delete
 	return d
 }
 
-func (d *__PhoneContact_Deleter) DeviceUuidId_GE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) DeviceUuidId_GE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -760,7 +655,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_GE(val int) *__PhoneContact_Delete
 	return d
 }
 
-func (u *__PhoneContact_Deleter) CreatedTime_In(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) CreatedTime_In(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -773,7 +668,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_In(ins []int) *__PhoneContact_Delet
 	return u
 }
 
-func (u *__PhoneContact_Deleter) CreatedTime_Ins(ins ...int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) CreatedTime_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -786,7 +681,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_Ins(ins ...int) *__PhoneContact_Del
 	return u
 }
 
-func (u *__PhoneContact_Deleter) CreatedTime_NotIn(ins []int) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) CreatedTime_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -799,7 +694,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_NotIn(ins []int) *__PhoneContact_De
 	return u
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_Eq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_Eq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -810,7 +705,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_Eq(val int) *__PhoneContact_Deleter
 	return d
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_NotEq(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_NotEq(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -821,7 +716,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_NotEq(val int) *__PhoneContact_Dele
 	return d
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_LT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_LT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -832,7 +727,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_LT(val int) *__PhoneContact_Deleter
 	return d
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_LE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_LE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -843,7 +738,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_LE(val int) *__PhoneContact_Deleter
 	return d
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_GT(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_GT(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -854,24 +749,129 @@ func (d *__PhoneContact_Deleter) CreatedTime_GT(val int) *__PhoneContact_Deleter
 	return d
 }
 
-func (d *__PhoneContact_Deleter) CreatedTime_GE(val int) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) CreatedTime_GE(val int) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Deleter) UpdatedTime_In(ins []int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Deleter) UpdatedTime_Ins(ins ...int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Deleter) UpdatedTime_NotIn(ins []int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_Eq(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_NotEq(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_LT(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_LE(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_GT(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Deleter) UpdatedTime_GE(val int) *__PhoneContactsCopy_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__PhoneContact_Updater) Or() *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Or() *__PhoneContactsCopy_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PhoneContact_Updater) Id_In(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Id_In(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -884,7 +884,7 @@ func (u *__PhoneContact_Updater) Id_In(ins []int) *__PhoneContact_Updater {
 	return u
 }
 
-func (u *__PhoneContact_Updater) Id_Ins(ins ...int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Id_Ins(ins ...int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -897,7 +897,7 @@ func (u *__PhoneContact_Updater) Id_Ins(ins ...int) *__PhoneContact_Updater {
 	return u
 }
 
-func (u *__PhoneContact_Updater) Id_NotIn(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Id_NotIn(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -910,7 +910,7 @@ func (u *__PhoneContact_Updater) Id_NotIn(ins []int) *__PhoneContact_Updater {
 	return u
 }
 
-func (d *__PhoneContact_Updater) Id_Eq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_Eq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -921,7 +921,7 @@ func (d *__PhoneContact_Updater) Id_Eq(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (d *__PhoneContact_Updater) Id_NotEq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_NotEq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -932,7 +932,7 @@ func (d *__PhoneContact_Updater) Id_NotEq(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (d *__PhoneContact_Updater) Id_LT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_LT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -943,7 +943,7 @@ func (d *__PhoneContact_Updater) Id_LT(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (d *__PhoneContact_Updater) Id_LE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_LE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -954,7 +954,7 @@ func (d *__PhoneContact_Updater) Id_LE(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (d *__PhoneContact_Updater) Id_GT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_GT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -965,7 +965,7 @@ func (d *__PhoneContact_Updater) Id_GT(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (d *__PhoneContact_Updater) Id_GE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) Id_GE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -976,217 +976,7 @@ func (d *__PhoneContact_Updater) Id_GE(val int) *__PhoneContact_Updater {
 	return d
 }
 
-func (u *__PhoneContact_Updater) UserId_In(ins []int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Updater) UserId_Ins(ins ...int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Updater) UserId_NotIn(ins []int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Updater) UserId_Eq(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) UserId_NotEq(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) UserId_LT(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) UserId_LE(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) UserId_GT(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) UserId_GE(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Updater) Phone_In(ins []int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Updater) Phone_Ins(ins ...int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Updater) Phone_NotIn(ins []int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Updater) Phone_Eq(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) Phone_NotEq(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) Phone_LT(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) Phone_LE(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) Phone_GT(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Updater) Phone_GE(val int) *__PhoneContact_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Updater) PhoneContactRowId_In(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneContactRowId_In(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1199,7 +989,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_In(ins []int) *__PhoneContact
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneContactRowId_Ins(ins ...int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneContactRowId_Ins(ins ...int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1212,7 +1002,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_Ins(ins ...int) *__PhoneConta
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneContactRowId_NotIn(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneContactRowId_NotIn(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1225,7 +1015,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_NotIn(ins []int) *__PhoneCont
 	return u
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_Eq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_Eq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1236,7 +1026,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_Eq(val int) *__PhoneContact_U
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_NotEq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_NotEq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1247,7 +1037,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_NotEq(val int) *__PhoneContac
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_LT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_LT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1258,7 +1048,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_LT(val int) *__PhoneContact_U
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_LE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_LE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1269,7 +1059,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_LE(val int) *__PhoneContact_U
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_GT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_GT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1280,7 +1070,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_GT(val int) *__PhoneContact_U
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneContactRowId_GE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneContactRowId_GE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1291,7 +1081,112 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_GE(val int) *__PhoneContact_U
 	return d
 }
 
-func (u *__PhoneContact_Updater) DeviceUuidId_In(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) UserId_In(ins []int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UserId_Ins(ins ...int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UserId_NotIn(ins []int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_Eq(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_NotEq(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_LT(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_LE(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_GT(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UserId_GE(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Updater) DeviceUuidId_In(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1304,7 +1199,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_In(ins []int) *__PhoneContact_Upda
 	return u
 }
 
-func (u *__PhoneContact_Updater) DeviceUuidId_Ins(ins ...int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) DeviceUuidId_Ins(ins ...int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1317,7 +1212,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_Ins(ins ...int) *__PhoneContact_Up
 	return u
 }
 
-func (u *__PhoneContact_Updater) DeviceUuidId_NotIn(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) DeviceUuidId_NotIn(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1330,7 +1225,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_NotIn(ins []int) *__PhoneContact_U
 	return u
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_Eq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_Eq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1341,7 +1236,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_Eq(val int) *__PhoneContact_Update
 	return d
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_NotEq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_NotEq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1352,7 +1247,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_NotEq(val int) *__PhoneContact_Upd
 	return d
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_LT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_LT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1363,7 +1258,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_LT(val int) *__PhoneContact_Update
 	return d
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_LE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_LE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1374,7 +1269,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_LE(val int) *__PhoneContact_Update
 	return d
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_GT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_GT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1385,7 +1280,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_GT(val int) *__PhoneContact_Update
 	return d
 }
 
-func (d *__PhoneContact_Updater) DeviceUuidId_GE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) DeviceUuidId_GE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1396,7 +1291,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_GE(val int) *__PhoneContact_Update
 	return d
 }
 
-func (u *__PhoneContact_Updater) CreatedTime_In(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) CreatedTime_In(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1409,7 +1304,7 @@ func (u *__PhoneContact_Updater) CreatedTime_In(ins []int) *__PhoneContact_Updat
 	return u
 }
 
-func (u *__PhoneContact_Updater) CreatedTime_Ins(ins ...int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) CreatedTime_Ins(ins ...int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1422,7 +1317,7 @@ func (u *__PhoneContact_Updater) CreatedTime_Ins(ins ...int) *__PhoneContact_Upd
 	return u
 }
 
-func (u *__PhoneContact_Updater) CreatedTime_NotIn(ins []int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) CreatedTime_NotIn(ins []int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1435,7 +1330,7 @@ func (u *__PhoneContact_Updater) CreatedTime_NotIn(ins []int) *__PhoneContact_Up
 	return u
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_Eq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_Eq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1446,7 +1341,7 @@ func (d *__PhoneContact_Updater) CreatedTime_Eq(val int) *__PhoneContact_Updater
 	return d
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_NotEq(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_NotEq(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1457,7 +1352,7 @@ func (d *__PhoneContact_Updater) CreatedTime_NotEq(val int) *__PhoneContact_Upda
 	return d
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_LT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_LT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1468,7 +1363,7 @@ func (d *__PhoneContact_Updater) CreatedTime_LT(val int) *__PhoneContact_Updater
 	return d
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_LE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_LE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1479,7 +1374,7 @@ func (d *__PhoneContact_Updater) CreatedTime_LE(val int) *__PhoneContact_Updater
 	return d
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_GT(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_GT(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1490,24 +1385,129 @@ func (d *__PhoneContact_Updater) CreatedTime_GT(val int) *__PhoneContact_Updater
 	return d
 }
 
-func (d *__PhoneContact_Updater) CreatedTime_GE(val int) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) CreatedTime_GE(val int) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Updater) UpdatedTime_In(ins []int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UpdatedTime_Ins(ins ...int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UpdatedTime_NotIn(ins []int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_Eq(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_NotEq(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_LT(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_LE(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_GT(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Updater) UpdatedTime_GE(val int) *__PhoneContactsCopy_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__PhoneContact_Selector) Or() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Or() *__PhoneContactsCopy_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Id_In(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Id_In(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1520,7 +1520,7 @@ func (u *__PhoneContact_Selector) Id_In(ins []int) *__PhoneContact_Selector {
 	return u
 }
 
-func (u *__PhoneContact_Selector) Id_Ins(ins ...int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Id_Ins(ins ...int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1533,7 +1533,7 @@ func (u *__PhoneContact_Selector) Id_Ins(ins ...int) *__PhoneContact_Selector {
 	return u
 }
 
-func (u *__PhoneContact_Selector) Id_NotIn(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Id_NotIn(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1546,7 +1546,7 @@ func (u *__PhoneContact_Selector) Id_NotIn(ins []int) *__PhoneContact_Selector {
 	return u
 }
 
-func (d *__PhoneContact_Selector) Id_Eq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_Eq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1557,7 +1557,7 @@ func (d *__PhoneContact_Selector) Id_Eq(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (d *__PhoneContact_Selector) Id_NotEq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_NotEq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1568,7 +1568,7 @@ func (d *__PhoneContact_Selector) Id_NotEq(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (d *__PhoneContact_Selector) Id_LT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_LT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1579,7 +1579,7 @@ func (d *__PhoneContact_Selector) Id_LT(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (d *__PhoneContact_Selector) Id_LE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_LE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1590,7 +1590,7 @@ func (d *__PhoneContact_Selector) Id_LE(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (d *__PhoneContact_Selector) Id_GT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_GT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1601,7 +1601,7 @@ func (d *__PhoneContact_Selector) Id_GT(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (d *__PhoneContact_Selector) Id_GE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) Id_GE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1612,217 +1612,7 @@ func (d *__PhoneContact_Selector) Id_GE(val int) *__PhoneContact_Selector {
 	return d
 }
 
-func (u *__PhoneContact_Selector) UserId_In(ins []int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Selector) UserId_Ins(ins ...int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Selector) UserId_NotIn(ins []int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Selector) UserId_Eq(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) UserId_NotEq(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) UserId_LT(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) UserId_LE(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) UserId_GT(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) UserId_GE(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Selector) Phone_In(ins []int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Selector) Phone_Ins(ins ...int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PhoneContact_Selector) Phone_NotIn(ins []int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PhoneContact_Selector) Phone_Eq(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) Phone_NotEq(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) Phone_LT(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) Phone_LE(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) Phone_GT(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PhoneContact_Selector) Phone_GE(val int) *__PhoneContact_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PhoneContact_Selector) PhoneContactRowId_In(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneContactRowId_In(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1835,7 +1625,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_In(ins []int) *__PhoneContac
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneContactRowId_Ins(ins ...int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneContactRowId_Ins(ins ...int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1848,7 +1638,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_Ins(ins ...int) *__PhoneCont
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneContactRowId_NotIn(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneContactRowId_NotIn(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1861,7 +1651,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_NotIn(ins []int) *__PhoneCon
 	return u
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_Eq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_Eq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1872,7 +1662,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_Eq(val int) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_NotEq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_NotEq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1883,7 +1673,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_NotEq(val int) *__PhoneConta
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_LT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_LT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1894,7 +1684,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_LT(val int) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_LE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_LE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1905,7 +1695,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_LE(val int) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_GT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_GT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1916,7 +1706,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_GT(val int) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneContactRowId_GE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneContactRowId_GE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1927,7 +1717,112 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_GE(val int) *__PhoneContact_
 	return d
 }
 
-func (u *__PhoneContact_Selector) DeviceUuidId_In(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) UserId_In(ins []int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) UserId_Ins(ins ...int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) UserId_NotIn(ins []int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_Eq(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_NotEq(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_LT(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_LE(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_GT(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UserId_GE(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Selector) DeviceUuidId_In(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1940,7 +1835,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_In(ins []int) *__PhoneContact_Sel
 	return u
 }
 
-func (u *__PhoneContact_Selector) DeviceUuidId_Ins(ins ...int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) DeviceUuidId_Ins(ins ...int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1953,7 +1848,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_Ins(ins ...int) *__PhoneContact_S
 	return u
 }
 
-func (u *__PhoneContact_Selector) DeviceUuidId_NotIn(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) DeviceUuidId_NotIn(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1966,7 +1861,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_NotIn(ins []int) *__PhoneContact_
 	return u
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_Eq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_Eq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1977,7 +1872,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_Eq(val int) *__PhoneContact_Selec
 	return d
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_NotEq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_NotEq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1988,7 +1883,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_NotEq(val int) *__PhoneContact_Se
 	return d
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_LT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_LT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1999,7 +1894,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_LT(val int) *__PhoneContact_Selec
 	return d
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_LE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_LE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2010,7 +1905,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_LE(val int) *__PhoneContact_Selec
 	return d
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_GT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_GT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2021,7 +1916,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_GT(val int) *__PhoneContact_Selec
 	return d
 }
 
-func (d *__PhoneContact_Selector) DeviceUuidId_GE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) DeviceUuidId_GE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2032,7 +1927,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_GE(val int) *__PhoneContact_Selec
 	return d
 }
 
-func (u *__PhoneContact_Selector) CreatedTime_In(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) CreatedTime_In(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2045,7 +1940,7 @@ func (u *__PhoneContact_Selector) CreatedTime_In(ins []int) *__PhoneContact_Sele
 	return u
 }
 
-func (u *__PhoneContact_Selector) CreatedTime_Ins(ins ...int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) CreatedTime_Ins(ins ...int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2058,7 +1953,7 @@ func (u *__PhoneContact_Selector) CreatedTime_Ins(ins ...int) *__PhoneContact_Se
 	return u
 }
 
-func (u *__PhoneContact_Selector) CreatedTime_NotIn(ins []int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) CreatedTime_NotIn(ins []int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2071,7 +1966,7 @@ func (u *__PhoneContact_Selector) CreatedTime_NotIn(ins []int) *__PhoneContact_S
 	return u
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_Eq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_Eq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2082,7 +1977,7 @@ func (d *__PhoneContact_Selector) CreatedTime_Eq(val int) *__PhoneContact_Select
 	return d
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_NotEq(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_NotEq(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2093,7 +1988,7 @@ func (d *__PhoneContact_Selector) CreatedTime_NotEq(val int) *__PhoneContact_Sel
 	return d
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_LT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_LT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2104,7 +1999,7 @@ func (d *__PhoneContact_Selector) CreatedTime_LT(val int) *__PhoneContact_Select
 	return d
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_LE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_LE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2115,7 +2010,7 @@ func (d *__PhoneContact_Selector) CreatedTime_LE(val int) *__PhoneContact_Select
 	return d
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_GT(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_GT(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2126,12 +2021,117 @@ func (d *__PhoneContact_Selector) CreatedTime_GT(val int) *__PhoneContact_Select
 	return d
 }
 
-func (d *__PhoneContact_Selector) CreatedTime_GE(val int) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) CreatedTime_GE(val int) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PhoneContactsCopy_Selector) UpdatedTime_In(ins []int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) UpdatedTime_Ins(ins ...int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) UpdatedTime_NotIn(ins []int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_Eq(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_NotEq(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_LT(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_LE(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_GT(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PhoneContactsCopy_Selector) UpdatedTime_GE(val int) *__PhoneContactsCopy_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UpdatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2141,7 +2141,7 @@ func (d *__PhoneContact_Selector) CreatedTime_GE(val int) *__PhoneContact_Select
 
 ////////ints
 
-func (u *__PhoneContact_Deleter) PhoneDisplayName_In(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneDisplayName_In(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2154,7 +2154,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_In(ins []string) *__PhoneConta
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneDisplayName_NotIn(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneDisplayName_NotIn(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2168,7 +2168,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_NotIn(ins []string) *__PhoneCo
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Deleter) PhoneDisplayName_Like(val string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneDisplayName_Like(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2179,7 +2179,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_Like(val string) *__PhoneConta
 	return u
 }
 
-func (d *__PhoneContact_Deleter) PhoneDisplayName_Eq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneDisplayName_Eq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2190,7 +2190,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_Eq(val string) *__PhoneContact
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneDisplayName_NotEq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneDisplayName_NotEq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2201,7 +2201,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	return d
 }
 
-func (u *__PhoneContact_Deleter) PhoneFamilyName_In(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneFamilyName_In(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2214,7 +2214,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_In(ins []string) *__PhoneContac
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneFamilyName_NotIn(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneFamilyName_NotIn(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2228,7 +2228,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_NotIn(ins []string) *__PhoneCon
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Deleter) PhoneFamilyName_Like(val string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneFamilyName_Like(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2239,7 +2239,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_Like(val string) *__PhoneContac
 	return u
 }
 
-func (d *__PhoneContact_Deleter) PhoneFamilyName_Eq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneFamilyName_Eq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2250,7 +2250,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneFamilyName_NotEq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneFamilyName_NotEq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2261,7 +2261,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	return d
 }
 
-func (u *__PhoneContact_Deleter) PhoneNumber_In(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNumber_In(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2274,7 +2274,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_In(ins []string) *__PhoneContact_De
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneNumber_NotIn(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNumber_NotIn(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2288,7 +2288,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_NotIn(ins []string) *__PhoneContact
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Deleter) PhoneNumber_Like(val string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNumber_Like(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2299,7 +2299,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_Like(val string) *__PhoneContact_De
 	return u
 }
 
-func (d *__PhoneContact_Deleter) PhoneNumber_Eq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneNumber_Eq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2310,7 +2310,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_Eq(val string) *__PhoneContact_Dele
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneNumber_NotEq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneNumber_NotEq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2321,7 +2321,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_NotEq(val string) *__PhoneContact_D
 	return d
 }
 
-func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_In(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNormalizedNumber_In(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2334,7 +2334,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_In(ins []string) *__Phone
 	return u
 }
 
-func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2348,7 +2348,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_NotIn(ins []string) *__Ph
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_Like(val string) *__PhoneContact_Deleter {
+func (u *__PhoneContactsCopy_Deleter) PhoneNormalizedNumber_Like(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2359,7 +2359,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_Like(val string) *__Phone
 	return u
 }
 
-func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_Eq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneNormalizedNumber_Eq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2370,7 +2370,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	return d
 }
 
-func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_NotEq(val string) *__PhoneContact_Deleter {
+func (d *__PhoneContactsCopy_Deleter) PhoneNormalizedNumber_NotEq(val string) *__PhoneContactsCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2383,7 +2383,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_NotEq(val string) *__Phon
 
 ////////ints
 
-func (u *__PhoneContact_Updater) PhoneDisplayName_In(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneDisplayName_In(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2396,7 +2396,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_In(ins []string) *__PhoneConta
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneDisplayName_NotIn(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneDisplayName_NotIn(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2410,7 +2410,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_NotIn(ins []string) *__PhoneCo
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Updater) PhoneDisplayName_Like(val string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneDisplayName_Like(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2421,7 +2421,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_Like(val string) *__PhoneConta
 	return u
 }
 
-func (d *__PhoneContact_Updater) PhoneDisplayName_Eq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneDisplayName_Eq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2432,7 +2432,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_Eq(val string) *__PhoneContact
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneDisplayName_NotEq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneDisplayName_NotEq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2443,7 +2443,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	return d
 }
 
-func (u *__PhoneContact_Updater) PhoneFamilyName_In(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneFamilyName_In(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2456,7 +2456,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_In(ins []string) *__PhoneContac
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneFamilyName_NotIn(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneFamilyName_NotIn(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2470,7 +2470,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_NotIn(ins []string) *__PhoneCon
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Updater) PhoneFamilyName_Like(val string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneFamilyName_Like(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2481,7 +2481,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_Like(val string) *__PhoneContac
 	return u
 }
 
-func (d *__PhoneContact_Updater) PhoneFamilyName_Eq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneFamilyName_Eq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2492,7 +2492,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneFamilyName_NotEq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneFamilyName_NotEq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2503,7 +2503,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	return d
 }
 
-func (u *__PhoneContact_Updater) PhoneNumber_In(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNumber_In(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2516,7 +2516,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_In(ins []string) *__PhoneContact_Up
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneNumber_NotIn(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNumber_NotIn(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2530,7 +2530,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_NotIn(ins []string) *__PhoneContact
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Updater) PhoneNumber_Like(val string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNumber_Like(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2541,7 +2541,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_Like(val string) *__PhoneContact_Up
 	return u
 }
 
-func (d *__PhoneContact_Updater) PhoneNumber_Eq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneNumber_Eq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2552,7 +2552,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_Eq(val string) *__PhoneContact_Upda
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneNumber_NotEq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneNumber_NotEq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2563,7 +2563,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_NotEq(val string) *__PhoneContact_U
 	return d
 }
 
-func (u *__PhoneContact_Updater) PhoneNormalizedNumber_In(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNormalizedNumber_In(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2576,7 +2576,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_In(ins []string) *__Phone
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2590,7 +2590,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_NotIn(ins []string) *__Ph
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Updater) PhoneNormalizedNumber_Like(val string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNormalizedNumber_Like(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2601,7 +2601,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_Like(val string) *__Phone
 	return u
 }
 
-func (d *__PhoneContact_Updater) PhoneNormalizedNumber_Eq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneNormalizedNumber_Eq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2612,7 +2612,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	return d
 }
 
-func (d *__PhoneContact_Updater) PhoneNormalizedNumber_NotEq(val string) *__PhoneContact_Updater {
+func (d *__PhoneContactsCopy_Updater) PhoneNormalizedNumber_NotEq(val string) *__PhoneContactsCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2625,7 +2625,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_NotEq(val string) *__Phon
 
 ////////ints
 
-func (u *__PhoneContact_Selector) PhoneDisplayName_In(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneDisplayName_In(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2638,7 +2638,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_In(ins []string) *__PhoneCont
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneDisplayName_NotIn(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneDisplayName_NotIn(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2652,7 +2652,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_NotIn(ins []string) *__PhoneC
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Selector) PhoneDisplayName_Like(val string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneDisplayName_Like(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2663,7 +2663,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_Like(val string) *__PhoneCont
 	return u
 }
 
-func (d *__PhoneContact_Selector) PhoneDisplayName_Eq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneDisplayName_Eq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2674,7 +2674,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_Eq(val string) *__PhoneContac
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneDisplayName_NotEq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneDisplayName_NotEq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2685,7 +2685,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_NotEq(val string) *__PhoneCon
 	return d
 }
 
-func (u *__PhoneContact_Selector) PhoneFamilyName_In(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneFamilyName_In(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2698,7 +2698,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_In(ins []string) *__PhoneConta
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneFamilyName_NotIn(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneFamilyName_NotIn(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2712,7 +2712,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_NotIn(ins []string) *__PhoneCo
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Selector) PhoneFamilyName_Like(val string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneFamilyName_Like(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2723,7 +2723,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_Like(val string) *__PhoneConta
 	return u
 }
 
-func (d *__PhoneContact_Selector) PhoneFamilyName_Eq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneFamilyName_Eq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2734,7 +2734,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_Eq(val string) *__PhoneContact
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneFamilyName_NotEq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneFamilyName_NotEq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2745,7 +2745,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_NotEq(val string) *__PhoneCont
 	return d
 }
 
-func (u *__PhoneContact_Selector) PhoneNumber_In(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNumber_In(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2758,7 +2758,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_In(ins []string) *__PhoneContact_S
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneNumber_NotIn(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNumber_NotIn(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2772,7 +2772,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_NotIn(ins []string) *__PhoneContac
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Selector) PhoneNumber_Like(val string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNumber_Like(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2783,7 +2783,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_Like(val string) *__PhoneContact_S
 	return u
 }
 
-func (d *__PhoneContact_Selector) PhoneNumber_Eq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneNumber_Eq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2794,7 +2794,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_Eq(val string) *__PhoneContact_Sel
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneNumber_NotEq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneNumber_NotEq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2805,7 +2805,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_NotEq(val string) *__PhoneContact_
 	return d
 }
 
-func (u *__PhoneContact_Selector) PhoneNormalizedNumber_In(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNormalizedNumber_In(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2818,7 +2818,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_In(ins []string) *__Phon
 	return u
 }
 
-func (u *__PhoneContact_Selector) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNormalizedNumber_NotIn(ins []string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2832,7 +2832,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_NotIn(ins []string) *__P
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PhoneContact_Selector) PhoneNormalizedNumber_Like(val string) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) PhoneNormalizedNumber_Like(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2843,7 +2843,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_Like(val string) *__Phon
 	return u
 }
 
-func (d *__PhoneContact_Selector) PhoneNormalizedNumber_Eq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneNormalizedNumber_Eq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2854,7 +2854,7 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_Eq(val string) *__PhoneC
 	return d
 }
 
-func (d *__PhoneContact_Selector) PhoneNormalizedNumber_NotEq(val string) *__PhoneContact_Selector {
+func (d *__PhoneContactsCopy_Selector) PhoneNormalizedNumber_NotEq(val string) *__PhoneContactsCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2871,12 +2871,12 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_NotEq(val string) *__Pho
 
 //ints
 
-func (u *__PhoneContact_Updater) Id(newVal int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Id(newVal int) *__PhoneContactsCopy_Updater {
 	u.updates[" Id = ? "] = newVal
 	return u
 }
 
-func (u *__PhoneContact_Updater) Id_Increment(count int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) Id_Increment(count int) *__PhoneContactsCopy_Updater {
 	if count > 0 {
 		u.updates[" Id = Id+? "] = count
 	}
@@ -2892,50 +2892,8 @@ func (u *__PhoneContact_Updater) Id_Increment(count int) *__PhoneContact_Updater
 
 //ints
 
-func (u *__PhoneContact_Updater) UserId(newVal int) *__PhoneContact_Updater {
-	u.updates[" UserId = ? "] = newVal
-	return u
-}
-
-func (u *__PhoneContact_Updater) UserId_Increment(count int) *__PhoneContact_Updater {
-	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
 //string
-
-//ints
-
-func (u *__PhoneContact_Updater) Phone(newVal int) *__PhoneContact_Updater {
-	u.updates[" Phone = ? "] = newVal
-	return u
-}
-
-func (u *__PhoneContact_Updater) Phone_Increment(count int) *__PhoneContact_Updater {
-	if count > 0 {
-		u.updates[" Phone = Phone+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Phone = Phone-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-//string
-func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneDisplayName(newVal string) *__PhoneContactsCopy_Updater {
 	u.updates[" PhoneDisplayName = ? "] = newVal
 	return u
 }
@@ -2943,7 +2901,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact
 //ints
 
 //string
-func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneFamilyName(newVal string) *__PhoneContactsCopy_Updater {
 	u.updates[" PhoneFamilyName = ? "] = newVal
 	return u
 }
@@ -2951,7 +2909,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_
 //ints
 
 //string
-func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNumber(newVal string) *__PhoneContactsCopy_Updater {
 	u.updates[" PhoneNumber = ? "] = newVal
 	return u
 }
@@ -2959,19 +2917,19 @@ func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Upda
 //ints
 
 //string
-func (u *__PhoneContact_Updater) PhoneNormalizedNumber(newVal string) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneNormalizedNumber(newVal string) *__PhoneContactsCopy_Updater {
 	u.updates[" PhoneNormalizedNumber = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__PhoneContact_Updater) PhoneContactRowId(newVal int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneContactRowId(newVal int) *__PhoneContactsCopy_Updater {
 	u.updates[" PhoneContactRowId = ? "] = newVal
 	return u
 }
 
-func (u *__PhoneContact_Updater) PhoneContactRowId_Increment(count int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) PhoneContactRowId_Increment(count int) *__PhoneContactsCopy_Updater {
 	if count > 0 {
 		u.updates[" PhoneContactRowId = PhoneContactRowId+? "] = count
 	}
@@ -2987,12 +2945,33 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_Increment(count int) *__Phone
 
 //ints
 
-func (u *__PhoneContact_Updater) DeviceUuidId(newVal int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) UserId(newVal int) *__PhoneContactsCopy_Updater {
+	u.updates[" UserId = ? "] = newVal
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UserId_Increment(count int) *__PhoneContactsCopy_Updater {
+	if count > 0 {
+		u.updates[" UserId = UserId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__PhoneContactsCopy_Updater) DeviceUuidId(newVal int) *__PhoneContactsCopy_Updater {
 	u.updates[" DeviceUuidId = ? "] = newVal
 	return u
 }
 
-func (u *__PhoneContact_Updater) DeviceUuidId_Increment(count int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) DeviceUuidId_Increment(count int) *__PhoneContactsCopy_Updater {
 	if count > 0 {
 		u.updates[" DeviceUuidId = DeviceUuidId+? "] = count
 	}
@@ -3008,12 +2987,12 @@ func (u *__PhoneContact_Updater) DeviceUuidId_Increment(count int) *__PhoneConta
 
 //ints
 
-func (u *__PhoneContact_Updater) CreatedTime(newVal int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) CreatedTime(newVal int) *__PhoneContactsCopy_Updater {
 	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__PhoneContact_Updater) CreatedTime_Increment(count int) *__PhoneContact_Updater {
+func (u *__PhoneContactsCopy_Updater) CreatedTime_Increment(count int) *__PhoneContactsCopy_Updater {
 	if count > 0 {
 		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
@@ -3027,176 +3006,197 @@ func (u *__PhoneContact_Updater) CreatedTime_Increment(count int) *__PhoneContac
 
 //string
 
+//ints
+
+func (u *__PhoneContactsCopy_Updater) UpdatedTime(newVal int) *__PhoneContactsCopy_Updater {
+	u.updates[" UpdatedTime = ? "] = newVal
+	return u
+}
+
+func (u *__PhoneContactsCopy_Updater) UpdatedTime_Increment(count int) *__PhoneContactsCopy_Updater {
+	if count > 0 {
+		u.updates[" UpdatedTime = UpdatedTime+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" UpdatedTime = UpdatedTime-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__PhoneContact_Selector) OrderBy_Id_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_Id_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_Id_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_Id_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_Id() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_Id() *__PhoneContactsCopy_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_UserId_Desc() *__PhoneContact_Selector {
-	u.orderBy = " ORDER BY UserId DESC "
-	return u
-}
-
-func (u *__PhoneContact_Selector) OrderBy_UserId_Asc() *__PhoneContact_Selector {
-	u.orderBy = " ORDER BY UserId ASC "
-	return u
-}
-
-func (u *__PhoneContact_Selector) Select_UserId() *__PhoneContact_Selector {
-	u.selectCol = "UserId"
-	return u
-}
-
-func (u *__PhoneContact_Selector) OrderBy_Phone_Desc() *__PhoneContact_Selector {
-	u.orderBy = " ORDER BY Phone DESC "
-	return u
-}
-
-func (u *__PhoneContact_Selector) OrderBy_Phone_Asc() *__PhoneContact_Selector {
-	u.orderBy = " ORDER BY Phone ASC "
-	return u
-}
-
-func (u *__PhoneContact_Selector) Select_Phone() *__PhoneContact_Selector {
-	u.selectCol = "Phone"
-	return u
-}
-
-func (u *__PhoneContact_Selector) OrderBy_PhoneDisplayName_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneDisplayName_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneDisplayName DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneDisplayName_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneDisplayName_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneDisplayName ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_PhoneDisplayName() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_PhoneDisplayName() *__PhoneContactsCopy_Selector {
 	u.selectCol = "PhoneDisplayName"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneFamilyName_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneFamilyName_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneFamilyName DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneFamilyName_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneFamilyName_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneFamilyName ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_PhoneFamilyName() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_PhoneFamilyName() *__PhoneContactsCopy_Selector {
 	u.selectCol = "PhoneFamilyName"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneNumber_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneNumber_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneNumber DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneNumber_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneNumber_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneNumber ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_PhoneNumber() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_PhoneNumber() *__PhoneContactsCopy_Selector {
 	u.selectCol = "PhoneNumber"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneNormalizedNumber_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneNormalizedNumber_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneNormalizedNumber DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneNormalizedNumber_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneNormalizedNumber_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneNormalizedNumber ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_PhoneNormalizedNumber() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_PhoneNormalizedNumber() *__PhoneContactsCopy_Selector {
 	u.selectCol = "PhoneNormalizedNumber"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneContactRowId_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneContactRowId_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneContactRowId DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_PhoneContactRowId_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_PhoneContactRowId_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY PhoneContactRowId ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_PhoneContactRowId() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_PhoneContactRowId() *__PhoneContactsCopy_Selector {
 	u.selectCol = "PhoneContactRowId"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_DeviceUuidId_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_UserId_Desc() *__PhoneContactsCopy_Selector {
+	u.orderBy = " ORDER BY UserId DESC "
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) OrderBy_UserId_Asc() *__PhoneContactsCopy_Selector {
+	u.orderBy = " ORDER BY UserId ASC "
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) Select_UserId() *__PhoneContactsCopy_Selector {
+	u.selectCol = "UserId"
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) OrderBy_DeviceUuidId_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY DeviceUuidId DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_DeviceUuidId_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_DeviceUuidId_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY DeviceUuidId ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_DeviceUuidId() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_DeviceUuidId() *__PhoneContactsCopy_Selector {
 	u.selectCol = "DeviceUuidId"
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_CreatedTime_Desc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_CreatedTime_Desc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) OrderBy_CreatedTime_Asc() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_CreatedTime_Asc() *__PhoneContactsCopy_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__PhoneContact_Selector) Select_CreatedTime() *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Select_CreatedTime() *__PhoneContactsCopy_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__PhoneContact_Selector) Limit(num int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) OrderBy_UpdatedTime_Desc() *__PhoneContactsCopy_Selector {
+	u.orderBy = " ORDER BY UpdatedTime DESC "
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) OrderBy_UpdatedTime_Asc() *__PhoneContactsCopy_Selector {
+	u.orderBy = " ORDER BY UpdatedTime ASC "
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) Select_UpdatedTime() *__PhoneContactsCopy_Selector {
+	u.selectCol = "UpdatedTime"
+	return u
+}
+
+func (u *__PhoneContactsCopy_Selector) Limit(num int) *__PhoneContactsCopy_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__PhoneContact_Selector) Offset(num int) *__PhoneContact_Selector {
+func (u *__PhoneContactsCopy_Selector) Offset(num int) *__PhoneContactsCopy_Selector {
 	u.offset = num
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__PhoneContact_Selector) _stoSql() (string, []interface{}) {
+func (u *__PhoneContactsCopy_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.phone_contacts"
+	sqlstr := "SELECT " + u.selectCol + " FROM ms.phone_contacts_copy"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3216,14 +3216,14 @@ func (u *__PhoneContact_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__PhoneContact_Selector) GetRow(db *sqlx.DB) (*PhoneContact, error) {
+func (u *__PhoneContactsCopy_Selector) GetRow(db *sqlx.DB) (*PhoneContactsCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	row := &PhoneContact{}
+	row := &PhoneContactsCopy{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
@@ -3233,19 +3233,19 @@ func (u *__PhoneContact_Selector) GetRow(db *sqlx.DB) (*PhoneContact, error) {
 
 	row._exists = true
 
-	OnPhoneContact_LoadOne(row)
+	OnPhoneContactsCopy_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__PhoneContact_Selector) GetRows(db *sqlx.DB) ([]*PhoneContact, error) {
+func (u *__PhoneContactsCopy_Selector) GetRows(db *sqlx.DB) ([]*PhoneContactsCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*PhoneContact
+	var rows []*PhoneContactsCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -3261,20 +3261,20 @@ func (u *__PhoneContact_Selector) GetRows(db *sqlx.DB) ([]*PhoneContact, error) 
 		rows[i]._exists = true
 	}
 
-	OnPhoneContact_LoadMany(rows)
+	OnPhoneContactsCopy_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__PhoneContact_Selector) GetRows2(db *sqlx.DB) ([]PhoneContact, error) {
+func (u *__PhoneContactsCopy_Selector) GetRows2(db *sqlx.DB) ([]PhoneContactsCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*PhoneContact
+	var rows []*PhoneContactsCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -3290,9 +3290,9 @@ func (u *__PhoneContact_Selector) GetRows2(db *sqlx.DB) ([]PhoneContact, error) 
 		rows[i]._exists = true
 	}
 
-	OnPhoneContact_LoadMany(rows)
+	OnPhoneContactsCopy_LoadMany(rows)
 
-	rows2 := make([]PhoneContact, len(rows))
+	rows2 := make([]PhoneContactsCopy, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -3301,7 +3301,7 @@ func (u *__PhoneContact_Selector) GetRows2(db *sqlx.DB) ([]PhoneContact, error) 
 	return rows2, nil
 }
 
-func (u *__PhoneContact_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PhoneContactsCopy_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -3319,7 +3319,7 @@ func (u *__PhoneContact_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__PhoneContact_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PhoneContactsCopy_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -3337,7 +3337,7 @@ func (u *__PhoneContact_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) 
 	return rows, nil
 }
 
-func (u *__PhoneContact_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PhoneContactsCopy_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -3355,7 +3355,7 @@ func (u *__PhoneContact_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__PhoneContact_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PhoneContactsCopy_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -3374,7 +3374,7 @@ func (u *__PhoneContact_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__PhoneContact_Updater) Update(db XODB) (int, error) {
+func (u *__PhoneContactsCopy_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -3391,7 +3391,7 @@ func (u *__PhoneContact_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.phone_contacts SET ` + sqlUpdate
+	sqlstr := `UPDATE ms.phone_contacts_copy SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3413,7 +3413,7 @@ func (u *__PhoneContact_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__PhoneContact_Deleter) Delete(db XODB) (int, error) {
+func (d *__PhoneContactsCopy_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -3426,7 +3426,7 @@ func (d *__PhoneContact_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.phone_contacts WHERE " + wheresStr
+	sqlstr := "DELETE FROM ms.phone_contacts_copy WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3446,9 +3446,9 @@ func (d *__PhoneContact_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  PhoneContact ////////////////
+///////////////////////// Mass insert - replace for  PhoneContactsCopy ////////////////
 
-func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
+func MassInsert_PhoneContactsCopy(rows []PhoneContactsCopy, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -3459,8 +3459,8 @@ func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.phone_contacts (" +
-		"UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime" +
+	sqlstr := "INSERT INTO ms.phone_contacts_copy (" +
+		"PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3468,15 +3468,15 @@ func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.UserId)
-		vals = append(vals, row.Phone)
 		vals = append(vals, row.PhoneDisplayName)
 		vals = append(vals, row.PhoneFamilyName)
 		vals = append(vals, row.PhoneNumber)
 		vals = append(vals, row.PhoneNormalizedNumber)
 		vals = append(vals, row.PhoneContactRowId)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.DeviceUuidId)
 		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.UpdatedTime)
 
 	}
 
@@ -3491,15 +3491,15 @@ func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
 	return nil
 }
 
-func MassReplace_PhoneContact(rows []PhoneContact, db XODB) error {
+func MassReplace_PhoneContactsCopy(rows []PhoneContactsCopy, db XODB) error {
 	var err error
 	ln := len(rows)
 	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.phone_contacts (" +
-		"UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime" +
+	sqlstr := "REPLACE INTO ms.phone_contacts_copy (" +
+		"PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3507,15 +3507,15 @@ func MassReplace_PhoneContact(rows []PhoneContact, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.UserId)
-		vals = append(vals, row.Phone)
 		vals = append(vals, row.PhoneDisplayName)
 		vals = append(vals, row.PhoneFamilyName)
 		vals = append(vals, row.PhoneNumber)
 		vals = append(vals, row.PhoneNormalizedNumber)
 		vals = append(vals, row.PhoneContactRowId)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.DeviceUuidId)
 		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.UpdatedTime)
 
 	}
 

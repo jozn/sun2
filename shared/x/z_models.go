@@ -457,6 +457,35 @@ type NotifyRemoved struct {
 // phone_contacts 'PhoneContact'.
 type PhoneContact struct {
 	Id                    int
+	UserId                int
+	Phone                 int
+	PhoneDisplayName      string
+	PhoneFamilyName       string
+	PhoneNumber           string
+	PhoneNormalizedNumber string
+	PhoneContactRowId     int
+	DeviceUuidId          int
+	CreatedTime           int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &PhoneContact {
+	Id: 0,
+	UserId: 0,
+	Phone: 0,
+	PhoneDisplayName: "",
+	PhoneFamilyName: "",
+	PhoneNumber: "",
+	PhoneNormalizedNumber: "",
+	PhoneContactRowId: 0,
+	DeviceUuidId: 0,
+	CreatedTime: 0,
+*/
+// phone_contacts_copy 'PhoneContactsCopy'.
+type PhoneContactsCopy struct {
+	Id                    int
 	PhoneDisplayName      string
 	PhoneFamilyName       string
 	PhoneNumber           string
@@ -471,7 +500,7 @@ type PhoneContact struct {
 }
 
 /*
-:= &PhoneContact {
+:= &PhoneContactsCopy {
 	Id: 0,
 	PhoneDisplayName: "",
 	PhoneFamilyName: "",

@@ -24,6 +24,7 @@ func PostsViews(posts []*x.Post, UserId int) (viw []*x.PB_PostView) {
 	return viw
 }
 
+//todo improve this to just look at cashe via preloading
 func PostsViewsForPostIds(postsIds []int, MeId int) (viw []*x.PB_PostView) {
 	if len(postsIds) != 0 {
 		posts, err := x.NewPost_Selector().PostId_In(postsIds).GetRows(base.DB)
@@ -82,7 +83,7 @@ func PostSingleView(post *x.Post, MeId int) *x.PB_PostView {
 	if x.MediaTypeEnum(post.PostTypeEnum) == x.MediaTypeEnum_MEDIA_IMAGE {
 		m, ok := x.Store.GetMediaByMediaId(post.PostId)
 		if ok {
-			v.Media = &x.PB_MediaView{
+			v.MediaView = &x.PB_MediaView{
 				MediaId:     int64(m.MediaId),
 				UserId:      int32(m.UserId),
 				PostId:      int32(m.PostId),
@@ -96,6 +97,6 @@ func PostSingleView(post *x.Post, MeId int) *x.PB_PostView {
 			}
 		}
 	}
-	v.SenderUser = UserViewAndMe(post.UserId, MeId)
+	v.SenderUserView = UserViewAndMe(post.UserId, MeId)
 	return v
 }

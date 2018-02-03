@@ -3966,10 +3966,10 @@ public class PBFlatTypes {
 	   public long ReSharedPostId;
 	   public boolean DidILiked;
 	   public boolean DidIReShared;
-	   public PB_UserView SenderUser;
-	   public PB_UserView ReSharedUser;
-	   public PB_MediaView Media;
-	   public PB_MediaView MediaList;
+	   public PB_UserView SenderUserView;
+	   public PB_UserView ReSharedUserView;
+	   public PB_MediaView MediaView;
+	   public PB_MediaView MediaViewList;
 	}
 	/*
 	folding
@@ -3991,10 +3991,10 @@ public class PBFlatTypes {
     t.setReSharedPostId();
     t.setDidILiked();
     t.setDidIReShared();
-    t.setSenderUser();
-    t.setReSharedUser();
-    t.setMedia();
-    t.setMediaList();
+    t.setSenderUserView();
+    t.setReSharedUserView();
+    t.setMediaView();
+    t.setMediaViewList();
 	*/
 
 	/*
@@ -4016,10 +4016,10 @@ public class PBFlatTypes {
 	t.ReSharedPostId = ;
 	t.DidILiked = ;
 	t.DidIReShared = ;
-	t.SenderUser = ;
-	t.ReSharedUser = ;
-	t.Media = ;
-	t.MediaList = ;
+	t.SenderUserView = ;
+	t.ReSharedUserView = ;
+	t.MediaView = ;
+	t.MediaViewList = ;
 	*/
 
 	/*
@@ -4041,10 +4041,10 @@ public class PBFlatTypes {
 	t.ReSharedPostId = m.getReSharedPostId() ;
 	t.DidILiked = m.getDidILiked() ;
 	t.DidIReShared = m.getDidIReShared() ;
-	t.SenderUser = m.getSenderUser() ;
-	t.ReSharedUser = m.getReSharedUser() ;
-	t.Media = m.getMedia() ;
-	t.MediaList = m.getMediaList() ;
+	t.SenderUserView = m.getSenderUserView() ;
+	t.ReSharedUserView = m.getReSharedUserView() ;
+	t.MediaView = m.getMediaView() ;
+	t.MediaViewList = m.getMediaViewList() ;
 	*/
 
 	public class PB_MediaView {
@@ -4115,11 +4115,11 @@ public class PBFlatTypes {
 	   public long CommentId;
 	   public long Murmur64Hash;
 	   public int CreatedTime;
-	   public PB_UserView ActorUser;
-	   public PB_PostView Post;
-	   public PB_CommentView Comment;
-	   public PB_UserView FollowedUser;
-	   public PB_UserView ContentOwenerUser;
+	   public PB_UserView ActorUserView;
+	   public PB_PostView PostView;
+	   public PB_CommentView CommentView;
+	   public PB_UserView FollowedUserView;
+	   public PB_UserView ContentOwenerUserView;
 	}
 	/*
 	folding
@@ -4132,11 +4132,11 @@ public class PBFlatTypes {
     t.setCommentId();
     t.setMurmur64Hash();
     t.setCreatedTime();
-    t.setActorUser();
-    t.setPost();
-    t.setComment();
-    t.setFollowedUser();
-    t.setContentOwenerUser();
+    t.setActorUserView();
+    t.setPostView();
+    t.setCommentView();
+    t.setFollowedUserView();
+    t.setContentOwenerUserView();
 	*/
 
 	/*
@@ -4149,11 +4149,11 @@ public class PBFlatTypes {
 	t.CommentId = ;
 	t.Murmur64Hash = ;
 	t.CreatedTime = ;
-	t.ActorUser = ;
-	t.Post = ;
-	t.Comment = ;
-	t.FollowedUser = ;
-	t.ContentOwenerUser = ;
+	t.ActorUserView = ;
+	t.PostView = ;
+	t.CommentView = ;
+	t.FollowedUserView = ;
+	t.ContentOwenerUserView = ;
 	*/
 
 	/*
@@ -4166,11 +4166,11 @@ public class PBFlatTypes {
 	t.CommentId = m.getCommentId() ;
 	t.Murmur64Hash = m.getMurmur64Hash() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.ActorUser = m.getActorUser() ;
-	t.Post = m.getPost() ;
-	t.Comment = m.getComment() ;
-	t.FollowedUser = m.getFollowedUser() ;
-	t.ContentOwenerUser = m.getContentOwenerUser() ;
+	t.ActorUserView = m.getActorUserView() ;
+	t.PostView = m.getPostView() ;
+	t.CommentView = m.getCommentView() ;
+	t.FollowedUserView = m.getFollowedUserView() ;
+	t.ContentOwenerUserView = m.getContentOwenerUserView() ;
 	*/
 
 	public class PB_NotifyView {
@@ -4184,9 +4184,9 @@ public class PBFlatTypes {
 	   public long Murmur64Hash;
 	   public int SeenStatus;
 	   public int CreatedTime;
-	   public PB_UserView ActorUser;
-	   public PB_PostView Post;
-	   public PB_CommentView Comment;
+	   public PB_UserView ActorUserView;
+	   public PB_PostView PostView;
+	   public PB_CommentView CommentView;
 	}
 	/*
 	folding
@@ -4201,9 +4201,9 @@ public class PBFlatTypes {
     t.setMurmur64Hash();
     t.setSeenStatus();
     t.setCreatedTime();
-    t.setActorUser();
-    t.setPost();
-    t.setComment();
+    t.setActorUserView();
+    t.setPostView();
+    t.setCommentView();
 	*/
 
 	/*
@@ -4218,9 +4218,9 @@ public class PBFlatTypes {
 	t.Murmur64Hash = ;
 	t.SeenStatus = ;
 	t.CreatedTime = ;
-	t.ActorUser = ;
-	t.Post = ;
-	t.Comment = ;
+	t.ActorUserView = ;
+	t.PostView = ;
+	t.CommentView = ;
 	*/
 
 	/*
@@ -4235,9 +4235,9 @@ public class PBFlatTypes {
 	t.Murmur64Hash = m.getMurmur64Hash() ;
 	t.SeenStatus = m.getSeenStatus() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.ActorUser = m.getActorUser() ;
-	t.Post = m.getPost() ;
-	t.Comment = m.getComment() ;
+	t.ActorUserView = m.getActorUserView() ;
+	t.PostView = m.getPostView() ;
+	t.CommentView = m.getCommentView() ;
 	*/
 
 	public class PB_CommentView {
@@ -4247,7 +4247,7 @@ public class PBFlatTypes {
 	   public String Text;
 	   public int LikesCount;
 	   public int CreatedTime;
-	   public PB_UserView SenderUser;
+	   public PB_UserView SenderUserView;
 	}
 	/*
 	folding
@@ -4258,7 +4258,7 @@ public class PBFlatTypes {
     t.setText();
     t.setLikesCount();
     t.setCreatedTime();
-    t.setSenderUser();
+    t.setSenderUserView();
 	*/
 
 	/*
@@ -4269,7 +4269,7 @@ public class PBFlatTypes {
 	t.Text = ;
 	t.LikesCount = ;
 	t.CreatedTime = ;
-	t.SenderUser = ;
+	t.SenderUserView = ;
 	*/
 
 	/*
@@ -4280,7 +4280,7 @@ public class PBFlatTypes {
 	t.Text = m.getText() ;
 	t.LikesCount = m.getLikesCount() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.SenderUser = m.getSenderUser() ;
+	t.SenderUserView = m.getSenderUserView() ;
 	*/
 
 	public class PB_UserView {
@@ -4418,6 +4418,64 @@ public class PBFlatTypes {
 	t.Id = m.getId() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	t.UserView = m.getUserView() ;
+	*/
+
+	public class PB_TagView {
+	   public long TagId;
+	   public String Name;
+	   public int Count;
+	   public int TagStatusEnum;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_TagView t = new PBFlatTypes.PB_TagView();
+    t.setTagId();
+    t.setName();
+    t.setCount();
+    t.setTagStatusEnum();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_TagView t = new PBFlatTypes.PB_TagView();
+	t.TagId = ;
+	t.Name = ;
+	t.Count = ;
+	t.TagStatusEnum = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_TagView t = new PB_TagView();
+	t.TagId = m.getTagId() ;
+	t.Name = m.getName() ;
+	t.Count = m.getCount() ;
+	t.TagStatusEnum = m.getTagStatusEnum() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_TopTagWithSamplePosts {
+	   public PB_TagView TagView;
+	   public PB_PostView PostViewList;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_TopTagWithSamplePosts t = new PBFlatTypes.PB_TopTagWithSamplePosts();
+    t.setTagView();
+    t.setPostViewList();
+	*/
+
+	/*
+	PBFlatTypes.PB_TopTagWithSamplePosts t = new PBFlatTypes.PB_TopTagWithSamplePosts();
+	t.TagView = ;
+	t.PostViewList = ;
+	*/
+
+	/*
+	PB_TopTagWithSamplePosts t = new PB_TopTagWithSamplePosts();
+	t.TagView = m.getTagView() ;
+	t.PostViewList = m.getPostViewList() ;
 	*/
 
 	public class PB_ChatView {

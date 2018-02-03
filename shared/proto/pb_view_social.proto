@@ -32,10 +32,10 @@ message PB_PostView {
     bool DidILiked = 50;
     bool DidIReShared = 51;
 
-    PB_UserView SenderUser = 100;
-    PB_UserView ReSharedUser = 101;
-    PB_MediaView Media = 102;
-    repeated PB_MediaView MediaList = 103;
+    PB_UserView SenderUserView = 100;
+    PB_UserView ReSharedUserView = 101;
+    PB_MediaView MediaView = 102;
+    repeated PB_MediaView MediaViewList = 103;
 }
 
 message PB_MediaView {
@@ -63,11 +63,11 @@ message PB_ActionView {
     int64 Murmur64Hash = 7;
     int32 CreatedTime = 8;
 
-    PB_UserView ActorUser = 100;
-    PB_PostView Post   = 101;
-    PB_CommentView Comment = 102;
-    PB_UserView FollowedUser = 103;
-    PB_UserView ContentOwenerUser = 104;
+    PB_UserView ActorUserView = 100;
+    PB_PostView PostView   = 101;
+    PB_CommentView CommentView = 102;
+    PB_UserView FollowedUserView = 103;
+    PB_UserView ContentOwenerUserView = 104;
 }
 
 message PB_NotifyView {
@@ -82,9 +82,9 @@ message PB_NotifyView {
     int32 SeenStatus = 9;
     int32 CreatedTime = 10;
 
-    PB_UserView ActorUser = 100;
-    PB_PostView Post = 101;
-    PB_CommentView Comment = 102;
+    PB_UserView ActorUserView = 100;
+    PB_PostView PostView = 101;
+    PB_CommentView CommentView = 102;
 }
 message PB_CommentView {
     int64 CommentId = 1;
@@ -94,7 +94,7 @@ message PB_CommentView {
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
 
-    PB_UserView SenderUser = 15;
+    PB_UserView SenderUserView = 15;
 }
 
 message PB_UserView {
@@ -134,4 +134,18 @@ message PB_UserViewRowify {
     int64 Id = 1;
     int32 CreatedTime = 2;
     PB_UserView UserView = 10;
+}
+
+//////////// Tags /////////////
+message PB_TagView {
+    int64 TagId = 1;
+    string Name = 2;
+    int32 Count = 3;
+    int32 TagStatusEnum = 4;
+    int32 CreatedTime = 5;
+}
+
+message PB_TopTagWithSamplePosts {
+    PB_TagView TagView = 1;
+    repeated PB_PostView PostViewList = 2;
 }

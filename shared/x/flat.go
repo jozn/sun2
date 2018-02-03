@@ -4520,27 +4520,27 @@ var PB_UserPassword__FOlD = &PB_UserPassword{
 }
 
 type PB_PostView_Flat struct {
-	PostId         int
-	UserId         int
-	PostTypeEnum   PostTypeEnum
-	Text           string
-	RichText       string
-	MediaCount     int
-	SharedTo       int
-	DisableComment int
-	HasTag         int
-	CommentsCount  int
-	LikesCount     int
-	ViewsCount     int
-	EditedTime     int
-	CreatedTime    int
-	ReSharedPostId int
-	DidILiked      bool
-	DidIReShared   bool
-	SenderUser     PB_UserView
-	ReSharedUser   PB_UserView
-	Media          PB_MediaView
-	MediaList      []PB_MediaView
+	PostId           int
+	UserId           int
+	PostTypeEnum     PostTypeEnum
+	Text             string
+	RichText         string
+	MediaCount       int
+	SharedTo         int
+	DisableComment   int
+	HasTag           int
+	CommentsCount    int
+	LikesCount       int
+	ViewsCount       int
+	EditedTime       int
+	CreatedTime      int
+	ReSharedPostId   int
+	DidILiked        bool
+	DidIReShared     bool
+	SenderUserView   PB_UserView
+	ReSharedUserView PB_UserView
+	MediaView        PB_MediaView
+	MediaViewList    []PB_MediaView
 }
 
 //ToPB
@@ -4678,19 +4678,19 @@ var PB_MediaView__FOlD = &PB_MediaView{
 }
 
 type PB_ActionView_Flat struct {
-	ActionId          int
-	ActorUserId       int
-	ActionTypeEnum    int
-	PeerUserId        int
-	PostId            int
-	CommentId         int
-	Murmur64Hash      int
-	CreatedTime       int
-	ActorUser         PB_UserView
-	Post              PB_PostView
-	Comment           PB_CommentView
-	FollowedUser      PB_UserView
-	ContentOwenerUser PB_UserView
+	ActionId              int
+	ActorUserId           int
+	ActionTypeEnum        int
+	PeerUserId            int
+	PostId                int
+	CommentId             int
+	Murmur64Hash          int
+	CreatedTime           int
+	ActorUserView         PB_UserView
+	PostView              PB_PostView
+	CommentView           PB_CommentView
+	FollowedUserView      PB_UserView
+	ContentOwenerUserView PB_UserView
 }
 
 //ToPB
@@ -4746,9 +4746,9 @@ type PB_NotifyView_Flat struct {
 	Murmur64Hash  int
 	SeenStatus    int
 	CreatedTime   int
-	ActorUser     PB_UserView
-	Post          PB_PostView
-	Comment       PB_CommentView
+	ActorUserView PB_UserView
+	PostView      PB_PostView
+	CommentView   PB_CommentView
 }
 
 //ToPB
@@ -4800,13 +4800,13 @@ var PB_NotifyView__FOlD = &PB_NotifyView{
 }
 
 type PB_CommentView_Flat struct {
-	CommentId   int
-	UserId      int
-	PostId      int
-	Text        string
-	LikesCount  int
-	CreatedTime int
-	SenderUser  PB_UserView
+	CommentId      int
+	UserId         int
+	PostId         int
+	Text           string
+	LikesCount     int
+	CreatedTime    int
+	SenderUserView PB_UserView
 }
 
 //ToPB
@@ -4984,6 +4984,67 @@ var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
 	Id:          0,
 	CreatedTime: 0,
 }
+
+type PB_TagView_Flat struct {
+	TagId         int
+	Name          string
+	Count         int
+	TagStatusEnum int
+	CreatedTime   int
+}
+
+//ToPB
+func (m *PB_TagView) ToFlat() *PB_TagView_Flat {
+	r := &PB_TagView_Flat{
+		TagId:         int(m.TagId),
+		Name:          m.Name,
+		Count:         int(m.Count),
+		TagStatusEnum: int(m.TagStatusEnum),
+		CreatedTime:   int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_TagView_Flat) ToPB() *PB_TagView {
+	r := &PB_TagView{
+		TagId:         int64(m.TagId),
+		Name:          m.Name,
+		Count:         int32(m.Count),
+		TagStatusEnum: int32(m.TagStatusEnum),
+		CreatedTime:   int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_TagView__FOlD = &PB_TagView{
+	TagId:         0,
+	Name:          "",
+	Count:         0,
+	TagStatusEnum: 0,
+	CreatedTime:   0,
+}
+
+type PB_TopTagWithSamplePosts_Flat struct {
+	TagView      PB_TagView
+	PostViewList []PB_PostView
+}
+
+//ToPB
+func (m *PB_TopTagWithSamplePosts) ToFlat() *PB_TopTagWithSamplePosts_Flat {
+	r := &PB_TopTagWithSamplePosts_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_TopTagWithSamplePosts_Flat) ToPB() *PB_TopTagWithSamplePosts {
+	r := &PB_TopTagWithSamplePosts{}
+	return r
+}
+
+//folding
+var PB_TopTagWithSamplePosts__FOlD = &PB_TopTagWithSamplePosts{}
 
 type PB_ChatView_Flat struct {
 	ChatKey              string
@@ -6796,6 +6857,25 @@ r := &PB_UserViewRowify_Flat{
 return r
 }
 
+func(m *PB_TagView)ToFlat() *PB_TagView_Flat {
+r := &PB_TagView_Flat{
+    TagId:  int(m.TagId) ,
+    Name:  m.Name ,
+    Count:  int(m.Count) ,
+    TagStatusEnum:  int(m.TagStatusEnum) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_TopTagWithSamplePosts)ToFlat() *PB_TopTagWithSamplePosts_Flat {
+r := &PB_TopTagWithSamplePosts_Flat{
+
+
+}
+return r
+}
+
 func(m *PB_ChatView)ToFlat() *PB_ChatView_Flat {
 r := &PB_ChatView_Flat{
     ChatKey:  m.ChatKey ,
@@ -8332,6 +8412,25 @@ r := &PB_UserViewRowify{
 return r
 }
 
+func(m *PB_TagView_Flat)ToPB() *PB_TagView {
+r := &PB_TagView{
+    TagId:  int64(m.TagId) ,
+    Name:  m.Name ,
+    Count:  int32(m.Count) ,
+    TagStatusEnum:  int32(m.TagStatusEnum) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_TopTagWithSamplePosts_Flat)ToPB() *PB_TopTagWithSamplePosts {
+r := &PB_TopTagWithSamplePosts{
+
+
+}
+return r
+}
+
 func(m *PB_ChatView_Flat)ToPB() *PB_ChatView {
 r := &PB_ChatView{
     ChatKey:  m.ChatKey ,
@@ -9572,6 +9671,21 @@ var PB_TopProfileView__FOlD = &PB_TopProfileView{
 var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
         Id:  0 ,
         CreatedTime:  0 ,
+
+}
+
+
+var PB_TagView__FOlD = &PB_TagView{
+        TagId:  0 ,
+        Name:  "" ,
+        Count:  0 ,
+        TagStatusEnum:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_TopTagWithSamplePosts__FOlD = &PB_TopTagWithSamplePosts{
+
 
 }
 

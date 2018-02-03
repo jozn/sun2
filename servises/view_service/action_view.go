@@ -36,17 +36,17 @@ func Action_GetLastsViews(MeId, Limit, Last int) []*x.PB_ActionView {
 			Murmur64Hash:   int64(act.Murmur64Hash),
 			CreatedTime:    int32(act.CreatedTime),
 		}
-		av.ActorUser = UserViewAndMe(act.ActorUserId, MeId)
+		av.ActorUserView = UserViewAndMe(act.ActorUserId, MeId)
 
 		switch x.ActionEnum(act.ActionTypeEnum) {
 		case x.ActionEnum_ACTION_POST_LIKED:
-			av.Post, _ = PostSingleViewForPostId(act.PostId, MeId)
+			av.PostView, _ = PostSingleViewForPostId(act.PostId, MeId)
 
 		case x.ActionEnum_ACTION_FOLLOWED_USER:
-			av.FollowedUser = UserViewAndMe(act.PeerUserId, MeId)
+			av.FollowedUserView = UserViewAndMe(act.PeerUserId, MeId)
 
 		case x.ActionEnum_ACTION_POST_COMMENTED:
-			av.Comment = SingleCommentView(act.CommentId)
+			av.CommentView = SingleCommentView(act.CommentId)
 		}
 		res = append(res, av)
 	}

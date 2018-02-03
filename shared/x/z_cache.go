@@ -613,6 +613,38 @@ func (c _StoreImpl) PreLoadPhoneContactByIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetPhoneContactsCopyById(Id int) (*PhoneContactsCopy, bool) {
+	o, ok := RowCache.Get("PhoneContactsCopy:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*PhoneContactsCopy); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PhoneContactsCopyById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPhoneContactsCopyByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PhoneContactsCopy:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPhoneContactsCopy_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetPostByPostId(PostId int) (*Post, bool) {
 	o, ok := RowCache.Get("Post:" + strconv.Itoa(PostId))
 	if ok {

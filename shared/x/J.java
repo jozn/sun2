@@ -203,6 +203,19 @@ public class J {
 
 	public static class PhoneContact {//oridnal: 18
 		public int Id;
+		public int UserId;
+		public int Phone;
+		public String PhoneDisplayName;
+		public String PhoneFamilyName;
+		public String PhoneNumber;
+		public String PhoneNormalizedNumber;
+		public int PhoneContactRowId;
+		public int DeviceUuidId;
+		public int CreatedTime;
+	}
+
+	public static class PhoneContactsCopy {//oridnal: 19
+		public int Id;
 		public String PhoneDisplayName;
 		public String PhoneFamilyName;
 		public String PhoneNumber;
@@ -214,7 +227,7 @@ public class J {
 		public int UpdatedTime;
 	}
 
-	public static class Post {//oridnal: 19
+	public static class Post {//oridnal: 20
 		public int PostId;
 		public int UserId;
 		public int PostTypeEnum;
@@ -233,7 +246,7 @@ public class J {
 		public int ReSharedPostId;
 	}
 
-	public static class RecommendUser {//oridnal: 20
+	public static class RecommendUser {//oridnal: 21
 		public int Id;
 		public int UserId;
 		public int TargetId;
@@ -241,7 +254,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SearchClicked {//oridnal: 21
+	public static class SearchClicked {//oridnal: 22
 		public int Id;
 		public String Query;
 		public int ClickType;
@@ -250,7 +263,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class Session {//oridnal: 22
+	public static class Session {//oridnal: 23
 		public int Id;
 		public int UserId;
 		public String SessionUuid;
@@ -266,7 +279,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SettingClient {//oridnal: 23
+	public static class SettingClient {//oridnal: 24
 		public int UserId;
 		public int AutoDownloadWifiVoice;
 		public int AutoDownloadWifiImage;
@@ -289,7 +302,7 @@ public class J {
 		public int SaveToGallery;
 	}
 
-	public static class SettingNotification {//oridnal: 24
+	public static class SettingNotification {//oridnal: 25
 		public int UserId;
 		public int SocialLedOn;
 		public String SocialLedColor;
@@ -312,7 +325,7 @@ public class J {
 		public int DirectPriority;
 	}
 
-	public static class Tag {//oridnal: 25
+	public static class Tag {//oridnal: 26
 		public int TagId;
 		public String Name;
 		public int Count;
@@ -320,7 +333,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TagsPost {//oridnal: 26
+	public static class TagsPost {//oridnal: 27
 		public int Id;
 		public int TagId;
 		public int PostId;
@@ -328,7 +341,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TriggerLog {//oridnal: 27
+	public static class TriggerLog {//oridnal: 28
 		public int Id;
 		public String ModelName;
 		public String ChangeType;
@@ -337,7 +350,7 @@ public class J {
 		public int CreatedSe;
 	}
 
-	public static class User {//oridnal: 28
+	public static class User {//oridnal: 29
 		public int UserId;
 		public String UserName;
 		public String UserNameLower;
@@ -368,14 +381,14 @@ public class J {
 		public String Phone2;
 	}
 
-	public static class UserMetaInfo {//oridnal: 29
+	public static class UserMetaInfo {//oridnal: 30
 		public int Id;
 		public int UserId;
 		public int IsNotificationDirty;
 		public int LastUserRecGen;
 	}
 
-	public static class UserPassword {//oridnal: 30
+	public static class UserPassword {//oridnal: 31
 		public int UserId;
 		public String Password;
 		public int CreatedTime;

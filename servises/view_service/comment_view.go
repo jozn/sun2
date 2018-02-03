@@ -48,7 +48,7 @@ func GetCommentsOfPost(PostId, Limit, Last, MeId int) (views []*x.PB_CommentView
 			LikesCount:  int32(com.LikesCount),
 			CreatedTime: int32(com.CreatedTime),
 		}
-		v.SenderUser = UserViewAndMe(com.UserId, MeId)
+		v.SenderUserView = UserViewAndMe(com.UserId, MeId)
 		views = append(views, v)
 	}
 	return

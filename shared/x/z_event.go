@@ -461,6 +461,30 @@ func OnPhoneContact_LoadMany(rows []*PhoneContact) {
 	}
 }
 
+//PhoneContactsCopy Events
+
+func OnPhoneContactsCopy_AfterInsert(row *PhoneContactsCopy) {
+	RowCache.Set("PhoneContactsCopy:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnPhoneContactsCopy_AfterUpdate(row *PhoneContactsCopy) {
+	RowCache.Set("PhoneContactsCopy:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnPhoneContactsCopy_AfterDelete(row *PhoneContactsCopy) {
+	RowCache.Delete("PhoneContactsCopy:" + strconv.Itoa(row.Id))
+}
+
+func OnPhoneContactsCopy_LoadOne(row *PhoneContactsCopy) {
+	RowCache.Set("PhoneContactsCopy:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnPhoneContactsCopy_LoadMany(rows []*PhoneContactsCopy) {
+	for _, row := range rows {
+		RowCache.Set("PhoneContactsCopy:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
 //Post Events
 
 func OnPost_AfterInsert(row *Post) {

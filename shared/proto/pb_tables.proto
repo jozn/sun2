@@ -191,6 +191,18 @@ message PB_NotifyRemoved {
 }
 message PB_PhoneContact {
     int32 Id = 1;
+    int32 UserId = 2;
+    int64 Phone = 3;
+    string PhoneDisplayName = 4;
+    string PhoneFamilyName = 5;
+    string PhoneNumber = 6;
+    string PhoneNormalizedNumber = 7;
+    int32 PhoneContactRowId = 8;
+    int32 DeviceUuidId = 9;
+    int32 CreatedTime = 10;
+}
+message PB_PhoneContactsCopy {
+    int32 Id = 1;
     string PhoneDisplayName = 2;
     string PhoneFamilyName = 3;
     string PhoneNumber = 4;

@@ -39,6 +39,8 @@ const (
 	NotifyRemoved_TableGo              = "NotifyRemoved"
 	PhoneContact_Table                 = "phone_contacts"
 	PhoneContact_TableGo               = "PhoneContact"
+	PhoneContactsCopy_Table            = "phone_contacts_copy"
+	PhoneContactsCopy_TableGo          = "PhoneContactsCopy"
 	Post_Table                         = "post"
 	Post_TableGo                       = "Post"
 	RecommendUser_Table                = "recommend_user"
@@ -448,6 +450,31 @@ var NotifyRemoved = struct {
 }
 
 var PhoneContact = struct {
+	Id                    string
+	UserId                string
+	Phone                 string
+	PhoneDisplayName      string
+	PhoneFamilyName       string
+	PhoneNumber           string
+	PhoneNormalizedNumber string
+	PhoneContactRowId     string
+	DeviceUuidId          string
+	CreatedTime           string
+}{
+
+	Id:                    "Id",
+	UserId:                "UserId",
+	Phone:                 "Phone",
+	PhoneDisplayName:      "PhoneDisplayName",
+	PhoneFamilyName:       "PhoneFamilyName",
+	PhoneNumber:           "PhoneNumber",
+	PhoneNormalizedNumber: "PhoneNormalizedNumber",
+	PhoneContactRowId:     "PhoneContactRowId",
+	DeviceUuidId:          "DeviceUuidId",
+	CreatedTime:           "CreatedTime",
+}
+
+var PhoneContactsCopy = struct {
 	Id                    string
 	PhoneDisplayName      string
 	PhoneFamilyName       string

@@ -550,6 +550,35 @@ $$
 
 
  #### delimiter ;*/
+################################ PhoneContactsCopy ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnCreateLogger $$
+CREATE TRIGGER phone_contacts_copy_OnCreateLogger AFTER INSERT ON phone_contacts_copy
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PhoneContactsCopy","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnUpdateLogger $$
+CREATE TRIGGER phone_contacts_copy_OnUpdateLogger AFTER UPDATE ON phone_contacts_copy
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PhoneContactsCopy","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnDeleteLogger $$
+CREATE TRIGGER phone_contacts_copy_OnDeleteLogger AFTER DELETE ON phone_contacts_copy
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PhoneContactsCopy","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ Post ######################################
 
 delimiter $$
@@ -979,6 +1008,10 @@ DROP TRIGGER IF EXISTS notify_removed_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS phone_contacts_OnCreateLogger ;
 DROP TRIGGER IF EXISTS phone_contacts_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS phone_contacts_OnDeleteLogger ;
+### PhoneContactsCopy ##
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnCreateLogger ;
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS phone_contacts_copy_OnDeleteLogger ;
 ### Post ##
 DROP TRIGGER IF EXISTS post_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_OnUpdateLogger ;

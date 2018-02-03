@@ -460,6 +460,30 @@ func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 	return &pc, nil
 }
 
+// PhoneContactsCopyById Generated from index 'PRIMARY' -- retrieves a row from 'ms.phone_contacts_copy' as a PhoneContactsCopy.
+func PhoneContactsCopyById(db *sqlx.DB, id int) (*PhoneContactsCopy, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM ms.phone_contacts_copy ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	pcc := PhoneContactsCopy{
+		_exists: true,
+	}
+
+	err = db.Get(&pcc, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPhoneContactsCopy_LoadOne(&pcc)
+
+	return &pcc, nil
+}
+
 // PostByPostId Generated from index 'PRIMARY' -- retrieves a row from 'ms.post' as a Post.
 func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	var err error
