@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectOffline represents a row from 'ms.direct_offline'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectOffline represents a row from 'sun.direct_offline'.
 
 // Manualy copy this to project
 type DirectOffline__ struct {
@@ -47,7 +47,7 @@ func (do *DirectOffline) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.direct_offline (` +
+	const sqlstr = `INSERT INTO sun.direct_offline (` +
 		`DirectOfflineId, ToUserId, ChatKey, MessageId, MessageFileId, PBClass, DataPB, DataJson, DataTemp, AtTimeMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -74,7 +74,7 @@ func (do *DirectOffline) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.direct_offline (` +
+	const sqlstr = `REPLACE INTO sun.direct_offline (` +
 		`DirectOfflineId, ToUserId, ChatKey, MessageId, MessageFileId, PBClass, DataPB, DataJson, DataTemp, AtTimeMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -110,7 +110,7 @@ func (do *DirectOffline) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.direct_offline SET ` +
+	const sqlstr = `UPDATE sun.direct_offline SET ` +
 		`ToUserId = ?, ChatKey = ?, MessageId = ?, MessageFileId = ?, PBClass = ?, DataPB = ?, DataJson = ?, DataTemp = ?, AtTimeMs = ?` +
 		` WHERE DirectOfflineId = ?`
 
@@ -148,7 +148,7 @@ func (do *DirectOffline) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.direct_offline WHERE DirectOfflineId = ?`
+	const sqlstr = `DELETE FROM sun.direct_offline WHERE DirectOfflineId = ?`
 
 	// run query
 	XOLog(sqlstr, do.DirectOfflineId)
@@ -2846,7 +2846,7 @@ func (u *__DirectOffline_Selector) Offset(num int) *__DirectOffline_Selector {
 func (u *__DirectOffline_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.direct_offline"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_offline"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3041,7 +3041,7 @@ func (u *__DirectOffline_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.direct_offline SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.direct_offline SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3076,7 +3076,7 @@ func (d *__DirectOffline_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.direct_offline WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.direct_offline WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3109,7 +3109,7 @@ func MassInsert_DirectOffline(rows []DirectOffline, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.direct_offline (" +
+	sqlstr := "INSERT INTO sun.direct_offline (" +
 		"DirectOfflineId, ToUserId, ChatKey, MessageId, MessageFileId, PBClass, DataPB, DataJson, DataTemp, AtTimeMs" +
 		") VALUES " + insVals
 
@@ -3149,7 +3149,7 @@ func MassReplace_DirectOffline(rows []DirectOffline, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.direct_offline (" +
+	sqlstr := "REPLACE INTO sun.direct_offline (" +
 		"DirectOfflineId, ToUserId, ChatKey, MessageId, MessageFileId, PBClass, DataPB, DataJson, DataTemp, AtTimeMs" +
 		") VALUES " + insVals
 

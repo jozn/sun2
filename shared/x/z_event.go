@@ -509,6 +509,30 @@ func OnPost_LoadMany(rows []*Post) {
 	}
 }
 
+//PostCopy Events
+
+func OnPostCopy_AfterInsert(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_AfterUpdate(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_AfterDelete(row *PostCopy) {
+	RowCache.Delete("PostCopy:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostCopy_LoadOne(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_LoadMany(rows []*PostCopy) {
+	for _, row := range rows {
+		RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	}
+}
+
 //RecommendUser Events
 
 func OnRecommendUser_AfterInsert(row *RecommendUser) {
@@ -626,6 +650,54 @@ func OnSettingNotification_LoadOne(row *SettingNotification) {
 func OnSettingNotification_LoadMany(rows []*SettingNotification) {
 	for _, row := range rows {
 		RowCache.Set("SettingNotification:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+	}
+}
+
+//SuggestedTopPost Events
+
+func OnSuggestedTopPost_AfterInsert(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_AfterUpdate(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_AfterDelete(row *SuggestedTopPost) {
+	RowCache.Delete("SuggestedTopPost:" + strconv.Itoa(row.Id))
+}
+
+func OnSuggestedTopPost_LoadOne(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_LoadMany(rows []*SuggestedTopPost) {
+	for _, row := range rows {
+		RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//SuggestedUser Events
+
+func OnSuggestedUser_AfterInsert(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_AfterUpdate(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_AfterDelete(row *SuggestedUser) {
+	RowCache.Delete("SuggestedUser:" + strconv.Itoa(row.Id))
+}
+
+func OnSuggestedUser_LoadOne(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_LoadMany(rows []*SuggestedUser) {
+	for _, row := range rows {
+		RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
 

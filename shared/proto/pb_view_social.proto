@@ -136,6 +136,11 @@ message PB_UserViewRowify {
     PB_UserView UserView = 10;
 }
 
+message PB_PostViewRowify {
+    int64 Id = 1;
+    PB_PostView PostView = 10;
+}
+
 //////////// Tags /////////////
 message PB_TagView {
     int64 TagId = 1;

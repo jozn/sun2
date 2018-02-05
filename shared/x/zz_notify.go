@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Notify represents a row from 'ms.notify'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Notify represents a row from 'sun.notify'.
 
 // Manualy copy this to project
 type Notify__ struct {
@@ -48,7 +48,7 @@ func (n *Notify) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.notify (` +
+	const sqlstr = `INSERT INTO sun.notify (` +
 		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -75,7 +75,7 @@ func (n *Notify) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.notify (` +
+	const sqlstr = `REPLACE INTO sun.notify (` +
 		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -111,7 +111,7 @@ func (n *Notify) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.notify SET ` +
+	const sqlstr = `UPDATE sun.notify SET ` +
 		`ForUserId = ?, ActorUserId = ?, NotiyTypeEnum = ?, PostId = ?, CommentId = ?, PeerUserId = ?, Murmur64Hash = ?, SeenStatus = ?, CreatedTime = ?, Seq = ?` +
 		` WHERE NotifyId = ?`
 
@@ -149,7 +149,7 @@ func (n *Notify) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.notify WHERE NotifyId = ?`
+	const sqlstr = `DELETE FROM sun.notify WHERE NotifyId = ?`
 
 	// run query
 	XOLog(sqlstr, n.NotifyId)
@@ -4122,7 +4122,7 @@ func (u *__Notify_Selector) Offset(num int) *__Notify_Selector {
 func (u *__Notify_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.notify"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.notify"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4317,7 +4317,7 @@ func (u *__Notify_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.notify SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.notify SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4352,7 +4352,7 @@ func (d *__Notify_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.notify WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.notify WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4385,7 +4385,7 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.notify (" +
+	sqlstr := "INSERT INTO sun.notify (" +
 		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq" +
 		") VALUES " + insVals
 
@@ -4426,7 +4426,7 @@ func MassReplace_Notify(rows []Notify, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.notify (" +
+	sqlstr := "REPLACE INTO sun.notify (" +
 		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq" +
 		") VALUES " + insVals
 

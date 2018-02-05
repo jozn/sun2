@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Action represents a row from 'ms.action'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Action represents a row from 'sun.action'.
 
 // Manualy copy this to project
 type Action__ struct {
@@ -46,7 +46,7 @@ func (a *Action) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.action (` +
+	const sqlstr = `INSERT INTO sun.action (` +
 		`ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -82,7 +82,7 @@ func (a *Action) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.action (` +
+	const sqlstr = `REPLACE INTO sun.action (` +
 		`ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -127,7 +127,7 @@ func (a *Action) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.action SET ` +
+	const sqlstr = `UPDATE sun.action SET ` +
 		`ActorUserId = ?, ActionTypeEnum = ?, PeerUserId = ?, PostId = ?, CommentId = ?, Murmur64Hash = ?, CreatedTime = ?, Seq = ?` +
 		` WHERE ActionId = ?`
 
@@ -165,7 +165,7 @@ func (a *Action) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.action WHERE ActionId = ?`
+	const sqlstr = `DELETE FROM sun.action WHERE ActionId = ?`
 
 	// run query
 	XOLog(sqlstr, a.ActionId)
@@ -3436,7 +3436,7 @@ func (u *__Action_Selector) Offset(num int) *__Action_Selector {
 func (u *__Action_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.action"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.action"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3631,7 +3631,7 @@ func (u *__Action_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.action SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.action SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3666,7 +3666,7 @@ func (d *__Action_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.action WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.action WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3699,7 +3699,7 @@ func MassInsert_Action(rows []Action, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.action (" +
+	sqlstr := "INSERT INTO sun.action (" +
 		"ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq" +
 		") VALUES " + insVals
 
@@ -3737,7 +3737,7 @@ func MassReplace_Action(rows []Action, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.action (" +
+	sqlstr := "REPLACE INTO sun.action (" +
 		"ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq" +
 		") VALUES " + insVals
 

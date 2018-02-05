@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagsPost represents a row from 'ms.tags_posts'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagsPost represents a row from 'sun.tags_posts'.
 
 // Manualy copy this to project
 type TagsPost__ struct {
@@ -42,7 +42,7 @@ func (tp *TagsPost) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.tags_posts (` +
+	const sqlstr = `INSERT INTO sun.tags_posts (` +
 		`TagId, PostId, PostTypeEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -78,7 +78,7 @@ func (tp *TagsPost) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.tags_posts (` +
+	const sqlstr = `REPLACE INTO sun.tags_posts (` +
 		`TagId, PostId, PostTypeEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -123,7 +123,7 @@ func (tp *TagsPost) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.tags_posts SET ` +
+	const sqlstr = `UPDATE sun.tags_posts SET ` +
 		`TagId = ?, PostId = ?, PostTypeEnum = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -161,7 +161,7 @@ func (tp *TagsPost) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.tags_posts WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.tags_posts WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, tp.Id)
@@ -2028,7 +2028,7 @@ func (u *__TagsPost_Selector) Offset(num int) *__TagsPost_Selector {
 func (u *__TagsPost_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.tags_posts"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.tags_posts"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2223,7 +2223,7 @@ func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.tags_posts SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.tags_posts SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2258,7 +2258,7 @@ func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.tags_posts WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.tags_posts WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2291,7 +2291,7 @@ func MassInsert_TagsPost(rows []TagsPost, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.tags_posts (" +
+	sqlstr := "INSERT INTO sun.tags_posts (" +
 		"TagId, PostId, PostTypeEnum, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2325,7 +2325,7 @@ func MassReplace_TagsPost(rows []TagsPost, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.tags_posts (" +
+	sqlstr := "REPLACE INTO sun.tags_posts (" +
 		"TagId, PostId, PostTypeEnum, CreatedTime" +
 		") VALUES " + insVals
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMember represents a row from 'ms.following_list_member'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMember represents a row from 'sun.following_list_member'.
 
 // Manualy copy this to project
 type FollowingListMember__ struct {
@@ -42,7 +42,7 @@ func (flm *FollowingListMember) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.following_list_member (` +
+	const sqlstr = `INSERT INTO sun.following_list_member (` +
 		`ListId, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -78,7 +78,7 @@ func (flm *FollowingListMember) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.following_list_member (` +
+	const sqlstr = `REPLACE INTO sun.following_list_member (` +
 		`ListId, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -123,7 +123,7 @@ func (flm *FollowingListMember) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.following_list_member SET ` +
+	const sqlstr = `UPDATE sun.following_list_member SET ` +
 		`ListId = ?, UserId = ?, FollowedUserId = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -161,7 +161,7 @@ func (flm *FollowingListMember) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.following_list_member WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.following_list_member WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, flm.Id)
@@ -2028,7 +2028,7 @@ func (u *__FollowingListMember_Selector) Offset(num int) *__FollowingListMember_
 func (u *__FollowingListMember_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.following_list_member"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.following_list_member"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2223,7 +2223,7 @@ func (u *__FollowingListMember_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.following_list_member SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.following_list_member SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2258,7 +2258,7 @@ func (d *__FollowingListMember_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.following_list_member WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.following_list_member WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2291,7 +2291,7 @@ func MassInsert_FollowingListMember(rows []FollowingListMember, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.following_list_member (" +
+	sqlstr := "INSERT INTO sun.following_list_member (" +
 		"ListId, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2325,7 +2325,7 @@ func MassReplace_FollowingListMember(rows []FollowingListMember, db XODB) error 
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.following_list_member (" +
+	sqlstr := "REPLACE INTO sun.following_list_member (" +
 		"ListId, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 

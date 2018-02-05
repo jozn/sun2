@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotification represents a row from 'ms.setting_notifications'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotification represents a row from 'sun.setting_notifications'.
 
 // Manualy copy this to project
 type SettingNotification__ struct {
@@ -57,7 +57,7 @@ func (sn *SettingNotification) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.setting_notifications (` +
+	const sqlstr = `INSERT INTO sun.setting_notifications (` +
 		`UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -84,7 +84,7 @@ func (sn *SettingNotification) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.setting_notifications (` +
+	const sqlstr = `REPLACE INTO sun.setting_notifications (` +
 		`UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -120,7 +120,7 @@ func (sn *SettingNotification) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.setting_notifications SET ` +
+	const sqlstr = `UPDATE sun.setting_notifications SET ` +
 		`SocialLedOn = ?, SocialLedColor = ?, ReqestToFollowYou = ?, FollowedYou = ?, AccptedYourFollowRequest = ?, YourPostLiked = ?, YourPostCommented = ?, MenthenedYouInPost = ?, MenthenedYouInComment = ?, YourContactsJoined = ?, DirectMessage = ?, DirectAlert = ?, DirectPerview = ?, DirectLedOn = ?, DirectLedColor = ?, DirectVibrate = ?, DirectPopup = ?, DirectSound = ?, DirectPriority = ?` +
 		` WHERE UserId = ?`
 
@@ -158,7 +158,7 @@ func (sn *SettingNotification) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.setting_notifications WHERE UserId = ?`
+	const sqlstr = `DELETE FROM sun.setting_notifications WHERE UserId = ?`
 
 	// run query
 	XOLog(sqlstr, sn.UserId)
@@ -7142,7 +7142,7 @@ func (u *__SettingNotification_Selector) Offset(num int) *__SettingNotification_
 func (u *__SettingNotification_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.setting_notifications"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.setting_notifications"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -7337,7 +7337,7 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.setting_notifications SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.setting_notifications SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -7372,7 +7372,7 @@ func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.setting_notifications WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.setting_notifications WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -7405,7 +7405,7 @@ func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.setting_notifications (" +
+	sqlstr := "INSERT INTO sun.setting_notifications (" +
 		"UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority" +
 		") VALUES " + insVals
 
@@ -7455,7 +7455,7 @@ func MassReplace_SettingNotification(rows []SettingNotification, db XODB) error 
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.setting_notifications (" +
+	sqlstr := "REPLACE INTO sun.setting_notifications (" +
 		"UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority" +
 		") VALUES " + insVals
 

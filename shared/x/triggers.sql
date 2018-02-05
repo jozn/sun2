@@ -608,6 +608,35 @@ $$
 
 
 delimiter ;
+################################ PostCopy ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS post_copy_OnCreateLogger $$
+CREATE TRIGGER post_copy_OnCreateLogger AFTER INSERT ON post_copy
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","INSERT",NEW.PostId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger $$
+CREATE TRIGGER post_copy_OnUpdateLogger AFTER UPDATE ON post_copy
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","UPDATE",NEW.PostId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger $$
+CREATE TRIGGER post_copy_OnDeleteLogger AFTER DELETE ON post_copy
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","DELETE",OLD.PostId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ RecommendUser ######################################
 
 /* #### delimiter $$
@@ -748,6 +777,64 @@ CREATE TRIGGER setting_notifications_OnDeleteLogger AFTER DELETE ON setting_noti
   FOR EACH ROW
   BEGIN
    	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SettingNotification","DELETE",OLD.UserId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ SuggestedTopPost ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS suggested_top_posts_OnCreateLogger $$
+CREATE TRIGGER suggested_top_posts_OnCreateLogger AFTER INSERT ON suggested_top_posts
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedTopPost","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS suggested_top_posts_OnUpdateLogger $$
+CREATE TRIGGER suggested_top_posts_OnUpdateLogger AFTER UPDATE ON suggested_top_posts
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedTopPost","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS suggested_top_posts_OnDeleteLogger $$
+CREATE TRIGGER suggested_top_posts_OnDeleteLogger AFTER DELETE ON suggested_top_posts
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedTopPost","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ SuggestedUser ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS suggested_user_OnCreateLogger $$
+CREATE TRIGGER suggested_user_OnCreateLogger AFTER INSERT ON suggested_user
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedUser","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS suggested_user_OnUpdateLogger $$
+CREATE TRIGGER suggested_user_OnUpdateLogger AFTER UPDATE ON suggested_user
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedUser","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS suggested_user_OnDeleteLogger $$
+CREATE TRIGGER suggested_user_OnDeleteLogger AFTER DELETE ON suggested_user
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SuggestedUser","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1016,6 +1103,10 @@ DROP TRIGGER IF EXISTS phone_contacts_copy_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS post_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_OnDeleteLogger ;
+### PostCopy ##
+DROP TRIGGER IF EXISTS post_copy_OnCreateLogger ;
+DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger ;
 ### RecommendUser ##
 DROP TRIGGER IF EXISTS recommend_user_OnCreateLogger ;
 DROP TRIGGER IF EXISTS recommend_user_OnUpdateLogger ;
@@ -1036,6 +1127,14 @@ DROP TRIGGER IF EXISTS setting_client_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS setting_notifications_OnCreateLogger ;
 DROP TRIGGER IF EXISTS setting_notifications_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS setting_notifications_OnDeleteLogger ;
+### SuggestedTopPost ##
+DROP TRIGGER IF EXISTS suggested_top_posts_OnCreateLogger ;
+DROP TRIGGER IF EXISTS suggested_top_posts_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS suggested_top_posts_OnDeleteLogger ;
+### SuggestedUser ##
+DROP TRIGGER IF EXISTS suggested_user_OnCreateLogger ;
+DROP TRIGGER IF EXISTS suggested_user_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS suggested_user_OnDeleteLogger ;
 ### Tag ##
 DROP TRIGGER IF EXISTS tag_OnCreateLogger ;
 DROP TRIGGER IF EXISTS tag_OnUpdateLogger ;

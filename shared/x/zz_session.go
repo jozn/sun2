@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Session represents a row from 'ms.session'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Session represents a row from 'sun.session'.
 
 // Manualy copy this to project
 type Session__ struct {
@@ -50,7 +50,7 @@ func (s *Session) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.session (` +
+	const sqlstr = `INSERT INTO sun.session (` +
 		`UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -86,7 +86,7 @@ func (s *Session) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.session (` +
+	const sqlstr = `REPLACE INTO sun.session (` +
 		`UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -131,7 +131,7 @@ func (s *Session) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.session SET ` +
+	const sqlstr = `UPDATE sun.session SET ` +
 		`UserId = ?, SessionUuid = ?, ClientUuid = ?, DeviceUuid = ?, LastActivityTime = ?, LastIpAddress = ?, LastWifiMacAddress = ?, LastNetworkType = ?, LastNetworkTypeEnumId = ?, AppVersion = ?, UpdatedTime = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -169,7 +169,7 @@ func (s *Session) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.session WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.session WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, s.Id)
@@ -3956,7 +3956,7 @@ func (u *__Session_Selector) Offset(num int) *__Session_Selector {
 func (u *__Session_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.session"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.session"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4151,7 +4151,7 @@ func (u *__Session_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.session SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.session SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4186,7 +4186,7 @@ func (d *__Session_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.session WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.session WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4219,7 +4219,7 @@ func MassInsert_Session(rows []Session, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.session (" +
+	sqlstr := "INSERT INTO sun.session (" +
 		"UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime" +
 		") VALUES " + insVals
 
@@ -4261,7 +4261,7 @@ func MassReplace_Session(rows []Session, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.session (" +
+	sqlstr := "REPLACE INTO sun.session (" +
 		"UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime" +
 		") VALUES " + insVals
 

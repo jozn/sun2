@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Like represents a row from 'ms.likes'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Like represents a row from 'sun.likes'.
 
 // Manualy copy this to project
 type Like__ struct {
@@ -43,7 +43,7 @@ func (l *Like) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.likes (` +
+	const sqlstr = `INSERT INTO sun.likes (` +
 		`Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -70,7 +70,7 @@ func (l *Like) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.likes (` +
+	const sqlstr = `REPLACE INTO sun.likes (` +
 		`Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -106,7 +106,7 @@ func (l *Like) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.likes SET ` +
+	const sqlstr = `UPDATE sun.likes SET ` +
 		`PostId = ?, PostTypeEnum = ?, UserId = ?, LikeEnum = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -144,7 +144,7 @@ func (l *Like) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.likes WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.likes WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, l.Id)
@@ -2362,7 +2362,7 @@ func (u *__Like_Selector) Offset(num int) *__Like_Selector {
 func (u *__Like_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.likes"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.likes"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2557,7 +2557,7 @@ func (u *__Like_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.likes SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.likes SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2592,7 +2592,7 @@ func (d *__Like_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.likes WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.likes WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2625,7 +2625,7 @@ func MassInsert_Like(rows []Like, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.likes (" +
+	sqlstr := "INSERT INTO sun.likes (" +
 		"Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2661,7 +2661,7 @@ func MassReplace_Like(rows []Like, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.likes (" +
+	sqlstr := "REPLACE INTO sun.likes (" +
 		"Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime" +
 		") VALUES " + insVals
 

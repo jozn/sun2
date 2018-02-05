@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GroupMessage represents a row from 'ms.group_message'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GroupMessage represents a row from 'sun.group_message'.
 
 // Manualy copy this to project
 type GroupMessage__ struct {
@@ -45,7 +45,7 @@ func (gm *GroupMessage) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.group_message (` +
+	const sqlstr = `INSERT INTO sun.group_message (` +
 		`MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -72,7 +72,7 @@ func (gm *GroupMessage) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.group_message (` +
+	const sqlstr = `REPLACE INTO sun.group_message (` +
 		`MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -108,7 +108,7 @@ func (gm *GroupMessage) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.group_message SET ` +
+	const sqlstr = `UPDATE sun.group_message SET ` +
 		`RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnum = ?, Text = ?, CreatedMs = ?, DeliveryStatusEnum = ?` +
 		` WHERE MessageId = ?`
 
@@ -146,7 +146,7 @@ func (gm *GroupMessage) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.group_message WHERE MessageId = ?`
+	const sqlstr = `DELETE FROM sun.group_message WHERE MessageId = ?`
 
 	// run query
 	XOLog(sqlstr, gm.MessageId)
@@ -2770,7 +2770,7 @@ func (u *__GroupMessage_Selector) Offset(num int) *__GroupMessage_Selector {
 func (u *__GroupMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.group_message"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.group_message"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2965,7 +2965,7 @@ func (u *__GroupMessage_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.group_message SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.group_message SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3000,7 +3000,7 @@ func (d *__GroupMessage_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.group_message WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.group_message WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3033,7 +3033,7 @@ func MassInsert_GroupMessage(rows []GroupMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.group_message (" +
+	sqlstr := "INSERT INTO sun.group_message (" +
 		"MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum" +
 		") VALUES " + insVals
 
@@ -3071,7 +3071,7 @@ func MassReplace_GroupMessage(rows []GroupMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.group_message (" +
+	sqlstr := "REPLACE INTO sun.group_message (" +
 		"MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum" +
 		") VALUES " + insVals
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContact represents a row from 'ms.phone_contacts'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContact represents a row from 'sun.phone_contacts'.
 
 // Manualy copy this to project
 type PhoneContact__ struct {
@@ -47,7 +47,7 @@ func (pc *PhoneContact) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.phone_contacts (` +
+	const sqlstr = `INSERT INTO sun.phone_contacts (` +
 		`UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -83,7 +83,7 @@ func (pc *PhoneContact) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.phone_contacts (` +
+	const sqlstr = `REPLACE INTO sun.phone_contacts (` +
 		`UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -128,7 +128,7 @@ func (pc *PhoneContact) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.phone_contacts SET ` +
+	const sqlstr = `UPDATE sun.phone_contacts SET ` +
 		`UserId = ?, Phone = ?, PhoneDisplayName = ?, PhoneFamilyName = ?, PhoneNumber = ?, PhoneNormalizedNumber = ?, PhoneContactRowId = ?, DeviceUuidId = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -166,7 +166,7 @@ func (pc *PhoneContact) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.phone_contacts WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.phone_contacts WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, pc.Id)
@@ -3196,7 +3196,7 @@ func (u *__PhoneContact_Selector) Offset(num int) *__PhoneContact_Selector {
 func (u *__PhoneContact_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.phone_contacts"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.phone_contacts"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3391,7 +3391,7 @@ func (u *__PhoneContact_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.phone_contacts SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.phone_contacts SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3426,7 +3426,7 @@ func (d *__PhoneContact_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.phone_contacts WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.phone_contacts WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3459,7 +3459,7 @@ func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.phone_contacts (" +
+	sqlstr := "INSERT INTO sun.phone_contacts (" +
 		"UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime" +
 		") VALUES " + insVals
 
@@ -3498,7 +3498,7 @@ func MassReplace_PhoneContact(rows []PhoneContact, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.phone_contacts (" +
+	sqlstr := "REPLACE INTO sun.phone_contacts (" +
 		"UserId, Phone, PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, DeviceUuidId, CreatedTime" +
 		") VALUES " + insVals
 

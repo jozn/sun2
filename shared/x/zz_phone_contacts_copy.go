@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContactsCopy represents a row from 'ms.phone_contacts_copy'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContactsCopy represents a row from 'sun.phone_contacts_copy'.
 
 // Manualy copy this to project
 type PhoneContactsCopy__ struct {
@@ -47,7 +47,7 @@ func (pcc *PhoneContactsCopy) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.phone_contacts_copy (` +
+	const sqlstr = `INSERT INTO sun.phone_contacts_copy (` +
 		`PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -83,7 +83,7 @@ func (pcc *PhoneContactsCopy) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.phone_contacts_copy (` +
+	const sqlstr = `REPLACE INTO sun.phone_contacts_copy (` +
 		`PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -128,7 +128,7 @@ func (pcc *PhoneContactsCopy) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.phone_contacts_copy SET ` +
+	const sqlstr = `UPDATE sun.phone_contacts_copy SET ` +
 		`PhoneDisplayName = ?, PhoneFamilyName = ?, PhoneNumber = ?, PhoneNormalizedNumber = ?, PhoneContactRowId = ?, UserId = ?, DeviceUuidId = ?, CreatedTime = ?, UpdatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -166,7 +166,7 @@ func (pcc *PhoneContactsCopy) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.phone_contacts_copy WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.phone_contacts_copy WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, pcc.Id)
@@ -3196,7 +3196,7 @@ func (u *__PhoneContactsCopy_Selector) Offset(num int) *__PhoneContactsCopy_Sele
 func (u *__PhoneContactsCopy_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.phone_contacts_copy"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.phone_contacts_copy"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3391,7 +3391,7 @@ func (u *__PhoneContactsCopy_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.phone_contacts_copy SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.phone_contacts_copy SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3426,7 +3426,7 @@ func (d *__PhoneContactsCopy_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.phone_contacts_copy WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.phone_contacts_copy WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3459,7 +3459,7 @@ func MassInsert_PhoneContactsCopy(rows []PhoneContactsCopy, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.phone_contacts_copy (" +
+	sqlstr := "INSERT INTO sun.phone_contacts_copy (" +
 		"PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime" +
 		") VALUES " + insVals
 
@@ -3498,7 +3498,7 @@ func MassReplace_PhoneContactsCopy(rows []PhoneContactsCopy, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.phone_contacts_copy (" +
+	sqlstr := "REPLACE INTO sun.phone_contacts_copy (" +
 		"PhoneDisplayName, PhoneFamilyName, PhoneNumber, PhoneNormalizedNumber, PhoneContactRowId, UserId, DeviceUuidId, CreatedTime, UpdatedTime" +
 		") VALUES " + insVals
 

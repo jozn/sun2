@@ -9,47 +9,48 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserMetaInfo represents a row from 'sun.user_meta_info'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SuggestedUser represents a row from 'sun.suggested_user'.
 
 // Manualy copy this to project
-type UserMetaInfo__ struct {
-	Id                  int `json:"Id"`                  // Id -
-	UserId              int `json:"UserId"`              // UserId -
-	IsNotificationDirty int `json:"IsNotificationDirty"` // IsNotificationDirty -
-	LastUserRecGen      int `json:"LastUserRecGen"`      // LastUserRecGen -
+type SuggestedUser__ struct {
+	Id          int     `json:"Id"`          // Id -
+	UserId      int     `json:"UserId"`      // UserId -
+	TargetId    int     `json:"TargetId"`    // TargetId -
+	Weight      float32 `json:"Weight"`      // Weight -
+	CreatedTime int     `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the UserMetaInfo exists in the database.
-func (umi *UserMetaInfo) Exists() bool {
-	return umi._exists
+// Exists determines if the SuggestedUser exists in the database.
+func (su *SuggestedUser) Exists() bool {
+	return su._exists
 }
 
-// Deleted provides information if the UserMetaInfo has been deleted from the database.
-func (umi *UserMetaInfo) Deleted() bool {
-	return umi._deleted
+// Deleted provides information if the SuggestedUser has been deleted from the database.
+func (su *SuggestedUser) Deleted() bool {
+	return su._deleted
 }
 
-// Insert inserts the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Insert(db XODB) error {
+// Insert inserts the SuggestedUser to the database.
+func (su *SuggestedUser) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if umi._exists {
+	if su._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.user_meta_info (` +
-		`UserId, IsNotificationDirty, LastUserRecGen` +
+	const sqlstr = `INSERT INTO sun.suggested_user (` +
+		`UserId, TargetId, Weight, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
-	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	XOLog(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime)
+	res, err := db.Exec(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -63,29 +64,29 @@ func (umi *UserMetaInfo) Insert(db XODB) error {
 	}
 
 	// set primary key and existence
-	umi.Id = int(id)
-	umi._exists = true
+	su.Id = int(id)
+	su._exists = true
 
-	OnUserMetaInfo_AfterInsert(umi)
+	OnSuggestedUser_AfterInsert(su)
 
 	return nil
 }
 
-// Insert inserts the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Replace(db XODB) error {
+// Insert inserts the SuggestedUser to the database.
+func (su *SuggestedUser) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.user_meta_info (` +
-		`UserId, IsNotificationDirty, LastUserRecGen` +
+	const sqlstr = `REPLACE INTO sun.suggested_user (` +
+		`UserId, TargetId, Weight, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
-	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	XOLog(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime)
+	res, err := db.Exec(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -99,81 +100,81 @@ func (umi *UserMetaInfo) Replace(db XODB) error {
 	}
 
 	// set primary key and existence
-	umi.Id = int(id)
-	umi._exists = true
+	su.Id = int(id)
+	su._exists = true
 
-	OnUserMetaInfo_AfterInsert(umi)
+	OnSuggestedUser_AfterInsert(su)
 
 	return nil
 }
 
-// Update updates the UserMetaInfo in the database.
-func (umi *UserMetaInfo) Update(db XODB) error {
+// Update updates the SuggestedUser in the database.
+func (su *SuggestedUser) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !umi._exists {
+	if !su._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if umi._deleted {
+	if su._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.user_meta_info SET ` +
-		`UserId = ?, IsNotificationDirty = ?, LastUserRecGen = ?` +
+	const sqlstr = `UPDATE sun.suggested_user SET ` +
+		`UserId = ?, TargetId = ?, Weight = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
-	_, err = db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
+	XOLog(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime, su.Id)
+	_, err = db.Exec(sqlstr, su.UserId, su.TargetId, su.Weight, su.CreatedTime, su.Id)
 
 	XOLogErr(err)
-	OnUserMetaInfo_AfterUpdate(umi)
+	OnSuggestedUser_AfterUpdate(su)
 
 	return err
 }
 
-// Save saves the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Save(db XODB) error {
-	if umi.Exists() {
-		return umi.Update(db)
+// Save saves the SuggestedUser to the database.
+func (su *SuggestedUser) Save(db XODB) error {
+	if su.Exists() {
+		return su.Update(db)
 	}
 
-	return umi.Replace(db)
+	return su.Replace(db)
 }
 
-// Delete deletes the UserMetaInfo from the database.
-func (umi *UserMetaInfo) Delete(db XODB) error {
+// Delete deletes the SuggestedUser from the database.
+func (su *SuggestedUser) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !umi._exists {
+	if !su._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if umi._deleted {
+	if su._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.user_meta_info WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.suggested_user WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, umi.Id)
-	_, err = db.Exec(sqlstr, umi.Id)
+	XOLog(sqlstr, su.Id)
+	_, err = db.Exec(sqlstr, su.Id)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
 	// set deleted
-	umi._deleted = true
+	su._deleted = true
 
-	OnUserMetaInfo_AfterDelete(umi)
+	OnSuggestedUser_AfterDelete(su)
 
 	return nil
 }
@@ -184,18 +185,18 @@ func (umi *UserMetaInfo) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __UserMetaInfo_Deleter struct {
+type __SuggestedUser_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __UserMetaInfo_Updater struct {
+type __SuggestedUser_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __UserMetaInfo_Selector struct {
+type __SuggestedUser_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -204,19 +205,19 @@ type __UserMetaInfo_Selector struct {
 	offset    int
 }
 
-func NewUserMetaInfo_Deleter() *__UserMetaInfo_Deleter {
-	d := __UserMetaInfo_Deleter{whereSep: " AND "}
+func NewSuggestedUser_Deleter() *__SuggestedUser_Deleter {
+	d := __SuggestedUser_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewUserMetaInfo_Updater() *__UserMetaInfo_Updater {
-	u := __UserMetaInfo_Updater{whereSep: " AND "}
+func NewSuggestedUser_Updater() *__SuggestedUser_Updater {
+	u := __SuggestedUser_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewUserMetaInfo_Selector() *__UserMetaInfo_Selector {
-	u := __UserMetaInfo_Selector{whereSep: " AND ", selectCol: "*"}
+func NewSuggestedUser_Selector() *__SuggestedUser_Selector {
+	u := __SuggestedUser_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -224,12 +225,12 @@ func NewUserMetaInfo_Selector() *__UserMetaInfo_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__UserMetaInfo_Deleter) Or() *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) Or() *__SuggestedUser_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) Id_In(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -242,7 +243,7 @@ func (u *__UserMetaInfo_Deleter) Id_In(ins []int) *__UserMetaInfo_Deleter {
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) Id_Ins(ins ...int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -255,7 +256,7 @@ func (u *__UserMetaInfo_Deleter) Id_Ins(ins ...int) *__UserMetaInfo_Deleter {
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) Id_NotIn(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -268,7 +269,7 @@ func (u *__UserMetaInfo_Deleter) Id_NotIn(ins []int) *__UserMetaInfo_Deleter {
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) Id_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_Eq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -279,7 +280,7 @@ func (d *__UserMetaInfo_Deleter) Id_Eq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_NotEq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -290,7 +291,7 @@ func (d *__UserMetaInfo_Deleter) Id_NotEq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_LT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -301,7 +302,7 @@ func (d *__UserMetaInfo_Deleter) Id_LT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_LE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -312,7 +313,7 @@ func (d *__UserMetaInfo_Deleter) Id_LE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_GT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -323,7 +324,7 @@ func (d *__UserMetaInfo_Deleter) Id_GT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) Id_GE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -334,7 +335,7 @@ func (d *__UserMetaInfo_Deleter) Id_GE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) UserId_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) UserId_In(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -347,7 +348,7 @@ func (u *__UserMetaInfo_Deleter) UserId_In(ins []int) *__UserMetaInfo_Deleter {
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) UserId_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) UserId_Ins(ins ...int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -360,7 +361,7 @@ func (u *__UserMetaInfo_Deleter) UserId_Ins(ins ...int) *__UserMetaInfo_Deleter 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) UserId_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) UserId_NotIn(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -373,7 +374,7 @@ func (u *__UserMetaInfo_Deleter) UserId_NotIn(ins []int) *__UserMetaInfo_Deleter
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_Eq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -384,7 +385,7 @@ func (d *__UserMetaInfo_Deleter) UserId_Eq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_NotEq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -395,7 +396,7 @@ func (d *__UserMetaInfo_Deleter) UserId_NotEq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_LT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -406,7 +407,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_LE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -417,7 +418,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_GT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -428,7 +429,7 @@ func (d *__UserMetaInfo_Deleter) UserId_GT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) UserId_GE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -439,223 +440,223 @@ func (d *__UserMetaInfo_Deleter) UserId_GE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) TargetId_In(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) TargetId_Ins(ins ...int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) TargetId_NotIn(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_Eq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " TargetId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_NotEq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " TargetId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_LT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " TargetId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_LE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " TargetId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_GT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " TargetId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) TargetId_GE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " TargetId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) CreatedTime_In(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) CreatedTime_Ins(ins ...int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__SuggestedUser_Deleter) CreatedTime_NotIn(ins []int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_Eq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_NotEq(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_LT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_LE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_GT(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__SuggestedUser_Deleter) CreatedTime_GE(val int) *__SuggestedUser_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__UserMetaInfo_Updater) Or() *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Or() *__SuggestedUser_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Id_In(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -668,7 +669,7 @@ func (u *__UserMetaInfo_Updater) Id_In(ins []int) *__UserMetaInfo_Updater {
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Id_Ins(ins ...int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -681,7 +682,7 @@ func (u *__UserMetaInfo_Updater) Id_Ins(ins ...int) *__UserMetaInfo_Updater {
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Id_NotIn(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -694,7 +695,7 @@ func (u *__UserMetaInfo_Updater) Id_NotIn(ins []int) *__UserMetaInfo_Updater {
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) Id_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_Eq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -705,7 +706,7 @@ func (d *__UserMetaInfo_Updater) Id_Eq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_NotEq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -716,7 +717,7 @@ func (d *__UserMetaInfo_Updater) Id_NotEq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_LT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_LT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -727,7 +728,7 @@ func (d *__UserMetaInfo_Updater) Id_LT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_LE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_LE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -738,7 +739,7 @@ func (d *__UserMetaInfo_Updater) Id_LE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_GT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_GT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -749,7 +750,7 @@ func (d *__UserMetaInfo_Updater) Id_GT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_GE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) Id_GE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -760,7 +761,7 @@ func (d *__UserMetaInfo_Updater) Id_GE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) UserId_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) UserId_In(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -773,7 +774,7 @@ func (u *__UserMetaInfo_Updater) UserId_In(ins []int) *__UserMetaInfo_Updater {
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) UserId_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) UserId_Ins(ins ...int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -786,7 +787,7 @@ func (u *__UserMetaInfo_Updater) UserId_Ins(ins ...int) *__UserMetaInfo_Updater 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) UserId_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) UserId_NotIn(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -799,7 +800,7 @@ func (u *__UserMetaInfo_Updater) UserId_NotIn(ins []int) *__UserMetaInfo_Updater
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) UserId_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_Eq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -810,7 +811,7 @@ func (d *__UserMetaInfo_Updater) UserId_Eq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_NotEq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -821,7 +822,7 @@ func (d *__UserMetaInfo_Updater) UserId_NotEq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_LT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_LT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -832,7 +833,7 @@ func (d *__UserMetaInfo_Updater) UserId_LT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_LE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_LE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -843,7 +844,7 @@ func (d *__UserMetaInfo_Updater) UserId_LE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_GT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_GT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -854,7 +855,7 @@ func (d *__UserMetaInfo_Updater) UserId_GT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_GE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) UserId_GE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -865,223 +866,223 @@ func (d *__UserMetaInfo_Updater) UserId_GE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) TargetId_In(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) TargetId_Ins(ins ...int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) TargetId_NotIn(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_Eq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " TargetId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_NotEq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " TargetId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_LT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_LT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " TargetId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_LE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_LE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " TargetId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_GT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_GT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " TargetId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_GE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) TargetId_GE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " TargetId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) CreatedTime_In(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) CreatedTime_Ins(ins ...int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) CreatedTime_NotIn(ins []int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_Eq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_NotEq(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_LT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_LT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_LE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_LE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_GT(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_GT(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_GE(val int) *__UserMetaInfo_Updater {
+func (d *__SuggestedUser_Updater) CreatedTime_GE(val int) *__SuggestedUser_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__UserMetaInfo_Selector) Or() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Or() *__SuggestedUser_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Id_In(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1094,7 +1095,7 @@ func (u *__UserMetaInfo_Selector) Id_In(ins []int) *__UserMetaInfo_Selector {
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Id_Ins(ins ...int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1107,7 +1108,7 @@ func (u *__UserMetaInfo_Selector) Id_Ins(ins ...int) *__UserMetaInfo_Selector {
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Id_NotIn(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1120,7 +1121,7 @@ func (u *__UserMetaInfo_Selector) Id_NotIn(ins []int) *__UserMetaInfo_Selector {
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) Id_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_Eq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1131,7 +1132,7 @@ func (d *__UserMetaInfo_Selector) Id_Eq(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_NotEq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1142,7 +1143,7 @@ func (d *__UserMetaInfo_Selector) Id_NotEq(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_LT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_LT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1153,7 +1154,7 @@ func (d *__UserMetaInfo_Selector) Id_LT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_LE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_LE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1164,7 +1165,7 @@ func (d *__UserMetaInfo_Selector) Id_LE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_GT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_GT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1175,7 +1176,7 @@ func (d *__UserMetaInfo_Selector) Id_GT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_GE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) Id_GE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1186,7 +1187,7 @@ func (d *__UserMetaInfo_Selector) Id_GE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) UserId_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) UserId_In(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1199,7 +1200,7 @@ func (u *__UserMetaInfo_Selector) UserId_In(ins []int) *__UserMetaInfo_Selector 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) UserId_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) UserId_Ins(ins ...int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1212,7 +1213,7 @@ func (u *__UserMetaInfo_Selector) UserId_Ins(ins ...int) *__UserMetaInfo_Selecto
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) UserId_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) UserId_NotIn(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1225,7 +1226,7 @@ func (u *__UserMetaInfo_Selector) UserId_NotIn(ins []int) *__UserMetaInfo_Select
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) UserId_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_Eq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1236,7 +1237,7 @@ func (d *__UserMetaInfo_Selector) UserId_Eq(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_NotEq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1247,7 +1248,7 @@ func (d *__UserMetaInfo_Selector) UserId_NotEq(val int) *__UserMetaInfo_Selector
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_LT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_LT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1258,7 +1259,7 @@ func (d *__UserMetaInfo_Selector) UserId_LT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_LE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_LE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1269,7 +1270,7 @@ func (d *__UserMetaInfo_Selector) UserId_LE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_GT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_GT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1280,7 +1281,7 @@ func (d *__UserMetaInfo_Selector) UserId_GT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_GE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) UserId_GE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1291,211 +1292,211 @@ func (d *__UserMetaInfo_Selector) UserId_GE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) TargetId_In(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) TargetId_Ins(ins ...int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) TargetId_NotIn(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_Eq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " TargetId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_NotEq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " TargetId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_LT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_LT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " TargetId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_LE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_LE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " TargetId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_GT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_GT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " TargetId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_GE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) TargetId_GE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " TargetId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) CreatedTime_In(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) CreatedTime_Ins(ins ...int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) CreatedTime_NotIn(ins []int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_Eq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " CreatedTime = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_NotEq(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " CreatedTime != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_LT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_LT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " CreatedTime < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_LE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_LE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " CreatedTime <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_GT(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_GT(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " CreatedTime > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Selector {
+func (d *__SuggestedUser_Selector) CreatedTime_GE(val int) *__SuggestedUser_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " CreatedTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1515,12 +1516,12 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Sel
 
 //ints
 
-func (u *__UserMetaInfo_Updater) Id(newVal int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Id(newVal int) *__SuggestedUser_Updater {
 	u.updates[" Id = ? "] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) Id_Increment(count int) *__SuggestedUser_Updater {
 	if count > 0 {
 		u.updates[" Id = Id+? "] = count
 	}
@@ -1536,12 +1537,12 @@ func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater
 
 //ints
 
-func (u *__UserMetaInfo_Updater) UserId(newVal int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) UserId(newVal int) *__SuggestedUser_Updater {
 	u.updates[" UserId = ? "] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) UserId_Increment(count int) *__SuggestedUser_Updater {
 	if count > 0 {
 		u.updates[" UserId = UserId+? "] = count
 	}
@@ -1557,18 +1558,18 @@ func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Upd
 
 //ints
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" IsNotificationDirty = ? "] = newVal
+func (u *__SuggestedUser_Updater) TargetId(newVal int) *__SuggestedUser_Updater {
+	u.updates[" TargetId = ? "] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) TargetId_Increment(count int) *__SuggestedUser_Updater {
 	if count > 0 {
-		u.updates[" IsNotificationDirty = IsNotificationDirty+? "] = count
+		u.updates[" TargetId = TargetId+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" IsNotificationDirty = IsNotificationDirty-? "] = -(count) //make it positive
+		u.updates[" TargetId = TargetId-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -1578,18 +1579,22 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__Use
 
 //ints
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" LastUserRecGen = ? "] = newVal
+//string
+
+//ints
+
+func (u *__SuggestedUser_Updater) CreatedTime(newVal int) *__SuggestedUser_Updater {
+	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__SuggestedUser_Updater) CreatedTime_Increment(count int) *__SuggestedUser_Updater {
 	if count > 0 {
-		u.updates[" LastUserRecGen = LastUserRecGen+? "] = count
+		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" LastUserRecGen = LastUserRecGen-? "] = -(count) //make it positive
+		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -1602,81 +1607,96 @@ func (u *__UserMetaInfo_Updater) LastUserRecGen_Increment(count int) *__UserMeta
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__UserMetaInfo_Selector) OrderBy_Id_Desc() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) OrderBy_Id_Desc() *__SuggestedUser_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_Id_Asc() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) OrderBy_Id_Asc() *__SuggestedUser_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_Id() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Select_Id() *__SuggestedUser_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_UserId_Desc() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) OrderBy_UserId_Desc() *__SuggestedUser_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_UserId_Asc() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) OrderBy_UserId_Asc() *__SuggestedUser_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_UserId() *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Select_UserId() *__SuggestedUser_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_IsNotificationDirty_Desc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY IsNotificationDirty DESC "
+func (u *__SuggestedUser_Selector) OrderBy_TargetId_Desc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY TargetId DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_IsNotificationDirty_Asc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY IsNotificationDirty ASC "
+func (u *__SuggestedUser_Selector) OrderBy_TargetId_Asc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY TargetId ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_IsNotificationDirty() *__UserMetaInfo_Selector {
-	u.selectCol = "IsNotificationDirty"
+func (u *__SuggestedUser_Selector) Select_TargetId() *__SuggestedUser_Selector {
+	u.selectCol = "TargetId"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_LastUserRecGen_Desc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY LastUserRecGen DESC "
+func (u *__SuggestedUser_Selector) OrderBy_Weight_Desc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY Weight DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_LastUserRecGen_Asc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY LastUserRecGen ASC "
+func (u *__SuggestedUser_Selector) OrderBy_Weight_Asc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY Weight ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_LastUserRecGen() *__UserMetaInfo_Selector {
-	u.selectCol = "LastUserRecGen"
+func (u *__SuggestedUser_Selector) Select_Weight() *__SuggestedUser_Selector {
+	u.selectCol = "Weight"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Limit(num int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) OrderBy_CreatedTime_Desc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY CreatedTime DESC "
+	return u
+}
+
+func (u *__SuggestedUser_Selector) OrderBy_CreatedTime_Asc() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY CreatedTime ASC "
+	return u
+}
+
+func (u *__SuggestedUser_Selector) Select_CreatedTime() *__SuggestedUser_Selector {
+	u.selectCol = "CreatedTime"
+	return u
+}
+
+func (u *__SuggestedUser_Selector) Limit(num int) *__SuggestedUser_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Offset(num int) *__UserMetaInfo_Selector {
+func (u *__SuggestedUser_Selector) Offset(num int) *__SuggestedUser_Selector {
 	u.offset = num
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__UserMetaInfo_Selector) _stoSql() (string, []interface{}) {
+func (u *__SuggestedUser_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.user_meta_info"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.suggested_user"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1696,14 +1716,14 @@ func (u *__UserMetaInfo_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__UserMetaInfo_Selector) GetRow(db *sqlx.DB) (*UserMetaInfo, error) {
+func (u *__SuggestedUser_Selector) GetRow(db *sqlx.DB) (*SuggestedUser, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	row := &UserMetaInfo{}
+	row := &SuggestedUser{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
@@ -1713,19 +1733,19 @@ func (u *__UserMetaInfo_Selector) GetRow(db *sqlx.DB) (*UserMetaInfo, error) {
 
 	row._exists = true
 
-	OnUserMetaInfo_LoadOne(row)
+	OnSuggestedUser_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetRows(db *sqlx.DB) ([]*UserMetaInfo, error) {
+func (u *__SuggestedUser_Selector) GetRows(db *sqlx.DB) ([]*SuggestedUser, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*UserMetaInfo
+	var rows []*SuggestedUser
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -1741,20 +1761,20 @@ func (u *__UserMetaInfo_Selector) GetRows(db *sqlx.DB) ([]*UserMetaInfo, error) 
 		rows[i]._exists = true
 	}
 
-	OnUserMetaInfo_LoadMany(rows)
+	OnSuggestedUser_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) {
+func (u *__SuggestedUser_Selector) GetRows2(db *sqlx.DB) ([]SuggestedUser, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*UserMetaInfo
+	var rows []*SuggestedUser
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -1770,9 +1790,9 @@ func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) 
 		rows[i]._exists = true
 	}
 
-	OnUserMetaInfo_LoadMany(rows)
+	OnSuggestedUser_LoadMany(rows)
 
-	rows2 := make([]UserMetaInfo, len(rows))
+	rows2 := make([]SuggestedUser, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -1781,7 +1801,7 @@ func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) 
 	return rows2, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__SuggestedUser_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -1799,7 +1819,7 @@ func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__SuggestedUser_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -1817,7 +1837,7 @@ func (u *__UserMetaInfo_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) 
 	return rows, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__SuggestedUser_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -1835,7 +1855,7 @@ func (u *__UserMetaInfo_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__SuggestedUser_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -1854,7 +1874,7 @@ func (u *__UserMetaInfo_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
+func (u *__SuggestedUser_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -1871,7 +1891,7 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.user_meta_info SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.suggested_user SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1893,7 +1913,7 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
+func (d *__SuggestedUser_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -1906,7 +1926,7 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.user_meta_info WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.suggested_user WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -1926,21 +1946,21 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  UserMetaInfo ////////////////
+///////////////////////// Mass insert - replace for  SuggestedUser ////////////////
 
-func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
+func MassInsert_SuggestedUser(rows []SuggestedUser, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.user_meta_info (" +
-		"UserId, IsNotificationDirty, LastUserRecGen" +
+	sqlstr := "INSERT INTO sun.suggested_user (" +
+		"UserId, TargetId, Weight, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -1949,8 +1969,9 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.IsNotificationDirty)
-		vals = append(vals, row.LastUserRecGen)
+		vals = append(vals, row.TargetId)
+		vals = append(vals, row.Weight)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
@@ -1965,15 +1986,15 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 	return nil
 }
 
-func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
+func MassReplace_SuggestedUser(rows []SuggestedUser, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.user_meta_info (" +
-		"UserId, IsNotificationDirty, LastUserRecGen" +
+	sqlstr := "REPLACE INTO sun.suggested_user (" +
+		"UserId, TargetId, Weight, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -1982,8 +2003,9 @@ func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.IsNotificationDirty)
-		vals = append(vals, row.LastUserRecGen)
+		vals = append(vals, row.TargetId)
+		vals = append(vals, row.Weight)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
@@ -1999,6 +2021,8 @@ func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

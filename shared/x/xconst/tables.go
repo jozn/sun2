@@ -43,6 +43,8 @@ const (
 	PhoneContactsCopy_TableGo          = "PhoneContactsCopy"
 	Post_Table                         = "post"
 	Post_TableGo                       = "Post"
+	PostCopy_Table                     = "post_copy"
+	PostCopy_TableGo                   = "PostCopy"
 	RecommendUser_Table                = "recommend_user"
 	RecommendUser_TableGo              = "RecommendUser"
 	SearchClicked_Table                = "search_clicked"
@@ -53,6 +55,10 @@ const (
 	SettingClient_TableGo              = "SettingClient"
 	SettingNotification_Table          = "setting_notifications"
 	SettingNotification_TableGo        = "SettingNotification"
+	SuggestedTopPost_Table             = "suggested_top_posts"
+	SuggestedTopPost_TableGo           = "SuggestedTopPost"
+	SuggestedUser_Table                = "suggested_user"
+	SuggestedUser_TableGo              = "SuggestedUser"
 	Tag_Table                          = "tag"
 	Tag_TableGo                        = "Tag"
 	TagsPost_Table                     = "tags_posts"
@@ -536,6 +542,43 @@ var Post = struct {
 	ReSharedPostId: "ReSharedPostId",
 }
 
+var PostCopy = struct {
+	PostId         string
+	UserId         string
+	PostTypeEnum   string
+	MediaId        string
+	Text           string
+	RichText       string
+	MediaCount     string
+	SharedTo       string
+	DisableComment string
+	HasTag         string
+	CommentsCount  string
+	LikesCount     string
+	ViewsCount     string
+	EditedTime     string
+	CreatedTime    string
+	ReSharedPostId string
+}{
+
+	PostId:         "PostId",
+	UserId:         "UserId",
+	PostTypeEnum:   "PostTypeEnum",
+	MediaId:        "MediaId",
+	Text:           "Text",
+	RichText:       "RichText",
+	MediaCount:     "MediaCount",
+	SharedTo:       "SharedTo",
+	DisableComment: "DisableComment",
+	HasTag:         "HasTag",
+	CommentsCount:  "CommentsCount",
+	LikesCount:     "LikesCount",
+	ViewsCount:     "ViewsCount",
+	EditedTime:     "EditedTime",
+	CreatedTime:    "CreatedTime",
+	ReSharedPostId: "ReSharedPostId",
+}
+
 var RecommendUser = struct {
 	Id          string
 	UserId      string
@@ -687,6 +730,30 @@ var SettingNotification = struct {
 	DirectPopup:              "DirectPopup",
 	DirectSound:              "DirectSound",
 	DirectPriority:           "DirectPriority",
+}
+
+var SuggestedTopPost = struct {
+	Id     string
+	PostId string
+}{
+
+	Id:     "Id",
+	PostId: "PostId",
+}
+
+var SuggestedUser = struct {
+	Id          string
+	UserId      string
+	TargetId    string
+	Weight      string
+	CreatedTime string
+}{
+
+	Id:          "Id",
+	UserId:      "UserId",
+	TargetId:    "TargetId",
+	Weight:      "Weight",
+	CreatedTime: "CreatedTime",
 }
 
 var Tag = struct {

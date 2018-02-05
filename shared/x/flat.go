@@ -1036,7 +1036,7 @@ func (m *PB_PageParam_GetCommentsPage) ToFlat() *PB_PageParam_GetCommentsPage_Fl
 func (m *PB_PageParam_GetCommentsPage_Flat) ToPB() *PB_PageParam_GetCommentsPage {
 	r := &PB_PageParam_GetCommentsPage{
 		PostId: int64(m.PostId),
-		Limit:  int64(m.Limit),
+		Limit:  int32(m.Limit),
 		Last:   int64(m.Last),
 	}
 	return r
@@ -1086,7 +1086,7 @@ func (m *PB_PageParam_GetHomePage) ToFlat() *PB_PageParam_GetHomePage_Flat {
 //ToPB
 func (m *PB_PageParam_GetHomePage_Flat) ToPB() *PB_PageParam_GetHomePage {
 	r := &PB_PageParam_GetHomePage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1175,7 +1175,7 @@ func (m *PB_PageParam_GetLikesPage) ToFlat() *PB_PageParam_GetLikesPage_Flat {
 func (m *PB_PageParam_GetLikesPage_Flat) ToPB() *PB_PageParam_GetLikesPage {
 	r := &PB_PageParam_GetLikesPage{
 		PostId: int64(m.PostId),
-		Limit:  int64(m.Limit),
+		Limit:  int32(m.Limit),
 		Last:   int64(m.Last),
 	}
 	return r
@@ -1228,7 +1228,7 @@ func (m *PB_PageParam_GetFollowersPage) ToFlat() *PB_PageParam_GetFollowersPage_
 func (m *PB_PageParam_GetFollowersPage_Flat) ToPB() *PB_PageParam_GetFollowersPage {
 	r := &PB_PageParam_GetFollowersPage{
 		UserId: int64(m.UserId),
-		Limit:  int64(m.Limit),
+		Limit:  int32(m.Limit),
 		Last:   int64(m.Last),
 	}
 	return r
@@ -1281,7 +1281,7 @@ func (m *PB_PageParam_GetFollowingsPage) ToFlat() *PB_PageParam_GetFollowingsPag
 func (m *PB_PageParam_GetFollowingsPage_Flat) ToPB() *PB_PageParam_GetFollowingsPage {
 	r := &PB_PageParam_GetFollowingsPage{
 		UserId: int64(m.UserId),
-		Limit:  int64(m.Limit),
+		Limit:  int32(m.Limit),
 		Last:   int64(m.Last),
 	}
 	return r
@@ -1331,7 +1331,7 @@ func (m *PB_PageParam_GetNotifiesPage) ToFlat() *PB_PageParam_GetNotifiesPage_Fl
 //ToPB
 func (m *PB_PageParam_GetNotifiesPage_Flat) ToPB() *PB_PageParam_GetNotifiesPage {
 	r := &PB_PageParam_GetNotifiesPage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1387,7 +1387,7 @@ func (m *PB_PageParam_GetUserActionsPage) ToFlat() *PB_PageParam_GetUserActionsP
 //ToPB
 func (m *PB_PageParam_GetUserActionsPage_Flat) ToPB() *PB_PageParam_GetUserActionsPage {
 	r := &PB_PageParam_GetUserActionsPage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1436,7 +1436,7 @@ func (m *PB_PageParam_GetSuggestedPostsPage) ToFlat() *PB_PageParam_GetSuggested
 //ToPB
 func (m *PB_PageParam_GetSuggestedPostsPage_Flat) ToPB() *PB_PageParam_GetSuggestedPostsPage {
 	r := &PB_PageParam_GetSuggestedPostsPage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1449,8 +1449,8 @@ var PB_PageParam_GetSuggestedPostsPage__FOlD = &PB_PageParam_GetSuggestedPostsPa
 }
 
 type PB_PageResponse_GetSuggestedPostsPage_Flat struct {
-	Extra        PB_ResponseExtra
-	PostViewList []PB_PostView
+	Extra              PB_ResponseExtra
+	PostViewRowifyList []PB_PostViewRowify
 }
 
 //ToPB
@@ -1485,7 +1485,7 @@ func (m *PB_PageParam_GetSuggestedUsersPage) ToFlat() *PB_PageParam_GetSuggested
 //ToPB
 func (m *PB_PageParam_GetSuggestedUsersPage_Flat) ToPB() *PB_PageParam_GetSuggestedUsersPage {
 	r := &PB_PageParam_GetSuggestedUsersPage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1498,8 +1498,8 @@ var PB_PageParam_GetSuggestedUsersPage__FOlD = &PB_PageParam_GetSuggestedUsersPa
 }
 
 type PB_PageResponse_GetSuggestedUsersPage_Flat struct {
-	Extra        PB_ResponseExtra
-	UserViewList []PB_UserView
+	Extra              PB_ResponseExtra
+	UserViewRowifyList []PB_UserViewRowify
 }
 
 //ToPB
@@ -1518,36 +1518,26 @@ func (m *PB_PageResponse_GetSuggestedUsersPage_Flat) ToPB() *PB_PageResponse_Get
 var PB_PageResponse_GetSuggestedUsersPage__FOlD = &PB_PageResponse_GetSuggestedUsersPage{}
 
 type PB_PageParam_GetSuggestedTagsPage_Flat struct {
-	Limit int
-	Last  int
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedTagsPage) ToFlat() *PB_PageParam_GetSuggestedTagsPage_Flat {
-	r := &PB_PageParam_GetSuggestedTagsPage_Flat{
-		Limit: int(m.Limit),
-		Last:  int(m.Last),
-	}
+	r := &PB_PageParam_GetSuggestedTagsPage_Flat{}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_GetSuggestedTagsPage_Flat) ToPB() *PB_PageParam_GetSuggestedTagsPage {
-	r := &PB_PageParam_GetSuggestedTagsPage{
-		Limit: int64(m.Limit),
-		Last:  int64(m.Last),
-	}
+	r := &PB_PageParam_GetSuggestedTagsPage{}
 	return r
 }
 
 //folding
-var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{
-	Limit: 0,
-	Last:  0,
-}
+var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{}
 
 type PB_PageResponse_GetSuggestedTagsPage_Flat struct {
-	Extra PB_ResponseExtra
+	Extra                     PB_ResponseExtra
+	TopTagWithSamplePostsList []PB_TopTagWithSamplePosts
 }
 
 //ToPB
@@ -1582,7 +1572,7 @@ func (m *PB_PageParam_GetLastPostsPage) ToFlat() *PB_PageParam_GetLastPostsPage_
 //ToPB
 func (m *PB_PageParam_GetLastPostsPage_Flat) ToPB() *PB_PageParam_GetLastPostsPage {
 	r := &PB_PageParam_GetLastPostsPage{
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1634,7 +1624,7 @@ func (m *PB_PageParam_GetTagPage) ToFlat() *PB_PageParam_GetTagPage_Flat {
 func (m *PB_PageParam_GetTagPage_Flat) ToPB() *PB_PageParam_GetTagPage {
 	r := &PB_PageParam_GetTagPage{
 		Tag:   m.Tag,
-		Limit: int64(m.Limit),
+		Limit: int32(m.Limit),
 		Last:  int64(m.Last),
 	}
 	return r
@@ -1668,25 +1658,33 @@ func (m *PB_PageResponse_GetTagPage_Flat) ToPB() *PB_PageResponse_GetTagPage {
 var PB_PageResponse_GetTagPage__FOlD = &PB_PageResponse_GetTagPage{}
 
 type PB_PageParam_SearchTagsPage_Flat struct {
+	Query string
 }
 
 //ToPB
 func (m *PB_PageParam_SearchTagsPage) ToFlat() *PB_PageParam_SearchTagsPage_Flat {
-	r := &PB_PageParam_SearchTagsPage_Flat{}
+	r := &PB_PageParam_SearchTagsPage_Flat{
+		Query: m.Query,
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_SearchTagsPage_Flat) ToPB() *PB_PageParam_SearchTagsPage {
-	r := &PB_PageParam_SearchTagsPage{}
+	r := &PB_PageParam_SearchTagsPage{
+		Query: m.Query,
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_SearchTagsPage__FOlD = &PB_PageParam_SearchTagsPage{}
+var PB_PageParam_SearchTagsPage__FOlD = &PB_PageParam_SearchTagsPage{
+	Query: "",
+}
 
 type PB_PageResponse_SearchTagsPage_Flat struct {
-	Extra PB_ResponseExtra
+	Extra       PB_ResponseExtra
+	TagViewList []PB_TagView
 }
 
 //ToPB
@@ -1705,25 +1703,33 @@ func (m *PB_PageResponse_SearchTagsPage_Flat) ToPB() *PB_PageResponse_SearchTags
 var PB_PageResponse_SearchTagsPage__FOlD = &PB_PageResponse_SearchTagsPage{}
 
 type PB_PageParam_SearchUsersPage_Flat struct {
+	Query string
 }
 
 //ToPB
 func (m *PB_PageParam_SearchUsersPage) ToFlat() *PB_PageParam_SearchUsersPage_Flat {
-	r := &PB_PageParam_SearchUsersPage_Flat{}
+	r := &PB_PageParam_SearchUsersPage_Flat{
+		Query: m.Query,
+	}
 	return r
 }
 
 //ToPB
 func (m *PB_PageParam_SearchUsersPage_Flat) ToPB() *PB_PageParam_SearchUsersPage {
-	r := &PB_PageParam_SearchUsersPage{}
+	r := &PB_PageParam_SearchUsersPage{
+		Query: m.Query,
+	}
 	return r
 }
 
 //folding
-var PB_PageParam_SearchUsersPage__FOlD = &PB_PageParam_SearchUsersPage{}
+var PB_PageParam_SearchUsersPage__FOlD = &PB_PageParam_SearchUsersPage{
+	Query: "",
+}
 
 type PB_PageResponse_SearchUsersPage_Flat struct {
-	Extra PB_ResponseExtra
+	Extra        PB_ResponseExtra
+	UserViewList []PB_UserView
 }
 
 //ToPB
@@ -3684,6 +3690,67 @@ var PB_NotifyRemoved__FOlD = &PB_NotifyRemoved{
 
 type PB_PhoneContact_Flat struct {
 	Id                    int
+	UserId                int
+	Phone                 int
+	PhoneDisplayName      string
+	PhoneFamilyName       string
+	PhoneNumber           string
+	PhoneNormalizedNumber string
+	PhoneContactRowId     int
+	DeviceUuidId          int
+	CreatedTime           int
+}
+
+//ToPB
+func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
+	r := &PB_PhoneContact_Flat{
+		Id:                    int(m.Id),
+		UserId:                int(m.UserId),
+		Phone:                 int(m.Phone),
+		PhoneDisplayName:      m.PhoneDisplayName,
+		PhoneFamilyName:       m.PhoneFamilyName,
+		PhoneNumber:           m.PhoneNumber,
+		PhoneNormalizedNumber: m.PhoneNormalizedNumber,
+		PhoneContactRowId:     int(m.PhoneContactRowId),
+		DeviceUuidId:          int(m.DeviceUuidId),
+		CreatedTime:           int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
+	r := &PB_PhoneContact{
+		Id:                    int32(m.Id),
+		UserId:                int32(m.UserId),
+		Phone:                 int64(m.Phone),
+		PhoneDisplayName:      m.PhoneDisplayName,
+		PhoneFamilyName:       m.PhoneFamilyName,
+		PhoneNumber:           m.PhoneNumber,
+		PhoneNormalizedNumber: m.PhoneNormalizedNumber,
+		PhoneContactRowId:     int32(m.PhoneContactRowId),
+		DeviceUuidId:          int32(m.DeviceUuidId),
+		CreatedTime:           int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PhoneContact__FOlD = &PB_PhoneContact{
+	Id:                    0,
+	UserId:                0,
+	Phone:                 0,
+	PhoneDisplayName:      "",
+	PhoneFamilyName:       "",
+	PhoneNumber:           "",
+	PhoneNormalizedNumber: "",
+	PhoneContactRowId:     0,
+	DeviceUuidId:          0,
+	CreatedTime:           0,
+}
+
+type PB_PhoneContactsCopy_Flat struct {
+	Id                    int
 	PhoneDisplayName      string
 	PhoneFamilyName       string
 	PhoneNumber           string
@@ -3696,8 +3763,8 @@ type PB_PhoneContact_Flat struct {
 }
 
 //ToPB
-func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
-	r := &PB_PhoneContact_Flat{
+func (m *PB_PhoneContactsCopy) ToFlat() *PB_PhoneContactsCopy_Flat {
+	r := &PB_PhoneContactsCopy_Flat{
 		Id:                    int(m.Id),
 		PhoneDisplayName:      m.PhoneDisplayName,
 		PhoneFamilyName:       m.PhoneFamilyName,
@@ -3713,8 +3780,8 @@ func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
 }
 
 //ToPB
-func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
-	r := &PB_PhoneContact{
+func (m *PB_PhoneContactsCopy_Flat) ToPB() *PB_PhoneContactsCopy {
+	r := &PB_PhoneContactsCopy{
 		Id:                    int32(m.Id),
 		PhoneDisplayName:      m.PhoneDisplayName,
 		PhoneFamilyName:       m.PhoneFamilyName,
@@ -3730,7 +3797,7 @@ func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
 }
 
 //folding
-var PB_PhoneContact__FOlD = &PB_PhoneContact{
+var PB_PhoneContactsCopy__FOlD = &PB_PhoneContactsCopy{
 	Id:                    0,
 	PhoneDisplayName:      "",
 	PhoneFamilyName:       "",
@@ -3810,6 +3877,91 @@ func (m *PB_Post_Flat) ToPB() *PB_Post {
 
 //folding
 var PB_Post__FOlD = &PB_Post{
+	PostId:         0,
+	UserId:         0,
+	PostTypeEnum:   0,
+	MediaId:        0,
+	Text:           "",
+	RichText:       "",
+	MediaCount:     0,
+	SharedTo:       0,
+	DisableComment: 0,
+	HasTag:         0,
+	CommentsCount:  0,
+	LikesCount:     0,
+	ViewsCount:     0,
+	EditedTime:     0,
+	CreatedTime:    0,
+	ReSharedPostId: 0,
+}
+
+type PB_PostCopy_Flat struct {
+	PostId         int
+	UserId         int
+	PostTypeEnum   int
+	MediaId        int
+	Text           string
+	RichText       string
+	MediaCount     int
+	SharedTo       int
+	DisableComment int
+	HasTag         int
+	CommentsCount  int
+	LikesCount     int
+	ViewsCount     int
+	EditedTime     int
+	CreatedTime    int
+	ReSharedPostId int
+}
+
+//ToPB
+func (m *PB_PostCopy) ToFlat() *PB_PostCopy_Flat {
+	r := &PB_PostCopy_Flat{
+		PostId:         int(m.PostId),
+		UserId:         int(m.UserId),
+		PostTypeEnum:   int(m.PostTypeEnum),
+		MediaId:        int(m.MediaId),
+		Text:           m.Text,
+		RichText:       m.RichText,
+		MediaCount:     int(m.MediaCount),
+		SharedTo:       int(m.SharedTo),
+		DisableComment: int(m.DisableComment),
+		HasTag:         int(m.HasTag),
+		CommentsCount:  int(m.CommentsCount),
+		LikesCount:     int(m.LikesCount),
+		ViewsCount:     int(m.ViewsCount),
+		EditedTime:     int(m.EditedTime),
+		CreatedTime:    int(m.CreatedTime),
+		ReSharedPostId: int(m.ReSharedPostId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostCopy_Flat) ToPB() *PB_PostCopy {
+	r := &PB_PostCopy{
+		PostId:         int64(m.PostId),
+		UserId:         int32(m.UserId),
+		PostTypeEnum:   int32(m.PostTypeEnum),
+		MediaId:        int32(m.MediaId),
+		Text:           m.Text,
+		RichText:       m.RichText,
+		MediaCount:     int32(m.MediaCount),
+		SharedTo:       int32(m.SharedTo),
+		DisableComment: int32(m.DisableComment),
+		HasTag:         int32(m.HasTag),
+		CommentsCount:  int32(m.CommentsCount),
+		LikesCount:     int32(m.LikesCount),
+		ViewsCount:     int32(m.ViewsCount),
+		EditedTime:     int32(m.EditedTime),
+		CreatedTime:    int32(m.CreatedTime),
+		ReSharedPostId: int64(m.ReSharedPostId),
+	}
+	return r
+}
+
+//folding
+var PB_PostCopy__FOlD = &PB_PostCopy{
 	PostId:         0,
 	UserId:         0,
 	PostTypeEnum:   0,
@@ -3972,6 +4124,79 @@ func (m *PB_Session_Flat) ToPB() *PB_Session {
 
 //folding
 var PB_Session__FOlD = &PB_Session{
+	Id:                    0,
+	UserId:                0,
+	SessionUuid:           "",
+	ClientUuid:            "",
+	DeviceUuid:            "",
+	LastActivityTime:      0,
+	LastIpAddress:         "",
+	LastWifiMacAddress:    "",
+	LastNetworkType:       "",
+	LastNetworkTypeEnumId: 0,
+	AppVersion:            0,
+	UpdatedTime:           0,
+	CreatedTime:           0,
+}
+
+type PB_SessionCopy_Flat struct {
+	Id                    int
+	UserId                int
+	SessionUuid           string
+	ClientUuid            string
+	DeviceUuid            string
+	LastActivityTime      int
+	LastIpAddress         string
+	LastWifiMacAddress    string
+	LastNetworkType       string
+	LastNetworkTypeEnumId int
+	AppVersion            int
+	UpdatedTime           int
+	CreatedTime           int
+}
+
+//ToPB
+func (m *PB_SessionCopy) ToFlat() *PB_SessionCopy_Flat {
+	r := &PB_SessionCopy_Flat{
+		Id:                    int(m.Id),
+		UserId:                int(m.UserId),
+		SessionUuid:           m.SessionUuid,
+		ClientUuid:            m.ClientUuid,
+		DeviceUuid:            m.DeviceUuid,
+		LastActivityTime:      int(m.LastActivityTime),
+		LastIpAddress:         m.LastIpAddress,
+		LastWifiMacAddress:    m.LastWifiMacAddress,
+		LastNetworkType:       m.LastNetworkType,
+		LastNetworkTypeEnumId: int(m.LastNetworkTypeEnumId),
+		AppVersion:            int(m.AppVersion),
+		UpdatedTime:           int(m.UpdatedTime),
+		CreatedTime:           int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SessionCopy_Flat) ToPB() *PB_SessionCopy {
+	r := &PB_SessionCopy{
+		Id:                    int64(m.Id),
+		UserId:                int32(m.UserId),
+		SessionUuid:           m.SessionUuid,
+		ClientUuid:            m.ClientUuid,
+		DeviceUuid:            m.DeviceUuid,
+		LastActivityTime:      int32(m.LastActivityTime),
+		LastIpAddress:         m.LastIpAddress,
+		LastWifiMacAddress:    m.LastWifiMacAddress,
+		LastNetworkType:       m.LastNetworkType,
+		LastNetworkTypeEnumId: int32(m.LastNetworkTypeEnumId),
+		AppVersion:            int32(m.AppVersion),
+		UpdatedTime:           int32(m.UpdatedTime),
+		CreatedTime:           int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_SessionCopy__FOlD = &PB_SessionCopy{
 	Id:                    0,
 	UserId:                0,
 	SessionUuid:           "",
@@ -4187,6 +4412,76 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
 	DirectPopup:              0,
 	DirectSound:              0,
 	DirectPriority:           0,
+}
+
+type PB_SuggestedTopPost_Flat struct {
+	Id     int
+	PostId int
+}
+
+//ToPB
+func (m *PB_SuggestedTopPost) ToFlat() *PB_SuggestedTopPost_Flat {
+	r := &PB_SuggestedTopPost_Flat{
+		Id:     int(m.Id),
+		PostId: int(m.PostId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SuggestedTopPost_Flat) ToPB() *PB_SuggestedTopPost {
+	r := &PB_SuggestedTopPost{
+		Id:     int64(m.Id),
+		PostId: int64(m.PostId),
+	}
+	return r
+}
+
+//folding
+var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+	Id:     0,
+	PostId: 0,
+}
+
+type PB_SuggestedUser_Flat struct {
+	Id          int
+	UserId      int
+	TargetId    int
+	Weight      float32
+	CreatedTime int
+}
+
+//ToPB
+func (m *PB_SuggestedUser) ToFlat() *PB_SuggestedUser_Flat {
+	r := &PB_SuggestedUser_Flat{
+		Id:          int(m.Id),
+		UserId:      int(m.UserId),
+		TargetId:    int(m.TargetId),
+		Weight:      float32(m.Weight),
+		CreatedTime: int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SuggestedUser_Flat) ToPB() *PB_SuggestedUser {
+	r := &PB_SuggestedUser{
+		Id:          int32(m.Id),
+		UserId:      int32(m.UserId),
+		TargetId:    int32(m.TargetId),
+		Weight:      m.Weight,
+		CreatedTime: int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
+	Id:          0,
+	UserId:      0,
+	TargetId:    0,
+	Weight:      0.0,
+	CreatedTime: 0,
 }
 
 type PB_Tag_Flat struct {
@@ -4983,6 +5278,32 @@ func (m *PB_UserViewRowify_Flat) ToPB() *PB_UserViewRowify {
 var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
 	Id:          0,
 	CreatedTime: 0,
+}
+
+type PB_PostViewRowify_Flat struct {
+	Id       int
+	PostView PB_PostView
+}
+
+//ToPB
+func (m *PB_PostViewRowify) ToFlat() *PB_PostViewRowify_Flat {
+	r := &PB_PostViewRowify_Flat{
+		Id: int(m.Id),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostViewRowify_Flat) ToPB() *PB_PostViewRowify {
+	r := &PB_PostViewRowify{
+		Id: int64(m.Id),
+	}
+	return r
+}
+
+//folding
+var PB_PostViewRowify__FOlD = &PB_PostViewRowify{
+	Id: 0,
 }
 
 type PB_TagView_Flat struct {
@@ -5881,14 +6202,13 @@ return r
 
 func(m *PB_PageParam_GetSuggestedTagsPage)ToFlat() *PB_PageParam_GetSuggestedTagsPage_Flat {
 r := &PB_PageParam_GetSuggestedTagsPage_Flat{
-    Limit:  int(m.Limit) ,
-    Last:  int(m.Last) ,
 }
 return r
 }
 
 func(m *PB_PageResponse_GetSuggestedTagsPage)ToFlat() *PB_PageResponse_GetSuggestedTagsPage_Flat {
 r := &PB_PageResponse_GetSuggestedTagsPage_Flat{
+
 
 }
 return r
@@ -5929,6 +6249,7 @@ return r
 
 func(m *PB_PageParam_SearchTagsPage)ToFlat() *PB_PageParam_SearchTagsPage_Flat {
 r := &PB_PageParam_SearchTagsPage_Flat{
+    Query:  m.Query ,
 }
 return r
 }
@@ -5936,18 +6257,21 @@ return r
 func(m *PB_PageResponse_SearchTagsPage)ToFlat() *PB_PageResponse_SearchTagsPage_Flat {
 r := &PB_PageResponse_SearchTagsPage_Flat{
 
+
 }
 return r
 }
 
 func(m *PB_PageParam_SearchUsersPage)ToFlat() *PB_PageParam_SearchUsersPage_Flat {
 r := &PB_PageParam_SearchUsersPage_Flat{
+    Query:  m.Query ,
 }
 return r
 }
 
 func(m *PB_PageResponse_SearchUsersPage)ToFlat() *PB_PageResponse_SearchUsersPage_Flat {
 r := &PB_PageResponse_SearchUsersPage_Flat{
+
 
 }
 return r
@@ -6505,6 +6829,22 @@ return r
 func(m *PB_PhoneContact)ToFlat() *PB_PhoneContact_Flat {
 r := &PB_PhoneContact_Flat{
     Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    Phone:  int(m.Phone) ,
+    PhoneDisplayName:  m.PhoneDisplayName ,
+    PhoneFamilyName:  m.PhoneFamilyName ,
+    PhoneNumber:  m.PhoneNumber ,
+    PhoneNormalizedNumber:  m.PhoneNormalizedNumber ,
+    PhoneContactRowId:  int(m.PhoneContactRowId) ,
+    DeviceUuidId:  int(m.DeviceUuidId) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PhoneContactsCopy)ToFlat() *PB_PhoneContactsCopy_Flat {
+r := &PB_PhoneContactsCopy_Flat{
+    Id:  int(m.Id) ,
     PhoneDisplayName:  m.PhoneDisplayName ,
     PhoneFamilyName:  m.PhoneFamilyName ,
     PhoneNumber:  m.PhoneNumber ,
@@ -6520,6 +6860,28 @@ return r
 
 func(m *PB_Post)ToFlat() *PB_Post_Flat {
 r := &PB_Post_Flat{
+    PostId:  int(m.PostId) ,
+    UserId:  int(m.UserId) ,
+    PostTypeEnum:  int(m.PostTypeEnum) ,
+    MediaId:  int(m.MediaId) ,
+    Text:  m.Text ,
+    RichText:  m.RichText ,
+    MediaCount:  int(m.MediaCount) ,
+    SharedTo:  int(m.SharedTo) ,
+    DisableComment:  int(m.DisableComment) ,
+    HasTag:  int(m.HasTag) ,
+    CommentsCount:  int(m.CommentsCount) ,
+    LikesCount:  int(m.LikesCount) ,
+    ViewsCount:  int(m.ViewsCount) ,
+    EditedTime:  int(m.EditedTime) ,
+    CreatedTime:  int(m.CreatedTime) ,
+    ReSharedPostId:  int(m.ReSharedPostId) ,
+}
+return r
+}
+
+func(m *PB_PostCopy)ToFlat() *PB_PostCopy_Flat {
+r := &PB_PostCopy_Flat{
     PostId:  int(m.PostId) ,
     UserId:  int(m.UserId) ,
     PostTypeEnum:  int(m.PostTypeEnum) ,
@@ -6565,6 +6927,25 @@ return r
 
 func(m *PB_Session)ToFlat() *PB_Session_Flat {
 r := &PB_Session_Flat{
+    Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    SessionUuid:  m.SessionUuid ,
+    ClientUuid:  m.ClientUuid ,
+    DeviceUuid:  m.DeviceUuid ,
+    LastActivityTime:  int(m.LastActivityTime) ,
+    LastIpAddress:  m.LastIpAddress ,
+    LastWifiMacAddress:  m.LastWifiMacAddress ,
+    LastNetworkType:  m.LastNetworkType ,
+    LastNetworkTypeEnumId:  int(m.LastNetworkTypeEnumId) ,
+    AppVersion:  int(m.AppVersion) ,
+    UpdatedTime:  int(m.UpdatedTime) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_SessionCopy)ToFlat() *PB_SessionCopy_Flat {
+r := &PB_SessionCopy_Flat{
     Id:  int(m.Id) ,
     UserId:  int(m.UserId) ,
     SessionUuid:  m.SessionUuid ,
@@ -6630,6 +7011,25 @@ r := &PB_SettingNotification_Flat{
     DirectPopup:  int(m.DirectPopup) ,
     DirectSound:  int(m.DirectSound) ,
     DirectPriority:  int(m.DirectPriority) ,
+}
+return r
+}
+
+func(m *PB_SuggestedTopPost)ToFlat() *PB_SuggestedTopPost_Flat {
+r := &PB_SuggestedTopPost_Flat{
+    Id:  int(m.Id) ,
+    PostId:  int(m.PostId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedUser)ToFlat() *PB_SuggestedUser_Flat {
+r := &PB_SuggestedUser_Flat{
+    Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    TargetId:  int(m.TargetId) ,
+    Weight:  float32(m.Weight) ,
+    CreatedTime:  int(m.CreatedTime) ,
 }
 return r
 }
@@ -6852,6 +7252,14 @@ func(m *PB_UserViewRowify)ToFlat() *PB_UserViewRowify_Flat {
 r := &PB_UserViewRowify_Flat{
     Id:  int(m.Id) ,
     CreatedTime:  int(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostViewRowify)ToFlat() *PB_PostViewRowify_Flat {
+r := &PB_PostViewRowify_Flat{
+    Id:  int(m.Id) ,
 
 }
 return r
@@ -7275,7 +7683,7 @@ return r
 func(m *PB_PageParam_GetCommentsPage_Flat)ToPB() *PB_PageParam_GetCommentsPage {
 r := &PB_PageParam_GetCommentsPage{
     PostId:  int64(m.PostId) ,
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7291,7 +7699,7 @@ return r
 
 func(m *PB_PageParam_GetHomePage_Flat)ToPB() *PB_PageParam_GetHomePage {
 r := &PB_PageParam_GetHomePage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7321,7 +7729,7 @@ return r
 func(m *PB_PageParam_GetLikesPage_Flat)ToPB() *PB_PageParam_GetLikesPage {
 r := &PB_PageParam_GetLikesPage{
     PostId:  int64(m.PostId) ,
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7338,7 +7746,7 @@ return r
 func(m *PB_PageParam_GetFollowersPage_Flat)ToPB() *PB_PageParam_GetFollowersPage {
 r := &PB_PageParam_GetFollowersPage{
     UserId:  int64(m.UserId) ,
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7355,7 +7763,7 @@ return r
 func(m *PB_PageParam_GetFollowingsPage_Flat)ToPB() *PB_PageParam_GetFollowingsPage {
 r := &PB_PageParam_GetFollowingsPage{
     UserId:  int64(m.UserId) ,
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7371,7 +7779,7 @@ return r
 
 func(m *PB_PageParam_GetNotifiesPage_Flat)ToPB() *PB_PageParam_GetNotifiesPage {
 r := &PB_PageParam_GetNotifiesPage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7388,7 +7796,7 @@ return r
 
 func(m *PB_PageParam_GetUserActionsPage_Flat)ToPB() *PB_PageParam_GetUserActionsPage {
 r := &PB_PageParam_GetUserActionsPage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7404,7 +7812,7 @@ return r
 
 func(m *PB_PageParam_GetSuggestedPostsPage_Flat)ToPB() *PB_PageParam_GetSuggestedPostsPage {
 r := &PB_PageParam_GetSuggestedPostsPage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7420,7 +7828,7 @@ return r
 
 func(m *PB_PageParam_GetSuggestedUsersPage_Flat)ToPB() *PB_PageParam_GetSuggestedUsersPage {
 r := &PB_PageParam_GetSuggestedUsersPage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7436,8 +7844,6 @@ return r
 
 func(m *PB_PageParam_GetSuggestedTagsPage_Flat)ToPB() *PB_PageParam_GetSuggestedTagsPage {
 r := &PB_PageParam_GetSuggestedTagsPage{
-    Limit:  int64(m.Limit) ,
-    Last:  int64(m.Last) ,
 }
 return r
 }
@@ -7445,13 +7851,14 @@ return r
 func(m *PB_PageResponse_GetSuggestedTagsPage_Flat)ToPB() *PB_PageResponse_GetSuggestedTagsPage {
 r := &PB_PageResponse_GetSuggestedTagsPage{
 
+
 }
 return r
 }
 
 func(m *PB_PageParam_GetLastPostsPage_Flat)ToPB() *PB_PageParam_GetLastPostsPage {
 r := &PB_PageParam_GetLastPostsPage{
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7468,7 +7875,7 @@ return r
 func(m *PB_PageParam_GetTagPage_Flat)ToPB() *PB_PageParam_GetTagPage {
 r := &PB_PageParam_GetTagPage{
     Tag:  m.Tag ,
-    Limit:  int64(m.Limit) ,
+    Limit:  int32(m.Limit) ,
     Last:  int64(m.Last) ,
 }
 return r
@@ -7484,6 +7891,7 @@ return r
 
 func(m *PB_PageParam_SearchTagsPage_Flat)ToPB() *PB_PageParam_SearchTagsPage {
 r := &PB_PageParam_SearchTagsPage{
+    Query:  m.Query ,
 }
 return r
 }
@@ -7491,18 +7899,21 @@ return r
 func(m *PB_PageResponse_SearchTagsPage_Flat)ToPB() *PB_PageResponse_SearchTagsPage {
 r := &PB_PageResponse_SearchTagsPage{
 
+
 }
 return r
 }
 
 func(m *PB_PageParam_SearchUsersPage_Flat)ToPB() *PB_PageParam_SearchUsersPage {
 r := &PB_PageParam_SearchUsersPage{
+    Query:  m.Query ,
 }
 return r
 }
 
 func(m *PB_PageResponse_SearchUsersPage_Flat)ToPB() *PB_PageResponse_SearchUsersPage {
 r := &PB_PageResponse_SearchUsersPage{
+
 
 }
 return r
@@ -8060,6 +8471,22 @@ return r
 func(m *PB_PhoneContact_Flat)ToPB() *PB_PhoneContact {
 r := &PB_PhoneContact{
     Id:  int32(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    Phone:  int64(m.Phone) ,
+    PhoneDisplayName:  m.PhoneDisplayName ,
+    PhoneFamilyName:  m.PhoneFamilyName ,
+    PhoneNumber:  m.PhoneNumber ,
+    PhoneNormalizedNumber:  m.PhoneNormalizedNumber ,
+    PhoneContactRowId:  int32(m.PhoneContactRowId) ,
+    DeviceUuidId:  int32(m.DeviceUuidId) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PhoneContactsCopy_Flat)ToPB() *PB_PhoneContactsCopy {
+r := &PB_PhoneContactsCopy{
+    Id:  int32(m.Id) ,
     PhoneDisplayName:  m.PhoneDisplayName ,
     PhoneFamilyName:  m.PhoneFamilyName ,
     PhoneNumber:  m.PhoneNumber ,
@@ -8075,6 +8502,28 @@ return r
 
 func(m *PB_Post_Flat)ToPB() *PB_Post {
 r := &PB_Post{
+    PostId:  int64(m.PostId) ,
+    UserId:  int32(m.UserId) ,
+    PostTypeEnum:  int32(m.PostTypeEnum) ,
+    MediaId:  int32(m.MediaId) ,
+    Text:  m.Text ,
+    RichText:  m.RichText ,
+    MediaCount:  int32(m.MediaCount) ,
+    SharedTo:  int32(m.SharedTo) ,
+    DisableComment:  int32(m.DisableComment) ,
+    HasTag:  int32(m.HasTag) ,
+    CommentsCount:  int32(m.CommentsCount) ,
+    LikesCount:  int32(m.LikesCount) ,
+    ViewsCount:  int32(m.ViewsCount) ,
+    EditedTime:  int32(m.EditedTime) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+    ReSharedPostId:  int64(m.ReSharedPostId) ,
+}
+return r
+}
+
+func(m *PB_PostCopy_Flat)ToPB() *PB_PostCopy {
+r := &PB_PostCopy{
     PostId:  int64(m.PostId) ,
     UserId:  int32(m.UserId) ,
     PostTypeEnum:  int32(m.PostTypeEnum) ,
@@ -8120,6 +8569,25 @@ return r
 
 func(m *PB_Session_Flat)ToPB() *PB_Session {
 r := &PB_Session{
+    Id:  int64(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    SessionUuid:  m.SessionUuid ,
+    ClientUuid:  m.ClientUuid ,
+    DeviceUuid:  m.DeviceUuid ,
+    LastActivityTime:  int32(m.LastActivityTime) ,
+    LastIpAddress:  m.LastIpAddress ,
+    LastWifiMacAddress:  m.LastWifiMacAddress ,
+    LastNetworkType:  m.LastNetworkType ,
+    LastNetworkTypeEnumId:  int32(m.LastNetworkTypeEnumId) ,
+    AppVersion:  int32(m.AppVersion) ,
+    UpdatedTime:  int32(m.UpdatedTime) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_SessionCopy_Flat)ToPB() *PB_SessionCopy {
+r := &PB_SessionCopy{
     Id:  int64(m.Id) ,
     UserId:  int32(m.UserId) ,
     SessionUuid:  m.SessionUuid ,
@@ -8185,6 +8653,25 @@ r := &PB_SettingNotification{
     DirectPopup:  int32(m.DirectPopup) ,
     DirectSound:  int32(m.DirectSound) ,
     DirectPriority:  int32(m.DirectPriority) ,
+}
+return r
+}
+
+func(m *PB_SuggestedTopPost_Flat)ToPB() *PB_SuggestedTopPost {
+r := &PB_SuggestedTopPost{
+    Id:  int64(m.Id) ,
+    PostId:  int64(m.PostId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedUser_Flat)ToPB() *PB_SuggestedUser {
+r := &PB_SuggestedUser{
+    Id:  int32(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    TargetId:  int32(m.TargetId) ,
+    Weight:  m.Weight ,
+    CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
 }
@@ -8407,6 +8894,14 @@ func(m *PB_UserViewRowify_Flat)ToPB() *PB_UserViewRowify {
 r := &PB_UserViewRowify{
     Id:  int64(m.Id) ,
     CreatedTime:  int32(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostViewRowify_Flat)ToPB() *PB_PostViewRowify {
+r := &PB_PostViewRowify{
+    Id:  int64(m.Id) ,
 
 }
 return r
@@ -8876,12 +9371,11 @@ var PB_PageResponse_GetSuggestedUsersPage__FOlD = &PB_PageResponse_GetSuggestedU
 
 
 var PB_PageParam_GetSuggestedTagsPage__FOlD = &PB_PageParam_GetSuggestedTagsPage{
-        Limit:  0 ,
-        Last:  0 ,
 }
 
 
 var PB_PageResponse_GetSuggestedTagsPage__FOlD = &PB_PageResponse_GetSuggestedTagsPage{
+
 
 }
 
@@ -8912,19 +9406,23 @@ var PB_PageResponse_GetTagPage__FOlD = &PB_PageResponse_GetTagPage{
 
 
 var PB_PageParam_SearchTagsPage__FOlD = &PB_PageParam_SearchTagsPage{
+        Query:  "" ,
 }
 
 
 var PB_PageResponse_SearchTagsPage__FOlD = &PB_PageResponse_SearchTagsPage{
 
+
 }
 
 
 var PB_PageParam_SearchUsersPage__FOlD = &PB_PageParam_SearchUsersPage{
+        Query:  "" ,
 }
 
 
 var PB_PageResponse_SearchUsersPage__FOlD = &PB_PageResponse_SearchUsersPage{
+
 
 }
 
@@ -9364,6 +9862,20 @@ var PB_NotifyRemoved__FOlD = &PB_NotifyRemoved{
 
 var PB_PhoneContact__FOlD = &PB_PhoneContact{
         Id:  0 ,
+        UserId:  0 ,
+        Phone:  0 ,
+        PhoneDisplayName:  "" ,
+        PhoneFamilyName:  "" ,
+        PhoneNumber:  "" ,
+        PhoneNormalizedNumber:  "" ,
+        PhoneContactRowId:  0 ,
+        DeviceUuidId:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_PhoneContactsCopy__FOlD = &PB_PhoneContactsCopy{
+        Id:  0 ,
         PhoneDisplayName:  "" ,
         PhoneFamilyName:  "" ,
         PhoneNumber:  "" ,
@@ -9377,6 +9889,26 @@ var PB_PhoneContact__FOlD = &PB_PhoneContact{
 
 
 var PB_Post__FOlD = &PB_Post{
+        PostId:  0 ,
+        UserId:  0 ,
+        PostTypeEnum:  0 ,
+        MediaId:  0 ,
+        Text:  "" ,
+        RichText:  "" ,
+        MediaCount:  0 ,
+        SharedTo:  0 ,
+        DisableComment:  0 ,
+        HasTag:  0 ,
+        CommentsCount:  0 ,
+        LikesCount:  0 ,
+        ViewsCount:  0 ,
+        EditedTime:  0 ,
+        CreatedTime:  0 ,
+        ReSharedPostId:  0 ,
+}
+
+
+var PB_PostCopy__FOlD = &PB_PostCopy{
         PostId:  0 ,
         UserId:  0 ,
         PostTypeEnum:  0 ,
@@ -9416,6 +9948,23 @@ var PB_SearchClicked__FOlD = &PB_SearchClicked{
 
 
 var PB_Session__FOlD = &PB_Session{
+        Id:  0 ,
+        UserId:  0 ,
+        SessionUuid:  "" ,
+        ClientUuid:  "" ,
+        DeviceUuid:  "" ,
+        LastActivityTime:  0 ,
+        LastIpAddress:  "" ,
+        LastWifiMacAddress:  "" ,
+        LastNetworkType:  "" ,
+        LastNetworkTypeEnumId:  0 ,
+        AppVersion:  0 ,
+        UpdatedTime:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_SessionCopy__FOlD = &PB_SessionCopy{
         Id:  0 ,
         UserId:  0 ,
         SessionUuid:  "" ,
@@ -9477,6 +10026,21 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
         DirectPopup:  0 ,
         DirectSound:  0 ,
         DirectPriority:  0 ,
+}
+
+
+var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+        Id:  0 ,
+        PostId:  0 ,
+}
+
+
+var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
+        Id:  0 ,
+        UserId:  0 ,
+        TargetId:  0 ,
+        Weight:  0.0 ,
+        CreatedTime:  0 ,
 }
 
 
@@ -9671,6 +10235,12 @@ var PB_TopProfileView__FOlD = &PB_TopProfileView{
 var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
         Id:  0 ,
         CreatedTime:  0 ,
+
+}
+
+
+var PB_PostViewRowify__FOlD = &PB_PostViewRowify{
+        Id:  0 ,
 
 }
 

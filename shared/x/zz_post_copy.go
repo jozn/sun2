@@ -9,10 +9,10 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Post represents a row from 'sun.post'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostCopy represents a row from 'sun.post_copy'.
 
 // Manualy copy this to project
-type Post__ struct {
+type PostCopy__ struct {
 	PostId         int    `json:"PostId"`         // PostId -
 	UserId         int    `json:"UserId"`         // UserId -
 	PostTypeEnum   int    `json:"PostTypeEnum"`   // PostTypeEnum -
@@ -33,141 +33,141 @@ type Post__ struct {
 	_exists, _deleted bool
 }
 
-// Exists determines if the Post exists in the database.
-func (p *Post) Exists() bool {
-	return p._exists
+// Exists determines if the PostCopy exists in the database.
+func (pc *PostCopy) Exists() bool {
+	return pc._exists
 }
 
-// Deleted provides information if the Post has been deleted from the database.
-func (p *Post) Deleted() bool {
-	return p._deleted
+// Deleted provides information if the PostCopy has been deleted from the database.
+func (pc *PostCopy) Deleted() bool {
+	return pc._deleted
 }
 
-// Insert inserts the Post to the database.
-func (p *Post) Insert(db XODB) error {
+// Insert inserts the PostCopy to the database.
+func (pc *PostCopy) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if p._exists {
+	if pc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.post (` +
+	const sqlstr = `INSERT INTO sun.post_copy (` +
 		`PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	XOLog(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	if err != nil {
 		return err
 	}
 
 	// set existence
-	p._exists = true
+	pc._exists = true
 
-	OnPost_AfterInsert(p)
+	OnPostCopy_AfterInsert(pc)
 
 	return nil
 }
 
-// Insert inserts the Post to the database.
-func (p *Post) Replace(db XODB) error {
+// Insert inserts the PostCopy to the database.
+func (pc *PostCopy) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.post (` +
+	const sqlstr = `REPLACE INTO sun.post_copy (` +
 		`PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	XOLog(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	p._exists = true
+	pc._exists = true
 
-	OnPost_AfterInsert(p)
+	OnPostCopy_AfterInsert(pc)
 
 	return nil
 }
 
-// Update updates the Post in the database.
-func (p *Post) Update(db XODB) error {
+// Update updates the PostCopy in the database.
+func (pc *PostCopy) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !p._exists {
+	if !pc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if p._deleted {
+	if pc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.post SET ` +
+	const sqlstr = `UPDATE sun.post_copy SET ` +
 		`UserId = ?, PostTypeEnum = ?, MediaId = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, HasTag = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
 		` WHERE PostId = ?`
 
 	// run query
-	XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	XOLog(sqlstr, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId, pc.PostId)
+	_, err = db.Exec(sqlstr, pc.UserId, pc.PostTypeEnum, pc.MediaId, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.HasTag, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId, pc.PostId)
 
 	XOLogErr(err)
-	OnPost_AfterUpdate(p)
+	OnPostCopy_AfterUpdate(pc)
 
 	return err
 }
 
-// Save saves the Post to the database.
-func (p *Post) Save(db XODB) error {
-	if p.Exists() {
-		return p.Update(db)
+// Save saves the PostCopy to the database.
+func (pc *PostCopy) Save(db XODB) error {
+	if pc.Exists() {
+		return pc.Update(db)
 	}
 
-	return p.Replace(db)
+	return pc.Replace(db)
 }
 
-// Delete deletes the Post from the database.
-func (p *Post) Delete(db XODB) error {
+// Delete deletes the PostCopy from the database.
+func (pc *PostCopy) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !p._exists {
+	if !pc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if p._deleted {
+	if pc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.post WHERE PostId = ?`
+	const sqlstr = `DELETE FROM sun.post_copy WHERE PostId = ?`
 
 	// run query
-	XOLog(sqlstr, p.PostId)
-	_, err = db.Exec(sqlstr, p.PostId)
+	XOLog(sqlstr, pc.PostId)
+	_, err = db.Exec(sqlstr, pc.PostId)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
 	// set deleted
-	p._deleted = true
+	pc._deleted = true
 
-	OnPost_AfterDelete(p)
+	OnPostCopy_AfterDelete(pc)
 
 	return nil
 }
@@ -178,18 +178,18 @@ func (p *Post) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Post_Deleter struct {
+type __PostCopy_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __Post_Updater struct {
+type __PostCopy_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __Post_Selector struct {
+type __PostCopy_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -198,19 +198,19 @@ type __Post_Selector struct {
 	offset    int
 }
 
-func NewPost_Deleter() *__Post_Deleter {
-	d := __Post_Deleter{whereSep: " AND "}
+func NewPostCopy_Deleter() *__PostCopy_Deleter {
+	d := __PostCopy_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewPost_Updater() *__Post_Updater {
-	u := __Post_Updater{whereSep: " AND "}
+func NewPostCopy_Updater() *__PostCopy_Updater {
+	u := __PostCopy_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewPost_Selector() *__Post_Selector {
-	u := __Post_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPostCopy_Selector() *__PostCopy_Selector {
+	u := __PostCopy_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -218,12 +218,12 @@ func NewPost_Selector() *__Post_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__Post_Deleter) Or() *__Post_Deleter {
+func (u *__PostCopy_Deleter) Or() *__PostCopy_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Deleter) PostId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -236,7 +236,7 @@ func (u *__Post_Deleter) PostId_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) PostId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -249,7 +249,7 @@ func (u *__Post_Deleter) PostId_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) PostId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -262,7 +262,7 @@ func (u *__Post_Deleter) PostId_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) PostId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -273,7 +273,7 @@ func (d *__Post_Deleter) PostId_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -284,7 +284,7 @@ func (d *__Post_Deleter) PostId_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -295,7 +295,7 @@ func (d *__Post_Deleter) PostId_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -306,7 +306,7 @@ func (d *__Post_Deleter) PostId_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -317,7 +317,7 @@ func (d *__Post_Deleter) PostId_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -328,7 +328,7 @@ func (d *__Post_Deleter) PostId_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) UserId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -341,7 +341,7 @@ func (u *__Post_Deleter) UserId_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) UserId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -354,7 +354,7 @@ func (u *__Post_Deleter) UserId_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) UserId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -367,7 +367,7 @@ func (u *__Post_Deleter) UserId_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) UserId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -378,7 +378,7 @@ func (d *__Post_Deleter) UserId_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) UserId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -389,7 +389,7 @@ func (d *__Post_Deleter) UserId_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) UserId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -400,7 +400,7 @@ func (d *__Post_Deleter) UserId_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) UserId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -411,7 +411,7 @@ func (d *__Post_Deleter) UserId_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) UserId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -422,7 +422,7 @@ func (d *__Post_Deleter) UserId_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) UserId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -433,7 +433,7 @@ func (d *__Post_Deleter) UserId_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) PostTypeEnum_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -446,7 +446,7 @@ func (u *__Post_Deleter) PostTypeEnum_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -459,7 +459,7 @@ func (u *__Post_Deleter) PostTypeEnum_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -472,7 +472,7 @@ func (u *__Post_Deleter) PostTypeEnum_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) PostTypeEnum_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -483,7 +483,7 @@ func (d *__Post_Deleter) PostTypeEnum_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -494,7 +494,7 @@ func (d *__Post_Deleter) PostTypeEnum_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -505,7 +505,7 @@ func (d *__Post_Deleter) PostTypeEnum_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -516,7 +516,7 @@ func (d *__Post_Deleter) PostTypeEnum_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -527,7 +527,7 @@ func (d *__Post_Deleter) PostTypeEnum_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -538,7 +538,7 @@ func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) MediaId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -551,7 +551,7 @@ func (u *__Post_Deleter) MediaId_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) MediaId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -564,7 +564,7 @@ func (u *__Post_Deleter) MediaId_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) MediaId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -577,7 +577,7 @@ func (u *__Post_Deleter) MediaId_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) MediaId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -588,7 +588,7 @@ func (d *__Post_Deleter) MediaId_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -599,7 +599,7 @@ func (d *__Post_Deleter) MediaId_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -610,7 +610,7 @@ func (d *__Post_Deleter) MediaId_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -621,7 +621,7 @@ func (d *__Post_Deleter) MediaId_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -632,7 +632,7 @@ func (d *__Post_Deleter) MediaId_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -643,7 +643,7 @@ func (d *__Post_Deleter) MediaId_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) MediaCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -656,7 +656,7 @@ func (u *__Post_Deleter) MediaCount_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) MediaCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -669,7 +669,7 @@ func (u *__Post_Deleter) MediaCount_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) MediaCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -682,7 +682,7 @@ func (u *__Post_Deleter) MediaCount_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) MediaCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -693,7 +693,7 @@ func (d *__Post_Deleter) MediaCount_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -704,7 +704,7 @@ func (d *__Post_Deleter) MediaCount_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -715,7 +715,7 @@ func (d *__Post_Deleter) MediaCount_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -726,7 +726,7 @@ func (d *__Post_Deleter) MediaCount_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -737,7 +737,7 @@ func (d *__Post_Deleter) MediaCount_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -748,7 +748,7 @@ func (d *__Post_Deleter) MediaCount_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) SharedTo_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -761,7 +761,7 @@ func (u *__Post_Deleter) SharedTo_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) SharedTo_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -774,7 +774,7 @@ func (u *__Post_Deleter) SharedTo_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) SharedTo_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -787,7 +787,7 @@ func (u *__Post_Deleter) SharedTo_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) SharedTo_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -798,7 +798,7 @@ func (d *__Post_Deleter) SharedTo_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -809,7 +809,7 @@ func (d *__Post_Deleter) SharedTo_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -820,7 +820,7 @@ func (d *__Post_Deleter) SharedTo_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -831,7 +831,7 @@ func (d *__Post_Deleter) SharedTo_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -842,7 +842,7 @@ func (d *__Post_Deleter) SharedTo_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -853,7 +853,7 @@ func (d *__Post_Deleter) SharedTo_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) DisableComment_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -866,7 +866,7 @@ func (u *__Post_Deleter) DisableComment_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) DisableComment_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -879,7 +879,7 @@ func (u *__Post_Deleter) DisableComment_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) DisableComment_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -892,7 +892,7 @@ func (u *__Post_Deleter) DisableComment_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) DisableComment_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -903,7 +903,7 @@ func (d *__Post_Deleter) DisableComment_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -914,7 +914,7 @@ func (d *__Post_Deleter) DisableComment_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -925,7 +925,7 @@ func (d *__Post_Deleter) DisableComment_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -936,7 +936,7 @@ func (d *__Post_Deleter) DisableComment_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -947,7 +947,7 @@ func (d *__Post_Deleter) DisableComment_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -958,7 +958,7 @@ func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) HasTag_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -971,7 +971,7 @@ func (u *__Post_Deleter) HasTag_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) HasTag_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -984,7 +984,7 @@ func (u *__Post_Deleter) HasTag_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) HasTag_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -997,7 +997,7 @@ func (u *__Post_Deleter) HasTag_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) HasTag_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1008,7 +1008,7 @@ func (d *__Post_Deleter) HasTag_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1019,7 +1019,7 @@ func (d *__Post_Deleter) HasTag_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1030,7 +1030,7 @@ func (d *__Post_Deleter) HasTag_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1041,7 +1041,7 @@ func (d *__Post_Deleter) HasTag_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1052,7 +1052,7 @@ func (d *__Post_Deleter) HasTag_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1063,7 +1063,7 @@ func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) CommentsCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1076,7 +1076,7 @@ func (u *__Post_Deleter) CommentsCount_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) CommentsCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1089,7 +1089,7 @@ func (u *__Post_Deleter) CommentsCount_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) CommentsCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1102,7 +1102,7 @@ func (u *__Post_Deleter) CommentsCount_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) CommentsCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1113,7 +1113,7 @@ func (d *__Post_Deleter) CommentsCount_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1124,7 +1124,7 @@ func (d *__Post_Deleter) CommentsCount_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1135,7 +1135,7 @@ func (d *__Post_Deleter) CommentsCount_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1146,7 +1146,7 @@ func (d *__Post_Deleter) CommentsCount_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1157,7 +1157,7 @@ func (d *__Post_Deleter) CommentsCount_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1168,7 +1168,7 @@ func (d *__Post_Deleter) CommentsCount_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) LikesCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1181,7 +1181,7 @@ func (u *__Post_Deleter) LikesCount_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) LikesCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1194,7 +1194,7 @@ func (u *__Post_Deleter) LikesCount_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) LikesCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1207,7 +1207,7 @@ func (u *__Post_Deleter) LikesCount_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) LikesCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1218,7 +1218,7 @@ func (d *__Post_Deleter) LikesCount_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1229,7 +1229,7 @@ func (d *__Post_Deleter) LikesCount_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1240,7 +1240,7 @@ func (d *__Post_Deleter) LikesCount_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1251,7 +1251,7 @@ func (d *__Post_Deleter) LikesCount_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1262,7 +1262,7 @@ func (d *__Post_Deleter) LikesCount_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1273,7 +1273,7 @@ func (d *__Post_Deleter) LikesCount_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) ViewsCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1286,7 +1286,7 @@ func (u *__Post_Deleter) ViewsCount_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) ViewsCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1299,7 +1299,7 @@ func (u *__Post_Deleter) ViewsCount_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) ViewsCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1312,7 +1312,7 @@ func (u *__Post_Deleter) ViewsCount_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) ViewsCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1323,7 +1323,7 @@ func (d *__Post_Deleter) ViewsCount_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1334,7 +1334,7 @@ func (d *__Post_Deleter) ViewsCount_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1345,7 +1345,7 @@ func (d *__Post_Deleter) ViewsCount_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1356,7 +1356,7 @@ func (d *__Post_Deleter) ViewsCount_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1367,7 +1367,7 @@ func (d *__Post_Deleter) ViewsCount_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1378,7 +1378,7 @@ func (d *__Post_Deleter) ViewsCount_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) EditedTime_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1391,7 +1391,7 @@ func (u *__Post_Deleter) EditedTime_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) EditedTime_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1404,7 +1404,7 @@ func (u *__Post_Deleter) EditedTime_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) EditedTime_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1417,7 +1417,7 @@ func (u *__Post_Deleter) EditedTime_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) EditedTime_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1428,7 +1428,7 @@ func (d *__Post_Deleter) EditedTime_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1439,7 +1439,7 @@ func (d *__Post_Deleter) EditedTime_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1450,7 +1450,7 @@ func (d *__Post_Deleter) EditedTime_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1461,7 +1461,7 @@ func (d *__Post_Deleter) EditedTime_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1472,7 +1472,7 @@ func (d *__Post_Deleter) EditedTime_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1483,7 +1483,7 @@ func (d *__Post_Deleter) EditedTime_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) CreatedTime_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1496,7 +1496,7 @@ func (u *__Post_Deleter) CreatedTime_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) CreatedTime_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1509,7 +1509,7 @@ func (u *__Post_Deleter) CreatedTime_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) CreatedTime_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1522,7 +1522,7 @@ func (u *__Post_Deleter) CreatedTime_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) CreatedTime_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1533,7 +1533,7 @@ func (d *__Post_Deleter) CreatedTime_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1544,7 +1544,7 @@ func (d *__Post_Deleter) CreatedTime_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1555,7 +1555,7 @@ func (d *__Post_Deleter) CreatedTime_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1566,7 +1566,7 @@ func (d *__Post_Deleter) CreatedTime_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1577,7 +1577,7 @@ func (d *__Post_Deleter) CreatedTime_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1588,7 +1588,7 @@ func (d *__Post_Deleter) CreatedTime_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) ReSharedPostId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1601,7 +1601,7 @@ func (u *__Post_Deleter) ReSharedPostId_In(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) ReSharedPostId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1614,7 +1614,7 @@ func (u *__Post_Deleter) ReSharedPostId_Ins(ins ...int) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) ReSharedPostId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1627,7 +1627,7 @@ func (u *__Post_Deleter) ReSharedPostId_NotIn(ins []int) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) ReSharedPostId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1638,7 +1638,7 @@ func (d *__Post_Deleter) ReSharedPostId_Eq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1649,7 +1649,7 @@ func (d *__Post_Deleter) ReSharedPostId_NotEq(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1660,7 +1660,7 @@ func (d *__Post_Deleter) ReSharedPostId_LT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1671,7 +1671,7 @@ func (d *__Post_Deleter) ReSharedPostId_LE(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1682,7 +1682,7 @@ func (d *__Post_Deleter) ReSharedPostId_GT(val int) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1694,12 +1694,12 @@ func (d *__Post_Deleter) ReSharedPostId_GE(val int) *__Post_Deleter {
 }
 
 ////////ints
-func (u *__Post_Updater) Or() *__Post_Updater {
+func (u *__PostCopy_Updater) Or() *__PostCopy_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Updater) PostId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1712,7 +1712,7 @@ func (u *__Post_Updater) PostId_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) PostId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1725,7 +1725,7 @@ func (u *__Post_Updater) PostId_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) PostId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1738,7 +1738,7 @@ func (u *__Post_Updater) PostId_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) PostId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1749,7 +1749,7 @@ func (d *__Post_Updater) PostId_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1760,7 +1760,7 @@ func (d *__Post_Updater) PostId_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1771,7 +1771,7 @@ func (d *__Post_Updater) PostId_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1782,7 +1782,7 @@ func (d *__Post_Updater) PostId_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1793,7 +1793,7 @@ func (d *__Post_Updater) PostId_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1804,7 +1804,7 @@ func (d *__Post_Updater) PostId_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) UserId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1817,7 +1817,7 @@ func (u *__Post_Updater) UserId_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) UserId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1830,7 +1830,7 @@ func (u *__Post_Updater) UserId_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) UserId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1843,7 +1843,7 @@ func (u *__Post_Updater) UserId_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) UserId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1854,7 +1854,7 @@ func (d *__Post_Updater) UserId_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) UserId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1865,7 +1865,7 @@ func (d *__Post_Updater) UserId_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) UserId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1876,7 +1876,7 @@ func (d *__Post_Updater) UserId_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) UserId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1887,7 +1887,7 @@ func (d *__Post_Updater) UserId_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) UserId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1898,7 +1898,7 @@ func (d *__Post_Updater) UserId_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) UserId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1909,7 +1909,7 @@ func (d *__Post_Updater) UserId_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) PostTypeEnum_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1922,7 +1922,7 @@ func (u *__Post_Updater) PostTypeEnum_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1935,7 +1935,7 @@ func (u *__Post_Updater) PostTypeEnum_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1948,7 +1948,7 @@ func (u *__Post_Updater) PostTypeEnum_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) PostTypeEnum_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1959,7 +1959,7 @@ func (d *__Post_Updater) PostTypeEnum_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1970,7 +1970,7 @@ func (d *__Post_Updater) PostTypeEnum_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1981,7 +1981,7 @@ func (d *__Post_Updater) PostTypeEnum_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1992,7 +1992,7 @@ func (d *__Post_Updater) PostTypeEnum_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2003,7 +2003,7 @@ func (d *__Post_Updater) PostTypeEnum_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2014,7 +2014,7 @@ func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) MediaId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2027,7 +2027,7 @@ func (u *__Post_Updater) MediaId_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) MediaId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2040,7 +2040,7 @@ func (u *__Post_Updater) MediaId_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) MediaId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2053,7 +2053,7 @@ func (u *__Post_Updater) MediaId_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) MediaId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2064,7 +2064,7 @@ func (d *__Post_Updater) MediaId_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2075,7 +2075,7 @@ func (d *__Post_Updater) MediaId_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2086,7 +2086,7 @@ func (d *__Post_Updater) MediaId_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2097,7 +2097,7 @@ func (d *__Post_Updater) MediaId_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2108,7 +2108,7 @@ func (d *__Post_Updater) MediaId_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2119,7 +2119,7 @@ func (d *__Post_Updater) MediaId_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) MediaCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2132,7 +2132,7 @@ func (u *__Post_Updater) MediaCount_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2145,7 +2145,7 @@ func (u *__Post_Updater) MediaCount_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2158,7 +2158,7 @@ func (u *__Post_Updater) MediaCount_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) MediaCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2169,7 +2169,7 @@ func (d *__Post_Updater) MediaCount_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2180,7 +2180,7 @@ func (d *__Post_Updater) MediaCount_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2191,7 +2191,7 @@ func (d *__Post_Updater) MediaCount_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2202,7 +2202,7 @@ func (d *__Post_Updater) MediaCount_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2213,7 +2213,7 @@ func (d *__Post_Updater) MediaCount_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2224,7 +2224,7 @@ func (d *__Post_Updater) MediaCount_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) SharedTo_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2237,7 +2237,7 @@ func (u *__Post_Updater) SharedTo_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2250,7 +2250,7 @@ func (u *__Post_Updater) SharedTo_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2263,7 +2263,7 @@ func (u *__Post_Updater) SharedTo_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) SharedTo_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2274,7 +2274,7 @@ func (d *__Post_Updater) SharedTo_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2285,7 +2285,7 @@ func (d *__Post_Updater) SharedTo_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2296,7 +2296,7 @@ func (d *__Post_Updater) SharedTo_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2307,7 +2307,7 @@ func (d *__Post_Updater) SharedTo_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2318,7 +2318,7 @@ func (d *__Post_Updater) SharedTo_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2329,7 +2329,7 @@ func (d *__Post_Updater) SharedTo_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) DisableComment_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2342,7 +2342,7 @@ func (u *__Post_Updater) DisableComment_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2355,7 +2355,7 @@ func (u *__Post_Updater) DisableComment_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2368,7 +2368,7 @@ func (u *__Post_Updater) DisableComment_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) DisableComment_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2379,7 +2379,7 @@ func (d *__Post_Updater) DisableComment_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2390,7 +2390,7 @@ func (d *__Post_Updater) DisableComment_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2401,7 +2401,7 @@ func (d *__Post_Updater) DisableComment_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2412,7 +2412,7 @@ func (d *__Post_Updater) DisableComment_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2423,7 +2423,7 @@ func (d *__Post_Updater) DisableComment_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2434,7 +2434,7 @@ func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2447,7 +2447,7 @@ func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) HasTag_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2460,7 +2460,7 @@ func (u *__Post_Updater) HasTag_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) HasTag_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2473,7 +2473,7 @@ func (u *__Post_Updater) HasTag_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) HasTag_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2484,7 +2484,7 @@ func (d *__Post_Updater) HasTag_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) HasTag_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2495,7 +2495,7 @@ func (d *__Post_Updater) HasTag_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) HasTag_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2506,7 +2506,7 @@ func (d *__Post_Updater) HasTag_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) HasTag_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2517,7 +2517,7 @@ func (d *__Post_Updater) HasTag_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) HasTag_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2528,7 +2528,7 @@ func (d *__Post_Updater) HasTag_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2539,7 +2539,7 @@ func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) CommentsCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2552,7 +2552,7 @@ func (u *__Post_Updater) CommentsCount_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2565,7 +2565,7 @@ func (u *__Post_Updater) CommentsCount_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2578,7 +2578,7 @@ func (u *__Post_Updater) CommentsCount_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) CommentsCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2589,7 +2589,7 @@ func (d *__Post_Updater) CommentsCount_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2600,7 +2600,7 @@ func (d *__Post_Updater) CommentsCount_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2611,7 +2611,7 @@ func (d *__Post_Updater) CommentsCount_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2622,7 +2622,7 @@ func (d *__Post_Updater) CommentsCount_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2633,7 +2633,7 @@ func (d *__Post_Updater) CommentsCount_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2644,7 +2644,7 @@ func (d *__Post_Updater) CommentsCount_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) LikesCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2657,7 +2657,7 @@ func (u *__Post_Updater) LikesCount_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2670,7 +2670,7 @@ func (u *__Post_Updater) LikesCount_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2683,7 +2683,7 @@ func (u *__Post_Updater) LikesCount_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) LikesCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2694,7 +2694,7 @@ func (d *__Post_Updater) LikesCount_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2705,7 +2705,7 @@ func (d *__Post_Updater) LikesCount_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2716,7 +2716,7 @@ func (d *__Post_Updater) LikesCount_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2727,7 +2727,7 @@ func (d *__Post_Updater) LikesCount_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2738,7 +2738,7 @@ func (d *__Post_Updater) LikesCount_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2749,7 +2749,7 @@ func (d *__Post_Updater) LikesCount_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) ViewsCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2762,7 +2762,7 @@ func (u *__Post_Updater) ViewsCount_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2775,7 +2775,7 @@ func (u *__Post_Updater) ViewsCount_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2788,7 +2788,7 @@ func (u *__Post_Updater) ViewsCount_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) ViewsCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2799,7 +2799,7 @@ func (d *__Post_Updater) ViewsCount_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2810,7 +2810,7 @@ func (d *__Post_Updater) ViewsCount_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2821,7 +2821,7 @@ func (d *__Post_Updater) ViewsCount_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2832,7 +2832,7 @@ func (d *__Post_Updater) ViewsCount_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2843,7 +2843,7 @@ func (d *__Post_Updater) ViewsCount_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2854,7 +2854,7 @@ func (d *__Post_Updater) ViewsCount_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) EditedTime_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2867,7 +2867,7 @@ func (u *__Post_Updater) EditedTime_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2880,7 +2880,7 @@ func (u *__Post_Updater) EditedTime_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2893,7 +2893,7 @@ func (u *__Post_Updater) EditedTime_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) EditedTime_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2904,7 +2904,7 @@ func (d *__Post_Updater) EditedTime_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2915,7 +2915,7 @@ func (d *__Post_Updater) EditedTime_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2926,7 +2926,7 @@ func (d *__Post_Updater) EditedTime_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2937,7 +2937,7 @@ func (d *__Post_Updater) EditedTime_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2948,7 +2948,7 @@ func (d *__Post_Updater) EditedTime_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2959,7 +2959,7 @@ func (d *__Post_Updater) EditedTime_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) CreatedTime_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2972,7 +2972,7 @@ func (u *__Post_Updater) CreatedTime_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2985,7 +2985,7 @@ func (u *__Post_Updater) CreatedTime_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2998,7 +2998,7 @@ func (u *__Post_Updater) CreatedTime_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) CreatedTime_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3009,7 +3009,7 @@ func (d *__Post_Updater) CreatedTime_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3020,7 +3020,7 @@ func (d *__Post_Updater) CreatedTime_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3031,7 +3031,7 @@ func (d *__Post_Updater) CreatedTime_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3042,7 +3042,7 @@ func (d *__Post_Updater) CreatedTime_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3053,7 +3053,7 @@ func (d *__Post_Updater) CreatedTime_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3064,7 +3064,7 @@ func (d *__Post_Updater) CreatedTime_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) ReSharedPostId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3077,7 +3077,7 @@ func (u *__Post_Updater) ReSharedPostId_In(ins []int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3090,7 +3090,7 @@ func (u *__Post_Updater) ReSharedPostId_Ins(ins ...int) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3103,7 +3103,7 @@ func (u *__Post_Updater) ReSharedPostId_NotIn(ins []int) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) ReSharedPostId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3114,7 +3114,7 @@ func (d *__Post_Updater) ReSharedPostId_Eq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3125,7 +3125,7 @@ func (d *__Post_Updater) ReSharedPostId_NotEq(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3136,7 +3136,7 @@ func (d *__Post_Updater) ReSharedPostId_LT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3147,7 +3147,7 @@ func (d *__Post_Updater) ReSharedPostId_LE(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3158,7 +3158,7 @@ func (d *__Post_Updater) ReSharedPostId_GT(val int) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3170,12 +3170,12 @@ func (d *__Post_Updater) ReSharedPostId_GE(val int) *__Post_Updater {
 }
 
 ////////ints
-func (u *__Post_Selector) Or() *__Post_Selector {
+func (u *__PostCopy_Selector) Or() *__PostCopy_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Selector) PostId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3188,7 +3188,7 @@ func (u *__Post_Selector) PostId_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) PostId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3201,7 +3201,7 @@ func (u *__Post_Selector) PostId_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) PostId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3214,7 +3214,7 @@ func (u *__Post_Selector) PostId_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) PostId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3225,7 +3225,7 @@ func (d *__Post_Selector) PostId_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3236,7 +3236,7 @@ func (d *__Post_Selector) PostId_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3247,7 +3247,7 @@ func (d *__Post_Selector) PostId_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3258,7 +3258,7 @@ func (d *__Post_Selector) PostId_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3269,7 +3269,7 @@ func (d *__Post_Selector) PostId_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3280,7 +3280,7 @@ func (d *__Post_Selector) PostId_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) UserId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3293,7 +3293,7 @@ func (u *__Post_Selector) UserId_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) UserId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3306,7 +3306,7 @@ func (u *__Post_Selector) UserId_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) UserId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3319,7 +3319,7 @@ func (u *__Post_Selector) UserId_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) UserId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3330,7 +3330,7 @@ func (d *__Post_Selector) UserId_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) UserId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3341,7 +3341,7 @@ func (d *__Post_Selector) UserId_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) UserId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3352,7 +3352,7 @@ func (d *__Post_Selector) UserId_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) UserId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3363,7 +3363,7 @@ func (d *__Post_Selector) UserId_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) UserId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3374,7 +3374,7 @@ func (d *__Post_Selector) UserId_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) UserId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3385,7 +3385,7 @@ func (d *__Post_Selector) UserId_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) PostTypeEnum_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3398,7 +3398,7 @@ func (u *__Post_Selector) PostTypeEnum_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3411,7 +3411,7 @@ func (u *__Post_Selector) PostTypeEnum_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3424,7 +3424,7 @@ func (u *__Post_Selector) PostTypeEnum_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) PostTypeEnum_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3435,7 +3435,7 @@ func (d *__Post_Selector) PostTypeEnum_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3446,7 +3446,7 @@ func (d *__Post_Selector) PostTypeEnum_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3457,7 +3457,7 @@ func (d *__Post_Selector) PostTypeEnum_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3468,7 +3468,7 @@ func (d *__Post_Selector) PostTypeEnum_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3479,7 +3479,7 @@ func (d *__Post_Selector) PostTypeEnum_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3490,7 +3490,7 @@ func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) MediaId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3503,7 +3503,7 @@ func (u *__Post_Selector) MediaId_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) MediaId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3516,7 +3516,7 @@ func (u *__Post_Selector) MediaId_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) MediaId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3529,7 +3529,7 @@ func (u *__Post_Selector) MediaId_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) MediaId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3540,7 +3540,7 @@ func (d *__Post_Selector) MediaId_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3551,7 +3551,7 @@ func (d *__Post_Selector) MediaId_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3562,7 +3562,7 @@ func (d *__Post_Selector) MediaId_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3573,7 +3573,7 @@ func (d *__Post_Selector) MediaId_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3584,7 +3584,7 @@ func (d *__Post_Selector) MediaId_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3595,7 +3595,7 @@ func (d *__Post_Selector) MediaId_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) MediaCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3608,7 +3608,7 @@ func (u *__Post_Selector) MediaCount_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) MediaCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3621,7 +3621,7 @@ func (u *__Post_Selector) MediaCount_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) MediaCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3634,7 +3634,7 @@ func (u *__Post_Selector) MediaCount_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) MediaCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3645,7 +3645,7 @@ func (d *__Post_Selector) MediaCount_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3656,7 +3656,7 @@ func (d *__Post_Selector) MediaCount_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3667,7 +3667,7 @@ func (d *__Post_Selector) MediaCount_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3678,7 +3678,7 @@ func (d *__Post_Selector) MediaCount_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3689,7 +3689,7 @@ func (d *__Post_Selector) MediaCount_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3700,7 +3700,7 @@ func (d *__Post_Selector) MediaCount_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) SharedTo_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3713,7 +3713,7 @@ func (u *__Post_Selector) SharedTo_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) SharedTo_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3726,7 +3726,7 @@ func (u *__Post_Selector) SharedTo_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) SharedTo_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3739,7 +3739,7 @@ func (u *__Post_Selector) SharedTo_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) SharedTo_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3750,7 +3750,7 @@ func (d *__Post_Selector) SharedTo_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3761,7 +3761,7 @@ func (d *__Post_Selector) SharedTo_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3772,7 +3772,7 @@ func (d *__Post_Selector) SharedTo_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3783,7 +3783,7 @@ func (d *__Post_Selector) SharedTo_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3794,7 +3794,7 @@ func (d *__Post_Selector) SharedTo_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3805,7 +3805,7 @@ func (d *__Post_Selector) SharedTo_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) DisableComment_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3818,7 +3818,7 @@ func (u *__Post_Selector) DisableComment_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) DisableComment_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3831,7 +3831,7 @@ func (u *__Post_Selector) DisableComment_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) DisableComment_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3844,7 +3844,7 @@ func (u *__Post_Selector) DisableComment_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) DisableComment_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3855,7 +3855,7 @@ func (d *__Post_Selector) DisableComment_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3866,7 +3866,7 @@ func (d *__Post_Selector) DisableComment_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3877,7 +3877,7 @@ func (d *__Post_Selector) DisableComment_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3888,7 +3888,7 @@ func (d *__Post_Selector) DisableComment_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3899,7 +3899,7 @@ func (d *__Post_Selector) DisableComment_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3910,7 +3910,7 @@ func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3923,7 +3923,7 @@ func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) HasTag_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3936,7 +3936,7 @@ func (u *__Post_Selector) HasTag_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) HasTag_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3949,7 +3949,7 @@ func (u *__Post_Selector) HasTag_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) HasTag_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3960,7 +3960,7 @@ func (d *__Post_Selector) HasTag_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) HasTag_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3971,7 +3971,7 @@ func (d *__Post_Selector) HasTag_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) HasTag_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3982,7 +3982,7 @@ func (d *__Post_Selector) HasTag_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) HasTag_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3993,7 +3993,7 @@ func (d *__Post_Selector) HasTag_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) HasTag_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4004,7 +4004,7 @@ func (d *__Post_Selector) HasTag_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4015,7 +4015,7 @@ func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) CommentsCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4028,7 +4028,7 @@ func (u *__Post_Selector) CommentsCount_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) CommentsCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4041,7 +4041,7 @@ func (u *__Post_Selector) CommentsCount_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) CommentsCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4054,7 +4054,7 @@ func (u *__Post_Selector) CommentsCount_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) CommentsCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4065,7 +4065,7 @@ func (d *__Post_Selector) CommentsCount_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4076,7 +4076,7 @@ func (d *__Post_Selector) CommentsCount_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4087,7 +4087,7 @@ func (d *__Post_Selector) CommentsCount_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4098,7 +4098,7 @@ func (d *__Post_Selector) CommentsCount_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4109,7 +4109,7 @@ func (d *__Post_Selector) CommentsCount_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4120,7 +4120,7 @@ func (d *__Post_Selector) CommentsCount_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) LikesCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4133,7 +4133,7 @@ func (u *__Post_Selector) LikesCount_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) LikesCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4146,7 +4146,7 @@ func (u *__Post_Selector) LikesCount_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) LikesCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4159,7 +4159,7 @@ func (u *__Post_Selector) LikesCount_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) LikesCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4170,7 +4170,7 @@ func (d *__Post_Selector) LikesCount_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4181,7 +4181,7 @@ func (d *__Post_Selector) LikesCount_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4192,7 +4192,7 @@ func (d *__Post_Selector) LikesCount_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4203,7 +4203,7 @@ func (d *__Post_Selector) LikesCount_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4214,7 +4214,7 @@ func (d *__Post_Selector) LikesCount_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4225,7 +4225,7 @@ func (d *__Post_Selector) LikesCount_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) ViewsCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4238,7 +4238,7 @@ func (u *__Post_Selector) ViewsCount_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) ViewsCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4251,7 +4251,7 @@ func (u *__Post_Selector) ViewsCount_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) ViewsCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4264,7 +4264,7 @@ func (u *__Post_Selector) ViewsCount_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) ViewsCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4275,7 +4275,7 @@ func (d *__Post_Selector) ViewsCount_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4286,7 +4286,7 @@ func (d *__Post_Selector) ViewsCount_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4297,7 +4297,7 @@ func (d *__Post_Selector) ViewsCount_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4308,7 +4308,7 @@ func (d *__Post_Selector) ViewsCount_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4319,7 +4319,7 @@ func (d *__Post_Selector) ViewsCount_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4330,7 +4330,7 @@ func (d *__Post_Selector) ViewsCount_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) EditedTime_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4343,7 +4343,7 @@ func (u *__Post_Selector) EditedTime_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) EditedTime_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4356,7 +4356,7 @@ func (u *__Post_Selector) EditedTime_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) EditedTime_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4369,7 +4369,7 @@ func (u *__Post_Selector) EditedTime_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) EditedTime_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4380,7 +4380,7 @@ func (d *__Post_Selector) EditedTime_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4391,7 +4391,7 @@ func (d *__Post_Selector) EditedTime_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4402,7 +4402,7 @@ func (d *__Post_Selector) EditedTime_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4413,7 +4413,7 @@ func (d *__Post_Selector) EditedTime_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4424,7 +4424,7 @@ func (d *__Post_Selector) EditedTime_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4435,7 +4435,7 @@ func (d *__Post_Selector) EditedTime_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) CreatedTime_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4448,7 +4448,7 @@ func (u *__Post_Selector) CreatedTime_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) CreatedTime_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4461,7 +4461,7 @@ func (u *__Post_Selector) CreatedTime_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) CreatedTime_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4474,7 +4474,7 @@ func (u *__Post_Selector) CreatedTime_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) CreatedTime_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4485,7 +4485,7 @@ func (d *__Post_Selector) CreatedTime_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4496,7 +4496,7 @@ func (d *__Post_Selector) CreatedTime_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4507,7 +4507,7 @@ func (d *__Post_Selector) CreatedTime_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4518,7 +4518,7 @@ func (d *__Post_Selector) CreatedTime_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4529,7 +4529,7 @@ func (d *__Post_Selector) CreatedTime_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4540,7 +4540,7 @@ func (d *__Post_Selector) CreatedTime_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) ReSharedPostId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4553,7 +4553,7 @@ func (u *__Post_Selector) ReSharedPostId_In(ins []int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) ReSharedPostId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4566,7 +4566,7 @@ func (u *__Post_Selector) ReSharedPostId_Ins(ins ...int) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) ReSharedPostId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4579,7 +4579,7 @@ func (u *__Post_Selector) ReSharedPostId_NotIn(ins []int) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) ReSharedPostId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4590,7 +4590,7 @@ func (d *__Post_Selector) ReSharedPostId_Eq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4601,7 +4601,7 @@ func (d *__Post_Selector) ReSharedPostId_NotEq(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4612,7 +4612,7 @@ func (d *__Post_Selector) ReSharedPostId_LT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4623,7 +4623,7 @@ func (d *__Post_Selector) ReSharedPostId_LE(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4634,7 +4634,7 @@ func (d *__Post_Selector) ReSharedPostId_GT(val int) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4649,7 +4649,7 @@ func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
 
 ////////ints
 
-func (u *__Post_Deleter) Text_In(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_In(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4662,7 +4662,7 @@ func (u *__Post_Deleter) Text_In(ins []string) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) Text_NotIn(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_NotIn(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4676,7 +4676,7 @@ func (u *__Post_Deleter) Text_NotIn(ins []string) *__Post_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Deleter) Text_Like(val string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_Like(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4687,7 +4687,7 @@ func (u *__Post_Deleter) Text_Like(val string) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) Text_Eq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Text_Eq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4698,7 +4698,7 @@ func (d *__Post_Deleter) Text_Eq(val string) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) Text_NotEq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Text_NotEq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4709,7 +4709,7 @@ func (d *__Post_Deleter) Text_NotEq(val string) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) RichText_In(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_In(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4722,7 +4722,7 @@ func (u *__Post_Deleter) RichText_In(ins []string) *__Post_Deleter {
 	return u
 }
 
-func (u *__Post_Deleter) RichText_NotIn(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_NotIn(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4736,7 +4736,7 @@ func (u *__Post_Deleter) RichText_NotIn(ins []string) *__Post_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Deleter) RichText_Like(val string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_Like(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4747,7 +4747,7 @@ func (u *__Post_Deleter) RichText_Like(val string) *__Post_Deleter {
 	return u
 }
 
-func (d *__Post_Deleter) RichText_Eq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) RichText_Eq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4758,7 +4758,7 @@ func (d *__Post_Deleter) RichText_Eq(val string) *__Post_Deleter {
 	return d
 }
 
-func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) RichText_NotEq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4771,7 +4771,7 @@ func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
 
 ////////ints
 
-func (u *__Post_Updater) Text_In(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_In(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4784,7 +4784,7 @@ func (u *__Post_Updater) Text_In(ins []string) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) Text_NotIn(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_NotIn(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4798,7 +4798,7 @@ func (u *__Post_Updater) Text_NotIn(ins []string) *__Post_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Updater) Text_Like(val string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_Like(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4809,7 +4809,7 @@ func (u *__Post_Updater) Text_Like(val string) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) Text_Eq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) Text_Eq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4820,7 +4820,7 @@ func (d *__Post_Updater) Text_Eq(val string) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) Text_NotEq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) Text_NotEq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4831,7 +4831,7 @@ func (d *__Post_Updater) Text_NotEq(val string) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) RichText_In(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_In(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4844,7 +4844,7 @@ func (u *__Post_Updater) RichText_In(ins []string) *__Post_Updater {
 	return u
 }
 
-func (u *__Post_Updater) RichText_NotIn(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_NotIn(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4858,7 +4858,7 @@ func (u *__Post_Updater) RichText_NotIn(ins []string) *__Post_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Updater) RichText_Like(val string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_Like(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4869,7 +4869,7 @@ func (u *__Post_Updater) RichText_Like(val string) *__Post_Updater {
 	return u
 }
 
-func (d *__Post_Updater) RichText_Eq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) RichText_Eq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4880,7 +4880,7 @@ func (d *__Post_Updater) RichText_Eq(val string) *__Post_Updater {
 	return d
 }
 
-func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) RichText_NotEq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4893,7 +4893,7 @@ func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
 
 ////////ints
 
-func (u *__Post_Selector) Text_In(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_In(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4906,7 +4906,7 @@ func (u *__Post_Selector) Text_In(ins []string) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) Text_NotIn(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_NotIn(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4920,7 +4920,7 @@ func (u *__Post_Selector) Text_NotIn(ins []string) *__Post_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Selector) Text_Like(val string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_Like(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4931,7 +4931,7 @@ func (u *__Post_Selector) Text_Like(val string) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) Text_Eq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) Text_Eq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4942,7 +4942,7 @@ func (d *__Post_Selector) Text_Eq(val string) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) Text_NotEq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) Text_NotEq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4953,7 +4953,7 @@ func (d *__Post_Selector) Text_NotEq(val string) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) RichText_In(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_In(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4966,7 +4966,7 @@ func (u *__Post_Selector) RichText_In(ins []string) *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) RichText_NotIn(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_NotIn(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4980,7 +4980,7 @@ func (u *__Post_Selector) RichText_NotIn(ins []string) *__Post_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Selector) RichText_Like(val string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_Like(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4991,7 +4991,7 @@ func (u *__Post_Selector) RichText_Like(val string) *__Post_Selector {
 	return u
 }
 
-func (d *__Post_Selector) RichText_Eq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) RichText_Eq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5002,7 +5002,7 @@ func (d *__Post_Selector) RichText_Eq(val string) *__Post_Selector {
 	return d
 }
 
-func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) RichText_NotEq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5019,12 +5019,12 @@ func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
 
 //ints
 
-func (u *__Post_Updater) PostId(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId(newVal int) *__PostCopy_Updater {
 	u.updates[" PostId = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" PostId = PostId+? "] = count
 	}
@@ -5040,12 +5040,12 @@ func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) UserId(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId(newVal int) *__PostCopy_Updater {
 	u.updates[" UserId = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" UserId = UserId+? "] = count
 	}
@@ -5061,12 +5061,12 @@ func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) PostTypeEnum(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum(newVal int) *__PostCopy_Updater {
 	u.updates[" PostTypeEnum = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" PostTypeEnum = PostTypeEnum+? "] = count
 	}
@@ -5082,12 +5082,12 @@ func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) MediaId(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId(newVal int) *__PostCopy_Updater {
 	u.updates[" MediaId = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" MediaId = MediaId+? "] = count
 	}
@@ -5104,7 +5104,7 @@ func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 //ints
 
 //string
-func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text(newVal string) *__PostCopy_Updater {
 	u.updates[" Text = ? "] = newVal
 	return u
 }
@@ -5112,19 +5112,19 @@ func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
 //ints
 
 //string
-func (u *__Post_Updater) RichText(newVal string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText(newVal string) *__PostCopy_Updater {
 	u.updates[" RichText = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__Post_Updater) MediaCount(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount(newVal int) *__PostCopy_Updater {
 	u.updates[" MediaCount = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" MediaCount = MediaCount+? "] = count
 	}
@@ -5140,12 +5140,12 @@ func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) SharedTo(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo(newVal int) *__PostCopy_Updater {
 	u.updates[" SharedTo = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" SharedTo = SharedTo+? "] = count
 	}
@@ -5161,12 +5161,12 @@ func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) DisableComment(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment(newVal int) *__PostCopy_Updater {
 	u.updates[" DisableComment = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" DisableComment = DisableComment+? "] = count
 	}
@@ -5182,12 +5182,12 @@ func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) HasTag(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag(newVal int) *__PostCopy_Updater {
 	u.updates[" HasTag = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" HasTag = HasTag+? "] = count
 	}
@@ -5203,12 +5203,12 @@ func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) CommentsCount(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount(newVal int) *__PostCopy_Updater {
 	u.updates[" CommentsCount = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" CommentsCount = CommentsCount+? "] = count
 	}
@@ -5224,12 +5224,12 @@ func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) LikesCount(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount(newVal int) *__PostCopy_Updater {
 	u.updates[" LikesCount = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" LikesCount = LikesCount+? "] = count
 	}
@@ -5245,12 +5245,12 @@ func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) ViewsCount(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount(newVal int) *__PostCopy_Updater {
 	u.updates[" ViewsCount = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" ViewsCount = ViewsCount+? "] = count
 	}
@@ -5266,12 +5266,12 @@ func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) EditedTime(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime(newVal int) *__PostCopy_Updater {
 	u.updates[" EditedTime = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" EditedTime = EditedTime+? "] = count
 	}
@@ -5287,12 +5287,12 @@ func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) CreatedTime(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime(newVal int) *__PostCopy_Updater {
 	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
@@ -5308,12 +5308,12 @@ func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) ReSharedPostId(newVal int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId(newVal int) *__PostCopy_Updater {
 	u.updates[" ReSharedPostId = ? "] = newVal
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
 		u.updates[" ReSharedPostId = ReSharedPostId+? "] = count
 	}
@@ -5332,261 +5332,261 @@ func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Post_Selector) OrderBy_PostId_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_PostId_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostId_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_PostId_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostId() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_PostId() *__PostCopy_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_UserId_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_UserId_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_UserId_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_UserId_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_UserId() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_UserId() *__PostCopy_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_PostTypeEnum_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_PostTypeEnum_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostTypeEnum() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_PostTypeEnum() *__PostCopy_Selector {
 	u.selectCol = "PostTypeEnum"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaId_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_MediaId_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY MediaId DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaId_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_MediaId_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY MediaId ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_MediaId() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_MediaId() *__PostCopy_Selector {
 	u.selectCol = "MediaId"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Text_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_Text_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY Text DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Text_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_Text_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY Text ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_Text() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_Text() *__PostCopy_Selector {
 	u.selectCol = "Text"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_RichText_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_RichText_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY RichText DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_RichText_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_RichText_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY RichText ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_RichText() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_RichText() *__PostCopy_Selector {
 	u.selectCol = "RichText"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaCount_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_MediaCount_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY MediaCount DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaCount_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_MediaCount_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY MediaCount ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_MediaCount() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_MediaCount() *__PostCopy_Selector {
 	u.selectCol = "MediaCount"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_SharedTo_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_SharedTo_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY SharedTo DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_SharedTo_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_SharedTo_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY SharedTo ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_SharedTo() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_SharedTo() *__PostCopy_Selector {
 	u.selectCol = "SharedTo"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_DisableComment_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_DisableComment_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY DisableComment DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_DisableComment_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_DisableComment_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY DisableComment ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_DisableComment() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_DisableComment() *__PostCopy_Selector {
 	u.selectCol = "DisableComment"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_HasTag_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_HasTag_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY HasTag DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_HasTag_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_HasTag_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY HasTag ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_HasTag() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_HasTag() *__PostCopy_Selector {
 	u.selectCol = "HasTag"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CommentsCount_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_CommentsCount_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY CommentsCount DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CommentsCount_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_CommentsCount_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY CommentsCount ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_CommentsCount() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_CommentsCount() *__PostCopy_Selector {
 	u.selectCol = "CommentsCount"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_LikesCount_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_LikesCount_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY LikesCount DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_LikesCount_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_LikesCount_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY LikesCount ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_LikesCount() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_LikesCount() *__PostCopy_Selector {
 	u.selectCol = "LikesCount"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ViewsCount_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_ViewsCount_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY ViewsCount DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ViewsCount_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_ViewsCount_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY ViewsCount ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_ViewsCount() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_ViewsCount() *__PostCopy_Selector {
 	u.selectCol = "ViewsCount"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_EditedTime_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_EditedTime_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY EditedTime DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_EditedTime_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_EditedTime_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY EditedTime ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_EditedTime() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_EditedTime() *__PostCopy_Selector {
 	u.selectCol = "EditedTime"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CreatedTime_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_CreatedTime_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CreatedTime_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_CreatedTime_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_CreatedTime() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_CreatedTime() *__PostCopy_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Desc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_ReSharedPostId_Desc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY ReSharedPostId DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Asc() *__Post_Selector {
+func (u *__PostCopy_Selector) OrderBy_ReSharedPostId_Asc() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY ReSharedPostId ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_ReSharedPostId() *__Post_Selector {
+func (u *__PostCopy_Selector) Select_ReSharedPostId() *__PostCopy_Selector {
 	u.selectCol = "ReSharedPostId"
 	return u
 }
 
-func (u *__Post_Selector) Limit(num int) *__Post_Selector {
+func (u *__PostCopy_Selector) Limit(num int) *__PostCopy_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Post_Selector) Offset(num int) *__Post_Selector {
+func (u *__PostCopy_Selector) Offset(num int) *__PostCopy_Selector {
 	u.offset = num
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Post_Selector) _stoSql() (string, []interface{}) {
+func (u *__PostCopy_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.post"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.post_copy"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -5606,14 +5606,14 @@ func (u *__Post_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Post_Selector) GetRow(db *sqlx.DB) (*Post, error) {
+func (u *__PostCopy_Selector) GetRow(db *sqlx.DB) (*PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	row := &Post{}
+	row := &PostCopy{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
@@ -5623,19 +5623,19 @@ func (u *__Post_Selector) GetRow(db *sqlx.DB) (*Post, error) {
 
 	row._exists = true
 
-	OnPost_LoadOne(row)
+	OnPostCopy_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Post_Selector) GetRows(db *sqlx.DB) ([]*Post, error) {
+func (u *__PostCopy_Selector) GetRows(db *sqlx.DB) ([]*PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*Post
+	var rows []*PostCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -5651,20 +5651,20 @@ func (u *__Post_Selector) GetRows(db *sqlx.DB) ([]*Post, error) {
 		rows[i]._exists = true
 	}
 
-	OnPost_LoadMany(rows)
+	OnPostCopy_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
+func (u *__PostCopy_Selector) GetRows2(db *sqlx.DB) ([]PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*Post
+	var rows []*PostCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -5680,9 +5680,9 @@ func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
 		rows[i]._exists = true
 	}
 
-	OnPost_LoadMany(rows)
+	OnPostCopy_LoadMany(rows)
 
-	rows2 := make([]Post, len(rows))
+	rows2 := make([]PostCopy, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -5691,7 +5691,7 @@ func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
 	return rows2, nil
 }
 
-func (u *__Post_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PostCopy_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -5709,7 +5709,7 @@ func (u *__Post_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Post_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PostCopy_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -5727,7 +5727,7 @@ func (u *__Post_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Post_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PostCopy_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -5745,7 +5745,7 @@ func (u *__Post_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Post_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PostCopy_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -5764,7 +5764,7 @@ func (u *__Post_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Post_Updater) Update(db XODB) (int, error) {
+func (u *__PostCopy_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -5781,7 +5781,7 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.post SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.post_copy SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -5803,7 +5803,7 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Post_Deleter) Delete(db XODB) (int, error) {
+func (d *__PostCopy_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -5816,7 +5816,7 @@ func (d *__Post_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.post WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.post_copy WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -5836,9 +5836,9 @@ func (d *__Post_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Post ////////////////
+///////////////////////// Mass insert - replace for  PostCopy ////////////////
 
-func MassInsert_Post(rows []Post, db XODB) error {
+func MassInsert_PostCopy(rows []PostCopy, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -5849,7 +5849,7 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.post (" +
+	sqlstr := "INSERT INTO sun.post_copy (" +
 		"PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
@@ -5888,14 +5888,14 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	return nil
 }
 
-func MassReplace_Post(rows []Post, db XODB) error {
+func MassReplace_PostCopy(rows []PostCopy, db XODB) error {
 	var err error
 	ln := len(rows)
 	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.post (" +
+	sqlstr := "REPLACE INTO sun.post_copy (" +
 		"PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 

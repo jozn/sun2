@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// User represents a row from 'ms.user'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// User represents a row from 'sun.user'.
 
 // Manualy copy this to project
 type User__ struct {
@@ -65,7 +65,7 @@ func (u *User) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.user (` +
+	const sqlstr = `INSERT INTO sun.user (` +
 		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -101,7 +101,7 @@ func (u *User) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.user (` +
+	const sqlstr = `REPLACE INTO sun.user (` +
 		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -146,7 +146,7 @@ func (u *User) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.user SET ` +
+	const sqlstr = `UPDATE sun.user SET ` +
 		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
 		` WHERE UserId = ?`
 
@@ -184,7 +184,7 @@ func (u *User) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.user WHERE UserId = ?`
+	const sqlstr = `DELETE FROM sun.user WHERE UserId = ?`
 
 	// run query
 	XOLog(sqlstr, u.UserId)
@@ -8792,7 +8792,7 @@ func (u *__User_Selector) Offset(num int) *__User_Selector {
 func (u *__User_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.user"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.user"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -8987,7 +8987,7 @@ func (u *__User_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.user SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.user SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -9022,7 +9022,7 @@ func (d *__User_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.user WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.user WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -9055,7 +9055,7 @@ func MassInsert_User(rows []User, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.user (" +
+	sqlstr := "INSERT INTO sun.user (" +
 		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 
@@ -9112,7 +9112,7 @@ func MassReplace_User(rows []User, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.user (" +
+	sqlstr := "REPLACE INTO sun.user (" +
 		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 

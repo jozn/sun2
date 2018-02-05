@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// NotifyRemoved represents a row from 'ms.notify_removed'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// NotifyRemoved represents a row from 'sun.notify_removed'.
 
 // Manualy copy this to project
 type NotifyRemoved__ struct {
@@ -40,7 +40,7 @@ func (nr *NotifyRemoved) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.notify_removed (` +
+	const sqlstr = `INSERT INTO sun.notify_removed (` +
 		`Murmur64Hash, ForUserId` +
 		`) VALUES (` +
 		`?, ?` +
@@ -76,7 +76,7 @@ func (nr *NotifyRemoved) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.notify_removed (` +
+	const sqlstr = `REPLACE INTO sun.notify_removed (` +
 		`Murmur64Hash, ForUserId` +
 		`) VALUES (` +
 		`?, ?` +
@@ -121,7 +121,7 @@ func (nr *NotifyRemoved) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.notify_removed SET ` +
+	const sqlstr = `UPDATE sun.notify_removed SET ` +
 		`Murmur64Hash = ?, ForUserId = ?` +
 		` WHERE Id = ?`
 
@@ -159,7 +159,7 @@ func (nr *NotifyRemoved) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.notify_removed WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.notify_removed WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, nr.Id)
@@ -1324,7 +1324,7 @@ func (u *__NotifyRemoved_Selector) Offset(num int) *__NotifyRemoved_Selector {
 func (u *__NotifyRemoved_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.notify_removed"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.notify_removed"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1519,7 +1519,7 @@ func (u *__NotifyRemoved_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.notify_removed SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.notify_removed SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1554,7 +1554,7 @@ func (d *__NotifyRemoved_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.notify_removed WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.notify_removed WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -1587,7 +1587,7 @@ func MassInsert_NotifyRemoved(rows []NotifyRemoved, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.notify_removed (" +
+	sqlstr := "INSERT INTO sun.notify_removed (" +
 		"Murmur64Hash, ForUserId" +
 		") VALUES " + insVals
 
@@ -1619,7 +1619,7 @@ func MassReplace_NotifyRemoved(rows []NotifyRemoved, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.notify_removed (" +
+	sqlstr := "REPLACE INTO sun.notify_removed (" +
 		"Murmur64Hash, ForUserId" +
 		") VALUES " + insVals
 

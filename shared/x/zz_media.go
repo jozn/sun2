@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Media represents a row from 'ms.media'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Media represents a row from 'sun.media'.
 
 // Manualy copy this to project
 type Media__ struct {
@@ -49,7 +49,7 @@ func (m *Media) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.media (` +
+	const sqlstr = `INSERT INTO sun.media (` +
 		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -76,7 +76,7 @@ func (m *Media) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.media (` +
+	const sqlstr = `REPLACE INTO sun.media (` +
 		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -112,7 +112,7 @@ func (m *Media) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.media SET ` +
+	const sqlstr = `UPDATE sun.media SET ` +
 		`UserId = ?, PostId = ?, AlbumId = ?, MediaTypeEnum = ?, Width = ?, Height = ?, Size = ?, Duration = ?, Md5Hash = ?, Color = ?, CreatedTime = ?` +
 		` WHERE MediaId = ?`
 
@@ -150,7 +150,7 @@ func (m *Media) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.media WHERE MediaId = ?`
+	const sqlstr = `DELETE FROM sun.media WHERE MediaId = ?`
 
 	// run query
 	XOLog(sqlstr, m.MediaId)
@@ -4178,7 +4178,7 @@ func (u *__Media_Selector) Offset(num int) *__Media_Selector {
 func (u *__Media_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.media"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.media"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4373,7 +4373,7 @@ func (u *__Media_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.media SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.media SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4408,7 +4408,7 @@ func (d *__Media_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.media WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.media WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4441,7 +4441,7 @@ func MassInsert_Media(rows []Media, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.media (" +
+	sqlstr := "INSERT INTO sun.media (" +
 		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime" +
 		") VALUES " + insVals
 
@@ -4483,7 +4483,7 @@ func MassReplace_Media(rows []Media, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.media (" +
+	sqlstr := "REPLACE INTO sun.media (" +
 		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime" +
 		") VALUES " + insVals
 

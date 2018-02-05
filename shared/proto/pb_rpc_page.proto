@@ -12,7 +12,7 @@ import "pb_view_social.proto";
 
 message PB_PageParam_GetCommentsPage {
     int64 PostId = 1;
-    int64 Limit = 2;
+    int32 Limit = 2;
     int64 Last = 3;
 
 }
@@ -23,7 +23,7 @@ message PB_PageResponse_GetCommentsPage {
 //
 
 message PB_PageParam_GetHomePage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetHomePage {
@@ -40,7 +40,7 @@ message PB_PageResponse_GetProfilePage {
 //
 message PB_PageParam_GetLikesPage {
     int64 PostId = 1;
-    int64 Limit = 2;
+    int32 Limit = 2;
     int64 Last = 3;
 }
 message PB_PageResponse_GetLikesPage {
@@ -51,7 +51,7 @@ message PB_PageResponse_GetLikesPage {
 //
 message PB_PageParam_GetFollowersPage {
     int64 UserId = 1;
-    int64 Limit = 2;
+    int32 Limit = 2;
     int64 Last = 3;
 }
 message PB_PageResponse_GetFollowersPage {
@@ -62,7 +62,7 @@ message PB_PageResponse_GetFollowersPage {
 //
 message PB_PageParam_GetFollowingsPage {
     int64 UserId = 1;
-    int64 Limit = 2;
+    int32 Limit = 2;
     int64 Last = 3;
 }
 message PB_PageResponse_GetFollowingsPage {
@@ -73,7 +73,7 @@ message PB_PageResponse_GetFollowingsPage {
 //
 
 message PB_PageParam_GetNotifiesPage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetNotifiesPage {
@@ -84,7 +84,7 @@ message PB_PageResponse_GetNotifiesPage {
 //
 
 message PB_PageParam_GetUserActionsPage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetUserActionsPage {
@@ -94,33 +94,33 @@ message PB_PageResponse_GetUserActionsPage {
 //
 
 message PB_PageParam_GetSuggestedPostsPage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetSuggestedPostsPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_PostView PostViewList = 2;
+    repeated PB_PostViewRowify PostViewRowifyList = 2;
 }
 //
 message PB_PageParam_GetSuggestedUsersPage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetSuggestedUsersPage {
     PB_ResponseExtra Extra = 1;
-    repeated PB_UserView UserViewList = 2;
+    repeated PB_UserViewRowify UserViewRowifyList = 2;
 }
 //
 message PB_PageParam_GetSuggestedTagsPage {
-    int64 Limit = 1;
-    int64 Last = 2;
+
 }
 message PB_PageResponse_GetSuggestedTagsPage {
     PB_ResponseExtra Extra = 1;
+    repeated PB_TopTagWithSamplePosts TopTagWithSamplePostsList = 2;
 }
 //
 message PB_PageParam_GetLastPostsPage {
-    int64 Limit = 1;
+    int32 Limit = 1;
     int64 Last = 2;
 }
 message PB_PageResponse_GetLastPostsPage {
@@ -130,7 +130,7 @@ message PB_PageResponse_GetLastPostsPage {
 //
 message PB_PageParam_GetTagPage {
     string Tag = 1;
-    int64 Limit = 2;
+    int32 Limit = 2;
     int64 Last = 3;
 }
 message PB_PageResponse_GetTagPage {
@@ -139,17 +139,19 @@ message PB_PageResponse_GetTagPage {
 }
 //
 message PB_PageParam_SearchTagsPage {
-
+    string Query = 1;
 }
 message PB_PageResponse_SearchTagsPage {
     PB_ResponseExtra Extra = 1;
+    repeated PB_TagView TagViewList = 2;
 }
 //
 message PB_PageParam_SearchUsersPage {
-
+    string Query = 1;
 }
 message PB_PageResponse_SearchUsersPage {
     PB_ResponseExtra Extra = 1;
+    repeated PB_UserView UserViewList = 2;
 }
 //
 message PB_PageParam_ {

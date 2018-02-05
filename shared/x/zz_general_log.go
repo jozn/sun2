@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GeneralLog represents a row from 'ms.general_log'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GeneralLog represents a row from 'sun.general_log'.
 
 // Manualy copy this to project
 type GeneralLog__ struct {
@@ -44,7 +44,7 @@ func (gl *GeneralLog) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.general_log (` +
+	const sqlstr = `INSERT INTO sun.general_log (` +
 		`Id, ToUserId, TargetId, LogTypeId, ExtraPB, ExtraJson, CreatedMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?` +
@@ -71,7 +71,7 @@ func (gl *GeneralLog) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.general_log (` +
+	const sqlstr = `REPLACE INTO sun.general_log (` +
 		`Id, ToUserId, TargetId, LogTypeId, ExtraPB, ExtraJson, CreatedMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?` +
@@ -107,7 +107,7 @@ func (gl *GeneralLog) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.general_log SET ` +
+	const sqlstr = `UPDATE sun.general_log SET ` +
 		`ToUserId = ?, TargetId = ?, LogTypeId = ?, ExtraPB = ?, ExtraJson = ?, CreatedMs = ?` +
 		` WHERE Id = ?`
 
@@ -145,7 +145,7 @@ func (gl *GeneralLog) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.general_log WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.general_log WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, gl.Id)
@@ -2234,7 +2234,7 @@ func (u *__GeneralLog_Selector) Offset(num int) *__GeneralLog_Selector {
 func (u *__GeneralLog_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.general_log"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.general_log"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2429,7 +2429,7 @@ func (u *__GeneralLog_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.general_log SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.general_log SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2464,7 +2464,7 @@ func (d *__GeneralLog_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.general_log WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.general_log WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2497,7 +2497,7 @@ func MassInsert_GeneralLog(rows []GeneralLog, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.general_log (" +
+	sqlstr := "INSERT INTO sun.general_log (" +
 		"Id, ToUserId, TargetId, LogTypeId, ExtraPB, ExtraJson, CreatedMs" +
 		") VALUES " + insVals
 
@@ -2534,7 +2534,7 @@ func MassReplace_GeneralLog(rows []GeneralLog, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.general_log (" +
+	sqlstr := "REPLACE INTO sun.general_log (" +
 		"Id, ToUserId, TargetId, LogTypeId, ExtraPB, ExtraJson, CreatedMs" +
 		") VALUES " + insVals
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectToMessage represents a row from 'ms.direct_to_message'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectToMessage represents a row from 'sun.direct_to_message'.
 
 // Manualy copy this to project
 type DirectToMessage__ struct {
@@ -41,7 +41,7 @@ func (dtm *DirectToMessage) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.direct_to_message (` +
+	const sqlstr = `INSERT INTO sun.direct_to_message (` +
 		`Id, ChatKey, MessageId, SourceEnumId` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -68,7 +68,7 @@ func (dtm *DirectToMessage) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.direct_to_message (` +
+	const sqlstr = `REPLACE INTO sun.direct_to_message (` +
 		`Id, ChatKey, MessageId, SourceEnumId` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -104,7 +104,7 @@ func (dtm *DirectToMessage) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.direct_to_message SET ` +
+	const sqlstr = `UPDATE sun.direct_to_message SET ` +
 		`ChatKey = ?, MessageId = ?, SourceEnumId = ?` +
 		` WHERE Id = ?`
 
@@ -142,7 +142,7 @@ func (dtm *DirectToMessage) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.direct_to_message WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.direct_to_message WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, dtm.Id)
@@ -1510,7 +1510,7 @@ func (u *__DirectToMessage_Selector) Offset(num int) *__DirectToMessage_Selector
 func (u *__DirectToMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.direct_to_message"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_to_message"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1705,7 +1705,7 @@ func (u *__DirectToMessage_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.direct_to_message SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.direct_to_message SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1740,7 +1740,7 @@ func (d *__DirectToMessage_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.direct_to_message WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.direct_to_message WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -1773,7 +1773,7 @@ func MassInsert_DirectToMessage(rows []DirectToMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.direct_to_message (" +
+	sqlstr := "INSERT INTO sun.direct_to_message (" +
 		"Id, ChatKey, MessageId, SourceEnumId" +
 		") VALUES " + insVals
 
@@ -1807,7 +1807,7 @@ func MassReplace_DirectToMessage(rows []DirectToMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.direct_to_message (" +
+	sqlstr := "REPLACE INTO sun.direct_to_message (" +
 		"Id, ChatKey, MessageId, SourceEnumId" +
 		") VALUES " + insVals
 

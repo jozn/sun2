@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// MessageFile represents a row from 'ms.message_file'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// MessageFile represents a row from 'sun.message_file'.
 
 // Manualy copy this to project
 type MessageFile__ struct {
@@ -49,7 +49,7 @@ func (mf *MessageFile) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.message_file (` +
+	const sqlstr = `INSERT INTO sun.message_file (` +
 		`MessageFileId, MessageFileKey, UserId, Title, Size, FileTypeEnum, Width, Height, Duration, Extension, Md5Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -76,7 +76,7 @@ func (mf *MessageFile) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.message_file (` +
+	const sqlstr = `REPLACE INTO sun.message_file (` +
 		`MessageFileId, MessageFileKey, UserId, Title, Size, FileTypeEnum, Width, Height, Duration, Extension, Md5Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -112,7 +112,7 @@ func (mf *MessageFile) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.message_file SET ` +
+	const sqlstr = `UPDATE sun.message_file SET ` +
 		`MessageFileKey = ?, UserId = ?, Title = ?, Size = ?, FileTypeEnum = ?, Width = ?, Height = ?, Duration = ?, Extension = ?, Md5Hash = ?, CreatedTime = ?` +
 		` WHERE MessageFileId = ?`
 
@@ -150,7 +150,7 @@ func (mf *MessageFile) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.message_file WHERE MessageFileId = ?`
+	const sqlstr = `DELETE FROM sun.message_file WHERE MessageFileId = ?`
 
 	// run query
 	XOLog(sqlstr, mf.MessageFileId)
@@ -3882,7 +3882,7 @@ func (u *__MessageFile_Selector) Offset(num int) *__MessageFile_Selector {
 func (u *__MessageFile_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.message_file"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.message_file"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4077,7 +4077,7 @@ func (u *__MessageFile_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.message_file SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.message_file SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4112,7 +4112,7 @@ func (d *__MessageFile_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.message_file WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.message_file WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4145,7 +4145,7 @@ func MassInsert_MessageFile(rows []MessageFile, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.message_file (" +
+	sqlstr := "INSERT INTO sun.message_file (" +
 		"MessageFileId, MessageFileKey, UserId, Title, Size, FileTypeEnum, Width, Height, Duration, Extension, Md5Hash, CreatedTime" +
 		") VALUES " + insVals
 
@@ -4187,7 +4187,7 @@ func MassReplace_MessageFile(rows []MessageFile, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.message_file (" +
+	sqlstr := "REPLACE INTO sun.message_file (" +
 		"MessageFileId, MessageFileKey, UserId, Title, Size, FileTypeEnum, Width, Height, Duration, Extension, Md5Hash, CreatedTime" +
 		") VALUES " + insVals
 

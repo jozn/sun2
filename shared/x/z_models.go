@@ -553,6 +553,47 @@ type Post struct {
 	CreatedTime: 0,
 	ReSharedPostId: 0,
 */
+// post_copy 'PostCopy'.
+type PostCopy struct {
+	PostId         int
+	UserId         int
+	PostTypeEnum   int
+	MediaId        int
+	Text           string
+	RichText       string
+	MediaCount     int
+	SharedTo       int
+	DisableComment int
+	HasTag         int
+	CommentsCount  int
+	LikesCount     int
+	ViewsCount     int
+	EditedTime     int
+	CreatedTime    int
+	ReSharedPostId int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &PostCopy {
+	PostId: 0,
+	UserId: 0,
+	PostTypeEnum: 0,
+	MediaId: 0,
+	Text: "",
+	RichText: "",
+	MediaCount: 0,
+	SharedTo: 0,
+	DisableComment: 0,
+	HasTag: 0,
+	CommentsCount: 0,
+	LikesCount: 0,
+	ViewsCount: 0,
+	EditedTime: 0,
+	CreatedTime: 0,
+	ReSharedPostId: 0,
+*/
 // recommend_user 'RecommendUser'.
 type RecommendUser struct {
 	Id          int
@@ -725,6 +766,38 @@ type SettingNotification struct {
 	DirectPopup: 0,
 	DirectSound: 0,
 	DirectPriority: 0,
+*/
+// suggested_top_posts 'SuggestedTopPost'.
+type SuggestedTopPost struct {
+	Id     int
+	PostId int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &SuggestedTopPost {
+	Id: 0,
+	PostId: 0,
+*/
+// suggested_user 'SuggestedUser'.
+type SuggestedUser struct {
+	Id          int
+	UserId      int
+	TargetId    int
+	Weight      float32
+	CreatedTime int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &SuggestedUser {
+	Id: 0,
+	UserId: 0,
+	TargetId: 0,
+	Weight: float32(0),
+	CreatedTime: 0,
 */
 // tag 'Tag'.
 type Tag struct {

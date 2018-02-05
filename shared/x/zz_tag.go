@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Tag represents a row from 'ms.tag'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Tag represents a row from 'sun.tag'.
 
 // Manualy copy this to project
 type Tag__ struct {
@@ -42,7 +42,7 @@ func (t *Tag) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.tag (` +
+	const sqlstr = `INSERT INTO sun.tag (` +
 		`Name, Count, TagStatusEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -78,7 +78,7 @@ func (t *Tag) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.tag (` +
+	const sqlstr = `REPLACE INTO sun.tag (` +
 		`Name, Count, TagStatusEnum, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -123,7 +123,7 @@ func (t *Tag) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.tag SET ` +
+	const sqlstr = `UPDATE sun.tag SET ` +
 		`Name = ?, Count = ?, TagStatusEnum = ?, CreatedTime = ?` +
 		` WHERE TagId = ?`
 
@@ -161,7 +161,7 @@ func (t *Tag) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.tag WHERE TagId = ?`
+	const sqlstr = `DELETE FROM sun.tag WHERE TagId = ?`
 
 	// run query
 	XOLog(sqlstr, t.TagId)
@@ -1880,7 +1880,7 @@ func (u *__Tag_Selector) Offset(num int) *__Tag_Selector {
 func (u *__Tag_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.tag"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.tag"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2075,7 +2075,7 @@ func (u *__Tag_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.tag SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.tag SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2110,7 +2110,7 @@ func (d *__Tag_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.tag WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.tag WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2143,7 +2143,7 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.tag (" +
+	sqlstr := "INSERT INTO sun.tag (" +
 		"Name, Count, TagStatusEnum, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2177,7 +2177,7 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.tag (" +
+	sqlstr := "REPLACE INTO sun.tag (" +
 		"Name, Count, TagStatusEnum, CreatedTime" +
 		") VALUES " + insVals
 

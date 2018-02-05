@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Comment represents a row from 'ms.comment'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Comment represents a row from 'sun.comment'.
 
 // Manualy copy this to project
 type Comment__ struct {
@@ -44,7 +44,7 @@ func (c *Comment) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.comment (` +
+	const sqlstr = `INSERT INTO sun.comment (` +
 		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -80,7 +80,7 @@ func (c *Comment) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.comment (` +
+	const sqlstr = `REPLACE INTO sun.comment (` +
 		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -125,7 +125,7 @@ func (c *Comment) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.comment SET ` +
+	const sqlstr = `UPDATE sun.comment SET ` +
 		`UserId = ?, PostId = ?, Text = ?, LikesCount = ?, CreatedTime = ?, Seq = ?` +
 		` WHERE CommentId = ?`
 
@@ -163,7 +163,7 @@ func (c *Comment) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.comment WHERE CommentId = ?`
+	const sqlstr = `DELETE FROM sun.comment WHERE CommentId = ?`
 
 	// run query
 	XOLog(sqlstr, c.CommentId)
@@ -2584,7 +2584,7 @@ func (u *__Comment_Selector) Offset(num int) *__Comment_Selector {
 func (u *__Comment_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.comment"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.comment"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2779,7 +2779,7 @@ func (u *__Comment_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.comment SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.comment SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2814,7 +2814,7 @@ func (d *__Comment_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.comment WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.comment WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2847,7 +2847,7 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.comment (" +
+	sqlstr := "INSERT INTO sun.comment (" +
 		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
 		") VALUES " + insVals
 
@@ -2883,7 +2883,7 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.comment (" +
+	sqlstr := "REPLACE INTO sun.comment (" +
 		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
 		") VALUES " + insVals
 

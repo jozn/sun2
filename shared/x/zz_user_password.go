@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserPassword represents a row from 'ms.user_password'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserPassword represents a row from 'sun.user_password'.
 
 // Manualy copy this to project
 type UserPassword__ struct {
@@ -40,7 +40,7 @@ func (up *UserPassword) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.user_password (` +
+	const sqlstr = `INSERT INTO sun.user_password (` +
 		`Password, CreatedTime` +
 		`) VALUES (` +
 		`?, ?` +
@@ -76,7 +76,7 @@ func (up *UserPassword) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.user_password (` +
+	const sqlstr = `REPLACE INTO sun.user_password (` +
 		`Password, CreatedTime` +
 		`) VALUES (` +
 		`?, ?` +
@@ -121,7 +121,7 @@ func (up *UserPassword) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.user_password SET ` +
+	const sqlstr = `UPDATE sun.user_password SET ` +
 		`Password = ?, CreatedTime = ?` +
 		` WHERE UserId = ?`
 
@@ -159,7 +159,7 @@ func (up *UserPassword) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.user_password WHERE UserId = ?`
+	const sqlstr = `DELETE FROM sun.user_password WHERE UserId = ?`
 
 	// run query
 	XOLog(sqlstr, up.UserId)
@@ -1176,7 +1176,7 @@ func (u *__UserPassword_Selector) Offset(num int) *__UserPassword_Selector {
 func (u *__UserPassword_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.user_password"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.user_password"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1371,7 +1371,7 @@ func (u *__UserPassword_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.user_password SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.user_password SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1406,7 +1406,7 @@ func (d *__UserPassword_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.user_password WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.user_password WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -1439,7 +1439,7 @@ func MassInsert_UserPassword(rows []UserPassword, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.user_password (" +
+	sqlstr := "INSERT INTO sun.user_password (" +
 		"Password, CreatedTime" +
 		") VALUES " + insVals
 
@@ -1471,7 +1471,7 @@ func MassReplace_UserPassword(rows []UserPassword, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.user_password (" +
+	sqlstr := "REPLACE INTO sun.user_password (" +
 		"Password, CreatedTime" +
 		") VALUES " + insVals
 

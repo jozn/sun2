@@ -246,7 +246,26 @@ public class J {
 		public int ReSharedPostId;
 	}
 
-	public static class RecommendUser {//oridnal: 21
+	public static class PostCopy {//oridnal: 21
+		public int PostId;
+		public int UserId;
+		public int PostTypeEnum;
+		public int MediaId;
+		public String Text;
+		public String RichText;
+		public int MediaCount;
+		public int SharedTo;
+		public int DisableComment;
+		public int HasTag;
+		public int CommentsCount;
+		public int LikesCount;
+		public int ViewsCount;
+		public int EditedTime;
+		public int CreatedTime;
+		public int ReSharedPostId;
+	}
+
+	public static class RecommendUser {//oridnal: 22
 		public int Id;
 		public int UserId;
 		public int TargetId;
@@ -254,7 +273,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SearchClicked {//oridnal: 22
+	public static class SearchClicked {//oridnal: 23
 		public int Id;
 		public String Query;
 		public int ClickType;
@@ -263,7 +282,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class Session {//oridnal: 23
+	public static class Session {//oridnal: 24
 		public int Id;
 		public int UserId;
 		public String SessionUuid;
@@ -279,7 +298,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SettingClient {//oridnal: 24
+	public static class SettingClient {//oridnal: 25
 		public int UserId;
 		public int AutoDownloadWifiVoice;
 		public int AutoDownloadWifiImage;
@@ -302,7 +321,7 @@ public class J {
 		public int SaveToGallery;
 	}
 
-	public static class SettingNotification {//oridnal: 25
+	public static class SettingNotification {//oridnal: 26
 		public int UserId;
 		public int SocialLedOn;
 		public String SocialLedColor;
@@ -325,7 +344,20 @@ public class J {
 		public int DirectPriority;
 	}
 
-	public static class Tag {//oridnal: 26
+	public static class SuggestedTopPost {//oridnal: 27
+		public int Id;
+		public int PostId;
+	}
+
+	public static class SuggestedUser {//oridnal: 28
+		public int Id;
+		public int UserId;
+		public int TargetId;
+		public float Weight;
+		public int CreatedTime;
+	}
+
+	public static class Tag {//oridnal: 29
 		public int TagId;
 		public String Name;
 		public int Count;
@@ -333,7 +365,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TagsPost {//oridnal: 27
+	public static class TagsPost {//oridnal: 30
 		public int Id;
 		public int TagId;
 		public int PostId;
@@ -341,7 +373,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TriggerLog {//oridnal: 28
+	public static class TriggerLog {//oridnal: 31
 		public int Id;
 		public String ModelName;
 		public String ChangeType;
@@ -350,7 +382,7 @@ public class J {
 		public int CreatedSe;
 	}
 
-	public static class User {//oridnal: 29
+	public static class User {//oridnal: 32
 		public int UserId;
 		public String UserName;
 		public String UserNameLower;
@@ -381,14 +413,14 @@ public class J {
 		public String Phone2;
 	}
 
-	public static class UserMetaInfo {//oridnal: 30
+	public static class UserMetaInfo {//oridnal: 33
 		public int Id;
 		public int UserId;
 		public int IsNotificationDirty;
 		public int LastUserRecGen;
 	}
 
-	public static class UserPassword {//oridnal: 31
+	public static class UserPassword {//oridnal: 34
 		public int UserId;
 		public String Password;
 		public int CreatedTime;

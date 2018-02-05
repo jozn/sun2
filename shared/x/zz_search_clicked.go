@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SearchClicked represents a row from 'ms.search_clicked'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SearchClicked represents a row from 'sun.search_clicked'.
 
 // Manualy copy this to project
 type SearchClicked__ struct {
@@ -43,7 +43,7 @@ func (sc *SearchClicked) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.search_clicked (` +
+	const sqlstr = `INSERT INTO sun.search_clicked (` +
 		`Query, ClickType, TargetId, UserId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -79,7 +79,7 @@ func (sc *SearchClicked) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.search_clicked (` +
+	const sqlstr = `REPLACE INTO sun.search_clicked (` +
 		`Query, ClickType, TargetId, UserId, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -124,7 +124,7 @@ func (sc *SearchClicked) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.search_clicked SET ` +
+	const sqlstr = `UPDATE sun.search_clicked SET ` +
 		`Query = ?, ClickType = ?, TargetId = ?, UserId = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -162,7 +162,7 @@ func (sc *SearchClicked) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.search_clicked WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.search_clicked WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, sc.Id)
@@ -2232,7 +2232,7 @@ func (u *__SearchClicked_Selector) Offset(num int) *__SearchClicked_Selector {
 func (u *__SearchClicked_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.search_clicked"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.search_clicked"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2427,7 +2427,7 @@ func (u *__SearchClicked_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.search_clicked SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.search_clicked SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2462,7 +2462,7 @@ func (d *__SearchClicked_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.search_clicked WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.search_clicked WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2495,7 +2495,7 @@ func MassInsert_SearchClicked(rows []SearchClicked, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.search_clicked (" +
+	sqlstr := "INSERT INTO sun.search_clicked (" +
 		"Query, ClickType, TargetId, UserId, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2530,7 +2530,7 @@ func MassReplace_SearchClicked(rows []SearchClicked, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.search_clicked (" +
+	sqlstr := "REPLACE INTO sun.search_clicked (" +
 		"Query, ClickType, TargetId, UserId, CreatedTime" +
 		") VALUES " + insVals
 

@@ -146,12 +146,17 @@ It has these top-level messages:
 	PB_Notify
 	PB_NotifyRemoved
 	PB_PhoneContact
+	PB_PhoneContactsCopy
 	PB_Post
+	PB_PostCopy
 	PB_RecommendUser
 	PB_SearchClicked
 	PB_Session
+	PB_SessionCopy
 	PB_SettingClient
 	PB_SettingNotification
+	PB_SuggestedTopPost
+	PB_SuggestedUser
 	PB_Tag
 	PB_TagsPost
 	PB_TriggerLog
@@ -166,6 +171,7 @@ It has these top-level messages:
 	PB_UserView
 	PB_TopProfileView
 	PB_UserViewRowify
+	PB_PostViewRowify
 	PB_TagView
 	PB_TopTagWithSamplePosts
 	PB_ChatView

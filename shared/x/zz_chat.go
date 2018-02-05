@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Chat represents a row from 'ms.chat'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Chat represents a row from 'sun.chat'.
 
 // Manualy copy this to project
 type Chat__ struct {
@@ -48,7 +48,7 @@ func (c *Chat) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.chat (` +
+	const sqlstr = `INSERT INTO sun.chat (` +
 		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -75,7 +75,7 @@ func (c *Chat) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.chat (` +
+	const sqlstr = `REPLACE INTO sun.chat (` +
 		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -111,7 +111,7 @@ func (c *Chat) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.chat SET ` +
+	const sqlstr = `UPDATE sun.chat SET ` +
 		`RoomKey = ?, RoomTypeEnum = ?, UserId = ?, PeerUserId = ?, GroupId = ?, CreatedTime = ?, StartMessageIdFrom = ?, LastMessageId = ?, LastSeenMessageId = ?, UpdatedMs = ?` +
 		` WHERE ChatKey = ?`
 
@@ -149,7 +149,7 @@ func (c *Chat) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.chat WHERE ChatKey = ?`
+	const sqlstr = `DELETE FROM sun.chat WHERE ChatKey = ?`
 
 	// run query
 	XOLog(sqlstr, c.ChatKey)
@@ -3826,7 +3826,7 @@ func (u *__Chat_Selector) Offset(num int) *__Chat_Selector {
 func (u *__Chat_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.chat"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.chat"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4021,7 +4021,7 @@ func (u *__Chat_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.chat SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.chat SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4056,7 +4056,7 @@ func (d *__Chat_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.chat WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.chat WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4089,7 +4089,7 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.chat (" +
+	sqlstr := "INSERT INTO sun.chat (" +
 		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs" +
 		") VALUES " + insVals
 
@@ -4130,7 +4130,7 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.chat (" +
+	sqlstr := "REPLACE INTO sun.chat (" +
 		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs" +
 		") VALUES " + insVals
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingClient represents a row from 'ms.setting_client'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingClient represents a row from 'sun.setting_client'.
 
 // Manualy copy this to project
 type SettingClient__ struct {
@@ -57,7 +57,7 @@ func (sc *SettingClient) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.setting_client (` +
+	const sqlstr = `INSERT INTO sun.setting_client (` +
 		`UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -84,7 +84,7 @@ func (sc *SettingClient) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.setting_client (` +
+	const sqlstr = `REPLACE INTO sun.setting_client (` +
 		`UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -120,7 +120,7 @@ func (sc *SettingClient) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.setting_client SET ` +
+	const sqlstr = `UPDATE sun.setting_client SET ` +
 		`AutoDownloadWifiVoice = ?, AutoDownloadWifiImage = ?, AutoDownloadWifiVideo = ?, AutoDownloadWifiFile = ?, AutoDownloadWifiMusic = ?, AutoDownloadWifiGif = ?, AutoDownloadCellularVoice = ?, AutoDownloadCellularImage = ?, AutoDownloadCellularVideo = ?, AutoDownloadCellularFile = ?, AutoDownloadCellularMusic = ?, AutoDownloadCellularGif = ?, AutoDownloadRoamingVoice = ?, AutoDownloadRoamingImage = ?, AutoDownloadRoamingVideo = ?, AutoDownloadRoamingFile = ?, AutoDownloadRoamingMusic = ?, AutoDownloadRoamingGif = ?, SaveToGallery = ?` +
 		` WHERE UserId = ?`
 
@@ -158,7 +158,7 @@ func (sc *SettingClient) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.setting_client WHERE UserId = ?`
+	const sqlstr = `DELETE FROM sun.setting_client WHERE UserId = ?`
 
 	// run query
 	XOLog(sqlstr, sc.UserId)
@@ -7290,7 +7290,7 @@ func (u *__SettingClient_Selector) Offset(num int) *__SettingClient_Selector {
 func (u *__SettingClient_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.setting_client"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.setting_client"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -7485,7 +7485,7 @@ func (u *__SettingClient_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.setting_client SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.setting_client SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -7520,7 +7520,7 @@ func (d *__SettingClient_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.setting_client WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.setting_client WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -7553,7 +7553,7 @@ func MassInsert_SettingClient(rows []SettingClient, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.setting_client (" +
+	sqlstr := "INSERT INTO sun.setting_client (" +
 		"UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery" +
 		") VALUES " + insVals
 
@@ -7603,7 +7603,7 @@ func MassReplace_SettingClient(rows []SettingClient, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.setting_client (" +
+	sqlstr := "REPLACE INTO sun.setting_client (" +
 		"UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery" +
 		") VALUES " + insVals
 

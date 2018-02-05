@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TriggerLog represents a row from 'ms.trigger_log'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TriggerLog represents a row from 'sun.trigger_log'.
 
 // Manualy copy this to project
 type TriggerLog__ struct {
@@ -43,7 +43,7 @@ func (tl *TriggerLog) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.trigger_log (` +
+	const sqlstr = `INSERT INTO sun.trigger_log (` +
 		`ModelName, ChangeType, TargetId, TargetStr, CreatedSe` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -79,7 +79,7 @@ func (tl *TriggerLog) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.trigger_log (` +
+	const sqlstr = `REPLACE INTO sun.trigger_log (` +
 		`ModelName, ChangeType, TargetId, TargetStr, CreatedSe` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -124,7 +124,7 @@ func (tl *TriggerLog) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.trigger_log SET ` +
+	const sqlstr = `UPDATE sun.trigger_log SET ` +
 		`ModelName = ?, ChangeType = ?, TargetId = ?, TargetStr = ?, CreatedSe = ?` +
 		` WHERE Id = ?`
 
@@ -162,7 +162,7 @@ func (tl *TriggerLog) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.trigger_log WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.trigger_log WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, tl.Id)
@@ -1936,7 +1936,7 @@ func (u *__TriggerLog_Selector) Offset(num int) *__TriggerLog_Selector {
 func (u *__TriggerLog_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.trigger_log"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.trigger_log"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2131,7 +2131,7 @@ func (u *__TriggerLog_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.trigger_log SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.trigger_log SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2166,7 +2166,7 @@ func (d *__TriggerLog_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.trigger_log WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.trigger_log WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2199,7 +2199,7 @@ func MassInsert_TriggerLog(rows []TriggerLog, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.trigger_log (" +
+	sqlstr := "INSERT INTO sun.trigger_log (" +
 		"ModelName, ChangeType, TargetId, TargetStr, CreatedSe" +
 		") VALUES " + insVals
 
@@ -2234,7 +2234,7 @@ func MassReplace_TriggerLog(rows []TriggerLog, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.trigger_log (" +
+	sqlstr := "REPLACE INTO sun.trigger_log (" +
 		"ModelName, ChangeType, TargetId, TargetStr, CreatedSe" +
 		") VALUES " + insVals
 

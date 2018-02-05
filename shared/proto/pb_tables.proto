@@ -231,6 +231,24 @@ message PB_Post {
     int32 CreatedTime = 15;
     int64 ReSharedPostId = 16;
 }
+message PB_PostCopy {
+    int64 PostId = 1;
+    int32 UserId = 2;
+    int32 PostTypeEnum = 3;
+    int32 MediaId = 4;
+    string Text = 5;
+    string RichText = 6;
+    int32 MediaCount = 7;
+    int32 SharedTo = 8;
+    int32 DisableComment = 9;
+    int32 HasTag = 10;
+    int32 CommentsCount = 11;
+    int32 LikesCount = 12;
+    int32 ViewsCount = 13;
+    int32 EditedTime = 14;
+    int32 CreatedTime = 15;
+    int64 ReSharedPostId = 16;
+}
 message PB_RecommendUser {
     int32 Id = 1;
     int32 UserId = 2;
@@ -304,6 +322,17 @@ message PB_SettingNotification {
     int32 DirectPopup = 18;
     int32 DirectSound = 19;
     int32 DirectPriority = 20;
+}
+message PB_SuggestedTopPost {
+    int64 Id = 1;
+    int64 PostId = 2;
+}
+message PB_SuggestedUser {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 TargetId = 3;
+    float Weight = 4;
+    int32 CreatedTime = 5;
 }
 message PB_Tag {
     int64 TagId = 1;

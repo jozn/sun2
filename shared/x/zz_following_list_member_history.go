@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMemberHistory represents a row from 'ms.following_list_member_history'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMemberHistory represents a row from 'sun.following_list_member_history'.
 
 // Manualy copy this to project
 type FollowingListMemberHistory__ struct {
@@ -44,7 +44,7 @@ func (flmh *FollowingListMemberHistory) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO ms.following_list_member_history (` +
+	const sqlstr = `INSERT INTO sun.following_list_member_history (` +
 		`ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs, FollowId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -80,7 +80,7 @@ func (flmh *FollowingListMemberHistory) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.following_list_member_history (` +
+	const sqlstr = `REPLACE INTO sun.following_list_member_history (` +
 		`ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs, FollowId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -125,7 +125,7 @@ func (flmh *FollowingListMemberHistory) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.following_list_member_history SET ` +
+	const sqlstr = `UPDATE sun.following_list_member_history SET ` +
 		`ListId = ?, UserId = ?, FollowedUserId = ?, FollowType = ?, UpdatedTimeMs = ?, FollowId = ?` +
 		` WHERE Id = ?`
 
@@ -163,7 +163,7 @@ func (flmh *FollowingListMemberHistory) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.following_list_member_history WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.following_list_member_history WHERE Id = ?`
 
 	// run query
 	XOLog(sqlstr, flmh.Id)
@@ -2732,7 +2732,7 @@ func (u *__FollowingListMemberHistory_Selector) Offset(num int) *__FollowingList
 func (u *__FollowingListMemberHistory_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.following_list_member_history"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.following_list_member_history"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2927,7 +2927,7 @@ func (u *__FollowingListMemberHistory_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.following_list_member_history SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.following_list_member_history SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2962,7 +2962,7 @@ func (d *__FollowingListMemberHistory_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.following_list_member_history WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.following_list_member_history WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2995,7 +2995,7 @@ func MassInsert_FollowingListMemberHistory(rows []FollowingListMemberHistory, db
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.following_list_member_history (" +
+	sqlstr := "INSERT INTO sun.following_list_member_history (" +
 		"ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs, FollowId" +
 		") VALUES " + insVals
 
@@ -3031,7 +3031,7 @@ func MassReplace_FollowingListMemberHistory(rows []FollowingListMemberHistory, d
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.following_list_member_history (" +
+	sqlstr := "REPLACE INTO sun.following_list_member_history (" +
 		"ListId, UserId, FollowedUserId, FollowType, UpdatedTimeMs, FollowId" +
 		") VALUES " + insVals
 

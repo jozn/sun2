@@ -677,6 +677,38 @@ func (c _StoreImpl) PreLoadPostByPostIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetPostCopyByPostId(PostId int) (*PostCopy, bool) {
+	o, ok := RowCache.Get("PostCopy:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostCopy); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostCopyByPostId(base.DB, PostId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostCopyByPostIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostCopy:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostCopy_Selector().PostId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetRecommendUserById(Id int) (*RecommendUser, bool) {
 	o, ok := RowCache.Get("RecommendUser:" + strconv.Itoa(Id))
 	if ok {
@@ -832,6 +864,70 @@ func (c _StoreImpl) PreLoadSettingNotificationByUserIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewSettingNotification_Selector().UserId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
+	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedTopPost); ok {
+			return obj, true
+		}
+	}
+	obj2, err := SuggestedTopPostById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSuggestedTopPostByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewSuggestedTopPost_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetSuggestedUserById(Id int) (*SuggestedUser, bool) {
+	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedUser); ok {
+			return obj, true
+		}
+	}
+	obj2, err := SuggestedUserById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSuggestedUserByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewSuggestedUser_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

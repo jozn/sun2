@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'ms.direct_message'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun.direct_message'.
 
 // Manualy copy this to project
 type DirectMessage__ struct {
@@ -48,7 +48,7 @@ func (dm *DirectMessage) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO ms.direct_message (` +
+	const sqlstr = `INSERT INTO sun.direct_message (` +
 		`MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -75,7 +75,7 @@ func (dm *DirectMessage) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO ms.direct_message (` +
+	const sqlstr = `REPLACE INTO sun.direct_message (` +
 		`MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
@@ -111,7 +111,7 @@ func (dm *DirectMessage) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE ms.direct_message SET ` +
+	const sqlstr = `UPDATE sun.direct_message SET ` +
 		`MessageKey = ?, RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnumId = ?, Text = ?, CreatedSe = ?, PeerReceivedTime = ?, PeerSeenTime = ?, DeliviryStatusEnumId = ?` +
 		` WHERE MessageId = ?`
 
@@ -149,7 +149,7 @@ func (dm *DirectMessage) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM ms.direct_message WHERE MessageId = ?`
+	const sqlstr = `DELETE FROM sun.direct_message WHERE MessageId = ?`
 
 	// run query
 	XOLog(sqlstr, dm.MessageId)
@@ -3678,7 +3678,7 @@ func (u *__DirectMessage_Selector) Offset(num int) *__DirectMessage_Selector {
 func (u *__DirectMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM ms.direct_message"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_message"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3873,7 +3873,7 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE ms.direct_message SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.direct_message SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3908,7 +3908,7 @@ func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM ms.direct_message WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.direct_message WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -3941,7 +3941,7 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO ms.direct_message (" +
+	sqlstr := "INSERT INTO sun.direct_message (" +
 		"MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId" +
 		") VALUES " + insVals
 
@@ -3982,7 +3982,7 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO ms.direct_message (" +
+	sqlstr := "REPLACE INTO sun.direct_message (" +
 		"MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId" +
 		") VALUES " + insVals
 

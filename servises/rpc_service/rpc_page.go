@@ -4,8 +4,10 @@ import (
 	"ms/sun/base"
 	"ms/sun/helper"
 	"ms/sun2/servises/memcache_service"
+	"ms/sun2/servises/suggestion_service"
 	"ms/sun2/servises/view_service"
 	"ms/sun2/shared/x"
+	"regexp"
 	"strings"
 )
 
@@ -179,15 +181,73 @@ func (rpc_page) GetUserActionsPage(param *x.PB_PageParam_GetUserActionsPage, use
 }
 
 func (rpc_page) GetSuggestedPostsPage(param *x.PB_PageParam_GetSuggestedPostsPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetSuggestedPostsPage, err error) {
-	panic("implement me")
+	limit := 60
+	if param.Limit != 0 {
+		limit = int(param.Limit)
+	}
+	selector := x.NewSuggestedTopPost_Selector().Limit(limit)
+	if param.Last > 0 {
+		selector.Id_LT(int(param.Last))
+	}
+	rows, err := selector.GetRows(base.DB)
+	if err != nil {
+		return
+	}
+	var pids []int
+	for _, row := range rows {
+		pids = append(pids, row.PostId)
+	}
+	x.Store.PreLoadPostByPostIds(pids)
+
+	for _, row := range rows {
+		v := &x.PB_PostViewRowify{
+			Id: int64(row.Id),
+		}
+		vp, ok := view_service.PostSingleViewForPostId(row.Id, userParam.GetUserId())
+		if ok {
+			v.PostView = vp
+			res.PostViewRowifyList = append(res.PostViewRowifyList, v)
+		}
+	}
+
+	return
 }
 
 func (rpc_page) GetSuggestedUsersPage(param *x.PB_PageParam_GetSuggestedUsersPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetSuggestedUsersPage, err error) {
-	panic("implement me")
+	limit := 60
+	if param.Limit != 0 {
+		limit = int(param.Limit)
+	}
+	selector := x.NewSuggestedUser_Selector().Limit(limit)
+	if param.Last > 0 {
+		selector.Id_LT(int(param.Last))
+	}
+	rows, err := selector.GetRows(base.DB)
+	if err != nil {
+		return
+	}
+	var uids []int
+	for _, row := range rows {
+		uids = append(uids, row.UserId)
+	}
+	x.Store.PreLoadUserByUserIds(uids)
+
+	for _, row := range rows {
+		v := &x.PB_UserViewRowify{
+			Id: int64(row.Id),
+		}
+		vp := view_service.UserViewAndMe(row.Id, userParam.GetUserId())
+		v.UserView = vp
+		res.UserViewRowifyList = append(res.UserViewRowifyList, v)
+	}
+
+	return
 }
 
 func (rpc_page) GetSuggestedTagsPage(param *x.PB_PageParam_GetSuggestedTagsPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetSuggestedTagsPage, err error) {
-	panic("implement me")
+
+	res.TopTagWithSamplePostsList = suggestion_service.TopTagsWithPostsResult
+	return
 }
 
 func (rpc_page) GetLastPostsPage(param *x.PB_PageParam_GetLastPostsPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_GetLastPostsPage, err error) {
@@ -237,9 +297,54 @@ func (rpc_page) GetTagPage(param *x.PB_PageParam_GetTagPage, userParam x.RPC_Use
 }
 
 func (rpc_page) SearchTagsPage(param *x.PB_PageParam_SearchTagsPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_SearchTagsPage, err error) {
-	panic("implement me")
+	q := param.Query + "%"
+	q = strings.TrimSpace(q)
+	if len(q) <= 2 {
+		return
+	}
+
+	rows, err := x.NewTag_Selector().Name_Like(q).Limit(30).GetRows(base.DB)
+	res.TagViewList = view_service.ToTagView(rows)
+	return
 }
 
+var regEmpty = regexp.MustCompile(`\\s+`)
+
 func (rpc_page) SearchUsersPage(param *x.PB_PageParam_SearchUsersPage, userParam x.RPC_UserParam) (res x.PB_PageResponse_SearchUsersPage, err error) {
-	panic("implement me")
+	q := param.Query //+ "%"
+
+	qb := regEmpty.ReplaceAll([]byte(q), []byte(" "))
+	q = string(qb)
+
+	q = strings.TrimSpace(q)
+	if len(q) <= 2 {
+		return
+	}
+
+	qs := strings.Split(q, " ")
+
+	if len(qs) > 0 {
+		selector := x.NewUser_Selector().Select_UserId().Or()
+
+		for _, q0 := range qs {
+			if q0 == "" {
+				continue
+			}
+			q0 = q0 + "%"
+			selector.
+				UserName_Like(q0).
+				FirstName_Like(q0).
+				LastName_Like(q0)
+		}
+
+		UsersIds, err := selector.Limit(30).GetIntSlice(base.DB)
+
+		if err != nil {
+			return
+		}
+
+		res.UserViewList = view_service.UserSliceViewAndMe(UsersIds, userParam.GetUserId())
+	}
+
+	return
 }

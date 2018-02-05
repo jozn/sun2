@@ -684,6 +684,49 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 	}
 }
 
+// PostCopy - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'UserId'.
+func (c _StoreImpl) PostCopy_ByUserId(UserId int) (*PostCopy, bool) {
+	o, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", UserId))
+	if ok {
+		if obj, ok := o.(*PostCopy); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostCopy_Selector().UserId_Eq(UserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostCopy_ByUserIds(UserIds []int) {
+	not_cached := make([]int, 0, len(UserIds))
+
+	for _, id := range UserIds {
+		_, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostCopy_Selector().UserId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+			}
+		}
+	}
+}
+
 // RecommendUser - PRIMARY
 
 // SearchClicked - PRIMARY
@@ -816,6 +859,10 @@ func (c _StoreImpl) PreLoadSession_ByUserIds(UserIds []int) {
 // SettingClient - PRIMARY
 
 // SettingNotification - PRIMARY
+
+// SuggestedTopPost - PRIMARY
+
+// SuggestedUser - PRIMARY
 
 // Tag - PRIMARY
 

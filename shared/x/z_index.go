@@ -4,12 +4,12 @@ import "github.com/jmoiron/sqlx"
 
 //todo this code can be used for multi secondery coulmn -- but this one interfier with secondery_template - in futer merege this two temple to one unifed that uses both primiry keys and othe seconder options and with reloadings
 
-// ActionByActionId Generated from index 'PRIMARY' -- retrieves a row from 'ms.action' as a Action.
+// ActionByActionId Generated from index 'PRIMARY' -- retrieves a row from 'sun.action' as a Action.
 func ActionByActionId(db *sqlx.DB, actionId int) (*Action, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.action ` +
+		`FROM sun.action ` +
 		`WHERE ActionId = ?`
 
 	XOLog(sqlstr, actionId)
@@ -28,12 +28,12 @@ func ActionByActionId(db *sqlx.DB, actionId int) (*Action, error) {
 	return &a, nil
 }
 
-// ChatByChatKey Generated from index 'PRIMARY' -- retrieves a row from 'ms.chat' as a Chat.
+// ChatByChatKey Generated from index 'PRIMARY' -- retrieves a row from 'sun.chat' as a Chat.
 func ChatByChatKey(db *sqlx.DB, chatKey string) (*Chat, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.chat ` +
+		`FROM sun.chat ` +
 		`WHERE ChatKey = ?`
 
 	XOLog(sqlstr, chatKey)
@@ -52,12 +52,12 @@ func ChatByChatKey(db *sqlx.DB, chatKey string) (*Chat, error) {
 	return &c, nil
 }
 
-// CommentByCommentId Generated from index 'PRIMARY' -- retrieves a row from 'ms.comment' as a Comment.
+// CommentByCommentId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment' as a Comment.
 func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.comment ` +
+		`FROM sun.comment ` +
 		`WHERE CommentId = ?`
 
 	XOLog(sqlstr, commentId)
@@ -76,12 +76,12 @@ func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	return &c, nil
 }
 
-// DirectMessageByMessageId Generated from index 'PRIMARY' -- retrieves a row from 'ms.direct_message' as a DirectMessage.
+// DirectMessageByMessageId Generated from index 'PRIMARY' -- retrieves a row from 'sun.direct_message' as a DirectMessage.
 func DirectMessageByMessageId(db *sqlx.DB, messageId int) (*DirectMessage, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.direct_message ` +
+		`FROM sun.direct_message ` +
 		`WHERE MessageId = ?`
 
 	XOLog(sqlstr, messageId)
@@ -100,12 +100,12 @@ func DirectMessageByMessageId(db *sqlx.DB, messageId int) (*DirectMessage, error
 	return &dm, nil
 }
 
-// DirectOfflineByDirectOfflineId Generated from index 'PRIMARY' -- retrieves a row from 'ms.direct_offline' as a DirectOffline.
+// DirectOfflineByDirectOfflineId Generated from index 'PRIMARY' -- retrieves a row from 'sun.direct_offline' as a DirectOffline.
 func DirectOfflineByDirectOfflineId(db *sqlx.DB, directOfflineId int) (*DirectOffline, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.direct_offline ` +
+		`FROM sun.direct_offline ` +
 		`WHERE DirectOfflineId = ?`
 
 	XOLog(sqlstr, directOfflineId)
@@ -124,12 +124,12 @@ func DirectOfflineByDirectOfflineId(db *sqlx.DB, directOfflineId int) (*DirectOf
 	return &do, nil
 }
 
-// DirectToMessageById Generated from index 'PRIMARY' -- retrieves a row from 'ms.direct_to_message' as a DirectToMessage.
+// DirectToMessageById Generated from index 'PRIMARY' -- retrieves a row from 'sun.direct_to_message' as a DirectToMessage.
 func DirectToMessageById(db *sqlx.DB, id int) (*DirectToMessage, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.direct_to_message ` +
+		`FROM sun.direct_to_message ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -148,12 +148,12 @@ func DirectToMessageById(db *sqlx.DB, id int) (*DirectToMessage, error) {
 	return &dtm, nil
 }
 
-// FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'ms.following_list' as a FollowingList.
+// FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list' as a FollowingList.
 func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.following_list ` +
+		`FROM sun.following_list ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -172,12 +172,12 @@ func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	return &fl, nil
 }
 
-// FollowingListMemberById Generated from index 'PRIMARY' -- retrieves a row from 'ms.following_list_member' as a FollowingListMember.
+// FollowingListMemberById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list_member' as a FollowingListMember.
 func FollowingListMemberById(db *sqlx.DB, id int) (*FollowingListMember, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.following_list_member ` +
+		`FROM sun.following_list_member ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -196,12 +196,12 @@ func FollowingListMemberById(db *sqlx.DB, id int) (*FollowingListMember, error) 
 	return &flm, nil
 }
 
-// FollowingListMemberHistoryById Generated from index 'PRIMARY' -- retrieves a row from 'ms.following_list_member_history' as a FollowingListMemberHistory.
+// FollowingListMemberHistoryById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list_member_history' as a FollowingListMemberHistory.
 func FollowingListMemberHistoryById(db *sqlx.DB, id int) (*FollowingListMemberHistory, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.following_list_member_history ` +
+		`FROM sun.following_list_member_history ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -220,12 +220,12 @@ func FollowingListMemberHistoryById(db *sqlx.DB, id int) (*FollowingListMemberHi
 	return &flmh, nil
 }
 
-// GeneralLogById Generated from index 'PRIMARY' -- retrieves a row from 'ms.general_log' as a GeneralLog.
+// GeneralLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun.general_log' as a GeneralLog.
 func GeneralLogById(db *sqlx.DB, id int) (*GeneralLog, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.general_log ` +
+		`FROM sun.general_log ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -244,12 +244,12 @@ func GeneralLogById(db *sqlx.DB, id int) (*GeneralLog, error) {
 	return &gl, nil
 }
 
-// GroupByGroupId Generated from index 'PRIMARY' -- retrieves a row from 'ms.group' as a Group.
+// GroupByGroupId Generated from index 'PRIMARY' -- retrieves a row from 'sun.group' as a Group.
 func GroupByGroupId(db *sqlx.DB, groupId int) (*Group, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.group ` +
+		`FROM sun.group ` +
 		`WHERE GroupId = ?`
 
 	XOLog(sqlstr, groupId)
@@ -268,12 +268,12 @@ func GroupByGroupId(db *sqlx.DB, groupId int) (*Group, error) {
 	return &g, nil
 }
 
-// GroupMemberById Generated from index 'PRIMARY' -- retrieves a row from 'ms.group_member' as a GroupMember.
+// GroupMemberById Generated from index 'PRIMARY' -- retrieves a row from 'sun.group_member' as a GroupMember.
 func GroupMemberById(db *sqlx.DB, id int) (*GroupMember, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.group_member ` +
+		`FROM sun.group_member ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -292,12 +292,12 @@ func GroupMemberById(db *sqlx.DB, id int) (*GroupMember, error) {
 	return &gm, nil
 }
 
-// GroupMessageByMessageId Generated from index 'PRIMARY' -- retrieves a row from 'ms.group_message' as a GroupMessage.
+// GroupMessageByMessageId Generated from index 'PRIMARY' -- retrieves a row from 'sun.group_message' as a GroupMessage.
 func GroupMessageByMessageId(db *sqlx.DB, messageId int) (*GroupMessage, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.group_message ` +
+		`FROM sun.group_message ` +
 		`WHERE MessageId = ?`
 
 	XOLog(sqlstr, messageId)
@@ -316,12 +316,12 @@ func GroupMessageByMessageId(db *sqlx.DB, messageId int) (*GroupMessage, error) 
 	return &gm, nil
 }
 
-// LikeById Generated from index 'PRIMARY' -- retrieves a row from 'ms.likes' as a Like.
+// LikeById Generated from index 'PRIMARY' -- retrieves a row from 'sun.likes' as a Like.
 func LikeById(db *sqlx.DB, id int) (*Like, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.likes ` +
+		`FROM sun.likes ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -340,12 +340,12 @@ func LikeById(db *sqlx.DB, id int) (*Like, error) {
 	return &l, nil
 }
 
-// MediaByMediaId Generated from index 'PRIMARY' -- retrieves a row from 'ms.media' as a Media.
+// MediaByMediaId Generated from index 'PRIMARY' -- retrieves a row from 'sun.media' as a Media.
 func MediaByMediaId(db *sqlx.DB, mediaId int) (*Media, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.media ` +
+		`FROM sun.media ` +
 		`WHERE MediaId = ?`
 
 	XOLog(sqlstr, mediaId)
@@ -364,12 +364,12 @@ func MediaByMediaId(db *sqlx.DB, mediaId int) (*Media, error) {
 	return &m, nil
 }
 
-// MessageFileByMessageFileId Generated from index 'PRIMARY' -- retrieves a row from 'ms.message_file' as a MessageFile.
+// MessageFileByMessageFileId Generated from index 'PRIMARY' -- retrieves a row from 'sun.message_file' as a MessageFile.
 func MessageFileByMessageFileId(db *sqlx.DB, messageFileId int) (*MessageFile, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.message_file ` +
+		`FROM sun.message_file ` +
 		`WHERE MessageFileId = ?`
 
 	XOLog(sqlstr, messageFileId)
@@ -388,12 +388,12 @@ func MessageFileByMessageFileId(db *sqlx.DB, messageFileId int) (*MessageFile, e
 	return &mf, nil
 }
 
-// NotifyByNotifyId Generated from index 'PRIMARY' -- retrieves a row from 'ms.notify' as a Notify.
+// NotifyByNotifyId Generated from index 'PRIMARY' -- retrieves a row from 'sun.notify' as a Notify.
 func NotifyByNotifyId(db *sqlx.DB, notifyId int) (*Notify, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.notify ` +
+		`FROM sun.notify ` +
 		`WHERE NotifyId = ?`
 
 	XOLog(sqlstr, notifyId)
@@ -412,12 +412,12 @@ func NotifyByNotifyId(db *sqlx.DB, notifyId int) (*Notify, error) {
 	return &n, nil
 }
 
-// NotifyRemovedById Generated from index 'PRIMARY' -- retrieves a row from 'ms.notify_removed' as a NotifyRemoved.
+// NotifyRemovedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.notify_removed' as a NotifyRemoved.
 func NotifyRemovedById(db *sqlx.DB, id int) (*NotifyRemoved, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.notify_removed ` +
+		`FROM sun.notify_removed ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -436,12 +436,12 @@ func NotifyRemovedById(db *sqlx.DB, id int) (*NotifyRemoved, error) {
 	return &nr, nil
 }
 
-// PhoneContactById Generated from index 'PRIMARY' -- retrieves a row from 'ms.phone_contacts' as a PhoneContact.
+// PhoneContactById Generated from index 'PRIMARY' -- retrieves a row from 'sun.phone_contacts' as a PhoneContact.
 func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.phone_contacts ` +
+		`FROM sun.phone_contacts ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -460,12 +460,12 @@ func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 	return &pc, nil
 }
 
-// PhoneContactsCopyById Generated from index 'PRIMARY' -- retrieves a row from 'ms.phone_contacts_copy' as a PhoneContactsCopy.
+// PhoneContactsCopyById Generated from index 'PRIMARY' -- retrieves a row from 'sun.phone_contacts_copy' as a PhoneContactsCopy.
 func PhoneContactsCopyById(db *sqlx.DB, id int) (*PhoneContactsCopy, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.phone_contacts_copy ` +
+		`FROM sun.phone_contacts_copy ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -484,12 +484,12 @@ func PhoneContactsCopyById(db *sqlx.DB, id int) (*PhoneContactsCopy, error) {
 	return &pcc, nil
 }
 
-// PostByPostId Generated from index 'PRIMARY' -- retrieves a row from 'ms.post' as a Post.
+// PostByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post' as a Post.
 func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.post ` +
+		`FROM sun.post ` +
 		`WHERE PostId = ?`
 
 	XOLog(sqlstr, postId)
@@ -508,12 +508,36 @@ func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	return &p, nil
 }
 
-// RecommendUserById Generated from index 'PRIMARY' -- retrieves a row from 'ms.recommend_user' as a RecommendUser.
+// PostCopyByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_copy' as a PostCopy.
+func PostCopyByPostId(db *sqlx.DB, postId int) (*PostCopy, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_copy ` +
+		`WHERE PostId = ?`
+
+	XOLog(sqlstr, postId)
+	pc := PostCopy{
+		_exists: true,
+	}
+
+	err = db.Get(&pc, sqlstr, postId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostCopy_LoadOne(&pc)
+
+	return &pc, nil
+}
+
+// RecommendUserById Generated from index 'PRIMARY' -- retrieves a row from 'sun.recommend_user' as a RecommendUser.
 func RecommendUserById(db *sqlx.DB, id int) (*RecommendUser, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.recommend_user ` +
+		`FROM sun.recommend_user ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -532,12 +556,12 @@ func RecommendUserById(db *sqlx.DB, id int) (*RecommendUser, error) {
 	return &ru, nil
 }
 
-// SearchClickedById Generated from index 'PRIMARY' -- retrieves a row from 'ms.search_clicked' as a SearchClicked.
+// SearchClickedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.search_clicked' as a SearchClicked.
 func SearchClickedById(db *sqlx.DB, id int) (*SearchClicked, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.search_clicked ` +
+		`FROM sun.search_clicked ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -556,12 +580,12 @@ func SearchClickedById(db *sqlx.DB, id int) (*SearchClicked, error) {
 	return &sc, nil
 }
 
-// SessionById Generated from index 'PRIMARY' -- retrieves a row from 'ms.session' as a Session.
+// SessionById Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.
 func SessionById(db *sqlx.DB, id int) (*Session, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.session ` +
+		`FROM sun.session ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -580,12 +604,12 @@ func SessionById(db *sqlx.DB, id int) (*Session, error) {
 	return &s, nil
 }
 
-// SettingClientByUserId Generated from index 'PRIMARY' -- retrieves a row from 'ms.setting_client' as a SettingClient.
+// SettingClientByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_client' as a SettingClient.
 func SettingClientByUserId(db *sqlx.DB, userId int) (*SettingClient, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.setting_client ` +
+		`FROM sun.setting_client ` +
 		`WHERE UserId = ?`
 
 	XOLog(sqlstr, userId)
@@ -604,12 +628,12 @@ func SettingClientByUserId(db *sqlx.DB, userId int) (*SettingClient, error) {
 	return &sc, nil
 }
 
-// SettingNotificationByUserId Generated from index 'PRIMARY' -- retrieves a row from 'ms.setting_notifications' as a SettingNotification.
+// SettingNotificationByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_notifications' as a SettingNotification.
 func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.setting_notifications ` +
+		`FROM sun.setting_notifications ` +
 		`WHERE UserId = ?`
 
 	XOLog(sqlstr, userId)
@@ -628,12 +652,60 @@ func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification,
 	return &sn, nil
 }
 
-// TagByTagId Generated from index 'PRIMARY' -- retrieves a row from 'ms.tag' as a Tag.
+// SuggestedTopPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun.suggested_top_posts' as a SuggestedTopPost.
+func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.suggested_top_posts ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	stp := SuggestedTopPost{
+		_exists: true,
+	}
+
+	err = db.Get(&stp, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSuggestedTopPost_LoadOne(&stp)
+
+	return &stp, nil
+}
+
+// SuggestedUserById Generated from index 'PRIMARY' -- retrieves a row from 'sun.suggested_user' as a SuggestedUser.
+func SuggestedUserById(db *sqlx.DB, id int) (*SuggestedUser, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.suggested_user ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	su := SuggestedUser{
+		_exists: true,
+	}
+
+	err = db.Get(&su, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSuggestedUser_LoadOne(&su)
+
+	return &su, nil
+}
+
+// TagByTagId Generated from index 'PRIMARY' -- retrieves a row from 'sun.tag' as a Tag.
 func TagByTagId(db *sqlx.DB, tagId int) (*Tag, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.tag ` +
+		`FROM sun.tag ` +
 		`WHERE TagId = ?`
 
 	XOLog(sqlstr, tagId)
@@ -652,12 +724,12 @@ func TagByTagId(db *sqlx.DB, tagId int) (*Tag, error) {
 	return &t, nil
 }
 
-// TagsPostById Generated from index 'PRIMARY' -- retrieves a row from 'ms.tags_posts' as a TagsPost.
+// TagsPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun.tags_posts' as a TagsPost.
 func TagsPostById(db *sqlx.DB, id int) (*TagsPost, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.tags_posts ` +
+		`FROM sun.tags_posts ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -676,12 +748,12 @@ func TagsPostById(db *sqlx.DB, id int) (*TagsPost, error) {
 	return &tp, nil
 }
 
-// TriggerLogById Generated from index 'PRIMARY' -- retrieves a row from 'ms.trigger_log' as a TriggerLog.
+// TriggerLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun.trigger_log' as a TriggerLog.
 func TriggerLogById(db *sqlx.DB, id int) (*TriggerLog, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.trigger_log ` +
+		`FROM sun.trigger_log ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -700,12 +772,12 @@ func TriggerLogById(db *sqlx.DB, id int) (*TriggerLog, error) {
 	return &tl, nil
 }
 
-// UserByUserId Generated from index 'PRIMARY' -- retrieves a row from 'ms.user' as a User.
+// UserByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.user' as a User.
 func UserByUserId(db *sqlx.DB, userId int) (*User, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.user ` +
+		`FROM sun.user ` +
 		`WHERE UserId = ?`
 
 	XOLog(sqlstr, userId)
@@ -724,12 +796,12 @@ func UserByUserId(db *sqlx.DB, userId int) (*User, error) {
 	return &u, nil
 }
 
-// UserMetaInfoById Generated from index 'PRIMARY' -- retrieves a row from 'ms.user_meta_info' as a UserMetaInfo.
+// UserMetaInfoById Generated from index 'PRIMARY' -- retrieves a row from 'sun.user_meta_info' as a UserMetaInfo.
 func UserMetaInfoById(db *sqlx.DB, id int) (*UserMetaInfo, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.user_meta_info ` +
+		`FROM sun.user_meta_info ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
@@ -748,12 +820,12 @@ func UserMetaInfoById(db *sqlx.DB, id int) (*UserMetaInfo, error) {
 	return &umi, nil
 }
 
-// UserPasswordByUserId Generated from index 'PRIMARY' -- retrieves a row from 'ms.user_password' as a UserPassword.
+// UserPasswordByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.user_password' as a UserPassword.
 func UserPasswordByUserId(db *sqlx.DB, userId int) (*UserPassword, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM ms.user_password ` +
+		`FROM sun.user_password ` +
 		`WHERE UserId = ?`
 
 	XOLog(sqlstr, userId)
