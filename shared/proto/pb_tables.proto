@@ -26,10 +26,17 @@ message PB_Chat {
     int32 PeerUserId = 5;
     int64 GroupId = 6;
     int32 CreatedTime = 7;
-    int64 StartMessageIdFrom = 8;
-    int64 LastMessageId = 9;
-    int64 LastSeenMessageId = 10;
-    int64 UpdatedMs = 11;
+    int32 Seq = 8;
+    int32 SeenSeq = 9;
+    int64 UpdatedMs = 10;
+}
+message PB_ChatSync {
+    int64 SyncId = 1;
+    int32 ToUserId = 2;
+    int32 ChatSyncTypeId = 3;
+    string ChatKey = 4;
+    int64 MessageId = 5;
+    int32 CreatedTime = 6;
 }
 message PB_Comment {
     int64 CommentId = 1;
@@ -41,6 +48,21 @@ message PB_Comment {
     int32 Seq = 7;
 }
 message PB_DirectMessage {
+    string ChatKey = 1;
+    int64 MessageId = 2;
+    string RoomKey = 3;
+    int32 UserId = 4;
+    int64 MessageFileId = 5;
+    int32 MessageTypeEnum = 6;
+    string Text = 7;
+    int32 CreatedTime = 8;
+    int32 Seq = 9;
+    int32 PeerReceivedTime = 10;
+    int32 PeerSeenTime = 11;
+    int32 DeliviryStatusEnum = 12;
+    bytes ExtraPB = 13;
+}
+message PB_DirectMessageCopy {
     int64 MessageId = 1;
     string MessageKey = 2;
     string RoomKey = 3;
@@ -88,14 +110,12 @@ message PB_FollowingListMember {
     int32 FollowedUserId = 4;
     int32 CreatedTime = 5;
 }
-message PB_FollowingListMemberHistory {
+message PB_FollowingListMemberRemoved {
     int64 Id = 1;
     int32 ListId = 2;
     int32 UserId = 3;
-    int32 FollowedUserId = 4;
-    int32 FollowType = 5;
-    int64 UpdatedTimeMs = 6;
-    int32 FollowId = 7;
+    int32 UnFollowedUserId = 4;
+    int32 UpdatedTime = 5;
 }
 message PB_GeneralLog {
     int64 Id = 1;
@@ -134,6 +154,9 @@ message PB_GroupMessage {
     string Text = 6;
     int64 CreatedMs = 7;
     int32 DeliveryStatusEnum = 8;
+}
+message PB_Key {
+    string Key = 1;
 }
 message PB_Like {
     int64 Id = 1;
@@ -201,18 +224,6 @@ message PB_PhoneContact {
     int32 DeviceUuidId = 9;
     int32 CreatedTime = 10;
 }
-message PB_PhoneContactsCopy {
-    int32 Id = 1;
-    string PhoneDisplayName = 2;
-    string PhoneFamilyName = 3;
-    string PhoneNumber = 4;
-    string PhoneNormalizedNumber = 5;
-    int32 PhoneContactRowId = 6;
-    int32 UserId = 7;
-    int32 DeviceUuidId = 8;
-    int32 CreatedTime = 9;
-    int32 UpdatedTime = 10;
-}
 message PB_Post {
     int64 PostId = 1;
     int32 UserId = 2;
@@ -230,31 +241,6 @@ message PB_Post {
     int32 EditedTime = 14;
     int32 CreatedTime = 15;
     int64 ReSharedPostId = 16;
-}
-message PB_PostCopy {
-    int64 PostId = 1;
-    int32 UserId = 2;
-    int32 PostTypeEnum = 3;
-    int32 MediaId = 4;
-    string Text = 5;
-    string RichText = 6;
-    int32 MediaCount = 7;
-    int32 SharedTo = 8;
-    int32 DisableComment = 9;
-    int32 HasTag = 10;
-    int32 CommentsCount = 11;
-    int32 LikesCount = 12;
-    int32 ViewsCount = 13;
-    int32 EditedTime = 14;
-    int32 CreatedTime = 15;
-    int64 ReSharedPostId = 16;
-}
-message PB_RecommendUser {
-    int32 Id = 1;
-    int32 UserId = 2;
-    int32 TargetId = 3;
-    float Weight = 4;
-    int32 CreatedTime = 5;
 }
 message PB_SearchClicked {
     int64 Id = 1;

@@ -54,6 +54,8 @@ func (c _StoreImpl) PreLoadAction_BySeqs(Seqs []int) {
 
 // Chat - PRIMARY
 
+// ChatSync - PRIMARY
+
 // Comment - PRIMARY
 
 //field//field//field
@@ -140,6 +142,8 @@ func (c _StoreImpl) PreLoadComment_BySeqs(Seqs []int) {
 
 // DirectMessage - PRIMARY
 
+// DirectMessageCopy - PRIMARY
+
 // DirectOffline - PRIMARY
 
 //field//field//field
@@ -197,9 +201,9 @@ func (c _StoreImpl) PreLoadDirectOffline_ByToUserIds(ToUserIds []int) {
 
 // FollowingListMember - UserId_2
 
-// FollowingListMemberHistory - PRIMARY
+// FollowingListMemberRemoved - PRIMARY
 
-// FollowingListMemberHistory - UserId
+// FollowingListMemberRemoved - UserId
 
 // GeneralLog - PRIMARY
 
@@ -249,6 +253,8 @@ func (c _StoreImpl) PreLoadGroupMember_ByIds(Ids []int) {
 }
 
 // GroupMessage - PRIMARY
+
+// Key - PRIMARY
 
 // Like - PRIMARY
 
@@ -512,135 +518,6 @@ func (c _StoreImpl) PreLoadMedia_ByPostIds(PostIds []int) {
 
 // PhoneContact - PRIMARY
 
-// PhoneContactsCopy - PRIMARY
-
-// PhoneContactsCopy - PhoneContactRowId
-
-//field//field//field
-
-///// Generated from index 'PhoneNumber'.
-func (c _StoreImpl) PhoneContactsCopy_ByPhoneNumber(PhoneNumber string) (*PhoneContactsCopy, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNumber:" + fmt.Sprintf("%v", PhoneNumber))
-	if ok {
-		if obj, ok := o.(*PhoneContactsCopy); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewPhoneContactsCopy_Selector().PhoneNumber_Eq(PhoneNumber).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("PhoneContactsCopy_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPhoneContactsCopy_ByPhoneNumbers(PhoneNumbers []string) {
-	not_cached := make([]string, 0, len(PhoneNumbers))
-
-	for _, id := range PhoneNumbers {
-		_, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNumber:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewPhoneContactsCopy_Selector().PhoneNumber_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContactsCopy_PhoneNumber:"+fmt.Sprintf("%v", row.PhoneNumber), row, 0)
-			}
-		}
-	}
-}
-
-//field//field//field
-
-///// Generated from index 'UserId'.
-func (c _StoreImpl) PhoneContactsCopy_ByUserId(UserId int) (*PhoneContactsCopy, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContactsCopy_UserId:" + fmt.Sprintf("%v", UserId))
-	if ok {
-		if obj, ok := o.(*PhoneContactsCopy); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewPhoneContactsCopy_Selector().UserId_Eq(UserId).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("PhoneContactsCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPhoneContactsCopy_ByUserIds(UserIds []int) {
-	not_cached := make([]int, 0, len(UserIds))
-
-	for _, id := range UserIds {
-		_, ok := RowCacheIndex.Get("PhoneContactsCopy_UserId:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewPhoneContactsCopy_Selector().UserId_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContactsCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
-			}
-		}
-	}
-}
-
-// PhoneContactsCopy - UserId_Time
-
-//field//field//field
-
-///// Generated from index 'PhoneNormalizedNumber'.
-func (c _StoreImpl) PhoneContactsCopy_ByPhoneNormalizedNumber(PhoneNormalizedNumber string) (*PhoneContactsCopy, bool) {
-	o, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNormalizedNumber:" + fmt.Sprintf("%v", PhoneNormalizedNumber))
-	if ok {
-		if obj, ok := o.(*PhoneContactsCopy); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewPhoneContactsCopy_Selector().PhoneNormalizedNumber_Eq(PhoneNormalizedNumber).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("PhoneContactsCopy_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPhoneContactsCopy_ByPhoneNormalizedNumbers(PhoneNormalizedNumbers []string) {
-	not_cached := make([]string, 0, len(PhoneNormalizedNumbers))
-
-	for _, id := range PhoneNormalizedNumbers {
-		_, ok := RowCacheIndex.Get("PhoneContactsCopy_PhoneNormalizedNumber:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewPhoneContactsCopy_Selector().PhoneNormalizedNumber_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("PhoneContactsCopy_PhoneNormalizedNumber:"+fmt.Sprintf("%v", row.PhoneNormalizedNumber), row, 0)
-			}
-		}
-	}
-}
-
 // Post - PRIMARY
 
 //field//field//field
@@ -683,51 +560,6 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 		}
 	}
 }
-
-// PostCopy - PRIMARY
-
-//field//field//field
-
-///// Generated from index 'UserId'.
-func (c _StoreImpl) PostCopy_ByUserId(UserId int) (*PostCopy, bool) {
-	o, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", UserId))
-	if ok {
-		if obj, ok := o.(*PostCopy); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewPostCopy_Selector().UserId_Eq(UserId).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPostCopy_ByUserIds(UserIds []int) {
-	not_cached := make([]int, 0, len(UserIds))
-
-	for _, id := range UserIds {
-		_, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewPostCopy_Selector().UserId_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
-			}
-		}
-	}
-}
-
-// RecommendUser - PRIMARY
 
 // SearchClicked - PRIMARY
 

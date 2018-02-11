@@ -52,6 +52,30 @@ func ChatByChatKey(db *sqlx.DB, chatKey string) (*Chat, error) {
 	return &c, nil
 }
 
+// ChatSyncBySyncId Generated from index 'PRIMARY' -- retrieves a row from 'sun.chat_sync' as a ChatSync.
+func ChatSyncBySyncId(db *sqlx.DB, syncId int) (*ChatSync, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.chat_sync ` +
+		`WHERE SyncId = ?`
+
+	XOLog(sqlstr, syncId)
+	cs := ChatSync{
+		_exists: true,
+	}
+
+	err = db.Get(&cs, sqlstr, syncId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnChatSync_LoadOne(&cs)
+
+	return &cs, nil
+}
+
 // CommentByCommentId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment' as a Comment.
 func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	var err error
@@ -98,6 +122,30 @@ func DirectMessageByMessageId(db *sqlx.DB, messageId int) (*DirectMessage, error
 	OnDirectMessage_LoadOne(&dm)
 
 	return &dm, nil
+}
+
+// DirectMessageCopyByMessageId Generated from index 'PRIMARY' -- retrieves a row from 'sun.direct_message_copy' as a DirectMessageCopy.
+func DirectMessageCopyByMessageId(db *sqlx.DB, messageId int) (*DirectMessageCopy, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.direct_message_copy ` +
+		`WHERE MessageId = ?`
+
+	XOLog(sqlstr, messageId)
+	dmc := DirectMessageCopy{
+		_exists: true,
+	}
+
+	err = db.Get(&dmc, sqlstr, messageId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnDirectMessageCopy_LoadOne(&dmc)
+
+	return &dmc, nil
 }
 
 // DirectOfflineByDirectOfflineId Generated from index 'PRIMARY' -- retrieves a row from 'sun.direct_offline' as a DirectOffline.
@@ -196,28 +244,28 @@ func FollowingListMemberById(db *sqlx.DB, id int) (*FollowingListMember, error) 
 	return &flm, nil
 }
 
-// FollowingListMemberHistoryById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list_member_history' as a FollowingListMemberHistory.
-func FollowingListMemberHistoryById(db *sqlx.DB, id int) (*FollowingListMemberHistory, error) {
+// FollowingListMemberRemovedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list_member_removed' as a FollowingListMemberRemoved.
+func FollowingListMemberRemovedById(db *sqlx.DB, id int) (*FollowingListMemberRemoved, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM sun.following_list_member_history ` +
+		`FROM sun.following_list_member_removed ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	flmh := FollowingListMemberHistory{
+	flmr := FollowingListMemberRemoved{
 		_exists: true,
 	}
 
-	err = db.Get(&flmh, sqlstr, id)
+	err = db.Get(&flmr, sqlstr, id)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
 	}
 
-	OnFollowingListMemberHistory_LoadOne(&flmh)
+	OnFollowingListMemberRemoved_LoadOne(&flmr)
 
-	return &flmh, nil
+	return &flmr, nil
 }
 
 // GeneralLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun.general_log' as a GeneralLog.
@@ -314,6 +362,30 @@ func GroupMessageByMessageId(db *sqlx.DB, messageId int) (*GroupMessage, error) 
 	OnGroupMessage_LoadOne(&gm)
 
 	return &gm, nil
+}
+
+// KeyByKey Generated from index 'PRIMARY' -- retrieves a row from 'sun.keys' as a Key.
+func KeyByKey(db *sqlx.DB, key string) (*Key, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.keys ` +
+		`WHERE Key = ?`
+
+	XOLog(sqlstr, key)
+	k := Key{
+		_exists: true,
+	}
+
+	err = db.Get(&k, sqlstr, key)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnKey_LoadOne(&k)
+
+	return &k, nil
 }
 
 // LikeById Generated from index 'PRIMARY' -- retrieves a row from 'sun.likes' as a Like.
@@ -460,30 +532,6 @@ func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 	return &pc, nil
 }
 
-// PhoneContactsCopyById Generated from index 'PRIMARY' -- retrieves a row from 'sun.phone_contacts_copy' as a PhoneContactsCopy.
-func PhoneContactsCopyById(db *sqlx.DB, id int) (*PhoneContactsCopy, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.phone_contacts_copy ` +
-		`WHERE Id = ?`
-
-	XOLog(sqlstr, id)
-	pcc := PhoneContactsCopy{
-		_exists: true,
-	}
-
-	err = db.Get(&pcc, sqlstr, id)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnPhoneContactsCopy_LoadOne(&pcc)
-
-	return &pcc, nil
-}
-
 // PostByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post' as a Post.
 func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	var err error
@@ -506,54 +554,6 @@ func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	OnPost_LoadOne(&p)
 
 	return &p, nil
-}
-
-// PostCopyByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_copy' as a PostCopy.
-func PostCopyByPostId(db *sqlx.DB, postId int) (*PostCopy, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.post_copy ` +
-		`WHERE PostId = ?`
-
-	XOLog(sqlstr, postId)
-	pc := PostCopy{
-		_exists: true,
-	}
-
-	err = db.Get(&pc, sqlstr, postId)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnPostCopy_LoadOne(&pc)
-
-	return &pc, nil
-}
-
-// RecommendUserById Generated from index 'PRIMARY' -- retrieves a row from 'sun.recommend_user' as a RecommendUser.
-func RecommendUserById(db *sqlx.DB, id int) (*RecommendUser, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.recommend_user ` +
-		`WHERE Id = ?`
-
-	XOLog(sqlstr, id)
-	ru := RecommendUser{
-		_exists: true,
-	}
-
-	err = db.Get(&ru, sqlstr, id)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnRecommendUser_LoadOne(&ru)
-
-	return &ru, nil
 }
 
 // SearchClickedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.search_clicked' as a SearchClicked.

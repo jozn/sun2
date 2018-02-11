@@ -5,10 +5,14 @@ const (
 	Action_TableGo                     = "Action"
 	Chat_Table                         = "chat"
 	Chat_TableGo                       = "Chat"
+	ChatSync_Table                     = "chat_sync"
+	ChatSync_TableGo                   = "ChatSync"
 	Comment_Table                      = "comment"
 	Comment_TableGo                    = "Comment"
 	DirectMessage_Table                = "direct_message"
 	DirectMessage_TableGo              = "DirectMessage"
+	DirectMessageCopy_Table            = "direct_message_copy"
+	DirectMessageCopy_TableGo          = "DirectMessageCopy"
 	DirectOffline_Table                = "direct_offline"
 	DirectOffline_TableGo              = "DirectOffline"
 	DirectToMessage_Table              = "direct_to_message"
@@ -17,8 +21,8 @@ const (
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
 	FollowingListMember_TableGo        = "FollowingListMember"
-	FollowingListMemberHistory_Table   = "following_list_member_history"
-	FollowingListMemberHistory_TableGo = "FollowingListMemberHistory"
+	FollowingListMemberRemoved_Table   = "following_list_member_removed"
+	FollowingListMemberRemoved_TableGo = "FollowingListMemberRemoved"
 	GeneralLog_Table                   = "general_log"
 	GeneralLog_TableGo                 = "GeneralLog"
 	Group_Table                        = "group"
@@ -27,6 +31,8 @@ const (
 	GroupMember_TableGo                = "GroupMember"
 	GroupMessage_Table                 = "group_message"
 	GroupMessage_TableGo               = "GroupMessage"
+	Key_Table                          = "keys"
+	Key_TableGo                        = "Key"
 	Like_Table                         = "likes"
 	Like_TableGo                       = "Like"
 	Media_Table                        = "media"
@@ -39,14 +45,8 @@ const (
 	NotifyRemoved_TableGo              = "NotifyRemoved"
 	PhoneContact_Table                 = "phone_contacts"
 	PhoneContact_TableGo               = "PhoneContact"
-	PhoneContactsCopy_Table            = "phone_contacts_copy"
-	PhoneContactsCopy_TableGo          = "PhoneContactsCopy"
 	Post_Table                         = "post"
 	Post_TableGo                       = "Post"
-	PostCopy_Table                     = "post_copy"
-	PostCopy_TableGo                   = "PostCopy"
-	RecommendUser_Table                = "recommend_user"
-	RecommendUser_TableGo              = "RecommendUser"
 	SearchClicked_Table                = "search_clicked"
 	SearchClicked_TableGo              = "SearchClicked"
 	Session_Table                      = "session"
@@ -97,30 +97,45 @@ var Action = struct {
 }
 
 var Chat = struct {
-	ChatKey            string
-	RoomKey            string
-	RoomTypeEnum       string
-	UserId             string
-	PeerUserId         string
-	GroupId            string
-	CreatedTime        string
-	StartMessageIdFrom string
-	LastMessageId      string
-	LastSeenMessageId  string
-	UpdatedMs          string
+	ChatKey      string
+	RoomKey      string
+	RoomTypeEnum string
+	UserId       string
+	PeerUserId   string
+	GroupId      string
+	CreatedTime  string
+	Seq          string
+	SeenSeq      string
+	UpdatedMs    string
 }{
 
-	ChatKey:            "ChatKey",
-	RoomKey:            "RoomKey",
-	RoomTypeEnum:       "RoomTypeEnum",
-	UserId:             "UserId",
-	PeerUserId:         "PeerUserId",
-	GroupId:            "GroupId",
-	CreatedTime:        "CreatedTime",
-	StartMessageIdFrom: "StartMessageIdFrom",
-	LastMessageId:      "LastMessageId",
-	LastSeenMessageId:  "LastSeenMessageId",
-	UpdatedMs:          "UpdatedMs",
+	ChatKey:      "ChatKey",
+	RoomKey:      "RoomKey",
+	RoomTypeEnum: "RoomTypeEnum",
+	UserId:       "UserId",
+	PeerUserId:   "PeerUserId",
+	GroupId:      "GroupId",
+	CreatedTime:  "CreatedTime",
+	Seq:          "Seq",
+	SeenSeq:      "SeenSeq",
+	UpdatedMs:    "UpdatedMs",
+}
+
+var ChatSync = struct {
+	SyncId         string
+	ToUserId       string
+	ChatSyncTypeId string
+	ChatKey        string
+	MessageId      string
+	CreatedTime    string
+}{
+
+	SyncId:         "SyncId",
+	ToUserId:       "ToUserId",
+	ChatSyncTypeId: "ChatSyncTypeId",
+	ChatKey:        "ChatKey",
+	MessageId:      "MessageId",
+	CreatedTime:    "CreatedTime",
 }
 
 var Comment = struct {
@@ -143,6 +158,37 @@ var Comment = struct {
 }
 
 var DirectMessage = struct {
+	ChatKey            string
+	MessageId          string
+	RoomKey            string
+	UserId             string
+	MessageFileId      string
+	MessageTypeEnum    string
+	Text               string
+	CreatedTime        string
+	Seq                string
+	PeerReceivedTime   string
+	PeerSeenTime       string
+	DeliviryStatusEnum string
+	ExtraPB            string
+}{
+
+	ChatKey:            "ChatKey",
+	MessageId:          "MessageId",
+	RoomKey:            "RoomKey",
+	UserId:             "UserId",
+	MessageFileId:      "MessageFileId",
+	MessageTypeEnum:    "MessageTypeEnum",
+	Text:               "Text",
+	CreatedTime:        "CreatedTime",
+	Seq:                "Seq",
+	PeerReceivedTime:   "PeerReceivedTime",
+	PeerSeenTime:       "PeerSeenTime",
+	DeliviryStatusEnum: "DeliviryStatusEnum",
+	ExtraPB:            "ExtraPB",
+}
+
+var DirectMessageCopy = struct {
 	MessageId            string
 	MessageKey           string
 	RoomKey              string
@@ -243,23 +289,19 @@ var FollowingListMember = struct {
 	CreatedTime:    "CreatedTime",
 }
 
-var FollowingListMemberHistory = struct {
-	Id             string
-	ListId         string
-	UserId         string
-	FollowedUserId string
-	FollowType     string
-	UpdatedTimeMs  string
-	FollowId       string
+var FollowingListMemberRemoved = struct {
+	Id               string
+	ListId           string
+	UserId           string
+	UnFollowedUserId string
+	UpdatedTime      string
 }{
 
-	Id:             "Id",
-	ListId:         "ListId",
-	UserId:         "UserId",
-	FollowedUserId: "FollowedUserId",
-	FollowType:     "FollowType",
-	UpdatedTimeMs:  "UpdatedTimeMs",
-	FollowId:       "FollowId",
+	Id:               "Id",
+	ListId:           "ListId",
+	UserId:           "UserId",
+	UnFollowedUserId: "UnFollowedUserId",
+	UpdatedTime:      "UpdatedTime",
 }
 
 var GeneralLog = struct {
@@ -340,6 +382,13 @@ var GroupMessage = struct {
 	Text:               "Text",
 	CreatedMs:          "CreatedMs",
 	DeliveryStatusEnum: "DeliveryStatusEnum",
+}
+
+var Key = struct {
+	Key string
+}{
+
+	Key: "Key",
 }
 
 var Like = struct {
@@ -480,31 +529,6 @@ var PhoneContact = struct {
 	CreatedTime:           "CreatedTime",
 }
 
-var PhoneContactsCopy = struct {
-	Id                    string
-	PhoneDisplayName      string
-	PhoneFamilyName       string
-	PhoneNumber           string
-	PhoneNormalizedNumber string
-	PhoneContactRowId     string
-	UserId                string
-	DeviceUuidId          string
-	CreatedTime           string
-	UpdatedTime           string
-}{
-
-	Id:                    "Id",
-	PhoneDisplayName:      "PhoneDisplayName",
-	PhoneFamilyName:       "PhoneFamilyName",
-	PhoneNumber:           "PhoneNumber",
-	PhoneNormalizedNumber: "PhoneNormalizedNumber",
-	PhoneContactRowId:     "PhoneContactRowId",
-	UserId:                "UserId",
-	DeviceUuidId:          "DeviceUuidId",
-	CreatedTime:           "CreatedTime",
-	UpdatedTime:           "UpdatedTime",
-}
-
 var Post = struct {
 	PostId         string
 	UserId         string
@@ -540,58 +564,6 @@ var Post = struct {
 	EditedTime:     "EditedTime",
 	CreatedTime:    "CreatedTime",
 	ReSharedPostId: "ReSharedPostId",
-}
-
-var PostCopy = struct {
-	PostId         string
-	UserId         string
-	PostTypeEnum   string
-	MediaId        string
-	Text           string
-	RichText       string
-	MediaCount     string
-	SharedTo       string
-	DisableComment string
-	HasTag         string
-	CommentsCount  string
-	LikesCount     string
-	ViewsCount     string
-	EditedTime     string
-	CreatedTime    string
-	ReSharedPostId string
-}{
-
-	PostId:         "PostId",
-	UserId:         "UserId",
-	PostTypeEnum:   "PostTypeEnum",
-	MediaId:        "MediaId",
-	Text:           "Text",
-	RichText:       "RichText",
-	MediaCount:     "MediaCount",
-	SharedTo:       "SharedTo",
-	DisableComment: "DisableComment",
-	HasTag:         "HasTag",
-	CommentsCount:  "CommentsCount",
-	LikesCount:     "LikesCount",
-	ViewsCount:     "ViewsCount",
-	EditedTime:     "EditedTime",
-	CreatedTime:    "CreatedTime",
-	ReSharedPostId: "ReSharedPostId",
-}
-
-var RecommendUser = struct {
-	Id          string
-	UserId      string
-	TargetId    string
-	Weight      string
-	CreatedTime string
-}{
-
-	Id:          "Id",
-	UserId:      "UserId",
-	TargetId:    "TargetId",
-	Weight:      "Weight",
-	CreatedTime: "CreatedTime",
 }
 
 var SearchClicked = struct {

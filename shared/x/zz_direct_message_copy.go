@@ -9,162 +9,160 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun.direct_message'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessageCopy represents a row from 'sun.direct_message_copy'.
 
 // Manualy copy this to project
-type DirectMessage__ struct {
-	ChatKey            string `json:"ChatKey"`            // ChatKey -
-	MessageId          int    `json:"MessageId"`          // MessageId -
-	RoomKey            string `json:"RoomKey"`            // RoomKey -
-	UserId             int    `json:"UserId"`             // UserId -
-	MessageFileId      int    `json:"MessageFileId"`      // MessageFileId -
-	MessageTypeEnum    int    `json:"MessageTypeEnum"`    // MessageTypeEnum -
-	Text               string `json:"Text"`               // Text -
-	CreatedTime        int    `json:"CreatedTime"`        // CreatedTime -
-	Seq                int    `json:"Seq"`                // Seq -
-	PeerReceivedTime   int    `json:"PeerReceivedTime"`   // PeerReceivedTime -
-	PeerSeenTime       int    `json:"PeerSeenTime"`       // PeerSeenTime -
-	DeliviryStatusEnum int    `json:"DeliviryStatusEnum"` // DeliviryStatusEnum -
-	ExtraPB            []byte `json:"ExtraPB"`            // ExtraPB -
+type DirectMessageCopy__ struct {
+	MessageId            int    `json:"MessageId"`            // MessageId -
+	MessageKey           string `json:"MessageKey"`           // MessageKey -
+	RoomKey              string `json:"RoomKey"`              // RoomKey -
+	UserId               int    `json:"UserId"`               // UserId -
+	MessageFileId        int    `json:"MessageFileId"`        // MessageFileId -
+	MessageTypeEnumId    int    `json:"MessageTypeEnumId"`    // MessageTypeEnumId -
+	Text                 string `json:"Text"`                 // Text -
+	CreatedSe            int    `json:"CreatedSe"`            // CreatedSe -
+	PeerReceivedTime     int    `json:"PeerReceivedTime"`     // PeerReceivedTime -
+	PeerSeenTime         int    `json:"PeerSeenTime"`         // PeerSeenTime -
+	DeliviryStatusEnumId int    `json:"DeliviryStatusEnumId"` // DeliviryStatusEnumId -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the DirectMessage exists in the database.
-func (dm *DirectMessage) Exists() bool {
-	return dm._exists
+// Exists determines if the DirectMessageCopy exists in the database.
+func (dmc *DirectMessageCopy) Exists() bool {
+	return dmc._exists
 }
 
-// Deleted provides information if the DirectMessage has been deleted from the database.
-func (dm *DirectMessage) Deleted() bool {
-	return dm._deleted
+// Deleted provides information if the DirectMessageCopy has been deleted from the database.
+func (dmc *DirectMessageCopy) Deleted() bool {
+	return dmc._deleted
 }
 
-// Insert inserts the DirectMessage to the database.
-func (dm *DirectMessage) Insert(db XODB) error {
+// Insert inserts the DirectMessageCopy to the database.
+func (dmc *DirectMessageCopy) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if dm._exists {
+	if dmc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.direct_message (` +
-		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB` +
+	const sqlstr = `INSERT INTO sun.direct_message_copy (` +
+		`MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
+	XOLog(sqlstr, dmc.MessageId, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId)
+	_, err = db.Exec(sqlstr, dmc.MessageId, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId)
 	if err != nil {
 		return err
 	}
 
 	// set existence
-	dm._exists = true
+	dmc._exists = true
 
-	OnDirectMessage_AfterInsert(dm)
+	OnDirectMessageCopy_AfterInsert(dmc)
 
 	return nil
 }
 
-// Insert inserts the DirectMessage to the database.
-func (dm *DirectMessage) Replace(db XODB) error {
+// Insert inserts the DirectMessageCopy to the database.
+func (dmc *DirectMessageCopy) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.direct_message (` +
-		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB` +
+	const sqlstr = `REPLACE INTO sun.direct_message_copy (` +
+		`MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
+	XOLog(sqlstr, dmc.MessageId, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId)
+	_, err = db.Exec(sqlstr, dmc.MessageId, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	dm._exists = true
+	dmc._exists = true
 
-	OnDirectMessage_AfterInsert(dm)
+	OnDirectMessageCopy_AfterInsert(dmc)
 
 	return nil
 }
 
-// Update updates the DirectMessage in the database.
-func (dm *DirectMessage) Update(db XODB) error {
+// Update updates the DirectMessageCopy in the database.
+func (dmc *DirectMessageCopy) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !dm._exists {
+	if !dmc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if dm._deleted {
+	if dmc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.direct_message SET ` +
-		`ChatKey = ?, RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnum = ?, Text = ?, CreatedTime = ?, Seq = ?, PeerReceivedTime = ?, PeerSeenTime = ?, DeliviryStatusEnum = ?, ExtraPB = ?` +
+	const sqlstr = `UPDATE sun.direct_message_copy SET ` +
+		`MessageKey = ?, RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnumId = ?, Text = ?, CreatedSe = ?, PeerReceivedTime = ?, PeerSeenTime = ?, DeliviryStatusEnumId = ?` +
 		` WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
+	XOLog(sqlstr, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId, dmc.MessageId)
+	_, err = db.Exec(sqlstr, dmc.MessageKey, dmc.RoomKey, dmc.UserId, dmc.MessageFileId, dmc.MessageTypeEnumId, dmc.Text, dmc.CreatedSe, dmc.PeerReceivedTime, dmc.PeerSeenTime, dmc.DeliviryStatusEnumId, dmc.MessageId)
 
 	XOLogErr(err)
-	OnDirectMessage_AfterUpdate(dm)
+	OnDirectMessageCopy_AfterUpdate(dmc)
 
 	return err
 }
 
-// Save saves the DirectMessage to the database.
-func (dm *DirectMessage) Save(db XODB) error {
-	if dm.Exists() {
-		return dm.Update(db)
+// Save saves the DirectMessageCopy to the database.
+func (dmc *DirectMessageCopy) Save(db XODB) error {
+	if dmc.Exists() {
+		return dmc.Update(db)
 	}
 
-	return dm.Replace(db)
+	return dmc.Replace(db)
 }
 
-// Delete deletes the DirectMessage from the database.
-func (dm *DirectMessage) Delete(db XODB) error {
+// Delete deletes the DirectMessageCopy from the database.
+func (dmc *DirectMessageCopy) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !dm._exists {
+	if !dmc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if dm._deleted {
+	if dmc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.direct_message WHERE MessageId = ?`
+	const sqlstr = `DELETE FROM sun.direct_message_copy WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, dm.MessageId)
-	_, err = db.Exec(sqlstr, dm.MessageId)
+	XOLog(sqlstr, dmc.MessageId)
+	_, err = db.Exec(sqlstr, dmc.MessageId)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
 	// set deleted
-	dm._deleted = true
+	dmc._deleted = true
 
-	OnDirectMessage_AfterDelete(dm)
+	OnDirectMessageCopy_AfterDelete(dmc)
 
 	return nil
 }
@@ -175,18 +173,18 @@ func (dm *DirectMessage) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __DirectMessage_Deleter struct {
+type __DirectMessageCopy_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __DirectMessage_Updater struct {
+type __DirectMessageCopy_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __DirectMessage_Selector struct {
+type __DirectMessageCopy_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -195,19 +193,19 @@ type __DirectMessage_Selector struct {
 	offset    int
 }
 
-func NewDirectMessage_Deleter() *__DirectMessage_Deleter {
-	d := __DirectMessage_Deleter{whereSep: " AND "}
+func NewDirectMessageCopy_Deleter() *__DirectMessageCopy_Deleter {
+	d := __DirectMessageCopy_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewDirectMessage_Updater() *__DirectMessage_Updater {
-	u := __DirectMessage_Updater{whereSep: " AND "}
+func NewDirectMessageCopy_Updater() *__DirectMessageCopy_Updater {
+	u := __DirectMessageCopy_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewDirectMessage_Selector() *__DirectMessage_Selector {
-	u := __DirectMessage_Selector{whereSep: " AND ", selectCol: "*"}
+func NewDirectMessageCopy_Selector() *__DirectMessageCopy_Selector {
+	u := __DirectMessageCopy_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -215,12 +213,12 @@ func NewDirectMessage_Selector() *__DirectMessage_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__DirectMessage_Deleter) Or() *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) Or() *__DirectMessageCopy_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageId_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageId_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -233,7 +231,7 @@ func (u *__DirectMessage_Deleter) MessageId_In(ins []int) *__DirectMessage_Delet
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageId_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageId_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -246,7 +244,7 @@ func (u *__DirectMessage_Deleter) MessageId_Ins(ins ...int) *__DirectMessage_Del
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageId_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageId_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -259,7 +257,7 @@ func (u *__DirectMessage_Deleter) MessageId_NotIn(ins []int) *__DirectMessage_De
 	return u
 }
 
-func (d *__DirectMessage_Deleter) MessageId_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -270,7 +268,7 @@ func (d *__DirectMessage_Deleter) MessageId_Eq(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageId_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -281,7 +279,7 @@ func (d *__DirectMessage_Deleter) MessageId_NotEq(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageId_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -292,7 +290,7 @@ func (d *__DirectMessage_Deleter) MessageId_LT(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageId_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -303,7 +301,7 @@ func (d *__DirectMessage_Deleter) MessageId_LE(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageId_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -314,7 +312,7 @@ func (d *__DirectMessage_Deleter) MessageId_GT(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageId_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageId_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -325,7 +323,7 @@ func (d *__DirectMessage_Deleter) MessageId_GE(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (u *__DirectMessage_Deleter) UserId_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) UserId_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -338,7 +336,7 @@ func (u *__DirectMessage_Deleter) UserId_In(ins []int) *__DirectMessage_Deleter 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) UserId_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) UserId_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -351,7 +349,7 @@ func (u *__DirectMessage_Deleter) UserId_Ins(ins ...int) *__DirectMessage_Delete
 	return u
 }
 
-func (u *__DirectMessage_Deleter) UserId_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) UserId_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -364,7 +362,7 @@ func (u *__DirectMessage_Deleter) UserId_NotIn(ins []int) *__DirectMessage_Delet
 	return u
 }
 
-func (d *__DirectMessage_Deleter) UserId_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -375,7 +373,7 @@ func (d *__DirectMessage_Deleter) UserId_Eq(val int) *__DirectMessage_Deleter {
 	return d
 }
 
-func (d *__DirectMessage_Deleter) UserId_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -386,7 +384,7 @@ func (d *__DirectMessage_Deleter) UserId_NotEq(val int) *__DirectMessage_Deleter
 	return d
 }
 
-func (d *__DirectMessage_Deleter) UserId_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -397,7 +395,7 @@ func (d *__DirectMessage_Deleter) UserId_LT(val int) *__DirectMessage_Deleter {
 	return d
 }
 
-func (d *__DirectMessage_Deleter) UserId_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -408,7 +406,7 @@ func (d *__DirectMessage_Deleter) UserId_LE(val int) *__DirectMessage_Deleter {
 	return d
 }
 
-func (d *__DirectMessage_Deleter) UserId_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -419,7 +417,7 @@ func (d *__DirectMessage_Deleter) UserId_GT(val int) *__DirectMessage_Deleter {
 	return d
 }
 
-func (d *__DirectMessage_Deleter) UserId_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) UserId_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -430,7 +428,7 @@ func (d *__DirectMessage_Deleter) UserId_GE(val int) *__DirectMessage_Deleter {
 	return d
 }
 
-func (u *__DirectMessage_Deleter) MessageFileId_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageFileId_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -443,7 +441,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_In(ins []int) *__DirectMessage_D
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageFileId_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageFileId_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -456,7 +454,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_Ins(ins ...int) *__DirectMessage
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageFileId_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageFileId_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -469,7 +467,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_NotIn(ins []int) *__DirectMessag
 	return u
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -480,7 +478,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_Eq(val int) *__DirectMessage_Del
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -491,7 +489,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_NotEq(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -502,7 +500,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_LT(val int) *__DirectMessage_Del
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -513,7 +511,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_LE(val int) *__DirectMessage_Del
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -524,7 +522,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_GT(val int) *__DirectMessage_Del
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageFileId_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageFileId_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -535,322 +533,217 @@ func (d *__DirectMessage_Deleter) MessageFileId_GE(val int) *__DirectMessage_Del
 	return d
 }
 
-func (u *__DirectMessage_Deleter) MessageTypeEnum_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageTypeEnumId_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageTypeEnum_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageTypeEnumId_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) MessageTypeEnum_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageTypeEnumId_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) MessageTypeEnum_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageTypeEnumId_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Deleter) CreatedTime_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) CreatedSe_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) CreatedTime_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) CreatedSe_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) CreatedTime_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) CreatedSe_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedSe = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedSe != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedSe < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedSe <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedSe > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) CreatedTime_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) CreatedSe_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedSe >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Deleter) Seq_In(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) Seq_Ins(ins ...int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) Seq_NotIn(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Deleter) Seq_Eq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) Seq_NotEq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) Seq_LT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) Seq_LE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) Seq_GT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) Seq_GE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Deleter) PeerReceivedTime_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerReceivedTime_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -863,7 +756,7 @@ func (u *__DirectMessage_Deleter) PeerReceivedTime_In(ins []int) *__DirectMessag
 	return u
 }
 
-func (u *__DirectMessage_Deleter) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerReceivedTime_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -876,7 +769,7 @@ func (u *__DirectMessage_Deleter) PeerReceivedTime_Ins(ins ...int) *__DirectMess
 	return u
 }
 
-func (u *__DirectMessage_Deleter) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerReceivedTime_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -889,7 +782,7 @@ func (u *__DirectMessage_Deleter) PeerReceivedTime_NotIn(ins []int) *__DirectMes
 	return u
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -900,7 +793,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_Eq(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -911,7 +804,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_NotEq(val int) *__DirectMessa
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -922,7 +815,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_LT(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -933,7 +826,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_LE(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -944,7 +837,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_GT(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerReceivedTime_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerReceivedTime_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -955,7 +848,7 @@ func (d *__DirectMessage_Deleter) PeerReceivedTime_GE(val int) *__DirectMessage_
 	return d
 }
 
-func (u *__DirectMessage_Deleter) PeerSeenTime_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerSeenTime_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -968,7 +861,7 @@ func (u *__DirectMessage_Deleter) PeerSeenTime_In(ins []int) *__DirectMessage_De
 	return u
 }
 
-func (u *__DirectMessage_Deleter) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerSeenTime_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -981,7 +874,7 @@ func (u *__DirectMessage_Deleter) PeerSeenTime_Ins(ins ...int) *__DirectMessage_
 	return u
 }
 
-func (u *__DirectMessage_Deleter) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) PeerSeenTime_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -994,7 +887,7 @@ func (u *__DirectMessage_Deleter) PeerSeenTime_NotIn(ins []int) *__DirectMessage
 	return u
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1005,7 +898,7 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_Eq(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1016,7 +909,7 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_NotEq(val int) *__DirectMessage_D
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1027,7 +920,7 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_LT(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1038,7 +931,7 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_LE(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1049,7 +942,7 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_GT(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (d *__DirectMessage_Deleter) PeerSeenTime_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) PeerSeenTime_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1060,118 +953,118 @@ func (d *__DirectMessage_Deleter) PeerSeenTime_GE(val int) *__DirectMessage_Dele
 	return d
 }
 
-func (u *__DirectMessage_Deleter) DeliviryStatusEnum_In(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_In(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) DeliviryStatusEnum_Ins(ins ...int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_Ins(ins ...int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) DeliviryStatusEnum_NotIn(ins []int) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_NotIn(ins []int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_Eq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_Eq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_NotEq(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_NotEq(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_LT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_LT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_LE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_LE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_GT(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_GT(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) DeliviryStatusEnum_GE(val int) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) DeliviryStatusEnumId_GE(val int) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__DirectMessage_Updater) Or() *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) Or() *__DirectMessageCopy_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageId_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageId_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1184,7 +1077,7 @@ func (u *__DirectMessage_Updater) MessageId_In(ins []int) *__DirectMessage_Updat
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageId_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageId_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1197,7 +1090,7 @@ func (u *__DirectMessage_Updater) MessageId_Ins(ins ...int) *__DirectMessage_Upd
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageId_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageId_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1210,7 +1103,7 @@ func (u *__DirectMessage_Updater) MessageId_NotIn(ins []int) *__DirectMessage_Up
 	return u
 }
 
-func (d *__DirectMessage_Updater) MessageId_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1221,7 +1114,7 @@ func (d *__DirectMessage_Updater) MessageId_Eq(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageId_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1232,7 +1125,7 @@ func (d *__DirectMessage_Updater) MessageId_NotEq(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageId_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1243,7 +1136,7 @@ func (d *__DirectMessage_Updater) MessageId_LT(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageId_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1254,7 +1147,7 @@ func (d *__DirectMessage_Updater) MessageId_LE(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageId_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1265,7 +1158,7 @@ func (d *__DirectMessage_Updater) MessageId_GT(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageId_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageId_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1276,7 +1169,7 @@ func (d *__DirectMessage_Updater) MessageId_GE(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (u *__DirectMessage_Updater) UserId_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) UserId_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1289,7 +1182,7 @@ func (u *__DirectMessage_Updater) UserId_In(ins []int) *__DirectMessage_Updater 
 	return u
 }
 
-func (u *__DirectMessage_Updater) UserId_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) UserId_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1302,7 +1195,7 @@ func (u *__DirectMessage_Updater) UserId_Ins(ins ...int) *__DirectMessage_Update
 	return u
 }
 
-func (u *__DirectMessage_Updater) UserId_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) UserId_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1315,7 +1208,7 @@ func (u *__DirectMessage_Updater) UserId_NotIn(ins []int) *__DirectMessage_Updat
 	return u
 }
 
-func (d *__DirectMessage_Updater) UserId_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1326,7 +1219,7 @@ func (d *__DirectMessage_Updater) UserId_Eq(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (d *__DirectMessage_Updater) UserId_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1337,7 +1230,7 @@ func (d *__DirectMessage_Updater) UserId_NotEq(val int) *__DirectMessage_Updater
 	return d
 }
 
-func (d *__DirectMessage_Updater) UserId_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1348,7 +1241,7 @@ func (d *__DirectMessage_Updater) UserId_LT(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (d *__DirectMessage_Updater) UserId_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1359,7 +1252,7 @@ func (d *__DirectMessage_Updater) UserId_LE(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (d *__DirectMessage_Updater) UserId_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1370,7 +1263,7 @@ func (d *__DirectMessage_Updater) UserId_GT(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (d *__DirectMessage_Updater) UserId_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) UserId_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1381,7 +1274,7 @@ func (d *__DirectMessage_Updater) UserId_GE(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (u *__DirectMessage_Updater) MessageFileId_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageFileId_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1394,7 +1287,7 @@ func (u *__DirectMessage_Updater) MessageFileId_In(ins []int) *__DirectMessage_U
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageFileId_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageFileId_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1407,7 +1300,7 @@ func (u *__DirectMessage_Updater) MessageFileId_Ins(ins ...int) *__DirectMessage
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageFileId_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageFileId_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1420,7 +1313,7 @@ func (u *__DirectMessage_Updater) MessageFileId_NotIn(ins []int) *__DirectMessag
 	return u
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1431,7 +1324,7 @@ func (d *__DirectMessage_Updater) MessageFileId_Eq(val int) *__DirectMessage_Upd
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1442,7 +1335,7 @@ func (d *__DirectMessage_Updater) MessageFileId_NotEq(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1453,7 +1346,7 @@ func (d *__DirectMessage_Updater) MessageFileId_LT(val int) *__DirectMessage_Upd
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1464,7 +1357,7 @@ func (d *__DirectMessage_Updater) MessageFileId_LE(val int) *__DirectMessage_Upd
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1475,7 +1368,7 @@ func (d *__DirectMessage_Updater) MessageFileId_GT(val int) *__DirectMessage_Upd
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageFileId_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageFileId_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1486,322 +1379,217 @@ func (d *__DirectMessage_Updater) MessageFileId_GE(val int) *__DirectMessage_Upd
 	return d
 }
 
-func (u *__DirectMessage_Updater) MessageTypeEnum_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageTypeEnumId_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageTypeEnum_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageTypeEnumId_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageTypeEnum_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageTypeEnumId_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) MessageTypeEnum_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageTypeEnumId_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Updater) CreatedTime_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) CreatedSe_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) CreatedTime_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) CreatedSe_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) CreatedTime_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) CreatedSe_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedSe = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedSe != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedSe < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedSe <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedSe > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) CreatedTime_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) CreatedSe_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedSe >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Updater) Seq_In(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) Seq_Ins(ins ...int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) Seq_NotIn(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Updater) Seq_Eq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) Seq_NotEq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) Seq_LT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) Seq_LE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) Seq_GT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) Seq_GE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Updater) PeerReceivedTime_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerReceivedTime_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1814,7 +1602,7 @@ func (u *__DirectMessage_Updater) PeerReceivedTime_In(ins []int) *__DirectMessag
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerReceivedTime_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1827,7 +1615,7 @@ func (u *__DirectMessage_Updater) PeerReceivedTime_Ins(ins ...int) *__DirectMess
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerReceivedTime_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1840,7 +1628,7 @@ func (u *__DirectMessage_Updater) PeerReceivedTime_NotIn(ins []int) *__DirectMes
 	return u
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1851,7 +1639,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_Eq(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1862,7 +1650,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_NotEq(val int) *__DirectMessa
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1873,7 +1661,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_LT(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1884,7 +1672,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_LE(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1895,7 +1683,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_GT(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerReceivedTime_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerReceivedTime_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1906,7 +1694,7 @@ func (d *__DirectMessage_Updater) PeerReceivedTime_GE(val int) *__DirectMessage_
 	return d
 }
 
-func (u *__DirectMessage_Updater) PeerSeenTime_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerSeenTime_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1919,7 +1707,7 @@ func (u *__DirectMessage_Updater) PeerSeenTime_In(ins []int) *__DirectMessage_Up
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerSeenTime_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1932,7 +1720,7 @@ func (u *__DirectMessage_Updater) PeerSeenTime_Ins(ins ...int) *__DirectMessage_
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerSeenTime_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1945,7 +1733,7 @@ func (u *__DirectMessage_Updater) PeerSeenTime_NotIn(ins []int) *__DirectMessage
 	return u
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1956,7 +1744,7 @@ func (d *__DirectMessage_Updater) PeerSeenTime_Eq(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1967,7 +1755,7 @@ func (d *__DirectMessage_Updater) PeerSeenTime_NotEq(val int) *__DirectMessage_U
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1978,7 +1766,7 @@ func (d *__DirectMessage_Updater) PeerSeenTime_LT(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1989,7 +1777,7 @@ func (d *__DirectMessage_Updater) PeerSeenTime_LE(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2000,7 +1788,7 @@ func (d *__DirectMessage_Updater) PeerSeenTime_GT(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (d *__DirectMessage_Updater) PeerSeenTime_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) PeerSeenTime_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2011,118 +1799,118 @@ func (d *__DirectMessage_Updater) PeerSeenTime_GE(val int) *__DirectMessage_Upda
 	return d
 }
 
-func (u *__DirectMessage_Updater) DeliviryStatusEnum_In(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) DeliviryStatusEnumId_In(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) DeliviryStatusEnum_Ins(ins ...int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) DeliviryStatusEnumId_Ins(ins ...int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) DeliviryStatusEnum_NotIn(ins []int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) DeliviryStatusEnumId_NotIn(ins []int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_Eq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_Eq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_NotEq(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_NotEq(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_LT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_LT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_LE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_LE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_GT(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_GT(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) DeliviryStatusEnum_GE(val int) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) DeliviryStatusEnumId_GE(val int) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__DirectMessage_Selector) Or() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Or() *__DirectMessageCopy_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageId_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageId_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2135,7 +1923,7 @@ func (u *__DirectMessage_Selector) MessageId_In(ins []int) *__DirectMessage_Sele
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageId_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageId_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2148,7 +1936,7 @@ func (u *__DirectMessage_Selector) MessageId_Ins(ins ...int) *__DirectMessage_Se
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageId_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageId_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2161,7 +1949,7 @@ func (u *__DirectMessage_Selector) MessageId_NotIn(ins []int) *__DirectMessage_S
 	return u
 }
 
-func (d *__DirectMessage_Selector) MessageId_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2172,7 +1960,7 @@ func (d *__DirectMessage_Selector) MessageId_Eq(val int) *__DirectMessage_Select
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageId_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2183,7 +1971,7 @@ func (d *__DirectMessage_Selector) MessageId_NotEq(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageId_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2194,7 +1982,7 @@ func (d *__DirectMessage_Selector) MessageId_LT(val int) *__DirectMessage_Select
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageId_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2205,7 +1993,7 @@ func (d *__DirectMessage_Selector) MessageId_LE(val int) *__DirectMessage_Select
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageId_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2216,7 +2004,7 @@ func (d *__DirectMessage_Selector) MessageId_GT(val int) *__DirectMessage_Select
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageId_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageId_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2227,7 +2015,7 @@ func (d *__DirectMessage_Selector) MessageId_GE(val int) *__DirectMessage_Select
 	return d
 }
 
-func (u *__DirectMessage_Selector) UserId_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) UserId_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2240,7 +2028,7 @@ func (u *__DirectMessage_Selector) UserId_In(ins []int) *__DirectMessage_Selecto
 	return u
 }
 
-func (u *__DirectMessage_Selector) UserId_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) UserId_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2253,7 +2041,7 @@ func (u *__DirectMessage_Selector) UserId_Ins(ins ...int) *__DirectMessage_Selec
 	return u
 }
 
-func (u *__DirectMessage_Selector) UserId_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) UserId_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2266,7 +2054,7 @@ func (u *__DirectMessage_Selector) UserId_NotIn(ins []int) *__DirectMessage_Sele
 	return u
 }
 
-func (d *__DirectMessage_Selector) UserId_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2277,7 +2065,7 @@ func (d *__DirectMessage_Selector) UserId_Eq(val int) *__DirectMessage_Selector 
 	return d
 }
 
-func (d *__DirectMessage_Selector) UserId_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2288,7 +2076,7 @@ func (d *__DirectMessage_Selector) UserId_NotEq(val int) *__DirectMessage_Select
 	return d
 }
 
-func (d *__DirectMessage_Selector) UserId_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2299,7 +2087,7 @@ func (d *__DirectMessage_Selector) UserId_LT(val int) *__DirectMessage_Selector 
 	return d
 }
 
-func (d *__DirectMessage_Selector) UserId_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2310,7 +2098,7 @@ func (d *__DirectMessage_Selector) UserId_LE(val int) *__DirectMessage_Selector 
 	return d
 }
 
-func (d *__DirectMessage_Selector) UserId_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2321,7 +2109,7 @@ func (d *__DirectMessage_Selector) UserId_GT(val int) *__DirectMessage_Selector 
 	return d
 }
 
-func (d *__DirectMessage_Selector) UserId_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) UserId_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2332,7 +2120,7 @@ func (d *__DirectMessage_Selector) UserId_GE(val int) *__DirectMessage_Selector 
 	return d
 }
 
-func (u *__DirectMessage_Selector) MessageFileId_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageFileId_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2345,7 +2133,7 @@ func (u *__DirectMessage_Selector) MessageFileId_In(ins []int) *__DirectMessage_
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageFileId_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageFileId_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2358,7 +2146,7 @@ func (u *__DirectMessage_Selector) MessageFileId_Ins(ins ...int) *__DirectMessag
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageFileId_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageFileId_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2371,7 +2159,7 @@ func (u *__DirectMessage_Selector) MessageFileId_NotIn(ins []int) *__DirectMessa
 	return u
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2382,7 +2170,7 @@ func (d *__DirectMessage_Selector) MessageFileId_Eq(val int) *__DirectMessage_Se
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2393,7 +2181,7 @@ func (d *__DirectMessage_Selector) MessageFileId_NotEq(val int) *__DirectMessage
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2404,7 +2192,7 @@ func (d *__DirectMessage_Selector) MessageFileId_LT(val int) *__DirectMessage_Se
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2415,7 +2203,7 @@ func (d *__DirectMessage_Selector) MessageFileId_LE(val int) *__DirectMessage_Se
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2426,7 +2214,7 @@ func (d *__DirectMessage_Selector) MessageFileId_GT(val int) *__DirectMessage_Se
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageFileId_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageFileId_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2437,322 +2225,217 @@ func (d *__DirectMessage_Selector) MessageFileId_GE(val int) *__DirectMessage_Se
 	return d
 }
 
-func (u *__DirectMessage_Selector) MessageTypeEnum_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageTypeEnumId_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageTypeEnum_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageTypeEnumId_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) MessageTypeEnum_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageTypeEnumId_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) MessageTypeEnum_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageTypeEnumId_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Selector) CreatedTime_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) CreatedSe_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) CreatedTime_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) CreatedSe_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) CreatedTime_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) CreatedSe_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedSe = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedSe != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedSe < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedSe <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedSe > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) CreatedTime_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) CreatedSe_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedSe >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Selector) Seq_In(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) Seq_Ins(ins ...int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) Seq_NotIn(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Selector) Seq_Eq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) Seq_NotEq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) Seq_LT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) Seq_LE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) Seq_GT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) Seq_GE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Selector) PeerReceivedTime_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerReceivedTime_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2765,7 +2448,7 @@ func (u *__DirectMessage_Selector) PeerReceivedTime_In(ins []int) *__DirectMessa
 	return u
 }
 
-func (u *__DirectMessage_Selector) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerReceivedTime_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2778,7 +2461,7 @@ func (u *__DirectMessage_Selector) PeerReceivedTime_Ins(ins ...int) *__DirectMes
 	return u
 }
 
-func (u *__DirectMessage_Selector) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerReceivedTime_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2791,7 +2474,7 @@ func (u *__DirectMessage_Selector) PeerReceivedTime_NotIn(ins []int) *__DirectMe
 	return u
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2802,7 +2485,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_Eq(val int) *__DirectMessage
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2813,7 +2496,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_NotEq(val int) *__DirectMess
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2824,7 +2507,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_LT(val int) *__DirectMessage
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2835,7 +2518,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_LE(val int) *__DirectMessage
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2846,7 +2529,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_GT(val int) *__DirectMessage
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerReceivedTime_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerReceivedTime_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2857,7 +2540,7 @@ func (d *__DirectMessage_Selector) PeerReceivedTime_GE(val int) *__DirectMessage
 	return d
 }
 
-func (u *__DirectMessage_Selector) PeerSeenTime_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerSeenTime_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2870,7 +2553,7 @@ func (u *__DirectMessage_Selector) PeerSeenTime_In(ins []int) *__DirectMessage_S
 	return u
 }
 
-func (u *__DirectMessage_Selector) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerSeenTime_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2883,7 +2566,7 @@ func (u *__DirectMessage_Selector) PeerSeenTime_Ins(ins ...int) *__DirectMessage
 	return u
 }
 
-func (u *__DirectMessage_Selector) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) PeerSeenTime_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2896,7 +2579,7 @@ func (u *__DirectMessage_Selector) PeerSeenTime_NotIn(ins []int) *__DirectMessag
 	return u
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2907,7 +2590,7 @@ func (d *__DirectMessage_Selector) PeerSeenTime_Eq(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2918,7 +2601,7 @@ func (d *__DirectMessage_Selector) PeerSeenTime_NotEq(val int) *__DirectMessage_
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2929,7 +2612,7 @@ func (d *__DirectMessage_Selector) PeerSeenTime_LT(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2940,7 +2623,7 @@ func (d *__DirectMessage_Selector) PeerSeenTime_LE(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2951,7 +2634,7 @@ func (d *__DirectMessage_Selector) PeerSeenTime_GT(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (d *__DirectMessage_Selector) PeerSeenTime_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) PeerSeenTime_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2962,106 +2645,106 @@ func (d *__DirectMessage_Selector) PeerSeenTime_GE(val int) *__DirectMessage_Sel
 	return d
 }
 
-func (u *__DirectMessage_Selector) DeliviryStatusEnum_In(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) DeliviryStatusEnumId_In(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) DeliviryStatusEnum_Ins(ins ...int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) DeliviryStatusEnumId_Ins(ins ...int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) DeliviryStatusEnum_NotIn(ins []int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) DeliviryStatusEnumId_NotIn(ins []int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_Eq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_Eq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnumId = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_NotEq(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_NotEq(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnumId != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_LT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_LT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnumId < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_LE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_LE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnumId <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_GT(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_GT(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnumId > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) DeliviryStatusEnum_GE(val int) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) DeliviryStatusEnumId_GE(val int) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnumId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3071,67 +2754,67 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_GE(val int) *__DirectMessa
 
 ////////ints
 
-func (u *__DirectMessage_Deleter) ChatKey_In(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageKey_In(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Deleter) ChatKey_NotIn(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageKey_NotIn(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Deleter) ChatKey_Like(val string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) MessageKey_Like(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " MessageKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Deleter) ChatKey_Eq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageKey_Eq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " MessageKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Deleter) ChatKey_NotEq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) MessageKey_NotEq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " MessageKey != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Deleter) RoomKey_In(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) RoomKey_In(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3144,7 +2827,7 @@ func (u *__DirectMessage_Deleter) RoomKey_In(ins []string) *__DirectMessage_Dele
 	return u
 }
 
-func (u *__DirectMessage_Deleter) RoomKey_NotIn(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) RoomKey_NotIn(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3158,7 +2841,7 @@ func (u *__DirectMessage_Deleter) RoomKey_NotIn(ins []string) *__DirectMessage_D
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Deleter) RoomKey_Like(val string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) RoomKey_Like(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3169,7 +2852,7 @@ func (u *__DirectMessage_Deleter) RoomKey_Like(val string) *__DirectMessage_Dele
 	return u
 }
 
-func (d *__DirectMessage_Deleter) RoomKey_Eq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) RoomKey_Eq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3180,7 +2863,7 @@ func (d *__DirectMessage_Deleter) RoomKey_Eq(val string) *__DirectMessage_Delete
 	return d
 }
 
-func (d *__DirectMessage_Deleter) RoomKey_NotEq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) RoomKey_NotEq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3191,7 +2874,7 @@ func (d *__DirectMessage_Deleter) RoomKey_NotEq(val string) *__DirectMessage_Del
 	return d
 }
 
-func (u *__DirectMessage_Deleter) Text_In(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) Text_In(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3204,7 +2887,7 @@ func (u *__DirectMessage_Deleter) Text_In(ins []string) *__DirectMessage_Deleter
 	return u
 }
 
-func (u *__DirectMessage_Deleter) Text_NotIn(ins []string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) Text_NotIn(ins []string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3218,7 +2901,7 @@ func (u *__DirectMessage_Deleter) Text_NotIn(ins []string) *__DirectMessage_Dele
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Deleter) Text_Like(val string) *__DirectMessage_Deleter {
+func (u *__DirectMessageCopy_Deleter) Text_Like(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3229,7 +2912,7 @@ func (u *__DirectMessage_Deleter) Text_Like(val string) *__DirectMessage_Deleter
 	return u
 }
 
-func (d *__DirectMessage_Deleter) Text_Eq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) Text_Eq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3240,7 +2923,7 @@ func (d *__DirectMessage_Deleter) Text_Eq(val string) *__DirectMessage_Deleter {
 	return d
 }
 
-func (d *__DirectMessage_Deleter) Text_NotEq(val string) *__DirectMessage_Deleter {
+func (d *__DirectMessageCopy_Deleter) Text_NotEq(val string) *__DirectMessageCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3253,67 +2936,67 @@ func (d *__DirectMessage_Deleter) Text_NotEq(val string) *__DirectMessage_Delete
 
 ////////ints
 
-func (u *__DirectMessage_Updater) ChatKey_In(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageKey_In(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Updater) ChatKey_NotIn(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageKey_NotIn(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Updater) ChatKey_Like(val string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageKey_Like(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " MessageKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Updater) ChatKey_Eq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageKey_Eq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " MessageKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Updater) ChatKey_NotEq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) MessageKey_NotEq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " MessageKey != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Updater) RoomKey_In(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) RoomKey_In(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3326,7 +3009,7 @@ func (u *__DirectMessage_Updater) RoomKey_In(ins []string) *__DirectMessage_Upda
 	return u
 }
 
-func (u *__DirectMessage_Updater) RoomKey_NotIn(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) RoomKey_NotIn(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3340,7 +3023,7 @@ func (u *__DirectMessage_Updater) RoomKey_NotIn(ins []string) *__DirectMessage_U
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Updater) RoomKey_Like(val string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) RoomKey_Like(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3351,7 +3034,7 @@ func (u *__DirectMessage_Updater) RoomKey_Like(val string) *__DirectMessage_Upda
 	return u
 }
 
-func (d *__DirectMessage_Updater) RoomKey_Eq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) RoomKey_Eq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3362,7 +3045,7 @@ func (d *__DirectMessage_Updater) RoomKey_Eq(val string) *__DirectMessage_Update
 	return d
 }
 
-func (d *__DirectMessage_Updater) RoomKey_NotEq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) RoomKey_NotEq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3373,7 +3056,7 @@ func (d *__DirectMessage_Updater) RoomKey_NotEq(val string) *__DirectMessage_Upd
 	return d
 }
 
-func (u *__DirectMessage_Updater) Text_In(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) Text_In(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3386,7 +3069,7 @@ func (u *__DirectMessage_Updater) Text_In(ins []string) *__DirectMessage_Updater
 	return u
 }
 
-func (u *__DirectMessage_Updater) Text_NotIn(ins []string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) Text_NotIn(ins []string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3400,7 +3083,7 @@ func (u *__DirectMessage_Updater) Text_NotIn(ins []string) *__DirectMessage_Upda
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Updater) Text_Like(val string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) Text_Like(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3411,7 +3094,7 @@ func (u *__DirectMessage_Updater) Text_Like(val string) *__DirectMessage_Updater
 	return u
 }
 
-func (d *__DirectMessage_Updater) Text_Eq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) Text_Eq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3422,7 +3105,7 @@ func (d *__DirectMessage_Updater) Text_Eq(val string) *__DirectMessage_Updater {
 	return d
 }
 
-func (d *__DirectMessage_Updater) Text_NotEq(val string) *__DirectMessage_Updater {
+func (d *__DirectMessageCopy_Updater) Text_NotEq(val string) *__DirectMessageCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3435,67 +3118,67 @@ func (d *__DirectMessage_Updater) Text_NotEq(val string) *__DirectMessage_Update
 
 ////////ints
 
-func (u *__DirectMessage_Selector) ChatKey_In(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageKey_In(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__DirectMessage_Selector) ChatKey_NotIn(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageKey_NotIn(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Selector) ChatKey_Like(val string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) MessageKey_Like(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " MessageKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__DirectMessage_Selector) ChatKey_Eq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageKey_Eq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " MessageKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__DirectMessage_Selector) ChatKey_NotEq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) MessageKey_NotEq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " MessageKey != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__DirectMessage_Selector) RoomKey_In(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) RoomKey_In(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3508,7 +3191,7 @@ func (u *__DirectMessage_Selector) RoomKey_In(ins []string) *__DirectMessage_Sel
 	return u
 }
 
-func (u *__DirectMessage_Selector) RoomKey_NotIn(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) RoomKey_NotIn(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3522,7 +3205,7 @@ func (u *__DirectMessage_Selector) RoomKey_NotIn(ins []string) *__DirectMessage_
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Selector) RoomKey_Like(val string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) RoomKey_Like(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3533,7 +3216,7 @@ func (u *__DirectMessage_Selector) RoomKey_Like(val string) *__DirectMessage_Sel
 	return u
 }
 
-func (d *__DirectMessage_Selector) RoomKey_Eq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) RoomKey_Eq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3544,7 +3227,7 @@ func (d *__DirectMessage_Selector) RoomKey_Eq(val string) *__DirectMessage_Selec
 	return d
 }
 
-func (d *__DirectMessage_Selector) RoomKey_NotEq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) RoomKey_NotEq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3555,7 +3238,7 @@ func (d *__DirectMessage_Selector) RoomKey_NotEq(val string) *__DirectMessage_Se
 	return d
 }
 
-func (u *__DirectMessage_Selector) Text_In(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Text_In(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3568,7 +3251,7 @@ func (u *__DirectMessage_Selector) Text_In(ins []string) *__DirectMessage_Select
 	return u
 }
 
-func (u *__DirectMessage_Selector) Text_NotIn(ins []string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Text_NotIn(ins []string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3582,7 +3265,7 @@ func (u *__DirectMessage_Selector) Text_NotIn(ins []string) *__DirectMessage_Sel
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__DirectMessage_Selector) Text_Like(val string) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Text_Like(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3593,7 +3276,7 @@ func (u *__DirectMessage_Selector) Text_Like(val string) *__DirectMessage_Select
 	return u
 }
 
-func (d *__DirectMessage_Selector) Text_Eq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) Text_Eq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3604,7 +3287,7 @@ func (d *__DirectMessage_Selector) Text_Eq(val string) *__DirectMessage_Selector
 	return d
 }
 
-func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selector {
+func (d *__DirectMessageCopy_Selector) Text_NotEq(val string) *__DirectMessageCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3621,20 +3304,12 @@ func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selec
 
 //ints
 
-//string
-func (u *__DirectMessage_Updater) ChatKey(newVal string) *__DirectMessage_Updater {
-	u.updates[" ChatKey = ? "] = newVal
-	return u
-}
-
-//ints
-
-func (u *__DirectMessage_Updater) MessageId(newVal int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageId(newVal int) *__DirectMessageCopy_Updater {
 	u.updates[" MessageId = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageId_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageId_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
 		u.updates[" MessageId = MessageId+? "] = count
 	}
@@ -3651,19 +3326,27 @@ func (u *__DirectMessage_Updater) MessageId_Increment(count int) *__DirectMessag
 //ints
 
 //string
-func (u *__DirectMessage_Updater) RoomKey(newVal string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageKey(newVal string) *__DirectMessageCopy_Updater {
+	u.updates[" MessageKey = ? "] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__DirectMessageCopy_Updater) RoomKey(newVal string) *__DirectMessageCopy_Updater {
 	u.updates[" RoomKey = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__DirectMessage_Updater) UserId(newVal int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) UserId(newVal int) *__DirectMessageCopy_Updater {
 	u.updates[" UserId = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) UserId_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) UserId_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
 		u.updates[" UserId = UserId+? "] = count
 	}
@@ -3679,12 +3362,12 @@ func (u *__DirectMessage_Updater) UserId_Increment(count int) *__DirectMessage_U
 
 //ints
 
-func (u *__DirectMessage_Updater) MessageFileId(newVal int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageFileId(newVal int) *__DirectMessageCopy_Updater {
 	u.updates[" MessageFileId = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageFileId_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageFileId_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
 		u.updates[" MessageFileId = MessageFileId+? "] = count
 	}
@@ -3700,18 +3383,18 @@ func (u *__DirectMessage_Updater) MessageFileId_Increment(count int) *__DirectMe
 
 //ints
 
-func (u *__DirectMessage_Updater) MessageTypeEnum(newVal int) *__DirectMessage_Updater {
-	u.updates[" MessageTypeEnum = ? "] = newVal
+func (u *__DirectMessageCopy_Updater) MessageTypeEnumId(newVal int) *__DirectMessageCopy_Updater {
+	u.updates[" MessageTypeEnumId = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) MessageTypeEnum_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) MessageTypeEnumId_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum+? "] = count
+		u.updates[" MessageTypeEnumId = MessageTypeEnumId+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum-? "] = -(count) //make it positive
+		u.updates[" MessageTypeEnumId = MessageTypeEnumId-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -3722,25 +3405,25 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_Increment(count int) *__Direct
 //ints
 
 //string
-func (u *__DirectMessage_Updater) Text(newVal string) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) Text(newVal string) *__DirectMessageCopy_Updater {
 	u.updates[" Text = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__DirectMessage_Updater) CreatedTime(newVal int) *__DirectMessage_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+func (u *__DirectMessageCopy_Updater) CreatedSe(newVal int) *__DirectMessageCopy_Updater {
+	u.updates[" CreatedSe = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) CreatedTime_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) CreatedSe_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		u.updates[" CreatedSe = CreatedSe+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		u.updates[" CreatedSe = CreatedSe-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -3750,33 +3433,12 @@ func (u *__DirectMessage_Updater) CreatedTime_Increment(count int) *__DirectMess
 
 //ints
 
-func (u *__DirectMessage_Updater) Seq(newVal int) *__DirectMessage_Updater {
-	u.updates[" Seq = ? "] = newVal
-	return u
-}
-
-func (u *__DirectMessage_Updater) Seq_Increment(count int) *__DirectMessage_Updater {
-	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__DirectMessage_Updater) PeerReceivedTime(newVal int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerReceivedTime(newVal int) *__DirectMessageCopy_Updater {
 	u.updates[" PeerReceivedTime = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerReceivedTime_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerReceivedTime_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
 		u.updates[" PeerReceivedTime = PeerReceivedTime+? "] = count
 	}
@@ -3792,12 +3454,12 @@ func (u *__DirectMessage_Updater) PeerReceivedTime_Increment(count int) *__Direc
 
 //ints
 
-func (u *__DirectMessage_Updater) PeerSeenTime(newVal int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerSeenTime(newVal int) *__DirectMessageCopy_Updater {
 	u.updates[" PeerSeenTime = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) PeerSeenTime_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) PeerSeenTime_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
 		u.updates[" PeerSeenTime = PeerSeenTime+? "] = count
 	}
@@ -3813,26 +3475,22 @@ func (u *__DirectMessage_Updater) PeerSeenTime_Increment(count int) *__DirectMes
 
 //ints
 
-func (u *__DirectMessage_Updater) DeliviryStatusEnum(newVal int) *__DirectMessage_Updater {
-	u.updates[" DeliviryStatusEnum = ? "] = newVal
+func (u *__DirectMessageCopy_Updater) DeliviryStatusEnumId(newVal int) *__DirectMessageCopy_Updater {
+	u.updates[" DeliviryStatusEnumId = ? "] = newVal
 	return u
 }
 
-func (u *__DirectMessage_Updater) DeliviryStatusEnum_Increment(count int) *__DirectMessage_Updater {
+func (u *__DirectMessageCopy_Updater) DeliviryStatusEnumId_Increment(count int) *__DirectMessageCopy_Updater {
 	if count > 0 {
-		u.updates[" DeliviryStatusEnum = DeliviryStatusEnum+? "] = count
+		u.updates[" DeliviryStatusEnumId = DeliviryStatusEnumId+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" DeliviryStatusEnum = DeliviryStatusEnum-? "] = -(count) //make it positive
+		u.updates[" DeliviryStatusEnumId = DeliviryStatusEnumId-? "] = -(count) //make it positive
 	}
 
 	return u
 }
-
-//string
-
-//ints
 
 //string
 
@@ -3841,216 +3499,186 @@ func (u *__DirectMessage_Updater) DeliviryStatusEnum_Increment(count int) *__Dir
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__DirectMessage_Selector) OrderBy_ChatKey_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY ChatKey DESC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_ChatKey_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY ChatKey ASC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) Select_ChatKey() *__DirectMessage_Selector {
-	u.selectCol = "ChatKey"
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_MessageId_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageId_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY MessageId DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_MessageId_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageId_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY MessageId ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_MessageId() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_MessageId() *__DirectMessageCopy_Selector {
 	u.selectCol = "MessageId"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_RoomKey_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageKey_Desc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY MessageKey DESC "
+	return u
+}
+
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageKey_Asc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY MessageKey ASC "
+	return u
+}
+
+func (u *__DirectMessageCopy_Selector) Select_MessageKey() *__DirectMessageCopy_Selector {
+	u.selectCol = "MessageKey"
+	return u
+}
+
+func (u *__DirectMessageCopy_Selector) OrderBy_RoomKey_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY RoomKey DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_RoomKey_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_RoomKey_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY RoomKey ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_RoomKey() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_RoomKey() *__DirectMessageCopy_Selector {
 	u.selectCol = "RoomKey"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_UserId_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_UserId_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_UserId_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_UserId_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_UserId() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_UserId() *__DirectMessageCopy_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_MessageFileId_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageFileId_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY MessageFileId DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_MessageFileId_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageFileId_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY MessageFileId ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_MessageFileId() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_MessageFileId() *__DirectMessageCopy_Selector {
 	u.selectCol = "MessageFileId"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_MessageTypeEnum_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY MessageTypeEnum DESC "
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageTypeEnumId_Desc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY MessageTypeEnumId DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_MessageTypeEnum_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY MessageTypeEnum ASC "
+func (u *__DirectMessageCopy_Selector) OrderBy_MessageTypeEnumId_Asc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY MessageTypeEnumId ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_MessageTypeEnum() *__DirectMessage_Selector {
-	u.selectCol = "MessageTypeEnum"
+func (u *__DirectMessageCopy_Selector) Select_MessageTypeEnumId() *__DirectMessageCopy_Selector {
+	u.selectCol = "MessageTypeEnumId"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_Text_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_Text_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY Text DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_Text_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_Text_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY Text ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_Text() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_Text() *__DirectMessageCopy_Selector {
 	u.selectCol = "Text"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_CreatedTime_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY CreatedTime DESC "
+func (u *__DirectMessageCopy_Selector) OrderBy_CreatedSe_Desc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY CreatedSe DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_CreatedTime_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY CreatedTime ASC "
+func (u *__DirectMessageCopy_Selector) OrderBy_CreatedSe_Asc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY CreatedSe ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_CreatedTime() *__DirectMessage_Selector {
-	u.selectCol = "CreatedTime"
+func (u *__DirectMessageCopy_Selector) Select_CreatedSe() *__DirectMessageCopy_Selector {
+	u.selectCol = "CreatedSe"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_Seq_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_Seq_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) Select_Seq() *__DirectMessage_Selector {
-	u.selectCol = "Seq"
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_PeerReceivedTime_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_PeerReceivedTime_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY PeerReceivedTime DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_PeerReceivedTime_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_PeerReceivedTime_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY PeerReceivedTime ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_PeerReceivedTime() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_PeerReceivedTime() *__DirectMessageCopy_Selector {
 	u.selectCol = "PeerReceivedTime"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_PeerSeenTime_Desc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_PeerSeenTime_Desc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY PeerSeenTime DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_PeerSeenTime_Asc() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) OrderBy_PeerSeenTime_Asc() *__DirectMessageCopy_Selector {
 	u.orderBy = " ORDER BY PeerSeenTime ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_PeerSeenTime() *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Select_PeerSeenTime() *__DirectMessageCopy_Selector {
 	u.selectCol = "PeerSeenTime"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_DeliviryStatusEnum_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY DeliviryStatusEnum DESC "
+func (u *__DirectMessageCopy_Selector) OrderBy_DeliviryStatusEnumId_Desc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY DeliviryStatusEnumId DESC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_DeliviryStatusEnum_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY DeliviryStatusEnum ASC "
+func (u *__DirectMessageCopy_Selector) OrderBy_DeliviryStatusEnumId_Asc() *__DirectMessageCopy_Selector {
+	u.orderBy = " ORDER BY DeliviryStatusEnumId ASC "
 	return u
 }
 
-func (u *__DirectMessage_Selector) Select_DeliviryStatusEnum() *__DirectMessage_Selector {
-	u.selectCol = "DeliviryStatusEnum"
+func (u *__DirectMessageCopy_Selector) Select_DeliviryStatusEnumId() *__DirectMessageCopy_Selector {
+	u.selectCol = "DeliviryStatusEnumId"
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_ExtraPB_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY ExtraPB DESC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_ExtraPB_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY ExtraPB ASC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) Select_ExtraPB() *__DirectMessage_Selector {
-	u.selectCol = "ExtraPB"
-	return u
-}
-
-func (u *__DirectMessage_Selector) Limit(num int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Limit(num int) *__DirectMessageCopy_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__DirectMessage_Selector) Offset(num int) *__DirectMessage_Selector {
+func (u *__DirectMessageCopy_Selector) Offset(num int) *__DirectMessageCopy_Selector {
 	u.offset = num
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__DirectMessage_Selector) _stoSql() (string, []interface{}) {
+func (u *__DirectMessageCopy_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_message"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_message_copy"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4070,14 +3698,14 @@ func (u *__DirectMessage_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__DirectMessage_Selector) GetRow(db *sqlx.DB) (*DirectMessage, error) {
+func (u *__DirectMessageCopy_Selector) GetRow(db *sqlx.DB) (*DirectMessageCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	row := &DirectMessage{}
+	row := &DirectMessageCopy{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
@@ -4087,19 +3715,19 @@ func (u *__DirectMessage_Selector) GetRow(db *sqlx.DB) (*DirectMessage, error) {
 
 	row._exists = true
 
-	OnDirectMessage_LoadOne(row)
+	OnDirectMessageCopy_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__DirectMessage_Selector) GetRows(db *sqlx.DB) ([]*DirectMessage, error) {
+func (u *__DirectMessageCopy_Selector) GetRows(db *sqlx.DB) ([]*DirectMessageCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*DirectMessage
+	var rows []*DirectMessageCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -4115,20 +3743,20 @@ func (u *__DirectMessage_Selector) GetRows(db *sqlx.DB) ([]*DirectMessage, error
 		rows[i]._exists = true
 	}
 
-	OnDirectMessage_LoadMany(rows)
+	OnDirectMessageCopy_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__DirectMessage_Selector) GetRows2(db *sqlx.DB) ([]DirectMessage, error) {
+func (u *__DirectMessageCopy_Selector) GetRows2(db *sqlx.DB) ([]DirectMessageCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*DirectMessage
+	var rows []*DirectMessageCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -4144,9 +3772,9 @@ func (u *__DirectMessage_Selector) GetRows2(db *sqlx.DB) ([]DirectMessage, error
 		rows[i]._exists = true
 	}
 
-	OnDirectMessage_LoadMany(rows)
+	OnDirectMessageCopy_LoadMany(rows)
 
-	rows2 := make([]DirectMessage, len(rows))
+	rows2 := make([]DirectMessageCopy, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -4155,7 +3783,7 @@ func (u *__DirectMessage_Selector) GetRows2(db *sqlx.DB) ([]DirectMessage, error
 	return rows2, nil
 }
 
-func (u *__DirectMessage_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__DirectMessageCopy_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -4173,7 +3801,7 @@ func (u *__DirectMessage_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__DirectMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__DirectMessageCopy_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -4191,7 +3819,7 @@ func (u *__DirectMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, error)
 	return rows, nil
 }
 
-func (u *__DirectMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__DirectMessageCopy_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -4209,7 +3837,7 @@ func (u *__DirectMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__DirectMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__DirectMessageCopy_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -4228,7 +3856,7 @@ func (u *__DirectMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
+func (u *__DirectMessageCopy_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -4245,7 +3873,7 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.direct_message SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.direct_message_copy SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4267,7 +3895,7 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
+func (d *__DirectMessageCopy_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -4280,7 +3908,7 @@ func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.direct_message WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.direct_message_copy WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4300,21 +3928,21 @@ func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  DirectMessage ////////////////
+///////////////////////// Mass insert - replace for  DirectMessageCopy ////////////////
 
-func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
+func MassInsert_DirectMessageCopy(rows []DirectMessageCopy, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.direct_message (" +
-		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB" +
+	sqlstr := "INSERT INTO sun.direct_message_copy (" +
+		"MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId" +
 		") VALUES " + insVals
 
 	// run query
@@ -4322,19 +3950,17 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
+		vals = append(vals, row.MessageKey)
 		vals = append(vals, row.RoomKey)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.MessageFileId)
-		vals = append(vals, row.MessageTypeEnum)
+		vals = append(vals, row.MessageTypeEnumId)
 		vals = append(vals, row.Text)
-		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
+		vals = append(vals, row.CreatedSe)
 		vals = append(vals, row.PeerReceivedTime)
 		vals = append(vals, row.PeerSeenTime)
-		vals = append(vals, row.DeliviryStatusEnum)
-		vals = append(vals, row.ExtraPB)
+		vals = append(vals, row.DeliviryStatusEnumId)
 
 	}
 
@@ -4349,15 +3975,15 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 	return nil
 }
 
-func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
+func MassReplace_DirectMessageCopy(rows []DirectMessageCopy, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.direct_message (" +
-		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB" +
+	sqlstr := "REPLACE INTO sun.direct_message_copy (" +
+		"MessageId, MessageKey, RoomKey, UserId, MessageFileId, MessageTypeEnumId, Text, CreatedSe, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnumId" +
 		") VALUES " + insVals
 
 	// run query
@@ -4365,19 +3991,17 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
+		vals = append(vals, row.MessageKey)
 		vals = append(vals, row.RoomKey)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.MessageFileId)
-		vals = append(vals, row.MessageTypeEnum)
+		vals = append(vals, row.MessageTypeEnumId)
 		vals = append(vals, row.Text)
-		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
+		vals = append(vals, row.CreatedSe)
 		vals = append(vals, row.PeerReceivedTime)
 		vals = append(vals, row.PeerSeenTime)
-		vals = append(vals, row.DeliviryStatusEnum)
-		vals = append(vals, row.ExtraPB)
+		vals = append(vals, row.DeliviryStatusEnumId)
 
 	}
 
@@ -4393,10 +4017,6 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
-
-//
 
 //
 

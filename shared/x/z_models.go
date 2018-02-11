@@ -29,17 +29,16 @@ type Action struct {
 */
 // chat 'Chat'.
 type Chat struct {
-	ChatKey            string
-	RoomKey            string
-	RoomTypeEnum       int
-	UserId             int
-	PeerUserId         int
-	GroupId            int
-	CreatedTime        int
-	StartMessageIdFrom int
-	LastMessageId      int //just direct-not reliable- just increment not decremetnt
-	LastSeenMessageId  int
-	UpdatedMs          int
+	ChatKey      string
+	RoomKey      string
+	RoomTypeEnum int
+	UserId       int
+	PeerUserId   int
+	GroupId      int
+	CreatedTime  int
+	Seq          int
+	SeenSeq      int
+	UpdatedMs    int
 
 	_exists, _deleted bool
 }
@@ -53,10 +52,30 @@ type Chat struct {
 	PeerUserId: 0,
 	GroupId: 0,
 	CreatedTime: 0,
-	StartMessageIdFrom: 0,
-	LastMessageId: 0,
-	LastSeenMessageId: 0,
+	Seq: 0,
+	SeenSeq: 0,
 	UpdatedMs: 0,
+*/
+// chat_sync 'ChatSync'.
+type ChatSync struct {
+	SyncId         int
+	ToUserId       int
+	ChatSyncTypeId int
+	ChatKey        string
+	MessageId      int
+	CreatedTime    int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &ChatSync {
+	SyncId: 0,
+	ToUserId: 0,
+	ChatSyncTypeId: 0,
+	ChatKey: "",
+	MessageId: 0,
+	CreatedTime: 0,
 */
 // comment 'Comment'.
 type Comment struct {
@@ -83,6 +102,41 @@ type Comment struct {
 */
 // direct_message 'DirectMessage'.
 type DirectMessage struct {
+	ChatKey            string
+	MessageId          int
+	RoomKey            string
+	UserId             int
+	MessageFileId      int
+	MessageTypeEnum    int
+	Text               string
+	CreatedTime        int
+	Seq                int
+	PeerReceivedTime   int
+	PeerSeenTime       int
+	DeliviryStatusEnum int
+	ExtraPB            []byte
+
+	_exists, _deleted bool
+}
+
+/*
+:= &DirectMessage {
+	ChatKey: "",
+	MessageId: 0,
+	RoomKey: "",
+	UserId: 0,
+	MessageFileId: 0,
+	MessageTypeEnum: 0,
+	Text: "",
+	CreatedTime: 0,
+	Seq: 0,
+	PeerReceivedTime: 0,
+	PeerSeenTime: 0,
+	DeliviryStatusEnum: 0,
+	ExtraPB: []byte{},
+*/
+// direct_message_copy 'DirectMessageCopy'.
+type DirectMessageCopy struct {
 	MessageId            int
 	MessageKey           string
 	RoomKey              string
@@ -99,7 +153,7 @@ type DirectMessage struct {
 }
 
 /*
-:= &DirectMessage {
+:= &DirectMessageCopy {
 	MessageId: 0,
 	MessageKey: "",
 	RoomKey: "",
@@ -202,28 +256,24 @@ type FollowingListMember struct {
 	FollowedUserId: 0,
 	CreatedTime: 0,
 */
-// following_list_member_history 'FollowingListMemberHistory'.
-type FollowingListMemberHistory struct {
-	Id             int
-	ListId         int
-	UserId         int
-	FollowedUserId int
-	FollowType     int
-	UpdatedTimeMs  int
-	FollowId       int
+// following_list_member_removed 'FollowingListMemberRemoved'.
+type FollowingListMemberRemoved struct {
+	Id               int
+	ListId           int
+	UserId           int
+	UnFollowedUserId int
+	UpdatedTime      int
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FollowingListMemberHistory {
+:= &FollowingListMemberRemoved {
 	Id: 0,
 	ListId: 0,
 	UserId: 0,
-	FollowedUserId: 0,
-	FollowType: 0,
-	UpdatedTimeMs: 0,
-	FollowId: 0,
+	UnFollowedUserId: 0,
+	UpdatedTime: 0,
 */
 // general_log 'GeneralLog'.
 type GeneralLog struct {
@@ -320,6 +370,17 @@ type GroupMessage struct {
 	Text: "",
 	CreatedMs: 0,
 	DeliveryStatusEnum: 0,
+*/
+// keys 'Key'.
+type Key struct {
+	Key string
+
+	_exists, _deleted bool
+}
+
+/*
+:= &Key {
+	Key: "",
 */
 // likes 'Like'.
 type Like struct {
@@ -483,35 +544,6 @@ type PhoneContact struct {
 	DeviceUuidId: 0,
 	CreatedTime: 0,
 */
-// phone_contacts_copy 'PhoneContactsCopy'.
-type PhoneContactsCopy struct {
-	Id                    int
-	PhoneDisplayName      string
-	PhoneFamilyName       string
-	PhoneNumber           string
-	PhoneNormalizedNumber string
-	PhoneContactRowId     int
-	UserId                int
-	DeviceUuidId          int
-	CreatedTime           int
-	UpdatedTime           int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &PhoneContactsCopy {
-	Id: 0,
-	PhoneDisplayName: "",
-	PhoneFamilyName: "",
-	PhoneNumber: "",
-	PhoneNormalizedNumber: "",
-	PhoneContactRowId: 0,
-	UserId: 0,
-	DeviceUuidId: 0,
-	CreatedTime: 0,
-	UpdatedTime: 0,
-*/
 // post 'Post'.
 type Post struct {
 	PostId         int
@@ -552,66 +584,6 @@ type Post struct {
 	EditedTime: 0,
 	CreatedTime: 0,
 	ReSharedPostId: 0,
-*/
-// post_copy 'PostCopy'.
-type PostCopy struct {
-	PostId         int
-	UserId         int
-	PostTypeEnum   int
-	MediaId        int
-	Text           string
-	RichText       string
-	MediaCount     int
-	SharedTo       int
-	DisableComment int
-	HasTag         int
-	CommentsCount  int
-	LikesCount     int
-	ViewsCount     int
-	EditedTime     int
-	CreatedTime    int
-	ReSharedPostId int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &PostCopy {
-	PostId: 0,
-	UserId: 0,
-	PostTypeEnum: 0,
-	MediaId: 0,
-	Text: "",
-	RichText: "",
-	MediaCount: 0,
-	SharedTo: 0,
-	DisableComment: 0,
-	HasTag: 0,
-	CommentsCount: 0,
-	LikesCount: 0,
-	ViewsCount: 0,
-	EditedTime: 0,
-	CreatedTime: 0,
-	ReSharedPostId: 0,
-*/
-// recommend_user 'RecommendUser'.
-type RecommendUser struct {
-	Id          int
-	UserId      int
-	TargetId    int
-	Weight      float32
-	CreatedTime int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &RecommendUser {
-	Id: 0,
-	UserId: 0,
-	TargetId: 0,
-	Weight: float32(0),
-	CreatedTime: 0,
 */
 // search_clicked 'SearchClicked'.
 type SearchClicked struct {

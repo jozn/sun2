@@ -69,6 +69,38 @@ func (c _StoreImpl) PreLoadChatByChatKeys(ids []string) {
 
 // yes 222 string
 
+func (c _StoreImpl) GetChatSyncBySyncId(SyncId int) (*ChatSync, bool) {
+	o, ok := RowCache.Get("ChatSync:" + strconv.Itoa(SyncId))
+	if ok {
+		if obj, ok := o.(*ChatSync); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ChatSyncBySyncId(base.DB, SyncId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChatSyncBySyncIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ChatSync:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewChatSync_Selector().SyncId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetCommentByCommentId(CommentId int) (*Comment, bool) {
 	o, ok := RowCache.Get("Comment:" + strconv.Itoa(CommentId))
 	if ok {
@@ -128,6 +160,38 @@ func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewDirectMessage_Selector().MessageId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetDirectMessageCopyByMessageId(MessageId int) (*DirectMessageCopy, bool) {
+	o, ok := RowCache.Get("DirectMessageCopy:" + strconv.Itoa(MessageId))
+	if ok {
+		if obj, ok := o.(*DirectMessageCopy); ok {
+			return obj, true
+		}
+	}
+	obj2, err := DirectMessageCopyByMessageId(base.DB, MessageId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadDirectMessageCopyByMessageIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("DirectMessageCopy:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewDirectMessageCopy_Selector().MessageId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -261,14 +325,14 @@ func (c _StoreImpl) PreLoadFollowingListMemberByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetFollowingListMemberHistoryById(Id int) (*FollowingListMemberHistory, bool) {
-	o, ok := RowCache.Get("FollowingListMemberHistory:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetFollowingListMemberRemovedById(Id int) (*FollowingListMemberRemoved, bool) {
+	o, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*FollowingListMemberHistory); ok {
+		if obj, ok := o.(*FollowingListMemberRemoved); ok {
 			return obj, true
 		}
 	}
-	obj2, err := FollowingListMemberHistoryById(base.DB, Id)
+	obj2, err := FollowingListMemberRemovedById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
@@ -276,18 +340,18 @@ func (c _StoreImpl) GetFollowingListMemberHistoryById(Id int) (*FollowingListMem
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadFollowingListMemberHistoryByIds(ids []int) {
+func (c _StoreImpl) PreLoadFollowingListMemberRemovedByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("FollowingListMemberHistory:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewFollowingListMemberHistory_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewFollowingListMemberRemoved_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -420,6 +484,38 @@ func (c _StoreImpl) PreLoadGroupMessageByMessageIds(ids []int) {
 }
 
 // yes 222 int
+
+func (c _StoreImpl) GetKeyByKey(Key string) (*Key, bool) {
+	o, ok := RowCache.Get("Key:" + Key)
+	if ok {
+		if obj, ok := o.(*Key); ok {
+			return obj, true
+		}
+	}
+	obj2, err := KeyByKey(base.DB, Key)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadKeyByKeys(ids []string) {
+	not_cached := make([]string, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Key:" + id)
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewKey_Selector().Key_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 string
 
 func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
 	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
@@ -613,38 +709,6 @@ func (c _StoreImpl) PreLoadPhoneContactByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPhoneContactsCopyById(Id int) (*PhoneContactsCopy, bool) {
-	o, ok := RowCache.Get("PhoneContactsCopy:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*PhoneContactsCopy); ok {
-			return obj, true
-		}
-	}
-	obj2, err := PhoneContactsCopyById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPhoneContactsCopyByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("PhoneContactsCopy:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewPhoneContactsCopy_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetPostByPostId(PostId int) (*Post, bool) {
 	o, ok := RowCache.Get("Post:" + strconv.Itoa(PostId))
 	if ok {
@@ -672,70 +736,6 @@ func (c _StoreImpl) PreLoadPostByPostIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPost_Selector().PostId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetPostCopyByPostId(PostId int) (*PostCopy, bool) {
-	o, ok := RowCache.Get("PostCopy:" + strconv.Itoa(PostId))
-	if ok {
-		if obj, ok := o.(*PostCopy); ok {
-			return obj, true
-		}
-	}
-	obj2, err := PostCopyByPostId(base.DB, PostId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPostCopyByPostIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("PostCopy:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewPostCopy_Selector().PostId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetRecommendUserById(Id int) (*RecommendUser, bool) {
-	o, ok := RowCache.Get("RecommendUser:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*RecommendUser); ok {
-			return obj, true
-		}
-	}
-	obj2, err := RecommendUserById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadRecommendUserByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("RecommendUser:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewRecommendUser_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

@@ -13,17 +13,16 @@ import (
 
 // Manualy copy this to project
 type Chat__ struct {
-	ChatKey            string `json:"ChatKey"`            // ChatKey -
-	RoomKey            string `json:"RoomKey"`            // RoomKey -
-	RoomTypeEnum       int    `json:"RoomTypeEnum"`       // RoomTypeEnum -
-	UserId             int    `json:"UserId"`             // UserId -
-	PeerUserId         int    `json:"PeerUserId"`         // PeerUserId -
-	GroupId            int    `json:"GroupId"`            // GroupId -
-	CreatedTime        int    `json:"CreatedTime"`        // CreatedTime -
-	StartMessageIdFrom int    `json:"StartMessageIdFrom"` // StartMessageIdFrom -
-	LastMessageId      int    `json:"LastMessageId"`      // LastMessageId -
-	LastSeenMessageId  int    `json:"LastSeenMessageId"`  // LastSeenMessageId -
-	UpdatedMs          int    `json:"UpdatedMs"`          // UpdatedMs -
+	ChatKey      string `json:"ChatKey"`      // ChatKey -
+	RoomKey      string `json:"RoomKey"`      // RoomKey -
+	RoomTypeEnum int    `json:"RoomTypeEnum"` // RoomTypeEnum -
+	UserId       int    `json:"UserId"`       // UserId -
+	PeerUserId   int    `json:"PeerUserId"`   // PeerUserId -
+	GroupId      int    `json:"GroupId"`      // GroupId -
+	CreatedTime  int    `json:"CreatedTime"`  // CreatedTime -
+	Seq          int    `json:"Seq"`          // Seq -
+	SeenSeq      int    `json:"SeenSeq"`      // SeenSeq -
+	UpdatedMs    int    `json:"UpdatedMs"`    // UpdatedMs -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -49,14 +48,14 @@ func (c *Chat) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.chat (` +
-		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs` +
+		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs)
-	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs)
+	XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs)
+	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs)
 	if err != nil {
 		return err
 	}
@@ -76,14 +75,14 @@ func (c *Chat) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.chat (` +
-		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs` +
+		`ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs)
-	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs)
+	XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs)
+	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -112,12 +111,12 @@ func (c *Chat) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.chat SET ` +
-		`RoomKey = ?, RoomTypeEnum = ?, UserId = ?, PeerUserId = ?, GroupId = ?, CreatedTime = ?, StartMessageIdFrom = ?, LastMessageId = ?, LastSeenMessageId = ?, UpdatedMs = ?` +
+		`RoomKey = ?, RoomTypeEnum = ?, UserId = ?, PeerUserId = ?, GroupId = ?, CreatedTime = ?, Seq = ?, SeenSeq = ?, UpdatedMs = ?` +
 		` WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs, c.ChatKey)
-	_, err = db.Exec(sqlstr, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.StartMessageIdFrom, c.LastMessageId, c.LastSeenMessageId, c.UpdatedMs, c.ChatKey)
+	XOLog(sqlstr, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs, c.ChatKey)
+	_, err = db.Exec(sqlstr, c.RoomKey, c.RoomTypeEnum, c.UserId, c.PeerUserId, c.GroupId, c.CreatedTime, c.Seq, c.SeenSeq, c.UpdatedMs, c.ChatKey)
 
 	XOLogErr(err)
 	OnChat_AfterUpdate(c)
@@ -743,316 +742,211 @@ func (d *__Chat_Deleter) CreatedTime_GE(val int) *__Chat_Deleter {
 	return d
 }
 
-func (u *__Chat_Deleter) StartMessageIdFrom_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) Seq_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) StartMessageIdFrom_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) Seq_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) StartMessageIdFrom_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) Seq_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom = ? "
+	w.condition = " Seq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom != ? "
+	w.condition = " Seq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom < ? "
+	w.condition = " Seq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom <= ? "
+	w.condition = " Seq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom > ? "
+	w.condition = " Seq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartMessageIdFrom_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) Seq_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom >= ? "
+	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) LastMessageId_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) SeenSeq_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMessageId_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) SeenSeq_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMessageId_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) SeenSeq_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) LastMessageId_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId = ? "
+	w.condition = " SeenSeq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMessageId_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId != ? "
+	w.condition = " SeenSeq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMessageId_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId < ? "
+	w.condition = " SeenSeq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMessageId_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId <= ? "
+	w.condition = " SeenSeq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMessageId_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId > ? "
+	w.condition = " SeenSeq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMessageId_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) SeenSeq_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Deleter) LastSeenMessageId_In(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) LastSeenMessageId_Ins(ins ...int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) LastSeenMessageId_NotIn(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_Eq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_NotEq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_LT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_LE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_GT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) LastSeenMessageId_GE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId >= ? "
+	w.condition = " SeenSeq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,316 +1588,211 @@ func (d *__Chat_Updater) CreatedTime_GE(val int) *__Chat_Updater {
 	return d
 }
 
-func (u *__Chat_Updater) StartMessageIdFrom_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) Seq_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) StartMessageIdFrom_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) Seq_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) StartMessageIdFrom_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) Seq_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom = ? "
+	w.condition = " Seq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom != ? "
+	w.condition = " Seq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom < ? "
+	w.condition = " Seq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom <= ? "
+	w.condition = " Seq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom > ? "
+	w.condition = " Seq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartMessageIdFrom_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) Seq_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom >= ? "
+	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) LastMessageId_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) SeenSeq_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMessageId_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) SeenSeq_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMessageId_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) SeenSeq_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) LastMessageId_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId = ? "
+	w.condition = " SeenSeq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMessageId_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId != ? "
+	w.condition = " SeenSeq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMessageId_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId < ? "
+	w.condition = " SeenSeq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMessageId_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId <= ? "
+	w.condition = " SeenSeq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMessageId_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId > ? "
+	w.condition = " SeenSeq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMessageId_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) SeenSeq_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Updater) LastSeenMessageId_In(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) LastSeenMessageId_Ins(ins ...int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) LastSeenMessageId_NotIn(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_Eq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_NotEq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_LT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_LE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_GT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) LastSeenMessageId_GE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId >= ? "
+	w.condition = " SeenSeq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2645,316 +2434,211 @@ func (d *__Chat_Selector) CreatedTime_GE(val int) *__Chat_Selector {
 	return d
 }
 
-func (u *__Chat_Selector) StartMessageIdFrom_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) Seq_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) StartMessageIdFrom_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) Seq_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) StartMessageIdFrom_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) Seq_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom = ? "
+	w.condition = " Seq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom != ? "
+	w.condition = " Seq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom < ? "
+	w.condition = " Seq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom <= ? "
+	w.condition = " Seq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom > ? "
+	w.condition = " Seq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartMessageIdFrom_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) Seq_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartMessageIdFrom >= ? "
+	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) LastMessageId_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) SeenSeq_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMessageId_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) SeenSeq_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMessageId_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) SeenSeq_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) LastMessageId_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId = ? "
+	w.condition = " SeenSeq = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMessageId_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId != ? "
+	w.condition = " SeenSeq != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMessageId_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId < ? "
+	w.condition = " SeenSeq < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMessageId_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId <= ? "
+	w.condition = " SeenSeq <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMessageId_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId > ? "
+	w.condition = " SeenSeq > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMessageId_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) SeenSeq_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Selector) LastSeenMessageId_In(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) LastSeenMessageId_Ins(ins ...int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) LastSeenMessageId_NotIn(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastSeenMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_Eq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_NotEq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_LT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_LE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_GT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) LastSeenMessageId_GE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastSeenMessageId >= ? "
+	w.condition = " SeenSeq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3560,18 +3244,18 @@ func (u *__Chat_Updater) CreatedTime_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) StartMessageIdFrom(newVal int) *__Chat_Updater {
-	u.updates[" StartMessageIdFrom = ? "] = newVal
+func (u *__Chat_Updater) Seq(newVal int) *__Chat_Updater {
+	u.updates[" Seq = ? "] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) StartMessageIdFrom_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) Seq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" StartMessageIdFrom = StartMessageIdFrom+? "] = count
+		u.updates[" Seq = Seq+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" StartMessageIdFrom = StartMessageIdFrom-? "] = -(count) //make it positive
+		u.updates[" Seq = Seq-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -3581,39 +3265,18 @@ func (u *__Chat_Updater) StartMessageIdFrom_Increment(count int) *__Chat_Updater
 
 //ints
 
-func (u *__Chat_Updater) LastMessageId(newVal int) *__Chat_Updater {
-	u.updates[" LastMessageId = ? "] = newVal
+func (u *__Chat_Updater) SeenSeq(newVal int) *__Chat_Updater {
+	u.updates[" SeenSeq = ? "] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) LastMessageId_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) SeenSeq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" LastMessageId = LastMessageId+? "] = count
+		u.updates[" SeenSeq = SeenSeq+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" LastMessageId = LastMessageId-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__Chat_Updater) LastSeenMessageId(newVal int) *__Chat_Updater {
-	u.updates[" LastSeenMessageId = ? "] = newVal
-	return u
-}
-
-func (u *__Chat_Updater) LastSeenMessageId_Increment(count int) *__Chat_Updater {
-	if count > 0 {
-		u.updates[" LastSeenMessageId = LastSeenMessageId+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" LastSeenMessageId = LastSeenMessageId-? "] = -(count) //make it positive
+		u.updates[" SeenSeq = SeenSeq-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -3752,48 +3415,33 @@ func (u *__Chat_Selector) Select_CreatedTime() *__Chat_Selector {
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_StartMessageIdFrom_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY StartMessageIdFrom DESC "
+func (u *__Chat_Selector) OrderBy_Seq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY Seq DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_StartMessageIdFrom_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY StartMessageIdFrom ASC "
+func (u *__Chat_Selector) OrderBy_Seq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY Seq ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_StartMessageIdFrom() *__Chat_Selector {
-	u.selectCol = "StartMessageIdFrom"
+func (u *__Chat_Selector) Select_Seq() *__Chat_Selector {
+	u.selectCol = "Seq"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMessageId_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMessageId DESC "
+func (u *__Chat_Selector) OrderBy_SeenSeq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY SeenSeq DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMessageId_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMessageId ASC "
+func (u *__Chat_Selector) OrderBy_SeenSeq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY SeenSeq ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_LastMessageId() *__Chat_Selector {
-	u.selectCol = "LastMessageId"
-	return u
-}
-
-func (u *__Chat_Selector) OrderBy_LastSeenMessageId_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastSeenMessageId DESC "
-	return u
-}
-
-func (u *__Chat_Selector) OrderBy_LastSeenMessageId_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastSeenMessageId ASC "
-	return u
-}
-
-func (u *__Chat_Selector) Select_LastSeenMessageId() *__Chat_Selector {
-	u.selectCol = "LastSeenMessageId"
+func (u *__Chat_Selector) Select_SeenSeq() *__Chat_Selector {
+	u.selectCol = "SeenSeq"
 	return u
 }
 
@@ -4084,13 +3732,13 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.chat (" +
-		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs" +
+		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs" +
 		") VALUES " + insVals
 
 	// run query
@@ -4105,9 +3753,8 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.GroupId)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.StartMessageIdFrom)
-		vals = append(vals, row.LastMessageId)
-		vals = append(vals, row.LastSeenMessageId)
+		vals = append(vals, row.Seq)
+		vals = append(vals, row.SeenSeq)
 		vals = append(vals, row.UpdatedMs)
 
 	}
@@ -4126,12 +3773,12 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 func MassReplace_Chat(rows []Chat, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.chat (" +
-		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, StartMessageIdFrom, LastMessageId, LastSeenMessageId, UpdatedMs" +
+		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs" +
 		") VALUES " + insVals
 
 	// run query
@@ -4146,9 +3793,8 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.GroupId)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.StartMessageIdFrom)
-		vals = append(vals, row.LastMessageId)
-		vals = append(vals, row.LastSeenMessageId)
+		vals = append(vals, row.Seq)
+		vals = append(vals, row.SeenSeq)
 		vals = append(vals, row.UpdatedMs)
 
 	}
@@ -4165,8 +3811,6 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 
