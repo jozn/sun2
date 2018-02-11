@@ -32,64 +32,6 @@ func PBConvPB_Action_To_Action ( o *Action) *PB_Action {
 }
 */
 /*
-func PBConvPB__Chat_To_Chat( o *PB_Chat) *Chat {
-     n := &Chat{
-      ChatKey: string ( o.ChatKey ),
-      RoomKey: string ( o.RoomKey ),
-      RoomTypeEnum: int ( o.RoomTypeEnum ),
-      UserId: int ( o.UserId ),
-      PeerUserId: int ( o.PeerUserId ),
-      GroupId: int ( o.GroupId ),
-      CreatedTime: int ( o.CreatedTime ),
-      Seq: int ( o.Seq ),
-      SeenSeq: int ( o.SeenSeq ),
-      UpdatedMs: int ( o.UpdatedMs ),
-    }
-    return n
-}
-
-func PBConvPB_Chat_To_Chat ( o *Chat) *PB_Chat {
-     n := &PB_Chat{
-      ChatKey: string ( o.ChatKey ),
-      RoomKey: string ( o.RoomKey ),
-      RoomTypeEnum: int32 ( o.RoomTypeEnum ),
-      UserId: int32 ( o.UserId ),
-      PeerUserId: int32 ( o.PeerUserId ),
-      GroupId: int64 ( o.GroupId ),
-      CreatedTime: int32 ( o.CreatedTime ),
-      Seq: int32 ( o.Seq ),
-      SeenSeq: int32 ( o.SeenSeq ),
-      UpdatedMs: int64 ( o.UpdatedMs ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__ChatSync_To_ChatSync( o *PB_ChatSync) *ChatSync {
-     n := &ChatSync{
-      SyncId: int ( o.SyncId ),
-      ToUserId: int ( o.ToUserId ),
-      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int ( o.MessageId ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_ChatSync_To_ChatSync ( o *ChatSync) *PB_ChatSync {
-     n := &PB_ChatSync{
-      SyncId: int64 ( o.SyncId ),
-      ToUserId: int32 ( o.ToUserId ),
-      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int64 ( o.MessageId ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__Comment_To_Comment( o *PB_Comment) *Comment {
      n := &Comment{
       CommentId: int ( o.CommentId ),
@@ -112,134 +54,6 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
       LikesCount: int32 ( o.LikesCount ),
       CreatedTime: int32 ( o.CreatedTime ),
       Seq: int32 ( o.Seq ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__DirectMessage_To_DirectMessage( o *PB_DirectMessage) *DirectMessage {
-     n := &DirectMessage{
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int ( o.MessageId ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int ( o.UserId ),
-      MessageFileId: int ( o.MessageFileId ),
-      MessageTypeEnum: int ( o.MessageTypeEnum ),
-      Text: string ( o.Text ),
-      CreatedTime: int ( o.CreatedTime ),
-      Seq: int ( o.Seq ),
-      PeerReceivedTime: int ( o.PeerReceivedTime ),
-      PeerSeenTime: int ( o.PeerSeenTime ),
-      DeliviryStatusEnum: int ( o.DeliviryStatusEnum ),
-      ExtraPB: []byte ( o.ExtraPB ),
-    }
-    return n
-}
-
-func PBConvPB_DirectMessage_To_DirectMessage ( o *DirectMessage) *PB_DirectMessage {
-     n := &PB_DirectMessage{
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int64 ( o.MessageId ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int32 ( o.UserId ),
-      MessageFileId: int64 ( o.MessageFileId ),
-      MessageTypeEnum: int32 ( o.MessageTypeEnum ),
-      Text: string ( o.Text ),
-      CreatedTime: int32 ( o.CreatedTime ),
-      Seq: int32 ( o.Seq ),
-      PeerReceivedTime: int32 ( o.PeerReceivedTime ),
-      PeerSeenTime: int32 ( o.PeerSeenTime ),
-      DeliviryStatusEnum: int32 ( o.DeliviryStatusEnum ),
-      ExtraPB: []byte ( o.ExtraPB ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__DirectMessageCopy_To_DirectMessageCopy( o *PB_DirectMessageCopy) *DirectMessageCopy {
-     n := &DirectMessageCopy{
-      MessageId: int ( o.MessageId ),
-      MessageKey: string ( o.MessageKey ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int ( o.UserId ),
-      MessageFileId: int ( o.MessageFileId ),
-      MessageTypeEnumId: int ( o.MessageTypeEnumId ),
-      Text: string ( o.Text ),
-      CreatedSe: int ( o.CreatedSe ),
-      PeerReceivedTime: int ( o.PeerReceivedTime ),
-      PeerSeenTime: int ( o.PeerSeenTime ),
-      DeliviryStatusEnumId: int ( o.DeliviryStatusEnumId ),
-    }
-    return n
-}
-
-func PBConvPB_DirectMessageCopy_To_DirectMessageCopy ( o *DirectMessageCopy) *PB_DirectMessageCopy {
-     n := &PB_DirectMessageCopy{
-      MessageId: int64 ( o.MessageId ),
-      MessageKey: string ( o.MessageKey ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int32 ( o.UserId ),
-      MessageFileId: int64 ( o.MessageFileId ),
-      MessageTypeEnumId: int32 ( o.MessageTypeEnumId ),
-      Text: string ( o.Text ),
-      CreatedSe: int32 ( o.CreatedSe ),
-      PeerReceivedTime: int32 ( o.PeerReceivedTime ),
-      PeerSeenTime: int32 ( o.PeerSeenTime ),
-      DeliviryStatusEnumId: int32 ( o.DeliviryStatusEnumId ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__DirectOffline_To_DirectOffline( o *PB_DirectOffline) *DirectOffline {
-     n := &DirectOffline{
-      DirectOfflineId: int ( o.DirectOfflineId ),
-      ToUserId: int ( o.ToUserId ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int ( o.MessageId ),
-      MessageFileId: int ( o.MessageFileId ),
-      PBClass: string ( o.PBClass ),
-      DataPB: []byte ( o.DataPB ),
-      DataJson: string ( o.DataJson ),
-      DataTemp: string ( o.DataTemp ),
-      AtTimeMs: int ( o.AtTimeMs ),
-    }
-    return n
-}
-
-func PBConvPB_DirectOffline_To_DirectOffline ( o *DirectOffline) *PB_DirectOffline {
-     n := &PB_DirectOffline{
-      DirectOfflineId: int64 ( o.DirectOfflineId ),
-      ToUserId: int32 ( o.ToUserId ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int64 ( o.MessageId ),
-      MessageFileId: int64 ( o.MessageFileId ),
-      PBClass: string ( o.PBClass ),
-      DataPB: []byte ( o.DataPB ),
-      DataJson: string ( o.DataJson ),
-      DataTemp: string ( o.DataTemp ),
-      AtTimeMs: int64 ( o.AtTimeMs ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__DirectToMessage_To_DirectToMessage( o *PB_DirectToMessage) *DirectToMessage {
-     n := &DirectToMessage{
-      Id: int ( o.Id ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int ( o.MessageId ),
-      SourceEnumId: int ( o.SourceEnumId ),
-    }
-    return n
-}
-
-func PBConvPB_DirectToMessage_To_DirectToMessage ( o *DirectToMessage) *PB_DirectToMessage {
-     n := &PB_DirectToMessage{
-      Id: int64 ( o.Id ),
-      ChatKey: string ( o.ChatKey ),
-      MessageId: int64 ( o.MessageId ),
-      SourceEnumId: int32 ( o.SourceEnumId ),
     }
     return n
 }
@@ -315,33 +129,6 @@ func PBConvPB_FollowingListMemberRemoved_To_FollowingListMemberRemoved ( o *Foll
       UserId: int32 ( o.UserId ),
       UnFollowedUserId: int32 ( o.UnFollowedUserId ),
       UpdatedTime: int32 ( o.UpdatedTime ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__GeneralLog_To_GeneralLog( o *PB_GeneralLog) *GeneralLog {
-     n := &GeneralLog{
-      Id: int ( o.Id ),
-      ToUserId: int ( o.ToUserId ),
-      TargetId: int ( o.TargetId ),
-      LogTypeId: int ( o.LogTypeId ),
-      ExtraPB: []byte ( o.ExtraPB ),
-      ExtraJson: string ( o.ExtraJson ),
-      CreatedMs: int ( o.CreatedMs ),
-    }
-    return n
-}
-
-func PBConvPB_GeneralLog_To_GeneralLog ( o *GeneralLog) *PB_GeneralLog {
-     n := &PB_GeneralLog{
-      Id: int64 ( o.Id ),
-      ToUserId: int32 ( o.ToUserId ),
-      TargetId: int32 ( o.TargetId ),
-      LogTypeId: int32 ( o.LogTypeId ),
-      ExtraPB: []byte ( o.ExtraPB ),
-      ExtraJson: string ( o.ExtraJson ),
-      CreatedMs: int64 ( o.CreatedMs ),
     }
     return n
 }
@@ -432,21 +219,6 @@ func PBConvPB_GroupMessage_To_GroupMessage ( o *GroupMessage) *PB_GroupMessage {
 }
 */
 /*
-func PBConvPB__Key_To_Key( o *PB_Key) *Key {
-     n := &Key{
-      Key: string ( o.Key ),
-    }
-    return n
-}
-
-func PBConvPB_Key_To_Key ( o *Key) *PB_Key {
-     n := &PB_Key{
-      Key: string ( o.Key ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__Like_To_Like( o *PB_Like) *Like {
      n := &Like{
       Id: int ( o.Id ),
@@ -503,43 +275,6 @@ func PBConvPB_Media_To_Media ( o *Media) *PB_Media {
       Duration: int32 ( o.Duration ),
       Md5Hash: string ( o.Md5Hash ),
       Color: string ( o.Color ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__MessageFile_To_MessageFile( o *PB_MessageFile) *MessageFile {
-     n := &MessageFile{
-      MessageFileId: int ( o.MessageFileId ),
-      MessageFileKey: string ( o.MessageFileKey ),
-      UserId: int ( o.UserId ),
-      Title: string ( o.Title ),
-      Size: int ( o.Size ),
-      FileTypeEnum: int ( o.FileTypeEnum ),
-      Width: int ( o.Width ),
-      Height: int ( o.Height ),
-      Duration: int ( o.Duration ),
-      Extension: string ( o.Extension ),
-      Md5Hash: string ( o.Md5Hash ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_MessageFile_To_MessageFile ( o *MessageFile) *PB_MessageFile {
-     n := &PB_MessageFile{
-      MessageFileId: int64 ( o.MessageFileId ),
-      MessageFileKey: string ( o.MessageFileKey ),
-      UserId: int32 ( o.UserId ),
-      Title: string ( o.Title ),
-      Size: int32 ( o.Size ),
-      FileTypeEnum: int32 ( o.FileTypeEnum ),
-      Width: int32 ( o.Width ),
-      Height: int32 ( o.Height ),
-      Duration: int32 ( o.Duration ),
-      Extension: string ( o.Extension ),
-      Md5Hash: string ( o.Md5Hash ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -673,6 +408,23 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
       EditedTime: int32 ( o.EditedTime ),
       CreatedTime: int32 ( o.CreatedTime ),
       ReSharedPostId: int64 ( o.ReSharedPostId ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostKey_To_PostKey( o *PB_PostKey) *PostKey {
+     n := &PostKey{
+      Id: int ( o.Id ),
+      Key: string ( o.Key ),
+    }
+    return n
+}
+
+func PBConvPB_PostKey_To_PostKey ( o *PostKey) *PB_PostKey {
+     n := &PB_PostKey{
+      Id: int32 ( o.Id ),
+      Key: string ( o.Key ),
     }
     return n
 }
@@ -1062,6 +814,157 @@ func PBConvPB_UserPassword_To_UserPassword ( o *UserPassword) *PB_UserPassword {
      n := &PB_UserPassword{
       UserId: int32 ( o.UserId ),
       Password: string ( o.Password ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__Chat_To_Chat( o *PB_Chat) *Chat {
+     n := &Chat{
+      ChatKey: string ( o.ChatKey ),
+      RoomKey: string ( o.RoomKey ),
+      RoomTypeEnum: int ( o.RoomTypeEnum ),
+      UserId: int ( o.UserId ),
+      PeerUserId: int ( o.PeerUserId ),
+      GroupId: int ( o.GroupId ),
+      CreatedTime: int ( o.CreatedTime ),
+      Seq: int ( o.Seq ),
+      SeenSeq: int ( o.SeenSeq ),
+      UpdatedMs: int ( o.UpdatedMs ),
+    }
+    return n
+}
+
+func PBConvPB_Chat_To_Chat ( o *Chat) *PB_Chat {
+     n := &PB_Chat{
+      ChatKey: string ( o.ChatKey ),
+      RoomKey: string ( o.RoomKey ),
+      RoomTypeEnum: int32 ( o.RoomTypeEnum ),
+      UserId: int32 ( o.UserId ),
+      PeerUserId: int32 ( o.PeerUserId ),
+      GroupId: int64 ( o.GroupId ),
+      CreatedTime: int32 ( o.CreatedTime ),
+      Seq: int32 ( o.Seq ),
+      SeenSeq: int32 ( o.SeenSeq ),
+      UpdatedMs: int64 ( o.UpdatedMs ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__ChatLastMessage_To_ChatLastMessage( o *PB_ChatLastMessage) *ChatLastMessage {
+     n := &ChatLastMessage{
+      ChatKey: string ( o.ChatKey ),
+      LastMsgPb: []byte ( o.LastMsgPb ),
+      LastMsgJson: string ( o.LastMsgJson ),
+    }
+    return n
+}
+
+func PBConvPB_ChatLastMessage_To_ChatLastMessage ( o *ChatLastMessage) *PB_ChatLastMessage {
+     n := &PB_ChatLastMessage{
+      ChatKey: string ( o.ChatKey ),
+      LastMsgPb: []byte ( o.LastMsgPb ),
+      LastMsgJson: string ( o.LastMsgJson ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__ChatSync_To_ChatSync( o *PB_ChatSync) *ChatSync {
+     n := &ChatSync{
+      SyncId: int ( o.SyncId ),
+      ToUserId: int ( o.ToUserId ),
+      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_ChatSync_To_ChatSync ( o *ChatSync) *PB_ChatSync {
+     n := &PB_ChatSync{
+      SyncId: int64 ( o.SyncId ),
+      ToUserId: int32 ( o.ToUserId ),
+      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int64 ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__DirectMessage_To_DirectMessage( o *PB_DirectMessage) *DirectMessage {
+     n := &DirectMessage{
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int ( o.MessageId ),
+      RoomKey: string ( o.RoomKey ),
+      UserId: int ( o.UserId ),
+      MessageFileId: int ( o.MessageFileId ),
+      MessageTypeEnum: int ( o.MessageTypeEnum ),
+      Text: string ( o.Text ),
+      CreatedTime: int ( o.CreatedTime ),
+      Seq: int ( o.Seq ),
+      DeliviryStatusEnum: int ( o.DeliviryStatusEnum ),
+      ExtraPB: []byte ( o.ExtraPB ),
+    }
+    return n
+}
+
+func PBConvPB_DirectMessage_To_DirectMessage ( o *DirectMessage) *PB_DirectMessage {
+     n := &PB_DirectMessage{
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int64 ( o.MessageId ),
+      RoomKey: string ( o.RoomKey ),
+      UserId: int32 ( o.UserId ),
+      MessageFileId: int64 ( o.MessageFileId ),
+      MessageTypeEnum: int32 ( o.MessageTypeEnum ),
+      Text: string ( o.Text ),
+      CreatedTime: int32 ( o.CreatedTime ),
+      Seq: int32 ( o.Seq ),
+      DeliviryStatusEnum: int32 ( o.DeliviryStatusEnum ),
+      ExtraPB: []byte ( o.ExtraPB ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__MessageFile_To_MessageFile( o *PB_MessageFile) *MessageFile {
+     n := &MessageFile{
+      MessageFileId: int ( o.MessageFileId ),
+      FileTypeEnum: int ( o.FileTypeEnum ),
+      UserId: int ( o.UserId ),
+      Title: string ( o.Title ),
+      Size: int ( o.Size ),
+      Width: int ( o.Width ),
+      Height: int ( o.Height ),
+      Duration: int ( o.Duration ),
+      Extension: string ( o.Extension ),
+      Md5Hash: string ( o.Md5Hash ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_MessageFile_To_MessageFile ( o *MessageFile) *PB_MessageFile {
+     n := &PB_MessageFile{
+      MessageFileId: int64 ( o.MessageFileId ),
+      FileTypeEnum: int32 ( o.FileTypeEnum ),
+      UserId: int32 ( o.UserId ),
+      Title: string ( o.Title ),
+      Size: int32 ( o.Size ),
+      Width: int32 ( o.Width ),
+      Height: int32 ( o.Height ),
+      Duration: int32 ( o.Duration ),
+      Extension: string ( o.Extension ),
+      Md5Hash: string ( o.Md5Hash ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n

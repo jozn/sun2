@@ -3,42 +3,24 @@ package xconst
 const (
 	Action_Table                       = "action"
 	Action_TableGo                     = "Action"
-	Chat_Table                         = "chat"
-	Chat_TableGo                       = "Chat"
-	ChatSync_Table                     = "chat_sync"
-	ChatSync_TableGo                   = "ChatSync"
 	Comment_Table                      = "comment"
 	Comment_TableGo                    = "Comment"
-	DirectMessage_Table                = "direct_message"
-	DirectMessage_TableGo              = "DirectMessage"
-	DirectMessageCopy_Table            = "direct_message_copy"
-	DirectMessageCopy_TableGo          = "DirectMessageCopy"
-	DirectOffline_Table                = "direct_offline"
-	DirectOffline_TableGo              = "DirectOffline"
-	DirectToMessage_Table              = "direct_to_message"
-	DirectToMessage_TableGo            = "DirectToMessage"
 	FollowingList_Table                = "following_list"
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
 	FollowingListMember_TableGo        = "FollowingListMember"
 	FollowingListMemberRemoved_Table   = "following_list_member_removed"
 	FollowingListMemberRemoved_TableGo = "FollowingListMemberRemoved"
-	GeneralLog_Table                   = "general_log"
-	GeneralLog_TableGo                 = "GeneralLog"
 	Group_Table                        = "group"
 	Group_TableGo                      = "Group"
 	GroupMember_Table                  = "group_member"
 	GroupMember_TableGo                = "GroupMember"
 	GroupMessage_Table                 = "group_message"
 	GroupMessage_TableGo               = "GroupMessage"
-	Key_Table                          = "keys"
-	Key_TableGo                        = "Key"
 	Like_Table                         = "likes"
 	Like_TableGo                       = "Like"
 	Media_Table                        = "media"
 	Media_TableGo                      = "Media"
-	MessageFile_Table                  = "message_file"
-	MessageFile_TableGo                = "MessageFile"
 	Notify_Table                       = "notify"
 	Notify_TableGo                     = "Notify"
 	NotifyRemoved_Table                = "notify_removed"
@@ -47,6 +29,8 @@ const (
 	PhoneContact_TableGo               = "PhoneContact"
 	Post_Table                         = "post"
 	Post_TableGo                       = "Post"
+	PostKey_Table                      = "post_keys"
+	PostKey_TableGo                    = "PostKey"
 	SearchClicked_Table                = "search_clicked"
 	SearchClicked_TableGo              = "SearchClicked"
 	Session_Table                      = "session"
@@ -71,6 +55,16 @@ const (
 	UserMetaInfo_TableGo               = "UserMetaInfo"
 	UserPassword_Table                 = "user_password"
 	UserPassword_TableGo               = "UserPassword"
+	Chat_Table                         = "chat"
+	Chat_TableGo                       = "Chat"
+	ChatLastMessage_Table              = "chat_last_message"
+	ChatLastMessage_TableGo            = "ChatLastMessage"
+	ChatSync_Table                     = "chat_sync"
+	ChatSync_TableGo                   = "ChatSync"
+	DirectMessage_Table                = "direct_message"
+	DirectMessage_TableGo              = "DirectMessage"
+	MessageFile_Table                  = "message_file"
+	MessageFile_TableGo                = "MessageFile"
 )
 
 var Action = struct {
@@ -96,48 +90,6 @@ var Action = struct {
 	Seq:            "Seq",
 }
 
-var Chat = struct {
-	ChatKey      string
-	RoomKey      string
-	RoomTypeEnum string
-	UserId       string
-	PeerUserId   string
-	GroupId      string
-	CreatedTime  string
-	Seq          string
-	SeenSeq      string
-	UpdatedMs    string
-}{
-
-	ChatKey:      "ChatKey",
-	RoomKey:      "RoomKey",
-	RoomTypeEnum: "RoomTypeEnum",
-	UserId:       "UserId",
-	PeerUserId:   "PeerUserId",
-	GroupId:      "GroupId",
-	CreatedTime:  "CreatedTime",
-	Seq:          "Seq",
-	SeenSeq:      "SeenSeq",
-	UpdatedMs:    "UpdatedMs",
-}
-
-var ChatSync = struct {
-	SyncId         string
-	ToUserId       string
-	ChatSyncTypeId string
-	ChatKey        string
-	MessageId      string
-	CreatedTime    string
-}{
-
-	SyncId:         "SyncId",
-	ToUserId:       "ToUserId",
-	ChatSyncTypeId: "ChatSyncTypeId",
-	ChatKey:        "ChatKey",
-	MessageId:      "MessageId",
-	CreatedTime:    "CreatedTime",
-}
-
 var Comment = struct {
 	CommentId   string
 	UserId      string
@@ -155,102 +107,6 @@ var Comment = struct {
 	LikesCount:  "LikesCount",
 	CreatedTime: "CreatedTime",
 	Seq:         "Seq",
-}
-
-var DirectMessage = struct {
-	ChatKey            string
-	MessageId          string
-	RoomKey            string
-	UserId             string
-	MessageFileId      string
-	MessageTypeEnum    string
-	Text               string
-	CreatedTime        string
-	Seq                string
-	PeerReceivedTime   string
-	PeerSeenTime       string
-	DeliviryStatusEnum string
-	ExtraPB            string
-}{
-
-	ChatKey:            "ChatKey",
-	MessageId:          "MessageId",
-	RoomKey:            "RoomKey",
-	UserId:             "UserId",
-	MessageFileId:      "MessageFileId",
-	MessageTypeEnum:    "MessageTypeEnum",
-	Text:               "Text",
-	CreatedTime:        "CreatedTime",
-	Seq:                "Seq",
-	PeerReceivedTime:   "PeerReceivedTime",
-	PeerSeenTime:       "PeerSeenTime",
-	DeliviryStatusEnum: "DeliviryStatusEnum",
-	ExtraPB:            "ExtraPB",
-}
-
-var DirectMessageCopy = struct {
-	MessageId            string
-	MessageKey           string
-	RoomKey              string
-	UserId               string
-	MessageFileId        string
-	MessageTypeEnumId    string
-	Text                 string
-	CreatedSe            string
-	PeerReceivedTime     string
-	PeerSeenTime         string
-	DeliviryStatusEnumId string
-}{
-
-	MessageId:            "MessageId",
-	MessageKey:           "MessageKey",
-	RoomKey:              "RoomKey",
-	UserId:               "UserId",
-	MessageFileId:        "MessageFileId",
-	MessageTypeEnumId:    "MessageTypeEnumId",
-	Text:                 "Text",
-	CreatedSe:            "CreatedSe",
-	PeerReceivedTime:     "PeerReceivedTime",
-	PeerSeenTime:         "PeerSeenTime",
-	DeliviryStatusEnumId: "DeliviryStatusEnumId",
-}
-
-var DirectOffline = struct {
-	DirectOfflineId string
-	ToUserId        string
-	ChatKey         string
-	MessageId       string
-	MessageFileId   string
-	PBClass         string
-	DataPB          string
-	DataJson        string
-	DataTemp        string
-	AtTimeMs        string
-}{
-
-	DirectOfflineId: "DirectOfflineId",
-	ToUserId:        "ToUserId",
-	ChatKey:         "ChatKey",
-	MessageId:       "MessageId",
-	MessageFileId:   "MessageFileId",
-	PBClass:         "PBClass",
-	DataPB:          "DataPB",
-	DataJson:        "DataJson",
-	DataTemp:        "DataTemp",
-	AtTimeMs:        "AtTimeMs",
-}
-
-var DirectToMessage = struct {
-	Id           string
-	ChatKey      string
-	MessageId    string
-	SourceEnumId string
-}{
-
-	Id:           "Id",
-	ChatKey:      "ChatKey",
-	MessageId:    "MessageId",
-	SourceEnumId: "SourceEnumId",
 }
 
 var FollowingList = struct {
@@ -302,25 +158,6 @@ var FollowingListMemberRemoved = struct {
 	UserId:           "UserId",
 	UnFollowedUserId: "UnFollowedUserId",
 	UpdatedTime:      "UpdatedTime",
-}
-
-var GeneralLog = struct {
-	Id        string
-	ToUserId  string
-	TargetId  string
-	LogTypeId string
-	ExtraPB   string
-	ExtraJson string
-	CreatedMs string
-}{
-
-	Id:        "Id",
-	ToUserId:  "ToUserId",
-	TargetId:  "TargetId",
-	LogTypeId: "LogTypeId",
-	ExtraPB:   "ExtraPB",
-	ExtraJson: "ExtraJson",
-	CreatedMs: "CreatedMs",
 }
 
 var Group = struct {
@@ -384,13 +221,6 @@ var GroupMessage = struct {
 	DeliveryStatusEnum: "DeliveryStatusEnum",
 }
 
-var Key = struct {
-	Key string
-}{
-
-	Key: "Key",
-}
-
 var Like = struct {
 	Id           string
 	PostId       string
@@ -435,35 +265,6 @@ var Media = struct {
 	Md5Hash:       "Md5Hash",
 	Color:         "Color",
 	CreatedTime:   "CreatedTime",
-}
-
-var MessageFile = struct {
-	MessageFileId  string
-	MessageFileKey string
-	UserId         string
-	Title          string
-	Size           string
-	FileTypeEnum   string
-	Width          string
-	Height         string
-	Duration       string
-	Extension      string
-	Md5Hash        string
-	CreatedTime    string
-}{
-
-	MessageFileId:  "MessageFileId",
-	MessageFileKey: "MessageFileKey",
-	UserId:         "UserId",
-	Title:          "Title",
-	Size:           "Size",
-	FileTypeEnum:   "FileTypeEnum",
-	Width:          "Width",
-	Height:         "Height",
-	Duration:       "Duration",
-	Extension:      "Extension",
-	Md5Hash:        "Md5Hash",
-	CreatedTime:    "CreatedTime",
 }
 
 var Notify = struct {
@@ -564,6 +365,15 @@ var Post = struct {
 	EditedTime:     "EditedTime",
 	CreatedTime:    "CreatedTime",
 	ReSharedPostId: "ReSharedPostId",
+}
+
+var PostKey = struct {
+	Id  string
+	Key string
+}{
+
+	Id:  "Id",
+	Key: "Key",
 }
 
 var SearchClicked = struct {
@@ -858,4 +668,115 @@ var UserPassword = struct {
 	UserId:      "UserId",
 	Password:    "Password",
 	CreatedTime: "CreatedTime",
+}
+
+var Chat = struct {
+	ChatKey      string
+	RoomKey      string
+	RoomTypeEnum string
+	UserId       string
+	PeerUserId   string
+	GroupId      string
+	CreatedTime  string
+	Seq          string
+	SeenSeq      string
+	UpdatedMs    string
+}{
+
+	ChatKey:      "ChatKey",
+	RoomKey:      "RoomKey",
+	RoomTypeEnum: "RoomTypeEnum",
+	UserId:       "UserId",
+	PeerUserId:   "PeerUserId",
+	GroupId:      "GroupId",
+	CreatedTime:  "CreatedTime",
+	Seq:          "Seq",
+	SeenSeq:      "SeenSeq",
+	UpdatedMs:    "UpdatedMs",
+}
+
+var ChatLastMessage = struct {
+	ChatKey     string
+	LastMsgPb   string
+	LastMsgJson string
+}{
+
+	ChatKey:     "ChatKey",
+	LastMsgPb:   "LastMsgPb",
+	LastMsgJson: "LastMsgJson",
+}
+
+var ChatSync = struct {
+	SyncId         string
+	ToUserId       string
+	ChatSyncTypeId string
+	ChatKey        string
+	MessageId      string
+	MessagePb      string
+	MessageJson    string
+	CreatedTime    string
+}{
+
+	SyncId:         "SyncId",
+	ToUserId:       "ToUserId",
+	ChatSyncTypeId: "ChatSyncTypeId",
+	ChatKey:        "ChatKey",
+	MessageId:      "MessageId",
+	MessagePb:      "MessagePb",
+	MessageJson:    "MessageJson",
+	CreatedTime:    "CreatedTime",
+}
+
+var DirectMessage = struct {
+	ChatKey            string
+	MessageId          string
+	RoomKey            string
+	UserId             string
+	MessageFileId      string
+	MessageTypeEnum    string
+	Text               string
+	CreatedTime        string
+	Seq                string
+	DeliviryStatusEnum string
+	ExtraPB            string
+}{
+
+	ChatKey:            "ChatKey",
+	MessageId:          "MessageId",
+	RoomKey:            "RoomKey",
+	UserId:             "UserId",
+	MessageFileId:      "MessageFileId",
+	MessageTypeEnum:    "MessageTypeEnum",
+	Text:               "Text",
+	CreatedTime:        "CreatedTime",
+	Seq:                "Seq",
+	DeliviryStatusEnum: "DeliviryStatusEnum",
+	ExtraPB:            "ExtraPB",
+}
+
+var MessageFile = struct {
+	MessageFileId string
+	FileTypeEnum  string
+	UserId        string
+	Title         string
+	Size          string
+	Width         string
+	Height        string
+	Duration      string
+	Extension     string
+	Md5Hash       string
+	CreatedTime   string
+}{
+
+	MessageFileId: "MessageFileId",
+	FileTypeEnum:  "FileTypeEnum",
+	UserId:        "UserId",
+	Title:         "Title",
+	Size:          "Size",
+	Width:         "Width",
+	Height:        "Height",
+	Duration:      "Duration",
+	Extension:     "Extension",
+	Md5Hash:       "Md5Hash",
+	CreatedTime:   "CreatedTime",
 }

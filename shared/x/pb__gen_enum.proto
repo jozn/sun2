@@ -22,14 +22,13 @@ enum RPC_Chat_Enum {
     EMPTY = 0;
     AddNewMessage = 7534;
     SetRoomActionDoing = 7576;
+    SetMessagesAsReceived = 6852;
     SetMessagesRangeAsSeen = 1565;
     DeleteChatHistory = 5524;
     DeleteMessagesByIds = 1169;
-    SetMessagesAsReceived = 6852;
     EditMessage = 2882;
     GetChatList = 2677;
     GetChatHistoryToOlder = 7782;
-    GetFreshAllDirectMessagesList = 1094;
 }
 enum RPC_Other_Enum {
     EMPTY = 0;

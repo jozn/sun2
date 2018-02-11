@@ -40,6 +40,9 @@ func (EmptyRPC_RPC_Chat) AddNewMessage(i *PB_ChatParam_AddNewMessage, p RPC_User
 func (EmptyRPC_RPC_Chat) SetRoomActionDoing(i *PB_ChatParam_SetRoomActionDoing, p RPC_UserParam) (*PB_ChatResponse_SetRoomActionDoing, error) {
 	return nil, nil
 }
+func (EmptyRPC_RPC_Chat) SetMessagesAsReceived(i *PB_ChatParam_SetMessagesAsReceived, p RPC_UserParam) (*PB_ChatResponse_SetMessagesAsReceived, error) {
+	return nil, nil
+}
 func (EmptyRPC_RPC_Chat) SetMessagesRangeAsSeen(i *PB_ChatParam_SetChatMessagesRangeAsSeen, p RPC_UserParam) (*PB_ChatResponse_SetChatMessagesRangeAsSeen, error) {
 	return nil, nil
 }
@@ -49,9 +52,6 @@ func (EmptyRPC_RPC_Chat) DeleteChatHistory(i *PB_ChatParam_DeleteChatHistory, p 
 func (EmptyRPC_RPC_Chat) DeleteMessagesByIds(i *PB_ChatParam_DeleteMessagesByIds, p RPC_UserParam) (*PB_ChatResponse_DeleteMessagesByIds, error) {
 	return nil, nil
 }
-func (EmptyRPC_RPC_Chat) SetMessagesAsReceived(i *PB_ChatParam_SetMessagesAsReceived, p RPC_UserParam) (*PB_ChatResponse_SetMessagesAsReceived, error) {
-	return nil, nil
-}
 func (EmptyRPC_RPC_Chat) EditMessage(i *PB_ChatParam_EditMessage, p RPC_UserParam) (*PB_ChatResponse_EditMessage, error) {
 	return nil, nil
 }
@@ -59,9 +59,6 @@ func (EmptyRPC_RPC_Chat) GetChatList(i *PB_ChatParam_GetChatList, p RPC_UserPara
 	return nil, nil
 }
 func (EmptyRPC_RPC_Chat) GetChatHistoryToOlder(i *PB_ChatParam_GetChatHistoryToOlder, p RPC_UserParam) (*PB_ChatResponse_GetChatHistoryToOlder, error) {
-	return nil, nil
-}
-func (EmptyRPC_RPC_Chat) GetFreshAllDirectMessagesList(i *PB_ChatParam_GetFreshAllDirectMessagesList, p RPC_UserParam) (*PB_ChatResponse_GetFreshAllDirectMessagesList, error) {
 	return nil, nil
 }
 

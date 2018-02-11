@@ -23,7 +23,7 @@ type PB_SearchResponse_AddNewC struct {
 func (m *PB_SearchResponse_AddNewC) Reset()                    { *m = PB_SearchResponse_AddNewC{} }
 func (m *PB_SearchResponse_AddNewC) String() string            { return proto.CompactTextString(m) }
 func (*PB_SearchResponse_AddNewC) ProtoMessage()               {}
-func (*PB_SearchResponse_AddNewC) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (*PB_SearchResponse_AddNewC) Descriptor() ([]byte, []int) { return fileDescriptor6, []int{0} }
 
 func init() {
 	proto.RegisterType((*PB_SearchResponse_AddNewC)(nil), "PB_SearchResponse_AddNewC")
@@ -101,9 +101,9 @@ var _RPC_Search_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_search.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_search.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("pb_rpc_search.proto", fileDescriptor6) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor6 = []byte{
 	// 122 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x48, 0x8a, 0x2f,
 	0x2a, 0x48, 0x8e, 0x2f, 0x4e, 0x4d, 0x2c, 0x4a, 0xce, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57,

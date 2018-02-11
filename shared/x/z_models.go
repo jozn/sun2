@@ -27,56 +27,6 @@ type Action struct {
 	CreatedTime: 0,
 	Seq: 0,
 */
-// chat 'Chat'.
-type Chat struct {
-	ChatKey      string
-	RoomKey      string
-	RoomTypeEnum int
-	UserId       int
-	PeerUserId   int
-	GroupId      int
-	CreatedTime  int
-	Seq          int
-	SeenSeq      int
-	UpdatedMs    int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &Chat {
-	ChatKey: "",
-	RoomKey: "",
-	RoomTypeEnum: 0,
-	UserId: 0,
-	PeerUserId: 0,
-	GroupId: 0,
-	CreatedTime: 0,
-	Seq: 0,
-	SeenSeq: 0,
-	UpdatedMs: 0,
-*/
-// chat_sync 'ChatSync'.
-type ChatSync struct {
-	SyncId         int
-	ToUserId       int
-	ChatSyncTypeId int
-	ChatKey        string
-	MessageId      int
-	CreatedTime    int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &ChatSync {
-	SyncId: 0,
-	ToUserId: 0,
-	ChatSyncTypeId: 0,
-	ChatKey: "",
-	MessageId: 0,
-	CreatedTime: 0,
-*/
 // comment 'Comment'.
 type Comment struct {
 	CommentId   int
@@ -99,118 +49,6 @@ type Comment struct {
 	LikesCount: 0,
 	CreatedTime: 0,
 	Seq: 0,
-*/
-// direct_message 'DirectMessage'.
-type DirectMessage struct {
-	ChatKey            string
-	MessageId          int
-	RoomKey            string
-	UserId             int
-	MessageFileId      int
-	MessageTypeEnum    int
-	Text               string
-	CreatedTime        int
-	Seq                int
-	PeerReceivedTime   int
-	PeerSeenTime       int
-	DeliviryStatusEnum int
-	ExtraPB            []byte
-
-	_exists, _deleted bool
-}
-
-/*
-:= &DirectMessage {
-	ChatKey: "",
-	MessageId: 0,
-	RoomKey: "",
-	UserId: 0,
-	MessageFileId: 0,
-	MessageTypeEnum: 0,
-	Text: "",
-	CreatedTime: 0,
-	Seq: 0,
-	PeerReceivedTime: 0,
-	PeerSeenTime: 0,
-	DeliviryStatusEnum: 0,
-	ExtraPB: []byte{},
-*/
-// direct_message_copy 'DirectMessageCopy'.
-type DirectMessageCopy struct {
-	MessageId            int
-	MessageKey           string
-	RoomKey              string
-	UserId               int
-	MessageFileId        int
-	MessageTypeEnumId    int
-	Text                 string
-	CreatedSe            int
-	PeerReceivedTime     int
-	PeerSeenTime         int
-	DeliviryStatusEnumId int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &DirectMessageCopy {
-	MessageId: 0,
-	MessageKey: "",
-	RoomKey: "",
-	UserId: 0,
-	MessageFileId: 0,
-	MessageTypeEnumId: 0,
-	Text: "",
-	CreatedSe: 0,
-	PeerReceivedTime: 0,
-	PeerSeenTime: 0,
-	DeliviryStatusEnumId: 0,
-*/
-// direct_offline 'DirectOffline'.
-type DirectOffline struct {
-	DirectOfflineId int
-	ToUserId        int
-	ChatKey         string
-	MessageId       int
-	MessageFileId   int
-	PBClass         string
-	DataPB          []byte
-	DataJson        string
-	DataTemp        string //not real data
-	AtTimeMs        int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &DirectOffline {
-	DirectOfflineId: 0,
-	ToUserId: 0,
-	ChatKey: "",
-	MessageId: 0,
-	MessageFileId: 0,
-	PBClass: "",
-	DataPB: []byte{},
-	DataJson: "",
-	DataTemp: "",
-	AtTimeMs: 0,
-*/
-// direct_to_message 'DirectToMessage'.
-type DirectToMessage struct {
-	Id           int
-	ChatKey      string
-	MessageId    int
-	SourceEnumId int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &DirectToMessage {
-	Id: 0,
-	ChatKey: "",
-	MessageId: 0,
-	SourceEnumId: 0,
 */
 // following_list 'FollowingList'.
 type FollowingList struct {
@@ -274,29 +112,6 @@ type FollowingListMemberRemoved struct {
 	UserId: 0,
 	UnFollowedUserId: 0,
 	UpdatedTime: 0,
-*/
-// general_log 'GeneralLog'.
-type GeneralLog struct {
-	Id        int
-	ToUserId  int
-	TargetId  int
-	LogTypeId int
-	ExtraPB   []byte
-	ExtraJson string
-	CreatedMs int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &GeneralLog {
-	Id: 0,
-	ToUserId: 0,
-	TargetId: 0,
-	LogTypeId: 0,
-	ExtraPB: []byte{},
-	ExtraJson: "",
-	CreatedMs: 0,
 */
 // group 'Group'.
 type Group struct {
@@ -371,17 +186,6 @@ type GroupMessage struct {
 	CreatedMs: 0,
 	DeliveryStatusEnum: 0,
 */
-// keys 'Key'.
-type Key struct {
-	Key string
-
-	_exists, _deleted bool
-}
-
-/*
-:= &Key {
-	Key: "",
-*/
 // likes 'Like'.
 type Like struct {
 	Id           int
@@ -434,39 +238,6 @@ type Media struct {
 	Duration: 0,
 	Md5Hash: "",
 	Color: "",
-	CreatedTime: 0,
-*/
-// message_file 'MessageFile'.
-type MessageFile struct {
-	MessageFileId  int
-	MessageFileKey string
-	UserId         int //orginal user id
-	Title          string
-	Size           int
-	FileTypeEnum   int
-	Width          int
-	Height         int
-	Duration       int
-	Extension      string
-	Md5Hash        string
-	CreatedTime    int
-
-	_exists, _deleted bool
-}
-
-/*
-:= &MessageFile {
-	MessageFileId: 0,
-	MessageFileKey: "",
-	UserId: 0,
-	Title: "",
-	Size: 0,
-	FileTypeEnum: 0,
-	Width: 0,
-	Height: 0,
-	Duration: 0,
-	Extension: "",
-	Md5Hash: "",
 	CreatedTime: 0,
 */
 // notify 'Notify'.
@@ -584,6 +355,19 @@ type Post struct {
 	EditedTime: 0,
 	CreatedTime: 0,
 	ReSharedPostId: 0,
+*/
+// post_keys 'PostKey'.
+type PostKey struct {
+	Id  int
+	Key string
+
+	_exists, _deleted bool
+}
+
+/*
+:= &PostKey {
+	Id: 0,
+	Key: "",
 */
 // search_clicked 'SearchClicked'.
 type SearchClicked struct {
@@ -925,5 +709,136 @@ type UserPassword struct {
 := &UserPassword {
 	UserId: 0,
 	Password: "",
+	CreatedTime: 0,
+*/
+// chat 'Chat'.
+type Chat struct {
+	ChatKey      string
+	RoomKey      string
+	RoomTypeEnum int
+	UserId       int
+	PeerUserId   int
+	GroupId      int
+	CreatedTime  int
+	Seq          int
+	SeenSeq      int
+	UpdatedMs    int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &Chat {
+	ChatKey: "",
+	RoomKey: "",
+	RoomTypeEnum: 0,
+	UserId: 0,
+	PeerUserId: 0,
+	GroupId: 0,
+	CreatedTime: 0,
+	Seq: 0,
+	SeenSeq: 0,
+	UpdatedMs: 0,
+*/
+// chat_last_message 'ChatLastMessage'.
+type ChatLastMessage struct {
+	ChatKey     string
+	LastMsgPb   []byte
+	LastMsgJson string
+
+	_exists, _deleted bool
+}
+
+/*
+:= &ChatLastMessage {
+	ChatKey: "",
+	LastMsgPb: []byte{},
+	LastMsgJson: "",
+*/
+// chat_sync 'ChatSync'.
+type ChatSync struct {
+	SyncId         int
+	ToUserId       int
+	ChatSyncTypeId int
+	ChatKey        string
+	MessageId      int
+	MessagePb      []byte
+	MessageJson    string
+	CreatedTime    int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &ChatSync {
+	SyncId: 0,
+	ToUserId: 0,
+	ChatSyncTypeId: 0,
+	ChatKey: "",
+	MessageId: 0,
+	MessagePb: []byte{},
+	MessageJson: "",
+	CreatedTime: 0,
+*/
+// direct_message 'DirectMessage'.
+type DirectMessage struct {
+	ChatKey            string
+	MessageId          int
+	RoomKey            string
+	UserId             int
+	MessageFileId      int
+	MessageTypeEnum    int
+	Text               string
+	CreatedTime        int
+	Seq                int
+	DeliviryStatusEnum int
+	ExtraPB            []byte
+
+	_exists, _deleted bool
+}
+
+/*
+:= &DirectMessage {
+	ChatKey: "",
+	MessageId: 0,
+	RoomKey: "",
+	UserId: 0,
+	MessageFileId: 0,
+	MessageTypeEnum: 0,
+	Text: "",
+	CreatedTime: 0,
+	Seq: 0,
+	DeliviryStatusEnum: 0,
+	ExtraPB: []byte{},
+*/
+// message_file 'MessageFile'.
+type MessageFile struct {
+	MessageFileId int
+	FileTypeEnum  int
+	UserId        int //orginal user id
+	Title         string
+	Size          int
+	Width         int
+	Height        int
+	Duration      int
+	Extension     string
+	Md5Hash       string
+	CreatedTime   int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &MessageFile {
+	MessageFileId: 0,
+	FileTypeEnum: 0,
+	UserId: 0,
+	Title: "",
+	Size: 0,
+	Width: 0,
+	Height: 0,
+	Duration: 0,
+	Extension: "",
+	Md5Hash: "",
 	CreatedTime: 0,
 */

@@ -9,169 +9,152 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Key represents a row from 'sun.keys'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatLastMessage represents a row from 'sun_chat.chat_last_message'.
 
 // Manualy copy this to project
-type Key__ struct {
-	Id  int    `json:"Id"`  // Id -
-	Key string `json:"Key"` // Key -
+type ChatLastMessage__ struct {
+	ChatKey     string `json:"ChatKey"`     // ChatKey -
+	LastMsgPb   []byte `json:"LastMsgPb"`   // LastMsgPb -
+	LastMsgJson string `json:"LastMsgJson"` // LastMsgJson -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the Key exists in the database.
-func (k *Key) Exists() bool {
-	return k._exists
+// Exists determines if the ChatLastMessage exists in the database.
+func (clm *ChatLastMessage) Exists() bool {
+	return clm._exists
 }
 
-// Deleted provides information if the Key has been deleted from the database.
-func (k *Key) Deleted() bool {
-	return k._deleted
+// Deleted provides information if the ChatLastMessage has been deleted from the database.
+func (clm *ChatLastMessage) Deleted() bool {
+	return clm._deleted
 }
 
-// Insert inserts the Key to the database.
-func (k *Key) Insert(db XODB) error {
+// Insert inserts the ChatLastMessage to the database.
+func (clm *ChatLastMessage) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if k._exists {
+	if clm._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.keys (` +
-		`Key` +
+	// sql insert query, primary key must be provided
+	const sqlstr = `INSERT INTO sun_chat.chat_last_message (` +
+		`ChatKey, LastMsgPb, LastMsgJson` +
 		`) VALUES (` +
-		`?` +
+		`?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, k.Key)
-	res, err := db.Exec(sqlstr, k.Key)
+	XOLog(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
+	_, err = db.Exec(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
-		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
+	// set existence
+	clm._exists = true
 
-	// set primary key and existence
-	k.Id = int(id)
-	k._exists = true
-
-	OnKey_AfterInsert(k)
+	OnChatLastMessage_AfterInsert(clm)
 
 	return nil
 }
 
-// Insert inserts the Key to the database.
-func (k *Key) Replace(db XODB) error {
+// Insert inserts the ChatLastMessage to the database.
+func (clm *ChatLastMessage) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.keys (` +
-		`Key` +
+	const sqlstr = `REPLACE INTO sun_chat.chat_last_message (` +
+		`ChatKey, LastMsgPb, LastMsgJson` +
 		`) VALUES (` +
-		`?` +
+		`?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, k.Key)
-	res, err := db.Exec(sqlstr, k.Key)
+	XOLog(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
+	_, err = db.Exec(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
+	clm._exists = true
 
-	// set primary key and existence
-	k.Id = int(id)
-	k._exists = true
-
-	OnKey_AfterInsert(k)
+	OnChatLastMessage_AfterInsert(clm)
 
 	return nil
 }
 
-// Update updates the Key in the database.
-func (k *Key) Update(db XODB) error {
+// Update updates the ChatLastMessage in the database.
+func (clm *ChatLastMessage) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !k._exists {
+	if !clm._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if k._deleted {
+	if clm._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.keys SET ` +
-		`Key = ?` +
-		` WHERE Id = ?`
+	const sqlstr = `UPDATE sun_chat.chat_last_message SET ` +
+		`LastMsgPb = ?, LastMsgJson = ?` +
+		` WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, k.Key, k.Id)
-	_, err = db.Exec(sqlstr, k.Key, k.Id)
+	XOLog(sqlstr, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
+	_, err = db.Exec(sqlstr, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
 
 	XOLogErr(err)
-	OnKey_AfterUpdate(k)
+	OnChatLastMessage_AfterUpdate(clm)
 
 	return err
 }
 
-// Save saves the Key to the database.
-func (k *Key) Save(db XODB) error {
-	if k.Exists() {
-		return k.Update(db)
+// Save saves the ChatLastMessage to the database.
+func (clm *ChatLastMessage) Save(db XODB) error {
+	if clm.Exists() {
+		return clm.Update(db)
 	}
 
-	return k.Replace(db)
+	return clm.Replace(db)
 }
 
-// Delete deletes the Key from the database.
-func (k *Key) Delete(db XODB) error {
+// Delete deletes the ChatLastMessage from the database.
+func (clm *ChatLastMessage) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !k._exists {
+	if !clm._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if k._deleted {
+	if clm._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.keys WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun_chat.chat_last_message WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, k.Id)
-	_, err = db.Exec(sqlstr, k.Id)
+	XOLog(sqlstr, clm.ChatKey)
+	_, err = db.Exec(sqlstr, clm.ChatKey)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
 	// set deleted
-	k._deleted = true
+	clm._deleted = true
 
-	OnKey_AfterDelete(k)
+	OnChatLastMessage_AfterDelete(clm)
 
 	return nil
 }
@@ -182,18 +165,18 @@ func (k *Key) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Key_Deleter struct {
+type __ChatLastMessage_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __Key_Updater struct {
+type __ChatLastMessage_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __Key_Selector struct {
+type __ChatLastMessage_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -202,19 +185,19 @@ type __Key_Selector struct {
 	offset    int
 }
 
-func NewKey_Deleter() *__Key_Deleter {
-	d := __Key_Deleter{whereSep: " AND "}
+func NewChatLastMessage_Deleter() *__ChatLastMessage_Deleter {
+	d := __ChatLastMessage_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewKey_Updater() *__Key_Updater {
-	u := __Key_Updater{whereSep: " AND "}
+func NewChatLastMessage_Updater() *__ChatLastMessage_Updater {
+	u := __ChatLastMessage_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewKey_Selector() *__Key_Selector {
-	u := __Key_Selector{whereSep: " AND ", selectCol: "*"}
+func NewChatLastMessage_Selector() *__ChatLastMessage_Selector {
+	u := __ChatLastMessage_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -222,397 +205,142 @@ func NewKey_Selector() *__Key_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__Key_Deleter) Or() *__Key_Deleter {
+func (u *__ChatLastMessage_Deleter) Or() *__ChatLastMessage_Deleter {
 	u.whereSep = " OR "
 	return u
-}
-
-func (u *__Key_Deleter) Id_In(ins []int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Deleter) Id_Ins(ins ...int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Deleter) Id_NotIn(ins []int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Key_Deleter) Id_Eq(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Deleter) Id_NotEq(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Deleter) Id_LT(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Deleter) Id_LE(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Deleter) Id_GT(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Deleter) Id_GE(val int) *__Key_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
 }
 
 ////////ints
-func (u *__Key_Updater) Or() *__Key_Updater {
+func (u *__ChatLastMessage_Updater) Or() *__ChatLastMessage_Updater {
 	u.whereSep = " OR "
 	return u
-}
-
-func (u *__Key_Updater) Id_In(ins []int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Updater) Id_Ins(ins ...int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Updater) Id_NotIn(ins []int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Key_Updater) Id_Eq(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Updater) Id_NotEq(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Updater) Id_LT(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Updater) Id_LE(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Updater) Id_GT(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Updater) Id_GE(val int) *__Key_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
 }
 
 ////////ints
-func (u *__Key_Selector) Or() *__Key_Selector {
+func (u *__ChatLastMessage_Selector) Or() *__ChatLastMessage_Selector {
 	u.whereSep = " OR "
 	return u
-}
-
-func (u *__Key_Selector) Id_In(ins []int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Selector) Id_Ins(ins ...int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Key_Selector) Id_NotIn(ins []int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Key_Selector) Id_Eq(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Selector) Id_NotEq(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Selector) Id_LT(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Selector) Id_LE(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Selector) Id_GT(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Key_Selector) Id_GE(val int) *__Key_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
 }
 
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
 
-func (u *__Key_Deleter) Key_In(ins []string) *__Key_Deleter {
+func (u *__ChatLastMessage_Deleter) ChatKey_In(ins []string) *__ChatLastMessage_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Key_Deleter) Key_NotIn(ins []string) *__Key_Deleter {
+func (u *__ChatLastMessage_Deleter) ChatKey_NotIn(ins []string) *__ChatLastMessage_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Key_Deleter) Key_Like(val string) *__Key_Deleter {
+func (u *__ChatLastMessage_Deleter) ChatKey_Like(val string) *__ChatLastMessage_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " ChatKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Key_Deleter) Key_Eq(val string) *__Key_Deleter {
+func (d *__ChatLastMessage_Deleter) ChatKey_Eq(val string) *__ChatLastMessage_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " ChatKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Key_Deleter) Key_NotEq(val string) *__Key_Deleter {
+func (d *__ChatLastMessage_Deleter) ChatKey_NotEq(val string) *__ChatLastMessage_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ChatLastMessage_Deleter) LastMsgJson_In(ins []string) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Deleter) LastMsgJson_NotIn(ins []string) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatLastMessage_Deleter) LastMsgJson_Like(val string) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Deleter) LastMsgJson_Eq(val string) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) LastMsgJson_NotEq(val string) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -620,61 +348,121 @@ func (d *__Key_Deleter) Key_NotEq(val string) *__Key_Deleter {
 
 ////////ints
 
-func (u *__Key_Updater) Key_In(ins []string) *__Key_Updater {
+func (u *__ChatLastMessage_Updater) ChatKey_In(ins []string) *__ChatLastMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Key_Updater) Key_NotIn(ins []string) *__Key_Updater {
+func (u *__ChatLastMessage_Updater) ChatKey_NotIn(ins []string) *__ChatLastMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Key_Updater) Key_Like(val string) *__Key_Updater {
+func (u *__ChatLastMessage_Updater) ChatKey_Like(val string) *__ChatLastMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " ChatKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Key_Updater) Key_Eq(val string) *__Key_Updater {
+func (d *__ChatLastMessage_Updater) ChatKey_Eq(val string) *__ChatLastMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " ChatKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Key_Updater) Key_NotEq(val string) *__Key_Updater {
+func (d *__ChatLastMessage_Updater) ChatKey_NotEq(val string) *__ChatLastMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ChatLastMessage_Updater) LastMsgJson_In(ins []string) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Updater) LastMsgJson_NotIn(ins []string) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatLastMessage_Updater) LastMsgJson_Like(val string) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Updater) LastMsgJson_Eq(val string) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) LastMsgJson_NotEq(val string) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -682,61 +470,121 @@ func (d *__Key_Updater) Key_NotEq(val string) *__Key_Updater {
 
 ////////ints
 
-func (u *__Key_Selector) Key_In(ins []string) *__Key_Selector {
+func (u *__ChatLastMessage_Selector) ChatKey_In(ins []string) *__ChatLastMessage_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Key_Selector) Key_NotIn(ins []string) *__Key_Selector {
+func (u *__ChatLastMessage_Selector) ChatKey_NotIn(ins []string) *__ChatLastMessage_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Key_Selector) Key_Like(val string) *__Key_Selector {
+func (u *__ChatLastMessage_Selector) ChatKey_Like(val string) *__ChatLastMessage_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " ChatKey LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Key_Selector) Key_Eq(val string) *__Key_Selector {
+func (d *__ChatLastMessage_Selector) ChatKey_Eq(val string) *__ChatLastMessage_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " ChatKey = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Key_Selector) Key_NotEq(val string) *__Key_Selector {
+func (d *__ChatLastMessage_Selector) ChatKey_NotEq(val string) *__ChatLastMessage_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ChatLastMessage_Selector) LastMsgJson_In(ins []string) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) LastMsgJson_NotIn(ins []string) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatLastMessage_Selector) LastMsgJson_Like(val string) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Selector) LastMsgJson_Eq(val string) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) LastMsgJson_NotEq(val string) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgJson != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -748,30 +596,21 @@ func (d *__Key_Selector) Key_NotEq(val string) *__Key_Selector {
 
 //ints
 
-func (u *__Key_Updater) Id(newVal int) *__Key_Updater {
-	u.updates[" Id = ? "] = newVal
+//string
+func (u *__ChatLastMessage_Updater) ChatKey(newVal string) *__ChatLastMessage_Updater {
+	u.updates[" ChatKey = ? "] = newVal
 	return u
 }
 
-func (u *__Key_Updater) Id_Increment(count int) *__Key_Updater {
-	if count > 0 {
-		u.updates[" Id = Id+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
-	}
-
-	return u
-}
+//ints
 
 //string
 
 //ints
 
 //string
-func (u *__Key_Updater) Key(newVal string) *__Key_Updater {
-	u.updates[" Key = ? "] = newVal
+func (u *__ChatLastMessage_Updater) LastMsgJson(newVal string) *__ChatLastMessage_Updater {
+	u.updates[" LastMsgJson = ? "] = newVal
 	return u
 }
 
@@ -780,51 +619,66 @@ func (u *__Key_Updater) Key(newVal string) *__Key_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Key_Selector) OrderBy_Id_Desc() *__Key_Selector {
-	u.orderBy = " ORDER BY Id DESC "
+func (u *__ChatLastMessage_Selector) OrderBy_ChatKey_Desc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY ChatKey DESC "
 	return u
 }
 
-func (u *__Key_Selector) OrderBy_Id_Asc() *__Key_Selector {
-	u.orderBy = " ORDER BY Id ASC "
+func (u *__ChatLastMessage_Selector) OrderBy_ChatKey_Asc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY ChatKey ASC "
 	return u
 }
 
-func (u *__Key_Selector) Select_Id() *__Key_Selector {
-	u.selectCol = "Id"
+func (u *__ChatLastMessage_Selector) Select_ChatKey() *__ChatLastMessage_Selector {
+	u.selectCol = "ChatKey"
 	return u
 }
 
-func (u *__Key_Selector) OrderBy_Key_Desc() *__Key_Selector {
-	u.orderBy = " ORDER BY Key DESC "
+func (u *__ChatLastMessage_Selector) OrderBy_LastMsgPb_Desc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY LastMsgPb DESC "
 	return u
 }
 
-func (u *__Key_Selector) OrderBy_Key_Asc() *__Key_Selector {
-	u.orderBy = " ORDER BY Key ASC "
+func (u *__ChatLastMessage_Selector) OrderBy_LastMsgPb_Asc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY LastMsgPb ASC "
 	return u
 }
 
-func (u *__Key_Selector) Select_Key() *__Key_Selector {
-	u.selectCol = "Key"
+func (u *__ChatLastMessage_Selector) Select_LastMsgPb() *__ChatLastMessage_Selector {
+	u.selectCol = "LastMsgPb"
 	return u
 }
 
-func (u *__Key_Selector) Limit(num int) *__Key_Selector {
+func (u *__ChatLastMessage_Selector) OrderBy_LastMsgJson_Desc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY LastMsgJson DESC "
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) OrderBy_LastMsgJson_Asc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY LastMsgJson ASC "
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) Select_LastMsgJson() *__ChatLastMessage_Selector {
+	u.selectCol = "LastMsgJson"
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) Limit(num int) *__ChatLastMessage_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Key_Selector) Offset(num int) *__Key_Selector {
+func (u *__ChatLastMessage_Selector) Offset(num int) *__ChatLastMessage_Selector {
 	u.offset = num
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Key_Selector) _stoSql() (string, []interface{}) {
+func (u *__ChatLastMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.keys"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.chat_last_message"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -844,14 +698,14 @@ func (u *__Key_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Key_Selector) GetRow(db *sqlx.DB) (*Key, error) {
+func (u *__ChatLastMessage_Selector) GetRow(db *sqlx.DB) (*ChatLastMessage, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	row := &Key{}
+	row := &ChatLastMessage{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
@@ -861,19 +715,19 @@ func (u *__Key_Selector) GetRow(db *sqlx.DB) (*Key, error) {
 
 	row._exists = true
 
-	OnKey_LoadOne(row)
+	OnChatLastMessage_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Key_Selector) GetRows(db *sqlx.DB) ([]*Key, error) {
+func (u *__ChatLastMessage_Selector) GetRows(db *sqlx.DB) ([]*ChatLastMessage, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*Key
+	var rows []*ChatLastMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -889,20 +743,20 @@ func (u *__Key_Selector) GetRows(db *sqlx.DB) ([]*Key, error) {
 		rows[i]._exists = true
 	}
 
-	OnKey_LoadMany(rows)
+	OnChatLastMessage_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Key_Selector) GetRows2(db *sqlx.DB) ([]Key, error) {
+func (u *__ChatLastMessage_Selector) GetRows2(db *sqlx.DB) ([]ChatLastMessage, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
 	XOLog(sqlstr, whereArgs)
 
-	var rows []*Key
+	var rows []*ChatLastMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
@@ -918,9 +772,9 @@ func (u *__Key_Selector) GetRows2(db *sqlx.DB) ([]Key, error) {
 		rows[i]._exists = true
 	}
 
-	OnKey_LoadMany(rows)
+	OnChatLastMessage_LoadMany(rows)
 
-	rows2 := make([]Key, len(rows))
+	rows2 := make([]ChatLastMessage, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -929,7 +783,7 @@ func (u *__Key_Selector) GetRows2(db *sqlx.DB) ([]Key, error) {
 	return rows2, nil
 }
 
-func (u *__Key_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__ChatLastMessage_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -947,7 +801,7 @@ func (u *__Key_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Key_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__ChatLastMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -965,7 +819,7 @@ func (u *__Key_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Key_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__ChatLastMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -983,7 +837,7 @@ func (u *__Key_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Key_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__ChatLastMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
@@ -1002,7 +856,7 @@ func (u *__Key_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Key_Updater) Update(db XODB) (int, error) {
+func (u *__ChatLastMessage_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -1019,7 +873,7 @@ func (u *__Key_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.keys SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.chat_last_message SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1041,7 +895,7 @@ func (u *__Key_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Key_Deleter) Delete(db XODB) (int, error) {
+func (d *__ChatLastMessage_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -1054,7 +908,7 @@ func (d *__Key_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.keys WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.chat_last_message WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -1074,21 +928,21 @@ func (d *__Key_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Key ////////////////
+///////////////////////// Mass insert - replace for  ChatLastMessage ////////////////
 
-func MassInsert_Key(rows []Key, db XODB) error {
+func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.keys (" +
-		"Key" +
+	sqlstr := "INSERT INTO sun_chat.chat_last_message (" +
+		"ChatKey, LastMsgPb, LastMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -1096,7 +950,9 @@ func MassInsert_Key(rows []Key, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Key)
+		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.LastMsgPb)
+		vals = append(vals, row.LastMsgJson)
 
 	}
 
@@ -1111,15 +967,15 @@ func MassInsert_Key(rows []Key, db XODB) error {
 	return nil
 }
 
-func MassReplace_Key(rows []Key, db XODB) error {
+func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.keys (" +
-		"Key" +
+	sqlstr := "REPLACE INTO sun_chat.chat_last_message (" +
+		"ChatKey, LastMsgPb, LastMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -1127,7 +983,9 @@ func MassReplace_Key(rows []Key, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Key)
+		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.LastMsgPb)
+		vals = append(vals, row.LastMsgJson)
 
 	}
 
@@ -1143,6 +1001,8 @@ func MassReplace_Key(rows []Key, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

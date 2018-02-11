@@ -7,9 +7,6 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 
-import "pb_tables.proto";
-import "pb_views.proto";
-
 enum MediaTypeEnum {
     MEDIA_IMAGE = 0;
     MEDIA_VIDEO = 1;
@@ -74,4 +71,29 @@ enum ActionEnum{
     ACTION_POST_LIKED = 0;
     ACTION_POST_COMMENTED = 1;
     ACTION_FOLLOWED_USER = 2;
+}
+
+enum ProfilePrivacyLevelEnum {
+    NONE = 0;
+}
+
+// chat
+
+enum RoomActionDoingEnum {
+    UNKNOWN_ROOM_ACTION_DOING = 0;
+    CANCEL = 1;
+    TYPING = 2;
+    SENDING_IMAGE = 3;
+    CAPTURING_IMAGE = 4;
+    SENDING_VIDEO = 5;
+    CAPTURING_VIDEO = 6;
+    SENDING_AUDIO = 7;
+    RECORDING_VOICE = 8;
+    SENDING_VOICE = 9;
+    SENDING_DOCUMENT = 11;
+    SENDING_GIF = 12;
+    SENDING_FILE = 13;
+    SENDING_LOCATION = 14;
+    CHOOSING_CONTACT = 15;
+    PAINTING = 16;
 }

@@ -9,7 +9,6 @@ option go_package = "x";
 
 import "pb_global.proto";
 import "pb_views.proto";
-import "pb_view_social.proto";
 
 message PB_SocialParam_AddComment {
     int64 PostId = 1;

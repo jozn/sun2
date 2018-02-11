@@ -7,7 +7,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 
-import "pb_enums.proto";
+import "pb_enum.proto";
 
 //////////////////////////// User //////////////////////////////////
 

@@ -7,7 +7,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 import "pb_global.proto";
-import "pb_view_social.proto";
+import "pb_views.proto";
 
 
 message PB_PageParam_GetCommentsPage {

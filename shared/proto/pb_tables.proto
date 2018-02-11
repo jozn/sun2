@@ -18,26 +18,6 @@ message PB_Action {
     int32 CreatedTime = 8;
     int32 Seq = 9;
 }
-message PB_Chat {
-    string ChatKey = 1;
-    string RoomKey = 2;
-    int32 RoomTypeEnum = 3;
-    int32 UserId = 4;
-    int32 PeerUserId = 5;
-    int64 GroupId = 6;
-    int32 CreatedTime = 7;
-    int32 Seq = 8;
-    int32 SeenSeq = 9;
-    int64 UpdatedMs = 10;
-}
-message PB_ChatSync {
-    int64 SyncId = 1;
-    int32 ToUserId = 2;
-    int32 ChatSyncTypeId = 3;
-    string ChatKey = 4;
-    int64 MessageId = 5;
-    int32 CreatedTime = 6;
-}
 message PB_Comment {
     int64 CommentId = 1;
     int32 UserId = 2;
@@ -46,52 +26,6 @@ message PB_Comment {
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
     int32 Seq = 7;
-}
-message PB_DirectMessage {
-    string ChatKey = 1;
-    int64 MessageId = 2;
-    string RoomKey = 3;
-    int32 UserId = 4;
-    int64 MessageFileId = 5;
-    int32 MessageTypeEnum = 6;
-    string Text = 7;
-    int32 CreatedTime = 8;
-    int32 Seq = 9;
-    int32 PeerReceivedTime = 10;
-    int32 PeerSeenTime = 11;
-    int32 DeliviryStatusEnum = 12;
-    bytes ExtraPB = 13;
-}
-message PB_DirectMessageCopy {
-    int64 MessageId = 1;
-    string MessageKey = 2;
-    string RoomKey = 3;
-    int32 UserId = 4;
-    int64 MessageFileId = 5;
-    int32 MessageTypeEnumId = 6;
-    string Text = 7;
-    int32 CreatedSe = 8;
-    int32 PeerReceivedTime = 9;
-    int32 PeerSeenTime = 10;
-    int32 DeliviryStatusEnumId = 11;
-}
-message PB_DirectOffline {
-    int64 DirectOfflineId = 1;
-    int32 ToUserId = 2;
-    string ChatKey = 3;
-    int64 MessageId = 4;
-    int64 MessageFileId = 5;
-    string PBClass = 6;
-    bytes DataPB = 7;
-    string DataJson = 8;
-    string DataTemp = 9;
-    int64 AtTimeMs = 10;
-}
-message PB_DirectToMessage {
-    int64 Id = 1;
-    string ChatKey = 2;
-    int64 MessageId = 3;
-    int32 SourceEnumId = 4;
 }
 message PB_FollowingList {
     int32 Id = 1;
@@ -116,15 +50,6 @@ message PB_FollowingListMemberRemoved {
     int32 UserId = 3;
     int32 UnFollowedUserId = 4;
     int32 UpdatedTime = 5;
-}
-message PB_GeneralLog {
-    int64 Id = 1;
-    int32 ToUserId = 2;
-    int32 TargetId = 3;
-    int32 LogTypeId = 4;
-    bytes ExtraPB = 5;
-    string ExtraJson = 6;
-    int64 CreatedMs = 7;
 }
 message PB_Group {
     int64 GroupId = 1;
@@ -155,9 +80,6 @@ message PB_GroupMessage {
     int64 CreatedMs = 7;
     int32 DeliveryStatusEnum = 8;
 }
-message PB_Key {
-    string Key = 1;
-}
 message PB_Like {
     int64 Id = 1;
     int64 PostId = 2;
@@ -178,20 +100,6 @@ message PB_Media {
     int32 Duration = 9;
     string Md5Hash = 10;
     string Color = 11;
-    int32 CreatedTime = 12;
-}
-message PB_MessageFile {
-    int64 MessageFileId = 1;
-    string MessageFileKey = 2;
-    int32 UserId = 3;
-    string Title = 4;
-    int32 Size = 5;
-    int32 FileTypeEnum = 6;
-    int32 Width = 7;
-    int32 Height = 8;
-    int32 Duration = 9;
-    string Extension = 10;
-    string Md5Hash = 11;
     int32 CreatedTime = 12;
 }
 message PB_Notify {
@@ -241,6 +149,10 @@ message PB_Post {
     int32 EditedTime = 14;
     int32 CreatedTime = 15;
     int64 ReSharedPostId = 16;
+}
+message PB_PostKey {
+    int32 Id = 1;
+    string Key = 2;
 }
 message PB_SearchClicked {
     int64 Id = 1;
@@ -382,4 +294,57 @@ message PB_UserPassword {
     int32 UserId = 1;
     string Password = 2;
     int32 CreatedTime = 3;
+}
+message PB_Chat {
+    string ChatKey = 1;
+    string RoomKey = 2;
+    int32 RoomTypeEnum = 3;
+    int32 UserId = 4;
+    int32 PeerUserId = 5;
+    int64 GroupId = 6;
+    int32 CreatedTime = 7;
+    int32 Seq = 8;
+    int32 SeenSeq = 9;
+    int64 UpdatedMs = 10;
+}
+message PB_ChatLastMessage {
+    string ChatKey = 1;
+    bytes LastMsgPb = 2;
+    string LastMsgJson = 3;
+}
+message PB_ChatSync {
+    int64 SyncId = 1;
+    int32 ToUserId = 2;
+    int32 ChatSyncTypeId = 3;
+    string ChatKey = 4;
+    int64 MessageId = 5;
+    bytes MessagePb = 6;
+    string MessageJson = 7;
+    int32 CreatedTime = 8;
+}
+message PB_DirectMessage {
+    string ChatKey = 1;
+    int64 MessageId = 2;
+    string RoomKey = 3;
+    int32 UserId = 4;
+    int64 MessageFileId = 5;
+    int32 MessageTypeEnum = 6;
+    string Text = 7;
+    int32 CreatedTime = 8;
+    int32 Seq = 9;
+    int32 DeliviryStatusEnum = 10;
+    bytes ExtraPB = 11;
+}
+message PB_MessageFile {
+    int64 MessageFileId = 1;
+    int32 FileTypeEnum = 2;
+    int32 UserId = 3;
+    string Title = 4;
+    int32 Size = 5;
+    int32 Width = 6;
+    int32 Height = 7;
+    int32 Duration = 8;
+    string Extension = 9;
+    string Md5Hash = 10;
+    int32 CreatedTime = 11;
 }

@@ -37,70 +37,6 @@ func (c _StoreImpl) PreLoadActionByActionIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
-	o, ok := RowCache.Get("Chat:" + ChatKey)
-	if ok {
-		if obj, ok := o.(*Chat); ok {
-			return obj, true
-		}
-	}
-	obj2, err := ChatByChatKey(base.DB, ChatKey)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadChatByChatKeys(ids []string) {
-	not_cached := make([]string, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("Chat:" + id)
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewChat_Selector().ChatKey_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 string
-
-func (c _StoreImpl) GetChatSyncBySyncId(SyncId int) (*ChatSync, bool) {
-	o, ok := RowCache.Get("ChatSync:" + strconv.Itoa(SyncId))
-	if ok {
-		if obj, ok := o.(*ChatSync); ok {
-			return obj, true
-		}
-	}
-	obj2, err := ChatSyncBySyncId(base.DB, SyncId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadChatSyncBySyncIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("ChatSync:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewChatSync_Selector().SyncId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetCommentByCommentId(CommentId int) (*Comment, bool) {
 	o, ok := RowCache.Get("Comment:" + strconv.Itoa(CommentId))
 	if ok {
@@ -128,134 +64,6 @@ func (c _StoreImpl) PreLoadCommentByCommentIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewComment_Selector().CommentId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetDirectMessageByMessageId(MessageId int) (*DirectMessage, bool) {
-	o, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(MessageId))
-	if ok {
-		if obj, ok := o.(*DirectMessage); ok {
-			return obj, true
-		}
-	}
-	obj2, err := DirectMessageByMessageId(base.DB, MessageId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewDirectMessage_Selector().MessageId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetDirectMessageCopyByMessageId(MessageId int) (*DirectMessageCopy, bool) {
-	o, ok := RowCache.Get("DirectMessageCopy:" + strconv.Itoa(MessageId))
-	if ok {
-		if obj, ok := o.(*DirectMessageCopy); ok {
-			return obj, true
-		}
-	}
-	obj2, err := DirectMessageCopyByMessageId(base.DB, MessageId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadDirectMessageCopyByMessageIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("DirectMessageCopy:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewDirectMessageCopy_Selector().MessageId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetDirectOfflineByDirectOfflineId(DirectOfflineId int) (*DirectOffline, bool) {
-	o, ok := RowCache.Get("DirectOffline:" + strconv.Itoa(DirectOfflineId))
-	if ok {
-		if obj, ok := o.(*DirectOffline); ok {
-			return obj, true
-		}
-	}
-	obj2, err := DirectOfflineByDirectOfflineId(base.DB, DirectOfflineId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadDirectOfflineByDirectOfflineIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("DirectOffline:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewDirectOffline_Selector().DirectOfflineId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetDirectToMessageById(Id int) (*DirectToMessage, bool) {
-	o, ok := RowCache.Get("DirectToMessage:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*DirectToMessage); ok {
-			return obj, true
-		}
-	}
-	obj2, err := DirectToMessageById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadDirectToMessageByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("DirectToMessage:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewDirectToMessage_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -357,38 +165,6 @@ func (c _StoreImpl) PreLoadFollowingListMemberRemovedByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetGeneralLogById(Id int) (*GeneralLog, bool) {
-	o, ok := RowCache.Get("GeneralLog:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*GeneralLog); ok {
-			return obj, true
-		}
-	}
-	obj2, err := GeneralLogById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadGeneralLogByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("GeneralLog:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewGeneralLog_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetGroupByGroupId(GroupId int) (*Group, bool) {
 	o, ok := RowCache.Get("Group:" + strconv.Itoa(GroupId))
 	if ok {
@@ -485,38 +261,6 @@ func (c _StoreImpl) PreLoadGroupMessageByMessageIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetKeyByKey(Key string) (*Key, bool) {
-	o, ok := RowCache.Get("Key:" + Key)
-	if ok {
-		if obj, ok := o.(*Key); ok {
-			return obj, true
-		}
-	}
-	obj2, err := KeyByKey(base.DB, Key)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadKeyByKeys(ids []string) {
-	not_cached := make([]string, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("Key:" + id)
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewKey_Selector().Key_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 string
-
 func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
 	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
 	if ok {
@@ -576,38 +320,6 @@ func (c _StoreImpl) PreLoadMediaByMediaIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewMedia_Selector().MediaId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetMessageFileByMessageFileId(MessageFileId int) (*MessageFile, bool) {
-	o, ok := RowCache.Get("MessageFile:" + strconv.Itoa(MessageFileId))
-	if ok {
-		if obj, ok := o.(*MessageFile); ok {
-			return obj, true
-		}
-	}
-	obj2, err := MessageFileByMessageFileId(base.DB, MessageFileId)
-	if err == nil {
-		return obj2, true
-	}
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadMessageFileByMessageFileIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("MessageFile:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewMessageFile_Selector().MessageFileId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -736,6 +448,38 @@ func (c _StoreImpl) PreLoadPostByPostIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPost_Selector().PostId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostKeyById(Id int) (*PostKey, bool) {
+	o, ok := RowCache.Get("PostKey:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostKeyById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostKeyByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostKey:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostKey_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1120,6 +864,166 @@ func (c _StoreImpl) PreLoadUserPasswordByUserIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewUserPassword_Selector().UserId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
+	o, ok := RowCache.Get("Chat:" + ChatKey)
+	if ok {
+		if obj, ok := o.(*Chat); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ChatByChatKey(base.DB, ChatKey)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChatByChatKeys(ids []string) {
+	not_cached := make([]string, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Chat:" + id)
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewChat_Selector().ChatKey_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 string
+
+func (c _StoreImpl) GetChatLastMessageByChatKey(ChatKey string) (*ChatLastMessage, bool) {
+	o, ok := RowCache.Get("ChatLastMessage:" + ChatKey)
+	if ok {
+		if obj, ok := o.(*ChatLastMessage); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ChatLastMessageByChatKey(base.DB, ChatKey)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChatLastMessageByChatKeys(ids []string) {
+	not_cached := make([]string, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ChatLastMessage:" + id)
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewChatLastMessage_Selector().ChatKey_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 string
+
+func (c _StoreImpl) GetChatSyncBySyncId(SyncId int) (*ChatSync, bool) {
+	o, ok := RowCache.Get("ChatSync:" + strconv.Itoa(SyncId))
+	if ok {
+		if obj, ok := o.(*ChatSync); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ChatSyncBySyncId(base.DB, SyncId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChatSyncBySyncIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ChatSync:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewChatSync_Selector().SyncId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetDirectMessageByMessageId(MessageId int) (*DirectMessage, bool) {
+	o, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(MessageId))
+	if ok {
+		if obj, ok := o.(*DirectMessage); ok {
+			return obj, true
+		}
+	}
+	obj2, err := DirectMessageByMessageId(base.DB, MessageId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewDirectMessage_Selector().MessageId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetMessageFileByMessageFileId(MessageFileId int) (*MessageFile, bool) {
+	o, ok := RowCache.Get("MessageFile:" + strconv.Itoa(MessageFileId))
+	if ok {
+		if obj, ok := o.(*MessageFile); ok {
+			return obj, true
+		}
+	}
+	obj2, err := MessageFileByMessageFileId(base.DB, MessageFileId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadMessageFileByMessageFileIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("MessageFile:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewMessageFile_Selector().MessageFileId_In(not_cached).GetRows(base.DB)
 	}
 }
 

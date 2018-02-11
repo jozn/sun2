@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatSync represents a row from 'sun.chat_sync'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatSync represents a row from 'sun_chat.chat_sync'.
 
 // Manualy copy this to project
 type ChatSync__ struct {
@@ -18,6 +18,8 @@ type ChatSync__ struct {
 	ChatSyncTypeId int    `json:"ChatSyncTypeId"` // ChatSyncTypeId -
 	ChatKey        string `json:"ChatKey"`        // ChatKey -
 	MessageId      int    `json:"MessageId"`      // MessageId -
+	MessagePb      []byte `json:"MessagePb"`      // MessagePb -
+	MessageJson    string `json:"MessageJson"`    // MessageJson -
 	CreatedTime    int    `json:"CreatedTime"`    // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
@@ -43,15 +45,15 @@ func (cs *ChatSync) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.chat_sync (` +
-		`SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, CreatedTime` +
+	const sqlstr = `INSERT INTO sun_chat.chat_sync (` +
+		`SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime)
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime)
+	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -70,15 +72,15 @@ func (cs *ChatSync) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.chat_sync (` +
-		`SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, CreatedTime` +
+	const sqlstr = `REPLACE INTO sun_chat.chat_sync (` +
+		`SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime)
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime)
+	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -106,13 +108,13 @@ func (cs *ChatSync) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.chat_sync SET ` +
-		`ToUserId = ?, ChatSyncTypeId = ?, ChatKey = ?, MessageId = ?, CreatedTime = ?` +
+	const sqlstr = `UPDATE sun_chat.chat_sync SET ` +
+		`ToUserId = ?, ChatSyncTypeId = ?, ChatKey = ?, MessageId = ?, MessagePb = ?, MessageJson = ?, CreatedTime = ?` +
 		` WHERE SyncId = ?`
 
 	// run query
-	XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime, cs.SyncId)
-	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.CreatedTime, cs.SyncId)
+	XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.ChatKey, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
 
 	XOLogErr(err)
 	OnChatSync_AfterUpdate(cs)
@@ -144,7 +146,7 @@ func (cs *ChatSync) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.chat_sync WHERE SyncId = ?`
+	const sqlstr = `DELETE FROM sun_chat.chat_sync WHERE SyncId = ?`
 
 	// run query
 	XOLog(sqlstr, cs.SyncId)
@@ -1864,6 +1866,66 @@ func (d *__ChatSync_Deleter) ChatKey_NotEq(val string) *__ChatSync_Deleter {
 	return d
 }
 
+func (u *__ChatSync_Deleter) MessageJson_In(ins []string) *__ChatSync_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatSync_Deleter) MessageJson_NotIn(ins []string) *__ChatSync_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatSync_Deleter) MessageJson_Like(val string) *__ChatSync_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatSync_Deleter) MessageJson_Eq(val string) *__ChatSync_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatSync_Deleter) MessageJson_NotEq(val string) *__ChatSync_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 
 func (u *__ChatSync_Updater) ChatKey_In(ins []string) *__ChatSync_Updater {
@@ -1926,6 +1988,66 @@ func (d *__ChatSync_Updater) ChatKey_NotEq(val string) *__ChatSync_Updater {
 	return d
 }
 
+func (u *__ChatSync_Updater) MessageJson_In(ins []string) *__ChatSync_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatSync_Updater) MessageJson_NotIn(ins []string) *__ChatSync_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatSync_Updater) MessageJson_Like(val string) *__ChatSync_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatSync_Updater) MessageJson_Eq(val string) *__ChatSync_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatSync_Updater) MessageJson_NotEq(val string) *__ChatSync_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 
 func (u *__ChatSync_Selector) ChatKey_In(ins []string) *__ChatSync_Selector {
@@ -1983,6 +2105,66 @@ func (d *__ChatSync_Selector) ChatKey_NotEq(val string) *__ChatSync_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ChatSync_Selector) MessageJson_In(ins []string) *__ChatSync_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatSync_Selector) MessageJson_NotIn(ins []string) *__ChatSync_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__ChatSync_Selector) MessageJson_Like(val string) *__ChatSync_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatSync_Selector) MessageJson_Eq(val string) *__ChatSync_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatSync_Selector) MessageJson_NotEq(val string) *__ChatSync_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageJson != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2086,6 +2268,18 @@ func (u *__ChatSync_Updater) MessageId_Increment(count int) *__ChatSync_Updater 
 
 //ints
 
+//string
+
+//ints
+
+//string
+func (u *__ChatSync_Updater) MessageJson(newVal string) *__ChatSync_Updater {
+	u.updates[" MessageJson = ? "] = newVal
+	return u
+}
+
+//ints
+
 func (u *__ChatSync_Updater) CreatedTime(newVal int) *__ChatSync_Updater {
 	u.updates[" CreatedTime = ? "] = newVal
 	return u
@@ -2185,6 +2379,36 @@ func (u *__ChatSync_Selector) Select_MessageId() *__ChatSync_Selector {
 	return u
 }
 
+func (u *__ChatSync_Selector) OrderBy_MessagePb_Desc() *__ChatSync_Selector {
+	u.orderBy = " ORDER BY MessagePb DESC "
+	return u
+}
+
+func (u *__ChatSync_Selector) OrderBy_MessagePb_Asc() *__ChatSync_Selector {
+	u.orderBy = " ORDER BY MessagePb ASC "
+	return u
+}
+
+func (u *__ChatSync_Selector) Select_MessagePb() *__ChatSync_Selector {
+	u.selectCol = "MessagePb"
+	return u
+}
+
+func (u *__ChatSync_Selector) OrderBy_MessageJson_Desc() *__ChatSync_Selector {
+	u.orderBy = " ORDER BY MessageJson DESC "
+	return u
+}
+
+func (u *__ChatSync_Selector) OrderBy_MessageJson_Asc() *__ChatSync_Selector {
+	u.orderBy = " ORDER BY MessageJson ASC "
+	return u
+}
+
+func (u *__ChatSync_Selector) Select_MessageJson() *__ChatSync_Selector {
+	u.selectCol = "MessageJson"
+	return u
+}
+
 func (u *__ChatSync_Selector) OrderBy_CreatedTime_Desc() *__ChatSync_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
@@ -2214,7 +2438,7 @@ func (u *__ChatSync_Selector) Offset(num int) *__ChatSync_Selector {
 func (u *__ChatSync_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.chat_sync"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.chat_sync"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2409,7 +2633,7 @@ func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.chat_sync SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.chat_sync SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2444,7 +2668,7 @@ func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.chat_sync WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.chat_sync WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -2472,13 +2696,13 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.chat_sync (" +
-		"SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, CreatedTime" +
+	sqlstr := "INSERT INTO sun_chat.chat_sync (" +
+		"SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2491,6 +2715,8 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 		vals = append(vals, row.ChatSyncTypeId)
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
+		vals = append(vals, row.MessagePb)
+		vals = append(vals, row.MessageJson)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2509,12 +2735,12 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.chat_sync (" +
-		"SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, CreatedTime" +
+	sqlstr := "REPLACE INTO sun_chat.chat_sync (" +
+		"SyncId, ToUserId, ChatSyncTypeId, ChatKey, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2527,6 +2753,8 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 		vals = append(vals, row.ChatSyncTypeId)
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
+		vals = append(vals, row.MessagePb)
+		vals = append(vals, row.MessageJson)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2543,6 +2771,10 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
 
 //
 

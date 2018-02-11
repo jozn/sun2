@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun.direct_message'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun_chat.direct_message'.
 
 // Manualy copy this to project
 type DirectMessage__ struct {
@@ -22,8 +22,6 @@ type DirectMessage__ struct {
 	Text               string `json:"Text"`               // Text -
 	CreatedTime        int    `json:"CreatedTime"`        // CreatedTime -
 	Seq                int    `json:"Seq"`                // Seq -
-	PeerReceivedTime   int    `json:"PeerReceivedTime"`   // PeerReceivedTime -
-	PeerSeenTime       int    `json:"PeerSeenTime"`       // PeerSeenTime -
 	DeliviryStatusEnum int    `json:"DeliviryStatusEnum"` // DeliviryStatusEnum -
 	ExtraPB            []byte `json:"ExtraPB"`            // ExtraPB -
 	// xo fields
@@ -50,15 +48,15 @@ func (dm *DirectMessage) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.direct_message (` +
-		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB` +
+	const sqlstr = `INSERT INTO sun_chat.direct_message (` +
+		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
+	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
 	if err != nil {
 		return err
 	}
@@ -77,15 +75,15 @@ func (dm *DirectMessage) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.direct_message (` +
-		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB` +
+	const sqlstr = `REPLACE INTO sun_chat.direct_message (` +
+		`ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB)
+	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -113,13 +111,13 @@ func (dm *DirectMessage) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.direct_message SET ` +
-		`ChatKey = ?, RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnum = ?, Text = ?, CreatedTime = ?, Seq = ?, PeerReceivedTime = ?, PeerSeenTime = ?, DeliviryStatusEnum = ?, ExtraPB = ?` +
+	const sqlstr = `UPDATE sun_chat.direct_message SET ` +
+		`ChatKey = ?, RoomKey = ?, UserId = ?, MessageFileId = ?, MessageTypeEnum = ?, Text = ?, CreatedTime = ?, Seq = ?, DeliviryStatusEnum = ?, ExtraPB = ?` +
 		` WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
-	_, err = db.Exec(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.PeerReceivedTime, dm.PeerSeenTime, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
+	XOLog(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
+	_, err = db.Exec(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
 
 	XOLogErr(err)
 	OnDirectMessage_AfterUpdate(dm)
@@ -151,7 +149,7 @@ func (dm *DirectMessage) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.direct_message WHERE MessageId = ?`
+	const sqlstr = `DELETE FROM sun_chat.direct_message WHERE MessageId = ?`
 
 	// run query
 	XOLog(sqlstr, dm.MessageId)
@@ -845,216 +843,6 @@ func (d *__DirectMessage_Deleter) Seq_GE(val int) *__DirectMessage_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Deleter) PeerReceivedTime_In(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_Eq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_NotEq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_LT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_LE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_GT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerReceivedTime_GE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Deleter) PeerSeenTime_In(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Deleter) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_Eq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_NotEq(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_LT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_LE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_GT(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Deleter) PeerSeenTime_GE(val int) *__DirectMessage_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1801,216 +1589,6 @@ func (d *__DirectMessage_Updater) Seq_GE(val int) *__DirectMessage_Updater {
 	return d
 }
 
-func (u *__DirectMessage_Updater) PeerReceivedTime_In(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_Eq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_NotEq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_LT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_LE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_GT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerReceivedTime_GE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Updater) PeerSeenTime_In(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_Eq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_NotEq(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_LT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_LE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_GT(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Updater) PeerSeenTime_GE(val int) *__DirectMessage_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__DirectMessage_Updater) DeliviryStatusEnum_In(ins []int) *__DirectMessage_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2747,216 +2325,6 @@ func (d *__DirectMessage_Selector) Seq_GE(val int) *__DirectMessage_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Selector) PeerReceivedTime_In(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) PeerReceivedTime_Ins(ins ...int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) PeerReceivedTime_NotIn(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerReceivedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_Eq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_NotEq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_LT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_LE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_GT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerReceivedTime_GE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerReceivedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__DirectMessage_Selector) PeerSeenTime_In(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) PeerSeenTime_Ins(ins ...int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__DirectMessage_Selector) PeerSeenTime_NotIn(ins []int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PeerSeenTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_Eq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_NotEq(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_LT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_LE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_GT(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__DirectMessage_Selector) PeerSeenTime_GE(val int) *__DirectMessage_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PeerSeenTime >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3771,48 +3139,6 @@ func (u *__DirectMessage_Updater) Seq_Increment(count int) *__DirectMessage_Upda
 
 //ints
 
-func (u *__DirectMessage_Updater) PeerReceivedTime(newVal int) *__DirectMessage_Updater {
-	u.updates[" PeerReceivedTime = ? "] = newVal
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerReceivedTime_Increment(count int) *__DirectMessage_Updater {
-	if count > 0 {
-		u.updates[" PeerReceivedTime = PeerReceivedTime+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" PeerReceivedTime = PeerReceivedTime-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__DirectMessage_Updater) PeerSeenTime(newVal int) *__DirectMessage_Updater {
-	u.updates[" PeerSeenTime = ? "] = newVal
-	return u
-}
-
-func (u *__DirectMessage_Updater) PeerSeenTime_Increment(count int) *__DirectMessage_Updater {
-	if count > 0 {
-		u.updates[" PeerSeenTime = PeerSeenTime+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" PeerSeenTime = PeerSeenTime-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 func (u *__DirectMessage_Updater) DeliviryStatusEnum(newVal int) *__DirectMessage_Updater {
 	u.updates[" DeliviryStatusEnum = ? "] = newVal
 	return u
@@ -3976,36 +3302,6 @@ func (u *__DirectMessage_Selector) Select_Seq() *__DirectMessage_Selector {
 	return u
 }
 
-func (u *__DirectMessage_Selector) OrderBy_PeerReceivedTime_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY PeerReceivedTime DESC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_PeerReceivedTime_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY PeerReceivedTime ASC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) Select_PeerReceivedTime() *__DirectMessage_Selector {
-	u.selectCol = "PeerReceivedTime"
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_PeerSeenTime_Desc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY PeerSeenTime DESC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) OrderBy_PeerSeenTime_Asc() *__DirectMessage_Selector {
-	u.orderBy = " ORDER BY PeerSeenTime ASC "
-	return u
-}
-
-func (u *__DirectMessage_Selector) Select_PeerSeenTime() *__DirectMessage_Selector {
-	u.selectCol = "PeerSeenTime"
-	return u
-}
-
 func (u *__DirectMessage_Selector) OrderBy_DeliviryStatusEnum_Desc() *__DirectMessage_Selector {
 	u.orderBy = " ORDER BY DeliviryStatusEnum DESC "
 	return u
@@ -4050,7 +3346,7 @@ func (u *__DirectMessage_Selector) Offset(num int) *__DirectMessage_Selector {
 func (u *__DirectMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.direct_message"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.direct_message"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4245,7 +3541,7 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.direct_message SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.direct_message SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -4280,7 +3576,7 @@ func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.direct_message WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.direct_message WHERE " + wheresStr
 
 	// run query
 	XOLog(sqlstr, args)
@@ -4308,13 +3604,13 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.direct_message (" +
-		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB" +
+	sqlstr := "INSERT INTO sun_chat.direct_message (" +
+		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB" +
 		") VALUES " + insVals
 
 	// run query
@@ -4331,8 +3627,6 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 		vals = append(vals, row.Text)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.Seq)
-		vals = append(vals, row.PeerReceivedTime)
-		vals = append(vals, row.PeerSeenTime)
 		vals = append(vals, row.DeliviryStatusEnum)
 		vals = append(vals, row.ExtraPB)
 
@@ -4352,12 +3646,12 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.direct_message (" +
-		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, PeerReceivedTime, PeerSeenTime, DeliviryStatusEnum, ExtraPB" +
+	sqlstr := "REPLACE INTO sun_chat.direct_message (" +
+		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB" +
 		") VALUES " + insVals
 
 	// run query
@@ -4374,8 +3668,6 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 		vals = append(vals, row.Text)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.Seq)
-		vals = append(vals, row.PeerReceivedTime)
-		vals = append(vals, row.PeerSeenTime)
 		vals = append(vals, row.DeliviryStatusEnum)
 		vals = append(vals, row.ExtraPB)
 
@@ -4393,10 +3685,6 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
-
-//
 
 //
 
