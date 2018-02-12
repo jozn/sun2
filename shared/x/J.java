@@ -344,7 +344,6 @@ public class J {
 		public String ChatKey;
 		public int FromHighMessageId;
 		public int ToLowMessageId;
-		public int ToMessageId;
 		public int MessageId;
 		public UNKNOWN MessagePb;
 		public String MessageJson;

@@ -14,27 +14,30 @@ import (
 var chatLogger = log_service.NewSimpleLogger("chat")
 
 type chatDirect struct {
-	User1Id      int
-	User2Id      int
-	User1ChatKey string
-	User2ChatKey string
-	User1Chat    *x.Chat
-	User2Chat    *x.Chat
-	AddChan      chan *x.PB_MessageView
-	Err          error
+	User1Id        int
+	User2Id        int
+	User1ChatKey   string
+	User2ChatKey   string
+	User1Chat      *x.Chat
+	User2Chat      *x.Chat
+	AddChan        chan *x.PB_MessageView
+	Err            error
+	lastActiveTime int
 }
 
 func newChaatDirectByRoomKey(RoomKey string) *chatDirect {
 	u1, u2 := sun_utils.RoomKeyToUsers(RoomKey)
 	res := &chatDirect{
-		User1Id:      u1,
-		User2Id:      u2,
-		User1ChatKey: sun_utils.UsersToChatKey(u1, u2),
-		User2ChatKey: sun_utils.UsersToChatKey(u2, u1),
-		AddChan:      make(chan *x.PB_MessageView, 100),
+		User1Id:        u1,
+		User2Id:        u2,
+		User1ChatKey:   sun_utils.UsersToChatKey(u1, u2),
+		User2ChatKey:   sun_utils.UsersToChatKey(u2, u1),
+		AddChan:        make(chan *x.PB_MessageView, 100),
+		lastActiveTime: helper.TimeNow(),
 	}
 
 	res.loadOrCreateRooms()
+	go res.listenForAdding()
 
 	return res
 }
@@ -61,10 +64,12 @@ func (s *chatDirect) loadOrCreateRooms() error {
 }
 
 func (s *chatDirect) listenForAdding() {
+	defer helper.JustRecover()
 	for msgPb := range s.AddChan {
 		if s.Err != nil {
 			continue
 		}
+		s.lastActiveTime = helper.TimeNow()
 		adderUserId := int(msgPb.UserId)
 		peerUserId := s.User1Id
 		if adderUserId == s.User1Id {

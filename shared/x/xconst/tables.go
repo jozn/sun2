@@ -716,7 +716,6 @@ var ChatSync = struct {
 	ChatKey           string
 	FromHighMessageId string
 	ToLowMessageId    string
-	ToMessageId       string
 	MessageId         string
 	MessagePb         string
 	MessageJson       string
@@ -730,7 +729,6 @@ var ChatSync = struct {
 	ChatKey:           "ChatKey",
 	FromHighMessageId: "FromHighMessageId",
 	ToLowMessageId:    "ToLowMessageId",
-	ToMessageId:       "ToMessageId",
 	MessageId:         "MessageId",
 	MessagePb:         "MessagePb",
 	MessageJson:       "MessageJson",

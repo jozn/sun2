@@ -20,7 +20,6 @@ type ChatSync__ struct {
 	ChatKey           string `json:"ChatKey"`           // ChatKey -
 	FromHighMessageId int    `json:"FromHighMessageId"` // FromHighMessageId -
 	ToLowMessageId    int    `json:"ToLowMessageId"`    // ToLowMessageId -
-	ToMessageId       int    `json:"ToMessageId"`       // ToMessageId -
 	MessageId         int    `json:"MessageId"`         // MessageId -
 	MessagePb         []byte `json:"MessagePb"`         // MessagePb -
 	MessageJson       string `json:"MessageJson"`       // MessageJson -
@@ -50,14 +49,14 @@ func (cs *ChatSync) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.chat_sync (` +
-		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, ToMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
+		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -77,14 +76,14 @@ func (cs *ChatSync) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.chat_sync (` +
-		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, ToMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
+		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -113,12 +112,12 @@ func (cs *ChatSync) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.chat_sync SET ` +
-		`ToUserId = ?, ChatSyncTypeId = ?, RoomKey = ?, ChatKey = ?, FromHighMessageId = ?, ToLowMessageId = ?, ToMessageId = ?, MessageId = ?, MessagePb = ?, MessageJson = ?, CreatedTime = ?` +
+		`ToUserId = ?, ChatSyncTypeId = ?, RoomKey = ?, ChatKey = ?, FromHighMessageId = ?, ToLowMessageId = ?, MessageId = ?, MessagePb = ?, MessageJson = ?, CreatedTime = ?` +
 		` WHERE SyncId = ?`
 
 	// run query
-	XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
-	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.ToMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
 
 	XOLogErr(err)
 	OnChatSync_AfterUpdate(cs)
@@ -739,111 +738,6 @@ func (d *__ChatSync_Deleter) ToLowMessageId_GE(val int) *__ChatSync_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ToLowMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__ChatSync_Deleter) ToMessageId_In(ins []int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Deleter) ToMessageId_Ins(ins ...int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Deleter) ToMessageId_NotIn(ins []int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_Eq(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_NotEq(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_LT(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_LE(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_GT(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Deleter) ToMessageId_GE(val int) *__ChatSync_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1590,111 +1484,6 @@ func (d *__ChatSync_Updater) ToLowMessageId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) ToMessageId_In(ins []int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Updater) ToMessageId_Ins(ins ...int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Updater) ToMessageId_NotIn(ins []int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ChatSync_Updater) ToMessageId_Eq(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Updater) ToMessageId_NotEq(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Updater) ToMessageId_LT(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Updater) ToMessageId_LE(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Updater) ToMessageId_GT(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Updater) ToMessageId_GE(val int) *__ChatSync_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__ChatSync_Updater) MessageId_In(ins []int) *__ChatSync_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2431,111 +2220,6 @@ func (d *__ChatSync_Selector) ToLowMessageId_GE(val int) *__ChatSync_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ToLowMessageId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__ChatSync_Selector) ToMessageId_In(ins []int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Selector) ToMessageId_Ins(ins ...int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatSync_Selector) ToMessageId_NotIn(ins []int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ToMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ChatSync_Selector) ToMessageId_Eq(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Selector) ToMessageId_NotEq(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Selector) ToMessageId_LT(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Selector) ToMessageId_LE(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Selector) ToMessageId_GT(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ChatSync_Selector) ToMessageId_GE(val int) *__ChatSync_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ToMessageId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3426,27 +3110,6 @@ func (u *__ChatSync_Updater) ToLowMessageId_Increment(count int) *__ChatSync_Upd
 
 //ints
 
-func (u *__ChatSync_Updater) ToMessageId(newVal int) *__ChatSync_Updater {
-	u.updates[" ToMessageId = ? "] = newVal
-	return u
-}
-
-func (u *__ChatSync_Updater) ToMessageId_Increment(count int) *__ChatSync_Updater {
-	if count > 0 {
-		u.updates[" ToMessageId = ToMessageId+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" ToMessageId = ToMessageId-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 func (u *__ChatSync_Updater) MessageId(newVal int) *__ChatSync_Updater {
 	u.updates[" MessageId = ? "] = newVal
 	return u
@@ -3606,21 +3269,6 @@ func (u *__ChatSync_Selector) OrderBy_ToLowMessageId_Asc() *__ChatSync_Selector 
 
 func (u *__ChatSync_Selector) Select_ToLowMessageId() *__ChatSync_Selector {
 	u.selectCol = "ToLowMessageId"
-	return u
-}
-
-func (u *__ChatSync_Selector) OrderBy_ToMessageId_Desc() *__ChatSync_Selector {
-	u.orderBy = " ORDER BY ToMessageId DESC "
-	return u
-}
-
-func (u *__ChatSync_Selector) OrderBy_ToMessageId_Asc() *__ChatSync_Selector {
-	u.orderBy = " ORDER BY ToMessageId ASC "
-	return u
-}
-
-func (u *__ChatSync_Selector) Select_ToMessageId() *__ChatSync_Selector {
-	u.selectCol = "ToMessageId"
 	return u
 }
 
@@ -3956,13 +3604,13 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.chat_sync (" +
-		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, ToMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
+		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3977,7 +3625,6 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.FromHighMessageId)
 		vals = append(vals, row.ToLowMessageId)
-		vals = append(vals, row.ToMessageId)
 		vals = append(vals, row.MessageId)
 		vals = append(vals, row.MessagePb)
 		vals = append(vals, row.MessageJson)
@@ -3999,12 +3646,12 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.chat_sync (" +
-		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, ToMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
+		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4019,7 +3666,6 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.FromHighMessageId)
 		vals = append(vals, row.ToLowMessageId)
-		vals = append(vals, row.ToMessageId)
 		vals = append(vals, row.MessageId)
 		vals = append(vals, row.MessagePb)
 		vals = append(vals, row.MessageJson)
@@ -4039,8 +3685,6 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

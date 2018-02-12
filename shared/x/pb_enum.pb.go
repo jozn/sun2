@@ -15,6 +15,7 @@ It is generated from these files:
 	pb_rpc_social.proto
 	pb_rpc_user.proto
 	pb_tables.proto
+	pb_updates.proto
 	pb_views.proto
 
 It has these top-level messages:
@@ -149,6 +150,9 @@ It has these top-level messages:
 	PB_ChatSync
 	PB_DirectMessage
 	PB_MessageFile
+	PB_UpdateRoomActionDoing
+	PB_UpdateMessageMeta
+	PB_Updates
 	PB_PostView
 	PB_MediaView
 	PB_ActionView

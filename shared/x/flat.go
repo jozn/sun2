@@ -415,6 +415,7 @@ type PB_ChatParam_SetChatMessagesRangeAsSeen_Flat struct {
 	RoomKey            string
 	FromOlderMessageId int
 	TopNewerMessageId  int
+	LastSeqSeen        int
 	SeenTimeMs         int
 }
 
@@ -424,6 +425,7 @@ func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) ToFlat() *PB_ChatParam_SetChat
 		RoomKey:            m.RoomKey,
 		FromOlderMessageId: int(m.FromOlderMessageId),
 		TopNewerMessageId:  int(m.TopNewerMessageId),
+		LastSeqSeen:        int(m.LastSeqSeen),
 		SeenTimeMs:         int(m.SeenTimeMs),
 	}
 	return r
@@ -435,6 +437,7 @@ func (m *PB_ChatParam_SetChatMessagesRangeAsSeen_Flat) ToPB() *PB_ChatParam_SetC
 		RoomKey:            m.RoomKey,
 		FromOlderMessageId: int64(m.FromOlderMessageId),
 		TopNewerMessageId:  int64(m.TopNewerMessageId),
+		LastSeqSeen:        int32(m.LastSeqSeen),
 		SeenTimeMs:         int64(m.SeenTimeMs),
 	}
 	return r
@@ -445,6 +448,7 @@ var PB_ChatParam_SetChatMessagesRangeAsSeen__FOlD = &PB_ChatParam_SetChatMessage
 	RoomKey:            "",
 	FromOlderMessageId: 0,
 	TopNewerMessageId:  0,
+	LastSeqSeen:        0,
 	SeenTimeMs:         0,
 }
 
@@ -4039,6 +4043,7 @@ var PB_Chat__FOlD = &PB_Chat{
 
 type PB_ChatLastMessage_Flat struct {
 	ChatKey     string
+	ForUserId   int
 	LastMsgPb   []byte
 	LastMsgJson string
 }
@@ -4047,6 +4052,7 @@ type PB_ChatLastMessage_Flat struct {
 func (m *PB_ChatLastMessage) ToFlat() *PB_ChatLastMessage_Flat {
 	r := &PB_ChatLastMessage_Flat{
 		ChatKey:     m.ChatKey,
+		ForUserId:   int(m.ForUserId),
 		LastMsgPb:   []byte(m.LastMsgPb),
 		LastMsgJson: m.LastMsgJson,
 	}
@@ -4057,6 +4063,7 @@ func (m *PB_ChatLastMessage) ToFlat() *PB_ChatLastMessage_Flat {
 func (m *PB_ChatLastMessage_Flat) ToPB() *PB_ChatLastMessage {
 	r := &PB_ChatLastMessage{
 		ChatKey:     m.ChatKey,
+		ForUserId:   int32(m.ForUserId),
 		LastMsgPb:   m.LastMsgPb,
 		LastMsgJson: m.LastMsgJson,
 	}
@@ -4066,32 +4073,39 @@ func (m *PB_ChatLastMessage_Flat) ToPB() *PB_ChatLastMessage {
 //folding
 var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
 	ChatKey:     "",
+	ForUserId:   0,
 	LastMsgPb:   []byte{},
 	LastMsgJson: "",
 }
 
 type PB_ChatSync_Flat struct {
-	SyncId         int
-	ToUserId       int
-	ChatSyncTypeId int
-	ChatKey        string
-	MessageId      int
-	MessagePb      []byte
-	MessageJson    string
-	CreatedTime    int
+	SyncId            int
+	ToUserId          int
+	ChatSyncTypeId    int
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId int
+	ToLowMessageId    int
+	MessageId         int
+	MessagePb         []byte
+	MessageJson       string
+	CreatedTime       int
 }
 
 //ToPB
 func (m *PB_ChatSync) ToFlat() *PB_ChatSync_Flat {
 	r := &PB_ChatSync_Flat{
-		SyncId:         int(m.SyncId),
-		ToUserId:       int(m.ToUserId),
-		ChatSyncTypeId: int(m.ChatSyncTypeId),
-		ChatKey:        m.ChatKey,
-		MessageId:      int(m.MessageId),
-		MessagePb:      []byte(m.MessagePb),
-		MessageJson:    m.MessageJson,
-		CreatedTime:    int(m.CreatedTime),
+		SyncId:            int(m.SyncId),
+		ToUserId:          int(m.ToUserId),
+		ChatSyncTypeId:    int(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int(m.FromHighMessageId),
+		ToLowMessageId:    int(m.ToLowMessageId),
+		MessageId:         int(m.MessageId),
+		MessagePb:         []byte(m.MessagePb),
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int(m.CreatedTime),
 	}
 	return r
 }
@@ -4099,28 +4113,34 @@ func (m *PB_ChatSync) ToFlat() *PB_ChatSync_Flat {
 //ToPB
 func (m *PB_ChatSync_Flat) ToPB() *PB_ChatSync {
 	r := &PB_ChatSync{
-		SyncId:         int64(m.SyncId),
-		ToUserId:       int32(m.ToUserId),
-		ChatSyncTypeId: int32(m.ChatSyncTypeId),
-		ChatKey:        m.ChatKey,
-		MessageId:      int64(m.MessageId),
-		MessagePb:      m.MessagePb,
-		MessageJson:    m.MessageJson,
-		CreatedTime:    int32(m.CreatedTime),
+		SyncId:            int64(m.SyncId),
+		ToUserId:          int32(m.ToUserId),
+		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int64(m.FromHighMessageId),
+		ToLowMessageId:    int64(m.ToLowMessageId),
+		MessageId:         int64(m.MessageId),
+		MessagePb:         m.MessagePb,
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_ChatSync__FOlD = &PB_ChatSync{
-	SyncId:         0,
-	ToUserId:       0,
-	ChatSyncTypeId: 0,
-	ChatKey:        "",
-	MessageId:      0,
-	MessagePb:      []byte{},
-	MessageJson:    "",
-	CreatedTime:    0,
+	SyncId:            0,
+	ToUserId:          0,
+	ChatSyncTypeId:    0,
+	RoomKey:           "",
+	ChatKey:           "",
+	FromHighMessageId: 0,
+	ToLowMessageId:    0,
+	MessageId:         0,
+	MessagePb:         []byte{},
+	MessageJson:       "",
+	CreatedTime:       0,
 }
 
 type PB_DirectMessage_Flat struct {
@@ -4251,6 +4271,92 @@ var PB_MessageFile__FOlD = &PB_MessageFile{
 	Extension:     "",
 	Md5Hash:       "",
 	CreatedTime:   0,
+}
+
+type PB_UpdateRoomActionDoing_Flat struct {
+	RoomKey    string
+	ActionType RoomActionDoingEnum
+}
+
+//ToPB
+func (m *PB_UpdateRoomActionDoing) ToFlat() *PB_UpdateRoomActionDoing_Flat {
+	r := &PB_UpdateRoomActionDoing_Flat{
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UpdateRoomActionDoing_Flat) ToPB() *PB_UpdateRoomActionDoing {
+	r := &PB_UpdateRoomActionDoing{
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//folding
+var PB_UpdateRoomActionDoing__FOlD = &PB_UpdateRoomActionDoing{
+	RoomKey: "",
+}
+
+type PB_UpdateMessageMeta_Flat struct {
+	RoomKey   string
+	MessageId int
+}
+
+//ToPB
+func (m *PB_UpdateMessageMeta) ToFlat() *PB_UpdateMessageMeta_Flat {
+	r := &PB_UpdateMessageMeta_Flat{
+		RoomKey:   m.RoomKey,
+		MessageId: int(m.MessageId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UpdateMessageMeta_Flat) ToPB() *PB_UpdateMessageMeta {
+	r := &PB_UpdateMessageMeta{
+		RoomKey:   m.RoomKey,
+		MessageId: int64(m.MessageId),
+	}
+	return r
+}
+
+//folding
+var PB_UpdateMessageMeta__FOlD = &PB_UpdateMessageMeta{
+	RoomKey:   "",
+	MessageId: 0,
+}
+
+type PB_Updates_Flat struct {
+	LastChatSyncId          int
+	NewMessages             []PB_MessageView
+	Chats                   []PB_ChatView
+	MessagesReachedServer   []PB_UpdateMessageMeta
+	MessagesDeliveredToUser []PB_UpdateMessageMeta
+	MessagesSeenByPeer      []PB_UpdateMessageMeta
+	RoomActionDoing         []PB_UpdateRoomActionDoing
+}
+
+//ToPB
+func (m *PB_Updates) ToFlat() *PB_Updates_Flat {
+	r := &PB_Updates_Flat{
+		LastChatSyncId: int(m.LastChatSyncId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Updates_Flat) ToPB() *PB_Updates {
+	r := &PB_Updates{
+		LastChatSyncId: int64(m.LastChatSyncId),
+	}
+	return r
+}
+
+//folding
+var PB_Updates__FOlD = &PB_Updates{
+	LastChatSyncId: 0,
 }
 
 type PB_PostView_Flat struct {
@@ -5128,6 +5234,7 @@ r := &PB_ChatParam_SetChatMessagesRangeAsSeen_Flat{
     RoomKey:  m.RoomKey ,
     FromOlderMessageId:  int(m.FromOlderMessageId) ,
     TopNewerMessageId:  int(m.TopNewerMessageId) ,
+    LastSeqSeen:  int(m.LastSeqSeen) ,
     SeenTimeMs:  int(m.SeenTimeMs) ,
 }
 return r
@@ -6176,6 +6283,7 @@ return r
 func(m *PB_ChatLastMessage)ToFlat() *PB_ChatLastMessage_Flat {
 r := &PB_ChatLastMessage_Flat{
     ChatKey:  m.ChatKey ,
+    ForUserId:  int(m.ForUserId) ,
     LastMsgPb:  []byte(m.LastMsgPb) ,
     LastMsgJson:  m.LastMsgJson ,
 }
@@ -6187,7 +6295,10 @@ r := &PB_ChatSync_Flat{
     SyncId:  int(m.SyncId) ,
     ToUserId:  int(m.ToUserId) ,
     ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
     ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int(m.FromHighMessageId) ,
+    ToLowMessageId:  int(m.ToLowMessageId) ,
     MessageId:  int(m.MessageId) ,
     MessagePb:  []byte(m.MessagePb) ,
     MessageJson:  m.MessageJson ,
@@ -6226,6 +6337,35 @@ r := &PB_MessageFile_Flat{
     Extension:  m.Extension ,
     Md5Hash:  m.Md5Hash ,
     CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_UpdateRoomActionDoing)ToFlat() *PB_UpdateRoomActionDoing_Flat {
+r := &PB_UpdateRoomActionDoing_Flat{
+    RoomKey:  m.RoomKey ,
+
+}
+return r
+}
+
+func(m *PB_UpdateMessageMeta)ToFlat() *PB_UpdateMessageMeta_Flat {
+r := &PB_UpdateMessageMeta_Flat{
+    RoomKey:  m.RoomKey ,
+    MessageId:  int(m.MessageId) ,
+}
+return r
+}
+
+func(m *PB_Updates)ToFlat() *PB_Updates_Flat {
+r := &PB_Updates_Flat{
+    LastChatSyncId:  int(m.LastChatSyncId) ,
+
+
+
+
+
+
 }
 return r
 }
@@ -6578,6 +6718,7 @@ r := &PB_ChatParam_SetChatMessagesRangeAsSeen{
     RoomKey:  m.RoomKey ,
     FromOlderMessageId:  int64(m.FromOlderMessageId) ,
     TopNewerMessageId:  int64(m.TopNewerMessageId) ,
+    LastSeqSeen:  int32(m.LastSeqSeen) ,
     SeenTimeMs:  int64(m.SeenTimeMs) ,
 }
 return r
@@ -7626,6 +7767,7 @@ return r
 func(m *PB_ChatLastMessage_Flat)ToPB() *PB_ChatLastMessage {
 r := &PB_ChatLastMessage{
     ChatKey:  m.ChatKey ,
+    ForUserId:  int32(m.ForUserId) ,
     LastMsgPb:  m.LastMsgPb ,
     LastMsgJson:  m.LastMsgJson ,
 }
@@ -7637,7 +7779,10 @@ r := &PB_ChatSync{
     SyncId:  int64(m.SyncId) ,
     ToUserId:  int32(m.ToUserId) ,
     ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
     ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int64(m.FromHighMessageId) ,
+    ToLowMessageId:  int64(m.ToLowMessageId) ,
     MessageId:  int64(m.MessageId) ,
     MessagePb:  m.MessagePb ,
     MessageJson:  m.MessageJson ,
@@ -7676,6 +7821,35 @@ r := &PB_MessageFile{
     Extension:  m.Extension ,
     Md5Hash:  m.Md5Hash ,
     CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_UpdateRoomActionDoing_Flat)ToPB() *PB_UpdateRoomActionDoing {
+r := &PB_UpdateRoomActionDoing{
+    RoomKey:  m.RoomKey ,
+
+}
+return r
+}
+
+func(m *PB_UpdateMessageMeta_Flat)ToPB() *PB_UpdateMessageMeta {
+r := &PB_UpdateMessageMeta{
+    RoomKey:  m.RoomKey ,
+    MessageId:  int64(m.MessageId) ,
+}
+return r
+}
+
+func(m *PB_Updates_Flat)ToPB() *PB_Updates {
+r := &PB_Updates{
+    LastChatSyncId:  int64(m.LastChatSyncId) ,
+
+
+
+
+
+
 }
 return r
 }
@@ -7997,6 +8171,7 @@ var PB_ChatParam_SetChatMessagesRangeAsSeen__FOlD = &PB_ChatParam_SetChatMessage
         RoomKey:  "" ,
         FromOlderMessageId:  0 ,
         TopNewerMessageId:  0 ,
+        LastSeqSeen:  0 ,
         SeenTimeMs:  0 ,
 }
 
@@ -8821,6 +8996,7 @@ var PB_Chat__FOlD = &PB_Chat{
 
 var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
         ChatKey:  "" ,
+        ForUserId:  0 ,
         LastMsgPb:  []byte{} ,
         LastMsgJson:  "" ,
 }
@@ -8830,7 +9006,10 @@ var PB_ChatSync__FOlD = &PB_ChatSync{
         SyncId:  0 ,
         ToUserId:  0 ,
         ChatSyncTypeId:  0 ,
+        RoomKey:  "" ,
         ChatKey:  "" ,
+        FromHighMessageId:  0 ,
+        ToLowMessageId:  0 ,
         MessageId:  0 ,
         MessagePb:  []byte{} ,
         MessageJson:  "" ,
@@ -8865,6 +9044,29 @@ var PB_MessageFile__FOlD = &PB_MessageFile{
         Extension:  "" ,
         Md5Hash:  "" ,
         CreatedTime:  0 ,
+}
+
+
+var PB_UpdateRoomActionDoing__FOlD = &PB_UpdateRoomActionDoing{
+        RoomKey:  "" ,
+
+}
+
+
+var PB_UpdateMessageMeta__FOlD = &PB_UpdateMessageMeta{
+        RoomKey:  "" ,
+        MessageId:  0 ,
+}
+
+
+var PB_Updates__FOlD = &PB_Updates{
+        LastChatSyncId:  0 ,
+
+
+
+
+
+
 }
 
 

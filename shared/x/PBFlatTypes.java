@@ -347,6 +347,7 @@ public class PBFlatTypes {
 	   public String RoomKey;
 	   public long FromOlderMessageId;
 	   public long TopNewerMessageId;
+	   public int LastSeqSeen;
 	   public long SeenTimeMs;
 	}
 	/*
@@ -355,6 +356,7 @@ public class PBFlatTypes {
     t.setRoomKey();
     t.setFromOlderMessageId();
     t.setTopNewerMessageId();
+    t.setLastSeqSeen();
     t.setSeenTimeMs();
 	*/
 
@@ -363,6 +365,7 @@ public class PBFlatTypes {
 	t.RoomKey = ;
 	t.FromOlderMessageId = ;
 	t.TopNewerMessageId = ;
+	t.LastSeqSeen = ;
 	t.SeenTimeMs = ;
 	*/
 
@@ -371,6 +374,7 @@ public class PBFlatTypes {
 	t.RoomKey = m.getRoomKey() ;
 	t.FromOlderMessageId = m.getFromOlderMessageId() ;
 	t.TopNewerMessageId = m.getTopNewerMessageId() ;
+	t.LastSeqSeen = m.getLastSeqSeen() ;
 	t.SeenTimeMs = m.getSeenTimeMs() ;
 	*/
 
@@ -3537,6 +3541,7 @@ public class PBFlatTypes {
 
 	public class PB_ChatLastMessage {
 	   public String ChatKey;
+	   public int ForUserId;
 	   public byte[] LastMsgPb;
 	   public String LastMsgJson;
 	}
@@ -3544,6 +3549,7 @@ public class PBFlatTypes {
 	folding
 	PBFlatTypes.PB_ChatLastMessage t = new PBFlatTypes.PB_ChatLastMessage();
     t.setChatKey();
+    t.setForUserId();
     t.setLastMsgPb();
     t.setLastMsgJson();
 	*/
@@ -3551,6 +3557,7 @@ public class PBFlatTypes {
 	/*
 	PBFlatTypes.PB_ChatLastMessage t = new PBFlatTypes.PB_ChatLastMessage();
 	t.ChatKey = ;
+	t.ForUserId = ;
 	t.LastMsgPb = ;
 	t.LastMsgJson = ;
 	*/
@@ -3558,6 +3565,7 @@ public class PBFlatTypes {
 	/*
 	PB_ChatLastMessage t = new PB_ChatLastMessage();
 	t.ChatKey = m.getChatKey() ;
+	t.ForUserId = m.getForUserId() ;
 	t.LastMsgPb = m.getLastMsgPb() ;
 	t.LastMsgJson = m.getLastMsgJson() ;
 	*/
@@ -3566,7 +3574,10 @@ public class PBFlatTypes {
 	   public long SyncId;
 	   public int ToUserId;
 	   public int ChatSyncTypeId;
+	   public String RoomKey;
 	   public String ChatKey;
+	   public long FromHighMessageId;
+	   public long ToLowMessageId;
 	   public long MessageId;
 	   public byte[] MessagePb;
 	   public String MessageJson;
@@ -3578,7 +3589,10 @@ public class PBFlatTypes {
     t.setSyncId();
     t.setToUserId();
     t.setChatSyncTypeId();
+    t.setRoomKey();
     t.setChatKey();
+    t.setFromHighMessageId();
+    t.setToLowMessageId();
     t.setMessageId();
     t.setMessagePb();
     t.setMessageJson();
@@ -3590,7 +3604,10 @@ public class PBFlatTypes {
 	t.SyncId = ;
 	t.ToUserId = ;
 	t.ChatSyncTypeId = ;
+	t.RoomKey = ;
 	t.ChatKey = ;
+	t.FromHighMessageId = ;
+	t.ToLowMessageId = ;
 	t.MessageId = ;
 	t.MessagePb = ;
 	t.MessageJson = ;
@@ -3602,7 +3619,10 @@ public class PBFlatTypes {
 	t.SyncId = m.getSyncId() ;
 	t.ToUserId = m.getToUserId() ;
 	t.ChatSyncTypeId = m.getChatSyncTypeId() ;
+	t.RoomKey = m.getRoomKey() ;
 	t.ChatKey = m.getChatKey() ;
+	t.FromHighMessageId = m.getFromHighMessageId() ;
+	t.ToLowMessageId = m.getToLowMessageId() ;
 	t.MessageId = m.getMessageId() ;
 	t.MessagePb = m.getMessagePb() ;
 	t.MessageJson = m.getMessageJson() ;
@@ -3725,6 +3745,95 @@ public class PBFlatTypes {
 	t.Extension = m.getExtension() ;
 	t.Md5Hash = m.getMd5Hash() ;
 	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_UpdateRoomActionDoing {
+	   public String RoomKey;
+	   public RoomActionDoingEnum ActionType;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_UpdateRoomActionDoing t = new PBFlatTypes.PB_UpdateRoomActionDoing();
+    t.setRoomKey();
+    t.setActionType();
+	*/
+
+	/*
+	PBFlatTypes.PB_UpdateRoomActionDoing t = new PBFlatTypes.PB_UpdateRoomActionDoing();
+	t.RoomKey = ;
+	t.ActionType = ;
+	*/
+
+	/*
+	PB_UpdateRoomActionDoing t = new PB_UpdateRoomActionDoing();
+	t.RoomKey = m.getRoomKey() ;
+	t.ActionType = m.getActionType() ;
+	*/
+
+	public class PB_UpdateMessageMeta {
+	   public String RoomKey;
+	   public long MessageId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_UpdateMessageMeta t = new PBFlatTypes.PB_UpdateMessageMeta();
+    t.setRoomKey();
+    t.setMessageId();
+	*/
+
+	/*
+	PBFlatTypes.PB_UpdateMessageMeta t = new PBFlatTypes.PB_UpdateMessageMeta();
+	t.RoomKey = ;
+	t.MessageId = ;
+	*/
+
+	/*
+	PB_UpdateMessageMeta t = new PB_UpdateMessageMeta();
+	t.RoomKey = m.getRoomKey() ;
+	t.MessageId = m.getMessageId() ;
+	*/
+
+	public class PB_Updates {
+	   public long LastChatSyncId;
+	   public PB_MessageView NewMessages;
+	   public PB_ChatView Chats;
+	   public PB_UpdateMessageMeta MessagesReachedServer;
+	   public PB_UpdateMessageMeta MessagesDeliveredToUser;
+	   public PB_UpdateMessageMeta MessagesSeenByPeer;
+	   public PB_UpdateRoomActionDoing RoomActionDoing;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_Updates t = new PBFlatTypes.PB_Updates();
+    t.setLastChatSyncId();
+    t.setNewMessages();
+    t.setChats();
+    t.setMessagesReachedServer();
+    t.setMessagesDeliveredToUser();
+    t.setMessagesSeenByPeer();
+    t.setRoomActionDoing();
+	*/
+
+	/*
+	PBFlatTypes.PB_Updates t = new PBFlatTypes.PB_Updates();
+	t.LastChatSyncId = ;
+	t.NewMessages = ;
+	t.Chats = ;
+	t.MessagesReachedServer = ;
+	t.MessagesDeliveredToUser = ;
+	t.MessagesSeenByPeer = ;
+	t.RoomActionDoing = ;
+	*/
+
+	/*
+	PB_Updates t = new PB_Updates();
+	t.LastChatSyncId = m.getLastChatSyncId() ;
+	t.NewMessages = m.getNewMessages() ;
+	t.Chats = m.getChats() ;
+	t.MessagesReachedServer = m.getMessagesReachedServer() ;
+	t.MessagesDeliveredToUser = m.getMessagesDeliveredToUser() ;
+	t.MessagesSeenByPeer = m.getMessagesSeenByPeer() ;
+	t.RoomActionDoing = m.getRoomActionDoing() ;
 	*/
 
 	public class PB_PostView {

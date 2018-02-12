@@ -8,7 +8,7 @@ import (
 type rpc_chat int
 
 func (rpc_chat) AddNewMessage(param *x.PB_ChatParam_AddNewMessage, userParam x.RPC_UserParam) (res x.PB_ChatResponse_AddNewMessage, err error) {
-
+    chat_service.ChatAddNewMsg(userParam.GetUserId(),param.MessageView,param.FileBlob)
     return
 }
 

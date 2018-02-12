@@ -321,11 +321,10 @@ message PB_ChatSync {
     string ChatKey = 5;
     int64 FromHighMessageId = 6;
     int64 ToLowMessageId = 7;
-    int64 ToMessageId = 8;
-    int64 MessageId = 9;
-    bytes MessagePb = 10;
-    string MessageJson = 11;
-    int32 CreatedTime = 12;
+    int64 MessageId = 8;
+    bytes MessagePb = 9;
+    string MessageJson = 10;
+    int32 CreatedTime = 11;
 }
 message PB_DirectMessage {
     string ChatKey = 1;

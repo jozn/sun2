@@ -35,6 +35,36 @@ func GetChatList(UserId int) (res []*x.PB_ChatView) {
 	return
 }
 
+func ChatViewsForChatList(UserId int, RoomKeys []string) (res []*x.PB_ChatView) {
+    if len(RoomKeys) == 0 {
+        return
+    }
+    chats, err := x.NewChat_Selector().UserId_Eq(UserId).RoomKey_In(RoomKeys).OrderBy_UpdatedMs_Desc().GetRows(base.DB)
+    if err != nil {
+        return
+    }
+
+    for _, chat := range chats {
+        v := &x.PB_ChatView{
+            ChatKey:      chat.ChatKey,
+            RoomKey:      chat.RoomKey,
+            RoomTypeEnum: int32(chat.RoomTypeEnum),
+            UserId:       int32(chat.UserId),
+            PeerUserId:   int32(chat.PeerUserId),
+            GroupId:      int64(chat.GroupId),
+            CreatedTime:  int32(chat.CreatedTime),
+            Seq:          int32(chat.Seq),
+            SeenSeq:      int32(chat.SeenSeq),
+            UpdatedMs:    int64(chat.UpdatedMs),
+        }
+        v.UserView = view_service.UserViewAndMe(chat.PeerUserId, UserId)
+
+        res = append(res, v)
+    }
+
+    return
+}
+
 func GetMessageList(UserId int, ChatKey string, FromTopMessageId, Limit int) (msgs []*x.PB_MessageView, more bool) {
 	rows, err := x.NewDirectMessage_Selector().ChatKey_Eq(ChatKey).OrderBy_MessageId_Desc().
 		Limit(Limit + 1).

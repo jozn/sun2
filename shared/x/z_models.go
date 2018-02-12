@@ -766,7 +766,6 @@ type ChatSync struct {
 	ChatKey           string
 	FromHighMessageId int
 	ToLowMessageId    int
-	ToMessageId       int
 	MessageId         int
 	MessagePb         []byte
 	MessageJson       string
@@ -784,7 +783,6 @@ type ChatSync struct {
 	ChatKey: "",
 	FromHighMessageId: 0,
 	ToLowMessageId: 0,
-	ToMessageId: 0,
 	MessageId: 0,
 	MessagePb: []byte{},
 	MessageJson: "",

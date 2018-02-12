@@ -13,7 +13,6 @@ import (
 type pipesMap struct {
 	mp map[int]*UserDevicePipe
 	m  sync.RWMutex
-	mm sync.Map
 }
 
 func (m *pipesMap) IsPipeOpen(UserId int) bool {
