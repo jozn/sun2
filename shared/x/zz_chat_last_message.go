@@ -14,6 +14,7 @@ import (
 // Manualy copy this to project
 type ChatLastMessage__ struct {
 	ChatKey     string `json:"ChatKey"`     // ChatKey -
+	ForUserId   int    `json:"ForUserId"`   // ForUserId -
 	LastMsgPb   []byte `json:"LastMsgPb"`   // LastMsgPb -
 	LastMsgJson string `json:"LastMsgJson"` // LastMsgJson -
 	// xo fields
@@ -41,14 +42,14 @@ func (clm *ChatLastMessage) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.chat_last_message (` +
-		`ChatKey, LastMsgPb, LastMsgJson` +
+		`ChatKey, ForUserId, LastMsgPb, LastMsgJson` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
-	_, err = db.Exec(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
+	XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	_, err = db.Exec(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
 		return err
 	}
@@ -68,14 +69,14 @@ func (clm *ChatLastMessage) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.chat_last_message (` +
-		`ChatKey, LastMsgPb, LastMsgJson` +
+		`ChatKey, ForUserId, LastMsgPb, LastMsgJson` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
-	_, err = db.Exec(sqlstr, clm.ChatKey, clm.LastMsgPb, clm.LastMsgJson)
+	XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	_, err = db.Exec(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -104,12 +105,12 @@ func (clm *ChatLastMessage) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.chat_last_message SET ` +
-		`LastMsgPb = ?, LastMsgJson = ?` +
+		`ForUserId = ?, LastMsgPb = ?, LastMsgJson = ?` +
 		` WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
-	_, err = db.Exec(sqlstr, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
+	XOLog(sqlstr, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
+	_, err = db.Exec(sqlstr, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
 
 	XOLogErr(err)
 	OnChatLastMessage_AfterUpdate(clm)
@@ -210,16 +211,331 @@ func (u *__ChatLastMessage_Deleter) Or() *__ChatLastMessage_Deleter {
 	return u
 }
 
+func (u *__ChatLastMessage_Deleter) ForUserId_In(ins []int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Deleter) ForUserId_Ins(ins ...int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Deleter) ForUserId_NotIn(ins []int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_Eq(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_NotEq(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_LT(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_LE(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_GT(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Deleter) ForUserId_GE(val int) *__ChatLastMessage_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__ChatLastMessage_Updater) Or() *__ChatLastMessage_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
+func (u *__ChatLastMessage_Updater) ForUserId_In(ins []int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Updater) ForUserId_Ins(ins ...int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Updater) ForUserId_NotIn(ins []int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_Eq(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_NotEq(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_LT(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_LE(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_GT(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Updater) ForUserId_GE(val int) *__ChatLastMessage_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__ChatLastMessage_Selector) Or() *__ChatLastMessage_Selector {
 	u.whereSep = " OR "
 	return u
+}
+
+func (u *__ChatLastMessage_Selector) ForUserId_In(ins []int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) ForUserId_Ins(ins ...int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) ForUserId_NotIn(ins []int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_Eq(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_NotEq(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_LT(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_LE(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_GT(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ChatLastMessage_Selector) ForUserId_GE(val int) *__ChatLastMessage_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ForUserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
 }
 
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
@@ -604,6 +920,27 @@ func (u *__ChatLastMessage_Updater) ChatKey(newVal string) *__ChatLastMessage_Up
 
 //ints
 
+func (u *__ChatLastMessage_Updater) ForUserId(newVal int) *__ChatLastMessage_Updater {
+	u.updates[" ForUserId = ? "] = newVal
+	return u
+}
+
+func (u *__ChatLastMessage_Updater) ForUserId_Increment(count int) *__ChatLastMessage_Updater {
+	if count > 0 {
+		u.updates[" ForUserId = ForUserId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" ForUserId = ForUserId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 //string
 
 //ints
@@ -631,6 +968,21 @@ func (u *__ChatLastMessage_Selector) OrderBy_ChatKey_Asc() *__ChatLastMessage_Se
 
 func (u *__ChatLastMessage_Selector) Select_ChatKey() *__ChatLastMessage_Selector {
 	u.selectCol = "ChatKey"
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) OrderBy_ForUserId_Desc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY ForUserId DESC "
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) OrderBy_ForUserId_Asc() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY ForUserId ASC "
+	return u
+}
+
+func (u *__ChatLastMessage_Selector) Select_ForUserId() *__ChatLastMessage_Selector {
+	u.selectCol = "ForUserId"
 	return u
 }
 
@@ -936,13 +1288,13 @@ func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.chat_last_message (" +
-		"ChatKey, LastMsgPb, LastMsgJson" +
+		"ChatKey, ForUserId, LastMsgPb, LastMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -951,6 +1303,7 @@ func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.LastMsgPb)
 		vals = append(vals, row.LastMsgJson)
 
@@ -970,12 +1323,12 @@ func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.chat_last_message (" +
-		"ChatKey, LastMsgPb, LastMsgJson" +
+		"ChatKey, ForUserId, LastMsgPb, LastMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -984,6 +1337,7 @@ func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.LastMsgPb)
 		vals = append(vals, row.LastMsgJson)
 
@@ -1001,6 +1355,8 @@ func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

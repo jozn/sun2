@@ -79,6 +79,15 @@ enum ProfilePrivacyLevelEnum {
 
 // chat
 
+enum RoomTypeEnum {
+    UNKNOWN_ROOM_TYPE = 0;
+    DIRECT = 1;
+    GROUP = 2;
+    //    CHANNEL = 3;
+    BROADCAST = 3;
+    //    BULK = 3;
+}
+
 enum RoomActionDoingEnum {
     UNKNOWN_ROOM_ACTION_DOING = 0;
     CANCEL = 1;
@@ -96,4 +105,14 @@ enum RoomActionDoingEnum {
     SENDING_LOCATION = 14;
     CHOOSING_CONTACT = 15;
     PAINTING = 16;
+}
+
+enum RoomMessageDeliviryStatusEnum {
+    UNKNOWN_MESSAGE_DELIVIRY = 0;
+    NEED_TO_SINK = 1;
+    FAILED = 2;
+    SENDING = 3;
+    SENT = 4;
+    DELIVERED = 5;
+    SEEN = 6;
 }

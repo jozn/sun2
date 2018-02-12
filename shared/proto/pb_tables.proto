@@ -309,18 +309,23 @@ message PB_Chat {
 }
 message PB_ChatLastMessage {
     string ChatKey = 1;
-    bytes LastMsgPb = 2;
-    string LastMsgJson = 3;
+    int32 ForUserId = 2;
+    bytes LastMsgPb = 3;
+    string LastMsgJson = 4;
 }
 message PB_ChatSync {
     int64 SyncId = 1;
     int32 ToUserId = 2;
     int32 ChatSyncTypeId = 3;
-    string ChatKey = 4;
-    int64 MessageId = 5;
-    bytes MessagePb = 6;
-    string MessageJson = 7;
-    int32 CreatedTime = 8;
+    string RoomKey = 4;
+    string ChatKey = 5;
+    int64 FromHighMessageId = 6;
+    int64 ToLowMessageId = 7;
+    int64 ToMessageId = 8;
+    int64 MessageId = 9;
+    bytes MessagePb = 10;
+    string MessageJson = 11;
+    int32 CreatedTime = 12;
 }
 message PB_DirectMessage {
     string ChatKey = 1;

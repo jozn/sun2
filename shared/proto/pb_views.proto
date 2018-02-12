@@ -201,3 +201,8 @@ message PB_MessageFileView {
     int32 Duration = 6;
     string Extension = 7;
 }
+
+//just used on storage on server
+message PB_MessageTableExtra {
+    PB_MessageFileView MessageFileView = 1;
+}

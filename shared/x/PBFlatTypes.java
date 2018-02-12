@@ -2233,92 +2233,6 @@ public class PBFlatTypes {
 	t.Seq = m.getSeq() ;
 	*/
 
-	public class PB_DirectOffline {
-	   public long DirectOfflineId;
-	   public int ToUserId;
-	   public String ChatKey;
-	   public long MessageId;
-	   public long MessageFileId;
-	   public String PBClass;
-	   public byte[] DataPB;
-	   public String DataJson;
-	   public String DataTemp;
-	   public long AtTimeMs;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_DirectOffline t = new PBFlatTypes.PB_DirectOffline();
-    t.setDirectOfflineId();
-    t.setToUserId();
-    t.setChatKey();
-    t.setMessageId();
-    t.setMessageFileId();
-    t.setPBClass();
-    t.setDataPB();
-    t.setDataJson();
-    t.setDataTemp();
-    t.setAtTimeMs();
-	*/
-
-	/*
-	PBFlatTypes.PB_DirectOffline t = new PBFlatTypes.PB_DirectOffline();
-	t.DirectOfflineId = ;
-	t.ToUserId = ;
-	t.ChatKey = ;
-	t.MessageId = ;
-	t.MessageFileId = ;
-	t.PBClass = ;
-	t.DataPB = ;
-	t.DataJson = ;
-	t.DataTemp = ;
-	t.AtTimeMs = ;
-	*/
-
-	/*
-	PB_DirectOffline t = new PB_DirectOffline();
-	t.DirectOfflineId = m.getDirectOfflineId() ;
-	t.ToUserId = m.getToUserId() ;
-	t.ChatKey = m.getChatKey() ;
-	t.MessageId = m.getMessageId() ;
-	t.MessageFileId = m.getMessageFileId() ;
-	t.PBClass = m.getPBClass() ;
-	t.DataPB = m.getDataPB() ;
-	t.DataJson = m.getDataJson() ;
-	t.DataTemp = m.getDataTemp() ;
-	t.AtTimeMs = m.getAtTimeMs() ;
-	*/
-
-	public class PB_DirectToMessage {
-	   public long Id;
-	   public String ChatKey;
-	   public long MessageId;
-	   public int SourceEnumId;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_DirectToMessage t = new PBFlatTypes.PB_DirectToMessage();
-    t.setId();
-    t.setChatKey();
-    t.setMessageId();
-    t.setSourceEnumId();
-	*/
-
-	/*
-	PBFlatTypes.PB_DirectToMessage t = new PBFlatTypes.PB_DirectToMessage();
-	t.Id = ;
-	t.ChatKey = ;
-	t.MessageId = ;
-	t.SourceEnumId = ;
-	*/
-
-	/*
-	PB_DirectToMessage t = new PB_DirectToMessage();
-	t.Id = m.getId() ;
-	t.ChatKey = m.getChatKey() ;
-	t.MessageId = m.getMessageId() ;
-	t.SourceEnumId = m.getSourceEnumId() ;
-	*/
-
 	public class PB_FollowingList {
 	   public int Id;
 	   public int UserId;
@@ -3621,12 +3535,41 @@ public class PBFlatTypes {
 	t.UpdatedMs = m.getUpdatedMs() ;
 	*/
 
+	public class PB_ChatLastMessage {
+	   public String ChatKey;
+	   public byte[] LastMsgPb;
+	   public String LastMsgJson;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ChatLastMessage t = new PBFlatTypes.PB_ChatLastMessage();
+    t.setChatKey();
+    t.setLastMsgPb();
+    t.setLastMsgJson();
+	*/
+
+	/*
+	PBFlatTypes.PB_ChatLastMessage t = new PBFlatTypes.PB_ChatLastMessage();
+	t.ChatKey = ;
+	t.LastMsgPb = ;
+	t.LastMsgJson = ;
+	*/
+
+	/*
+	PB_ChatLastMessage t = new PB_ChatLastMessage();
+	t.ChatKey = m.getChatKey() ;
+	t.LastMsgPb = m.getLastMsgPb() ;
+	t.LastMsgJson = m.getLastMsgJson() ;
+	*/
+
 	public class PB_ChatSync {
 	   public long SyncId;
 	   public int ToUserId;
 	   public int ChatSyncTypeId;
 	   public String ChatKey;
 	   public long MessageId;
+	   public byte[] MessagePb;
+	   public String MessageJson;
 	   public int CreatedTime;
 	}
 	/*
@@ -3637,6 +3580,8 @@ public class PBFlatTypes {
     t.setChatSyncTypeId();
     t.setChatKey();
     t.setMessageId();
+    t.setMessagePb();
+    t.setMessageJson();
     t.setCreatedTime();
 	*/
 
@@ -3647,6 +3592,8 @@ public class PBFlatTypes {
 	t.ChatSyncTypeId = ;
 	t.ChatKey = ;
 	t.MessageId = ;
+	t.MessagePb = ;
+	t.MessageJson = ;
 	t.CreatedTime = ;
 	*/
 
@@ -3657,6 +3604,8 @@ public class PBFlatTypes {
 	t.ChatSyncTypeId = m.getChatSyncTypeId() ;
 	t.ChatKey = m.getChatKey() ;
 	t.MessageId = m.getMessageId() ;
+	t.MessagePb = m.getMessagePb() ;
+	t.MessageJson = m.getMessageJson() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -4502,6 +4451,25 @@ public class PBFlatTypes {
 	t.Height = m.getHeight() ;
 	t.Duration = m.getDuration() ;
 	t.Extension = m.getExtension() ;
+	*/
+
+	public class PB_MessageTableExtra {
+	   public PB_MessageFileView MessageFileView;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_MessageTableExtra t = new PBFlatTypes.PB_MessageTableExtra();
+    t.setMessageFileView();
+	*/
+
+	/*
+	PBFlatTypes.PB_MessageTableExtra t = new PBFlatTypes.PB_MessageTableExtra();
+	t.MessageFileView = ;
+	*/
+
+	/*
+	PB_MessageTableExtra t = new PB_MessageTableExtra();
+	t.MessageFileView = m.getMessageFileView() ;
 	*/
 
 	

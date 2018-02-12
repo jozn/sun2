@@ -2579,104 +2579,6 @@ var PB_Comment__FOlD = &PB_Comment{
 	Seq:         0,
 }
 
-type PB_DirectOffline_Flat struct {
-	DirectOfflineId int
-	ToUserId        int
-	ChatKey         string
-	MessageId       int
-	MessageFileId   int
-	PBClass         string
-	DataPB          []byte
-	DataJson        string
-	DataTemp        string
-	AtTimeMs        int
-}
-
-//ToPB
-func (m *PB_DirectOffline) ToFlat() *PB_DirectOffline_Flat {
-	r := &PB_DirectOffline_Flat{
-		DirectOfflineId: int(m.DirectOfflineId),
-		ToUserId:        int(m.ToUserId),
-		ChatKey:         m.ChatKey,
-		MessageId:       int(m.MessageId),
-		MessageFileId:   int(m.MessageFileId),
-		PBClass:         m.PBClass,
-		DataPB:          []byte(m.DataPB),
-		DataJson:        m.DataJson,
-		DataTemp:        m.DataTemp,
-		AtTimeMs:        int(m.AtTimeMs),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_DirectOffline_Flat) ToPB() *PB_DirectOffline {
-	r := &PB_DirectOffline{
-		DirectOfflineId: int64(m.DirectOfflineId),
-		ToUserId:        int32(m.ToUserId),
-		ChatKey:         m.ChatKey,
-		MessageId:       int64(m.MessageId),
-		MessageFileId:   int64(m.MessageFileId),
-		PBClass:         m.PBClass,
-		DataPB:          m.DataPB,
-		DataJson:        m.DataJson,
-		DataTemp:        m.DataTemp,
-		AtTimeMs:        int64(m.AtTimeMs),
-	}
-	return r
-}
-
-//folding
-var PB_DirectOffline__FOlD = &PB_DirectOffline{
-	DirectOfflineId: 0,
-	ToUserId:        0,
-	ChatKey:         "",
-	MessageId:       0,
-	MessageFileId:   0,
-	PBClass:         "",
-	DataPB:          []byte{},
-	DataJson:        "",
-	DataTemp:        "",
-	AtTimeMs:        0,
-}
-
-type PB_DirectToMessage_Flat struct {
-	Id           int
-	ChatKey      string
-	MessageId    int
-	SourceEnumId int
-}
-
-//ToPB
-func (m *PB_DirectToMessage) ToFlat() *PB_DirectToMessage_Flat {
-	r := &PB_DirectToMessage_Flat{
-		Id:           int(m.Id),
-		ChatKey:      m.ChatKey,
-		MessageId:    int(m.MessageId),
-		SourceEnumId: int(m.SourceEnumId),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_DirectToMessage_Flat) ToPB() *PB_DirectToMessage {
-	r := &PB_DirectToMessage{
-		Id:           int64(m.Id),
-		ChatKey:      m.ChatKey,
-		MessageId:    int64(m.MessageId),
-		SourceEnumId: int32(m.SourceEnumId),
-	}
-	return r
-}
-
-//folding
-var PB_DirectToMessage__FOlD = &PB_DirectToMessage{
-	Id:           0,
-	ChatKey:      "",
-	MessageId:    0,
-	SourceEnumId: 0,
-}
-
 type PB_FollowingList_Flat struct {
 	Id          int
 	UserId      int
@@ -4135,12 +4037,47 @@ var PB_Chat__FOlD = &PB_Chat{
 	UpdatedMs:    0,
 }
 
+type PB_ChatLastMessage_Flat struct {
+	ChatKey     string
+	LastMsgPb   []byte
+	LastMsgJson string
+}
+
+//ToPB
+func (m *PB_ChatLastMessage) ToFlat() *PB_ChatLastMessage_Flat {
+	r := &PB_ChatLastMessage_Flat{
+		ChatKey:     m.ChatKey,
+		LastMsgPb:   []byte(m.LastMsgPb),
+		LastMsgJson: m.LastMsgJson,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_ChatLastMessage_Flat) ToPB() *PB_ChatLastMessage {
+	r := &PB_ChatLastMessage{
+		ChatKey:     m.ChatKey,
+		LastMsgPb:   m.LastMsgPb,
+		LastMsgJson: m.LastMsgJson,
+	}
+	return r
+}
+
+//folding
+var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
+	ChatKey:     "",
+	LastMsgPb:   []byte{},
+	LastMsgJson: "",
+}
+
 type PB_ChatSync_Flat struct {
 	SyncId         int
 	ToUserId       int
 	ChatSyncTypeId int
 	ChatKey        string
 	MessageId      int
+	MessagePb      []byte
+	MessageJson    string
 	CreatedTime    int
 }
 
@@ -4152,6 +4089,8 @@ func (m *PB_ChatSync) ToFlat() *PB_ChatSync_Flat {
 		ChatSyncTypeId: int(m.ChatSyncTypeId),
 		ChatKey:        m.ChatKey,
 		MessageId:      int(m.MessageId),
+		MessagePb:      []byte(m.MessagePb),
+		MessageJson:    m.MessageJson,
 		CreatedTime:    int(m.CreatedTime),
 	}
 	return r
@@ -4165,6 +4104,8 @@ func (m *PB_ChatSync_Flat) ToPB() *PB_ChatSync {
 		ChatSyncTypeId: int32(m.ChatSyncTypeId),
 		ChatKey:        m.ChatKey,
 		MessageId:      int64(m.MessageId),
+		MessagePb:      m.MessagePb,
+		MessageJson:    m.MessageJson,
 		CreatedTime:    int32(m.CreatedTime),
 	}
 	return r
@@ -4177,6 +4118,8 @@ var PB_ChatSync__FOlD = &PB_ChatSync{
 	ChatSyncTypeId: 0,
 	ChatKey:        "",
 	MessageId:      0,
+	MessagePb:      []byte{},
+	MessageJson:    "",
 	CreatedTime:    0,
 }
 
@@ -5039,6 +4982,25 @@ var PB_MessageFileView__FOlD = &PB_MessageFileView{
 	Extension:     "",
 }
 
+type PB_MessageTableExtra_Flat struct {
+	MessageFileView PB_MessageFileView
+}
+
+//ToPB
+func (m *PB_MessageTableExtra) ToFlat() *PB_MessageTableExtra_Flat {
+	r := &PB_MessageTableExtra_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_MessageTableExtra_Flat) ToPB() *PB_MessageTableExtra {
+	r := &PB_MessageTableExtra{}
+	return r
+}
+
+//folding
+var PB_MessageTableExtra__FOlD = &PB_MessageTableExtra{}
+
 /*
 ///// to_flat ///
 
@@ -5827,32 +5789,6 @@ r := &PB_Comment_Flat{
 return r
 }
 
-func(m *PB_DirectOffline)ToFlat() *PB_DirectOffline_Flat {
-r := &PB_DirectOffline_Flat{
-    DirectOfflineId:  int(m.DirectOfflineId) ,
-    ToUserId:  int(m.ToUserId) ,
-    ChatKey:  m.ChatKey ,
-    MessageId:  int(m.MessageId) ,
-    MessageFileId:  int(m.MessageFileId) ,
-    PBClass:  m.PBClass ,
-    DataPB:  []byte(m.DataPB) ,
-    DataJson:  m.DataJson ,
-    DataTemp:  m.DataTemp ,
-    AtTimeMs:  int(m.AtTimeMs) ,
-}
-return r
-}
-
-func(m *PB_DirectToMessage)ToFlat() *PB_DirectToMessage_Flat {
-r := &PB_DirectToMessage_Flat{
-    Id:  int(m.Id) ,
-    ChatKey:  m.ChatKey ,
-    MessageId:  int(m.MessageId) ,
-    SourceEnumId:  int(m.SourceEnumId) ,
-}
-return r
-}
-
 func(m *PB_FollowingList)ToFlat() *PB_FollowingList_Flat {
 r := &PB_FollowingList_Flat{
     Id:  int(m.Id) ,
@@ -6237,6 +6173,15 @@ r := &PB_Chat_Flat{
 return r
 }
 
+func(m *PB_ChatLastMessage)ToFlat() *PB_ChatLastMessage_Flat {
+r := &PB_ChatLastMessage_Flat{
+    ChatKey:  m.ChatKey ,
+    LastMsgPb:  []byte(m.LastMsgPb) ,
+    LastMsgJson:  m.LastMsgJson ,
+}
+return r
+}
+
 func(m *PB_ChatSync)ToFlat() *PB_ChatSync_Flat {
 r := &PB_ChatSync_Flat{
     SyncId:  int(m.SyncId) ,
@@ -6244,6 +6189,8 @@ r := &PB_ChatSync_Flat{
     ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
     ChatKey:  m.ChatKey ,
     MessageId:  int(m.MessageId) ,
+    MessagePb:  []byte(m.MessagePb) ,
+    MessageJson:  m.MessageJson ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -6492,6 +6439,13 @@ r := &PB_MessageFileView_Flat{
     Height:  int(m.Height) ,
     Duration:  int(m.Duration) ,
     Extension:  m.Extension ,
+}
+return r
+}
+
+func(m *PB_MessageTableExtra)ToFlat() *PB_MessageTableExtra_Flat {
+r := &PB_MessageTableExtra_Flat{
+
 }
 return r
 }
@@ -7285,32 +7239,6 @@ r := &PB_Comment{
 return r
 }
 
-func(m *PB_DirectOffline_Flat)ToPB() *PB_DirectOffline {
-r := &PB_DirectOffline{
-    DirectOfflineId:  int64(m.DirectOfflineId) ,
-    ToUserId:  int32(m.ToUserId) ,
-    ChatKey:  m.ChatKey ,
-    MessageId:  int64(m.MessageId) ,
-    MessageFileId:  int64(m.MessageFileId) ,
-    PBClass:  m.PBClass ,
-    DataPB:  m.DataPB ,
-    DataJson:  m.DataJson ,
-    DataTemp:  m.DataTemp ,
-    AtTimeMs:  int64(m.AtTimeMs) ,
-}
-return r
-}
-
-func(m *PB_DirectToMessage_Flat)ToPB() *PB_DirectToMessage {
-r := &PB_DirectToMessage{
-    Id:  int64(m.Id) ,
-    ChatKey:  m.ChatKey ,
-    MessageId:  int64(m.MessageId) ,
-    SourceEnumId:  int32(m.SourceEnumId) ,
-}
-return r
-}
-
 func(m *PB_FollowingList_Flat)ToPB() *PB_FollowingList {
 r := &PB_FollowingList{
     Id:  int32(m.Id) ,
@@ -7695,6 +7623,15 @@ r := &PB_Chat{
 return r
 }
 
+func(m *PB_ChatLastMessage_Flat)ToPB() *PB_ChatLastMessage {
+r := &PB_ChatLastMessage{
+    ChatKey:  m.ChatKey ,
+    LastMsgPb:  m.LastMsgPb ,
+    LastMsgJson:  m.LastMsgJson ,
+}
+return r
+}
+
 func(m *PB_ChatSync_Flat)ToPB() *PB_ChatSync {
 r := &PB_ChatSync{
     SyncId:  int64(m.SyncId) ,
@@ -7702,6 +7639,8 @@ r := &PB_ChatSync{
     ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
     ChatKey:  m.ChatKey ,
     MessageId:  int64(m.MessageId) ,
+    MessagePb:  m.MessagePb ,
+    MessageJson:  m.MessageJson ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -7950,6 +7889,13 @@ r := &PB_MessageFileView{
     Height:  int32(m.Height) ,
     Duration:  int32(m.Duration) ,
     Extension:  m.Extension ,
+}
+return r
+}
+
+func(m *PB_MessageTableExtra_Flat)ToPB() *PB_MessageTableExtra {
+r := &PB_MessageTableExtra{
+
 }
 return r
 }
@@ -8541,28 +8487,6 @@ var PB_Comment__FOlD = &PB_Comment{
 }
 
 
-var PB_DirectOffline__FOlD = &PB_DirectOffline{
-        DirectOfflineId:  0 ,
-        ToUserId:  0 ,
-        ChatKey:  "" ,
-        MessageId:  0 ,
-        MessageFileId:  0 ,
-        PBClass:  "" ,
-        DataPB:  []byte{} ,
-        DataJson:  "" ,
-        DataTemp:  "" ,
-        AtTimeMs:  0 ,
-}
-
-
-var PB_DirectToMessage__FOlD = &PB_DirectToMessage{
-        Id:  0 ,
-        ChatKey:  "" ,
-        MessageId:  0 ,
-        SourceEnumId:  0 ,
-}
-
-
 var PB_FollowingList__FOlD = &PB_FollowingList{
         Id:  0 ,
         UserId:  0 ,
@@ -8895,12 +8819,21 @@ var PB_Chat__FOlD = &PB_Chat{
 }
 
 
+var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
+        ChatKey:  "" ,
+        LastMsgPb:  []byte{} ,
+        LastMsgJson:  "" ,
+}
+
+
 var PB_ChatSync__FOlD = &PB_ChatSync{
         SyncId:  0 ,
         ToUserId:  0 ,
         ChatSyncTypeId:  0 ,
         ChatKey:  "" ,
         MessageId:  0 ,
+        MessagePb:  []byte{} ,
+        MessageJson:  "" ,
         CreatedTime:  0 ,
 }
 
@@ -9117,6 +9050,11 @@ var PB_MessageFileView__FOlD = &PB_MessageFileView{
         Height:  0 ,
         Duration:  0 ,
         Extension:  "" ,
+}
+
+
+var PB_MessageTableExtra__FOlD = &PB_MessageTableExtra{
+
 }
 
 

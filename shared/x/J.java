@@ -331,6 +331,7 @@ public class J {
 
 	public static class ChatLastMessage {//oridnal: 28
 		public String ChatKey;
+		public int ForUserId;
 		public UNKNOWN LastMsgPb;
 		public String LastMsgJson;
 	}
@@ -339,7 +340,11 @@ public class J {
 		public int SyncId;
 		public int ToUserId;
 		public int ChatSyncTypeId;
+		public String RoomKey;
 		public String ChatKey;
+		public int FromHighMessageId;
+		public int ToLowMessageId;
+		public int ToMessageId;
 		public int MessageId;
 		public UNKNOWN MessagePb;
 		public String MessageJson;

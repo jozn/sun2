@@ -102,8 +102,6 @@ const (
 	UserView                                   = "UserView"
 	PB_Action                                  = "PB_Action"
 	PB_Comment                                 = "PB_Comment"
-	PB_DirectOffline                           = "PB_DirectOffline"
-	PB_DirectToMessage                         = "PB_DirectToMessage"
 	PB_FollowingList                           = "PB_FollowingList"
 	PB_FollowingListMember                     = "PB_FollowingListMember"
 	PB_FollowingListMemberRemoved              = "PB_FollowingListMemberRemoved"
@@ -130,6 +128,7 @@ const (
 	PB_UserMetaInfo                            = "PB_UserMetaInfo"
 	PB_UserPassword                            = "PB_UserPassword"
 	PB_Chat                                    = "PB_Chat"
+	PB_ChatLastMessage                         = "PB_ChatLastMessage"
 	PB_ChatSync                                = "PB_ChatSync"
 	PB_DirectMessage                           = "PB_DirectMessage"
 	PB_MessageFile                             = "PB_MessageFile"
@@ -147,4 +146,5 @@ const (
 	PB_ChatView                                = "PB_ChatView"
 	PB_MessageView                             = "PB_MessageView"
 	PB_MessageFileView                         = "PB_MessageFileView"
+	PB_MessageTableExtra                       = "PB_MessageTableExtra"
 )

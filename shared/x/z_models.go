@@ -743,6 +743,7 @@ type Chat struct {
 // chat_last_message 'ChatLastMessage'.
 type ChatLastMessage struct {
 	ChatKey     string
+	ForUserId   int
 	LastMsgPb   []byte
 	LastMsgJson string
 
@@ -752,19 +753,24 @@ type ChatLastMessage struct {
 /*
 := &ChatLastMessage {
 	ChatKey: "",
+	ForUserId: 0,
 	LastMsgPb: []byte{},
 	LastMsgJson: "",
 */
 // chat_sync 'ChatSync'.
 type ChatSync struct {
-	SyncId         int
-	ToUserId       int
-	ChatSyncTypeId int
-	ChatKey        string
-	MessageId      int
-	MessagePb      []byte
-	MessageJson    string
-	CreatedTime    int
+	SyncId            int
+	ToUserId          int
+	ChatSyncTypeId    int
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId int
+	ToLowMessageId    int
+	ToMessageId       int
+	MessageId         int
+	MessagePb         []byte
+	MessageJson       string
+	CreatedTime       int
 
 	_exists, _deleted bool
 }
@@ -774,7 +780,11 @@ type ChatSync struct {
 	SyncId: 0,
 	ToUserId: 0,
 	ChatSyncTypeId: 0,
+	RoomKey: "",
 	ChatKey: "",
+	FromHighMessageId: 0,
+	ToLowMessageId: 0,
+	ToMessageId: 0,
 	MessageId: 0,
 	MessagePb: []byte{},
 	MessageJson: "",

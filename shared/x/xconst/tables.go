@@ -697,34 +697,44 @@ var Chat = struct {
 
 var ChatLastMessage = struct {
 	ChatKey     string
+	ForUserId   string
 	LastMsgPb   string
 	LastMsgJson string
 }{
 
 	ChatKey:     "ChatKey",
+	ForUserId:   "ForUserId",
 	LastMsgPb:   "LastMsgPb",
 	LastMsgJson: "LastMsgJson",
 }
 
 var ChatSync = struct {
-	SyncId         string
-	ToUserId       string
-	ChatSyncTypeId string
-	ChatKey        string
-	MessageId      string
-	MessagePb      string
-	MessageJson    string
-	CreatedTime    string
+	SyncId            string
+	ToUserId          string
+	ChatSyncTypeId    string
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId string
+	ToLowMessageId    string
+	ToMessageId       string
+	MessageId         string
+	MessagePb         string
+	MessageJson       string
+	CreatedTime       string
 }{
 
-	SyncId:         "SyncId",
-	ToUserId:       "ToUserId",
-	ChatSyncTypeId: "ChatSyncTypeId",
-	ChatKey:        "ChatKey",
-	MessageId:      "MessageId",
-	MessagePb:      "MessagePb",
-	MessageJson:    "MessageJson",
-	CreatedTime:    "CreatedTime",
+	SyncId:            "SyncId",
+	ToUserId:          "ToUserId",
+	ChatSyncTypeId:    "ChatSyncTypeId",
+	RoomKey:           "RoomKey",
+	ChatKey:           "ChatKey",
+	FromHighMessageId: "FromHighMessageId",
+	ToLowMessageId:    "ToLowMessageId",
+	ToMessageId:       "ToMessageId",
+	MessageId:         "MessageId",
+	MessagePb:         "MessagePb",
+	MessageJson:       "MessageJson",
+	CreatedTime:       "CreatedTime",
 }
 
 var DirectMessage = struct {

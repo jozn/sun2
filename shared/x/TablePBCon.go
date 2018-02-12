@@ -856,6 +856,7 @@ func PBConvPB_Chat_To_Chat ( o *Chat) *PB_Chat {
 func PBConvPB__ChatLastMessage_To_ChatLastMessage( o *PB_ChatLastMessage) *ChatLastMessage {
      n := &ChatLastMessage{
       ChatKey: string ( o.ChatKey ),
+      ForUserId: int ( o.ForUserId ),
       LastMsgPb: []byte ( o.LastMsgPb ),
       LastMsgJson: string ( o.LastMsgJson ),
     }
@@ -865,6 +866,7 @@ func PBConvPB__ChatLastMessage_To_ChatLastMessage( o *PB_ChatLastMessage) *ChatL
 func PBConvPB_ChatLastMessage_To_ChatLastMessage ( o *ChatLastMessage) *PB_ChatLastMessage {
      n := &PB_ChatLastMessage{
       ChatKey: string ( o.ChatKey ),
+      ForUserId: int32 ( o.ForUserId ),
       LastMsgPb: []byte ( o.LastMsgPb ),
       LastMsgJson: string ( o.LastMsgJson ),
     }
@@ -877,7 +879,11 @@ func PBConvPB__ChatSync_To_ChatSync( o *PB_ChatSync) *ChatSync {
       SyncId: int ( o.SyncId ),
       ToUserId: int ( o.ToUserId ),
       ChatSyncTypeId: int ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
       ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int ( o.FromHighMessageId ),
+      ToLowMessageId: int ( o.ToLowMessageId ),
+      ToMessageId: int ( o.ToMessageId ),
       MessageId: int ( o.MessageId ),
       MessagePb: []byte ( o.MessagePb ),
       MessageJson: string ( o.MessageJson ),
@@ -891,7 +897,11 @@ func PBConvPB_ChatSync_To_ChatSync ( o *ChatSync) *PB_ChatSync {
       SyncId: int64 ( o.SyncId ),
       ToUserId: int32 ( o.ToUserId ),
       ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
       ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int64 ( o.FromHighMessageId ),
+      ToLowMessageId: int64 ( o.ToLowMessageId ),
+      ToMessageId: int64 ( o.ToMessageId ),
       MessageId: int64 ( o.MessageId ),
       MessagePb: []byte ( o.MessagePb ),
       MessageJson: string ( o.MessageJson ),
