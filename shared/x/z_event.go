@@ -749,6 +749,30 @@ func OnDirectMessage_LoadMany(rows []*DirectMessage) {
 	}
 }
 
+//Home Events
+
+func OnHome_AfterInsert(row *Home) {
+	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHome_AfterUpdate(row *Home) {
+	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHome_AfterDelete(row *Home) {
+	RowCache.Delete("Home:" + strconv.Itoa(row.Id))
+}
+
+func OnHome_LoadOne(row *Home) {
+	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHome_LoadMany(rows []*Home) {
+	for _, row := range rows {
+		RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
 //MessageFile Events
 
 func OnMessageFile_AfterInsert(row *MessageFile) {
@@ -770,5 +794,53 @@ func OnMessageFile_LoadOne(row *MessageFile) {
 func OnMessageFile_LoadMany(rows []*MessageFile) {
 	for _, row := range rows {
 		RowCache.Set("MessageFile:"+strconv.Itoa(row.MessageFileId), row, time.Hour*0)
+	}
+}
+
+//FileMsg Events
+
+func OnFileMsg_AfterInsert(row *FileMsg) {
+	RowCache.Set("FileMsg:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFileMsg_AfterUpdate(row *FileMsg) {
+	RowCache.Set("FileMsg:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFileMsg_AfterDelete(row *FileMsg) {
+	RowCache.Delete("FileMsg:" + strconv.Itoa(row.Id))
+}
+
+func OnFileMsg_LoadOne(row *FileMsg) {
+	RowCache.Set("FileMsg:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFileMsg_LoadMany(rows []*FileMsg) {
+	for _, row := range rows {
+		RowCache.Set("FileMsg:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//FilePost Events
+
+func OnFilePost_AfterInsert(row *FilePost) {
+	RowCache.Set("FilePost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFilePost_AfterUpdate(row *FilePost) {
+	RowCache.Set("FilePost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFilePost_AfterDelete(row *FilePost) {
+	RowCache.Delete("FilePost:" + strconv.Itoa(row.Id))
+}
+
+func OnFilePost_LoadOne(row *FilePost) {
+	RowCache.Set("FilePost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFilePost_LoadMany(rows []*FilePost) {
+	for _, row := range rows {
+		RowCache.Set("FilePost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }

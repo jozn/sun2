@@ -898,6 +898,35 @@ $$
 
 
  #### delimiter ;*/
+################################ Home ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS home_OnCreateLogger $$
+CREATE TRIGGER home_OnCreateLogger AFTER INSERT ON home
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Home","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS home_OnUpdateLogger $$
+CREATE TRIGGER home_OnUpdateLogger AFTER UPDATE ON home
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Home","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS home_OnDeleteLogger $$
+CREATE TRIGGER home_OnDeleteLogger AFTER DELETE ON home
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Home","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ MessageFile ######################################
 
 /* #### delimiter $$
@@ -922,6 +951,64 @@ CREATE TRIGGER message_file_OnDeleteLogger AFTER DELETE ON message_file
   FOR EACH ROW
   BEGIN
    	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("MessageFile","DELETE",OLD.MessageFileId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ FileMsg ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS file_msg_OnCreateLogger $$
+CREATE TRIGGER file_msg_OnCreateLogger AFTER INSERT ON file_msg
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FileMsg","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS file_msg_OnUpdateLogger $$
+CREATE TRIGGER file_msg_OnUpdateLogger AFTER UPDATE ON file_msg
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FileMsg","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS file_msg_OnDeleteLogger $$
+CREATE TRIGGER file_msg_OnDeleteLogger AFTER DELETE ON file_msg
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FileMsg","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ FilePost ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS file_post_OnCreateLogger $$
+CREATE TRIGGER file_post_OnCreateLogger AFTER INSERT ON file_post
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FilePost","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS file_post_OnUpdateLogger $$
+CREATE TRIGGER file_post_OnUpdateLogger AFTER UPDATE ON file_post
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FilePost","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS file_post_OnDeleteLogger $$
+CREATE TRIGGER file_post_OnDeleteLogger AFTER DELETE ON file_post
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FilePost","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1056,8 +1143,20 @@ DROP TRIGGER IF EXISTS chat_sync_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS direct_message_OnCreateLogger ;
 DROP TRIGGER IF EXISTS direct_message_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS direct_message_OnDeleteLogger ;
+### Home ##
+DROP TRIGGER IF EXISTS home_OnCreateLogger ;
+DROP TRIGGER IF EXISTS home_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS home_OnDeleteLogger ;
 ### MessageFile ##
 DROP TRIGGER IF EXISTS message_file_OnCreateLogger ;
 DROP TRIGGER IF EXISTS message_file_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS message_file_OnDeleteLogger ;
+### FileMsg ##
+DROP TRIGGER IF EXISTS file_msg_OnCreateLogger ;
+DROP TRIGGER IF EXISTS file_msg_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS file_msg_OnDeleteLogger ;
+### FilePost ##
+DROP TRIGGER IF EXISTS file_post_OnCreateLogger ;
+DROP TRIGGER IF EXISTS file_post_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS file_post_OnDeleteLogger ;
 */

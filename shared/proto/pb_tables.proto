@@ -339,6 +339,11 @@ message PB_DirectMessage {
     int32 DeliviryStatusEnum = 10;
     bytes ExtraPB = 11;
 }
+message PB_Home {
+    int64 Id = 1;
+    int32 ForUserId = 2;
+    int64 PostId = 3;
+}
 message PB_MessageFile {
     int64 MessageFileId = 1;
     int32 FileTypeEnum = 2;
@@ -351,4 +356,18 @@ message PB_MessageFile {
     string Extension = 9;
     string Md5Hash = 10;
     int32 CreatedTime = 11;
+}
+message PB_FileMsg {
+    int64 Id = 1;
+    int32 FileType = 2;
+    string Extension = 3;
+    bytes DataThumb = 4;
+    bytes Data = 5;
+}
+message PB_FilePost {
+    int64 Id = 1;
+    int32 FileType = 2;
+    string Extension = 3;
+    bytes DataThumb = 4;
+    bytes Data = 5;
 }

@@ -819,6 +819,21 @@ type DirectMessage struct {
 	DeliviryStatusEnum: 0,
 	ExtraPB: []byte{},
 */
+// home 'Home'.
+type Home struct {
+	Id        int
+	ForUserId int
+	PostId    int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &Home {
+	Id: 0,
+	ForUserId: 0,
+	PostId: 0,
+*/
 // message_file 'MessageFile'.
 type MessageFile struct {
 	MessageFileId int
@@ -849,4 +864,42 @@ type MessageFile struct {
 	Extension: "",
 	Md5Hash: "",
 	CreatedTime: 0,
+*/
+// file_msg 'FileMsg'.
+type FileMsg struct {
+	Id        int
+	FileType  int
+	Extension string
+	DataThumb []byte
+	Data      []byte
+
+	_exists, _deleted bool
+}
+
+/*
+:= &FileMsg {
+	Id: 0,
+	FileType: 0,
+	Extension: "",
+	DataThumb: []byte{},
+	Data: []byte{},
+*/
+// file_post 'FilePost'.
+type FilePost struct {
+	Id        int
+	FileType  int
+	Extension string
+	DataThumb []byte
+	Data      []byte
+
+	_exists, _deleted bool
+}
+
+/*
+:= &FilePost {
+	Id: 0,
+	FileType: 0,
+	Extension: "",
+	DataThumb: []byte{},
+	Data: []byte{},
 */

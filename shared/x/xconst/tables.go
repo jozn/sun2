@@ -63,8 +63,14 @@ const (
 	ChatSync_TableGo                   = "ChatSync"
 	DirectMessage_Table                = "direct_message"
 	DirectMessage_TableGo              = "DirectMessage"
+	Home_Table                         = "home"
+	Home_TableGo                       = "Home"
 	MessageFile_Table                  = "message_file"
 	MessageFile_TableGo                = "MessageFile"
+	FileMsg_Table                      = "file_msg"
+	FileMsg_TableGo                    = "FileMsg"
+	FilePost_Table                     = "file_post"
+	FilePost_TableGo                   = "FilePost"
 )
 
 var Action = struct {
@@ -762,6 +768,17 @@ var DirectMessage = struct {
 	ExtraPB:            "ExtraPB",
 }
 
+var Home = struct {
+	Id        string
+	ForUserId string
+	PostId    string
+}{
+
+	Id:        "Id",
+	ForUserId: "ForUserId",
+	PostId:    "PostId",
+}
+
 var MessageFile = struct {
 	MessageFileId string
 	FileTypeEnum  string
@@ -787,4 +804,34 @@ var MessageFile = struct {
 	Extension:     "Extension",
 	Md5Hash:       "Md5Hash",
 	CreatedTime:   "CreatedTime",
+}
+
+var FileMsg = struct {
+	Id        string
+	FileType  string
+	Extension string
+	DataThumb string
+	Data      string
+}{
+
+	Id:        "Id",
+	FileType:  "FileType",
+	Extension: "Extension",
+	DataThumb: "DataThumb",
+	Data:      "Data",
+}
+
+var FilePost = struct {
+	Id        string
+	FileType  string
+	Extension string
+	DataThumb string
+	Data      string
+}{
+
+	Id:        "Id",
+	FileType:  "FileType",
+	Extension: "Extension",
+	DataThumb: "DataThumb",
+	Data:      "Data",
 }

@@ -905,4 +905,92 @@ func (c _StoreImpl) PreLoadUserMetaInfo_ByUserIds(UserIds []int) {
 
 // DirectMessage - PRIMARY
 
+// Home - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'ForUserId'.
+func (c _StoreImpl) Home_ByForUserId(ForUserId int) (*Home, bool) {
+	o, ok := RowCacheIndex.Get("Home_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+	if ok {
+		if obj, ok := o.(*Home); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewHome_Selector().ForUserId_Eq(ForUserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("Home_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHome_ByForUserIds(ForUserIds []int) {
+	not_cached := make([]int, 0, len(ForUserIds))
+
+	for _, id := range ForUserIds {
+		_, ok := RowCacheIndex.Get("Home_ForUserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewHome_Selector().ForUserId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("Home_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'PostId'.
+func (c _StoreImpl) Home_ByPostId(PostId int) (*Home, bool) {
+	o, ok := RowCacheIndex.Get("Home_PostId:" + fmt.Sprintf("%v", PostId))
+	if ok {
+		if obj, ok := o.(*Home); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewHome_Selector().PostId_Eq(PostId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("Home_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHome_ByPostIds(PostIds []int) {
+	not_cached := make([]int, 0, len(PostIds))
+
+	for _, id := range PostIds {
+		_, ok := RowCacheIndex.Get("Home_PostId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewHome_Selector().PostId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("Home_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
+			}
+		}
+	}
+}
+
 // MessageFile - PRIMARY
+
+// FileMsg - PRIMARY
+
+// FilePost - PRIMARY

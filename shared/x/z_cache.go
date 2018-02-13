@@ -997,6 +997,38 @@ func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetHomeById(Id int) (*Home, bool) {
+	o, ok := RowCache.Get("Home:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Home); ok {
+			return obj, true
+		}
+	}
+	obj2, err := HomeById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHomeByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Home:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewHome_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetMessageFileByMessageFileId(MessageFileId int) (*MessageFile, bool) {
 	o, ok := RowCache.Get("MessageFile:" + strconv.Itoa(MessageFileId))
 	if ok {
@@ -1024,6 +1056,70 @@ func (c _StoreImpl) PreLoadMessageFileByMessageFileIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewMessageFile_Selector().MessageFileId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetFileMsgById(Id int) (*FileMsg, bool) {
+	o, ok := RowCache.Get("FileMsg:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FileMsg); ok {
+			return obj, true
+		}
+	}
+	obj2, err := FileMsgById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadFileMsgByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("FileMsg:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewFileMsg_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetFilePostById(Id int) (*FilePost, bool) {
+	o, ok := RowCache.Get("FilePost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FilePost); ok {
+			return obj, true
+		}
+	}
+	obj2, err := FilePostById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadFilePostByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("FilePost:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewFilePost_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

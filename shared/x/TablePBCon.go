@@ -944,6 +944,25 @@ func PBConvPB_DirectMessage_To_DirectMessage ( o *DirectMessage) *PB_DirectMessa
 }
 */
 /*
+func PBConvPB__Home_To_Home( o *PB_Home) *Home {
+     n := &Home{
+      Id: int ( o.Id ),
+      ForUserId: int ( o.ForUserId ),
+      PostId: int ( o.PostId ),
+    }
+    return n
+}
+
+func PBConvPB_Home_To_Home ( o *Home) *PB_Home {
+     n := &PB_Home{
+      Id: int64 ( o.Id ),
+      ForUserId: int32 ( o.ForUserId ),
+      PostId: int64 ( o.PostId ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__MessageFile_To_MessageFile( o *PB_MessageFile) *MessageFile {
      n := &MessageFile{
       MessageFileId: int ( o.MessageFileId ),
@@ -974,6 +993,52 @@ func PBConvPB_MessageFile_To_MessageFile ( o *MessageFile) *PB_MessageFile {
       Extension: string ( o.Extension ),
       Md5Hash: string ( o.Md5Hash ),
       CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__FileMsg_To_FileMsg( o *PB_FileMsg) *FileMsg {
+     n := &FileMsg{
+      Id: int ( o.Id ),
+      FileType: int ( o.FileType ),
+      Extension: string ( o.Extension ),
+      DataThumb: []byte ( o.DataThumb ),
+      Data: []byte ( o.Data ),
+    }
+    return n
+}
+
+func PBConvPB_FileMsg_To_FileMsg ( o *FileMsg) *PB_FileMsg {
+     n := &PB_FileMsg{
+      Id: int64 ( o.Id ),
+      FileType: int32 ( o.FileType ),
+      Extension: string ( o.Extension ),
+      DataThumb: []byte ( o.DataThumb ),
+      Data: []byte ( o.Data ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__FilePost_To_FilePost( o *PB_FilePost) *FilePost {
+     n := &FilePost{
+      Id: int ( o.Id ),
+      FileType: int ( o.FileType ),
+      Extension: string ( o.Extension ),
+      DataThumb: []byte ( o.DataThumb ),
+      Data: []byte ( o.Data ),
+    }
+    return n
+}
+
+func PBConvPB_FilePost_To_FilePost ( o *FilePost) *PB_FilePost {
+     n := &PB_FilePost{
+      Id: int64 ( o.Id ),
+      FileType: int32 ( o.FileType ),
+      Extension: string ( o.Extension ),
+      DataThumb: []byte ( o.DataThumb ),
+      Data: []byte ( o.Data ),
     }
     return n
 }

@@ -364,7 +364,13 @@ public class J {
 		public UNKNOWN ExtraPB;
 	}
 
-	public static class MessageFile {//oridnal: 31
+	public static class Home {//oridnal: 31
+		public int Id;
+		public int ForUserId;
+		public int PostId;
+	}
+
+	public static class MessageFile {//oridnal: 32
 		public int MessageFileId;
 		public int FileTypeEnum;
 		public int UserId;
@@ -376,6 +382,22 @@ public class J {
 		public String Extension;
 		public String Md5Hash;
 		public int CreatedTime;
+	}
+
+	public static class FileMsg {//oridnal: 33
+		public int Id;
+		public int FileType;
+		public String Extension;
+		public UNKNOWN DataThumb;
+		public UNKNOWN Data;
+	}
+
+	public static class FilePost {//oridnal: 34
+		public int Id;
+		public int FileType;
+		public String Extension;
+		public UNKNOWN DataThumb;
+		public UNKNOWN Data;
 	}
 
 }

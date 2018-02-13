@@ -748,6 +748,30 @@ func DirectMessageByMessageId(db *sqlx.DB, messageId int) (*DirectMessage, error
 	return &dm, nil
 }
 
+// HomeById Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.home' as a Home.
+func HomeById(db *sqlx.DB, id int) (*Home, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_chat.home ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	h := Home{
+		_exists: true,
+	}
+
+	err = db.Get(&h, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnHome_LoadOne(&h)
+
+	return &h, nil
+}
+
 // MessageFileByMessageFileId Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.message_file' as a MessageFile.
 func MessageFileByMessageFileId(db *sqlx.DB, messageFileId int) (*MessageFile, error) {
 	var err error
@@ -770,4 +794,52 @@ func MessageFileByMessageFileId(db *sqlx.DB, messageFileId int) (*MessageFile, e
 	OnMessageFile_LoadOne(&mf)
 
 	return &mf, nil
+}
+
+// FileMsgById Generated from index 'PRIMARY' -- retrieves a row from 'sun_file.file_msg' as a FileMsg.
+func FileMsgById(db *sqlx.DB, id int) (*FileMsg, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_file.file_msg ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	fm := FileMsg{
+		_exists: true,
+	}
+
+	err = db.Get(&fm, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnFileMsg_LoadOne(&fm)
+
+	return &fm, nil
+}
+
+// FilePostById Generated from index 'PRIMARY' -- retrieves a row from 'sun_file.file_post' as a FilePost.
+func FilePostById(db *sqlx.DB, id int) (*FilePost, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_file.file_post ` +
+		`WHERE Id = ?`
+
+	//XOLog(sqlstr, id)
+	fp := FilePost{
+		_exists: true,
+	}
+
+	err = db.Get(&fp, sqlstr, id)
+	if err != nil {
+		//XOLogErr(err)
+		return nil, err
+	}
+
+	//OnFilePost_LoadOne(&fp)
+
+	return &fp, nil
 }
