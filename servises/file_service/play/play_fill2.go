@@ -14,7 +14,7 @@ var cnt int = 1
 var size int = 0
 
 func main() {
-	Insert_many(10)
+	Insert_many(5)
 	file_service.Run()
 	http.HandleFunc("/hi", func(writer http.ResponseWriter, r *http.Request) {
 		writer.Write([]byte("hi"))
@@ -23,12 +23,13 @@ func main() {
 }
 func Insert_many(num int) {
 	for i := 0; i < num; i++ {
-		insert()
+		insertMsg()
+		insertPost()
 		fmt.Println("cnt: ", i, " size:(mb)", size/1000000)
 	}
 }
 
-func insert() {
+func insertPost() {
 	_, bs, err := RandImage()
 	if err != nil {
 		return
@@ -42,6 +43,22 @@ func insert() {
 	}
 	cnt++
 	file_service.SavePostFile(cas)
+}
+
+func insertMsg() {
+    _, bs, err := RandImage()
+    if err != nil {
+        return
+    }
+    cas := file_service.Row{
+        Id:        helper.NextRowsSeqId(),
+        Data:      bs,
+        FileType:  1,
+        Extension: ".jpg",
+        DataThumb: []byte{},
+    }
+    cnt++
+    file_service.SaveMsgFile(cas)
 }
 
 func RandImage() (fn string, bs []byte, err error) {

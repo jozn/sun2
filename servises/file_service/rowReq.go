@@ -14,6 +14,7 @@ import (
 const GALAXY_CACHE_PARENT_DIR = `E:\sun\`
 
 type rowReq struct {
+	fileCategory              fileCategory
 	fileName                  string
 	fileDataStoreId           int //64bit
 	fileExtensionWithoutDot   string
@@ -27,7 +28,7 @@ type rowReq struct {
 	cacheFullModuleDirectory  string // "/web/galxy/chat/"
 }
 
-func newRowReq(url *url.URL) (row *rowReq, err error) {
+func newRowReq(category fileCategory, url *url.URL) (row *rowReq, err error) {
 	urlPath := strings.Trim(url.Path, "/")
 	sep := strings.Split(urlPath, "/")
 	fileName := sep[len(sep)-1]
@@ -40,11 +41,12 @@ func newRowReq(url *url.URL) (row *rowReq, err error) {
 		return
 	}
 	row = &rowReq{
+		fileCategory:             category,
 		fileName:                 fileName,
 		fileDataStoreId:          id,
 		fileExtensionWithoutDot:  ext,
 		requestedImageSize:       size,
-		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + "cache/",
+		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + category.cachePath + "/", //"cache/",
 	}
 	err = row.setOutputChaseFullPath()
 	if err != nil {
@@ -76,7 +78,7 @@ func (r *rowReq) setOutputChaseFullPath() (err error) {
 	ids := r.fileName
 	//fmt.Println(ids)
 	r.rowCacheOutFullPathDir = fmt.Sprintf("%s%s/%s/%s/%s/", r.cacheFullModuleDirectory,
-		ids[0:2],ids[2:4],ids[4:6],ids[6:8])
+		ids[0:2], ids[2:4], ids[4:6], ids[6:8])
 	r.rowCacheOutFullPath = fmt.Sprintf("%s%d.%s", r.rowCacheOutFullPathDir, r.fileDataStoreId, r.fileExtensionWithoutDot)
 	r.rowCacheOutFullPathThumb = fmt.Sprintf("%s%d_thumb.%s", r.rowCacheOutFullPathDir, r.fileDataStoreId, r.fileExtensionWithoutDot)
 
@@ -97,11 +99,12 @@ func (row *rowReq) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//cassRow, ok := getFromCassandraById(row.fileDataStoreId)
-	cassRow, err := getMysql(row.fileDataStoreId)
+	cassRow, err := row.fileCategory.getterOfStore(row.fileDataStoreId)
 	if err == nil {
 		row.createRowOutCacheDir()
-		fmt.Println("mysql", cassRow)
+		//fmt.Println("mysql", cassRow)
 		ioutil.WriteFile(row.rowCacheOutFullPath, cassRow.Data, os.ModePerm)
+		http.ServeFile(w, r, row.rowCacheOutFullPath)
 	} else {
 		http.NotFound(w, r)
 	}
