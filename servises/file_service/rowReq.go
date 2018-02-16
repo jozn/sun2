@@ -32,7 +32,7 @@ func newRowReq(category fileCategory, url *url.URL) (row *rowReq, err error) {
 	urlPath := strings.Trim(url.Path, "/")
 	sep := strings.Split(urlPath, "/")
 	fileName := sep[len(sep)-1]
-	if len(fileName) < 6 {
+	if len(fileName) < 10 {
 		err = errFileNameTooShort
 		return
 	}
@@ -77,6 +77,9 @@ func nameToParts(name string) (id int, size int, ext string, err error) {
 func (r *rowReq) setOutputChaseFullPath() (err error) {
 	ids := r.fileName
 	//fmt.Println(ids)
+	if len(ids) < 10 {
+		return errFileNameTooShort
+	}
 	r.rowCacheOutFullPathDir = fmt.Sprintf("%s%s/%s/%s/%s/", r.cacheFullModuleDirectory,
 		ids[0:2], ids[2:4], ids[4:6], ids[6:8])
 	r.rowCacheOutFullPath = fmt.Sprintf("%s%d.%s", r.rowCacheOutFullPathDir, r.fileDataStoreId, r.fileExtensionWithoutDot)

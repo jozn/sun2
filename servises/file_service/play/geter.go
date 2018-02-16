@@ -17,6 +17,13 @@ func main() {
 		i++
 	}
 
+    for _, id := range ids {
+        u := fmt.Sprintf("http://localhost:5151/avatar/%d.jpg", id)
+        fmt.Println(u)
+        http.Get(u)
+        i++
+    }
+
 	for _, id := range ids {
 		u := fmt.Sprintf("http://localhost:5151/post_file/%d.jpg", id)
 		fmt.Println(u)

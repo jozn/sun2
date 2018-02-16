@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 )
+//todo: there can be a serve performance drop if we have 404, we must cache in memory with files are not exisit -- high io
 
 func Run() {
 	for _, cat := range httpCategories {

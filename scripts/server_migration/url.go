@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-	for i := 0; i < 180; i++ {
-		fmt.Printf("http://mardomsara.com:8000/file.z%02d\n", i)
+	for i := 0; i < 300; i++ {
+		fmt.Printf("http://mardomsara.com:8080/photos.z%02d\n", i)
 	}
 
 }
