@@ -28,3 +28,4 @@ const (
 var errBadReq = errors.New("bad request")
 var errWrongFileName = errors.New("wrong file name")
 var errFileNameTooShort = errors.New("file name too short")
+var errResizeNotAllowed = errors.New("image resize not allowed")

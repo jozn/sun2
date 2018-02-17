@@ -22,7 +22,7 @@ func main() {
 	})
 	go func() {
 	    time.Sleep(time.Second)
-	    http.Get("http://localhost:5151/post_file/1518524198836010728_thumbjpg")
+	    http.Get("http://localhost:5151/post_file/1518506476136010007_180.jpg")
     }()
 	http.ListenAndServe(":5151", nil)
 }

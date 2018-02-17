@@ -40,7 +40,7 @@ func NewRowReq(category fileCategory, url *url.URL) (row *rowReq) {
 		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + category.cachePath + "/", //"cache/",
 	}
 	row.extractParams()
-	row.setOutputChaseFullPath()
+	row.setOutputCacheFullPath()
 
 	if row.fileDataStoreId == 0 || row.fileExtensionWithoutDot == "" {
 		row.err = errBadReq
@@ -48,7 +48,7 @@ func NewRowReq(category fileCategory, url *url.URL) (row *rowReq) {
 	return
 }
 
-func (r *rowReq) setOutputChaseFullPath() (err error) {
+func (r *rowReq) setOutputCacheFullPath() (err error) {
 	ids := r.fileName
 	//fmt.Println(ids)
 	if len(ids) < 10 {
@@ -115,20 +115,107 @@ func (row *rowReq) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, row.err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	switch {
+	case row.requestedImageSize > 0:
+		row.serveResizeHTTP(w, r)
+	case row.isThumb:
+		row.serveThumbHTTP(w, r)
+	default:
+		row.serveOriginalHTTP(w, r)
+	}
+}
+
+func (row *rowReq) serveOriginalHTTP(w http.ResponseWriter, r *http.Request) {
 	if row.isLocalCacheAvailable() {
 		http.ServeFile(w, r, row.rowCacheOutFullPath)
 		return
 	}
-	//cassRow, ok := getFromCassandraById(row.fileDataStoreId)
-	cassRow, err := row.fileCategory.getterOfStore(row.fileDataStoreId)
+	err := row.loadOriginalFromStore()
 	if err == nil {
-		row.createRowOutCacheDir()
-		//fmt.Println("mysql", cassRow)
-		ioutil.WriteFile(row.rowCacheOutFullPath, cassRow.Data, os.ModePerm)
 		http.ServeFile(w, r, row.rowCacheOutFullPath)
 	} else {
 		http.NotFound(w, r)
 	}
+}
+
+func (row *rowReq) serveResizeHTTP(w http.ResponseWriter, r *http.Request) {
+	if !allowedSize[row.requestedImageSize] {
+		http.Error(w, errResizeNotAllowed.Error(), http.StatusNotFound)
+		return
+	}
+	cachePath := row.rowCacheOutFullPathSized
+	if isFileExists(cachePath) {
+		http.ServeFile(w, r, cachePath)
+		return
+	}
+	var err error
+	if isFileExists(row.rowCacheOutFullPath) {
+
+	} else {
+		err = row.loadOriginalFromStore()
+	}
+
+	if err == nil {
+		res := resizer{
+			inputFullPath:  row.rowCacheOutFullPath,
+			outputFullPath: cachePath,
+			width:          row.requestedImageSize,
+			quality:        90,
+		}
+		res.resizeFFMPEG()
+		http.ServeFile(w, r, cachePath)
+	} else {
+		http.NotFound(w, r)
+	}
+}
+
+func (row *rowReq) serveThumbHTTP(w http.ResponseWriter, r *http.Request) {
+	cachePath := row.rowCacheOutFullPathThumb
+	if isFileExists(cachePath) {
+		http.ServeFile(w, r, cachePath)
+		return
+	}
+	resizing := func() {
+		res := resizer{
+			inputFullPath:  row.rowCacheOutFullPath,
+			outputFullPath: cachePath,
+			width:          150,
+			quality:        90,
+		}
+		res.resizeFFMPEG()
+	}
+	var err error
+	if isFileExists(row.rowCacheOutFullPath) {
+		//this means we have not thumb in db - so just resize the original to 100px
+		resizing()
+	} else {
+		err = row.loadOriginalFromStore()
+	}
+
+	if err == nil {
+		if isFileExists(cachePath) {
+			http.ServeFile(w, r, cachePath)
+		} else {
+			resizing()
+			http.ServeFile(w, r, cachePath)
+		}
+	} else {
+		http.NotFound(w, r)
+	}
+}
+
+func (row *rowReq) loadOriginalFromStore() error {
+	cassRow, err := row.fileCategory.getterOfStore(row.fileDataStoreId)
+	if err == nil {
+		row.createRowOutCacheDir()
+		ioutil.WriteFile(row.rowCacheOutFullPath, cassRow.Data, os.ModePerm)
+		if len(cassRow.DataThumb) > 0 {
+			ioutil.WriteFile(row.rowCacheOutFullPathThumb, cassRow.DataThumb, os.ModePerm)
+		}
+		return nil
+	}
+	return err
 }
 
 func (row *rowReq) isLocalCacheAvailable() bool {
@@ -136,6 +223,20 @@ func (row *rowReq) isLocalCacheAvailable() bool {
 		return false
 	}
 	return true
+}
+
+func isFileExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+var allowedSize = map[int]bool{
+	100:  true,
+	250:  true,
+	500:  true,
+	1080: true,
 }
 
 ////////////////////////////////////////////////
@@ -162,7 +263,7 @@ func newRowReq_bk(category fileCategory, url *url.URL) (row *rowReq, err error) 
 		requestedImageSize:       size,
 		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + category.cachePath + "/", //"cache/",
 	}
-	err = row.setOutputChaseFullPath()
+	err = row.setOutputCacheFullPath()
 	if err != nil {
 		return
 	}
