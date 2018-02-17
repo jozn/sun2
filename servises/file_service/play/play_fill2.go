@@ -8,17 +8,22 @@ import (
 	"ms/sun/helper"
 	"ms/sun2/servises/file_service"
 	"net/http"
+    "time"
 )
 
 var cnt int = 1
 var size int = 0
 
 func main() {
-	Insert_many(5)
+	Insert_many(0)
 	file_service.Run()
 	http.HandleFunc("/hi", func(writer http.ResponseWriter, r *http.Request) {
 		writer.Write([]byte("hi"))
 	})
+	go func() {
+	    time.Sleep(time.Second)
+	    http.Get("http://localhost:5151/post_file/1518524198836010728_thumbjpg")
+    }()
 	http.ListenAndServe(":5151", nil)
 }
 func Insert_many(num int) {

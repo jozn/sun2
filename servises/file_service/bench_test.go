@@ -10,14 +10,14 @@ func BenchmarkNewRowReq(b *testing.B) {
 
 	r, _ := url.Parse("http://localhost:5151/getfile/1518504671057010006.jpg")
 	for i := 0; i < b.N; i++ {
-		newRowReq(r)
+		NewRowReq(r)
 	}
 }
 
 func BenchmarkDisk(b *testing.B) {
 
 	r, _ := url.Parse("http://localhost:5151/getfile/1518504671057010006.jpg")
-	rr, _ := newRowReq(r)
+	rr, _ := NewRowReq(r)
 	for i := 0; i < b.N; i++ {
 		rr.isLocalCacheAvailable()
 	}

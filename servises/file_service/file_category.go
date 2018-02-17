@@ -1,9 +1,7 @@
 package file_service
 
 import (
-	"fmt"
 	"net/http"
-	"os"
 )
 
 type fileCategory struct {
@@ -14,11 +12,11 @@ type fileCategory struct {
 }
 
 func (c fileCategory) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	os.Stdout = nil
-	fmt.Println("sasssss")
-	row, err := newRowReq(c, r.URL)
-	fmt.Println(row)
-	fmt.Println(err)
+	//os.Stdout = nil
+	//fmt.Println("sasssss")
+	row := NewRowReq(c, r.URL)
+	//fmt.Println(row)
+	//fmt.Println(err)
 	row.ServeHTTP(w, r)
 }
 

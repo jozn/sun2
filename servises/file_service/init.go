@@ -3,10 +3,12 @@ package file_service
 import (
 	"errors"
 	"net/http"
+    "fmt"
 )
 //todo: there can be a serve performance drop if we have 404, we must cache in memory with files are not exisit -- high io
 
 func Run() {
+    fmt.Println("file_service.Run() called")
 	for _, cat := range httpCategories {
 		http.Handle("/"+cat.urlPath+"/", cat)
 	}
