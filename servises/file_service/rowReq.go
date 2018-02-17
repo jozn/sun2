@@ -13,6 +13,7 @@ import (
 
 //const GALAXY_CACHE_PARENT_DIR = `C:\Go\_gopath\src\ms\sun2\files\`
 const GALAXY_CACHE_PARENT_DIR = `E:\sun\`
+const GALAXY_CACHE_PARENT_DIR_VERSION = `v1`
 
 type rowReq struct {
 	fullPath                  string
@@ -37,9 +38,11 @@ func NewRowReq(category fileCategory, url *url.URL) (row *rowReq) {
 	row = &rowReq{
 		fullPath:                 url.Path,
 		fileCategory:             category,
-		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + category.cachePath + "/", //"cache/",
+		cacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR + "/" + GALAXY_CACHE_PARENT_DIR_VERSION +"/" + category.cachePath + "/", //"cache/",
 	}
 	row.extractParams()
+    //row.fileExtensionWithoutDot = "media"
+
 	row.setOutputCacheFullPath()
 
 	if row.fileDataStoreId == 0 || row.fileExtensionWithoutDot == "" {
