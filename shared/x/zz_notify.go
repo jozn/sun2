@@ -23,7 +23,6 @@ type Notify__ struct {
 	Murmur64Hash  int `json:"Murmur64Hash"`  // Murmur64Hash -
 	SeenStatus    int `json:"SeenStatus"`    // SeenStatus -
 	CreatedTime   int `json:"CreatedTime"`   // CreatedTime -
-	Seq           int `json:"Seq"`           // Seq -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -49,14 +48,14 @@ func (n *Notify) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.notify (` +
-		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq` +
+		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq)
-	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq)
+	XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -76,14 +75,14 @@ func (n *Notify) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.notify (` +
-		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq` +
+		`NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq)
-	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq)
+	XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -112,12 +111,12 @@ func (n *Notify) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.notify SET ` +
-		`ForUserId = ?, ActorUserId = ?, NotiyTypeEnum = ?, PostId = ?, CommentId = ?, PeerUserId = ?, Murmur64Hash = ?, SeenStatus = ?, CreatedTime = ?, Seq = ?` +
+		`ForUserId = ?, ActorUserId = ?, NotiyTypeEnum = ?, PostId = ?, CommentId = ?, PeerUserId = ?, Murmur64Hash = ?, SeenStatus = ?, CreatedTime = ?` +
 		` WHERE NotifyId = ?`
 
 	// run query
-	XOLog(sqlstr, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq, n.NotifyId)
-	_, err = db.Exec(sqlstr, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.Seq, n.NotifyId)
+	XOLog(sqlstr, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
+	_, err = db.Exec(sqlstr, n.ForUserId, n.ActorUserId, n.NotiyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
 
 	XOLogErr(err)
 	OnNotify_AfterUpdate(n)
@@ -1268,111 +1267,6 @@ func (d *__Notify_Deleter) CreatedTime_GE(val int) *__Notify_Deleter {
 	return d
 }
 
-func (u *__Notify_Deleter) Seq_In(ins []int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Deleter) Seq_Ins(ins ...int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Deleter) Seq_NotIn(ins []int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Notify_Deleter) Seq_Eq(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Deleter) Seq_NotEq(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Deleter) Seq_LT(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Deleter) Seq_LE(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Deleter) Seq_GT(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Deleter) Seq_GE(val int) *__Notify_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
 func (u *__Notify_Updater) Or() *__Notify_Updater {
 	u.whereSep = " OR "
@@ -2424,111 +2318,6 @@ func (d *__Notify_Updater) CreatedTime_GE(val int) *__Notify_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Notify_Updater) Seq_In(ins []int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Updater) Seq_Ins(ins ...int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Updater) Seq_NotIn(ins []int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Notify_Updater) Seq_Eq(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Updater) Seq_NotEq(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Updater) Seq_LT(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Updater) Seq_LE(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Updater) Seq_GT(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Updater) Seq_GE(val int) *__Notify_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3590,111 +3379,6 @@ func (d *__Notify_Selector) CreatedTime_GE(val int) *__Notify_Selector {
 	return d
 }
 
-func (u *__Notify_Selector) Seq_In(ins []int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Selector) Seq_Ins(ins ...int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Notify_Selector) Seq_NotIn(ins []int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Notify_Selector) Seq_Eq(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Selector) Seq_NotEq(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Selector) Seq_LT(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Selector) Seq_LE(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Selector) Seq_GT(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Notify_Selector) Seq_GE(val int) *__Notify_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -3917,27 +3601,6 @@ func (u *__Notify_Updater) CreatedTime_Increment(count int) *__Notify_Updater {
 
 //string
 
-//ints
-
-func (u *__Notify_Updater) Seq(newVal int) *__Notify_Updater {
-	u.updates[" Seq = ? "] = newVal
-	return u
-}
-
-func (u *__Notify_Updater) Seq_Increment(count int) *__Notify_Updater {
-	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -4090,21 +3753,6 @@ func (u *__Notify_Selector) OrderBy_CreatedTime_Asc() *__Notify_Selector {
 
 func (u *__Notify_Selector) Select_CreatedTime() *__Notify_Selector {
 	u.selectCol = "CreatedTime"
-	return u
-}
-
-func (u *__Notify_Selector) OrderBy_Seq_Desc() *__Notify_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
-	return u
-}
-
-func (u *__Notify_Selector) OrderBy_Seq_Asc() *__Notify_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
-	return u
-}
-
-func (u *__Notify_Selector) Select_Seq() *__Notify_Selector {
-	u.selectCol = "Seq"
 	return u
 }
 
@@ -4380,13 +4028,13 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.notify (" +
-		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq" +
+		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4404,7 +4052,6 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 		vals = append(vals, row.Murmur64Hash)
 		vals = append(vals, row.SeenStatus)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -4422,12 +4069,12 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 func MassReplace_Notify(rows []Notify, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.notify (" +
-		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime, Seq" +
+		"NotifyId, ForUserId, ActorUserId, NotiyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4445,7 +4092,6 @@ func MassReplace_Notify(rows []Notify, db XODB) error {
 		vals = append(vals, row.Murmur64Hash)
 		vals = append(vals, row.SeenStatus)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -4461,8 +4107,6 @@ func MassReplace_Notify(rows []Notify, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

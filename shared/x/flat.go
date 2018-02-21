@@ -1661,13 +1661,15 @@ var PB_SocialResponse_DeleteComment__FOlD = &PB_SocialResponse_DeleteComment{
 }
 
 type PB_SocialParam_AddPost_Flat struct {
-	Text string
+	Text      string
+	ImageBlob []byte
 }
 
 //ToPB
 func (m *PB_SocialParam_AddPost) ToFlat() *PB_SocialParam_AddPost_Flat {
 	r := &PB_SocialParam_AddPost_Flat{
-		Text: m.Text,
+		Text:      m.Text,
+		ImageBlob: []byte(m.ImageBlob),
 	}
 	return r
 }
@@ -1675,14 +1677,16 @@ func (m *PB_SocialParam_AddPost) ToFlat() *PB_SocialParam_AddPost_Flat {
 //ToPB
 func (m *PB_SocialParam_AddPost_Flat) ToPB() *PB_SocialParam_AddPost {
 	r := &PB_SocialParam_AddPost{
-		Text: m.Text,
+		Text:      m.Text,
+		ImageBlob: m.ImageBlob,
 	}
 	return r
 }
 
 //folding
 var PB_SocialParam_AddPost__FOlD = &PB_SocialParam_AddPost{
-	Text: "",
+	Text:      "",
+	ImageBlob: []byte{},
 }
 
 type PB_SocialResponse_AddPost_Flat struct {
@@ -2486,7 +2490,6 @@ type PB_Action_Flat struct {
 	CommentId      int
 	Murmur64Hash   int
 	CreatedTime    int
-	Seq            int
 }
 
 //ToPB
@@ -2500,7 +2503,6 @@ func (m *PB_Action) ToFlat() *PB_Action_Flat {
 		CommentId:      int(m.CommentId),
 		Murmur64Hash:   int(m.Murmur64Hash),
 		CreatedTime:    int(m.CreatedTime),
-		Seq:            int(m.Seq),
 	}
 	return r
 }
@@ -2516,7 +2518,6 @@ func (m *PB_Action_Flat) ToPB() *PB_Action {
 		CommentId:      int64(m.CommentId),
 		Murmur64Hash:   int64(m.Murmur64Hash),
 		CreatedTime:    int32(m.CreatedTime),
-		Seq:            int32(m.Seq),
 	}
 	return r
 }
@@ -2531,7 +2532,6 @@ var PB_Action__FOlD = &PB_Action{
 	CommentId:      0,
 	Murmur64Hash:   0,
 	CreatedTime:    0,
-	Seq:            0,
 }
 
 type PB_Comment_Flat struct {
@@ -2541,7 +2541,6 @@ type PB_Comment_Flat struct {
 	Text        string
 	LikesCount  int
 	CreatedTime int
-	Seq         int
 }
 
 //ToPB
@@ -2553,7 +2552,6 @@ func (m *PB_Comment) ToFlat() *PB_Comment_Flat {
 		Text:        m.Text,
 		LikesCount:  int(m.LikesCount),
 		CreatedTime: int(m.CreatedTime),
-		Seq:         int(m.Seq),
 	}
 	return r
 }
@@ -2567,7 +2565,6 @@ func (m *PB_Comment_Flat) ToPB() *PB_Comment {
 		Text:        m.Text,
 		LikesCount:  int32(m.LikesCount),
 		CreatedTime: int32(m.CreatedTime),
-		Seq:         int32(m.Seq),
 	}
 	return r
 }
@@ -2580,7 +2577,6 @@ var PB_Comment__FOlD = &PB_Comment{
 	Text:        "",
 	LikesCount:  0,
 	CreatedTime: 0,
-	Seq:         0,
 }
 
 type PB_FollowingList_Flat struct {
@@ -2957,7 +2953,7 @@ func (m *PB_Media_Flat) ToPB() *PB_Media {
 	r := &PB_Media{
 		MediaId:       int64(m.MediaId),
 		UserId:        int32(m.UserId),
-		PostId:        int32(m.PostId),
+		PostId:        int64(m.PostId),
 		AlbumId:       int32(m.AlbumId),
 		MediaTypeEnum: int32(m.MediaTypeEnum),
 		Width:         int32(m.Width),
@@ -2998,7 +2994,6 @@ type PB_Notify_Flat struct {
 	Murmur64Hash  int
 	SeenStatus    int
 	CreatedTime   int
-	Seq           int
 }
 
 //ToPB
@@ -3014,7 +3009,6 @@ func (m *PB_Notify) ToFlat() *PB_Notify_Flat {
 		Murmur64Hash:  int(m.Murmur64Hash),
 		SeenStatus:    int(m.SeenStatus),
 		CreatedTime:   int(m.CreatedTime),
-		Seq:           int(m.Seq),
 	}
 	return r
 }
@@ -3032,7 +3026,6 @@ func (m *PB_Notify_Flat) ToPB() *PB_Notify {
 		Murmur64Hash:  int64(m.Murmur64Hash),
 		SeenStatus:    int32(m.SeenStatus),
 		CreatedTime:   int32(m.CreatedTime),
-		Seq:           int32(m.Seq),
 	}
 	return r
 }
@@ -3049,7 +3042,6 @@ var PB_Notify__FOlD = &PB_Notify{
 	Murmur64Hash:  0,
 	SeenStatus:    0,
 	CreatedTime:   0,
-	Seq:           0,
 }
 
 type PB_NotifyRemoved_Flat struct {
@@ -3194,7 +3186,7 @@ func (m *PB_Post_Flat) ToPB() *PB_Post {
 		PostId:         int64(m.PostId),
 		UserId:         int32(m.UserId),
 		PostTypeEnum:   int32(m.PostTypeEnum),
-		MediaId:        int32(m.MediaId),
+		MediaId:        int64(m.MediaId),
 		Text:           m.Text,
 		RichText:       m.RichText,
 		MediaCount:     int32(m.MediaCount),
@@ -4208,6 +4200,39 @@ var PB_DirectMessage__FOlD = &PB_DirectMessage{
 	ExtraPB:            []byte{},
 }
 
+type PB_Home_Flat struct {
+	Id        int
+	ForUserId int
+	PostId    int
+}
+
+//ToPB
+func (m *PB_Home) ToFlat() *PB_Home_Flat {
+	r := &PB_Home_Flat{
+		Id:        int(m.Id),
+		ForUserId: int(m.ForUserId),
+		PostId:    int(m.PostId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Home_Flat) ToPB() *PB_Home {
+	r := &PB_Home{
+		Id:        int64(m.Id),
+		ForUserId: int32(m.ForUserId),
+		PostId:    int64(m.PostId),
+	}
+	return r
+}
+
+//folding
+var PB_Home__FOlD = &PB_Home{
+	Id:        0,
+	ForUserId: 0,
+	PostId:    0,
+}
+
 type PB_MessageFile_Flat struct {
 	MessageFileId int
 	FileTypeEnum  int
@@ -4271,6 +4296,88 @@ var PB_MessageFile__FOlD = &PB_MessageFile{
 	Extension:     "",
 	Md5Hash:       "",
 	CreatedTime:   0,
+}
+
+type PB_FileMsg_Flat struct {
+	Id        int
+	FileType  int
+	Extension string
+	DataThumb []byte
+	Data      []byte
+}
+
+//ToPB
+func (m *PB_FileMsg) ToFlat() *PB_FileMsg_Flat {
+	r := &PB_FileMsg_Flat{
+		Id:        int(m.Id),
+		FileType:  int(m.FileType),
+		Extension: m.Extension,
+		DataThumb: []byte(m.DataThumb),
+		Data:      []byte(m.Data),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_FileMsg_Flat) ToPB() *PB_FileMsg {
+	r := &PB_FileMsg{
+		Id:        int64(m.Id),
+		FileType:  int32(m.FileType),
+		Extension: m.Extension,
+		DataThumb: m.DataThumb,
+		Data:      m.Data,
+	}
+	return r
+}
+
+//folding
+var PB_FileMsg__FOlD = &PB_FileMsg{
+	Id:        0,
+	FileType:  0,
+	Extension: "",
+	DataThumb: []byte{},
+	Data:      []byte{},
+}
+
+type PB_FilePost_Flat struct {
+	Id        int
+	FileType  int
+	Extension string
+	DataThumb []byte
+	Data      []byte
+}
+
+//ToPB
+func (m *PB_FilePost) ToFlat() *PB_FilePost_Flat {
+	r := &PB_FilePost_Flat{
+		Id:        int(m.Id),
+		FileType:  int(m.FileType),
+		Extension: m.Extension,
+		DataThumb: []byte(m.DataThumb),
+		Data:      []byte(m.Data),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_FilePost_Flat) ToPB() *PB_FilePost {
+	r := &PB_FilePost{
+		Id:        int64(m.Id),
+		FileType:  int32(m.FileType),
+		Extension: m.Extension,
+		DataThumb: m.DataThumb,
+		Data:      m.Data,
+	}
+	return r
+}
+
+//folding
+var PB_FilePost__FOlD = &PB_FilePost{
+	Id:        0,
+	FileType:  0,
+	Extension: "",
+	DataThumb: []byte{},
+	Data:      []byte{},
 }
 
 type PB_UpdateRoomActionDoing_Flat struct {
@@ -5627,6 +5734,7 @@ return r
 func(m *PB_SocialParam_AddPost)ToFlat() *PB_SocialParam_AddPost_Flat {
 r := &PB_SocialParam_AddPost_Flat{
     Text:  m.Text ,
+    ImageBlob:  []byte(m.ImageBlob) ,
 }
 return r
 }
@@ -5878,7 +5986,6 @@ r := &PB_Action_Flat{
     CommentId:  int(m.CommentId) ,
     Murmur64Hash:  int(m.Murmur64Hash) ,
     CreatedTime:  int(m.CreatedTime) ,
-    Seq:  int(m.Seq) ,
 }
 return r
 }
@@ -5891,7 +5998,6 @@ r := &PB_Comment_Flat{
     Text:  m.Text ,
     LikesCount:  int(m.LikesCount) ,
     CreatedTime:  int(m.CreatedTime) ,
-    Seq:  int(m.Seq) ,
 }
 return r
 }
@@ -6015,7 +6121,6 @@ r := &PB_Notify_Flat{
     Murmur64Hash:  int(m.Murmur64Hash) ,
     SeenStatus:  int(m.SeenStatus) ,
     CreatedTime:  int(m.CreatedTime) ,
-    Seq:  int(m.Seq) ,
 }
 return r
 }
@@ -6324,6 +6429,15 @@ r := &PB_DirectMessage_Flat{
 return r
 }
 
+func(m *PB_Home)ToFlat() *PB_Home_Flat {
+r := &PB_Home_Flat{
+    Id:  int(m.Id) ,
+    ForUserId:  int(m.ForUserId) ,
+    PostId:  int(m.PostId) ,
+}
+return r
+}
+
 func(m *PB_MessageFile)ToFlat() *PB_MessageFile_Flat {
 r := &PB_MessageFile_Flat{
     MessageFileId:  int(m.MessageFileId) ,
@@ -6337,6 +6451,28 @@ r := &PB_MessageFile_Flat{
     Extension:  m.Extension ,
     Md5Hash:  m.Md5Hash ,
     CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_FileMsg)ToFlat() *PB_FileMsg_Flat {
+r := &PB_FileMsg_Flat{
+    Id:  int(m.Id) ,
+    FileType:  int(m.FileType) ,
+    Extension:  m.Extension ,
+    DataThumb:  []byte(m.DataThumb) ,
+    Data:  []byte(m.Data) ,
+}
+return r
+}
+
+func(m *PB_FilePost)ToFlat() *PB_FilePost_Flat {
+r := &PB_FilePost_Flat{
+    Id:  int(m.Id) ,
+    FileType:  int(m.FileType) ,
+    Extension:  m.Extension ,
+    DataThumb:  []byte(m.DataThumb) ,
+    Data:  []byte(m.Data) ,
 }
 return r
 }
@@ -7111,6 +7247,7 @@ return r
 func(m *PB_SocialParam_AddPost_Flat)ToPB() *PB_SocialParam_AddPost {
 r := &PB_SocialParam_AddPost{
     Text:  m.Text ,
+    ImageBlob:  m.ImageBlob ,
 }
 return r
 }
@@ -7362,7 +7499,6 @@ r := &PB_Action{
     CommentId:  int64(m.CommentId) ,
     Murmur64Hash:  int64(m.Murmur64Hash) ,
     CreatedTime:  int32(m.CreatedTime) ,
-    Seq:  int32(m.Seq) ,
 }
 return r
 }
@@ -7375,7 +7511,6 @@ r := &PB_Comment{
     Text:  m.Text ,
     LikesCount:  int32(m.LikesCount) ,
     CreatedTime:  int32(m.CreatedTime) ,
-    Seq:  int32(m.Seq) ,
 }
 return r
 }
@@ -7473,7 +7608,7 @@ func(m *PB_Media_Flat)ToPB() *PB_Media {
 r := &PB_Media{
     MediaId:  int64(m.MediaId) ,
     UserId:  int32(m.UserId) ,
-    PostId:  int32(m.PostId) ,
+    PostId:  int64(m.PostId) ,
     AlbumId:  int32(m.AlbumId) ,
     MediaTypeEnum:  int32(m.MediaTypeEnum) ,
     Width:  int32(m.Width) ,
@@ -7499,7 +7634,6 @@ r := &PB_Notify{
     Murmur64Hash:  int64(m.Murmur64Hash) ,
     SeenStatus:  int32(m.SeenStatus) ,
     CreatedTime:  int32(m.CreatedTime) ,
-    Seq:  int32(m.Seq) ,
 }
 return r
 }
@@ -7534,7 +7668,7 @@ r := &PB_Post{
     PostId:  int64(m.PostId) ,
     UserId:  int32(m.UserId) ,
     PostTypeEnum:  int32(m.PostTypeEnum) ,
-    MediaId:  int32(m.MediaId) ,
+    MediaId:  int64(m.MediaId) ,
     Text:  m.Text ,
     RichText:  m.RichText ,
     MediaCount:  int32(m.MediaCount) ,
@@ -7808,6 +7942,15 @@ r := &PB_DirectMessage{
 return r
 }
 
+func(m *PB_Home_Flat)ToPB() *PB_Home {
+r := &PB_Home{
+    Id:  int64(m.Id) ,
+    ForUserId:  int32(m.ForUserId) ,
+    PostId:  int64(m.PostId) ,
+}
+return r
+}
+
 func(m *PB_MessageFile_Flat)ToPB() *PB_MessageFile {
 r := &PB_MessageFile{
     MessageFileId:  int64(m.MessageFileId) ,
@@ -7821,6 +7964,28 @@ r := &PB_MessageFile{
     Extension:  m.Extension ,
     Md5Hash:  m.Md5Hash ,
     CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_FileMsg_Flat)ToPB() *PB_FileMsg {
+r := &PB_FileMsg{
+    Id:  int64(m.Id) ,
+    FileType:  int32(m.FileType) ,
+    Extension:  m.Extension ,
+    DataThumb:  m.DataThumb ,
+    Data:  m.Data ,
+}
+return r
+}
+
+func(m *PB_FilePost_Flat)ToPB() *PB_FilePost {
+r := &PB_FilePost{
+    Id:  int64(m.Id) ,
+    FileType:  int32(m.FileType) ,
+    Extension:  m.Extension ,
+    DataThumb:  m.DataThumb ,
+    Data:  m.Data ,
 }
 return r
 }
@@ -8462,6 +8627,7 @@ var PB_SocialResponse_DeleteComment__FOlD = &PB_SocialResponse_DeleteComment{
 
 var PB_SocialParam_AddPost__FOlD = &PB_SocialParam_AddPost{
         Text:  "" ,
+        ImageBlob:  []byte{} ,
 }
 
 
@@ -8647,7 +8813,6 @@ var PB_Action__FOlD = &PB_Action{
         CommentId:  0 ,
         Murmur64Hash:  0 ,
         CreatedTime:  0 ,
-        Seq:  0 ,
 }
 
 
@@ -8658,7 +8823,6 @@ var PB_Comment__FOlD = &PB_Comment{
         Text:  "" ,
         LikesCount:  0 ,
         CreatedTime:  0 ,
-        Seq:  0 ,
 }
 
 
@@ -8764,7 +8928,6 @@ var PB_Notify__FOlD = &PB_Notify{
         Murmur64Hash:  0 ,
         SeenStatus:  0 ,
         CreatedTime:  0 ,
-        Seq:  0 ,
 }
 
 
@@ -9032,6 +9195,13 @@ var PB_DirectMessage__FOlD = &PB_DirectMessage{
 }
 
 
+var PB_Home__FOlD = &PB_Home{
+        Id:  0 ,
+        ForUserId:  0 ,
+        PostId:  0 ,
+}
+
+
 var PB_MessageFile__FOlD = &PB_MessageFile{
         MessageFileId:  0 ,
         FileTypeEnum:  0 ,
@@ -9044,6 +9214,24 @@ var PB_MessageFile__FOlD = &PB_MessageFile{
         Extension:  "" ,
         Md5Hash:  "" ,
         CreatedTime:  0 ,
+}
+
+
+var PB_FileMsg__FOlD = &PB_FileMsg{
+        Id:  0 ,
+        FileType:  0 ,
+        Extension:  "" ,
+        DataThumb:  []byte{} ,
+        Data:  []byte{} ,
+}
+
+
+var PB_FilePost__FOlD = &PB_FilePost{
+        Id:  0 ,
+        FileType:  0 ,
+        Extension:  "" ,
+        DataThumb:  []byte{} ,
+        Data:  []byte{} ,
 }
 
 

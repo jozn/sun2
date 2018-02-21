@@ -13,6 +13,9 @@ func mysqlSaveMsg(row Row) {
 		DataThumb: row.DataThumb,
 		Data:      row.Data,
 	}
+    if r.DataThumb == nil {
+        r.DataThumb = []byte{}
+    }
 	r.Save(base.DB)
 }
 
@@ -24,7 +27,13 @@ func mysqlSavePost(row Row) {
 		DataThumb: row.DataThumb,
 		Data:      row.Data,
 	}
-	r.Save(base.DB)
+	if r.DataThumb == nil {
+		r.DataThumb = []byte{}
+	}
+	err := r.Save(base.DB)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func mysqlGetmsgFile(id int) (*Row, error) {
@@ -38,6 +47,9 @@ func mysqlGetmsgFile(id int) (*Row, error) {
 		Extension: r.Extension,
 		DataThumb: r.DataThumb,
 		Data:      r.Data,
+	}
+	if r.DataThumb == nil {
+		r.DataThumb = []byte{}
 	}
 	return row, nil
 }

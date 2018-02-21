@@ -21,7 +21,6 @@ type Action__ struct {
 	CommentId      int `json:"CommentId"`      // CommentId -
 	Murmur64Hash   int `json:"Murmur64Hash"`   // Murmur64Hash -
 	CreatedTime    int `json:"CreatedTime"`    // CreatedTime -
-	Seq            int `json:"Seq"`            // Seq -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -45,30 +44,21 @@ func (a *Action) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.action (` +
-		`ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq` +
+		`ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq)
-	res, err := db.Exec(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq)
+	XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	a.ActionId = int(id)
+	// set existence
 	a._exists = true
 
 	OnAction_AfterInsert(a)
@@ -83,28 +73,19 @@ func (a *Action) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.action (` +
-		`ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq` +
+		`ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq)
-	res, err := db.Exec(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq)
+	XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	a.ActionId = int(id)
 	a._exists = true
 
 	OnAction_AfterInsert(a)
@@ -128,12 +109,12 @@ func (a *Action) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.action SET ` +
-		`ActorUserId = ?, ActionTypeEnum = ?, PeerUserId = ?, PostId = ?, CommentId = ?, Murmur64Hash = ?, CreatedTime = ?, Seq = ?` +
+		`ActorUserId = ?, ActionTypeEnum = ?, PeerUserId = ?, PostId = ?, CommentId = ?, Murmur64Hash = ?, CreatedTime = ?` +
 		` WHERE ActionId = ?`
 
 	// run query
-	XOLog(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq, a.ActionId)
-	_, err = db.Exec(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.Seq, a.ActionId)
+	XOLog(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
+	_, err = db.Exec(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
 
 	XOLogErr(err)
 	OnAction_AfterUpdate(a)
@@ -1074,111 +1055,6 @@ func (d *__Action_Deleter) CreatedTime_GE(val int) *__Action_Deleter {
 	return d
 }
 
-func (u *__Action_Deleter) Seq_In(ins []int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Deleter) Seq_Ins(ins ...int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Deleter) Seq_NotIn(ins []int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Action_Deleter) Seq_Eq(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Deleter) Seq_NotEq(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Deleter) Seq_LT(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Deleter) Seq_LE(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Deleter) Seq_GT(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Deleter) Seq_GE(val int) *__Action_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
 func (u *__Action_Updater) Or() *__Action_Updater {
 	u.whereSep = " OR "
@@ -2020,111 +1896,6 @@ func (d *__Action_Updater) CreatedTime_GE(val int) *__Action_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Action_Updater) Seq_In(ins []int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Updater) Seq_Ins(ins ...int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Updater) Seq_NotIn(ins []int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Action_Updater) Seq_Eq(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Updater) Seq_NotEq(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Updater) Seq_LT(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Updater) Seq_LE(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Updater) Seq_GT(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Updater) Seq_GE(val int) *__Action_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2976,111 +2747,6 @@ func (d *__Action_Selector) CreatedTime_GE(val int) *__Action_Selector {
 	return d
 }
 
-func (u *__Action_Selector) Seq_In(ins []int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Selector) Seq_Ins(ins ...int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Action_Selector) Seq_NotIn(ins []int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Action_Selector) Seq_Eq(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Selector) Seq_NotEq(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Selector) Seq_LT(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Selector) Seq_LE(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Selector) Seq_GT(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Action_Selector) Seq_GE(val int) *__Action_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -3261,27 +2927,6 @@ func (u *__Action_Updater) CreatedTime_Increment(count int) *__Action_Updater {
 
 //string
 
-//ints
-
-func (u *__Action_Updater) Seq(newVal int) *__Action_Updater {
-	u.updates[" Seq = ? "] = newVal
-	return u
-}
-
-func (u *__Action_Updater) Seq_Increment(count int) *__Action_Updater {
-	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -3404,21 +3049,6 @@ func (u *__Action_Selector) OrderBy_CreatedTime_Asc() *__Action_Selector {
 
 func (u *__Action_Selector) Select_CreatedTime() *__Action_Selector {
 	u.selectCol = "CreatedTime"
-	return u
-}
-
-func (u *__Action_Selector) OrderBy_Seq_Desc() *__Action_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
-	return u
-}
-
-func (u *__Action_Selector) OrderBy_Seq_Asc() *__Action_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
-	return u
-}
-
-func (u *__Action_Selector) Select_Seq() *__Action_Selector {
-	u.selectCol = "Seq"
 	return u
 }
 
@@ -3694,13 +3324,13 @@ func MassInsert_Action(rows []Action, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.action (" +
-		"ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq" +
+		"ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3708,6 +3338,7 @@ func MassInsert_Action(rows []Action, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
 		vals = append(vals, row.ActionTypeEnum)
 		vals = append(vals, row.PeerUserId)
@@ -3715,7 +3346,6 @@ func MassInsert_Action(rows []Action, db XODB) error {
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.Murmur64Hash)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -3738,7 +3368,7 @@ func MassReplace_Action(rows []Action, db XODB) error {
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.action (" +
-		"ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime, Seq" +
+		"ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3746,6 +3376,7 @@ func MassReplace_Action(rows []Action, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
 		vals = append(vals, row.ActionTypeEnum)
 		vals = append(vals, row.PeerUserId)
@@ -3753,7 +3384,6 @@ func MassReplace_Action(rows []Action, db XODB) error {
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.Murmur64Hash)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -3769,8 +3399,6 @@ func MassReplace_Action(rows []Action, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

@@ -149,7 +149,10 @@ It has these top-level messages:
 	PB_ChatLastMessage
 	PB_ChatSync
 	PB_DirectMessage
+	PB_Home
 	PB_MessageFile
+	PB_FileMsg
+	PB_FilePost
 	PB_UpdateRoomActionDoing
 	PB_UpdateMessageMeta
 	PB_Updates

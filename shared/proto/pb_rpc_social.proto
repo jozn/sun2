@@ -31,6 +31,7 @@ message PB_SocialResponse_DeleteComment {
 message PB_SocialParam_AddPost {
     string Text = 1;
     //todo add pic files
+    bytes ImageBlob = 2;
 }
 message PB_SocialResponse_AddPost {
     PB_ResponseExtra Extra = 1;

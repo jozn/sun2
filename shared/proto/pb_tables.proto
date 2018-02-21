@@ -16,7 +16,6 @@ message PB_Action {
     int64 CommentId = 6;
     int64 Murmur64Hash = 7;
     int32 CreatedTime = 8;
-    int32 Seq = 9;
 }
 message PB_Comment {
     int64 CommentId = 1;
@@ -25,7 +24,6 @@ message PB_Comment {
     string Text = 4;
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
-    int32 Seq = 7;
 }
 message PB_FollowingList {
     int32 Id = 1;
@@ -91,7 +89,7 @@ message PB_Like {
 message PB_Media {
     int64 MediaId = 1;
     int32 UserId = 2;
-    int32 PostId = 3;
+    int64 PostId = 3;
     int32 AlbumId = 4;
     int32 MediaTypeEnum = 5;
     int32 Width = 6;
@@ -113,7 +111,6 @@ message PB_Notify {
     int64 Murmur64Hash = 8;
     int32 SeenStatus = 9;
     int32 CreatedTime = 10;
-    int32 Seq = 11;
 }
 message PB_NotifyRemoved {
     int64 Murmur64Hash = 1;
@@ -136,7 +133,7 @@ message PB_Post {
     int64 PostId = 1;
     int32 UserId = 2;
     int32 PostTypeEnum = 3;
-    int32 MediaId = 4;
+    int64 MediaId = 4;
     string Text = 5;
     string RichText = 6;
     int32 MediaCount = 7;

@@ -10,7 +10,6 @@ type Action struct {
 	CommentId      int
 	Murmur64Hash   int
 	CreatedTime    int
-	Seq            int
 
 	_exists, _deleted bool
 }
@@ -25,7 +24,6 @@ type Action struct {
 	CommentId: 0,
 	Murmur64Hash: 0,
 	CreatedTime: 0,
-	Seq: 0,
 */
 // comment 'Comment'.
 type Comment struct {
@@ -35,7 +33,6 @@ type Comment struct {
 	Text        string
 	LikesCount  int
 	CreatedTime int
-	Seq         int
 
 	_exists, _deleted bool
 }
@@ -48,7 +45,6 @@ type Comment struct {
 	Text: "",
 	LikesCount: 0,
 	CreatedTime: 0,
-	Seq: 0,
 */
 // following_list 'FollowingList'.
 type FollowingList struct {
@@ -252,7 +248,6 @@ type Notify struct {
 	Murmur64Hash  int
 	SeenStatus    int
 	CreatedTime   int
-	Seq           int
 
 	_exists, _deleted bool
 }
@@ -269,7 +264,6 @@ type Notify struct {
 	Murmur64Hash: 0,
 	SeenStatus: 0,
 	CreatedTime: 0,
-	Seq: 0,
 */
 // notify_removed 'NotifyRemoved'.
 type NotifyRemoved struct {

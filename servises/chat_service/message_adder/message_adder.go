@@ -4,13 +4,12 @@ import (
 	"github.com/jozn/protobuf/proto"
 	"ms/sun/base"
 	"ms/sun/helper"
-	"ms/sun2/servises/chat_service"
 	"ms/sun2/servises/log_service"
 	"ms/sun2/servises/sun_utils"
 	"ms/sun2/shared/config"
 	"ms/sun2/shared/x"
 )
-
+//todo save MessageFiles to its tables for later retrival
 var chatLogger = log_service.NewSimpleLogger("chat")
 
 type chatDirect struct {
@@ -79,7 +78,7 @@ func (s *chatDirect) listenForAdding() {
 			MessageFileView: msgPb.MessageFileView,
 		}
 		extraBlob, _ := proto.Marshal(extraPb)
-		delivery := int(x.RoomMessageDeliviryStatusEnum_SENT)
+		delivery := 4 //int(x.RoomMessageDeliviryStatusEnum_SENT)
 		m1 := x.DirectMessage{
 			ChatKey:            s.User1ChatKey,
 			MessageId:          int(msgPb.MessageId),
@@ -122,7 +121,7 @@ func (s *chatDirect) listenForAdding() {
 		upToMe := &x.ChatSync{
 			SyncId:         helper.NextRowsSeqId(),
 			ToUserId:       adderUserId,
-			ChatSyncTypeId: chat_service.CHAT_SYNC_MSG_RECIVED_TO_SERVER,
+			ChatSyncTypeId: 3, //chat_service.CHAT_SYNC_MSG_RECIVED_TO_SERVER,
 			RoomKey:        msgPb.RoomKey,
 			ChatKey:        "",
 			MessageId:      int(msgPb.MessageId),
@@ -135,7 +134,7 @@ func (s *chatDirect) listenForAdding() {
 		upToPeer := &x.ChatSync{
 			SyncId:         helper.NextRowsSeqId(),
 			ToUserId:       peerUserId,
-			ChatSyncTypeId: chat_service.CHAT_SYNC_NEW_MESSAGE,
+			ChatSyncTypeId: 2, //chat_service.CHAT_SYNC_NEW_MESSAGE,
 			RoomKey:        msgPb.RoomKey,
 			ChatKey:        "",
 			MessageId:      int(msgPb.MessageId),

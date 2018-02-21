@@ -10,7 +10,6 @@ public class J {
 		public int CommentId;
 		public int Murmur64Hash;
 		public int CreatedTime;
-		public int Seq;
 	}
 
 	public static class Comment {//oridnal: 1
@@ -20,7 +19,6 @@ public class J {
 		public String Text;
 		public int LikesCount;
 		public int CreatedTime;
-		public int Seq;
 	}
 
 	public static class FollowingList {//oridnal: 2
@@ -117,7 +115,6 @@ public class J {
 		public int Murmur64Hash;
 		public int SeenStatus;
 		public int CreatedTime;
-		public int Seq;
 	}
 
 	public static class NotifyRemoved {//oridnal: 11

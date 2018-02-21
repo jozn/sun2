@@ -82,7 +82,6 @@ var Action = struct {
 	CommentId      string
 	Murmur64Hash   string
 	CreatedTime    string
-	Seq            string
 }{
 
 	ActionId:       "ActionId",
@@ -93,7 +92,6 @@ var Action = struct {
 	CommentId:      "CommentId",
 	Murmur64Hash:   "Murmur64Hash",
 	CreatedTime:    "CreatedTime",
-	Seq:            "Seq",
 }
 
 var Comment = struct {
@@ -103,7 +101,6 @@ var Comment = struct {
 	Text        string
 	LikesCount  string
 	CreatedTime string
-	Seq         string
 }{
 
 	CommentId:   "CommentId",
@@ -112,7 +109,6 @@ var Comment = struct {
 	Text:        "Text",
 	LikesCount:  "LikesCount",
 	CreatedTime: "CreatedTime",
-	Seq:         "Seq",
 }
 
 var FollowingList = struct {
@@ -284,7 +280,6 @@ var Notify = struct {
 	Murmur64Hash  string
 	SeenStatus    string
 	CreatedTime   string
-	Seq           string
 }{
 
 	NotifyId:      "NotifyId",
@@ -297,7 +292,6 @@ var Notify = struct {
 	Murmur64Hash:  "Murmur64Hash",
 	SeenStatus:    "SeenStatus",
 	CreatedTime:   "CreatedTime",
-	Seq:           "Seq",
 }
 
 var NotifyRemoved = struct {

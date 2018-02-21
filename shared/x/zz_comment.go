@@ -19,7 +19,6 @@ type Comment__ struct {
 	Text        string `json:"Text"`        // Text -
 	LikesCount  int    `json:"LikesCount"`  // LikesCount -
 	CreatedTime int    `json:"CreatedTime"` // CreatedTime -
-	Seq         int    `json:"Seq"`         // Seq -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -43,30 +42,21 @@ func (c *Comment) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.comment (` +
-		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
+		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
-	res, err := db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	c.CommentId = int(id)
+	// set existence
 	c._exists = true
 
 	OnComment_AfterInsert(c)
@@ -81,28 +71,19 @@ func (c *Comment) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.comment (` +
-		`UserId, PostId, Text, LikesCount, CreatedTime, Seq` +
+		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
-	res, err := db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq)
+	XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	c.CommentId = int(id)
 	c._exists = true
 
 	OnComment_AfterInsert(c)
@@ -126,12 +107,12 @@ func (c *Comment) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.comment SET ` +
-		`UserId = ?, PostId = ?, Text = ?, LikesCount = ?, CreatedTime = ?, Seq = ?` +
+		`UserId = ?, PostId = ?, Text = ?, LikesCount = ?, CreatedTime = ?` +
 		` WHERE CommentId = ?`
 
 	// run query
-	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq, c.CommentId)
-	_, err = db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.Seq, c.CommentId)
+	XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.CommentId)
+	_, err = db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.CommentId)
 
 	XOLogErr(err)
 	OnComment_AfterUpdate(c)
@@ -757,111 +738,6 @@ func (d *__Comment_Deleter) CreatedTime_GE(val int) *__Comment_Deleter {
 	return d
 }
 
-func (u *__Comment_Deleter) Seq_In(ins []int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Deleter) Seq_Ins(ins ...int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Deleter) Seq_NotIn(ins []int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Comment_Deleter) Seq_Eq(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Deleter) Seq_NotEq(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Deleter) Seq_LT(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Deleter) Seq_LE(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Deleter) Seq_GT(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Deleter) Seq_GE(val int) *__Comment_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
 func (u *__Comment_Updater) Or() *__Comment_Updater {
 	u.whereSep = " OR "
@@ -1388,111 +1264,6 @@ func (d *__Comment_Updater) CreatedTime_GE(val int) *__Comment_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Comment_Updater) Seq_In(ins []int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Updater) Seq_Ins(ins ...int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Updater) Seq_NotIn(ins []int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Comment_Updater) Seq_Eq(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Updater) Seq_NotEq(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Updater) Seq_LT(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Updater) Seq_LE(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Updater) Seq_GT(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Updater) Seq_GE(val int) *__Comment_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2029,111 +1800,6 @@ func (d *__Comment_Selector) CreatedTime_GE(val int) *__Comment_Selector {
 	return d
 }
 
-func (u *__Comment_Selector) Seq_In(ins []int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Selector) Seq_Ins(ins ...int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Comment_Selector) Seq_NotIn(ins []int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Comment_Selector) Seq_Eq(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Selector) Seq_NotEq(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Selector) Seq_LT(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Selector) Seq_LE(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Selector) Seq_GT(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Comment_Selector) Seq_GE(val int) *__Comment_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -2439,27 +2105,6 @@ func (u *__Comment_Updater) CreatedTime_Increment(count int) *__Comment_Updater 
 
 //string
 
-//ints
-
-func (u *__Comment_Updater) Seq(newVal int) *__Comment_Updater {
-	u.updates[" Seq = ? "] = newVal
-	return u
-}
-
-func (u *__Comment_Updater) Seq_Increment(count int) *__Comment_Updater {
-	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -2552,21 +2197,6 @@ func (u *__Comment_Selector) OrderBy_CreatedTime_Asc() *__Comment_Selector {
 
 func (u *__Comment_Selector) Select_CreatedTime() *__Comment_Selector {
 	u.selectCol = "CreatedTime"
-	return u
-}
-
-func (u *__Comment_Selector) OrderBy_Seq_Desc() *__Comment_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
-	return u
-}
-
-func (u *__Comment_Selector) OrderBy_Seq_Asc() *__Comment_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
-	return u
-}
-
-func (u *__Comment_Selector) Select_Seq() *__Comment_Selector {
-	u.selectCol = "Seq"
 	return u
 }
 
@@ -2842,13 +2472,13 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.comment (" +
-		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
+		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2856,12 +2486,12 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.CommentId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -2884,7 +2514,7 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.comment (" +
-		"UserId, PostId, Text, LikesCount, CreatedTime, Seq" +
+		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2892,12 +2522,12 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.CommentId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.Seq)
 
 	}
 
@@ -2913,8 +2543,6 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

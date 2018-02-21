@@ -1466,21 +1466,25 @@ public class PBFlatTypes {
 
 	public class PB_SocialParam_AddPost {
 	   public String Text;
+	   public byte[] ImageBlob;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_SocialParam_AddPost t = new PBFlatTypes.PB_SocialParam_AddPost();
     t.setText();
+    t.setImageBlob();
 	*/
 
 	/*
 	PBFlatTypes.PB_SocialParam_AddPost t = new PBFlatTypes.PB_SocialParam_AddPost();
 	t.Text = ;
+	t.ImageBlob = ;
 	*/
 
 	/*
 	PB_SocialParam_AddPost t = new PB_SocialParam_AddPost();
 	t.Text = m.getText() ;
+	t.ImageBlob = m.getImageBlob() ;
 	*/
 
 	public class PB_SocialResponse_AddPost {
@@ -2152,7 +2156,6 @@ public class PBFlatTypes {
 	   public long CommentId;
 	   public long Murmur64Hash;
 	   public int CreatedTime;
-	   public int Seq;
 	}
 	/*
 	folding
@@ -2165,7 +2168,6 @@ public class PBFlatTypes {
     t.setCommentId();
     t.setMurmur64Hash();
     t.setCreatedTime();
-    t.setSeq();
 	*/
 
 	/*
@@ -2178,7 +2180,6 @@ public class PBFlatTypes {
 	t.CommentId = ;
 	t.Murmur64Hash = ;
 	t.CreatedTime = ;
-	t.Seq = ;
 	*/
 
 	/*
@@ -2191,7 +2192,6 @@ public class PBFlatTypes {
 	t.CommentId = m.getCommentId() ;
 	t.Murmur64Hash = m.getMurmur64Hash() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.Seq = m.getSeq() ;
 	*/
 
 	public class PB_Comment {
@@ -2201,7 +2201,6 @@ public class PBFlatTypes {
 	   public String Text;
 	   public int LikesCount;
 	   public int CreatedTime;
-	   public int Seq;
 	}
 	/*
 	folding
@@ -2212,7 +2211,6 @@ public class PBFlatTypes {
     t.setText();
     t.setLikesCount();
     t.setCreatedTime();
-    t.setSeq();
 	*/
 
 	/*
@@ -2223,7 +2221,6 @@ public class PBFlatTypes {
 	t.Text = ;
 	t.LikesCount = ;
 	t.CreatedTime = ;
-	t.Seq = ;
 	*/
 
 	/*
@@ -2234,7 +2231,6 @@ public class PBFlatTypes {
 	t.Text = m.getText() ;
 	t.LikesCount = m.getLikesCount() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.Seq = m.getSeq() ;
 	*/
 
 	public class PB_FollowingList {
@@ -2533,7 +2529,7 @@ public class PBFlatTypes {
 	public class PB_Media {
 	   public long MediaId;
 	   public int UserId;
-	   public int PostId;
+	   public long PostId;
 	   public int AlbumId;
 	   public int MediaTypeEnum;
 	   public int Width;
@@ -2604,7 +2600,6 @@ public class PBFlatTypes {
 	   public long Murmur64Hash;
 	   public int SeenStatus;
 	   public int CreatedTime;
-	   public int Seq;
 	}
 	/*
 	folding
@@ -2619,7 +2614,6 @@ public class PBFlatTypes {
     t.setMurmur64Hash();
     t.setSeenStatus();
     t.setCreatedTime();
-    t.setSeq();
 	*/
 
 	/*
@@ -2634,7 +2628,6 @@ public class PBFlatTypes {
 	t.Murmur64Hash = ;
 	t.SeenStatus = ;
 	t.CreatedTime = ;
-	t.Seq = ;
 	*/
 
 	/*
@@ -2649,7 +2642,6 @@ public class PBFlatTypes {
 	t.Murmur64Hash = m.getMurmur64Hash() ;
 	t.SeenStatus = m.getSeenStatus() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.Seq = m.getSeq() ;
 	*/
 
 	public class PB_NotifyRemoved {
@@ -2738,7 +2730,7 @@ public class PBFlatTypes {
 	   public long PostId;
 	   public int UserId;
 	   public int PostTypeEnum;
-	   public int MediaId;
+	   public long MediaId;
 	   public String Text;
 	   public String RichText;
 	   public int MediaCount;
@@ -3688,6 +3680,33 @@ public class PBFlatTypes {
 	t.ExtraPB = m.getExtraPB() ;
 	*/
 
+	public class PB_Home {
+	   public long Id;
+	   public int ForUserId;
+	   public long PostId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_Home t = new PBFlatTypes.PB_Home();
+    t.setId();
+    t.setForUserId();
+    t.setPostId();
+	*/
+
+	/*
+	PBFlatTypes.PB_Home t = new PBFlatTypes.PB_Home();
+	t.Id = ;
+	t.ForUserId = ;
+	t.PostId = ;
+	*/
+
+	/*
+	PB_Home t = new PB_Home();
+	t.Id = m.getId() ;
+	t.ForUserId = m.getForUserId() ;
+	t.PostId = m.getPostId() ;
+	*/
+
 	public class PB_MessageFile {
 	   public long MessageFileId;
 	   public int FileTypeEnum;
@@ -3745,6 +3764,76 @@ public class PBFlatTypes {
 	t.Extension = m.getExtension() ;
 	t.Md5Hash = m.getMd5Hash() ;
 	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_FileMsg {
+	   public long Id;
+	   public int FileType;
+	   public String Extension;
+	   public byte[] DataThumb;
+	   public byte[] Data;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_FileMsg t = new PBFlatTypes.PB_FileMsg();
+    t.setId();
+    t.setFileType();
+    t.setExtension();
+    t.setDataThumb();
+    t.setData();
+	*/
+
+	/*
+	PBFlatTypes.PB_FileMsg t = new PBFlatTypes.PB_FileMsg();
+	t.Id = ;
+	t.FileType = ;
+	t.Extension = ;
+	t.DataThumb = ;
+	t.Data = ;
+	*/
+
+	/*
+	PB_FileMsg t = new PB_FileMsg();
+	t.Id = m.getId() ;
+	t.FileType = m.getFileType() ;
+	t.Extension = m.getExtension() ;
+	t.DataThumb = m.getDataThumb() ;
+	t.Data = m.getData() ;
+	*/
+
+	public class PB_FilePost {
+	   public long Id;
+	   public int FileType;
+	   public String Extension;
+	   public byte[] DataThumb;
+	   public byte[] Data;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_FilePost t = new PBFlatTypes.PB_FilePost();
+    t.setId();
+    t.setFileType();
+    t.setExtension();
+    t.setDataThumb();
+    t.setData();
+	*/
+
+	/*
+	PBFlatTypes.PB_FilePost t = new PBFlatTypes.PB_FilePost();
+	t.Id = ;
+	t.FileType = ;
+	t.Extension = ;
+	t.DataThumb = ;
+	t.Data = ;
+	*/
+
+	/*
+	PB_FilePost t = new PB_FilePost();
+	t.Id = m.getId() ;
+	t.FileType = m.getFileType() ;
+	t.Extension = m.getExtension() ;
+	t.DataThumb = m.getDataThumb() ;
+	t.Data = m.getData() ;
 	*/
 
 	public class PB_UpdateRoomActionDoing {

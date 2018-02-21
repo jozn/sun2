@@ -26,7 +26,18 @@ func (rpc_socila) DeleteComment(param *x.PB_SocialParam_DeleteComment, userParam
 }
 
 func (rpc_socila) AddPost(param *x.PB_SocialParam_AddPost, userParam x.RPC_UserParam) (res x.PB_SocialResponse_AddPost, err error) {
-	panic("implement me")
+	postParam := model_service.PostAddParam{
+		UserId:     userParam.GetUserId(),
+		Text:       param.Text,
+		MediaBytes: param.ImageBlob,
+	}
+	postId, err := model_service.AddPost(postParam)
+	if err != nil {
+		return
+	}
+	res.PostView, _ = view_service.PostSingleViewForPostId(postId, userParam.GetUserId())
+
+	return
 }
 
 func (rpc_socila) EditPost(param *x.PB_SocialParam_EditPost, userParam x.RPC_UserParam) (res x.PB_SocialResponse_EditPost, err error) {

@@ -1,7 +1,7 @@
 package chat_service
 
 type CHAT_SYNCType int
-
+//todo move to some shared places
 const (
 	CHAT_SYNC_NEW_MESSAGE           = 2
 	CHAT_SYNC_MSG_RECIVED_TO_SERVER = 3

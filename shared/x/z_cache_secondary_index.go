@@ -11,47 +11,6 @@ import (
 
 // Action - ActorUserId
 
-//field//field//field
-
-///// Generated from index 'Seq'.
-func (c _StoreImpl) Action_BySeq(Seq int) (*Action, bool) {
-	o, ok := RowCacheIndex.Get("Action_Seq:" + fmt.Sprintf("%v", Seq))
-	if ok {
-		if obj, ok := o.(*Action); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewAction_Selector().Seq_Eq(Seq).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("Action_Seq:"+fmt.Sprintf("%v", row.Seq), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadAction_BySeqs(Seqs []int) {
-	not_cached := make([]int, 0, len(Seqs))
-
-	for _, id := range Seqs {
-		_, ok := RowCacheIndex.Get("Action_Seq:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewAction_Selector().Seq_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("Action_Seq:"+fmt.Sprintf("%v", row.Seq), row, 0)
-			}
-		}
-	}
-}
-
 // Comment - PRIMARY
 
 //field//field//field
@@ -90,47 +49,6 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 		if err == nil {
 			for _, row := range rows {
 				RowCacheIndex.Set("Comment_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
-			}
-		}
-	}
-}
-
-//field//field//field
-
-///// Generated from index 'Asa'.
-func (c _StoreImpl) Comment_BySeq(Seq int) (*Comment, bool) {
-	o, ok := RowCacheIndex.Get("Comment_Asa:" + fmt.Sprintf("%v", Seq))
-	if ok {
-		if obj, ok := o.(*Comment); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewComment_Selector().Seq_Eq(Seq).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("Comment_Asa:"+fmt.Sprintf("%v", row.Seq), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadComment_BySeqs(Seqs []int) {
-	not_cached := make([]int, 0, len(Seqs))
-
-	for _, id := range Seqs {
-		_, ok := RowCacheIndex.Get("Comment_Asa:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewComment_Selector().Seq_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("Comment_Asa:"+fmt.Sprintf("%v", row.Seq), row, 0)
 			}
 		}
 	}

@@ -828,18 +828,18 @@ func FilePostById(db *sqlx.DB, id int) (*FilePost, error) {
 		`FROM sun_file.file_post ` +
 		`WHERE Id = ?`
 
-	//XOLog(sqlstr, id)
+	XOLog(sqlstr, id)
 	fp := FilePost{
 		_exists: true,
 	}
 
 	err = db.Get(&fp, sqlstr, id)
 	if err != nil {
-		//XOLogErr(err)
+		XOLogErr(err)
 		return nil, err
 	}
 
-	//OnFilePost_LoadOne(&fp)
+	OnFilePost_LoadOne(&fp)
 
 	return &fp, nil
 }

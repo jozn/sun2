@@ -11,7 +11,6 @@ func PBConvPB__Action_To_Action( o *PB_Action) *Action {
       CommentId: int ( o.CommentId ),
       Murmur64Hash: int ( o.Murmur64Hash ),
       CreatedTime: int ( o.CreatedTime ),
-      Seq: int ( o.Seq ),
     }
     return n
 }
@@ -26,7 +25,6 @@ func PBConvPB_Action_To_Action ( o *Action) *PB_Action {
       CommentId: int64 ( o.CommentId ),
       Murmur64Hash: int64 ( o.Murmur64Hash ),
       CreatedTime: int32 ( o.CreatedTime ),
-      Seq: int32 ( o.Seq ),
     }
     return n
 }
@@ -40,7 +38,6 @@ func PBConvPB__Comment_To_Comment( o *PB_Comment) *Comment {
       Text: string ( o.Text ),
       LikesCount: int ( o.LikesCount ),
       CreatedTime: int ( o.CreatedTime ),
-      Seq: int ( o.Seq ),
     }
     return n
 }
@@ -53,7 +50,6 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
       Text: string ( o.Text ),
       LikesCount: int32 ( o.LikesCount ),
       CreatedTime: int32 ( o.CreatedTime ),
-      Seq: int32 ( o.Seq ),
     }
     return n
 }
@@ -266,7 +262,7 @@ func PBConvPB_Media_To_Media ( o *Media) *PB_Media {
      n := &PB_Media{
       MediaId: int64 ( o.MediaId ),
       UserId: int32 ( o.UserId ),
-      PostId: int32 ( o.PostId ),
+      PostId: int64 ( o.PostId ),
       AlbumId: int32 ( o.AlbumId ),
       MediaTypeEnum: int32 ( o.MediaTypeEnum ),
       Width: int32 ( o.Width ),
@@ -293,7 +289,6 @@ func PBConvPB__Notify_To_Notify( o *PB_Notify) *Notify {
       Murmur64Hash: int ( o.Murmur64Hash ),
       SeenStatus: int ( o.SeenStatus ),
       CreatedTime: int ( o.CreatedTime ),
-      Seq: int ( o.Seq ),
     }
     return n
 }
@@ -310,7 +305,6 @@ func PBConvPB_Notify_To_Notify ( o *Notify) *PB_Notify {
       Murmur64Hash: int64 ( o.Murmur64Hash ),
       SeenStatus: int32 ( o.SeenStatus ),
       CreatedTime: int32 ( o.CreatedTime ),
-      Seq: int32 ( o.Seq ),
     }
     return n
 }
@@ -395,7 +389,7 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
       PostId: int64 ( o.PostId ),
       UserId: int32 ( o.UserId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
-      MediaId: int32 ( o.MediaId ),
+      MediaId: int64 ( o.MediaId ),
       Text: string ( o.Text ),
       RichText: string ( o.RichText ),
       MediaCount: int32 ( o.MediaCount ),
