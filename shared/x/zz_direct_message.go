@@ -55,7 +55,9 @@ func (dm *DirectMessage) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	}
 	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
 	if err != nil {
 		return err
@@ -82,10 +84,14 @@ func (dm *DirectMessage) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
+	}
 	_, err = db.Exec(sqlstr, dm.ChatKey, dm.MessageId, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -116,10 +122,14 @@ func (dm *DirectMessage) Update(db XODB) error {
 		` WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
+	}
 	_, err = db.Exec(sqlstr, dm.ChatKey, dm.RoomKey, dm.UserId, dm.MessageFileId, dm.MessageTypeEnum, dm.Text, dm.CreatedTime, dm.Seq, dm.DeliviryStatusEnum, dm.ExtraPB, dm.MessageId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.DirectMessage {
+		XOLogErr(err)
+	}
 	OnDirectMessage_AfterUpdate(dm)
 
 	return err
@@ -152,10 +162,14 @@ func (dm *DirectMessage) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_chat.direct_message WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, dm.MessageId)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, dm.MessageId)
+	}
 	_, err = db.Exec(sqlstr, dm.MessageId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3371,13 +3385,17 @@ func (u *__DirectMessage_Selector) GetRow(db *sqlx.DB) (*DirectMessage, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &DirectMessage{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3393,13 +3411,17 @@ func (u *__DirectMessage_Selector) GetRows(db *sqlx.DB) ([]*DirectMessage, error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*DirectMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3422,13 +3444,16 @@ func (u *__DirectMessage_Selector) GetRows2(db *sqlx.DB) ([]DirectMessage, error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*DirectMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3456,13 +3481,17 @@ func (u *__DirectMessage_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -3474,13 +3503,16 @@ func (u *__DirectMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, error)
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3492,13 +3524,16 @@ func (u *__DirectMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3510,13 +3545,16 @@ func (u *__DirectMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3547,16 +3585,22 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3579,17 +3623,23 @@ func (d *__DirectMessage_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_chat.direct_message WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3632,11 +3682,14 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3673,11 +3726,14 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.DirectMessage {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.DirectMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 

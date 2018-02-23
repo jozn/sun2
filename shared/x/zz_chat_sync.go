@@ -55,7 +55,9 @@ func (cs *ChatSync) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
 		return err
@@ -82,10 +84,14 @@ func (cs *ChatSync) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -116,10 +122,14 @@ func (cs *ChatSync) Update(db XODB) error {
 		` WHERE SyncId = ?`
 
 	// run query
-	XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	}
 	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.ChatSync {
+		XOLogErr(err)
+	}
 	OnChatSync_AfterUpdate(cs)
 
 	return err
@@ -152,10 +162,14 @@ func (cs *ChatSync) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_chat.chat_sync WHERE SyncId = ?`
 
 	// run query
-	XOLog(sqlstr, cs.SyncId)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, cs.SyncId)
+	}
 	_, err = db.Exec(sqlstr, cs.SyncId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3371,13 +3385,17 @@ func (u *__ChatSync_Selector) GetRow(db *sqlx.DB) (*ChatSync, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &ChatSync{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3393,13 +3411,17 @@ func (u *__ChatSync_Selector) GetRows(db *sqlx.DB) ([]*ChatSync, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*ChatSync
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3422,13 +3444,16 @@ func (u *__ChatSync_Selector) GetRows2(db *sqlx.DB) ([]ChatSync, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*ChatSync
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3456,13 +3481,17 @@ func (u *__ChatSync_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -3474,13 +3503,16 @@ func (u *__ChatSync_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3492,13 +3524,16 @@ func (u *__ChatSync_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3510,13 +3545,16 @@ func (u *__ChatSync_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3547,16 +3585,22 @@ func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3579,17 +3623,23 @@ func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_chat.chat_sync WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3632,11 +3682,14 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3673,11 +3726,14 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.ChatSync {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatSync {
+			XOLogErr(err)
+		}
 		return err
 	}
 

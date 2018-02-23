@@ -49,7 +49,9 @@ func (fm *FileMsg) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
+	}
 	_, err = db.Exec(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
 	if err != nil {
 		return err
@@ -76,10 +78,14 @@ func (fm *FileMsg) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
+	}
 	_, err = db.Exec(sqlstr, fm.Id, fm.FileType, fm.Extension, fm.DataThumb, fm.Data)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -110,10 +116,14 @@ func (fm *FileMsg) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, fm.FileType, fm.Extension, fm.DataThumb, fm.Data, fm.Id)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, fm.FileType, fm.Extension, fm.DataThumb, fm.Data, fm.Id)
+	}
 	_, err = db.Exec(sqlstr, fm.FileType, fm.Extension, fm.DataThumb, fm.Data, fm.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.FileMsg {
+		XOLogErr(err)
+	}
 	OnFileMsg_AfterUpdate(fm)
 
 	return err
@@ -146,10 +156,14 @@ func (fm *FileMsg) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_file.file_msg WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, fm.Id)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, fm.Id)
+	}
 	_, err = db.Exec(sqlstr, fm.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1223,13 +1237,17 @@ func (u *__FileMsg_Selector) GetRow(db *sqlx.DB) (*FileMsg, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &FileMsg{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1245,13 +1263,17 @@ func (u *__FileMsg_Selector) GetRows(db *sqlx.DB) ([]*FileMsg, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*FileMsg
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1274,13 +1296,16 @@ func (u *__FileMsg_Selector) GetRows2(db *sqlx.DB) ([]FileMsg, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*FileMsg
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1308,13 +1333,17 @@ func (u *__FileMsg_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -1326,13 +1355,16 @@ func (u *__FileMsg_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1344,13 +1376,16 @@ func (u *__FileMsg_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1362,13 +1397,16 @@ func (u *__FileMsg_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1399,16 +1437,22 @@ func (u *__FileMsg_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1431,17 +1475,23 @@ func (d *__FileMsg_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_file.file_msg WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1478,11 +1528,14 @@ func MassInsert_FileMsg(rows []FileMsg, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1513,11 +1566,14 @@ func MassReplace_FileMsg(rows []FileMsg, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.FileMsg {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.FileMsg {
+			XOLogErr(err)
+		}
 		return err
 	}
 

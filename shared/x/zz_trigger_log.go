@@ -50,17 +50,23 @@ func (tl *TriggerLog) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
+	}
 	res, err := db.Exec(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -86,17 +92,23 @@ func (tl *TriggerLog) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
+	}
 	res, err := db.Exec(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -129,10 +141,14 @@ func (tl *TriggerLog) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe, tl.Id)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe, tl.Id)
+	}
 	_, err = db.Exec(sqlstr, tl.ModelName, tl.ChangeType, tl.TargetId, tl.TargetStr, tl.CreatedSe, tl.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.TriggerLog {
+		XOLogErr(err)
+	}
 	OnTriggerLog_AfterUpdate(tl)
 
 	return err
@@ -165,10 +181,14 @@ func (tl *TriggerLog) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.trigger_log WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, tl.Id)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, tl.Id)
+	}
 	_, err = db.Exec(sqlstr, tl.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1961,13 +1981,17 @@ func (u *__TriggerLog_Selector) GetRow(db *sqlx.DB) (*TriggerLog, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &TriggerLog{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1983,13 +2007,17 @@ func (u *__TriggerLog_Selector) GetRows(db *sqlx.DB) ([]*TriggerLog, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*TriggerLog
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2012,13 +2040,16 @@ func (u *__TriggerLog_Selector) GetRows2(db *sqlx.DB) ([]TriggerLog, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*TriggerLog
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2046,13 +2077,17 @@ func (u *__TriggerLog_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -2064,13 +2099,16 @@ func (u *__TriggerLog_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2082,13 +2120,16 @@ func (u *__TriggerLog_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2100,13 +2141,16 @@ func (u *__TriggerLog_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2137,16 +2181,22 @@ func (u *__TriggerLog_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2169,17 +2219,23 @@ func (d *__TriggerLog_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.trigger_log WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2216,11 +2272,14 @@ func MassInsert_TriggerLog(rows []TriggerLog, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2251,11 +2310,14 @@ func MassReplace_TriggerLog(rows []TriggerLog, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.TriggerLog {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TriggerLog {
+			XOLogErr(err)
+		}
 		return err
 	}
 

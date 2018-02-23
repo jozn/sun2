@@ -16,7 +16,9 @@ func (c _StoreImpl) GetActionByActionId(ActionId int) (*Action, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Action {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -48,7 +50,9 @@ func (c _StoreImpl) GetCommentByCommentId(CommentId int) (*Comment, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Comment {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -80,7 +84,9 @@ func (c _StoreImpl) GetEventByEventId(EventId int) (*Event, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Event {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -112,7 +118,9 @@ func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.FollowingList {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -144,7 +152,9 @@ func (c _StoreImpl) GetFollowingListMemberById(Id int) (*FollowingListMember, bo
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.FollowingListMember {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -176,7 +186,9 @@ func (c _StoreImpl) GetFollowingListMemberRemovedById(Id int) (*FollowingListMem
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.FollowingListMemberRemoved {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -208,7 +220,9 @@ func (c _StoreImpl) GetGroupByGroupId(GroupId int) (*Group, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Group {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -240,7 +254,9 @@ func (c _StoreImpl) GetGroupMemberById(Id int) (*GroupMember, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.GroupMember {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -272,7 +288,9 @@ func (c _StoreImpl) GetGroupMessageByMessageId(MessageId int) (*GroupMessage, bo
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.GroupMessage {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -304,7 +322,9 @@ func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Like {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -336,7 +356,9 @@ func (c _StoreImpl) GetMediaByMediaId(MediaId int) (*Media, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Media {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -368,7 +390,9 @@ func (c _StoreImpl) GetNotifyByNotifyId(NotifyId int) (*Notify, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Notify {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -400,7 +424,9 @@ func (c _StoreImpl) GetNotifyRemovedById(Id int) (*NotifyRemoved, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.NotifyRemoved {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -432,7 +458,9 @@ func (c _StoreImpl) GetPhoneContactById(Id int) (*PhoneContact, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.PhoneContact {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -464,7 +492,9 @@ func (c _StoreImpl) GetPostByPostId(PostId int) (*Post, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Post {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -496,7 +526,9 @@ func (c _StoreImpl) GetPostKeyById(Id int) (*PostKey, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.PostKey {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -528,7 +560,9 @@ func (c _StoreImpl) GetSearchClickedById(Id int) (*SearchClicked, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.SearchClicked {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -560,7 +594,9 @@ func (c _StoreImpl) GetSessionBySessionUuid(SessionUuid string) (*Session, bool)
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Session {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -592,7 +628,9 @@ func (c _StoreImpl) GetSettingClientByUserId(UserId int) (*SettingClient, bool) 
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.SettingClient {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -624,7 +662,9 @@ func (c _StoreImpl) GetSettingNotificationByUserId(UserId int) (*SettingNotifica
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.SettingNotification {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -656,7 +696,9 @@ func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -688,7 +730,9 @@ func (c _StoreImpl) GetSuggestedUserById(Id int) (*SuggestedUser, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.SuggestedUser {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -720,7 +764,9 @@ func (c _StoreImpl) GetTagByTagId(TagId int) (*Tag, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Tag {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -752,7 +798,9 @@ func (c _StoreImpl) GetTagsPostById(Id int) (*TagsPost, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.TagsPost {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -784,7 +832,9 @@ func (c _StoreImpl) GetTriggerLogById(Id int) (*TriggerLog, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.TriggerLog {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -816,7 +866,9 @@ func (c _StoreImpl) GetUserByUserId(UserId int) (*User, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.User {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -848,7 +900,9 @@ func (c _StoreImpl) GetUserMetaInfoById(Id int) (*UserMetaInfo, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -880,7 +934,9 @@ func (c _StoreImpl) GetUserPasswordByUserId(UserId int) (*UserPassword, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.UserPassword {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -912,7 +968,9 @@ func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Chat {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -944,7 +1002,9 @@ func (c _StoreImpl) GetChatLastMessageByChatKey(ChatKey string) (*ChatLastMessag
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -976,7 +1036,9 @@ func (c _StoreImpl) GetChatSyncBySyncId(SyncId int) (*ChatSync, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.ChatSync {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -1008,7 +1070,9 @@ func (c _StoreImpl) GetDirectMessageByMessageId(MessageId int) (*DirectMessage, 
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.DirectMessage {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -1040,7 +1104,9 @@ func (c _StoreImpl) GetHomeById(Id int) (*Home, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.Home {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -1072,7 +1138,9 @@ func (c _StoreImpl) GetMessageFileByMessageFileId(MessageFileId int) (*MessageFi
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.MessageFile {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -1104,7 +1172,9 @@ func (c _StoreImpl) GetFileMsgById(Id int) (*FileMsg, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.FileMsg {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 
@@ -1136,7 +1206,9 @@ func (c _StoreImpl) GetFilePostById(Id int) (*FilePost, bool) {
 	if err == nil {
 		return obj2, true
 	}
-	XOLogErr(err)
+	if LogTableSqlReq.FilePost {
+		XOLogErr(err)
+	}
 	return nil, false
 }
 

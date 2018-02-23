@@ -1,5 +1,9 @@
 package event_service
 
+import (
+	_ "ms/sun2/servises/archiver_service"
+)
+
 type EventType int
 
 const (

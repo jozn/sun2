@@ -48,7 +48,9 @@ func (clm *ChatLastMessage) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	}
 	_, err = db.Exec(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
 		return err
@@ -75,10 +77,14 @@ func (clm *ChatLastMessage) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
+	}
 	_, err = db.Exec(sqlstr, clm.ChatKey, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -109,10 +115,14 @@ func (clm *ChatLastMessage) Update(db XODB) error {
 		` WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
+	}
 	_, err = db.Exec(sqlstr, clm.ForUserId, clm.LastMsgPb, clm.LastMsgJson, clm.ChatKey)
 
-	XOLogErr(err)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLogErr(err)
+	}
 	OnChatLastMessage_AfterUpdate(clm)
 
 	return err
@@ -145,10 +155,14 @@ func (clm *ChatLastMessage) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_chat.chat_last_message WHERE ChatKey = ?`
 
 	// run query
-	XOLog(sqlstr, clm.ChatKey)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, clm.ChatKey)
+	}
 	_, err = db.Exec(sqlstr, clm.ChatKey)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1055,13 +1069,17 @@ func (u *__ChatLastMessage_Selector) GetRow(db *sqlx.DB) (*ChatLastMessage, erro
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &ChatLastMessage{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1077,13 +1095,17 @@ func (u *__ChatLastMessage_Selector) GetRows(db *sqlx.DB) ([]*ChatLastMessage, e
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*ChatLastMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1106,13 +1128,16 @@ func (u *__ChatLastMessage_Selector) GetRows2(db *sqlx.DB) ([]ChatLastMessage, e
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*ChatLastMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1140,13 +1165,17 @@ func (u *__ChatLastMessage_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -1158,13 +1187,16 @@ func (u *__ChatLastMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, erro
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1176,13 +1208,16 @@ func (u *__ChatLastMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1194,13 +1229,16 @@ func (u *__ChatLastMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1231,16 +1269,22 @@ func (u *__ChatLastMessage_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1263,17 +1307,23 @@ func (d *__ChatLastMessage_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_chat.chat_last_message WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1309,11 +1359,14 @@ func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1343,11 +1396,14 @@ func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.ChatLastMessage {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.ChatLastMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 

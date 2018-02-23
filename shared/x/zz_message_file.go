@@ -55,7 +55,9 @@ func (mf *MessageFile) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
 	if err != nil {
 		return err
@@ -82,10 +84,14 @@ func (mf *MessageFile) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, mf.MessageFileId, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -116,10 +122,14 @@ func (mf *MessageFile) Update(db XODB) error {
 		` WHERE MessageFileId = ?`
 
 	// run query
-	XOLog(sqlstr, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime, mf.MessageFileId)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime, mf.MessageFileId)
+	}
 	_, err = db.Exec(sqlstr, mf.FileTypeEnum, mf.UserId, mf.Title, mf.Size, mf.Width, mf.Height, mf.Duration, mf.Extension, mf.Md5Hash, mf.CreatedTime, mf.MessageFileId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.MessageFile {
+		XOLogErr(err)
+	}
 	OnMessageFile_AfterUpdate(mf)
 
 	return err
@@ -152,10 +162,14 @@ func (mf *MessageFile) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_chat.message_file WHERE MessageFileId = ?`
 
 	// run query
-	XOLog(sqlstr, mf.MessageFileId)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, mf.MessageFileId)
+	}
 	_, err = db.Exec(sqlstr, mf.MessageFileId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3703,13 +3717,17 @@ func (u *__MessageFile_Selector) GetRow(db *sqlx.DB) (*MessageFile, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &MessageFile{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3725,13 +3743,17 @@ func (u *__MessageFile_Selector) GetRows(db *sqlx.DB) ([]*MessageFile, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*MessageFile
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3754,13 +3776,16 @@ func (u *__MessageFile_Selector) GetRows2(db *sqlx.DB) ([]MessageFile, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*MessageFile
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3788,13 +3813,17 @@ func (u *__MessageFile_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -3806,13 +3835,16 @@ func (u *__MessageFile_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3824,13 +3856,16 @@ func (u *__MessageFile_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3842,13 +3877,16 @@ func (u *__MessageFile_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3879,16 +3917,22 @@ func (u *__MessageFile_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3911,17 +3955,23 @@ func (d *__MessageFile_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_chat.message_file WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3964,11 +4014,14 @@ func MassInsert_MessageFile(rows []MessageFile, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -4005,11 +4058,14 @@ func MassReplace_MessageFile(rows []MessageFile, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.MessageFile {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.MessageFile {
+			XOLogErr(err)
+		}
 		return err
 	}
 

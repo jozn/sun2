@@ -918,3 +918,83 @@ type FilePost struct {
 	DataThumb: []byte{},
 	Data: []byte{},
 */
+
+///////////////// Skip Loging Tables ////////////////
+type LogTableSql struct {
+	Action                     bool
+	Comment                    bool
+	Event                      bool
+	FollowingList              bool
+	FollowingListMember        bool
+	FollowingListMemberRemoved bool
+	Group                      bool
+	GroupMember                bool
+	GroupMessage               bool
+	Like                       bool
+	Media                      bool
+	Notify                     bool
+	NotifyRemoved              bool
+	PhoneContact               bool
+	Post                       bool
+	PostKey                    bool
+	SearchClicked              bool
+	Session                    bool
+	SettingClient              bool
+	SettingNotification        bool
+	SuggestedTopPost           bool
+	SuggestedUser              bool
+	Tag                        bool
+	TagsPost                   bool
+	TriggerLog                 bool
+	User                       bool
+	UserMetaInfo               bool
+	UserPassword               bool
+	Chat                       bool
+	ChatLastMessage            bool
+	ChatSync                   bool
+	DirectMessage              bool
+	Home                       bool
+	MessageFile                bool
+	FileMsg                    bool
+	FilePost                   bool
+}
+
+var LogTableSqlReq = LogTableSql{
+
+	Action:                     true,
+	Comment:                    true,
+	Event:                      true,
+	FollowingList:              true,
+	FollowingListMember:        true,
+	FollowingListMemberRemoved: true,
+	Group:               true,
+	GroupMember:         true,
+	GroupMessage:        true,
+	Like:                true,
+	Media:               true,
+	Notify:              true,
+	NotifyRemoved:       true,
+	PhoneContact:        true,
+	Post:                true,
+	PostKey:             true,
+	SearchClicked:       true,
+	Session:             true,
+	SettingClient:       true,
+	SettingNotification: true,
+	SuggestedTopPost:    true,
+	SuggestedUser:       true,
+	Tag:                 true,
+	TagsPost:            true,
+	TriggerLog:          true,
+	User:                true,
+	UserMetaInfo:        true,
+	UserPassword:        true,
+	Chat:                true,
+	ChatLastMessage:     true,
+	ChatSync:            true,
+	DirectMessage:       true,
+	Home:                true,
+	MessageFile:         true,
+	FileMsg:             true,
+	FilePost:            true,
+}

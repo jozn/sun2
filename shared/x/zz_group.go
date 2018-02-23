@@ -52,7 +52,9 @@ func (g *Group) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	}
 	_, err = db.Exec(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
 	if err != nil {
 		return err
@@ -79,10 +81,14 @@ func (g *Group) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	}
 	_, err = db.Exec(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -113,10 +119,14 @@ func (g *Group) Update(db XODB) error {
 		` WHERE GroupId = ?`
 
 	// run query
-	XOLog(sqlstr, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq, g.GroupId)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq, g.GroupId)
+	}
 	_, err = db.Exec(sqlstr, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq, g.GroupId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.Group {
+		XOLogErr(err)
+	}
 	OnGroup_AfterUpdate(g)
 
 	return err
@@ -149,10 +159,14 @@ func (g *Group) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.group WHERE GroupId = ?`
 
 	// run query
-	XOLog(sqlstr, g.GroupId)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, g.GroupId)
+	}
 	_, err = db.Exec(sqlstr, g.GroupId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2943,13 +2957,17 @@ func (u *__Group_Selector) GetRow(db *sqlx.DB) (*Group, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &Group{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2965,13 +2983,17 @@ func (u *__Group_Selector) GetRows(db *sqlx.DB) ([]*Group, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*Group
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2994,13 +3016,16 @@ func (u *__Group_Selector) GetRows2(db *sqlx.DB) ([]Group, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*Group
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3028,13 +3053,17 @@ func (u *__Group_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -3046,13 +3075,16 @@ func (u *__Group_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3064,13 +3096,16 @@ func (u *__Group_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3082,13 +3117,16 @@ func (u *__Group_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3119,16 +3157,22 @@ func (u *__Group_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3151,17 +3195,23 @@ func (d *__Group_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.group WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3201,11 +3251,14 @@ func MassInsert_Group(rows []Group, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3239,11 +3292,14 @@ func MassReplace_Group(rows []Group, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.Group {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Group {
+			XOLogErr(err)
+		}
 		return err
 	}
 

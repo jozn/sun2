@@ -52,7 +52,9 @@ func (gm *GroupMessage) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
+	}
 	_, err = db.Exec(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
 	if err != nil {
 		return err
@@ -79,10 +81,14 @@ func (gm *GroupMessage) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
+	}
 	_, err = db.Exec(sqlstr, gm.MessageId, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -113,10 +119,14 @@ func (gm *GroupMessage) Update(db XODB) error {
 		` WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum, gm.MessageId)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum, gm.MessageId)
+	}
 	_, err = db.Exec(sqlstr, gm.RoomKey, gm.UserId, gm.MessageFileId, gm.MessageTypeEnum, gm.Text, gm.CreatedMs, gm.DeliveryStatusEnum, gm.MessageId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.GroupMessage {
+		XOLogErr(err)
+	}
 	OnGroupMessage_AfterUpdate(gm)
 
 	return err
@@ -149,10 +159,14 @@ func (gm *GroupMessage) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.group_message WHERE MessageId = ?`
 
 	// run query
-	XOLog(sqlstr, gm.MessageId)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, gm.MessageId)
+	}
 	_, err = db.Exec(sqlstr, gm.MessageId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2795,13 +2809,17 @@ func (u *__GroupMessage_Selector) GetRow(db *sqlx.DB) (*GroupMessage, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &GroupMessage{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2817,13 +2835,17 @@ func (u *__GroupMessage_Selector) GetRows(db *sqlx.DB) ([]*GroupMessage, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*GroupMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2846,13 +2868,16 @@ func (u *__GroupMessage_Selector) GetRows2(db *sqlx.DB) ([]GroupMessage, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*GroupMessage
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2880,13 +2905,17 @@ func (u *__GroupMessage_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -2898,13 +2927,16 @@ func (u *__GroupMessage_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2916,13 +2948,16 @@ func (u *__GroupMessage_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2934,13 +2969,16 @@ func (u *__GroupMessage_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2971,16 +3009,22 @@ func (u *__GroupMessage_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3003,17 +3047,23 @@ func (d *__GroupMessage_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.group_message WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3053,11 +3103,14 @@ func MassInsert_GroupMessage(rows []GroupMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3091,11 +3144,14 @@ func MassReplace_GroupMessage(rows []GroupMessage, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.GroupMessage {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.GroupMessage {
+			XOLogErr(err)
+		}
 		return err
 	}
 

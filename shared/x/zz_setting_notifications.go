@@ -64,7 +64,9 @@ func (sn *SettingNotification) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
+	}
 	_, err = db.Exec(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
 	if err != nil {
 		return err
@@ -91,10 +93,14 @@ func (sn *SettingNotification) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
+	}
 	_, err = db.Exec(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -125,10 +131,14 @@ func (sn *SettingNotification) Update(db XODB) error {
 		` WHERE UserId = ?`
 
 	// run query
-	XOLog(sqlstr, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority, sn.UserId)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority, sn.UserId)
+	}
 	_, err = db.Exec(sqlstr, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority, sn.UserId)
 
-	XOLogErr(err)
+	if LogTableSqlReq.SettingNotification {
+		XOLogErr(err)
+	}
 	OnSettingNotification_AfterUpdate(sn)
 
 	return err
@@ -161,10 +171,14 @@ func (sn *SettingNotification) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.setting_notifications WHERE UserId = ?`
 
 	// run query
-	XOLog(sqlstr, sn.UserId)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, sn.UserId)
+	}
 	_, err = db.Exec(sqlstr, sn.UserId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -7167,13 +7181,17 @@ func (u *__SettingNotification_Selector) GetRow(db *sqlx.DB) (*SettingNotificati
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &SettingNotification{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -7189,13 +7207,17 @@ func (u *__SettingNotification_Selector) GetRows(db *sqlx.DB) ([]*SettingNotific
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*SettingNotification
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -7218,13 +7240,16 @@ func (u *__SettingNotification_Selector) GetRows2(db *sqlx.DB) ([]SettingNotific
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*SettingNotification
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -7252,13 +7277,17 @@ func (u *__SettingNotification_Selector) GetString(db *sqlx.DB) (string, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -7270,13 +7299,16 @@ func (u *__SettingNotification_Selector) GetStringSlice(db *sqlx.DB) ([]string, 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -7288,13 +7320,16 @@ func (u *__SettingNotification_Selector) GetIntSlice(db *sqlx.DB) ([]int, error)
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -7306,13 +7341,16 @@ func (u *__SettingNotification_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -7343,16 +7381,22 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -7375,17 +7419,23 @@ func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.setting_notifications WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -7437,11 +7487,14 @@ func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -7487,11 +7540,14 @@ func MassReplace_SettingNotification(rows []SettingNotification, db XODB) error 
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.SettingNotification {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SettingNotification {
+			XOLogErr(err)
+		}
 		return err
 	}
 

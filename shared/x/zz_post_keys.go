@@ -46,17 +46,23 @@ func (pk *PostKey) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, pk.Key)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, pk.Key)
+	}
 	res, err := db.Exec(sqlstr, pk.Key)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -82,17 +88,23 @@ func (pk *PostKey) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, pk.Key)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, pk.Key)
+	}
 	res, err := db.Exec(sqlstr, pk.Key)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -125,10 +137,14 @@ func (pk *PostKey) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, pk.Key, pk.Id)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, pk.Key, pk.Id)
+	}
 	_, err = db.Exec(sqlstr, pk.Key, pk.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.PostKey {
+		XOLogErr(err)
+	}
 	OnPostKey_AfterUpdate(pk)
 
 	return err
@@ -161,10 +177,14 @@ func (pk *PostKey) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.post_keys WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, pk.Id)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, pk.Id)
+	}
 	_, err = db.Exec(sqlstr, pk.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -849,13 +869,17 @@ func (u *__PostKey_Selector) GetRow(db *sqlx.DB) (*PostKey, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &PostKey{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -871,13 +895,17 @@ func (u *__PostKey_Selector) GetRows(db *sqlx.DB) ([]*PostKey, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*PostKey
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -900,13 +928,16 @@ func (u *__PostKey_Selector) GetRows2(db *sqlx.DB) ([]PostKey, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*PostKey
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -934,13 +965,17 @@ func (u *__PostKey_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -952,13 +987,16 @@ func (u *__PostKey_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -970,13 +1008,16 @@ func (u *__PostKey_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -988,13 +1029,16 @@ func (u *__PostKey_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1025,16 +1069,22 @@ func (u *__PostKey_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1057,17 +1107,23 @@ func (d *__PostKey_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.post_keys WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1100,11 +1156,14 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1131,11 +1190,14 @@ func MassReplace_PostKey(rows []PostKey, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.PostKey {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.PostKey {
+			XOLogErr(err)
+		}
 		return err
 	}
 

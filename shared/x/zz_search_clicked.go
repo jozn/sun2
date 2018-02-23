@@ -50,17 +50,23 @@ func (sc *SearchClicked) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
+	}
 	res, err := db.Exec(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -86,17 +92,23 @@ func (sc *SearchClicked) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
+	}
 	res, err := db.Exec(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -129,10 +141,14 @@ func (sc *SearchClicked) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime, sc.Id)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime, sc.Id)
+	}
 	_, err = db.Exec(sqlstr, sc.Query, sc.ClickType, sc.TargetId, sc.UserId, sc.CreatedTime, sc.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.SearchClicked {
+		XOLogErr(err)
+	}
 	OnSearchClicked_AfterUpdate(sc)
 
 	return err
@@ -165,10 +181,14 @@ func (sc *SearchClicked) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.search_clicked WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, sc.Id)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, sc.Id)
+	}
 	_, err = db.Exec(sqlstr, sc.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2257,13 +2277,17 @@ func (u *__SearchClicked_Selector) GetRow(db *sqlx.DB) (*SearchClicked, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &SearchClicked{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2279,13 +2303,17 @@ func (u *__SearchClicked_Selector) GetRows(db *sqlx.DB) ([]*SearchClicked, error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*SearchClicked
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2308,13 +2336,16 @@ func (u *__SearchClicked_Selector) GetRows2(db *sqlx.DB) ([]SearchClicked, error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*SearchClicked
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2342,13 +2373,17 @@ func (u *__SearchClicked_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -2360,13 +2395,16 @@ func (u *__SearchClicked_Selector) GetStringSlice(db *sqlx.DB) ([]string, error)
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2378,13 +2416,16 @@ func (u *__SearchClicked_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2396,13 +2437,16 @@ func (u *__SearchClicked_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2433,16 +2477,22 @@ func (u *__SearchClicked_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2465,17 +2515,23 @@ func (d *__SearchClicked_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.search_clicked WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2512,11 +2568,14 @@ func MassInsert_SearchClicked(rows []SearchClicked, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2547,11 +2606,14 @@ func MassReplace_SearchClicked(rows []SearchClicked, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.SearchClicked {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SearchClicked {
+			XOLogErr(err)
+		}
 		return err
 	}
 

@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+    //x.LogTableSqlReq.Event = false
 	go func() {
 		param := event_service.SubParam{
 			LIKED_POST_EVENT: true,
@@ -21,7 +22,7 @@ func main() {
 	}()
 	go func() {
         for {
-            time.Sleep(time.Millisecond * 500)
+            time.Sleep(time.Millisecond * 100)
 
             evnt := x.Event{
                 EventId:    helper.NextRowsSeqId(),

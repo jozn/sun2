@@ -48,17 +48,23 @@ func (umi *UserMetaInfo) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	}
 	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -84,17 +90,23 @@ func (umi *UserMetaInfo) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	}
 	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -127,10 +139,14 @@ func (umi *UserMetaInfo) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
+	}
 	_, err = db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLogErr(err)
+	}
 	OnUserMetaInfo_AfterUpdate(umi)
 
 	return err
@@ -163,10 +179,14 @@ func (umi *UserMetaInfo) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.user_meta_info WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, umi.Id)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, umi.Id)
+	}
 	_, err = db.Exec(sqlstr, umi.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1701,13 +1721,17 @@ func (u *__UserMetaInfo_Selector) GetRow(db *sqlx.DB) (*UserMetaInfo, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &UserMetaInfo{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1723,13 +1747,17 @@ func (u *__UserMetaInfo_Selector) GetRows(db *sqlx.DB) ([]*UserMetaInfo, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*UserMetaInfo
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1752,13 +1780,16 @@ func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*UserMetaInfo
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1786,13 +1817,17 @@ func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -1804,13 +1839,16 @@ func (u *__UserMetaInfo_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) 
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1822,13 +1860,16 @@ func (u *__UserMetaInfo_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1840,13 +1881,16 @@ func (u *__UserMetaInfo_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1877,16 +1921,22 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1909,17 +1959,23 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.user_meta_info WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1954,11 +2010,14 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1987,11 +2046,14 @@ func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.UserMetaInfo {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.UserMetaInfo {
+			XOLogErr(err)
+		}
 		return err
 	}
 

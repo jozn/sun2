@@ -47,7 +47,9 @@ func (h *Home) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, h.Id, h.ForUserId, h.PostId)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, h.Id, h.ForUserId, h.PostId)
+	}
 	_, err = db.Exec(sqlstr, h.Id, h.ForUserId, h.PostId)
 	if err != nil {
 		return err
@@ -74,10 +76,14 @@ func (h *Home) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, h.Id, h.ForUserId, h.PostId)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, h.Id, h.ForUserId, h.PostId)
+	}
 	_, err = db.Exec(sqlstr, h.Id, h.ForUserId, h.PostId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -108,10 +114,14 @@ func (h *Home) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, h.ForUserId, h.PostId, h.Id)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, h.ForUserId, h.PostId, h.Id)
+	}
 	_, err = db.Exec(sqlstr, h.ForUserId, h.PostId, h.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.Home {
+		XOLogErr(err)
+	}
 	OnHome_AfterUpdate(h)
 
 	return err
@@ -144,10 +154,14 @@ func (h *Home) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun_chat.home WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, h.Id)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, h.Id)
+	}
 	_, err = db.Exec(sqlstr, h.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1331,13 +1345,17 @@ func (u *__Home_Selector) GetRow(db *sqlx.DB) (*Home, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &Home{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1353,13 +1371,17 @@ func (u *__Home_Selector) GetRows(db *sqlx.DB) ([]*Home, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*Home
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1382,13 +1404,16 @@ func (u *__Home_Selector) GetRows2(db *sqlx.DB) ([]Home, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*Home
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1416,13 +1441,17 @@ func (u *__Home_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -1434,13 +1463,16 @@ func (u *__Home_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1452,13 +1484,16 @@ func (u *__Home_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1470,13 +1505,16 @@ func (u *__Home_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1507,16 +1545,22 @@ func (u *__Home_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1539,17 +1583,23 @@ func (d *__Home_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun_chat.home WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1584,11 +1634,14 @@ func MassInsert_Home(rows []Home, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1617,11 +1670,14 @@ func MassReplace_Home(rows []Home, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.Home {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Home {
+			XOLogErr(err)
+		}
 		return err
 	}
 

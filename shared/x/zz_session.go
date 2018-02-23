@@ -56,7 +56,9 @@ func (s *Session) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
 	if err != nil {
 		return err
@@ -83,10 +85,14 @@ func (s *Session) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	}
 	_, err = db.Exec(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -117,10 +123,14 @@ func (s *Session) Update(db XODB) error {
 		` WHERE SessionUuid = ?`
 
 	// run query
-	XOLog(sqlstr, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.SessionUuid)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.SessionUuid)
+	}
 	_, err = db.Exec(sqlstr, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.SessionUuid)
 
-	XOLogErr(err)
+	if LogTableSqlReq.Session {
+		XOLogErr(err)
+	}
 	OnSession_AfterUpdate(s)
 
 	return err
@@ -153,10 +163,14 @@ func (s *Session) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.session WHERE SessionUuid = ?`
 
 	// run query
-	XOLog(sqlstr, s.SessionUuid)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, s.SessionUuid)
+	}
 	_, err = db.Exec(sqlstr, s.SessionUuid)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3611,13 +3625,17 @@ func (u *__Session_Selector) GetRow(db *sqlx.DB) (*Session, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &Session{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3633,13 +3651,17 @@ func (u *__Session_Selector) GetRows(db *sqlx.DB) ([]*Session, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*Session
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3662,13 +3684,16 @@ func (u *__Session_Selector) GetRows2(db *sqlx.DB) ([]Session, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*Session
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3696,13 +3721,17 @@ func (u *__Session_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -3714,13 +3743,16 @@ func (u *__Session_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3732,13 +3764,16 @@ func (u *__Session_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -3750,13 +3785,16 @@ func (u *__Session_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3787,16 +3825,22 @@ func (u *__Session_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3819,17 +3863,23 @@ func (d *__Session_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.session WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -3873,11 +3923,14 @@ func MassInsert_Session(rows []Session, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -3915,11 +3968,14 @@ func MassReplace_Session(rows []Session, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.Session {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.Session {
+			XOLogErr(err)
+		}
 		return err
 	}
 

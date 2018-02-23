@@ -46,17 +46,23 @@ func (stp *SuggestedTopPost) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, stp.PostId)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, stp.PostId)
+	}
 	res, err := db.Exec(sqlstr, stp.PostId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -82,17 +88,23 @@ func (stp *SuggestedTopPost) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, stp.PostId)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, stp.PostId)
+	}
 	res, err := db.Exec(sqlstr, stp.PostId)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -125,10 +137,14 @@ func (stp *SuggestedTopPost) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, stp.PostId, stp.Id)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, stp.PostId, stp.Id)
+	}
 	_, err = db.Exec(sqlstr, stp.PostId, stp.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLogErr(err)
+	}
 	OnSuggestedTopPost_AfterUpdate(stp)
 
 	return err
@@ -161,10 +177,14 @@ func (stp *SuggestedTopPost) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.suggested_top_posts WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, stp.Id)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, stp.Id)
+	}
 	_, err = db.Exec(sqlstr, stp.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -997,13 +1017,17 @@ func (u *__SuggestedTopPost_Selector) GetRow(db *sqlx.DB) (*SuggestedTopPost, er
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &SuggestedTopPost{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1019,13 +1043,17 @@ func (u *__SuggestedTopPost_Selector) GetRows(db *sqlx.DB) ([]*SuggestedTopPost,
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*SuggestedTopPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1048,13 +1076,16 @@ func (u *__SuggestedTopPost_Selector) GetRows2(db *sqlx.DB) ([]SuggestedTopPost,
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*SuggestedTopPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1082,13 +1113,17 @@ func (u *__SuggestedTopPost_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -1100,13 +1135,16 @@ func (u *__SuggestedTopPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, err
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1118,13 +1156,16 @@ func (u *__SuggestedTopPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -1136,13 +1177,16 @@ func (u *__SuggestedTopPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1173,16 +1217,22 @@ func (u *__SuggestedTopPost_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1205,17 +1255,23 @@ func (d *__SuggestedTopPost_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.suggested_top_posts WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -1248,11 +1304,14 @@ func MassInsert_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -1279,11 +1338,14 @@ func MassReplace_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.SuggestedTopPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 

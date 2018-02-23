@@ -16,6 +16,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 type XODB interface {
@@ -34,6 +35,17 @@ var XOLog = func(strings ...interface{}) {
 		_sqlLogFile.WriteString(fmt.Sprintln(strings...))
 		_sqlLogFile.Sync()
 	}
+}
+
+func init() {
+	go func() {
+		for {
+			time.Sleep(time.Second)
+			if _sqlLogFile != nil {
+				_sqlLogFile.Sync()
+			}
+		}
+	}()
 }
 
 var XOLogErr = func(err error) {

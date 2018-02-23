@@ -49,17 +49,23 @@ func (tp *TagsPost) Insert(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	}
 	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -85,17 +91,23 @@ func (tp *TagsPost) Replace(db XODB) error {
 		`)`
 
 	// run query
-	XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	}
 	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -128,10 +140,14 @@ func (tp *TagsPost) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime, tp.Id)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime, tp.Id)
+	}
 	_, err = db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime, tp.Id)
 
-	XOLogErr(err)
+	if LogTableSqlReq.TagsPost {
+		XOLogErr(err)
+	}
 	OnTagsPost_AfterUpdate(tp)
 
 	return err
@@ -164,10 +180,14 @@ func (tp *TagsPost) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.tags_posts WHERE Id = ?`
 
 	// run query
-	XOLog(sqlstr, tp.Id)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, tp.Id)
+	}
 	_, err = db.Exec(sqlstr, tp.Id)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2053,13 +2073,17 @@ func (u *__TagsPost_Selector) GetRow(db *sqlx.DB) (*TagsPost, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	row := &TagsPost{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2075,13 +2099,17 @@ func (u *__TagsPost_Selector) GetRows(db *sqlx.DB) ([]*TagsPost, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var rows []*TagsPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2104,13 +2132,16 @@ func (u *__TagsPost_Selector) GetRows2(db *sqlx.DB) ([]TagsPost, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []*TagsPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2138,13 +2169,17 @@ func (u *__TagsPost_Selector) GetString(db *sqlx.DB) (string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 
 	var res string
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return "", err
 	}
 
@@ -2156,13 +2191,16 @@ func (u *__TagsPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2174,13 +2212,16 @@ func (u *__TagsPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return nil, err
 	}
 
@@ -2192,13 +2233,16 @@ func (u *__TagsPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 
 	sqlstr, whereArgs := u._stoSql()
 
-	XOLog(sqlstr, whereArgs)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, whereArgs)
+	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2229,16 +2273,22 @@ func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	XOLog(sqlstr, allArgs)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, allArgs)
+	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2261,17 +2311,23 @@ func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.tags_posts WHERE " + wheresStr
 
 	// run query
-	XOLog(sqlstr, args)
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, args)
+	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return 0, err
 	}
 
@@ -2307,11 +2363,14 @@ func MassInsert_TagsPost(rows []TagsPost, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassInsert len = ", ln, vals)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, " MassInsert len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
@@ -2341,11 +2400,14 @@ func MassReplace_TagsPost(rows []TagsPost, db XODB) error {
 
 	}
 
-	XOLog(sqlstr, " MassReplace len = ", ln, vals)
-
+	if LogTableSqlReq.TagsPost {
+		XOLog(sqlstr, " MassReplace len = ", ln, vals)
+	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		XOLogErr(err)
+		if LogTableSqlReq.TagsPost {
+			XOLogErr(err)
+		}
 		return err
 	}
 
