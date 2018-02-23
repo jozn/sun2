@@ -57,6 +57,35 @@ $$
 
 
 delimiter ;
+################################ Event ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS event_OnCreateLogger $$
+CREATE TRIGGER event_OnCreateLogger AFTER INSERT ON event
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event","INSERT",NEW.EventId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS event_OnUpdateLogger $$
+CREATE TRIGGER event_OnUpdateLogger AFTER UPDATE ON event
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event","UPDATE",NEW.EventId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS event_OnDeleteLogger $$
+CREATE TRIGGER event_OnDeleteLogger AFTER DELETE ON event
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event","DELETE",OLD.EventId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ FollowingList ######################################
 
 /* #### delimiter $$
@@ -470,7 +499,7 @@ DROP TRIGGER IF EXISTS session_OnCreateLogger $$
 CREATE TRIGGER session_OnCreateLogger AFTER INSERT ON session
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Session","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Session","INSERT",NEW.SessionUuid, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -478,7 +507,7 @@ DROP TRIGGER IF EXISTS session_OnUpdateLogger $$
 CREATE TRIGGER session_OnUpdateLogger AFTER UPDATE ON session
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Session","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Session","UPDATE",NEW.SessionUuid, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -486,7 +515,7 @@ DROP TRIGGER IF EXISTS session_OnDeleteLogger $$
 CREATE TRIGGER session_OnDeleteLogger AFTER DELETE ON session
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Session","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Session","DELETE",OLD.SessionUuid, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1027,6 +1056,10 @@ DROP TRIGGER IF EXISTS action_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS comment_OnCreateLogger ;
 DROP TRIGGER IF EXISTS comment_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS comment_OnDeleteLogger ;
+### Event ##
+DROP TRIGGER IF EXISTS event_OnCreateLogger ;
+DROP TRIGGER IF EXISTS event_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS event_OnDeleteLogger ;
 ### FollowingList ##
 DROP TRIGGER IF EXISTS following_list_OnCreateLogger ;
 DROP TRIGGER IF EXISTS following_list_OnUpdateLogger ;

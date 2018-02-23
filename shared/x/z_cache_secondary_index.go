@@ -54,6 +54,8 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 	}
 }
 
+// Event - PRIMARY
+
 // FollowingList - PRIMARY
 
 // FollowingListMember - PRIMARY
@@ -460,47 +462,6 @@ func (c _StoreImpl) PreLoadSession_BySessionUuids(SessionUuids []string) {
 		if err == nil {
 			for _, row := range rows {
 				RowCacheIndex.Set("Session_SessionUuid2:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
-			}
-		}
-	}
-}
-
-//field//field//field
-
-///// Generated from index 'Id'.
-func (c _StoreImpl) Session_ById(Id int) (*Session, bool) {
-	o, ok := RowCacheIndex.Get("Session_Id:" + fmt.Sprintf("%v", Id))
-	if ok {
-		if obj, ok := o.(*Session); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewSession_Selector().Id_Eq(Id).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("Session_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSession_ByIds(Ids []int) {
-	not_cached := make([]int, 0, len(Ids))
-
-	for _, id := range Ids {
-		_, ok := RowCacheIndex.Get("Session_Id:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewSession_Selector().Id_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("Session_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
 			}
 		}
 	}

@@ -5,6 +5,8 @@ const (
 	Action_TableGo                     = "Action"
 	Comment_Table                      = "comment"
 	Comment_TableGo                    = "Comment"
+	Event_Table                        = "event"
+	Event_TableGo                      = "Event"
 	FollowingList_Table                = "following_list"
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
@@ -109,6 +111,25 @@ var Comment = struct {
 	Text:        "Text",
 	LikesCount:  "LikesCount",
 	CreatedTime: "CreatedTime",
+}
+
+var Event = struct {
+	EventId    string
+	EventType  string
+	ByUserId   string
+	PeerUserId string
+	PostId     string
+	CommentId  string
+	ActionId   string
+}{
+
+	EventId:    "EventId",
+	EventType:  "EventType",
+	ByUserId:   "ByUserId",
+	PeerUserId: "PeerUserId",
+	PostId:     "PostId",
+	CommentId:  "CommentId",
+	ActionId:   "ActionId",
 }
 
 var FollowingList = struct {
@@ -394,34 +415,32 @@ var SearchClicked = struct {
 }
 
 var Session = struct {
-	Id                    string
-	UserId                string
-	SessionUuid           string
-	ClientUuid            string
-	DeviceUuid            string
-	LastActivityTime      string
-	LastIpAddress         string
-	LastWifiMacAddress    string
-	LastNetworkType       string
-	LastNetworkTypeEnumId string
-	AppVersion            string
-	UpdatedTime           string
-	CreatedTime           string
+	SessionUuid         string
+	UserId              string
+	ClientUuid          string
+	DeviceUuid          string
+	LastActivityTime    string
+	LastIpAddress       string
+	LastWifiMacAddress  string
+	LastNetworkType     string
+	LastNetworkTypeEnum string
+	AppVersion          string
+	UpdatedTime         string
+	CreatedTime         string
 }{
 
-	Id:                    "Id",
-	UserId:                "UserId",
-	SessionUuid:           "SessionUuid",
-	ClientUuid:            "ClientUuid",
-	DeviceUuid:            "DeviceUuid",
-	LastActivityTime:      "LastActivityTime",
-	LastIpAddress:         "LastIpAddress",
-	LastWifiMacAddress:    "LastWifiMacAddress",
-	LastNetworkType:       "LastNetworkType",
-	LastNetworkTypeEnumId: "LastNetworkTypeEnumId",
-	AppVersion:            "AppVersion",
-	UpdatedTime:           "UpdatedTime",
-	CreatedTime:           "CreatedTime",
+	SessionUuid:         "SessionUuid",
+	UserId:              "UserId",
+	ClientUuid:          "ClientUuid",
+	DeviceUuid:          "DeviceUuid",
+	LastActivityTime:    "LastActivityTime",
+	LastIpAddress:       "LastIpAddress",
+	LastWifiMacAddress:  "LastWifiMacAddress",
+	LastNetworkType:     "LastNetworkType",
+	LastNetworkTypeEnum: "LastNetworkTypeEnum",
+	AppVersion:          "AppVersion",
+	UpdatedTime:         "UpdatedTime",
+	CreatedTime:         "CreatedTime",
 }
 
 var SettingClient = struct {

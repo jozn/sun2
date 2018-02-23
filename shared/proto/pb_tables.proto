@@ -25,6 +25,15 @@ message PB_Comment {
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
 }
+message PB_Event {
+    int64 EventId = 1;
+    int32 EventType = 2;
+    int64 ByUserId = 3;
+    int64 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 ActionId = 7;
+}
 message PB_FollowingList {
     int32 Id = 1;
     int32 UserId = 2;
@@ -160,19 +169,18 @@ message PB_SearchClicked {
     int32 CreatedTime = 6;
 }
 message PB_Session {
-    int64 Id = 1;
+    string SessionUuid = 1;
     int32 UserId = 2;
-    string SessionUuid = 3;
-    string ClientUuid = 4;
-    string DeviceUuid = 5;
-    int32 LastActivityTime = 6;
-    string LastIpAddress = 7;
-    string LastWifiMacAddress = 8;
-    string LastNetworkType = 9;
-    int32 LastNetworkTypeEnumId = 10;
-    int32 AppVersion = 11;
-    int32 UpdatedTime = 12;
-    int32 CreatedTime = 13;
+    string ClientUuid = 3;
+    string DeviceUuid = 4;
+    int32 LastActivityTime = 5;
+    string LastIpAddress = 6;
+    string LastWifiMacAddress = 7;
+    string LastNetworkType = 8;
+    int32 LastNetworkTypeEnum = 9;
+    int32 AppVersion = 10;
+    int32 UpdatedTime = 11;
+    int32 CreatedTime = 12;
 }
 message PB_SettingClient {
     int32 UserId = 1;

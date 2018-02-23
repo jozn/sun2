@@ -46,6 +46,29 @@ type Comment struct {
 	LikesCount: 0,
 	CreatedTime: 0,
 */
+// event 'Event'.
+type Event struct {
+	EventId    int
+	EventType  int
+	ByUserId   int
+	PeerUserId int
+	PostId     int
+	CommentId  int
+	ActionId   int
+
+	_exists, _deleted bool
+}
+
+/*
+:= &Event {
+	EventId: 0,
+	EventType: 0,
+	ByUserId: 0,
+	PeerUserId: 0,
+	PostId: 0,
+	CommentId: 0,
+	ActionId: 0,
+*/
 // following_list 'FollowingList'.
 type FollowingList struct {
 	Id          int
@@ -386,35 +409,33 @@ type SearchClicked struct {
 */
 // session 'Session'.
 type Session struct {
-	Id                    int
-	UserId                int
-	SessionUuid           string
-	ClientUuid            string
-	DeviceUuid            string
-	LastActivityTime      int
-	LastIpAddress         string
-	LastWifiMacAddress    string
-	LastNetworkType       string
-	LastNetworkTypeEnumId int
-	AppVersion            int
-	UpdatedTime           int
-	CreatedTime           int
+	SessionUuid         string
+	UserId              int
+	ClientUuid          string
+	DeviceUuid          string
+	LastActivityTime    int
+	LastIpAddress       string
+	LastWifiMacAddress  string
+	LastNetworkType     string
+	LastNetworkTypeEnum int
+	AppVersion          int
+	UpdatedTime         int
+	CreatedTime         int
 
 	_exists, _deleted bool
 }
 
 /*
 := &Session {
-	Id: 0,
-	UserId: 0,
 	SessionUuid: "",
+	UserId: 0,
 	ClientUuid: "",
 	DeviceUuid: "",
 	LastActivityTime: 0,
 	LastIpAddress: "",
 	LastWifiMacAddress: "",
 	LastNetworkType: "",
-	LastNetworkTypeEnumId: 0,
+	LastNetworkTypeEnum: 0,
 	AppVersion: 0,
 	UpdatedTime: 0,
 	CreatedTime: 0,

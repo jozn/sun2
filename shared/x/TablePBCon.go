@@ -55,6 +55,33 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
 }
 */
 /*
+func PBConvPB__Event_To_Event( o *PB_Event) *Event {
+     n := &Event{
+      EventId: int ( o.EventId ),
+      EventType: int ( o.EventType ),
+      ByUserId: int ( o.ByUserId ),
+      PeerUserId: int ( o.PeerUserId ),
+      PostId: int ( o.PostId ),
+      CommentId: int ( o.CommentId ),
+      ActionId: int ( o.ActionId ),
+    }
+    return n
+}
+
+func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
+     n := &PB_Event{
+      EventId: int64 ( o.EventId ),
+      EventType: int32 ( o.EventType ),
+      ByUserId: int64 ( o.ByUserId ),
+      PeerUserId: int64 ( o.PeerUserId ),
+      PostId: int64 ( o.PostId ),
+      CommentId: int64 ( o.CommentId ),
+      ActionId: int64 ( o.ActionId ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__FollowingList_To_FollowingList( o *PB_FollowingList) *FollowingList {
      n := &FollowingList{
       Id: int ( o.Id ),
@@ -451,16 +478,15 @@ func PBConvPB_SearchClicked_To_SearchClicked ( o *SearchClicked) *PB_SearchClick
 /*
 func PBConvPB__Session_To_Session( o *PB_Session) *Session {
      n := &Session{
-      Id: int ( o.Id ),
-      UserId: int ( o.UserId ),
       SessionUuid: string ( o.SessionUuid ),
+      UserId: int ( o.UserId ),
       ClientUuid: string ( o.ClientUuid ),
       DeviceUuid: string ( o.DeviceUuid ),
       LastActivityTime: int ( o.LastActivityTime ),
       LastIpAddress: string ( o.LastIpAddress ),
       LastWifiMacAddress: string ( o.LastWifiMacAddress ),
       LastNetworkType: string ( o.LastNetworkType ),
-      LastNetworkTypeEnumId: int ( o.LastNetworkTypeEnumId ),
+      LastNetworkTypeEnum: int ( o.LastNetworkTypeEnum ),
       AppVersion: int ( o.AppVersion ),
       UpdatedTime: int ( o.UpdatedTime ),
       CreatedTime: int ( o.CreatedTime ),
@@ -470,16 +496,15 @@ func PBConvPB__Session_To_Session( o *PB_Session) *Session {
 
 func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
      n := &PB_Session{
-      Id: int64 ( o.Id ),
-      UserId: int32 ( o.UserId ),
       SessionUuid: string ( o.SessionUuid ),
+      UserId: int32 ( o.UserId ),
       ClientUuid: string ( o.ClientUuid ),
       DeviceUuid: string ( o.DeviceUuid ),
       LastActivityTime: int32 ( o.LastActivityTime ),
       LastIpAddress: string ( o.LastIpAddress ),
       LastWifiMacAddress: string ( o.LastWifiMacAddress ),
       LastNetworkType: string ( o.LastNetworkType ),
-      LastNetworkTypeEnumId: int32 ( o.LastNetworkTypeEnumId ),
+      LastNetworkTypeEnum: int32 ( o.LastNetworkTypeEnum ),
       AppVersion: int32 ( o.AppVersion ),
       UpdatedTime: int32 ( o.UpdatedTime ),
       CreatedTime: int32 ( o.CreatedTime ),

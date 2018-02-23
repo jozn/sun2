@@ -69,6 +69,38 @@ func (c _StoreImpl) PreLoadCommentByCommentIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetEventByEventId(EventId int) (*Event, bool) {
+	o, ok := RowCache.Get("Event:" + strconv.Itoa(EventId))
+	if ok {
+		if obj, ok := o.(*Event); ok {
+			return obj, true
+		}
+	}
+	obj2, err := EventByEventId(base.DB, EventId)
+	if err == nil {
+		return obj2, true
+	}
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadEventByEventIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Event:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewEvent_Selector().EventId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
 	if ok {
@@ -517,14 +549,14 @@ func (c _StoreImpl) PreLoadSearchClickedByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSessionById(Id int) (*Session, bool) {
-	o, ok := RowCache.Get("Session:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetSessionBySessionUuid(SessionUuid string) (*Session, bool) {
+	o, ok := RowCache.Get("Session:" + SessionUuid)
 	if ok {
 		if obj, ok := o.(*Session); ok {
 			return obj, true
 		}
 	}
-	obj2, err := SessionById(base.DB, Id)
+	obj2, err := SessionBySessionUuid(base.DB, SessionUuid)
 	if err == nil {
 		return obj2, true
 	}
@@ -532,22 +564,22 @@ func (c _StoreImpl) GetSessionById(Id int) (*Session, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadSessionByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
+func (c _StoreImpl) PreLoadSessionBySessionUuids(ids []string) {
+	not_cached := make([]string, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("Session:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("Session:" + id)
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewSession_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewSession_Selector().SessionUuid_In(not_cached).GetRows(base.DB)
 	}
 }
 
-// yes 222 int
+// yes 222 string
 
 func (c _StoreImpl) GetSettingClientByUserId(UserId int) (*SettingClient, bool) {
 	o, ok := RowCache.Get("SettingClient:" + strconv.Itoa(UserId))

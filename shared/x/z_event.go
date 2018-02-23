@@ -53,6 +53,30 @@ func OnComment_LoadMany(rows []*Comment) {
 	}
 }
 
+//Event Events
+
+func OnEvent_AfterInsert(row *Event) {
+	RowCache.Set("Event:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent_AfterUpdate(row *Event) {
+	RowCache.Set("Event:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent_AfterDelete(row *Event) {
+	RowCache.Delete("Event:" + strconv.Itoa(row.EventId))
+}
+
+func OnEvent_LoadOne(row *Event) {
+	RowCache.Set("Event:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent_LoadMany(rows []*Event) {
+	for _, row := range rows {
+		RowCache.Set("Event:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+	}
+}
+
 //FollowingList Events
 
 func OnFollowingList_AfterInsert(row *FollowingList) {
@@ -392,24 +416,24 @@ func OnSearchClicked_LoadMany(rows []*SearchClicked) {
 //Session Events
 
 func OnSession_AfterInsert(row *Session) {
-	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
 }
 
 func OnSession_AfterUpdate(row *Session) {
-	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
 }
 
 func OnSession_AfterDelete(row *Session) {
-	RowCache.Delete("Session:" + strconv.Itoa(row.Id))
+	RowCache.Delete("Session:" + row.SessionUuid)
 }
 
 func OnSession_LoadOne(row *Session) {
-	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
 }
 
 func OnSession_LoadMany(rows []*Session) {
 	for _, row := range rows {
-		RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
+		RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
 	}
 }
 

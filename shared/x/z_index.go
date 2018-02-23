@@ -52,6 +52,30 @@ func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	return &c, nil
 }
 
+// EventByEventId Generated from index 'PRIMARY' -- retrieves a row from 'sun.event' as a Event.
+func EventByEventId(db *sqlx.DB, eventId int) (*Event, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.event ` +
+		`WHERE EventId = ?`
+
+	XOLog(sqlstr, eventId)
+	e := Event{
+		_exists: true,
+	}
+
+	err = db.Get(&e, sqlstr, eventId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnEvent_LoadOne(&e)
+
+	return &e, nil
+}
+
 // FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list' as a FollowingList.
 func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	var err error
@@ -388,20 +412,20 @@ func SearchClickedById(db *sqlx.DB, id int) (*SearchClicked, error) {
 	return &sc, nil
 }
 
-// SessionById Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.
-func SessionById(db *sqlx.DB, id int) (*Session, error) {
+// SessionBySessionUuid Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.
+func SessionBySessionUuid(db *sqlx.DB, sessionUuid string) (*Session, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun.session ` +
-		`WHERE Id = ?`
+		`WHERE SessionUuid = ?`
 
-	XOLog(sqlstr, id)
+	XOLog(sqlstr, sessionUuid)
 	s := Session{
 		_exists: true,
 	}
 
-	err = db.Get(&s, sqlstr, id)
+	err = db.Get(&s, sqlstr, sessionUuid)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err

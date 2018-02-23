@@ -13,19 +13,18 @@ import (
 
 // Manualy copy this to project
 type Session__ struct {
-	Id                    int    `json:"Id"`                    // Id -
-	UserId                int    `json:"UserId"`                // UserId -
-	SessionUuid           string `json:"SessionUuid"`           // SessionUuid -
-	ClientUuid            string `json:"ClientUuid"`            // ClientUuid -
-	DeviceUuid            string `json:"DeviceUuid"`            // DeviceUuid -
-	LastActivityTime      int    `json:"LastActivityTime"`      // LastActivityTime -
-	LastIpAddress         string `json:"LastIpAddress"`         // LastIpAddress -
-	LastWifiMacAddress    string `json:"LastWifiMacAddress"`    // LastWifiMacAddress -
-	LastNetworkType       string `json:"LastNetworkType"`       // LastNetworkType -
-	LastNetworkTypeEnumId int    `json:"LastNetworkTypeEnumId"` // LastNetworkTypeEnumId -
-	AppVersion            int    `json:"AppVersion"`            // AppVersion -
-	UpdatedTime           int    `json:"UpdatedTime"`           // UpdatedTime -
-	CreatedTime           int    `json:"CreatedTime"`           // CreatedTime -
+	SessionUuid         string `json:"SessionUuid"`         // SessionUuid -
+	UserId              int    `json:"UserId"`              // UserId -
+	ClientUuid          string `json:"ClientUuid"`          // ClientUuid -
+	DeviceUuid          string `json:"DeviceUuid"`          // DeviceUuid -
+	LastActivityTime    int    `json:"LastActivityTime"`    // LastActivityTime -
+	LastIpAddress       string `json:"LastIpAddress"`       // LastIpAddress -
+	LastWifiMacAddress  string `json:"LastWifiMacAddress"`  // LastWifiMacAddress -
+	LastNetworkType     string `json:"LastNetworkType"`     // LastNetworkType -
+	LastNetworkTypeEnum int    `json:"LastNetworkTypeEnum"` // LastNetworkTypeEnum -
+	AppVersion          int    `json:"AppVersion"`          // AppVersion -
+	UpdatedTime         int    `json:"UpdatedTime"`         // UpdatedTime -
+	CreatedTime         int    `json:"CreatedTime"`         // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -49,30 +48,21 @@ func (s *Session) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.session (` +
-		`UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime` +
+		`SessionUuid, UserId, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnum, AppVersion, UpdatedTime, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime)
-	res, err := db.Exec(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	_, err = db.Exec(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
 	if err != nil {
-		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	s.Id = int(id)
+	// set existence
 	s._exists = true
 
 	OnSession_AfterInsert(s)
@@ -87,28 +77,19 @@ func (s *Session) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.session (` +
-		`UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime` +
+		`SessionUuid, UserId, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnum, AppVersion, UpdatedTime, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime)
-	res, err := db.Exec(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	XOLog(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
+	_, err = db.Exec(sqlstr, s.SessionUuid, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime)
 	if err != nil {
 		XOLogErr(err)
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		XOLogErr(err)
-		return err
-	}
-
-	// set primary key and existence
-	s.Id = int(id)
 	s._exists = true
 
 	OnSession_AfterInsert(s)
@@ -132,12 +113,12 @@ func (s *Session) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.session SET ` +
-		`UserId = ?, SessionUuid = ?, ClientUuid = ?, DeviceUuid = ?, LastActivityTime = ?, LastIpAddress = ?, LastWifiMacAddress = ?, LastNetworkType = ?, LastNetworkTypeEnumId = ?, AppVersion = ?, UpdatedTime = ?, CreatedTime = ?` +
-		` WHERE Id = ?`
+		`UserId = ?, ClientUuid = ?, DeviceUuid = ?, LastActivityTime = ?, LastIpAddress = ?, LastWifiMacAddress = ?, LastNetworkType = ?, LastNetworkTypeEnum = ?, AppVersion = ?, UpdatedTime = ?, CreatedTime = ?` +
+		` WHERE SessionUuid = ?`
 
 	// run query
-	XOLog(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.Id)
-	_, err = db.Exec(sqlstr, s.UserId, s.SessionUuid, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnumId, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.Id)
+	XOLog(sqlstr, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.SessionUuid)
+	_, err = db.Exec(sqlstr, s.UserId, s.ClientUuid, s.DeviceUuid, s.LastActivityTime, s.LastIpAddress, s.LastWifiMacAddress, s.LastNetworkType, s.LastNetworkTypeEnum, s.AppVersion, s.UpdatedTime, s.CreatedTime, s.SessionUuid)
 
 	XOLogErr(err)
 	OnSession_AfterUpdate(s)
@@ -169,11 +150,11 @@ func (s *Session) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.session WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.session WHERE SessionUuid = ?`
 
 	// run query
-	XOLog(sqlstr, s.Id)
-	_, err = db.Exec(sqlstr, s.Id)
+	XOLog(sqlstr, s.SessionUuid)
+	_, err = db.Exec(sqlstr, s.SessionUuid)
 	if err != nil {
 		XOLogErr(err)
 		return err
@@ -236,111 +217,6 @@ func NewSession_Selector() *__Session_Selector {
 func (u *__Session_Deleter) Or() *__Session_Deleter {
 	u.whereSep = " OR "
 	return u
-}
-
-func (u *__Session_Deleter) Id_In(ins []int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Deleter) Id_Ins(ins ...int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Deleter) Id_NotIn(ins []int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Session_Deleter) Id_Eq(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Deleter) Id_NotEq(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Deleter) Id_LT(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Deleter) Id_LE(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Deleter) Id_GT(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Deleter) Id_GE(val int) *__Session_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
 }
 
 func (u *__Session_Deleter) UserId_In(ins []int) *__Session_Deleter {
@@ -553,106 +429,106 @@ func (d *__Session_Deleter) LastActivityTime_GE(val int) *__Session_Deleter {
 	return d
 }
 
-func (u *__Session_Deleter) LastNetworkTypeEnumId_In(ins []int) *__Session_Deleter {
+func (u *__Session_Deleter) LastNetworkTypeEnum_In(ins []int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Deleter) LastNetworkTypeEnumId_Ins(ins ...int) *__Session_Deleter {
+func (u *__Session_Deleter) LastNetworkTypeEnum_Ins(ins ...int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Deleter) LastNetworkTypeEnumId_NotIn(ins []int) *__Session_Deleter {
+func (u *__Session_Deleter) LastNetworkTypeEnum_NotIn(ins []int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_Eq(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_Eq(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId = ? "
+	w.condition = " LastNetworkTypeEnum = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_NotEq(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_NotEq(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId != ? "
+	w.condition = " LastNetworkTypeEnum != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_LT(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_LT(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId < ? "
+	w.condition = " LastNetworkTypeEnum < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_LE(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_LE(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId <= ? "
+	w.condition = " LastNetworkTypeEnum <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_GT(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_GT(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId > ? "
+	w.condition = " LastNetworkTypeEnum > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Deleter) LastNetworkTypeEnumId_GE(val int) *__Session_Deleter {
+func (d *__Session_Deleter) LastNetworkTypeEnum_GE(val int) *__Session_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId >= ? "
+	w.condition = " LastNetworkTypeEnum >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -979,111 +855,6 @@ func (u *__Session_Updater) Or() *__Session_Updater {
 	return u
 }
 
-func (u *__Session_Updater) Id_In(ins []int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Updater) Id_Ins(ins ...int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Updater) Id_NotIn(ins []int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Session_Updater) Id_Eq(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Updater) Id_NotEq(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Updater) Id_LT(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Updater) Id_LE(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Updater) Id_GT(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Updater) Id_GE(val int) *__Session_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Session_Updater) UserId_In(ins []int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1294,106 +1065,106 @@ func (d *__Session_Updater) LastActivityTime_GE(val int) *__Session_Updater {
 	return d
 }
 
-func (u *__Session_Updater) LastNetworkTypeEnumId_In(ins []int) *__Session_Updater {
+func (u *__Session_Updater) LastNetworkTypeEnum_In(ins []int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Updater) LastNetworkTypeEnumId_Ins(ins ...int) *__Session_Updater {
+func (u *__Session_Updater) LastNetworkTypeEnum_Ins(ins ...int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Updater) LastNetworkTypeEnumId_NotIn(ins []int) *__Session_Updater {
+func (u *__Session_Updater) LastNetworkTypeEnum_NotIn(ins []int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_Eq(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_Eq(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId = ? "
+	w.condition = " LastNetworkTypeEnum = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_NotEq(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_NotEq(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId != ? "
+	w.condition = " LastNetworkTypeEnum != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_LT(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_LT(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId < ? "
+	w.condition = " LastNetworkTypeEnum < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_LE(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_LE(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId <= ? "
+	w.condition = " LastNetworkTypeEnum <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_GT(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_GT(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId > ? "
+	w.condition = " LastNetworkTypeEnum > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Updater) LastNetworkTypeEnumId_GE(val int) *__Session_Updater {
+func (d *__Session_Updater) LastNetworkTypeEnum_GE(val int) *__Session_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId >= ? "
+	w.condition = " LastNetworkTypeEnum >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1720,111 +1491,6 @@ func (u *__Session_Selector) Or() *__Session_Selector {
 	return u
 }
 
-func (u *__Session_Selector) Id_In(ins []int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Selector) Id_Ins(ins ...int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Session_Selector) Id_NotIn(ins []int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Session_Selector) Id_Eq(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Selector) Id_NotEq(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Selector) Id_LT(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Selector) Id_LE(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Selector) Id_GT(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Session_Selector) Id_GE(val int) *__Session_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Session_Selector) UserId_In(ins []int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2035,106 +1701,106 @@ func (d *__Session_Selector) LastActivityTime_GE(val int) *__Session_Selector {
 	return d
 }
 
-func (u *__Session_Selector) LastNetworkTypeEnumId_In(ins []int) *__Session_Selector {
+func (u *__Session_Selector) LastNetworkTypeEnum_In(ins []int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Selector) LastNetworkTypeEnumId_Ins(ins ...int) *__Session_Selector {
+func (u *__Session_Selector) LastNetworkTypeEnum_Ins(ins ...int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Session_Selector) LastNetworkTypeEnumId_NotIn(ins []int) *__Session_Selector {
+func (u *__Session_Selector) LastNetworkTypeEnum_NotIn(ins []int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastNetworkTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_Eq(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_Eq(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId = ? "
+	w.condition = " LastNetworkTypeEnum = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_NotEq(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_NotEq(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId != ? "
+	w.condition = " LastNetworkTypeEnum != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_LT(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_LT(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId < ? "
+	w.condition = " LastNetworkTypeEnum < ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_LE(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_LE(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId <= ? "
+	w.condition = " LastNetworkTypeEnum <= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_GT(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_GT(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId > ? "
+	w.condition = " LastNetworkTypeEnum > ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Session_Selector) LastNetworkTypeEnumId_GE(val int) *__Session_Selector {
+func (d *__Session_Selector) LastNetworkTypeEnum_GE(val int) *__Session_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastNetworkTypeEnumId >= ? "
+	w.condition = " LastNetworkTypeEnum >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3549,24 +3215,11 @@ func (d *__Session_Selector) LastNetworkType_NotEq(val string) *__Session_Select
 
 //ints
 
-func (u *__Session_Updater) Id(newVal int) *__Session_Updater {
-	u.updates[" Id = ? "] = newVal
-	return u
-}
-
-func (u *__Session_Updater) Id_Increment(count int) *__Session_Updater {
-	if count > 0 {
-		u.updates[" Id = Id+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
 //string
+func (u *__Session_Updater) SessionUuid(newVal string) *__Session_Updater {
+	u.updates[" SessionUuid = ? "] = newVal
+	return u
+}
 
 //ints
 
@@ -3588,14 +3241,6 @@ func (u *__Session_Updater) UserId_Increment(count int) *__Session_Updater {
 }
 
 //string
-
-//ints
-
-//string
-func (u *__Session_Updater) SessionUuid(newVal string) *__Session_Updater {
-	u.updates[" SessionUuid = ? "] = newVal
-	return u
-}
 
 //ints
 
@@ -3660,18 +3305,18 @@ func (u *__Session_Updater) LastNetworkType(newVal string) *__Session_Updater {
 
 //ints
 
-func (u *__Session_Updater) LastNetworkTypeEnumId(newVal int) *__Session_Updater {
-	u.updates[" LastNetworkTypeEnumId = ? "] = newVal
+func (u *__Session_Updater) LastNetworkTypeEnum(newVal int) *__Session_Updater {
+	u.updates[" LastNetworkTypeEnum = ? "] = newVal
 	return u
 }
 
-func (u *__Session_Updater) LastNetworkTypeEnumId_Increment(count int) *__Session_Updater {
+func (u *__Session_Updater) LastNetworkTypeEnum_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" LastNetworkTypeEnumId = LastNetworkTypeEnumId+? "] = count
+		u.updates[" LastNetworkTypeEnum = LastNetworkTypeEnum+? "] = count
 	}
 
 	if count < 0 {
-		u.updates[" LastNetworkTypeEnumId = LastNetworkTypeEnumId-? "] = -(count) //make it positive
+		u.updates[" LastNetworkTypeEnum = LastNetworkTypeEnum-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -3747,18 +3392,18 @@ func (u *__Session_Updater) CreatedTime_Increment(count int) *__Session_Updater 
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Session_Selector) OrderBy_Id_Desc() *__Session_Selector {
-	u.orderBy = " ORDER BY Id DESC "
+func (u *__Session_Selector) OrderBy_SessionUuid_Desc() *__Session_Selector {
+	u.orderBy = " ORDER BY SessionUuid DESC "
 	return u
 }
 
-func (u *__Session_Selector) OrderBy_Id_Asc() *__Session_Selector {
-	u.orderBy = " ORDER BY Id ASC "
+func (u *__Session_Selector) OrderBy_SessionUuid_Asc() *__Session_Selector {
+	u.orderBy = " ORDER BY SessionUuid ASC "
 	return u
 }
 
-func (u *__Session_Selector) Select_Id() *__Session_Selector {
-	u.selectCol = "Id"
+func (u *__Session_Selector) Select_SessionUuid() *__Session_Selector {
+	u.selectCol = "SessionUuid"
 	return u
 }
 
@@ -3774,21 +3419,6 @@ func (u *__Session_Selector) OrderBy_UserId_Asc() *__Session_Selector {
 
 func (u *__Session_Selector) Select_UserId() *__Session_Selector {
 	u.selectCol = "UserId"
-	return u
-}
-
-func (u *__Session_Selector) OrderBy_SessionUuid_Desc() *__Session_Selector {
-	u.orderBy = " ORDER BY SessionUuid DESC "
-	return u
-}
-
-func (u *__Session_Selector) OrderBy_SessionUuid_Asc() *__Session_Selector {
-	u.orderBy = " ORDER BY SessionUuid ASC "
-	return u
-}
-
-func (u *__Session_Selector) Select_SessionUuid() *__Session_Selector {
-	u.selectCol = "SessionUuid"
 	return u
 }
 
@@ -3882,18 +3512,18 @@ func (u *__Session_Selector) Select_LastNetworkType() *__Session_Selector {
 	return u
 }
 
-func (u *__Session_Selector) OrderBy_LastNetworkTypeEnumId_Desc() *__Session_Selector {
-	u.orderBy = " ORDER BY LastNetworkTypeEnumId DESC "
+func (u *__Session_Selector) OrderBy_LastNetworkTypeEnum_Desc() *__Session_Selector {
+	u.orderBy = " ORDER BY LastNetworkTypeEnum DESC "
 	return u
 }
 
-func (u *__Session_Selector) OrderBy_LastNetworkTypeEnumId_Asc() *__Session_Selector {
-	u.orderBy = " ORDER BY LastNetworkTypeEnumId ASC "
+func (u *__Session_Selector) OrderBy_LastNetworkTypeEnum_Asc() *__Session_Selector {
+	u.orderBy = " ORDER BY LastNetworkTypeEnum ASC "
 	return u
 }
 
-func (u *__Session_Selector) Select_LastNetworkTypeEnumId() *__Session_Selector {
-	u.selectCol = "LastNetworkTypeEnumId"
+func (u *__Session_Selector) Select_LastNetworkTypeEnum() *__Session_Selector {
+	u.selectCol = "LastNetworkTypeEnum"
 	return u
 }
 
@@ -4214,13 +3844,13 @@ func MassInsert_Session(rows []Session, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.session (" +
-		"UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime" +
+		"SessionUuid, UserId, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnum, AppVersion, UpdatedTime, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4228,15 +3858,15 @@ func MassInsert_Session(rows []Session, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.UserId)
 		vals = append(vals, row.SessionUuid)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.ClientUuid)
 		vals = append(vals, row.DeviceUuid)
 		vals = append(vals, row.LastActivityTime)
 		vals = append(vals, row.LastIpAddress)
 		vals = append(vals, row.LastWifiMacAddress)
 		vals = append(vals, row.LastNetworkType)
-		vals = append(vals, row.LastNetworkTypeEnumId)
+		vals = append(vals, row.LastNetworkTypeEnum)
 		vals = append(vals, row.AppVersion)
 		vals = append(vals, row.UpdatedTime)
 		vals = append(vals, row.CreatedTime)
@@ -4262,7 +3892,7 @@ func MassReplace_Session(rows []Session, db XODB) error {
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.session (" +
-		"UserId, SessionUuid, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnumId, AppVersion, UpdatedTime, CreatedTime" +
+		"SessionUuid, UserId, ClientUuid, DeviceUuid, LastActivityTime, LastIpAddress, LastWifiMacAddress, LastNetworkType, LastNetworkTypeEnum, AppVersion, UpdatedTime, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4270,15 +3900,15 @@ func MassReplace_Session(rows []Session, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.UserId)
 		vals = append(vals, row.SessionUuid)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.ClientUuid)
 		vals = append(vals, row.DeviceUuid)
 		vals = append(vals, row.LastActivityTime)
 		vals = append(vals, row.LastIpAddress)
 		vals = append(vals, row.LastWifiMacAddress)
 		vals = append(vals, row.LastNetworkType)
-		vals = append(vals, row.LastNetworkTypeEnumId)
+		vals = append(vals, row.LastNetworkTypeEnum)
 		vals = append(vals, row.AppVersion)
 		vals = append(vals, row.UpdatedTime)
 		vals = append(vals, row.CreatedTime)
@@ -4297,8 +3927,6 @@ func MassReplace_Session(rows []Session, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 
