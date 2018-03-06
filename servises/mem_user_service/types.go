@@ -2,15 +2,15 @@ package mem_user_service
 
 import (
 	"ms/sun/base"
-	"ms/sun/models/x"
 	"ms/sun2/shared/golib/go_map"
+	"ms/sun2/shared/x"
 )
 
 /////////////////////////// MemUser ////////////////////////////
 type MemUser struct {
 	userId            int
 	lastPosts         []*x.Post
-	lastActivities    []*x.Activity
+	lastActions       []*x.Action
 	followedUserIds   *go_map.ConcurrentIntMap
 	followersUserIds  *go_map.ConcurrentIntMap
 	isPostsLoaded     bool
@@ -28,18 +28,18 @@ func newMemUser() MemUser {
 
 func (m *MemUser) GetLastPost() []*x.Post {
 	if !m.isPostsLoaded {
-		m.lastPosts, _ = x.NewPost_Selector().UserId_Eq(m.userId).OrderBy_Id_Desc().Limit(50).GetRows(base.DB)
+		m.lastPosts, _ = x.NewPost_Selector().UserId_Eq(m.userId).OrderBy_PostId_Desc().Limit(50).GetRows(base.DB)
 		m.isPostsLoaded = true
 	}
 	return m.lastPosts
 }
 
-func (m *MemUser) GetLastActivities() []*x.Activity {
+func (m *MemUser) GetLastActions() []*x.Action {
 	if !m.isActivityLoaded {
-		m.lastActivities, _ = x.NewActivity_Selector().ActorUserId_Eq(m.userId).OrderBy_Id_Desc().Limit(100).GetRows(base.DB)
+		m.lastActions, _ = x.NewAction_Selector().ActorUserId_Eq(m.userId).OrderBy_ActionId_Desc().Limit(100).GetRows(base.DB)
 		m.isActivityLoaded = true
 	}
-	return m.lastActivities
+	return m.lastActions
 }
 
 func (m *MemUser) GetFollowers() []int {
@@ -59,7 +59,7 @@ func (m *MemUser) GetFollowed() []int {
 		ids, _ := x.NewFollowingListMember_Selector().
 			Select_FollowedUserId().
 			UserId_Eq(m.userId).
-			Select_UserId().GetIntSlice(base.DB)
+			GetIntSlice(base.DB)
 		m.followedUserIds.SetKeys(ids, 1)
 		m.isFollowedLoaded = true
 	}

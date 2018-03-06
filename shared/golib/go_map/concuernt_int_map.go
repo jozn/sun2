@@ -23,7 +23,7 @@ func (s *ConcurrentIntMap) GetVal(key int) int {
 }
 
 func (s *ConcurrentIntMap) GetAllKeys() []int {
-	arr := make([]int, len(s.mp))
+	arr := make([]int, 0,len(s.mp))
 	s.mux.RLock()
 	for k, _ := range s.mp {
 		arr = append(arr, k)
