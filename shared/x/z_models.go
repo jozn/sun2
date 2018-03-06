@@ -2,20 +2,20 @@ package x
 
 // action 'Action'.
 type Action struct {
-	ActionId       int
-	ActorUserId    int
-	ActionTypeEnum int
-	PeerUserId     int
-	PostId         int
-	CommentId      int
-	Murmur64Hash   int
-	CreatedTime    int
+	ActionId       int `db:"ActionId"`
+	ActorUserId    int `db:"ActorUserId"`
+	ActionTypeEnum int `db:"ActionTypeEnum"`
+	PeerUserId     int `db:"PeerUserId"`
+	PostId         int `db:"PostId"`
+	CommentId      int `db:"CommentId"`
+	Murmur64Hash   int `db:"Murmur64Hash"`
+	CreatedTime    int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Action {
+:= &x.Action {
 	ActionId: 0,
 	ActorUserId: 0,
 	ActionTypeEnum: 0,
@@ -27,18 +27,18 @@ type Action struct {
 */
 // comment 'Comment'.
 type Comment struct {
-	CommentId   int
-	UserId      int
-	PostId      int
-	Text        string
-	LikesCount  int
-	CreatedTime int
+	CommentId   int    `db:"CommentId"`
+	UserId      int    `db:"UserId"`
+	PostId      int    `db:"PostId"`
+	Text        string `db:"Text"`
+	LikesCount  int    `db:"LikesCount"`
+	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Comment {
+:= &x.Comment {
 	CommentId: 0,
 	UserId: 0,
 	PostId: 0,
@@ -48,19 +48,19 @@ type Comment struct {
 */
 // event 'Event'.
 type Event struct {
-	EventId    int
-	EventType  int
-	ByUserId   int
-	PeerUserId int
-	PostId     int
-	CommentId  int
-	ActionId   int
+	EventId    int `db:"EventId"`
+	EventType  int `db:"EventType"`
+	ByUserId   int `db:"ByUserId"`
+	PeerUserId int `db:"PeerUserId"`
+	PostId     int `db:"PostId"`
+	CommentId  int `db:"CommentId"`
+	ActionId   int `db:"ActionId"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Event {
+:= &x.Event {
 	EventId: 0,
 	EventType: 0,
 	ByUserId: 0,
@@ -71,20 +71,20 @@ type Event struct {
 */
 // following_list 'FollowingList'.
 type FollowingList struct {
-	Id          int
-	UserId      int
-	ListType    int
-	Name        string
-	Count       int
-	IsAuto      int
-	IsPimiry    int
-	CreatedTime int
+	Id          int    `db:"Id"`
+	UserId      int    `db:"UserId"`
+	ListType    int    `db:"ListType"`
+	Name        string `db:"Name"`
+	Count       int    `db:"Count"`
+	IsAuto      int    `db:"IsAuto"`
+	IsPimiry    int    `db:"IsPimiry"`
+	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FollowingList {
+:= &x.FollowingList {
 	Id: 0,
 	UserId: 0,
 	ListType: 0,
@@ -96,17 +96,17 @@ type FollowingList struct {
 */
 // following_list_member 'FollowingListMember'.
 type FollowingListMember struct {
-	Id             int
-	ListId         int
-	UserId         int
-	FollowedUserId int
-	CreatedTime    int
+	Id             int `db:"Id"`
+	ListId         int `db:"ListId"`
+	UserId         int `db:"UserId"`
+	FollowedUserId int `db:"FollowedUserId"`
+	CreatedTime    int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FollowingListMember {
+:= &x.FollowingListMember {
 	Id: 0,
 	ListId: 0,
 	UserId: 0,
@@ -115,17 +115,17 @@ type FollowingListMember struct {
 */
 // following_list_member_removed 'FollowingListMemberRemoved'.
 type FollowingListMemberRemoved struct {
-	Id               int
-	ListId           int
-	UserId           int
-	UnFollowedUserId int
-	UpdatedTime      int
+	Id               int `db:"Id"`
+	ListId           int `db:"ListId"`
+	UserId           int `db:"UserId"`
+	UnFollowedUserId int `db:"UnFollowedUserId"`
+	UpdatedTime      int `db:"UpdatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FollowingListMemberRemoved {
+:= &x.FollowingListMemberRemoved {
 	Id: 0,
 	ListId: 0,
 	UserId: 0,
@@ -134,20 +134,20 @@ type FollowingListMemberRemoved struct {
 */
 // group 'Group'.
 type Group struct {
-	GroupId          int
-	GroupName        string
-	MembersCount     int
-	GroupPrivacyEnum int
-	CreatorUserId    int
-	CreatedTime      int
-	UpdatedMs        int
-	CurrentSeq       int
+	GroupId          int    `db:"GroupId"`
+	GroupName        string `db:"GroupName"`
+	MembersCount     int    `db:"MembersCount"`
+	GroupPrivacyEnum int    `db:"GroupPrivacyEnum"`
+	CreatorUserId    int    `db:"CreatorUserId"`
+	CreatedTime      int    `db:"CreatedTime"`
+	UpdatedMs        int    `db:"UpdatedMs"`
+	CurrentSeq       int    `db:"CurrentSeq"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Group {
+:= &x.Group {
 	GroupId: 0,
 	GroupName: "",
 	MembersCount: 0,
@@ -159,19 +159,19 @@ type Group struct {
 */
 // group_member 'GroupMember'.
 type GroupMember struct {
-	Id              int
-	GroupId         int
-	GroupKey        string
-	UserId          int
-	ByUserId        int
-	GroupRoleEnumId int
-	CreatedTime     int
+	Id              int    `db:"Id"`
+	GroupId         int    `db:"GroupId"`
+	GroupKey        string `db:"GroupKey"`
+	UserId          int    `db:"UserId"`
+	ByUserId        int    `db:"ByUserId"`
+	GroupRoleEnumId int    `db:"GroupRoleEnumId"`
+	CreatedTime     int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &GroupMember {
+:= &x.GroupMember {
 	Id: 0,
 	GroupId: 0,
 	GroupKey: "",
@@ -182,20 +182,20 @@ type GroupMember struct {
 */
 // group_message 'GroupMessage'.
 type GroupMessage struct {
-	MessageId          int
-	RoomKey            string
-	UserId             int
-	MessageFileId      int
-	MessageTypeEnum    int
-	Text               string
-	CreatedMs          int
-	DeliveryStatusEnum int
+	MessageId          int    `db:"MessageId"`
+	RoomKey            string `db:"RoomKey"`
+	UserId             int    `db:"UserId"`
+	MessageFileId      int    `db:"MessageFileId"`
+	MessageTypeEnum    int    `db:"MessageTypeEnum"`
+	Text               string `db:"Text"`
+	CreatedMs          int    `db:"CreatedMs"`
+	DeliveryStatusEnum int    `db:"DeliveryStatusEnum"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &GroupMessage {
+:= &x.GroupMessage {
 	MessageId: 0,
 	RoomKey: "",
 	UserId: 0,
@@ -207,18 +207,18 @@ type GroupMessage struct {
 */
 // likes 'Like'.
 type Like struct {
-	Id           int
-	PostId       int
-	PostTypeEnum int
-	UserId       int
-	LikeEnum     int
-	CreatedTime  int
+	Id           int `db:"Id"`
+	PostId       int `db:"PostId"`
+	PostTypeEnum int `db:"PostTypeEnum"`
+	UserId       int `db:"UserId"`
+	LikeEnum     int `db:"LikeEnum"`
+	CreatedTime  int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Like {
+:= &x.Like {
 	Id: 0,
 	PostId: 0,
 	PostTypeEnum: 0,
@@ -228,24 +228,24 @@ type Like struct {
 */
 // media 'Media'.
 type Media struct {
-	MediaId       int
-	UserId        int
-	PostId        int
-	AlbumId       int
-	MediaTypeEnum int
-	Width         int
-	Height        int
-	Size          int
-	Duration      int
-	Md5Hash       string
-	Color         string
-	CreatedTime   int
+	MediaId       int    `db:"MediaId"`
+	UserId        int    `db:"UserId"`
+	PostId        int    `db:"PostId"`
+	AlbumId       int    `db:"AlbumId"`
+	MediaTypeEnum int    `db:"MediaTypeEnum"`
+	Width         int    `db:"Width"`
+	Height        int    `db:"Height"`
+	Size          int    `db:"Size"`
+	Duration      int    `db:"Duration"`
+	Md5Hash       string `db:"Md5Hash"`
+	Color         string `db:"Color"`
+	CreatedTime   int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Media {
+:= &x.Media {
 	MediaId: 0,
 	UserId: 0,
 	PostId: 0,
@@ -261,22 +261,22 @@ type Media struct {
 */
 // notify 'Notify'.
 type Notify struct {
-	NotifyId      int
-	ForUserId     int
-	ActorUserId   int
-	NotiyTypeEnum int
-	PostId        int
-	CommentId     int
-	PeerUserId    int
-	Murmur64Hash  int
-	SeenStatus    int
-	CreatedTime   int
+	NotifyId      int `db:"NotifyId"`
+	ForUserId     int `db:"ForUserId"`
+	ActorUserId   int `db:"ActorUserId"`
+	NotiyTypeEnum int `db:"NotiyTypeEnum"`
+	PostId        int `db:"PostId"`
+	CommentId     int `db:"CommentId"`
+	PeerUserId    int `db:"PeerUserId"`
+	Murmur64Hash  int `db:"Murmur64Hash"`
+	SeenStatus    int `db:"SeenStatus"`
+	CreatedTime   int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Notify {
+:= &x.Notify {
 	NotifyId: 0,
 	ForUserId: 0,
 	ActorUserId: 0,
@@ -290,37 +290,37 @@ type Notify struct {
 */
 // notify_removed 'NotifyRemoved'.
 type NotifyRemoved struct {
-	Murmur64Hash int
-	ForUserId    int
-	Id           int
+	Murmur64Hash int `db:"Murmur64Hash"`
+	ForUserId    int `db:"ForUserId"`
+	Id           int `db:"Id"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &NotifyRemoved {
+:= &x.NotifyRemoved {
 	Murmur64Hash: 0,
 	ForUserId: 0,
 	Id: 0,
 */
 // phone_contacts 'PhoneContact'.
 type PhoneContact struct {
-	Id                    int
-	UserId                int
-	Phone                 int
-	PhoneDisplayName      string
-	PhoneFamilyName       string
-	PhoneNumber           string
-	PhoneNormalizedNumber string
-	PhoneContactRowId     int
-	DeviceUuidId          int
-	CreatedTime           int
+	Id                    int    `db:"Id"`
+	UserId                int    `db:"UserId"`
+	Phone                 int    `db:"Phone"`
+	PhoneDisplayName      string `db:"PhoneDisplayName"`
+	PhoneFamilyName       string `db:"PhoneFamilyName"`
+	PhoneNumber           string `db:"PhoneNumber"`
+	PhoneNormalizedNumber string `db:"PhoneNormalizedNumber"`
+	PhoneContactRowId     int    `db:"PhoneContactRowId"`
+	DeviceUuidId          int    `db:"DeviceUuidId"`
+	CreatedTime           int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &PhoneContact {
+:= &x.PhoneContact {
 	Id: 0,
 	UserId: 0,
 	Phone: 0,
@@ -334,28 +334,28 @@ type PhoneContact struct {
 */
 // post 'Post'.
 type Post struct {
-	PostId         int
-	UserId         int
-	PostTypeEnum   int
-	MediaId        int
-	Text           string
-	RichText       string
-	MediaCount     int
-	SharedTo       int
-	DisableComment int
-	HasTag         int
-	CommentsCount  int
-	LikesCount     int
-	ViewsCount     int
-	EditedTime     int
-	CreatedTime    int
-	ReSharedPostId int
+	PostId         int    `db:"PostId"`
+	UserId         int    `db:"UserId"`
+	PostTypeEnum   int    `db:"PostTypeEnum"`
+	MediaId        int    `db:"MediaId"`
+	Text           string `db:"Text"`
+	RichText       string `db:"RichText"`
+	MediaCount     int    `db:"MediaCount"`
+	SharedTo       int    `db:"SharedTo"`
+	DisableComment int    `db:"DisableComment"`
+	HasTag         int    `db:"HasTag"`
+	CommentsCount  int    `db:"CommentsCount"`
+	LikesCount     int    `db:"LikesCount"`
+	ViewsCount     int    `db:"ViewsCount"`
+	EditedTime     int    `db:"EditedTime"`
+	CreatedTime    int    `db:"CreatedTime"`
+	ReSharedPostId int    `db:"ReSharedPostId"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Post {
+:= &x.Post {
 	PostId: 0,
 	UserId: 0,
 	PostTypeEnum: 0,
@@ -375,31 +375,31 @@ type Post struct {
 */
 // post_keys 'PostKey'.
 type PostKey struct {
-	Id  int
-	Key string
+	Id  int    `db:"Id"`
+	Key string `db:"Key"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &PostKey {
+:= &x.PostKey {
 	Id: 0,
 	Key: "",
 */
 // search_clicked 'SearchClicked'.
 type SearchClicked struct {
-	Id          int
-	Query       string
-	ClickType   int
-	TargetId    int
-	UserId      int
-	CreatedTime int
+	Id          int    `db:"Id"`
+	Query       string `db:"Query"`
+	ClickType   int    `db:"ClickType"`
+	TargetId    int    `db:"TargetId"`
+	UserId      int    `db:"UserId"`
+	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &SearchClicked {
+:= &x.SearchClicked {
 	Id: 0,
 	Query: "",
 	ClickType: 0,
@@ -409,24 +409,24 @@ type SearchClicked struct {
 */
 // session 'Session'.
 type Session struct {
-	SessionUuid         string
-	UserId              int
-	ClientUuid          string
-	DeviceUuid          string
-	LastActivityTime    int
-	LastIpAddress       string
-	LastWifiMacAddress  string
-	LastNetworkType     string
-	LastNetworkTypeEnum int
-	AppVersion          int
-	UpdatedTime         int
-	CreatedTime         int
+	SessionUuid         string `db:"SessionUuid"`
+	UserId              int    `db:"UserId"`
+	ClientUuid          string `db:"ClientUuid"`
+	DeviceUuid          string `db:"DeviceUuid"`
+	LastActivityTime    int    `db:"LastActivityTime"`
+	LastIpAddress       string `db:"LastIpAddress"`
+	LastWifiMacAddress  string `db:"LastWifiMacAddress"`
+	LastNetworkType     string `db:"LastNetworkType"`
+	LastNetworkTypeEnum int    `db:"LastNetworkTypeEnum"`
+	AppVersion          int    `db:"AppVersion"`
+	UpdatedTime         int    `db:"UpdatedTime"`
+	CreatedTime         int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Session {
+:= &x.Session {
 	SessionUuid: "",
 	UserId: 0,
 	ClientUuid: "",
@@ -442,32 +442,32 @@ type Session struct {
 */
 // setting_client 'SettingClient'.
 type SettingClient struct {
-	UserId                    int
-	AutoDownloadWifiVoice     int
-	AutoDownloadWifiImage     int
-	AutoDownloadWifiVideo     int
-	AutoDownloadWifiFile      int
-	AutoDownloadWifiMusic     int
-	AutoDownloadWifiGif       int
-	AutoDownloadCellularVoice int
-	AutoDownloadCellularImage int
-	AutoDownloadCellularVideo int
-	AutoDownloadCellularFile  int
-	AutoDownloadCellularMusic int
-	AutoDownloadCellularGif   int
-	AutoDownloadRoamingVoice  int
-	AutoDownloadRoamingImage  int
-	AutoDownloadRoamingVideo  int
-	AutoDownloadRoamingFile   int
-	AutoDownloadRoamingMusic  int
-	AutoDownloadRoamingGif    int
-	SaveToGallery             int
+	UserId                    int `db:"UserId"`
+	AutoDownloadWifiVoice     int `db:"AutoDownloadWifiVoice"`
+	AutoDownloadWifiImage     int `db:"AutoDownloadWifiImage"`
+	AutoDownloadWifiVideo     int `db:"AutoDownloadWifiVideo"`
+	AutoDownloadWifiFile      int `db:"AutoDownloadWifiFile"`
+	AutoDownloadWifiMusic     int `db:"AutoDownloadWifiMusic"`
+	AutoDownloadWifiGif       int `db:"AutoDownloadWifiGif"`
+	AutoDownloadCellularVoice int `db:"AutoDownloadCellularVoice"`
+	AutoDownloadCellularImage int `db:"AutoDownloadCellularImage"`
+	AutoDownloadCellularVideo int `db:"AutoDownloadCellularVideo"`
+	AutoDownloadCellularFile  int `db:"AutoDownloadCellularFile"`
+	AutoDownloadCellularMusic int `db:"AutoDownloadCellularMusic"`
+	AutoDownloadCellularGif   int `db:"AutoDownloadCellularGif"`
+	AutoDownloadRoamingVoice  int `db:"AutoDownloadRoamingVoice"`
+	AutoDownloadRoamingImage  int `db:"AutoDownloadRoamingImage"`
+	AutoDownloadRoamingVideo  int `db:"AutoDownloadRoamingVideo"`
+	AutoDownloadRoamingFile   int `db:"AutoDownloadRoamingFile"`
+	AutoDownloadRoamingMusic  int `db:"AutoDownloadRoamingMusic"`
+	AutoDownloadRoamingGif    int `db:"AutoDownloadRoamingGif"`
+	SaveToGallery             int `db:"SaveToGallery"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &SettingClient {
+:= &x.SettingClient {
 	UserId: 0,
 	AutoDownloadWifiVoice: 0,
 	AutoDownloadWifiImage: 0,
@@ -491,32 +491,32 @@ type SettingClient struct {
 */
 // setting_notifications 'SettingNotification'.
 type SettingNotification struct {
-	UserId                   int
-	SocialLedOn              int
-	SocialLedColor           string
-	ReqestToFollowYou        int
-	FollowedYou              int
-	AccptedYourFollowRequest int
-	YourPostLiked            int
-	YourPostCommented        int
-	MenthenedYouInPost       int
-	MenthenedYouInComment    int
-	YourContactsJoined       int
-	DirectMessage            int
-	DirectAlert              int
-	DirectPerview            int
-	DirectLedOn              int
-	DirectLedColor           int
-	DirectVibrate            int
-	DirectPopup              int
-	DirectSound              int
-	DirectPriority           int
+	UserId                   int    `db:"UserId"`
+	SocialLedOn              int    `db:"SocialLedOn"`
+	SocialLedColor           string `db:"SocialLedColor"`
+	ReqestToFollowYou        int    `db:"ReqestToFollowYou"`
+	FollowedYou              int    `db:"FollowedYou"`
+	AccptedYourFollowRequest int    `db:"AccptedYourFollowRequest"`
+	YourPostLiked            int    `db:"YourPostLiked"`
+	YourPostCommented        int    `db:"YourPostCommented"`
+	MenthenedYouInPost       int    `db:"MenthenedYouInPost"`
+	MenthenedYouInComment    int    `db:"MenthenedYouInComment"`
+	YourContactsJoined       int    `db:"YourContactsJoined"`
+	DirectMessage            int    `db:"DirectMessage"`
+	DirectAlert              int    `db:"DirectAlert"`
+	DirectPerview            int    `db:"DirectPerview"`
+	DirectLedOn              int    `db:"DirectLedOn"`
+	DirectLedColor           int    `db:"DirectLedColor"`
+	DirectVibrate            int    `db:"DirectVibrate"`
+	DirectPopup              int    `db:"DirectPopup"`
+	DirectSound              int    `db:"DirectSound"`
+	DirectPriority           int    `db:"DirectPriority"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &SettingNotification {
+:= &x.SettingNotification {
 	UserId: 0,
 	SocialLedOn: 0,
 	SocialLedColor: "",
@@ -540,30 +540,30 @@ type SettingNotification struct {
 */
 // suggested_top_posts 'SuggestedTopPost'.
 type SuggestedTopPost struct {
-	Id     int
-	PostId int
+	Id     int `db:"Id"`
+	PostId int `db:"PostId"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &SuggestedTopPost {
+:= &x.SuggestedTopPost {
 	Id: 0,
 	PostId: 0,
 */
 // suggested_user 'SuggestedUser'.
 type SuggestedUser struct {
-	Id          int
-	UserId      int
-	TargetId    int
-	Weight      float32
-	CreatedTime int
+	Id          int     `db:"Id"`
+	UserId      int     `db:"UserId"`
+	TargetId    int     `db:"TargetId"`
+	Weight      float32 `db:"Weight"`
+	CreatedTime int     `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &SuggestedUser {
+:= &x.SuggestedUser {
 	Id: 0,
 	UserId: 0,
 	TargetId: 0,
@@ -572,17 +572,17 @@ type SuggestedUser struct {
 */
 // tag 'Tag'.
 type Tag struct {
-	TagId         int
-	Name          string
-	Count         int
-	TagStatusEnum int
-	CreatedTime   int
+	TagId         int    `db:"TagId"`
+	Name          string `db:"Name"`
+	Count         int    `db:"Count"`
+	TagStatusEnum int    `db:"TagStatusEnum"`
+	CreatedTime   int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Tag {
+:= &x.Tag {
 	TagId: 0,
 	Name: "",
 	Count: 0,
@@ -591,17 +591,17 @@ type Tag struct {
 */
 // tags_posts 'TagsPost'.
 type TagsPost struct {
-	Id           int
-	TagId        int
-	PostId       int
-	PostTypeEnum int
-	CreatedTime  int
+	Id           int `db:"Id"`
+	TagId        int `db:"TagId"`
+	PostId       int `db:"PostId"`
+	PostTypeEnum int `db:"PostTypeEnum"`
+	CreatedTime  int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &TagsPost {
+:= &x.TagsPost {
 	Id: 0,
 	TagId: 0,
 	PostId: 0,
@@ -610,18 +610,18 @@ type TagsPost struct {
 */
 // trigger_log 'TriggerLog'.
 type TriggerLog struct {
-	Id         int
-	ModelName  string
-	ChangeType string
-	TargetId   int
-	TargetStr  string
-	CreatedSe  int
+	Id         int    `db:"Id"`
+	ModelName  string `db:"ModelName"`
+	ChangeType string `db:"ChangeType"`
+	TargetId   int    `db:"TargetId"`
+	TargetStr  string `db:"TargetStr"`
+	CreatedSe  int    `db:"CreatedSe"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &TriggerLog {
+:= &x.TriggerLog {
 	Id: 0,
 	ModelName: "",
 	ChangeType: "",
@@ -631,40 +631,40 @@ type TriggerLog struct {
 */
 // user 'User'.
 type User struct {
-	UserId               int
-	UserName             string
-	UserNameLower        string `json:"-"` //nojson
-	FirstName            string
-	LastName             string
-	UserTypeEnum         int
-	UserLevelEnum        int
-	AvatarId             int
-	ProfilePrivacyEnum   int
-	Phone                int
-	About                string
-	Email                string
-	PasswordHash         string
-	PasswordSalt         string
-	FollowersCount       int
-	FollowingCount       int
-	PostsCount           int
-	MediaCount           int
-	LikesCount           int
-	ResharedCount        int
-	LastActionTime       int
-	LastPostTime         int
-	PrimaryFollowingList int
-	CreatedSe            int
-	UpdatedMs            int
-	OnlinePrivacyEnum    int
-	LastActivityTime     int
-	Phone2               string
+	UserId               int    `db:"UserId"`
+	UserName             string `db:"UserName"`
+	UserNameLower        string `db:"UserNameLower"` //nojson
+	FirstName            string `db:"FirstName"`
+	LastName             string `db:"LastName"`
+	UserTypeEnum         int    `db:"UserTypeEnum"`
+	UserLevelEnum        int    `db:"UserLevelEnum"`
+	AvatarId             int    `db:"AvatarId"`
+	ProfilePrivacyEnum   int    `db:"ProfilePrivacyEnum"`
+	Phone                int    `db:"Phone"`
+	About                string `db:"About"`
+	Email                string `db:"Email"`
+	PasswordHash         string `db:"PasswordHash"`
+	PasswordSalt         string `db:"PasswordSalt"`
+	FollowersCount       int    `db:"FollowersCount"`
+	FollowingCount       int    `db:"FollowingCount"`
+	PostsCount           int    `db:"PostsCount"`
+	MediaCount           int    `db:"MediaCount"`
+	LikesCount           int    `db:"LikesCount"`
+	ResharedCount        int    `db:"ResharedCount"`
+	LastActionTime       int    `db:"LastActionTime"`
+	LastPostTime         int    `db:"LastPostTime"`
+	PrimaryFollowingList int    `db:"PrimaryFollowingList"`
+	CreatedSe            int    `db:"CreatedSe"`
+	UpdatedMs            int    `db:"UpdatedMs"`
+	OnlinePrivacyEnum    int    `db:"OnlinePrivacyEnum"`
+	LastActivityTime     int    `db:"LastActivityTime"`
+	Phone2               string `db:"Phone2"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &User {
+:= &x.User {
 	UserId: 0,
 	UserName: "",
 	UserNameLower: "",
@@ -696,16 +696,16 @@ type User struct {
 */
 // user_meta_info 'UserMetaInfo'.
 type UserMetaInfo struct {
-	Id                  int
-	UserId              int
-	IsNotificationDirty int
-	LastUserRecGen      int
+	Id                  int `db:"Id"`
+	UserId              int `db:"UserId"`
+	IsNotificationDirty int `db:"IsNotificationDirty"`
+	LastUserRecGen      int `db:"LastUserRecGen"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &UserMetaInfo {
+:= &x.UserMetaInfo {
 	Id: 0,
 	UserId: 0,
 	IsNotificationDirty: 0,
@@ -713,37 +713,37 @@ type UserMetaInfo struct {
 */
 // user_password 'UserPassword'.
 type UserPassword struct {
-	UserId      int
-	Password    string
-	CreatedTime int
+	UserId      int    `db:"UserId"`
+	Password    string `db:"Password"`
+	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &UserPassword {
+:= &x.UserPassword {
 	UserId: 0,
 	Password: "",
 	CreatedTime: 0,
 */
 // chat 'Chat'.
 type Chat struct {
-	ChatKey      string
-	RoomKey      string
-	RoomTypeEnum int
-	UserId       int
-	PeerUserId   int
-	GroupId      int
-	CreatedTime  int
-	Seq          int
-	SeenSeq      int
-	UpdatedMs    int
+	ChatKey      string `db:"ChatKey"`
+	RoomKey      string `db:"RoomKey"`
+	RoomTypeEnum int    `db:"RoomTypeEnum"`
+	UserId       int    `db:"UserId"`
+	PeerUserId   int    `db:"PeerUserId"`
+	GroupId      int    `db:"GroupId"`
+	CreatedTime  int    `db:"CreatedTime"`
+	Seq          int    `db:"Seq"`
+	SeenSeq      int    `db:"SeenSeq"`
+	UpdatedMs    int    `db:"UpdatedMs"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Chat {
+:= &x.Chat {
 	ChatKey: "",
 	RoomKey: "",
 	RoomTypeEnum: 0,
@@ -757,16 +757,16 @@ type Chat struct {
 */
 // chat_last_message 'ChatLastMessage'.
 type ChatLastMessage struct {
-	ChatKey     string
-	ForUserId   int
-	LastMsgPb   []byte
-	LastMsgJson string
+	ChatKey     string `db:"ChatKey"`
+	ForUserId   int    `db:"ForUserId"`
+	LastMsgPb   []byte `db:"LastMsgPb"`
+	LastMsgJson string `db:"LastMsgJson"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &ChatLastMessage {
+:= &x.ChatLastMessage {
 	ChatKey: "",
 	ForUserId: 0,
 	LastMsgPb: []byte{},
@@ -774,23 +774,23 @@ type ChatLastMessage struct {
 */
 // chat_sync 'ChatSync'.
 type ChatSync struct {
-	SyncId            int
-	ToUserId          int
-	ChatSyncTypeId    int
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId int
-	ToLowMessageId    int
-	MessageId         int
-	MessagePb         []byte
-	MessageJson       string
-	CreatedTime       int
+	SyncId            int    `db:"SyncId"`
+	ToUserId          int    `db:"ToUserId"`
+	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
+	RoomKey           string `db:"RoomKey"`
+	ChatKey           string `db:"ChatKey"`
+	FromHighMessageId int    `db:"FromHighMessageId"`
+	ToLowMessageId    int    `db:"ToLowMessageId"`
+	MessageId         int    `db:"MessageId"`
+	MessagePb         []byte `db:"MessagePb"`
+	MessageJson       string `db:"MessageJson"`
+	CreatedTime       int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &ChatSync {
+:= &x.ChatSync {
 	SyncId: 0,
 	ToUserId: 0,
 	ChatSyncTypeId: 0,
@@ -805,23 +805,23 @@ type ChatSync struct {
 */
 // direct_message 'DirectMessage'.
 type DirectMessage struct {
-	ChatKey            string
-	MessageId          int
-	RoomKey            string
-	UserId             int
-	MessageFileId      int
-	MessageTypeEnum    int
-	Text               string
-	CreatedTime        int
-	Seq                int
-	DeliviryStatusEnum int
-	ExtraPB            []byte
+	ChatKey            string `db:"ChatKey"`
+	MessageId          int    `db:"MessageId"`
+	RoomKey            string `db:"RoomKey"`
+	UserId             int    `db:"UserId"`
+	MessageFileId      int    `db:"MessageFileId"`
+	MessageTypeEnum    int    `db:"MessageTypeEnum"`
+	Text               string `db:"Text"`
+	CreatedTime        int    `db:"CreatedTime"`
+	Seq                int    `db:"Seq"`
+	DeliviryStatusEnum int    `db:"DeliviryStatusEnum"`
+	ExtraPB            []byte `db:"ExtraPB"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &DirectMessage {
+:= &x.DirectMessage {
 	ChatKey: "",
 	MessageId: 0,
 	RoomKey: "",
@@ -836,38 +836,38 @@ type DirectMessage struct {
 */
 // home 'Home'.
 type Home struct {
-	Id        int
-	ForUserId int
-	PostId    int
+	Id        int `db:"Id"`
+	ForUserId int `db:"ForUserId"`
+	PostId    int `db:"PostId"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &Home {
+:= &x.Home {
 	Id: 0,
 	ForUserId: 0,
 	PostId: 0,
 */
 // message_file 'MessageFile'.
 type MessageFile struct {
-	MessageFileId int
-	FileTypeEnum  int
-	UserId        int //orginal user id
-	Title         string
-	Size          int
-	Width         int
-	Height        int
-	Duration      int
-	Extension     string
-	Md5Hash       string
-	CreatedTime   int
+	MessageFileId int    `db:"MessageFileId"`
+	FileTypeEnum  int    `db:"FileTypeEnum"`
+	UserId        int    `db:"UserId"` //orginal user id
+	Title         string `db:"Title"`
+	Size          int    `db:"Size"`
+	Width         int    `db:"Width"`
+	Height        int    `db:"Height"`
+	Duration      int    `db:"Duration"`
+	Extension     string `db:"Extension"`
+	Md5Hash       string `db:"Md5Hash"`
+	CreatedTime   int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &MessageFile {
+:= &x.MessageFile {
 	MessageFileId: 0,
 	FileTypeEnum: 0,
 	UserId: 0,
@@ -882,17 +882,17 @@ type MessageFile struct {
 */
 // file_msg 'FileMsg'.
 type FileMsg struct {
-	Id        int
-	FileType  int
-	Extension string
-	DataThumb []byte
-	Data      []byte
+	Id        int    `db:"Id"`
+	FileType  int    `db:"FileType"`
+	Extension string `db:"Extension"`
+	DataThumb []byte `db:"DataThumb"`
+	Data      []byte `db:"Data"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FileMsg {
+:= &x.FileMsg {
 	Id: 0,
 	FileType: 0,
 	Extension: "",
@@ -901,17 +901,17 @@ type FileMsg struct {
 */
 // file_post 'FilePost'.
 type FilePost struct {
-	Id        int
-	FileType  int
-	Extension string
-	DataThumb []byte
-	Data      []byte
+	Id        int    `db:"Id"`
+	FileType  int    `db:"FileType"`
+	Extension string `db:"Extension"`
+	DataThumb []byte `db:"DataThumb"`
+	Data      []byte `db:"Data"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &FilePost {
+:= &x.FilePost {
 	Id: 0,
 	FileType: 0,
 	Extension: "",

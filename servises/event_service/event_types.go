@@ -32,7 +32,7 @@ type GeneralEvent struct {
 	Event    x.Event
 	Post     *x.Post
 	Comment  *x.Comment
-	Action   *x.Comment
+	Action   *x.Action
 	ByUser   *x.User
 	PeerUser *x.User
 }

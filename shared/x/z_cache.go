@@ -1,6 +1,7 @@
 package x
 
 import (
+	"errors"
 	"ms/sun/base"
 	"strconv"
 )
@@ -18,6 +19,20 @@ func (c _StoreImpl) GetActionByActionId(ActionId int) (*Action, bool) {
 	}
 	if LogTableSqlReq.Action {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetActionByActionId_JustCache(ActionId int) (*Action, bool) {
+	o, ok := RowCache.Get("Action:" + strconv.Itoa(ActionId))
+	if ok {
+		if obj, ok := o.(*Action); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Action {
+		XOLogErr(errors.New("_JustCache is empty for Action: " + strconv.Itoa(ActionId)))
 	}
 	return nil, false
 }
@@ -56,6 +71,20 @@ func (c _StoreImpl) GetCommentByCommentId(CommentId int) (*Comment, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetCommentByCommentId_JustCache(CommentId int) (*Comment, bool) {
+	o, ok := RowCache.Get("Comment:" + strconv.Itoa(CommentId))
+	if ok {
+		if obj, ok := o.(*Comment); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Comment {
+		XOLogErr(errors.New("_JustCache is empty for Comment: " + strconv.Itoa(CommentId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadCommentByCommentIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -86,6 +115,20 @@ func (c _StoreImpl) GetEventByEventId(EventId int) (*Event, bool) {
 	}
 	if LogTableSqlReq.Event {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetEventByEventId_JustCache(EventId int) (*Event, bool) {
+	o, ok := RowCache.Get("Event:" + strconv.Itoa(EventId))
+	if ok {
+		if obj, ok := o.(*Event); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Event {
+		XOLogErr(errors.New("_JustCache is empty for Event: " + strconv.Itoa(EventId)))
 	}
 	return nil, false
 }
@@ -124,6 +167,20 @@ func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetFollowingListById_JustCache(Id int) (*FollowingList, bool) {
+	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FollowingList); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.FollowingList {
+		XOLogErr(errors.New("_JustCache is empty for FollowingList: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadFollowingListByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -154,6 +211,20 @@ func (c _StoreImpl) GetFollowingListMemberById(Id int) (*FollowingListMember, bo
 	}
 	if LogTableSqlReq.FollowingListMember {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetFollowingListMemberById_JustCache(Id int) (*FollowingListMember, bool) {
+	o, ok := RowCache.Get("FollowingListMember:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FollowingListMember); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.FollowingListMember {
+		XOLogErr(errors.New("_JustCache is empty for FollowingListMember: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -192,6 +263,20 @@ func (c _StoreImpl) GetFollowingListMemberRemovedById(Id int) (*FollowingListMem
 	return nil, false
 }
 
+func (c _StoreImpl) GetFollowingListMemberRemovedById_JustCache(Id int) (*FollowingListMemberRemoved, bool) {
+	o, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FollowingListMemberRemoved); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.FollowingListMemberRemoved {
+		XOLogErr(errors.New("_JustCache is empty for FollowingListMemberRemoved: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadFollowingListMemberRemovedByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -222,6 +307,20 @@ func (c _StoreImpl) GetGroupByGroupId(GroupId int) (*Group, bool) {
 	}
 	if LogTableSqlReq.Group {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetGroupByGroupId_JustCache(GroupId int) (*Group, bool) {
+	o, ok := RowCache.Get("Group:" + strconv.Itoa(GroupId))
+	if ok {
+		if obj, ok := o.(*Group); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Group {
+		XOLogErr(errors.New("_JustCache is empty for Group: " + strconv.Itoa(GroupId)))
 	}
 	return nil, false
 }
@@ -260,6 +359,20 @@ func (c _StoreImpl) GetGroupMemberById(Id int) (*GroupMember, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetGroupMemberById_JustCache(Id int) (*GroupMember, bool) {
+	o, ok := RowCache.Get("GroupMember:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*GroupMember); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.GroupMember {
+		XOLogErr(errors.New("_JustCache is empty for GroupMember: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadGroupMemberByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -290,6 +403,20 @@ func (c _StoreImpl) GetGroupMessageByMessageId(MessageId int) (*GroupMessage, bo
 	}
 	if LogTableSqlReq.GroupMessage {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetGroupMessageByMessageId_JustCache(MessageId int) (*GroupMessage, bool) {
+	o, ok := RowCache.Get("GroupMessage:" + strconv.Itoa(MessageId))
+	if ok {
+		if obj, ok := o.(*GroupMessage); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.GroupMessage {
+		XOLogErr(errors.New("_JustCache is empty for GroupMessage: " + strconv.Itoa(MessageId)))
 	}
 	return nil, false
 }
@@ -328,6 +455,20 @@ func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetLikeById_JustCache(Id int) (*Like, bool) {
+	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Like); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Like {
+		XOLogErr(errors.New("_JustCache is empty for Like: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadLikeByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -358,6 +499,20 @@ func (c _StoreImpl) GetMediaByMediaId(MediaId int) (*Media, bool) {
 	}
 	if LogTableSqlReq.Media {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetMediaByMediaId_JustCache(MediaId int) (*Media, bool) {
+	o, ok := RowCache.Get("Media:" + strconv.Itoa(MediaId))
+	if ok {
+		if obj, ok := o.(*Media); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Media {
+		XOLogErr(errors.New("_JustCache is empty for Media: " + strconv.Itoa(MediaId)))
 	}
 	return nil, false
 }
@@ -396,6 +551,20 @@ func (c _StoreImpl) GetNotifyByNotifyId(NotifyId int) (*Notify, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetNotifyByNotifyId_JustCache(NotifyId int) (*Notify, bool) {
+	o, ok := RowCache.Get("Notify:" + strconv.Itoa(NotifyId))
+	if ok {
+		if obj, ok := o.(*Notify); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Notify {
+		XOLogErr(errors.New("_JustCache is empty for Notify: " + strconv.Itoa(NotifyId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadNotifyByNotifyIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -426,6 +595,20 @@ func (c _StoreImpl) GetNotifyRemovedById(Id int) (*NotifyRemoved, bool) {
 	}
 	if LogTableSqlReq.NotifyRemoved {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetNotifyRemovedById_JustCache(Id int) (*NotifyRemoved, bool) {
+	o, ok := RowCache.Get("NotifyRemoved:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*NotifyRemoved); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.NotifyRemoved {
+		XOLogErr(errors.New("_JustCache is empty for NotifyRemoved: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -464,6 +647,20 @@ func (c _StoreImpl) GetPhoneContactById(Id int) (*PhoneContact, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetPhoneContactById_JustCache(Id int) (*PhoneContact, bool) {
+	o, ok := RowCache.Get("PhoneContact:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*PhoneContact); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PhoneContact {
+		XOLogErr(errors.New("_JustCache is empty for PhoneContact: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadPhoneContactByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -494,6 +691,20 @@ func (c _StoreImpl) GetPostByPostId(PostId int) (*Post, bool) {
 	}
 	if LogTableSqlReq.Post {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostByPostId_JustCache(PostId int) (*Post, bool) {
+	o, ok := RowCache.Get("Post:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*Post); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Post {
+		XOLogErr(errors.New("_JustCache is empty for Post: " + strconv.Itoa(PostId)))
 	}
 	return nil, false
 }
@@ -532,6 +743,20 @@ func (c _StoreImpl) GetPostKeyById(Id int) (*PostKey, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetPostKeyById_JustCache(Id int) (*PostKey, bool) {
+	o, ok := RowCache.Get("PostKey:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostKey {
+		XOLogErr(errors.New("_JustCache is empty for PostKey: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadPostKeyByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -562,6 +787,20 @@ func (c _StoreImpl) GetSearchClickedById(Id int) (*SearchClicked, bool) {
 	}
 	if LogTableSqlReq.SearchClicked {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSearchClickedById_JustCache(Id int) (*SearchClicked, bool) {
+	o, ok := RowCache.Get("SearchClicked:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SearchClicked); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SearchClicked {
+		XOLogErr(errors.New("_JustCache is empty for SearchClicked: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -600,6 +839,20 @@ func (c _StoreImpl) GetSessionBySessionUuid(SessionUuid string) (*Session, bool)
 	return nil, false
 }
 
+func (c _StoreImpl) GetSessionBySessionUuid_JustCache(SessionUuid string) (*Session, bool) {
+	o, ok := RowCache.Get("Session:" + SessionUuid)
+	if ok {
+		if obj, ok := o.(*Session); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Session {
+		XOLogErr(errors.New("_JustCache is empty for Session: " + SessionUuid))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadSessionBySessionUuids(ids []string) {
 	not_cached := make([]string, 0, len(ids))
 
@@ -630,6 +883,20 @@ func (c _StoreImpl) GetSettingClientByUserId(UserId int) (*SettingClient, bool) 
 	}
 	if LogTableSqlReq.SettingClient {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSettingClientByUserId_JustCache(UserId int) (*SettingClient, bool) {
+	o, ok := RowCache.Get("SettingClient:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*SettingClient); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SettingClient {
+		XOLogErr(errors.New("_JustCache is empty for SettingClient: " + strconv.Itoa(UserId)))
 	}
 	return nil, false
 }
@@ -668,6 +935,20 @@ func (c _StoreImpl) GetSettingNotificationByUserId(UserId int) (*SettingNotifica
 	return nil, false
 }
 
+func (c _StoreImpl) GetSettingNotificationByUserId_JustCache(UserId int) (*SettingNotification, bool) {
+	o, ok := RowCache.Get("SettingNotification:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*SettingNotification); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SettingNotification {
+		XOLogErr(errors.New("_JustCache is empty for SettingNotification: " + strconv.Itoa(UserId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadSettingNotificationByUserIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -698,6 +979,20 @@ func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
 	}
 	if LogTableSqlReq.SuggestedTopPost {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSuggestedTopPostById_JustCache(Id int) (*SuggestedTopPost, bool) {
+	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedTopPost); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLogErr(errors.New("_JustCache is empty for SuggestedTopPost: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -736,6 +1031,20 @@ func (c _StoreImpl) GetSuggestedUserById(Id int) (*SuggestedUser, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetSuggestedUserById_JustCache(Id int) (*SuggestedUser, bool) {
+	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedUser); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SuggestedUser {
+		XOLogErr(errors.New("_JustCache is empty for SuggestedUser: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadSuggestedUserByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -766,6 +1075,20 @@ func (c _StoreImpl) GetTagByTagId(TagId int) (*Tag, bool) {
 	}
 	if LogTableSqlReq.Tag {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetTagByTagId_JustCache(TagId int) (*Tag, bool) {
+	o, ok := RowCache.Get("Tag:" + strconv.Itoa(TagId))
+	if ok {
+		if obj, ok := o.(*Tag); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Tag {
+		XOLogErr(errors.New("_JustCache is empty for Tag: " + strconv.Itoa(TagId)))
 	}
 	return nil, false
 }
@@ -804,6 +1127,20 @@ func (c _StoreImpl) GetTagsPostById(Id int) (*TagsPost, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetTagsPostById_JustCache(Id int) (*TagsPost, bool) {
+	o, ok := RowCache.Get("TagsPost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*TagsPost); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.TagsPost {
+		XOLogErr(errors.New("_JustCache is empty for TagsPost: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadTagsPostByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -834,6 +1171,20 @@ func (c _StoreImpl) GetTriggerLogById(Id int) (*TriggerLog, bool) {
 	}
 	if LogTableSqlReq.TriggerLog {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetTriggerLogById_JustCache(Id int) (*TriggerLog, bool) {
+	o, ok := RowCache.Get("TriggerLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*TriggerLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.TriggerLog {
+		XOLogErr(errors.New("_JustCache is empty for TriggerLog: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -872,6 +1223,20 @@ func (c _StoreImpl) GetUserByUserId(UserId int) (*User, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetUserByUserId_JustCache(UserId int) (*User, bool) {
+	o, ok := RowCache.Get("User:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*User); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.User {
+		XOLogErr(errors.New("_JustCache is empty for User: " + strconv.Itoa(UserId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadUserByUserIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -902,6 +1267,20 @@ func (c _StoreImpl) GetUserMetaInfoById(Id int) (*UserMetaInfo, bool) {
 	}
 	if LogTableSqlReq.UserMetaInfo {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetUserMetaInfoById_JustCache(Id int) (*UserMetaInfo, bool) {
+	o, ok := RowCache.Get("UserMetaInfo:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*UserMetaInfo); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.UserMetaInfo {
+		XOLogErr(errors.New("_JustCache is empty for UserMetaInfo: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -940,6 +1319,20 @@ func (c _StoreImpl) GetUserPasswordByUserId(UserId int) (*UserPassword, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetUserPasswordByUserId_JustCache(UserId int) (*UserPassword, bool) {
+	o, ok := RowCache.Get("UserPassword:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*UserPassword); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.UserPassword {
+		XOLogErr(errors.New("_JustCache is empty for UserPassword: " + strconv.Itoa(UserId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadUserPasswordByUserIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -970,6 +1363,20 @@ func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
 	}
 	if LogTableSqlReq.Chat {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetChatByChatKey_JustCache(ChatKey string) (*Chat, bool) {
+	o, ok := RowCache.Get("Chat:" + ChatKey)
+	if ok {
+		if obj, ok := o.(*Chat); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Chat {
+		XOLogErr(errors.New("_JustCache is empty for Chat: " + ChatKey))
 	}
 	return nil, false
 }
@@ -1008,6 +1415,20 @@ func (c _StoreImpl) GetChatLastMessageByChatKey(ChatKey string) (*ChatLastMessag
 	return nil, false
 }
 
+func (c _StoreImpl) GetChatLastMessageByChatKey_JustCache(ChatKey string) (*ChatLastMessage, bool) {
+	o, ok := RowCache.Get("ChatLastMessage:" + ChatKey)
+	if ok {
+		if obj, ok := o.(*ChatLastMessage); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ChatLastMessage {
+		XOLogErr(errors.New("_JustCache is empty for ChatLastMessage: " + ChatKey))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadChatLastMessageByChatKeys(ids []string) {
 	not_cached := make([]string, 0, len(ids))
 
@@ -1038,6 +1459,20 @@ func (c _StoreImpl) GetChatSyncBySyncId(SyncId int) (*ChatSync, bool) {
 	}
 	if LogTableSqlReq.ChatSync {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetChatSyncBySyncId_JustCache(SyncId int) (*ChatSync, bool) {
+	o, ok := RowCache.Get("ChatSync:" + strconv.Itoa(SyncId))
+	if ok {
+		if obj, ok := o.(*ChatSync); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ChatSync {
+		XOLogErr(errors.New("_JustCache is empty for ChatSync: " + strconv.Itoa(SyncId)))
 	}
 	return nil, false
 }
@@ -1076,6 +1511,20 @@ func (c _StoreImpl) GetDirectMessageByMessageId(MessageId int) (*DirectMessage, 
 	return nil, false
 }
 
+func (c _StoreImpl) GetDirectMessageByMessageId_JustCache(MessageId int) (*DirectMessage, bool) {
+	o, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(MessageId))
+	if ok {
+		if obj, ok := o.(*DirectMessage); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.DirectMessage {
+		XOLogErr(errors.New("_JustCache is empty for DirectMessage: " + strconv.Itoa(MessageId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -1106,6 +1555,20 @@ func (c _StoreImpl) GetHomeById(Id int) (*Home, bool) {
 	}
 	if LogTableSqlReq.Home {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetHomeById_JustCache(Id int) (*Home, bool) {
+	o, ok := RowCache.Get("Home:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Home); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Home {
+		XOLogErr(errors.New("_JustCache is empty for Home: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
@@ -1144,6 +1607,20 @@ func (c _StoreImpl) GetMessageFileByMessageFileId(MessageFileId int) (*MessageFi
 	return nil, false
 }
 
+func (c _StoreImpl) GetMessageFileByMessageFileId_JustCache(MessageFileId int) (*MessageFile, bool) {
+	o, ok := RowCache.Get("MessageFile:" + strconv.Itoa(MessageFileId))
+	if ok {
+		if obj, ok := o.(*MessageFile); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.MessageFile {
+		XOLogErr(errors.New("_JustCache is empty for MessageFile: " + strconv.Itoa(MessageFileId)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadMessageFileByMessageFileIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -1178,6 +1655,20 @@ func (c _StoreImpl) GetFileMsgById(Id int) (*FileMsg, bool) {
 	return nil, false
 }
 
+func (c _StoreImpl) GetFileMsgById_JustCache(Id int) (*FileMsg, bool) {
+	o, ok := RowCache.Get("FileMsg:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FileMsg); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.FileMsg {
+		XOLogErr(errors.New("_JustCache is empty for FileMsg: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
 func (c _StoreImpl) PreLoadFileMsgByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
@@ -1208,6 +1699,20 @@ func (c _StoreImpl) GetFilePostById(Id int) (*FilePost, bool) {
 	}
 	if LogTableSqlReq.FilePost {
 		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetFilePostById_JustCache(Id int) (*FilePost, bool) {
+	o, ok := RowCache.Get("FilePost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*FilePost); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.FilePost {
+		XOLogErr(errors.New("_JustCache is empty for FilePost: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
