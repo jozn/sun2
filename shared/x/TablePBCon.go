@@ -64,6 +64,7 @@ func PBConvPB__Event_To_Event( o *PB_Event) *Event {
       PostId: int ( o.PostId ),
       CommentId: int ( o.CommentId ),
       ActionId: int ( o.ActionId ),
+      Murmur64Hash: int ( o.Murmur64Hash ),
     }
     return n
 }
@@ -77,6 +78,7 @@ func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
       PostId: int64 ( o.PostId ),
       CommentId: int64 ( o.CommentId ),
       ActionId: int64 ( o.ActionId ),
+      Murmur64Hash: int64 ( o.Murmur64Hash ),
     }
     return n
 }

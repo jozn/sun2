@@ -114,22 +114,24 @@ var Comment = struct {
 }
 
 var Event = struct {
-	EventId    string
-	EventType  string
-	ByUserId   string
-	PeerUserId string
-	PostId     string
-	CommentId  string
-	ActionId   string
+	EventId      string
+	EventType    string
+	ByUserId     string
+	PeerUserId   string
+	PostId       string
+	CommentId    string
+	ActionId     string
+	Murmur64Hash string
 }{
 
-	EventId:    "EventId",
-	EventType:  "EventType",
-	ByUserId:   "ByUserId",
-	PeerUserId: "PeerUserId",
-	PostId:     "PostId",
-	CommentId:  "CommentId",
-	ActionId:   "ActionId",
+	EventId:      "EventId",
+	EventType:    "EventType",
+	ByUserId:     "ByUserId",
+	PeerUserId:   "PeerUserId",
+	PostId:       "PostId",
+	CommentId:    "CommentId",
+	ActionId:     "ActionId",
+	Murmur64Hash: "Murmur64Hash",
 }
 
 var FollowingList = struct {

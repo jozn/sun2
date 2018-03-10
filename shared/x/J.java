@@ -29,6 +29,7 @@ public class J {
 		public int PostId;
 		public int CommentId;
 		public int ActionId;
+		public int Murmur64Hash;
 	}
 
 	public static class FollowingList {//oridnal: 3

@@ -48,13 +48,14 @@ type Comment struct {
 */
 // event 'Event'.
 type Event struct {
-	EventId    int `db:"EventId"`
-	EventType  int `db:"EventType"`
-	ByUserId   int `db:"ByUserId"`
-	PeerUserId int `db:"PeerUserId"`
-	PostId     int `db:"PostId"`
-	CommentId  int `db:"CommentId"`
-	ActionId   int `db:"ActionId"`
+	EventId      int `db:"EventId"`
+	EventType    int `db:"EventType"`
+	ByUserId     int `db:"ByUserId"`
+	PeerUserId   int `db:"PeerUserId"`
+	PostId       int `db:"PostId"`
+	CommentId    int `db:"CommentId"`
+	ActionId     int `db:"ActionId"`
+	Murmur64Hash int `db:"Murmur64Hash"`
 
 	_exists, _deleted bool
 }
@@ -68,6 +69,7 @@ type Event struct {
 	PostId: 0,
 	CommentId: 0,
 	ActionId: 0,
+	Murmur64Hash: 0,
 */
 // following_list 'FollowingList'.
 type FollowingList struct {

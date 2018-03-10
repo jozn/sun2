@@ -2,6 +2,7 @@ package event_service
 
 import (
 	"ms/sun/base"
+	"ms/sun/helper"
 	"ms/sun2/shared/x"
 	"time"
 )
@@ -9,6 +10,9 @@ import (
 var saverBuffer = make(chan x.Event, 100000)
 
 func SaveEvent(eventType EventType, event x.Event) {
+	if event.EventId == 0 {
+		event.EventId = helper.NextRowsSeqId()
+	}
 	event.EventType = int(eventType)
 	saverBuffer <- event
 }

@@ -13,13 +13,14 @@ import (
 
 // Manualy copy this to project
 type Event__ struct {
-	EventId    int `json:"EventId"`    // EventId -
-	EventType  int `json:"EventType"`  // EventType -
-	ByUserId   int `json:"ByUserId"`   // ByUserId -
-	PeerUserId int `json:"PeerUserId"` // PeerUserId -
-	PostId     int `json:"PostId"`     // PostId -
-	CommentId  int `json:"CommentId"`  // CommentId -
-	ActionId   int `json:"ActionId"`   // ActionId -
+	EventId      int `json:"EventId"`      // EventId -
+	EventType    int `json:"EventType"`    // EventType -
+	ByUserId     int `json:"ByUserId"`     // ByUserId -
+	PeerUserId   int `json:"PeerUserId"`   // PeerUserId -
+	PostId       int `json:"PostId"`       // PostId -
+	CommentId    int `json:"CommentId"`    // CommentId -
+	ActionId     int `json:"ActionId"`     // ActionId -
+	Murmur64Hash int `json:"Murmur64Hash"` // Murmur64Hash -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -45,16 +46,16 @@ func (e *Event) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
 	if err != nil {
 		return err
 	}
@@ -74,16 +75,16 @@ func (e *Event) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
 	if err != nil {
 		if LogTableSqlReq.Event {
 			XOLogErr(err)
@@ -114,14 +115,14 @@ func (e *Event) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.event SET ` +
-		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, ActionId = ?` +
+		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, ActionId = ?, Murmur64Hash = ?` +
 		` WHERE EventId = ?`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.EventId)
+		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.EventId)
 	}
-	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.EventId)
+	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.EventId)
 
 	if LogTableSqlReq.Event {
 		XOLogErr(err)
@@ -963,6 +964,111 @@ func (d *__Event_Deleter) ActionId_GE(val int) *__Event_Deleter {
 	return d
 }
 
+func (u *__Event_Deleter) Murmur64Hash_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) Murmur64Hash_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) Murmur64Hash_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) Murmur64Hash_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__Event_Updater) Or() *__Event_Updater {
 	u.whereSep = " OR "
@@ -1699,6 +1805,111 @@ func (d *__Event_Updater) ActionId_GE(val int) *__Event_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ActionId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Updater) Murmur64Hash_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) Murmur64Hash_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2445,6 +2656,111 @@ func (d *__Event_Selector) ActionId_GE(val int) *__Event_Selector {
 	return d
 }
 
+func (u *__Event_Selector) Murmur64Hash_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) Murmur64Hash_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) Murmur64Hash_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) Murmur64Hash_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -2604,6 +2920,27 @@ func (u *__Event_Updater) ActionId_Increment(count int) *__Event_Updater {
 
 //string
 
+//ints
+
+func (u *__Event_Updater) Murmur64Hash(newVal int) *__Event_Updater {
+	u.updates[" Murmur64Hash = ? "] = newVal
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		u.updates[" Murmur64Hash = Murmur64Hash+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Murmur64Hash = Murmur64Hash-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -2711,6 +3048,21 @@ func (u *__Event_Selector) OrderBy_ActionId_Asc() *__Event_Selector {
 
 func (u *__Event_Selector) Select_ActionId() *__Event_Selector {
 	u.selectCol = "ActionId"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_Murmur64Hash_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY Murmur64Hash DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_Murmur64Hash_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY Murmur64Hash ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_Murmur64Hash() *__Event_Selector {
+	u.selectCol = "Murmur64Hash"
 	return u
 }
 
@@ -3022,13 +3374,13 @@ func MassInsert_Event(rows []Event, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash" +
 		") VALUES " + insVals
 
 	// run query
@@ -3043,6 +3395,7 @@ func MassInsert_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.ActionId)
+		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -3063,12 +3416,12 @@ func MassInsert_Event(rows []Event, db XODB) error {
 func MassReplace_Event(rows []Event, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash" +
 		") VALUES " + insVals
 
 	// run query
@@ -3083,6 +3436,7 @@ func MassReplace_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.ActionId)
+		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -3101,6 +3455,8 @@ func MassReplace_Event(rows []Event, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

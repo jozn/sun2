@@ -33,6 +33,7 @@ message PB_Event {
     int64 PostId = 5;
     int64 CommentId = 6;
     int64 ActionId = 7;
+    int64 Murmur64Hash = 8;
 }
 message PB_FollowingList {
     int32 Id = 1;
