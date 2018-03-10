@@ -340,12 +340,14 @@ type Post struct {
 	UserId         int    `db:"UserId"`
 	PostTypeEnum   int    `db:"PostTypeEnum"`
 	MediaId        int    `db:"MediaId"`
+	PostKey        string `db:"PostKey"`
 	Text           string `db:"Text"`
 	RichText       string `db:"RichText"`
 	MediaCount     int    `db:"MediaCount"`
 	SharedTo       int    `db:"SharedTo"`
 	DisableComment int    `db:"DisableComment"`
 	HasTag         int    `db:"HasTag"`
+	Seq            int    `db:"Seq"`
 	CommentsCount  int    `db:"CommentsCount"`
 	LikesCount     int    `db:"LikesCount"`
 	ViewsCount     int    `db:"ViewsCount"`
@@ -362,12 +364,14 @@ type Post struct {
 	UserId: 0,
 	PostTypeEnum: 0,
 	MediaId: 0,
+	PostKey: "",
 	Text: "",
 	RichText: "",
 	MediaCount: 0,
 	SharedTo: 0,
 	DisableComment: 0,
 	HasTag: 0,
+	Seq: 0,
 	CommentsCount: 0,
 	LikesCount: 0,
 	ViewsCount: 0,
@@ -647,6 +651,7 @@ type User struct {
 	Email                string `db:"Email"`
 	PasswordHash         string `db:"PasswordHash"`
 	PasswordSalt         string `db:"PasswordSalt"`
+	PostSeq              int    `db:"PostSeq"`
 	FollowersCount       int    `db:"FollowersCount"`
 	FollowingCount       int    `db:"FollowingCount"`
 	PostsCount           int    `db:"PostsCount"`
@@ -681,6 +686,7 @@ type User struct {
 	Email: "",
 	PasswordHash: "",
 	PasswordSalt: "",
+	PostSeq: 0,
 	FollowersCount: 0,
 	FollowingCount: 0,
 	PostsCount: 0,

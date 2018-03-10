@@ -3,6 +3,7 @@ package model_service
 import (
 	"ms/sun/base"
 	"ms/sun/helper"
+	"ms/sun2/servises/event_service"
 	"ms/sun2/servises/memcache_service"
 	"ms/sun2/shared/x"
 )
@@ -31,8 +32,17 @@ func Follow(UserId, FollowedPeerUserId int) int {
 		Counter.UpdateUserFollowingCounts(UserId, 1)
 		Counter.UpdateUserFollowersCounts(FollowedPeerUserId, 1)
 
-		Notify_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
-		Action_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
+		hash := hashFollowed(UserId, FollowedPeerUserId)
+		event := x.Event{
+			ByUserId:     UserId,
+			PeerUserId:   FollowedPeerUserId,
+			ActionId:     helper.NextRowsSeqId(),
+			Murmur64Hash: hash,
+		}
+		event_service.SaveEvent(event_service.FOLLOWED_USER_EVENT, event)
+
+		//Notify_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
+		//Action_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
 		return 1
 	}
 	return 0
@@ -55,8 +65,17 @@ func UnFollow(UserId, FollowedPeerUserId int) {
 		Counter.UpdateUserFollowingCounts(UserId, -1)
 		Counter.UpdateUserFollowersCounts(FollowedPeerUserId, -1)
 
-		Notify_OnUnFollowed(UserId, FollowedPeerUserId)
-		Action_OnUnFollowed(UserId, FollowedPeerUserId, flm.Id)
+		hash := hashFollowed(UserId, FollowedPeerUserId)
+		event := x.Event{
+			ByUserId:     UserId,
+			PeerUserId:   FollowedPeerUserId,
+			ActionId:     helper.NextRowsSeqId(),
+			Murmur64Hash: hash,
+		}
+		event_service.SaveEvent(event_service.UNFOLLOWED_USER_EVENT, event)
+
+		//Notify_OnUnFollowed(UserId, FollowedPeerUserId)
+		//Action_OnUnFollowed(UserId, FollowedPeerUserId, flm.Id)
 	}
 	//n, err := NewFollowingListMember_Deleter().UserId_Eq(UserId).FollowedUserId_Eq(FollowedPeerUserId).Delete(base.DB)
 }

@@ -152,12 +152,14 @@ public class J {
 		public int UserId;
 		public int PostTypeEnum;
 		public int MediaId;
+		public String PostKey;
 		public String Text;
 		public String RichText;
 		public int MediaCount;
 		public int SharedTo;
 		public int DisableComment;
 		public int HasTag;
+		public int Seq;
 		public int CommentsCount;
 		public int LikesCount;
 		public int ViewsCount;
@@ -294,6 +296,7 @@ public class J {
 		public String Email;
 		public String PasswordHash;
 		public String PasswordSalt;
+		public int PostSeq;
 		public int FollowersCount;
 		public int FollowingCount;
 		public int PostsCount;

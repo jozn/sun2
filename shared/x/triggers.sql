@@ -288,7 +288,7 @@ CREATE TRIGGER likes_OnDeleteLogger AFTER DELETE ON likes
 $$
 
 
- #### delimiter ;
+ #### delimiter ;*/
 ################################ Media ######################################
 
 /* #### delimiter $$

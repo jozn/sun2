@@ -17,12 +17,14 @@ type Post__ struct {
 	UserId         int    `json:"UserId"`         // UserId -
 	PostTypeEnum   int    `json:"PostTypeEnum"`   // PostTypeEnum -
 	MediaId        int    `json:"MediaId"`        // MediaId -
+	PostKey        string `json:"PostKey"`        // PostKey -
 	Text           string `json:"Text"`           // Text -
 	RichText       string `json:"RichText"`       // RichText -
 	MediaCount     int    `json:"MediaCount"`     // MediaCount -
 	SharedTo       int    `json:"SharedTo"`       // SharedTo -
 	DisableComment int    `json:"DisableComment"` // DisableComment -
 	HasTag         int    `json:"HasTag"`         // HasTag -
+	Seq            int    `json:"Seq"`            // Seq -
 	CommentsCount  int    `json:"CommentsCount"`  // CommentsCount -
 	LikesCount     int    `json:"LikesCount"`     // LikesCount -
 	ViewsCount     int    `json:"ViewsCount"`     // ViewsCount -
@@ -54,16 +56,16 @@ func (p *Post) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		return err
 	}
@@ -83,16 +85,16 @@ func (p *Post) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		if LogTableSqlReq.Post {
 			XOLogErr(err)
@@ -123,14 +125,14 @@ func (p *Post) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post SET ` +
-		`UserId = ?, PostTypeEnum = ?, MediaId = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, HasTag = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
+		`UserId = ?, PostTypeEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
 		` WHERE PostId = ?`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 
 	if LogTableSqlReq.Post {
 		XOLogErr(err)
@@ -1072,6 +1074,111 @@ func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " HasTag >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Deleter) Seq_In(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) Seq_Ins(ins ...int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) Seq_NotIn(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Deleter) Seq_Eq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Seq_NotEq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Seq_LT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Seq_LE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Seq_GT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Seq_GE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2553,6 +2660,111 @@ func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
 	return d
 }
 
+func (u *__Post_Updater) Seq_In(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) Seq_Ins(ins ...int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) Seq_NotIn(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Updater) Seq_Eq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Seq_NotEq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Seq_LT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Seq_LE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Seq_GT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Seq_GE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Updater) CommentsCount_In(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4029,6 +4241,111 @@ func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
 	return d
 }
 
+func (u *__Post_Selector) Seq_In(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) Seq_Ins(ins ...int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) Seq_NotIn(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Selector) Seq_Eq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Seq_NotEq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Seq_LT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Seq_LE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Seq_GT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Seq_GE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Selector) CommentsCount_In(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4663,6 +4980,66 @@ func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
 
 ////////ints
 
+func (u *__Post_Deleter) PostKey_In(ins []string) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) PostKey_NotIn(ins []string) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Post_Deleter) PostKey_Like(val string) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Deleter) PostKey_Eq(val string) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostKey_NotEq(val string) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Deleter) Text_In(ins []string) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4785,6 +5162,66 @@ func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
 
 ////////ints
 
+func (u *__Post_Updater) PostKey_In(ins []string) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) PostKey_NotIn(ins []string) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Post_Updater) PostKey_Like(val string) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Updater) PostKey_Eq(val string) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostKey_NotEq(val string) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Updater) Text_In(ins []string) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4906,6 +5343,66 @@ func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
 }
 
 ////////ints
+
+func (u *__Post_Selector) PostKey_In(ins []string) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) PostKey_NotIn(ins []string) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Post_Selector) PostKey_Like(val string) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Selector) PostKey_Eq(val string) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostKey_NotEq(val string) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__Post_Selector) Text_In(ins []string) *__Post_Selector {
 	w := whereClause{}
@@ -5118,6 +5615,14 @@ func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 //ints
 
 //string
+func (u *__Post_Updater) PostKey(newVal string) *__Post_Updater {
+	u.updates[" PostKey = ? "] = newVal
+	return u
+}
+
+//ints
+
+//string
 func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
 	u.updates[" Text = ? "] = newVal
 	return u
@@ -5208,6 +5713,27 @@ func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
 
 	if count < 0 {
 		u.updates[" HasTag = HasTag-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Post_Updater) Seq(newVal int) *__Post_Updater {
+	u.updates[" Seq = ? "] = newVal
+	return u
+}
+
+func (u *__Post_Updater) Seq_Increment(count int) *__Post_Updater {
+	if count > 0 {
+		u.updates[" Seq = Seq+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Seq = Seq-? "] = -(count) //make it positive
 	}
 
 	return u
@@ -5406,6 +5932,21 @@ func (u *__Post_Selector) Select_MediaId() *__Post_Selector {
 	return u
 }
 
+func (u *__Post_Selector) OrderBy_PostKey_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostKey DESC "
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_PostKey_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostKey ASC "
+	return u
+}
+
+func (u *__Post_Selector) Select_PostKey() *__Post_Selector {
+	u.selectCol = "PostKey"
+	return u
+}
+
 func (u *__Post_Selector) OrderBy_Text_Desc() *__Post_Selector {
 	u.orderBy = " ORDER BY Text DESC "
 	return u
@@ -5493,6 +6034,21 @@ func (u *__Post_Selector) OrderBy_HasTag_Asc() *__Post_Selector {
 
 func (u *__Post_Selector) Select_HasTag() *__Post_Selector {
 	u.selectCol = "HasTag"
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_Seq_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY Seq DESC "
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_Seq_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY Seq ASC "
+	return u
+}
+
+func (u *__Post_Selector) Select_Seq() *__Post_Selector {
+	u.selectCol = "Seq"
 	return u
 }
 
@@ -5894,13 +6450,13 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -5912,12 +6468,14 @@ func MassInsert_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostTypeEnum)
 		vals = append(vals, row.MediaId)
+		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.RichText)
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
 		vals = append(vals, row.HasTag)
+		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
@@ -5944,12 +6502,12 @@ func MassInsert_Post(rows []Post, db XODB) error {
 func MassReplace_Post(rows []Post, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -5961,12 +6519,14 @@ func MassReplace_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostTypeEnum)
 		vals = append(vals, row.MediaId)
+		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.RichText)
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
 		vals = append(vals, row.HasTag)
+		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
@@ -5991,6 +6551,10 @@ func MassReplace_Post(rows []Post, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
 
 //
 

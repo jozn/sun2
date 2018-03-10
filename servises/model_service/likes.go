@@ -1,8 +1,10 @@
 package model_service
 
 import (
+	"golang.org/x/tools/go/gcimporter15/testdata"
 	"ms/sun/base"
 	"ms/sun/helper"
+	"ms/sun2/servises/event_service"
 	"ms/sun2/servises/memcache_service"
 	"ms/sun2/shared/x"
 )
@@ -24,8 +26,17 @@ func Like_LikePost(UserId, PostId int) {
 	if err == nil {
 		x.NewPost_Updater().LikesCount_Increment(1).PostId_Eq(PostId).Update(base.DB)
 		memcache_service.AddToUserLikedPosts(UserId, PostId)
-		Notify_OnPostLiked(l)
-		Action_OnPostLiked(l)
+
+		hash := hashPostLiked(UserId, PostId)
+		event := x.Event{
+			ByUserId:     UserId,
+			PeerUserId:   p.UserId,
+			ActionId:     helper.NextRowsSeqId(),
+			Murmur64Hash: hash,
+		}
+		event_service.SaveEvent(event_service.LIKED_POST_EVENT, event)
+		//Notify_OnPostLiked(l)
+		//Action_OnPostLiked(l)
 	}
 }
 
@@ -39,7 +50,16 @@ func Like_UnlikePost(UserId, PostId int) {
 	if err == nil {
 		memcache_service.DeleteFromUserLikedPosts(UserId, PostId)
 		x.NewPost_Updater().LikesCount_Increment(-1).PostId_Eq(PostId).Update(base.DB)
-		Notify_OnPostUnLiked(l)
-		Action_OnPostUnLiked(l)
+
+		hash := hashPostLiked(UserId, PostId)
+		event := x.Event{
+			ByUserId:     UserId,
+			PeerUserId:   0,
+			ActionId:     helper.NextRowsSeqId(),
+			Murmur64Hash: hash,
+		}
+		event_service.SaveEvent(event_service.UNLIKED_POST_EVENT, event)
+		//Notify_OnPostUnLiked(l)
+		//Action_OnPostUnLiked(l)
 	}
 }

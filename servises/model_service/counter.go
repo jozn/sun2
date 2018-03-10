@@ -24,3 +24,7 @@ func (t _cntImpl) UpdateUserPostsCounts(UserId int, cnt int) {
 func (t _cntImpl) IncerPostCommentsCount(PostId, CountDiff int) {
 	x.NewPost_Updater().PostId_Eq(PostId).CommentsCount_Increment(CountDiff).Update(base.DB)
 }
+
+func (t _cntImpl) IncermentUserPostSeq(UserId int) {
+    x.NewUser_Updater().UserId_Eq(UserId).PostSeq_Increment(1).Update(base.DB)
+}

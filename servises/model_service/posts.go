@@ -18,6 +18,11 @@ type PostAddParam struct {
 
 func AddPost(pp PostAddParam) (int, error) {
 	var err error
+	user, err := x.UserByUserId(base.DB, pp.UserId)
+	if err != nil {
+		return 0, err
+	}
+	user.PostSeq += 1
 	post := &x.Post{
 		PostId:         helper.NextRowsSeqId(),
 		UserId:         pp.UserId,
@@ -29,6 +34,7 @@ func AddPost(pp PostAddParam) (int, error) {
 		SharedTo:       0,
 		DisableComment: 0,
 		HasTag:         0,
+		Seq:            user.PostSeq,
 		CommentsCount:  0,
 		LikesCount:     0,
 		ViewsCount:     1,
@@ -75,6 +81,7 @@ func AddPost(pp PostAddParam) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	Counter.IncermentUserPostSeq(pp.UserId)
 	return post.PostId, nil
 }
 

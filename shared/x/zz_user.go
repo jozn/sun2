@@ -27,6 +27,7 @@ type User__ struct {
 	Email                string `json:"Email"`                // Email -
 	PasswordHash         string `json:"PasswordHash"`         // PasswordHash -
 	PasswordSalt         string `json:"PasswordSalt"`         // PasswordSalt -
+	PostSeq              int    `json:"PostSeq"`              // PostSeq -
 	FollowersCount       int    `json:"FollowersCount"`       // FollowersCount -
 	FollowingCount       int    `json:"FollowingCount"`       // FollowingCount -
 	PostsCount           int    `json:"PostsCount"`           // PostsCount -
@@ -66,16 +67,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -108,16 +109,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -159,14 +160,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -898,6 +899,111 @@ func (d *__User_Deleter) Phone_GE(val int) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Phone >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) PostSeq_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PostSeq_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PostSeq_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) PostSeq_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PostSeq_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PostSeq_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PostSeq_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PostSeq_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PostSeq_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2904,6 +3010,111 @@ func (d *__User_Updater) Phone_GE(val int) *__User_Updater {
 	return d
 }
 
+func (u *__User_Updater) PostSeq_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PostSeq_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PostSeq_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) PostSeq_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PostSeq_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PostSeq_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PostSeq_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PostSeq_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PostSeq_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Updater) FollowersCount_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4900,6 +5111,111 @@ func (d *__User_Selector) Phone_GE(val int) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Phone >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) PostSeq_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PostSeq_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PostSeq_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) PostSeq_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PostSeq_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PostSeq_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PostSeq_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PostSeq_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PostSeq_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostSeq >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -8094,6 +8410,27 @@ func (u *__User_Updater) PasswordSalt(newVal string) *__User_Updater {
 
 //ints
 
+func (u *__User_Updater) PostSeq(newVal int) *__User_Updater {
+	u.updates[" PostSeq = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) PostSeq_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" PostSeq = PostSeq+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" PostSeq = PostSeq-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__User_Updater) FollowersCount(newVal int) *__User_Updater {
 	u.updates[" FollowersCount = ? "] = newVal
 	return u
@@ -8585,6 +8922,21 @@ func (u *__User_Selector) OrderBy_PasswordSalt_Asc() *__User_Selector {
 
 func (u *__User_Selector) Select_PasswordSalt() *__User_Selector {
 	u.selectCol = "PasswordSalt"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_PostSeq_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY PostSeq DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_PostSeq_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY PostSeq ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_PostSeq() *__User_Selector {
+	u.selectCol = "PostSeq"
 	return u
 }
 
@@ -9107,12 +9459,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 
 	// run query
@@ -9133,6 +9485,7 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.Email)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
+		vals = append(vals, row.PostSeq)
 		vals = append(vals, row.FollowersCount)
 		vals = append(vals, row.FollowingCount)
 		vals = append(vals, row.PostsCount)
@@ -9167,12 +9520,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 
 	// run query
@@ -9193,6 +9546,7 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.Email)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
+		vals = append(vals, row.PostSeq)
 		vals = append(vals, row.FollowersCount)
 		vals = append(vals, row.FollowingCount)
 		vals = append(vals, row.PostsCount)
@@ -9225,6 +9579,8 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

@@ -358,12 +358,14 @@ var Post = struct {
 	UserId         string
 	PostTypeEnum   string
 	MediaId        string
+	PostKey        string
 	Text           string
 	RichText       string
 	MediaCount     string
 	SharedTo       string
 	DisableComment string
 	HasTag         string
+	Seq            string
 	CommentsCount  string
 	LikesCount     string
 	ViewsCount     string
@@ -376,12 +378,14 @@ var Post = struct {
 	UserId:         "UserId",
 	PostTypeEnum:   "PostTypeEnum",
 	MediaId:        "MediaId",
+	PostKey:        "PostKey",
 	Text:           "Text",
 	RichText:       "RichText",
 	MediaCount:     "MediaCount",
 	SharedTo:       "SharedTo",
 	DisableComment: "DisableComment",
 	HasTag:         "HasTag",
+	Seq:            "Seq",
 	CommentsCount:  "CommentsCount",
 	LikesCount:     "LikesCount",
 	ViewsCount:     "ViewsCount",
@@ -621,6 +625,7 @@ var User = struct {
 	Email                string
 	PasswordHash         string
 	PasswordSalt         string
+	PostSeq              string
 	FollowersCount       string
 	FollowingCount       string
 	PostsCount           string
@@ -651,6 +656,7 @@ var User = struct {
 	Email:                "Email",
 	PasswordHash:         "PasswordHash",
 	PasswordSalt:         "PasswordSalt",
+	PostSeq:              "PostSeq",
 	FollowersCount:       "FollowersCount",
 	FollowingCount:       "FollowingCount",
 	PostsCount:           "PostsCount",

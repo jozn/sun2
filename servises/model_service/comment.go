@@ -3,8 +3,10 @@ package model_service
 import (
 	"ms/sun/base"
 	"ms/sun/helper"
+	"ms/sun2/servises/event_service"
 	"ms/sun2/shared/x"
 )
+
 func Comment_Add(UserId, PostId int, Text string) x.Comment {
 	cmt := x.Comment{
 		CommentId:   helper.NextRowsSeqId(),
@@ -21,8 +23,17 @@ func Comment_Add(UserId, PostId int, Text string) x.Comment {
 		Counter.IncerPostCommentsCount(PostId, 1)
 		post, ok := x.Store.GetPostByPostId(PostId)
 		if ok {
-			Notify_OnPostCommented(&cmt, post)
-			Action_OnPostCommentAdd(&cmt, post)
+			hash := hashPostCommented(cmt.PostId, cmt.CommentId)
+			event := x.Event{
+				ByUserId:     UserId,
+				PeerUserId:   post.UserId,
+				PostId:       cmt.PostId,
+				CommentId:    cmt.CommentId,
+				ActionId:     helper.NextRowsSeqId(),
+				Murmur64Hash: hash,
+			}
+
+			event_service.SaveEvent(event_service.COMMENTED_POST_EVENT, event)
 		}
 	}
 
@@ -32,12 +43,22 @@ func Comment_Add(UserId, PostId int, Text string) x.Comment {
 func Comment_Delete(UserId, PostId, CommentId int) bool {
 	post, _ := x.Store.GetPostByPostId(PostId)
 
-	com, err := x.NewComment_Selector().CommentId_Eq(CommentId).UserId_Eq(UserId).PostId_Eq(PostId).GetRow(base.DB)
+	cmt, err := x.NewComment_Selector().CommentId_Eq(CommentId).UserId_Eq(UserId).PostId_Eq(PostId).GetRow(base.DB)
 	if err != nil {
-		com.Delete(base.DB)
+		cmt.Delete(base.DB)
 		Counter.IncerPostCommentsCount(PostId, -1)
-		Notify_OnPostCommentedDeleted(com, post)
-		Action_OnPostCommentDeleted(com, post)
+
+		hash := hashPostCommented(post.PostId, cmt.CommentId)
+		event := x.Event{
+			ByUserId:     UserId,
+			PeerUserId:   post.UserId,
+			PostId:       cmt.PostId,
+			CommentId:    cmt.CommentId,
+			ActionId:     helper.NextRowsSeqId(),
+			Murmur64Hash: hash,
+		}
+
+		event_service.SaveEvent(event_service.UNCOMMENTED_POST_EVENT, event)
 		return true
 	}
 
