@@ -2952,6 +2952,11 @@ func (u *__FollowingList_Selector) Offset(num int) *__FollowingList_Selector {
 	return u
 }
 
+func (u *__FollowingList_Selector) Order_Rand() *__FollowingList_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__FollowingList_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

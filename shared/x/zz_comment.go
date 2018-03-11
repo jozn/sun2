@@ -2224,6 +2224,11 @@ func (u *__Comment_Selector) Offset(num int) *__Comment_Selector {
 	return u
 }
 
+func (u *__Comment_Selector) Order_Rand() *__Comment_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Comment_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

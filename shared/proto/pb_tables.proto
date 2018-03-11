@@ -161,7 +161,8 @@ message PB_Post {
 }
 message PB_PostKey {
     int32 Id = 1;
-    string Key = 2;
+    string PostKeyStr = 2;
+    int32 Used = 3;
 }
 message PB_SearchClicked {
     int64 Id = 1;

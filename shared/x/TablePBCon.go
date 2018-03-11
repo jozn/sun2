@@ -443,7 +443,8 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
 func PBConvPB__PostKey_To_PostKey( o *PB_PostKey) *PostKey {
      n := &PostKey{
       Id: int ( o.Id ),
-      Key: string ( o.Key ),
+      PostKeyStr: string ( o.PostKeyStr ),
+      Used: int ( o.Used ),
     }
     return n
 }
@@ -451,7 +452,8 @@ func PBConvPB__PostKey_To_PostKey( o *PB_PostKey) *PostKey {
 func PBConvPB_PostKey_To_PostKey ( o *PostKey) *PB_PostKey {
      n := &PB_PostKey{
       Id: int32 ( o.Id ),
-      Key: string ( o.Key ),
+      PostKeyStr: string ( o.PostKeyStr ),
+      Used: int32 ( o.Used ),
     }
     return n
 }

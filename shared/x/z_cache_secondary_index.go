@@ -531,6 +531,59 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 
 // PostKey - PRIMARY
 
+//field//field//field
+
+///// Generated from index 'PostKey'.
+func (c _StoreImpl) PostKey_ByPostKeyStr(PostKeyStr string) (*PostKey, bool) {
+	o, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostKey_Selector().PostKeyStr_Eq(PostKeyStr).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostKey_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostKey_ByPostKeyStr_JustCache(PostKeyStr string) (*PostKey, bool) {
+	o, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostKey_ByPostKeyStrs(PostKeyStrs []string) {
+	not_cached := make([]string, 0, len(PostKeyStrs))
+
+	for _, id := range PostKeyStrs {
+		_, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostKey_Selector().PostKeyStr_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostKey_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
+			}
+		}
+	}
+}
+
 // SearchClicked - PRIMARY
 
 // Session - PRIMARY

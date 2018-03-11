@@ -1208,6 +1208,11 @@ func (u *__FilePost_Selector) Offset(num int) *__FilePost_Selector {
 	return u
 }
 
+func (u *__FilePost_Selector) Order_Rand() *__FilePost_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__FilePost_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

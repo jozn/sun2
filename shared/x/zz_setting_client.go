@@ -7300,6 +7300,11 @@ func (u *__SettingClient_Selector) Offset(num int) *__SettingClient_Selector {
 	return u
 }
 
+func (u *__SettingClient_Selector) Order_Rand() *__SettingClient_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__SettingClient_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

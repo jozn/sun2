@@ -2044,6 +2044,11 @@ func (u *__FollowingListMemberRemoved_Selector) Offset(num int) *__FollowingList
 	return u
 }
 
+func (u *__FollowingListMemberRemoved_Selector) Order_Rand() *__FollowingListMemberRemoved_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__FollowingListMemberRemoved_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

@@ -1340,6 +1340,11 @@ func (u *__NotifyRemoved_Selector) Offset(num int) *__NotifyRemoved_Selector {
 	return u
 }
 
+func (u *__NotifyRemoved_Selector) Order_Rand() *__NotifyRemoved_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__NotifyRemoved_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

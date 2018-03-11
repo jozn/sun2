@@ -3356,6 +3356,11 @@ func (u *__DirectMessage_Selector) Offset(num int) *__DirectMessage_Selector {
 	return u
 }
 
+func (u *__DirectMessage_Selector) Order_Rand() *__DirectMessage_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__DirectMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

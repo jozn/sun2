@@ -1896,6 +1896,11 @@ func (u *__Tag_Selector) Offset(num int) *__Tag_Selector {
 	return u
 }
 
+func (u *__Tag_Selector) Order_Rand() *__Tag_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Tag_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

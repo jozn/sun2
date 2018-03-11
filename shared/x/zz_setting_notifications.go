@@ -7152,6 +7152,11 @@ func (u *__SettingNotification_Selector) Offset(num int) *__SettingNotification_
 	return u
 }
 
+func (u *__SettingNotification_Selector) Order_Rand() *__SettingNotification_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__SettingNotification_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

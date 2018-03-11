@@ -381,8 +381,9 @@ type Post struct {
 */
 // post_keys 'PostKey'.
 type PostKey struct {
-	Id  int    `db:"Id"`
-	Key string `db:"Key"`
+	Id         int    `db:"Id"`
+	PostKeyStr string `db:"PostKeyStr"`
+	Used       int    `db:"Used"`
 
 	_exists, _deleted bool
 }
@@ -390,7 +391,8 @@ type PostKey struct {
 /*
 := &x.PostKey {
 	Id: 0,
-	Key: "",
+	PostKeyStr: "",
+	Used: 0,
 */
 // search_clicked 'SearchClicked'.
 type SearchClicked struct {

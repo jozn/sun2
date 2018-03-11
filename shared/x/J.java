@@ -170,7 +170,8 @@ public class J {
 
 	public static class PostKey {//oridnal: 15
 		public int Id;
-		public String Key;
+		public String PostKeyStr;
+		public int Used;
 	}
 
 	public static class SearchClicked {//oridnal: 16

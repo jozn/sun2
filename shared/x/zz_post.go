@@ -6152,6 +6152,11 @@ func (u *__Post_Selector) Offset(num int) *__Post_Selector {
 	return u
 }
 
+func (u *__Post_Selector) Order_Rand() *__Post_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Post_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

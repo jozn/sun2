@@ -2600,6 +2600,11 @@ func (u *__GroupMember_Selector) Offset(num int) *__GroupMember_Selector {
 	return u
 }
 
+func (u *__GroupMember_Selector) Order_Rand() *__GroupMember_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__GroupMember_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

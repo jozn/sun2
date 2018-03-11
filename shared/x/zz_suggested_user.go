@@ -1712,6 +1712,11 @@ func (u *__SuggestedUser_Selector) Offset(num int) *__SuggestedUser_Selector {
 	return u
 }
 
+func (u *__SuggestedUser_Selector) Order_Rand() *__SuggestedUser_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__SuggestedUser_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

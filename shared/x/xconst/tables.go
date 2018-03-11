@@ -395,12 +395,14 @@ var Post = struct {
 }
 
 var PostKey = struct {
-	Id  string
-	Key string
+	Id         string
+	PostKeyStr string
+	Used       string
 }{
 
-	Id:  "Id",
-	Key: "Key",
+	Id:         "Id",
+	PostKeyStr: "PostKeyStr",
+	Used:       "Used",
 }
 
 var SearchClicked = struct {

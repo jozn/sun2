@@ -3212,6 +3212,11 @@ func (u *__PhoneContact_Selector) Offset(num int) *__PhoneContact_Selector {
 	return u
 }
 
+func (u *__PhoneContact_Selector) Order_Rand() *__PhoneContact_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__PhoneContact_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

@@ -2780,6 +2780,11 @@ func (u *__GroupMessage_Selector) Offset(num int) *__GroupMessage_Selector {
 	return u
 }
 
+func (u *__GroupMessage_Selector) Order_Rand() *__GroupMessage_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__GroupMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

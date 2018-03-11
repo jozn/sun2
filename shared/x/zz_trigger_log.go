@@ -1952,6 +1952,11 @@ func (u *__TriggerLog_Selector) Offset(num int) *__TriggerLog_Selector {
 	return u
 }
 
+func (u *__TriggerLog_Selector) Order_Rand() *__TriggerLog_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__TriggerLog_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

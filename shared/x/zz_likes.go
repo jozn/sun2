@@ -2372,6 +2372,11 @@ func (u *__Like_Selector) Offset(num int) *__Like_Selector {
 	return u
 }
 
+func (u *__Like_Selector) Order_Rand() *__Like_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Like_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

@@ -3596,6 +3596,11 @@ func (u *__Session_Selector) Offset(num int) *__Session_Selector {
 	return u
 }
 
+func (u *__Session_Selector) Order_Rand() *__Session_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Session_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

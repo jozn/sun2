@@ -3688,6 +3688,11 @@ func (u *__MessageFile_Selector) Offset(num int) *__MessageFile_Selector {
 	return u
 }
 
+func (u *__MessageFile_Selector) Order_Rand() *__MessageFile_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__MessageFile_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

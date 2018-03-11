@@ -3356,6 +3356,11 @@ func (u *__ChatSync_Selector) Offset(num int) *__ChatSync_Selector {
 	return u
 }
 
+func (u *__ChatSync_Selector) Order_Rand() *__ChatSync_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__ChatSync_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

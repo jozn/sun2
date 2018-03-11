@@ -1040,6 +1040,11 @@ func (u *__ChatLastMessage_Selector) Offset(num int) *__ChatLastMessage_Selector
 	return u
 }
 
+func (u *__ChatLastMessage_Selector) Order_Rand() *__ChatLastMessage_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__ChatLastMessage_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

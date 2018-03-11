@@ -1692,6 +1692,11 @@ func (u *__UserMetaInfo_Selector) Offset(num int) *__UserMetaInfo_Selector {
 	return u
 }
 
+func (u *__UserMetaInfo_Selector) Order_Rand() *__UserMetaInfo_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__UserMetaInfo_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

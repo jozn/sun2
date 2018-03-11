@@ -28,6 +28,7 @@ func AddPost(pp PostAddParam) (int, error) {
 		UserId:         pp.UserId,
 		PostTypeEnum:   int(x.PostTypeEnum_POST_TEXT),
 		MediaId:        0,
+		PostKey:        <-nextPostKey,
 		Text:           pp.Text,
 		RichText:       "",
 		MediaCount:     0,

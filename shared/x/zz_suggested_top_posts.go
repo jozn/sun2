@@ -988,6 +988,11 @@ func (u *__SuggestedTopPost_Selector) Offset(num int) *__SuggestedTopPost_Select
 	return u
 }
 
+func (u *__SuggestedTopPost_Selector) Order_Rand() *__SuggestedTopPost_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__SuggestedTopPost_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)

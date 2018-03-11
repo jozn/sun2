@@ -13,8 +13,9 @@ import (
 
 // Manualy copy this to project
 type PostKey__ struct {
-	Id  int    `json:"Id"`  // Id -
-	Key string `json:"Key"` // Key -
+	Id         int    `json:"Id"`         // Id -
+	PostKeyStr string `json:"PostKeyStr"` // PostKeyStr -
+	Used       int    `json:"Used"`       // Used -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -40,16 +41,16 @@ func (pk *PostKey) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.post_keys (` +
-		`Key` +
+		`PostKeyStr, Used` +
 		`) VALUES (` +
-		`?` +
+		`?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostKey {
-		XOLog(sqlstr, pk.Key)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
 	}
-	res, err := db.Exec(sqlstr, pk.Key)
+	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
 	if err != nil {
 		if LogTableSqlReq.PostKey {
 			XOLogErr(err)
@@ -82,16 +83,16 @@ func (pk *PostKey) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post_keys (` +
-		`Key` +
+		`PostKeyStr, Used` +
 		`) VALUES (` +
-		`?` +
+		`?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostKey {
-		XOLog(sqlstr, pk.Key)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
 	}
-	res, err := db.Exec(sqlstr, pk.Key)
+	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
 	if err != nil {
 		if LogTableSqlReq.PostKey {
 			XOLogErr(err)
@@ -133,14 +134,14 @@ func (pk *PostKey) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_keys SET ` +
-		`Key = ?` +
+		`PostKeyStr = ?, Used = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.PostKey {
-		XOLog(sqlstr, pk.Key, pk.Id)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
 	}
-	_, err = db.Exec(sqlstr, pk.Key, pk.Id)
+	_, err = db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
 
 	if LogTableSqlReq.PostKey {
 		XOLogErr(err)
@@ -352,6 +353,111 @@ func (d *__PostKey_Deleter) Id_GE(val int) *__PostKey_Deleter {
 	return d
 }
 
+func (u *__PostKey_Deleter) Used_In(ins []int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Deleter) Used_Ins(ins ...int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Deleter) Used_NotIn(ins []int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKey_Deleter) Used_Eq(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Deleter) Used_NotEq(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Deleter) Used_LT(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Deleter) Used_LE(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Deleter) Used_GT(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Deleter) Used_GE(val int) *__PostKey_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__PostKey_Updater) Or() *__PostKey_Updater {
 	u.whereSep = " OR "
@@ -458,6 +564,111 @@ func (d *__PostKey_Updater) Id_GE(val int) *__PostKey_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Id >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostKey_Updater) Used_In(ins []int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Updater) Used_Ins(ins ...int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Updater) Used_NotIn(ins []int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKey_Updater) Used_Eq(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Updater) Used_NotEq(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Updater) Used_LT(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Updater) Used_LE(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Updater) Used_GT(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Updater) Used_GE(val int) *__PostKey_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -574,65 +785,170 @@ func (d *__PostKey_Selector) Id_GE(val int) *__PostKey_Selector {
 	return d
 }
 
+func (u *__PostKey_Selector) Used_In(ins []int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Selector) Used_Ins(ins ...int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKey_Selector) Used_NotIn(ins []int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKey_Selector) Used_Eq(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Selector) Used_NotEq(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Selector) Used_LT(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Selector) Used_LE(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Selector) Used_GT(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKey_Selector) Used_GE(val int) *__PostKey_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Used >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
 
-func (u *__PostKey_Deleter) Key_In(ins []string) *__PostKey_Deleter {
+func (u *__PostKey_Deleter) PostKeyStr_In(ins []string) *__PostKey_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostKey_Deleter) Key_NotIn(ins []string) *__PostKey_Deleter {
+func (u *__PostKey_Deleter) PostKeyStr_NotIn(ins []string) *__PostKey_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Deleter) Key_Like(val string) *__PostKey_Deleter {
+func (u *__PostKey_Deleter) PostKeyStr_Like(val string) *__PostKey_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " PostKeyStr LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostKey_Deleter) Key_Eq(val string) *__PostKey_Deleter {
+func (d *__PostKey_Deleter) PostKeyStr_Eq(val string) *__PostKey_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " PostKeyStr = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostKey_Deleter) Key_NotEq(val string) *__PostKey_Deleter {
+func (d *__PostKey_Deleter) PostKeyStr_NotEq(val string) *__PostKey_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " PostKeyStr != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -640,61 +956,61 @@ func (d *__PostKey_Deleter) Key_NotEq(val string) *__PostKey_Deleter {
 
 ////////ints
 
-func (u *__PostKey_Updater) Key_In(ins []string) *__PostKey_Updater {
+func (u *__PostKey_Updater) PostKeyStr_In(ins []string) *__PostKey_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostKey_Updater) Key_NotIn(ins []string) *__PostKey_Updater {
+func (u *__PostKey_Updater) PostKeyStr_NotIn(ins []string) *__PostKey_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Updater) Key_Like(val string) *__PostKey_Updater {
+func (u *__PostKey_Updater) PostKeyStr_Like(val string) *__PostKey_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " PostKeyStr LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostKey_Updater) Key_Eq(val string) *__PostKey_Updater {
+func (d *__PostKey_Updater) PostKeyStr_Eq(val string) *__PostKey_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " PostKeyStr = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostKey_Updater) Key_NotEq(val string) *__PostKey_Updater {
+func (d *__PostKey_Updater) PostKeyStr_NotEq(val string) *__PostKey_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " PostKeyStr != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -702,61 +1018,61 @@ func (d *__PostKey_Updater) Key_NotEq(val string) *__PostKey_Updater {
 
 ////////ints
 
-func (u *__PostKey_Selector) Key_In(ins []string) *__PostKey_Selector {
+func (u *__PostKey_Selector) PostKeyStr_In(ins []string) *__PostKey_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostKey_Selector) Key_NotIn(ins []string) *__PostKey_Selector {
+func (u *__PostKey_Selector) PostKeyStr_NotIn(ins []string) *__PostKey_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Key NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Selector) Key_Like(val string) *__PostKey_Selector {
+func (u *__PostKey_Selector) PostKeyStr_Like(val string) *__PostKey_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key LIKE ? "
+	w.condition = " PostKeyStr LIKE ? "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostKey_Selector) Key_Eq(val string) *__PostKey_Selector {
+func (d *__PostKey_Selector) PostKeyStr_Eq(val string) *__PostKey_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key = ? "
+	w.condition = " PostKeyStr = ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostKey_Selector) Key_NotEq(val string) *__PostKey_Selector {
+func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Key != ? "
+	w.condition = " PostKeyStr != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -790,10 +1106,31 @@ func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
 //ints
 
 //string
-func (u *__PostKey_Updater) Key(newVal string) *__PostKey_Updater {
-	u.updates[" Key = ? "] = newVal
+func (u *__PostKey_Updater) PostKeyStr(newVal string) *__PostKey_Updater {
+	u.updates[" PostKeyStr = ? "] = newVal
 	return u
 }
+
+//ints
+
+func (u *__PostKey_Updater) Used(newVal int) *__PostKey_Updater {
+	u.updates[" Used = ? "] = newVal
+	return u
+}
+
+func (u *__PostKey_Updater) Used_Increment(count int) *__PostKey_Updater {
+	if count > 0 {
+		u.updates[" Used = Used+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Used = Used-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
@@ -815,18 +1152,33 @@ func (u *__PostKey_Selector) Select_Id() *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_Key_Desc() *__PostKey_Selector {
-	u.orderBy = " ORDER BY Key DESC "
+func (u *__PostKey_Selector) OrderBy_PostKeyStr_Desc() *__PostKey_Selector {
+	u.orderBy = " ORDER BY PostKeyStr DESC "
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_Key_Asc() *__PostKey_Selector {
-	u.orderBy = " ORDER BY Key ASC "
+func (u *__PostKey_Selector) OrderBy_PostKeyStr_Asc() *__PostKey_Selector {
+	u.orderBy = " ORDER BY PostKeyStr ASC "
 	return u
 }
 
-func (u *__PostKey_Selector) Select_Key() *__PostKey_Selector {
-	u.selectCol = "Key"
+func (u *__PostKey_Selector) Select_PostKeyStr() *__PostKey_Selector {
+	u.selectCol = "PostKeyStr"
+	return u
+}
+
+func (u *__PostKey_Selector) OrderBy_Used_Desc() *__PostKey_Selector {
+	u.orderBy = " ORDER BY Used DESC "
+	return u
+}
+
+func (u *__PostKey_Selector) OrderBy_Used_Asc() *__PostKey_Selector {
+	u.orderBy = " ORDER BY Used ASC "
+	return u
+}
+
+func (u *__PostKey_Selector) Select_Used() *__PostKey_Selector {
+	u.selectCol = "Used"
 	return u
 }
 
@@ -837,6 +1189,11 @@ func (u *__PostKey_Selector) Limit(num int) *__PostKey_Selector {
 
 func (u *__PostKey_Selector) Offset(num int) *__PostKey_Selector {
 	u.offset = num
+	return u
+}
+
+func (u *__PostKey_Selector) Order_Rand() *__PostKey_Selector {
+	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
@@ -1139,12 +1496,12 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?)," //`(?, ?, ?, ?),`
+	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post_keys (" +
-		"Key" +
+		"PostKeyStr, Used" +
 		") VALUES " + insVals
 
 	// run query
@@ -1152,7 +1509,8 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Key)
+		vals = append(vals, row.PostKeyStr)
+		vals = append(vals, row.Used)
 
 	}
 
@@ -1173,12 +1531,12 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 func MassReplace_PostKey(rows []PostKey, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?)," //`(?, ?, ?, ?),`
+	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_keys (" +
-		"Key" +
+		"PostKeyStr, Used" +
 		") VALUES " + insVals
 
 	// run query
@@ -1186,7 +1544,8 @@ func MassReplace_PostKey(rows []PostKey, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Key)
+		vals = append(vals, row.PostKeyStr)
+		vals = append(vals, row.Used)
 
 	}
 
@@ -1205,6 +1564,8 @@ func MassReplace_PostKey(rows []PostKey, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

@@ -3484,6 +3484,11 @@ func (u *__Chat_Selector) Offset(num int) *__Chat_Selector {
 	return u
 }
 
+func (u *__Chat_Selector) Order_Rand() *__Chat_Selector {
+	u.orderBy = " ORDER BY RAND() "
+	return u
+}
+
 /////////////////////////  Queryer Selector  //////////////////////////////////
 func (u *__Chat_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
