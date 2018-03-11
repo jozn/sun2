@@ -3,33 +3,34 @@ package event_service
 import "ms/sun2/shared/x"
 
 type SubParam struct {
-	ADDED_POST_EVENT       bool
-	DELETED_POST_EVENT     bool
-	LIKED_POST_EVENT       bool
-	UNLIKED_POST_EVENT     bool
-	COMMENTED_POST_EVENT   bool
-	UNCOMMENTED_POST_EVENT bool
-	FOLLOWED_USER_EVENT    bool
-	UNFOLLOWED_USER_EVENT  bool
-	BLOCKED_USER_EVENT     bool
-	UNBLOCKED_USER_EVENT   bool
+	Added_Post_Event       bool
+	Deleted_Post_Event     bool
+	Liked_Post_Event       bool
+	UnLiked_Post_Event     bool
+	Commented_Post_Event   bool
+	UnCommented_Post_Event bool
+	Followed_User_Event    bool
+	UnFollwed_User_Event   bool
+	Blocked_User_Event     bool
+	UnBlocked_User_Event   bool
 }
 
 type Sub struct {
-	ADDED_POST_EVENT       chan GeneralEvent
-	DELETED_POST_EVENT     chan GeneralEvent
-	LIKED_POST_EVENT       chan GeneralEvent
-	UNLIKED_POST_EVENT     chan GeneralEvent
-	COMMENTED_POST_EVENT   chan GeneralEvent
-	UNCOMMENTED_POST_EVENT chan GeneralEvent
-	FOLLOWED_USER_EVENT    chan GeneralEvent
-	UNFOLLOWED_USER_EVENT  chan GeneralEvent
-	BLOCKED_USER_EVENT     chan GeneralEvent
-	UNBLOCKED_USER_EVENT   chan GeneralEvent
+	Added_Post_Event       chan GeneralEvent
+	Deleted_Post_Event     chan GeneralEvent
+	Liked_Post_Event       chan GeneralEvent
+	UnLiked_Post_Event     chan GeneralEvent
+	Commented_Post_Event   chan GeneralEvent
+	UnCommented_Post_Event chan GeneralEvent
+	Followed_User_Event    chan GeneralEvent
+	UnFollwed_User_Event   chan GeneralEvent
+	Blocked_User_Event     chan GeneralEvent
+	UnBlocked_User_Event   chan GeneralEvent
 }
 
 type GeneralEvent struct {
-	Event    x.Event
+	//Event    x.Event
+	x.Event
 	Post     *x.Post
 	Comment  *x.Comment
 	Action   *x.Action
@@ -48,16 +49,16 @@ func newGeneralEvent(event x.Event) GeneralEvent {
 func newSub() Sub {
 	NUM := 100
 	sub := Sub{
-		ADDED_POST_EVENT:       make(chan GeneralEvent, NUM),
-		DELETED_POST_EVENT:     make(chan GeneralEvent, NUM),
-		LIKED_POST_EVENT:       make(chan GeneralEvent, NUM),
-		UNLIKED_POST_EVENT:     make(chan GeneralEvent, NUM),
-		COMMENTED_POST_EVENT:   make(chan GeneralEvent, NUM),
-		UNCOMMENTED_POST_EVENT: make(chan GeneralEvent, NUM),
-		FOLLOWED_USER_EVENT:    make(chan GeneralEvent, NUM),
-		UNFOLLOWED_USER_EVENT:  make(chan GeneralEvent, NUM),
-		BLOCKED_USER_EVENT:     make(chan GeneralEvent, NUM),
-		UNBLOCKED_USER_EVENT:   make(chan GeneralEvent, NUM),
+		Added_Post_Event:       make(chan GeneralEvent, NUM),
+		Deleted_Post_Event:     make(chan GeneralEvent, NUM),
+		Liked_Post_Event:       make(chan GeneralEvent, NUM),
+		UnLiked_Post_Event:     make(chan GeneralEvent, NUM),
+		Commented_Post_Event:   make(chan GeneralEvent, NUM),
+		UnCommented_Post_Event: make(chan GeneralEvent, NUM),
+		Followed_User_Event:    make(chan GeneralEvent, NUM),
+		UnFollwed_User_Event:   make(chan GeneralEvent, NUM),
+		Blocked_User_Event:     make(chan GeneralEvent, NUM),
+		UnBlocked_User_Event:   make(chan GeneralEvent, NUM),
 	}
 	return sub
 }

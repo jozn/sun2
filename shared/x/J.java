@@ -119,7 +119,7 @@ public class J {
 		public int NotifyId;
 		public int ForUserId;
 		public int ActorUserId;
-		public int NotiyTypeEnum;
+		public int NotifyTypeEnum;
 		public int PostId;
 		public int CommentId;
 		public int PeerUserId;

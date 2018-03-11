@@ -13,10 +13,10 @@ func main() {
     //x.LogTableSqlReq.Event = false
 	go func() {
 		param := event_service.SubParam{
-			LIKED_POST_EVENT: true,
+			Liked_Post_Event: true,
 		}
 		sub := event_service.NewSub(param)
-		for evn := range sub.LIKED_POST_EVENT {
+		for evn := range sub.Liked_Post_Event {
 			fmt.Println("event,", evn)
 		}
 	}()

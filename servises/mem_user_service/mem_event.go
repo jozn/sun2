@@ -4,16 +4,16 @@ import "ms/sun2/servises/event_service"
 
 func listen() {
 	sub := event_service.SubParam{
-		ADDED_POST_EVENT:      true,
-		DELETED_POST_EVENT:    true,
-		FOLLOWED_USER_EVENT:   true,
-		UNFOLLOWED_USER_EVENT: true,
+		Added_Post_Event:     true,
+		Deleted_Post_Event:   true,
+		Followed_User_Event:  true,
+		UnFollwed_User_Event: true,
 	}
 	listener := event_service.NewSub(sub)
 
 	//posts add
 	go func() {
-		for e := range listener.ADDED_POST_EVENT {
+		for e := range listener.Added_Post_Event {
 			mu := AllMemUserMap.GetForUser(e.Event.ByUserId)
 			if mu != nil && len(mu.lastPosts) > 0 { //} && e.Post != nil {
 				mu.isPostsLoaded = false
@@ -24,7 +24,7 @@ func listen() {
 
 	//posts delete
 	go func() {
-		for e := range listener.DELETED_POST_EVENT {
+		for e := range listener.Deleted_Post_Event {
 			mu := AllMemUserMap.GetForUser(e.Event.ByUserId)
 			if mu != nil && len(mu.lastPosts) > 0 {
 				mu.isPostsLoaded = false
@@ -47,13 +47,13 @@ func listen() {
 	}
 
 	go func() {
-		for e := range listener.FOLLOWED_USER_EVENT {
+		for e := range listener.Followed_User_Event {
 			cleanFollowed(e)
 		}
 	}()
 
 	go func() {
-		for e := range listener.UNFOLLOWED_USER_EVENT {
+		for e := range listener.UnFollwed_User_Event {
 			cleanFollowed(e)
 		}
 	}()

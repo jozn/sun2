@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+//todo: change sub.Deleted_Post_Event <- gEvent # to a func with an select timeout in case event not procceed
 func NewSub(param SubParam) Sub {
 	last := 0
 	sub := newSub()
@@ -28,44 +29,44 @@ func NewSub(param SubParam) Sub {
 			for _, gEvent := range genEvents {
 				switch EventType(gEvent.Event.EventType) {
 				case ADDED_POST_EVENT:
-					if param.ADDED_POST_EVENT {
-						sub.ADDED_POST_EVENT <- gEvent
+					if param.Added_Post_Event {
+						sub.Added_Post_Event <- gEvent
 					}
 				case DELETED_POST_EVENT:
-					if param.DELETED_POST_EVENT {
-						sub.DELETED_POST_EVENT <- gEvent
+					if param.Deleted_Post_Event {
+						sub.Deleted_Post_Event <- gEvent
 					}
 				case LIKED_POST_EVENT:
-					if param.LIKED_POST_EVENT {
-						sub.LIKED_POST_EVENT <- gEvent
+					if param.Liked_Post_Event {
+						sub.Liked_Post_Event <- gEvent
 					}
 				case UNLIKED_POST_EVENT:
-					if param.UNLIKED_POST_EVENT {
-						sub.UNLIKED_POST_EVENT <- gEvent
+					if param.UnLiked_Post_Event {
+						sub.UnLiked_Post_Event <- gEvent
 					}
 				case COMMENTED_POST_EVENT:
-					if param.COMMENTED_POST_EVENT {
-						sub.COMMENTED_POST_EVENT <- gEvent
+					if param.Commented_Post_Event {
+						sub.Commented_Post_Event <- gEvent
 					}
 				case UNCOMMENTED_POST_EVENT:
-					if param.UNCOMMENTED_POST_EVENT {
-						sub.UNCOMMENTED_POST_EVENT <- gEvent
+					if param.UnCommented_Post_Event {
+						sub.UnCommented_Post_Event <- gEvent
 					}
 				case FOLLOWED_USER_EVENT:
-					if param.FOLLOWED_USER_EVENT {
-						sub.FOLLOWED_USER_EVENT <- gEvent
+					if param.Followed_User_Event {
+						sub.Followed_User_Event <- gEvent
 					}
 				case UNFOLLOWED_USER_EVENT:
-					if param.UNFOLLOWED_USER_EVENT {
-						sub.UNFOLLOWED_USER_EVENT <- gEvent
+					if param.UnFollwed_User_Event {
+						sub.UnFollwed_User_Event <- gEvent
 					}
 				case BLOCKED_USER_EVENT:
-					if param.BLOCKED_USER_EVENT {
-						sub.BLOCKED_USER_EVENT <- gEvent
+					if param.Blocked_User_Event {
+						sub.Blocked_User_Event <- gEvent
 					}
 				case UNBLOCKED_USER_EVENT:
-					if param.UNBLOCKED_USER_EVENT {
-						sub.UNBLOCKED_USER_EVENT <- gEvent
+					if param.UnBlocked_User_Event {
+						sub.UnBlocked_User_Event <- gEvent
 					}
 				default:
 					if config.IS_DEBUG {

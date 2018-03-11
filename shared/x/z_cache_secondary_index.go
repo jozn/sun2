@@ -584,6 +584,59 @@ func (c _StoreImpl) PreLoadPostKey_ByPostKeyStrs(PostKeyStrs []string) {
 	}
 }
 
+//field//field//field
+
+///// Generated from index 'Used'.
+func (c _StoreImpl) PostKey_ByUsed(Used int) (*PostKey, bool) {
+	o, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", Used))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostKey_Selector().Used_Eq(Used).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostKey_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostKey_ByUsed_JustCache(Used int) (*PostKey, bool) {
+	o, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", Used))
+	if ok {
+		if obj, ok := o.(*PostKey); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKey_Used:" + fmt.Sprintf("%v", Used)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostKey_ByUseds(Useds []int) {
+	not_cached := make([]int, 0, len(Useds))
+
+	for _, id := range Useds {
+		_, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostKey_Selector().Used_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostKey_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
+			}
+		}
+	}
+}
+
 // SearchClicked - PRIMARY
 
 // Session - PRIMARY

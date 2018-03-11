@@ -263,16 +263,16 @@ type Media struct {
 */
 // notify 'Notify'.
 type Notify struct {
-	NotifyId      int `db:"NotifyId"`
-	ForUserId     int `db:"ForUserId"`
-	ActorUserId   int `db:"ActorUserId"`
-	NotiyTypeEnum int `db:"NotiyTypeEnum"`
-	PostId        int `db:"PostId"`
-	CommentId     int `db:"CommentId"`
-	PeerUserId    int `db:"PeerUserId"`
-	Murmur64Hash  int `db:"Murmur64Hash"`
-	SeenStatus    int `db:"SeenStatus"`
-	CreatedTime   int `db:"CreatedTime"`
+	NotifyId       int `db:"NotifyId"`
+	ForUserId      int `db:"ForUserId"`
+	ActorUserId    int `db:"ActorUserId"`
+	NotifyTypeEnum int `db:"NotifyTypeEnum"`
+	PostId         int `db:"PostId"`
+	CommentId      int `db:"CommentId"`
+	PeerUserId     int `db:"PeerUserId"`
+	Murmur64Hash   int `db:"Murmur64Hash"`
+	SeenStatus     int `db:"SeenStatus"`
+	CreatedTime    int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -282,7 +282,7 @@ type Notify struct {
 	NotifyId: 0,
 	ForUserId: 0,
 	ActorUserId: 0,
-	NotiyTypeEnum: 0,
+	NotifyTypeEnum: 0,
 	PostId: 0,
 	CommentId: 0,
 	PeerUserId: 0,

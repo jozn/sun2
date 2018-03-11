@@ -114,7 +114,7 @@ message PB_Notify {
     int64 NotifyId = 1;
     int32 ForUserId = 2;
     int32 ActorUserId = 3;
-    int32 NotiyTypeEnum = 4;
+    int32 NotifyTypeEnum = 4;
     int64 PostId = 5;
     int64 CommentId = 6;
     int32 PeerUserId = 7;

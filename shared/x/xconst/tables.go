@@ -293,28 +293,28 @@ var Media = struct {
 }
 
 var Notify = struct {
-	NotifyId      string
-	ForUserId     string
-	ActorUserId   string
-	NotiyTypeEnum string
-	PostId        string
-	CommentId     string
-	PeerUserId    string
-	Murmur64Hash  string
-	SeenStatus    string
-	CreatedTime   string
+	NotifyId       string
+	ForUserId      string
+	ActorUserId    string
+	NotifyTypeEnum string
+	PostId         string
+	CommentId      string
+	PeerUserId     string
+	Murmur64Hash   string
+	SeenStatus     string
+	CreatedTime    string
 }{
 
-	NotifyId:      "NotifyId",
-	ForUserId:     "ForUserId",
-	ActorUserId:   "ActorUserId",
-	NotiyTypeEnum: "NotiyTypeEnum",
-	PostId:        "PostId",
-	CommentId:     "CommentId",
-	PeerUserId:    "PeerUserId",
-	Murmur64Hash:  "Murmur64Hash",
-	SeenStatus:    "SeenStatus",
-	CreatedTime:   "CreatedTime",
+	NotifyId:       "NotifyId",
+	ForUserId:      "ForUserId",
+	ActorUserId:    "ActorUserId",
+	NotifyTypeEnum: "NotifyTypeEnum",
+	PostId:         "PostId",
+	CommentId:      "CommentId",
+	PeerUserId:     "PeerUserId",
+	Murmur64Hash:   "Murmur64Hash",
+	SeenStatus:     "SeenStatus",
+	CreatedTime:    "CreatedTime",
 }
 
 var NotifyRemoved = struct {
