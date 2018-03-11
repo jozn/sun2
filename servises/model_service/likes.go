@@ -1,7 +1,6 @@
 package model_service
 
 import (
-	"golang.org/x/tools/go/gcimporter15/testdata"
 	"ms/sun/base"
 	"ms/sun/helper"
 	"ms/sun2/servises/event_service"

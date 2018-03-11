@@ -42,6 +42,8 @@ func listernAndSaverNotifys() {
 		for {
 			var e event_service.GeneralEvent
 			select {
+            case e = <-sub.Deleted_Post_Event:
+
 			case e = <-sub.Deleted_Post_Event:
 				on_Deleted_Post(e)
 			case e = <-sub.Liked_Post_Event:

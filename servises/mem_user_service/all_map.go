@@ -20,13 +20,21 @@ func (s *allMp) GetForUser(userId int) *MemUser {
 			followedUserIds:  go_map.NewConcurrentIntMap(100),
 			followersUserIds: go_map.NewConcurrentIntMap(100),
 		}
-        s.Lock()
+		s.Lock()
 		s.mp[userId] = mu
 		s.Unlock()
 	}
 	return mu
 }
 
-var AllMemUserMap = &allMp{
+var allMemUserMap = &allMp{
 	mp: make(map[int]*MemUser, 1000),
+}
+
+func GetForUser(userId int) (mu *MemUser, ok bool) {
+	mu = allMemUserMap.GetForUser(userId)
+	if mu != nil {
+		return mu, true
+	}
+	return nil, false
 }

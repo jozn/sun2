@@ -1043,6 +1043,64 @@ $$
 
 
  #### delimiter ;*/
+################################ ActionFanout ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS action_fanout_OnCreateLogger $$
+CREATE TRIGGER action_fanout_OnCreateLogger AFTER INSERT ON action_fanout
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ActionFanout","INSERT",NEW.OrderId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS action_fanout_OnUpdateLogger $$
+CREATE TRIGGER action_fanout_OnUpdateLogger AFTER UPDATE ON action_fanout
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ActionFanout","UPDATE",NEW.OrderId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS action_fanout_OnDeleteLogger $$
+CREATE TRIGGER action_fanout_OnDeleteLogger AFTER DELETE ON action_fanout
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ActionFanout","DELETE",OLD.OrderId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ HomeFanout ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS home_fanout_OnCreateLogger $$
+CREATE TRIGGER home_fanout_OnCreateLogger AFTER INSERT ON home_fanout
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HomeFanout","INSERT",NEW.OrderId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS home_fanout_OnUpdateLogger $$
+CREATE TRIGGER home_fanout_OnUpdateLogger AFTER UPDATE ON home_fanout
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HomeFanout","UPDATE",NEW.OrderId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS home_fanout_OnDeleteLogger $$
+CREATE TRIGGER home_fanout_OnDeleteLogger AFTER DELETE ON home_fanout
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HomeFanout","DELETE",OLD.OrderId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 
 ###############################################################################################
 ################################## Delete of all triggers #####################################
@@ -1192,4 +1250,12 @@ DROP TRIGGER IF EXISTS file_msg_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS file_post_OnCreateLogger ;
 DROP TRIGGER IF EXISTS file_post_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS file_post_OnDeleteLogger ;
+### ActionFanout ##
+DROP TRIGGER IF EXISTS action_fanout_OnCreateLogger ;
+DROP TRIGGER IF EXISTS action_fanout_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS action_fanout_OnDeleteLogger ;
+### HomeFanout ##
+DROP TRIGGER IF EXISTS home_fanout_OnCreateLogger ;
+DROP TRIGGER IF EXISTS home_fanout_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS home_fanout_OnDeleteLogger ;
 */

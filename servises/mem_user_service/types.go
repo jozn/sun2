@@ -26,7 +26,7 @@ func newMemUser() MemUser {
 	}
 }
 
-func (m *MemUser) GetLastPost() []*x.Post {
+func (m *MemUser) GetLastPosts() []*x.Post {
 	if !m.isPostsLoaded {
 		m.lastPosts, _ = x.NewPost_Selector().UserId_Eq(m.userId).OrderBy_PostId_Desc().Limit(50).GetRows(base.DB)
 		m.isPostsLoaded = true

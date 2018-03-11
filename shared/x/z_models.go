@@ -928,6 +928,42 @@ type FilePost struct {
 	DataThumb: []byte{},
 	Data: []byte{},
 */
+// action_fanout 'ActionFanout'.
+type ActionFanout struct {
+	OrderId      int `db:"OrderId"`
+	ForUserId    int `db:"ForUserId"`
+	ActionId     int `db:"ActionId"`
+	ActorUserId  int `db:"ActorUserId"`
+	Murmur64Hash int `db:"Murmur64Hash"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ActionFanout {
+	OrderId: 0,
+	ForUserId: 0,
+	ActionId: 0,
+	ActorUserId: 0,
+	Murmur64Hash: 0,
+*/
+// home_fanout 'HomeFanout'.
+type HomeFanout struct {
+	OrderId    int `db:"OrderId"`
+	ForUserId  int `db:"ForUserId"`
+	PostId     int `db:"PostId"`
+	PostUserId int `db:"PostUserId"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.HomeFanout {
+	OrderId: 0,
+	ForUserId: 0,
+	PostId: 0,
+	PostUserId: 0,
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -967,6 +1003,8 @@ type LogTableSql struct {
 	MessageFile                bool
 	FileMsg                    bool
 	FilePost                   bool
+	ActionFanout               bool
+	HomeFanout                 bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1007,4 +1045,6 @@ var LogTableSqlReq = LogTableSql{
 	MessageFile:         true,
 	FileMsg:             true,
 	FilePost:            true,
+	ActionFanout:        true,
+	HomeFanout:          true,
 }

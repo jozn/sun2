@@ -14,7 +14,7 @@ func listen() {
 	//posts add
 	go func() {
 		for e := range listener.Added_Post_Event {
-			mu := AllMemUserMap.GetForUser(e.Event.ByUserId)
+			mu := allMemUserMap.GetForUser(e.Event.ByUserId)
 			if mu != nil && len(mu.lastPosts) > 0 { //} && e.Post != nil {
 				mu.isPostsLoaded = false
 				//mu.lastPosts = append(mu.lastPosts, e.Post)
@@ -25,7 +25,7 @@ func listen() {
 	//posts delete
 	go func() {
 		for e := range listener.Deleted_Post_Event {
-			mu := AllMemUserMap.GetForUser(e.Event.ByUserId)
+			mu := allMemUserMap.GetForUser(e.Event.ByUserId)
 			if mu != nil && len(mu.lastPosts) > 0 {
 				mu.isPostsLoaded = false
 				/*for idx, p := range mu.lastPosts {
@@ -39,10 +39,10 @@ func listen() {
 
 	//followed
 	cleanFollowed := func(e event_service.GeneralEvent) {
-		mu1 := AllMemUserMap.GetForUser(e.Event.ByUserId)
+		mu1 := allMemUserMap.GetForUser(e.Event.ByUserId)
 		mu1.isFollowedLoaded = false //force reload
 
-		mu2 := AllMemUserMap.GetForUser(e.Event.PeerUserId)
+		mu2 := allMemUserMap.GetForUser(e.Event.PeerUserId)
 		mu2.isFollowersLoaded = false //force reload
 	}
 

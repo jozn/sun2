@@ -401,7 +401,7 @@ type PB_NotifyView struct {
 	NotifyId      int64           `protobuf:"varint,1,opt,name=NotifyId" json:"NotifyId,omitempty"`
 	ForUserId     int32           `protobuf:"varint,2,opt,name=ForUserId" json:"ForUserId,omitempty"`
 	ActorUserId   int32           `protobuf:"varint,3,opt,name=ActorUserId" json:"ActorUserId,omitempty"`
-	NotiyTypeEnum int32           `protobuf:"varint,4,opt,name=NotiyTypeEnum" json:"NotiyTypeEnum,omitempty"`
+	NotiyTypeEnum int32           `protobuf:"varint,4,opt,name=NotifyTypeEnum" json:"NotifyTypeEnum,omitempty"`
 	PostId        int64           `protobuf:"varint,5,opt,name=PostId" json:"PostId,omitempty"`
 	CommentId     int64           `protobuf:"varint,6,opt,name=CommentId" json:"CommentId,omitempty"`
 	PeerUserId    int32           `protobuf:"varint,7,opt,name=PeerUserId" json:"PeerUserId,omitempty"`

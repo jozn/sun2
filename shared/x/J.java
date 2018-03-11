@@ -411,4 +411,19 @@ public class J {
 		public UNKNOWN Data;
 	}
 
+	public static class ActionFanout {//oridnal: 36
+		public int OrderId;
+		public int ForUserId;
+		public int ActionId;
+		public int ActorUserId;
+		public int Murmur64Hash;
+	}
+
+	public static class HomeFanout {//oridnal: 37
+		public int OrderId;
+		public int ForUserId;
+		public int PostId;
+		public int PostUserId;
+	}
+
 }

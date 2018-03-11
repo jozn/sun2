@@ -868,3 +868,51 @@ func OnFilePost_LoadMany(rows []*FilePost) {
 		RowCache.Set("FilePost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
+
+//ActionFanout Events
+
+func OnActionFanout_AfterInsert(row *ActionFanout) {
+	RowCache.Set("ActionFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnActionFanout_AfterUpdate(row *ActionFanout) {
+	RowCache.Set("ActionFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnActionFanout_AfterDelete(row *ActionFanout) {
+	RowCache.Delete("ActionFanout:" + strconv.Itoa(row.OrderId))
+}
+
+func OnActionFanout_LoadOne(row *ActionFanout) {
+	RowCache.Set("ActionFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnActionFanout_LoadMany(rows []*ActionFanout) {
+	for _, row := range rows {
+		RowCache.Set("ActionFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+	}
+}
+
+//HomeFanout Events
+
+func OnHomeFanout_AfterInsert(row *HomeFanout) {
+	RowCache.Set("HomeFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnHomeFanout_AfterUpdate(row *HomeFanout) {
+	RowCache.Set("HomeFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnHomeFanout_AfterDelete(row *HomeFanout) {
+	RowCache.Delete("HomeFanout:" + strconv.Itoa(row.OrderId))
+}
+
+func OnHomeFanout_LoadOne(row *HomeFanout) {
+	RowCache.Set("HomeFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+}
+
+func OnHomeFanout_LoadMany(rows []*HomeFanout) {
+	for _, row := range rows {
+		RowCache.Set("HomeFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+	}
+}

@@ -22,7 +22,7 @@ func Follow(UserId, FollowedPeerUserId int) int {
 		ListId:         UserId,
 		UserId:         UserId,
 		FollowedUserId: FollowedPeerUserId,
-		CreatedTime:    helper.TimeNowMs(),
+		CreatedTime:    helper.TimeNow(),
 	}
 
 	err := flm.Insert(base.DB)

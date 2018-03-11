@@ -1208,3 +1208,7 @@ func (c _StoreImpl) PreLoadHome_ByPostIds(PostIds []int) {
 // FileMsg - PRIMARY
 
 // FilePost - PRIMARY
+
+// ActionFanout - PRIMARY
+
+// HomeFanout - PRIMARY

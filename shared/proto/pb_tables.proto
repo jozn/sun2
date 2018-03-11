@@ -381,3 +381,16 @@ message PB_FilePost {
     bytes DataThumb = 4;
     bytes Data = 5;
 }
+message PB_ActionFanout {
+    int64 OrderId = 1;
+    int32 ForUserId = 2;
+    int64 ActionId = 3;
+    int32 ActorUserId = 4;
+    int64 Murmur64Hash = 5;
+}
+message PB_HomeFanout {
+    int64 OrderId = 1;
+    int64 ForUserId = 2;
+    int64 PostId = 3;
+    int64 PostUserId = 4;
+}

@@ -16,9 +16,9 @@ func main() {
 	}
 }
 func factFollow() {
-	model_service.Follow(fact_utils.GetRandUserId(),fact_utils.GetRandPostId())
+	model_service.Follow(fact_utils.GetRandUserId(),fact_utils.GetRandUserId())
 }
 
 func factUnFollow() {
-    model_service.UnFollow(fact_utils.GetRandUserId(),fact_utils.GetRandPostId())
+    model_service.UnFollow(fact_utils.GetRandUserId(),fact_utils.GetRandUserId())
 }

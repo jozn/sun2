@@ -867,3 +867,51 @@ func FilePostById(db *sqlx.DB, id int) (*FilePost, error) {
 
 	return &fp, nil
 }
+
+// ActionFanoutByOrderId Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.action_fanout' as a ActionFanout.
+func ActionFanoutByOrderId(db *sqlx.DB, orderId int) (*ActionFanout, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_meta.action_fanout ` +
+		`WHERE OrderId = ?`
+
+	XOLog(sqlstr, orderId)
+	af := ActionFanout{
+		_exists: true,
+	}
+
+	err = db.Get(&af, sqlstr, orderId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnActionFanout_LoadOne(&af)
+
+	return &af, nil
+}
+
+// HomeFanoutByOrderId Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.home_fanout' as a HomeFanout.
+func HomeFanoutByOrderId(db *sqlx.DB, orderId int) (*HomeFanout, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_meta.home_fanout ` +
+		`WHERE OrderId = ?`
+
+	XOLog(sqlstr, orderId)
+	hf := HomeFanout{
+		_exists: true,
+	}
+
+	err = db.Get(&hf, sqlstr, orderId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnHomeFanout_LoadOne(&hf)
+
+	return &hf, nil
+}

@@ -73,6 +73,10 @@ const (
 	FileMsg_TableGo                    = "FileMsg"
 	FilePost_Table                     = "file_post"
 	FilePost_TableGo                   = "FilePost"
+	ActionFanout_Table                 = "action_fanout"
+	ActionFanout_TableGo               = "ActionFanout"
+	HomeFanout_Table                   = "home_fanout"
+	HomeFanout_TableGo                 = "HomeFanout"
 )
 
 var Action = struct {
@@ -857,4 +861,32 @@ var FilePost = struct {
 	Extension: "Extension",
 	DataThumb: "DataThumb",
 	Data:      "Data",
+}
+
+var ActionFanout = struct {
+	OrderId      string
+	ForUserId    string
+	ActionId     string
+	ActorUserId  string
+	Murmur64Hash string
+}{
+
+	OrderId:      "OrderId",
+	ForUserId:    "ForUserId",
+	ActionId:     "ActionId",
+	ActorUserId:  "ActorUserId",
+	Murmur64Hash: "Murmur64Hash",
+}
+
+var HomeFanout = struct {
+	OrderId    string
+	ForUserId  string
+	PostId     string
+	PostUserId string
+}{
+
+	OrderId:    "OrderId",
+	ForUserId:  "ForUserId",
+	PostId:     "PostId",
+	PostUserId: "PostUserId",
 }

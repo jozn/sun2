@@ -1072,3 +1072,47 @@ func PBConvPB_FilePost_To_FilePost ( o *FilePost) *PB_FilePost {
     return n
 }
 */
+/*
+func PBConvPB__ActionFanout_To_ActionFanout( o *PB_ActionFanout) *ActionFanout {
+     n := &ActionFanout{
+      OrderId: int ( o.OrderId ),
+      ForUserId: int ( o.ForUserId ),
+      ActionId: int ( o.ActionId ),
+      ActorUserId: int ( o.ActorUserId ),
+      Murmur64Hash: int ( o.Murmur64Hash ),
+    }
+    return n
+}
+
+func PBConvPB_ActionFanout_To_ActionFanout ( o *ActionFanout) *PB_ActionFanout {
+     n := &PB_ActionFanout{
+      OrderId: int64 ( o.OrderId ),
+      ForUserId: int32 ( o.ForUserId ),
+      ActionId: int64 ( o.ActionId ),
+      ActorUserId: int32 ( o.ActorUserId ),
+      Murmur64Hash: int64 ( o.Murmur64Hash ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__HomeFanout_To_HomeFanout( o *PB_HomeFanout) *HomeFanout {
+     n := &HomeFanout{
+      OrderId: int ( o.OrderId ),
+      ForUserId: int ( o.ForUserId ),
+      PostId: int ( o.PostId ),
+      PostUserId: int ( o.PostUserId ),
+    }
+    return n
+}
+
+func PBConvPB_HomeFanout_To_HomeFanout ( o *HomeFanout) *PB_HomeFanout {
+     n := &PB_HomeFanout{
+      OrderId: int64 ( o.OrderId ),
+      ForUserId: int64 ( o.ForUserId ),
+      PostId: int64 ( o.PostId ),
+      PostUserId: int64 ( o.PostUserId ),
+    }
+    return n
+}
+*/

@@ -1733,3 +1733,99 @@ func (c _StoreImpl) PreLoadFilePostByIds(ids []int) {
 }
 
 // yes 222 int
+
+func (c _StoreImpl) GetActionFanoutByOrderId(OrderId int) (*ActionFanout, bool) {
+	o, ok := RowCache.Get("ActionFanout:" + strconv.Itoa(OrderId))
+	if ok {
+		if obj, ok := o.(*ActionFanout); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ActionFanoutByOrderId(base.DB, OrderId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.ActionFanout {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetActionFanoutByOrderId_JustCache(OrderId int) (*ActionFanout, bool) {
+	o, ok := RowCache.Get("ActionFanout:" + strconv.Itoa(OrderId))
+	if ok {
+		if obj, ok := o.(*ActionFanout); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ActionFanout {
+		XOLogErr(errors.New("_JustCache is empty for ActionFanout: " + strconv.Itoa(OrderId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadActionFanoutByOrderIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ActionFanout:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewActionFanout_Selector().OrderId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetHomeFanoutByOrderId(OrderId int) (*HomeFanout, bool) {
+	o, ok := RowCache.Get("HomeFanout:" + strconv.Itoa(OrderId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+	obj2, err := HomeFanoutByOrderId(base.DB, OrderId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.HomeFanout {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetHomeFanoutByOrderId_JustCache(OrderId int) (*HomeFanout, bool) {
+	o, ok := RowCache.Get("HomeFanout:" + strconv.Itoa(OrderId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.HomeFanout {
+		XOLogErr(errors.New("_JustCache is empty for HomeFanout: " + strconv.Itoa(OrderId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHomeFanoutByOrderIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("HomeFanout:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewHomeFanout_Selector().OrderId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int

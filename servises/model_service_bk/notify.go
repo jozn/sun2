@@ -20,16 +20,16 @@ func Notify_OnPostCommented(comment *x.Comment, post *x.Post) {
 	key := hashPostCommented(post.PostId, comment.CommentId)
 
 	not := x.Notify{
-		NotifyId:      helper.NextRowsSeqId(),
-		ForUserId:     post.UserId,
-		ActorUserId:   comment.UserId,
-		NotiyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_COMMENTED),
-		PostId:        post.PostId,
-		CommentId:     comment.CommentId,
-		PeerUserId:    0,
-		Murmur64Hash:  key,
-		SeenStatus:    0,
-		CreatedTime:   helper.TimeNow(),
+		NotifyId:       helper.NextRowsSeqId(),
+		ForUserId:      post.UserId,
+		ActorUserId:    comment.UserId,
+		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_COMMENTED),
+		PostId:         post.PostId,
+		CommentId:      comment.CommentId,
+		PeerUserId:     0,
+		Murmur64Hash:   key,
+		SeenStatus:     0,
+		CreatedTime:    helper.TimeNow(),
 	}
 	not.Save(base.DB)
 
@@ -61,16 +61,16 @@ func Notify_OnFollowed(UserId, FollowedPeerUserId, FLId int) {
 
 	hash := hashFollowed(UserId, FollowedPeerUserId)
 	nf := x.Notify{
-		NotifyId:      helper.NextRowsSeqId(),
-		ForUserId:     FollowedPeerUserId,
-		ActorUserId:   UserId,
-		NotiyTypeEnum: int(x.NotifyEnum_NOTIFY_FOLLOWED_YOU),
-		PostId:        0,
-		CommentId:     0,
-		PeerUserId:    0,
-		Murmur64Hash:  hash,
-		SeenStatus:    0,
-		CreatedTime:   helper.TimeNow(),
+		NotifyId:       helper.NextRowsSeqId(),
+		ForUserId:      FollowedPeerUserId,
+		ActorUserId:    UserId,
+		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_FOLLOWED_YOU),
+		PostId:         0,
+		CommentId:      0,
+		PeerUserId:     0,
+		Murmur64Hash:   hash,
+		SeenStatus:     0,
+		CreatedTime:    helper.TimeNow(),
 	}
 
 	nf.Save(base.DB)
@@ -112,16 +112,16 @@ func Notify_OnPostLiked(lk *x.Like) {
 	hash := hashPostLiked(lk.UserId, lk.PostId)
 
 	nf := x.Notify{
-		NotifyId:      helper.NextRowsSeqId(),
-		ForUserId:     post.UserId,
-		ActorUserId:   lk.UserId,
-		NotiyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_LIKED),
-		PostId:        post.PostId,
-		CommentId:     0,
-		PeerUserId:    0,
-		Murmur64Hash:  hash,
-		SeenStatus:    0,
-		CreatedTime:   helper.TimeNow(),
+		NotifyId:       helper.NextRowsSeqId(),
+		ForUserId:      post.UserId,
+		ActorUserId:    lk.UserId,
+		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_LIKED),
+		PostId:         post.PostId,
+		CommentId:      0,
+		PeerUserId:     0,
+		Murmur64Hash:   hash,
+		SeenStatus:     0,
+		CreatedTime:    helper.TimeNow(),
 	}
 
 	nf.Save(base.DB)

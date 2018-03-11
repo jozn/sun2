@@ -35,7 +35,7 @@ func Notify_notifyToView(nf *x.Notify, MeId int) *x.PB_NotifyView {
 		NotifyId:      int64(nf.NotifyId),
 		ForUserId:     int32(nf.ForUserId),
 		ActorUserId:   int32(nf.ActorUserId),
-		NotiyTypeEnum: int32(nf.NotiyTypeEnum),
+		NotiyTypeEnum: int32(nf.NotifyTypeEnum),
 		PostId:        int64(nf.PostId),
 		CommentId:     int64(nf.CommentId),
 		PeerUserId:    int32(nf.PeerUserId),
@@ -46,7 +46,7 @@ func Notify_notifyToView(nf *x.Notify, MeId int) *x.PB_NotifyView {
 
 	nv.ActorUserView = UserViewAndMe(nf.ActorUserId, MeId)
 
-	switch x.NotifyEnum(nf.NotiyTypeEnum) {
+	switch x.NotifyEnum(nf.NotifyTypeEnum) {
 
 	case x.NotifyEnum_NOTIFY_FOLLOWED_YOU:
 
@@ -67,7 +67,7 @@ func notify_fillCaches(nots []*x.Notify) {
 	var pre_comments []int
 
 	for _, nf := range nots {
-		switch x.NotifyEnum(nf.NotiyTypeEnum) {
+		switch x.NotifyEnum(nf.NotifyTypeEnum) {
 
 		case x.NotifyEnum_NOTIFY_FOLLOWED_YOU:
 
