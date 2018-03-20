@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var saveHomeFans = make(chan x.HomeFanout, 1000)
+var saveHomeFans = make(chan x.HomeFanout, 100000)
 
 func saveHomeFansLooper() {
 	tick := time.Tick(time.Millisecond * 200)
@@ -57,41 +57,49 @@ func on_Added_Post(e event_service.GeneralEvent) {
 		return
 	}
 	mu, ok := mem_user_service.GetForUser(e.ByUserId)
-	if ok {
-		followers := mu.GetFollowers()
-		for _, uid := range followers {
-			fan := x.HomeFanout{
-				OrderId:    helper.NextRowsSeqId(), //fixme
-				ForUserId:  uid,
-				PostId:     e.PostId,
-				PostUserId: e.Post.UserId,
-			}
-			saveHomeFans <- fan
-		}
+	if !ok {
+		return
 	}
+
+	followers := mu.GetFollowers()
+	for _, uid := range followers {
+		fan := x.HomeFanout{
+			OrderId:    helper.NanoRowIdAtSec(e.Post.CreatedTime),
+			ForUserId:  uid,
+			PostId:     e.PostId,
+			PostUserId: e.Post.UserId,
+		}
+		saveHomeFans <- fan
+	}
+
 }
 
 func on_Deleted_Post(e event_service.GeneralEvent) {
-
+	if e.PostId < 1 {
+		return
+	}
+	x.NewHomeFanout_Deleter().PostId_Eq(e.PostId).Delete(base.DB)
 }
 
 func on_Followed(e event_service.GeneralEvent) {
 	mu, ok := mem_user_service.GetForUser(e.ByUserId)
-	if ok {
-		posts := mu.GetLastPosts()
-		for _, p := range posts {
-			if p == nil {
-				continue
-			}
-			fan := x.HomeFanout{
-				OrderId:    helper.NextRowsSeqId(), //fixme
-				ForUserId:  e.ByUserId,
-				PostId:     p.PostId,
-				PostUserId: p.UserId,
-			}
-			saveHomeFans <- fan
-		}
+	if !ok {
+		return
 	}
+	posts := mu.GetLastPosts()
+	for _, p := range posts {
+		if p == nil {
+			continue
+		}
+		fan := x.HomeFanout{
+			OrderId:    helper.NanoRowIdAtSec(p.CreatedTime),
+			ForUserId:  e.ByUserId,
+			PostId:     p.PostId,
+			PostUserId: p.UserId,
+		}
+		saveHomeFans <- fan
+	}
+
 }
 
 func on_UnFollwed(e event_service.GeneralEvent) {

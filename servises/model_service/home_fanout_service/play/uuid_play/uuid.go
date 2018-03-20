@@ -1,4 +1,4 @@
-package main
+package uuid_play
 
 import (
     "github.com/google/uuid"
