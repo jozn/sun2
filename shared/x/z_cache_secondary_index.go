@@ -818,18 +818,18 @@ func (c _StoreImpl) PreLoadTag_ByNames(Names []string) {
 
 //field//field//field
 
-///// Generated from index 'Id'.
-func (c _StoreImpl) TriggerLog_ById(Id int) (*TriggerLog, bool) {
-	o, ok := RowCacheIndex.Get("TriggerLog_Id:" + fmt.Sprintf("%v", Id))
+///// Generated from index 'CreatedSe'.
+func (c _StoreImpl) TriggerLog_ByCreatedSe(CreatedSe int) (*TriggerLog, bool) {
+	o, ok := RowCacheIndex.Get("TriggerLog_CreatedSe:" + fmt.Sprintf("%v", CreatedSe))
 	if ok {
 		if obj, ok := o.(*TriggerLog); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewTriggerLog_Selector().Id_Eq(Id).GetRow(base.DB)
+	row, err := NewTriggerLog_Selector().CreatedSe_Eq(CreatedSe).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("TriggerLog_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+		RowCacheIndex.Set("TriggerLog_CreatedSe:"+fmt.Sprintf("%v", row.CreatedSe), row, 0)
 		return row, true
 	}
 
@@ -837,33 +837,33 @@ func (c _StoreImpl) TriggerLog_ById(Id int) (*TriggerLog, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) TriggerLog_ById_JustCache(Id int) (*TriggerLog, bool) {
-	o, ok := RowCacheIndex.Get("TriggerLog_Id:" + fmt.Sprintf("%v", Id))
+func (c _StoreImpl) TriggerLog_ByCreatedSe_JustCache(CreatedSe int) (*TriggerLog, bool) {
+	o, ok := RowCacheIndex.Get("TriggerLog_CreatedSe:" + fmt.Sprintf("%v", CreatedSe))
 	if ok {
 		if obj, ok := o.(*TriggerLog); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "TriggerLog_Id:" + fmt.Sprintf("%v", Id)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "TriggerLog_CreatedSe:" + fmt.Sprintf("%v", CreatedSe)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadTriggerLog_ByIds(Ids []int) {
-	not_cached := make([]int, 0, len(Ids))
+func (c _StoreImpl) PreLoadTriggerLog_ByCreatedSes(CreatedSes []int) {
+	not_cached := make([]int, 0, len(CreatedSes))
 
-	for _, id := range Ids {
-		_, ok := RowCacheIndex.Get("TriggerLog_Id:" + fmt.Sprintf("%v", id))
+	for _, id := range CreatedSes {
+		_, ok := RowCacheIndex.Get("TriggerLog_CreatedSe:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewTriggerLog_Selector().Id_In(not_cached).GetRows(base.DB)
+		rows, err := NewTriggerLog_Selector().CreatedSe_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("TriggerLog_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+				RowCacheIndex.Set("TriggerLog_CreatedSe:"+fmt.Sprintf("%v", row.CreatedSe), row, 0)
 			}
 		}
 	}
@@ -1212,3 +1212,111 @@ func (c _StoreImpl) PreLoadHome_ByPostIds(PostIds []int) {
 // ActionFanout - PRIMARY
 
 // HomeFanout - PRIMARY
+
+// HomeFanout - ForUserId_2
+
+//field//field//field
+
+///// Generated from index 'ForUserId'.
+func (c _StoreImpl) HomeFanout_ByForUserId(ForUserId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewHomeFanout_Selector().ForUserId_Eq(ForUserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) HomeFanout_ByForUserId_JustCache(ForUserId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
+	not_cached := make([]int, 0, len(ForUserIds))
+
+	for _, id := range ForUserIds {
+		_, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewHomeFanout_Selector().ForUserId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'PostId'.
+func (c _StoreImpl) HomeFanout_ByPostId(PostId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_PostId:" + fmt.Sprintf("%v", PostId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewHomeFanout_Selector().PostId_Eq(PostId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("HomeFanout_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) HomeFanout_ByPostId_JustCache(PostId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_PostId:" + fmt.Sprintf("%v", PostId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "HomeFanout_PostId:" + fmt.Sprintf("%v", PostId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHomeFanout_ByPostIds(PostIds []int) {
+	not_cached := make([]int, 0, len(PostIds))
+
+	for _, id := range PostIds {
+		_, ok := RowCacheIndex.Get("HomeFanout_PostId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewHomeFanout_Selector().PostId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("HomeFanout_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
+			}
+		}
+	}
+}

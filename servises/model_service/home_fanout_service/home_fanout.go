@@ -19,7 +19,7 @@ func saveHomeFansLooper() {
 		case fan := <-saveHomeFans:
 			arr = append(arr, fan)
 		case <-tick:
-			x.MassInsert_HomeFanout(arr, base.DB)
+			x.MassReplace_HomeFanout(arr, base.DB)
 			arr = []x.HomeFanout{}
 		}
 	}

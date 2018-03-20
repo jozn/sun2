@@ -1654,8 +1654,12 @@ func MassInsert_Home(rows []Home, db XODB) error {
 }
 
 func MassReplace_Home(rows []Home, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
+	//s:= "(?,?,?)," //`(?, ?, ?, ?),`
 	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
@@ -1687,6 +1691,7 @@ func MassReplace_Home(rows []Home, db XODB) error {
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////
