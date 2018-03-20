@@ -68,6 +68,14 @@ func NewSub(param SubParam) Sub {
 					if param.UnBlocked_User_Event {
 						sub.UnBlocked_User_Event <- gEvent
 					}
+				case ADDED_USER_ACTION:
+					if param.Added_User_Action {
+						sub.Added_User_Action <- gEvent
+					}
+				case DELETED_USER_ACTION:
+					if param.Deleted_User_Action {
+						sub.Deleted_User_Action <- gEvent
+					}
 				default:
 					if config.IS_DEBUG {
 						log_service.BadErrorf("event_service NewSub unknown EventId: %d", gEvent.Event.EventType)

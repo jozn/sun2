@@ -18,6 +18,17 @@ func saveNewActiones() {
 				log.Panic("x.Action is not valid to save: ", act)
 			}
 		}
+		ev := x.Event{
+			EventId:      helper.NanoRowIdSeq(),
+			EventType:    int(event_service.ADDED_USER_ACTION),
+			ByUserId:     act.ActorUserId,
+			PeerUserId:   act.PeerUserId,
+			PostId:       act.PostId,
+			CommentId:    act.CommentId,
+			ActionId:     act.ActionId,
+			Murmur64Hash: act.Murmur64Hash,
+		}
+		event_service.SaveEvent(event_service.ADDED_USER_ACTION, ev)
 		act.Save(base.DB)
 	}
 }

@@ -13,6 +13,8 @@ type SubParam struct {
 	UnFollwed_User_Event   bool
 	Blocked_User_Event     bool
 	UnBlocked_User_Event   bool
+	Added_User_Action      bool
+	Deleted_User_Action    bool
 }
 
 type Sub struct {
@@ -26,6 +28,8 @@ type Sub struct {
 	UnFollwed_User_Event   chan GeneralEvent
 	Blocked_User_Event     chan GeneralEvent
 	UnBlocked_User_Event   chan GeneralEvent
+	Added_User_Action      chan GeneralEvent
+	Deleted_User_Action    chan GeneralEvent
 }
 
 type GeneralEvent struct {
@@ -59,6 +63,8 @@ func newSub() Sub {
 		UnFollwed_User_Event:   make(chan GeneralEvent, NUM),
 		Blocked_User_Event:     make(chan GeneralEvent, NUM),
 		UnBlocked_User_Event:   make(chan GeneralEvent, NUM),
+		Added_User_Action:      make(chan GeneralEvent, NUM),
+		Deleted_User_Action:    make(chan GeneralEvent, NUM),
 	}
 	return sub
 }
