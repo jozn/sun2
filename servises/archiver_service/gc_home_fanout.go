@@ -23,7 +23,7 @@ func gc_home_fanout() {
 			if err != nil || home == nil {
 				continue
 			}
-			x.NewHomeFanout_Deleter().ForUserId_Eq(uid).OrderId_LT(home.OrderId).Delete(base.DB)
+			x.NewHomeFanout_Deleter().ForUserId_Eq(uid).OrderId_LE(home.OrderId).Delete(base.DB)
 		}
 	}
 }

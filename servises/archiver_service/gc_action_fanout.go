@@ -23,7 +23,7 @@ func gc_action_fanout() {
 			if err != nil || act == nil {
 				continue
 			}
-			x.NewActionFanout_Deleter().ForUserId_Eq(uid).OrderId_LT(act.OrderId).Delete(base.DB)
+			x.NewActionFanout_Deleter().ForUserId_Eq(uid).OrderId_LE(act.OrderId).Delete(base.DB)
 		}
 	}
 }
