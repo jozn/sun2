@@ -11,18 +11,19 @@ func init() {
 }
 
 type TriggerStringModel interface {
-	OnInsert([]string)
-	OnUpdate([]string)
-	OnDelete([]string)
+	OnInsert(ins []string)
+	OnUpdate(ins []string)
+	OnDelete(ins []string)
 }
 
 type TriggerIntModel interface {
-	OnInsert([]int)
-	OnUpdate([]int)
-	OnDelete([]int)
+	OnInsert(ins []int)
+	OnUpdate(ins []int)
+	OnDelete(ins []int)
 }
 
 type TriggerModelListener struct {
+	Action  TriggerIntModel
 	Comment TriggerIntModel
 	Post    TriggerIntModel
 	User    TriggerIntModel
@@ -58,6 +59,10 @@ func triggerLoader() {
 				switch strings.ToUpper(trig.ChangeType) {
 				case "INSERT":
 					switch strings.ToUpper(trig.ModelName) {
+					case "ACTION":
+						if listener.Action != nil {
+							collect.Action.OnInsert = append(collect.Action.OnInsert, trig.TargetId)
+						}
 					case "COMMENT":
 						if listener.Comment != nil {
 							collect.Comment.OnInsert = append(collect.Comment.OnInsert, trig.TargetId)
@@ -77,6 +82,10 @@ func triggerLoader() {
 					}
 				case "UPDATE":
 					switch strings.ToUpper(trig.ModelName) {
+					case "ACTION":
+						if listener.Action != nil {
+							collect.Action.OnUpdate = append(collect.Action.OnUpdate, trig.TargetId)
+						}
 					case "COMMENT":
 						if listener.Comment != nil {
 							collect.Comment.OnUpdate = append(collect.Comment.OnUpdate, trig.TargetId)
@@ -96,6 +105,10 @@ func triggerLoader() {
 					}
 				case "DELETE":
 					switch strings.ToUpper(trig.ModelName) {
+					case "ACTION":
+						if listener.Action != nil {
+							collect.Action.OnDelete = append(collect.Action.OnDelete, trig.TargetId)
+						}
 					case "COMMENT":
 						if listener.Comment != nil {
 							collect.Comment.OnDelete = append(collect.Comment.OnDelete, trig.TargetId)
@@ -117,6 +130,18 @@ func triggerLoader() {
 			}
 
 			//each
+
+			if listener.Action != nil {
+				if len(collect.Action.OnInsert) != 0 {
+					listener.Action.OnInsert(collect.Action.OnInsert)
+				}
+				if len(collect.Action.OnUpdate) != 0 {
+					listener.Action.OnUpdate(collect.Action.OnUpdate)
+				}
+				if len(collect.Action.OnDelete) != 0 {
+					listener.Action.OnDelete(collect.Action.OnDelete)
+				}
+			}
 
 			if listener.Comment != nil {
 				if len(collect.Comment.OnInsert) != 0 {
@@ -183,6 +208,7 @@ type triggerIntCollection struct {
 }
 
 type triggerModelWalk struct {
+	Action  triggerIntCollection
 	Comment triggerIntCollection
 	Post    triggerIntCollection
 	User    triggerIntCollection

@@ -1,106 +1,54 @@
 package trigger_service
 
 import (
+	"fmt"
 	"ms/sun/base"
 	"ms/sun2/shared/x"
-	"strings"
-	"time"
 )
 
+type postTrig int
+
+func (postTrig) OnInsert(ins []int) {
+	fmt.Println("OnInsert postTrig", ins)
+}
+
+func (postTrig) OnUpdate(ins []int) {
+	fmt.Println("OnUpdate postTrig", ins)
+}
+
+func (postTrig) OnDelete(ins []int) {
+	fmt.Println("OnDelete postTrig", ins)
+	x.NewHomeFanout_Deleter().PostId_In(ins).Delete(base.DB)
+	x.NewAction_Deleter().PostId_In(ins).Delete(base.DB)
+}
+
+//////
+type actionTrig int
+
+func (actionTrig) OnInsert(ins []int) {
+	fmt.Println("OnInsert actionTrig", ins)
+}
+
+func (actionTrig) OnUpdate(ins []int) {
+	fmt.Println("OnUpdate actionTrig", ins)
+}
+
+func (actionTrig) OnDelete(ins []int) {
+	fmt.Println("OnDelete actionTrig", ins)
+	x.NewActionFanout_Deleter().ActionId_In(ins).Delete(base.DB)
+}
+
+var s = x.TriggerModelListener{
+	Action: actionTrig(1),
+	Post:   postTrig(1),
+}
+
 func init() {
-	go triggerLoader()
+	listen()
 }
+func listen() {
+	x.ActivateTrigger = true
 
-type TriggerStringModel interface {
-	OnInsert([]string)
-	OnUpdate([]string)
-	OnDelete([]string)
-}
+	x.ArrTriggerListeners = append(x.ArrTriggerListeners, s)
 
-type TriggerIntModel interface {
-	OnInsert([]int)
-	OnUpdate([]int)
-	OnDelete([]int)
-}
-
-type TriggerModelListener struct {
-	Chat TriggerStringModel
-	Post TriggerStringModel
-}
-
-var lastLoaded int
-var ArrTriggerListeners = make([]TriggerModelListener, 10)
-var ActivateTrigger = false
-
-func triggerLoader() {
-	for {
-		time.Sleep(time.Second)
-		if !ActivateTrigger {
-			continue
-		}
-
-		selector := x.NewTriggerLog_Selector()
-		if lastLoaded > 0 {
-			selector.Id_GE(lastLoaded)
-		}
-		triggers, err := selector.OrderBy_Id_Asc().GetRows(base.DB)
-		if err != nil || len(triggers) == 0 {
-			continue
-		}
-		lastLoaded = triggers[len(triggers)-1].Id
-		collect := triggerStringCollection{}
-		for _, litener := range ArrTriggerListeners {
-			for _, trig := range triggers {
-				//based on model
-				modelId := trig.TargetStr
-				switch strings.ToUpper(trig.ChangeType) {
-				case "INSERT":
-					switch strings.ToUpper(trig.ModelName) {
-					case "CHAT": //model.ModleNameUpper
-						if litener.Chat != nil {
-							collect.OnInsert = append(collect.OnInsert, modelId)
-						}
-					}
-				case "UPDATE":
-					switch strings.ToUpper(trig.ModelName) {
-					case "CHAT":
-						if litener.Chat != nil {
-							collect.OnUpdate = append(collect.OnUpdate, modelId)
-						}
-					}
-				case "DELETE":
-					switch strings.ToUpper(trig.ModelName) {
-					case "CHAT":
-						if litener.Chat != nil {
-							collect.OnDelete = append(collect.OnDelete, modelId)
-						}
-					}
-				}
-			}
-
-			//each
-			if litener.Chat != nil {
-				if len(collect.OnInsert) != 0 {
-					litener.Chat.OnInsert(collect.OnInsert)
-				}
-			}
-		}
-	}
-}
-
-type triggerStringCollection struct {
-	OnInsert []string
-	OnUpdate []string
-	OnDelete []string
-}
-
-type triggerIntCollection struct {
-	OnInsert []int
-	OnUpdate []int
-	OnDelete []int
-}
-
-type TriggerModelWalk struct {
-	Chat TriggerStringModel
-	Post TriggerStringModel
 }

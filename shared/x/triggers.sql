@@ -1,7 +1,7 @@
 
 ################################ Action ######################################
 
-/* #### delimiter $$
+delimiter $$
 DROP TRIGGER IF EXISTS action_OnCreateLogger $$
 CREATE TRIGGER action_OnCreateLogger AFTER INSERT ON action
   FOR EACH ROW
@@ -27,7 +27,7 @@ CREATE TRIGGER action_OnDeleteLogger AFTER DELETE ON action
 $$
 
 
- #### delimiter ;*/
+delimiter ;
 ################################ Comment ######################################
 
 delimiter $$
