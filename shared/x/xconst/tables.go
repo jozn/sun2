@@ -7,6 +7,8 @@ const (
 	Comment_TableGo                    = "Comment"
 	Event_Table                        = "event"
 	Event_TableGo                      = "Event"
+	Event2_Table                       = "event2"
+	Event2_TableGo                     = "Event2"
 	FollowingList_Table                = "following_list"
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
@@ -118,6 +120,27 @@ var Comment = struct {
 }
 
 var Event = struct {
+	EventId      string
+	EventType    string
+	ByUserId     string
+	PeerUserId   string
+	PostId       string
+	CommentId    string
+	ActionId     string
+	Murmur64Hash string
+}{
+
+	EventId:      "EventId",
+	EventType:    "EventType",
+	ByUserId:     "ByUserId",
+	PeerUserId:   "PeerUserId",
+	PostId:       "PostId",
+	CommentId:    "CommentId",
+	ActionId:     "ActionId",
+	Murmur64Hash: "Murmur64Hash",
+}
+
+var Event2 = struct {
 	EventId      string
 	EventType    string
 	ByUserId     string
@@ -864,18 +887,16 @@ var FilePost = struct {
 }
 
 var ActionFanout = struct {
-	OrderId      string
-	ForUserId    string
-	ActionId     string
-	ActorUserId  string
-	Murmur64Hash string
+	OrderId     string
+	ForUserId   string
+	ActionId    string
+	ActorUserId string
 }{
 
-	OrderId:      "OrderId",
-	ForUserId:    "ForUserId",
-	ActionId:     "ActionId",
-	ActorUserId:  "ActorUserId",
-	Murmur64Hash: "Murmur64Hash",
+	OrderId:     "OrderId",
+	ForUserId:   "ForUserId",
+	ActionId:    "ActionId",
+	ActorUserId: "ActorUserId",
 }
 
 var HomeFanout = struct {

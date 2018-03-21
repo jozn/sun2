@@ -55,11 +55,10 @@ func on_Added_Action(e event_service.GeneralEvent) {
 	followers := mu.GetFollowers()
 	for _, uid := range followers {
 		fan := x.ActionFanout{
-			OrderId:      helper.NanoRowIdAtSec(e.Post.CreatedTime),
-			ForUserId:    uid,
-			ActionId:     e.ActionId,
-			ActorUserId:  e.ByUserId,
-			Murmur64Hash: e.Murmur64Hash,
+			OrderId:     helper.NanoRowIdAtSec(e.Post.CreatedTime),
+			ForUserId:   uid,
+			ActionId:    e.ActionId,
+			ActorUserId: e.ByUserId,
 		}
 		saveActionFans <- fan
 	}

@@ -35,6 +35,16 @@ message PB_Event {
     int64 ActionId = 7;
     int64 Murmur64Hash = 8;
 }
+message PB_Event2 {
+    int64 EventId = 1;
+    int32 EventType = 2;
+    int64 ByUserId = 3;
+    int64 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 ActionId = 7;
+    int64 Murmur64Hash = 8;
+}
 message PB_FollowingList {
     int32 Id = 1;
     int32 UserId = 2;
@@ -386,7 +396,6 @@ message PB_ActionFanout {
     int32 ForUserId = 2;
     int64 ActionId = 3;
     int32 ActorUserId = 4;
-    int64 Murmur64Hash = 5;
 }
 message PB_HomeFanout {
     int64 OrderId = 1;

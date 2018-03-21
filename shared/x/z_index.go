@@ -76,6 +76,30 @@ func EventByEventId(db *sqlx.DB, eventId int) (*Event, error) {
 	return &e, nil
 }
 
+// Event2ByEventId Generated from index 'PRIMARY' -- retrieves a row from 'sun.event2' as a Event2.
+func Event2ByEventId(db *sqlx.DB, eventId int) (*Event2, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.event2 ` +
+		`WHERE EventId = ?`
+
+	XOLog(sqlstr, eventId)
+	e := Event2{
+		_exists: true,
+	}
+
+	err = db.Get(&e, sqlstr, eventId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnEvent2_LoadOne(&e)
+
+	return &e, nil
+}
+
 // FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list' as a FollowingList.
 func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	var err error

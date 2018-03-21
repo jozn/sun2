@@ -69,6 +69,8 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 
 // Event - PRIMARY
 
+// Event2 - PRIMARY
+
 // FollowingList - PRIMARY
 
 // FollowingListMember - PRIMARY
@@ -1211,24 +1213,22 @@ func (c _StoreImpl) PreLoadHome_ByPostIds(PostIds []int) {
 
 // ActionFanout - PRIMARY
 
-// HomeFanout - PRIMARY
-
-// HomeFanout - ForUserId_2
+// ActionFanout - ForUserId
 
 //field//field//field
 
-///// Generated from index 'ForUserId'.
-func (c _StoreImpl) HomeFanout_ByForUserId(ForUserId int) (*HomeFanout, bool) {
-	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+///// Generated from index 'ActionId'.
+func (c _StoreImpl) ActionFanout_ByActionId(ActionId int) (*ActionFanout, bool) {
+	o, ok := RowCacheIndex.Get("ActionFanout_ActionId:" + fmt.Sprintf("%v", ActionId))
 	if ok {
-		if obj, ok := o.(*HomeFanout); ok {
+		if obj, ok := o.(*ActionFanout); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewHomeFanout_Selector().ForUserId_Eq(ForUserId).GetRow(base.DB)
+	row, err := NewActionFanout_Selector().ActionId_Eq(ActionId).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+		RowCacheIndex.Set("ActionFanout_ActionId:"+fmt.Sprintf("%v", row.ActionId), row, 0)
 		return row, true
 	}
 
@@ -1236,37 +1236,43 @@ func (c _StoreImpl) HomeFanout_ByForUserId(ForUserId int) (*HomeFanout, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) HomeFanout_ByForUserId_JustCache(ForUserId int) (*HomeFanout, bool) {
-	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+func (c _StoreImpl) ActionFanout_ByActionId_JustCache(ActionId int) (*ActionFanout, bool) {
+	o, ok := RowCacheIndex.Get("ActionFanout_ActionId:" + fmt.Sprintf("%v", ActionId))
 	if ok {
-		if obj, ok := o.(*HomeFanout); ok {
+		if obj, ok := o.(*ActionFanout); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "ActionFanout_ActionId:" + fmt.Sprintf("%v", ActionId)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
-	not_cached := make([]int, 0, len(ForUserIds))
+func (c _StoreImpl) PreLoadActionFanout_ByActionIds(ActionIds []int) {
+	not_cached := make([]int, 0, len(ActionIds))
 
-	for _, id := range ForUserIds {
-		_, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", id))
+	for _, id := range ActionIds {
+		_, ok := RowCacheIndex.Get("ActionFanout_ActionId:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewHomeFanout_Selector().ForUserId_In(not_cached).GetRows(base.DB)
+		rows, err := NewActionFanout_Selector().ActionId_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+				RowCacheIndex.Set("ActionFanout_ActionId:"+fmt.Sprintf("%v", row.ActionId), row, 0)
 			}
 		}
 	}
 }
+
+// ActionFanout - ForUserId_2
+
+// HomeFanout - PRIMARY
+
+// HomeFanout - ForUserId_2
 
 //field//field//field
 
@@ -1316,6 +1322,59 @@ func (c _StoreImpl) PreLoadHomeFanout_ByPostIds(PostIds []int) {
 		if err == nil {
 			for _, row := range rows {
 				RowCacheIndex.Set("HomeFanout_PostId:"+fmt.Sprintf("%v", row.PostId), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'ForUserId'.
+func (c _StoreImpl) HomeFanout_ByForUserId(ForUserId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewHomeFanout_Selector().ForUserId_Eq(ForUserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) HomeFanout_ByForUserId_JustCache(ForUserId int) (*HomeFanout, bool) {
+	o, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId))
+	if ok {
+		if obj, ok := o.(*HomeFanout); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "HomeFanout_ForUserId:" + fmt.Sprintf("%v", ForUserId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
+	not_cached := make([]int, 0, len(ForUserIds))
+
+	for _, id := range ForUserIds {
+		_, ok := RowCacheIndex.Get("HomeFanout_ForUserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewHomeFanout_Selector().ForUserId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("HomeFanout_ForUserId:"+fmt.Sprintf("%v", row.ForUserId), row, 0)
 			}
 		}
 	}

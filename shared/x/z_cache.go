@@ -150,6 +150,54 @@ func (c _StoreImpl) PreLoadEventByEventIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetEvent2ByEventId(EventId int) (*Event2, bool) {
+	o, ok := RowCache.Get("Event2:" + strconv.Itoa(EventId))
+	if ok {
+		if obj, ok := o.(*Event2); ok {
+			return obj, true
+		}
+	}
+	obj2, err := Event2ByEventId(base.DB, EventId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.Event2 {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetEvent2ByEventId_JustCache(EventId int) (*Event2, bool) {
+	o, ok := RowCache.Get("Event2:" + strconv.Itoa(EventId))
+	if ok {
+		if obj, ok := o.(*Event2); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Event2 {
+		XOLogErr(errors.New("_JustCache is empty for Event2: " + strconv.Itoa(EventId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadEvent2ByEventIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Event2:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewEvent2_Selector().EventId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
 	if ok {

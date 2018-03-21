@@ -13,11 +13,10 @@ import (
 
 // Manualy copy this to project
 type ActionFanout__ struct {
-	OrderId      int `json:"OrderId"`      // OrderId -
-	ForUserId    int `json:"ForUserId"`    // ForUserId -
-	ActionId     int `json:"ActionId"`     // ActionId -
-	ActorUserId  int `json:"ActorUserId"`  // ActorUserId -
-	Murmur64Hash int `json:"Murmur64Hash"` // Murmur64Hash -
+	OrderId     int `json:"OrderId"`     // OrderId -
+	ForUserId   int `json:"ForUserId"`   // ForUserId -
+	ActionId    int `json:"ActionId"`    // ActionId -
+	ActorUserId int `json:"ActorUserId"` // ActorUserId -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -43,16 +42,16 @@ func (af *ActionFanout) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_meta.action_fanout (` +
-		`OrderId, ForUserId, ActionId, ActorUserId, Murmur64Hash` +
+		`OrderId, ForUserId, ActionId, ActorUserId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.ActionFanout {
-		XOLog(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash)
+		XOLog(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId)
 	}
-	_, err = db.Exec(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash)
+	_, err = db.Exec(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId)
 	if err != nil {
 		return err
 	}
@@ -72,16 +71,16 @@ func (af *ActionFanout) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_meta.action_fanout (` +
-		`OrderId, ForUserId, ActionId, ActorUserId, Murmur64Hash` +
+		`OrderId, ForUserId, ActionId, ActorUserId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.ActionFanout {
-		XOLog(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash)
+		XOLog(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId)
 	}
-	_, err = db.Exec(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash)
+	_, err = db.Exec(sqlstr, af.OrderId, af.ForUserId, af.ActionId, af.ActorUserId)
 	if err != nil {
 		if LogTableSqlReq.ActionFanout {
 			XOLogErr(err)
@@ -112,14 +111,14 @@ func (af *ActionFanout) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_meta.action_fanout SET ` +
-		`ForUserId = ?, ActionId = ?, ActorUserId = ?, Murmur64Hash = ?` +
+		`ForUserId = ?, ActionId = ?, ActorUserId = ?` +
 		` WHERE OrderId = ?`
 
 	// run query
 	if LogTableSqlReq.ActionFanout {
-		XOLog(sqlstr, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash, af.OrderId)
+		XOLog(sqlstr, af.ForUserId, af.ActionId, af.ActorUserId, af.OrderId)
 	}
-	_, err = db.Exec(sqlstr, af.ForUserId, af.ActionId, af.ActorUserId, af.Murmur64Hash, af.OrderId)
+	_, err = db.Exec(sqlstr, af.ForUserId, af.ActionId, af.ActorUserId, af.OrderId)
 
 	if LogTableSqlReq.ActionFanout {
 		XOLogErr(err)
@@ -646,111 +645,6 @@ func (d *__ActionFanout_Deleter) ActorUserId_GE(val int) *__ActionFanout_Deleter
 	return d
 }
 
-func (u *__ActionFanout_Deleter) Murmur64Hash_In(ins []int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Deleter) Murmur64Hash_Ins(ins ...int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Deleter) Murmur64Hash_NotIn(ins []int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_Eq(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_NotEq(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_LT(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_LE(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_GT(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Deleter) Murmur64Hash_GE(val int) *__ActionFanout_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
 func (u *__ActionFanout_Updater) Or() *__ActionFanout_Updater {
 	u.whereSep = " OR "
@@ -1172,111 +1066,6 @@ func (d *__ActionFanout_Updater) ActorUserId_GE(val int) *__ActionFanout_Updater
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ActorUserId >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__ActionFanout_Updater) Murmur64Hash_In(ins []int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Updater) Murmur64Hash_Ins(ins ...int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Updater) Murmur64Hash_NotIn(ins []int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_Eq(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_NotEq(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_LT(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_LE(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_GT(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Updater) Murmur64Hash_GE(val int) *__ActionFanout_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1708,111 +1497,6 @@ func (d *__ActionFanout_Selector) ActorUserId_GE(val int) *__ActionFanout_Select
 	return d
 }
 
-func (u *__ActionFanout_Selector) Murmur64Hash_In(ins []int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Selector) Murmur64Hash_Ins(ins ...int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ActionFanout_Selector) Murmur64Hash_NotIn(ins []int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_Eq(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_NotEq(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_LT(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_LE(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_GT(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__ActionFanout_Selector) Murmur64Hash_GE(val int) *__ActionFanout_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -1909,27 +1593,6 @@ func (u *__ActionFanout_Updater) ActorUserId_Increment(count int) *__ActionFanou
 
 //string
 
-//ints
-
-func (u *__ActionFanout_Updater) Murmur64Hash(newVal int) *__ActionFanout_Updater {
-	u.updates[" Murmur64Hash = ? "] = newVal
-	return u
-}
-
-func (u *__ActionFanout_Updater) Murmur64Hash_Increment(count int) *__ActionFanout_Updater {
-	if count > 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -1992,21 +1655,6 @@ func (u *__ActionFanout_Selector) OrderBy_ActorUserId_Asc() *__ActionFanout_Sele
 
 func (u *__ActionFanout_Selector) Select_ActorUserId() *__ActionFanout_Selector {
 	u.selectCol = "ActorUserId"
-	return u
-}
-
-func (u *__ActionFanout_Selector) OrderBy_Murmur64Hash_Desc() *__ActionFanout_Selector {
-	u.orderBy = " ORDER BY Murmur64Hash DESC "
-	return u
-}
-
-func (u *__ActionFanout_Selector) OrderBy_Murmur64Hash_Asc() *__ActionFanout_Selector {
-	u.orderBy = " ORDER BY Murmur64Hash ASC "
-	return u
-}
-
-func (u *__ActionFanout_Selector) Select_Murmur64Hash() *__ActionFanout_Selector {
-	u.selectCol = "Murmur64Hash"
 	return u
 }
 
@@ -2323,13 +1971,13 @@ func MassInsert_ActionFanout(rows []ActionFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_meta.action_fanout (" +
-		"OrderId, ForUserId, ActionId, ActorUserId, Murmur64Hash" +
+		"OrderId, ForUserId, ActionId, ActorUserId" +
 		") VALUES " + insVals
 
 	// run query
@@ -2341,7 +1989,6 @@ func MassInsert_ActionFanout(rows []ActionFanout, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -2365,13 +2012,13 @@ func MassReplace_ActionFanout(rows []ActionFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_meta.action_fanout (" +
-		"OrderId, ForUserId, ActionId, ActorUserId, Murmur64Hash" +
+		"OrderId, ForUserId, ActionId, ActorUserId" +
 		") VALUES " + insVals
 
 	// run query
@@ -2383,7 +2030,6 @@ func MassReplace_ActionFanout(rows []ActionFanout, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -2403,8 +2049,6 @@ func MassReplace_ActionFanout(rows []ActionFanout, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

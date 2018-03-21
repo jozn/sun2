@@ -30,7 +30,6 @@ func resetActionFanoutForUser(userId int) {
 					ForUserId:    userId,
 					ActionId:     act.ActionId,
 					ActorUserId:  act.ActorUserId,
-					Murmur64Hash: act.Murmur64Hash,
 				}
 				toSaveArr = append(toSaveArr, r)
 			}

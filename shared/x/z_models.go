@@ -71,6 +71,31 @@ type Event struct {
 	ActionId: 0,
 	Murmur64Hash: 0,
 */
+// event2 'Event2'.
+type Event2 struct {
+	EventId      int `db:"EventId"`
+	EventType    int `db:"EventType"`
+	ByUserId     int `db:"ByUserId"`
+	PeerUserId   int `db:"PeerUserId"`
+	PostId       int `db:"PostId"`
+	CommentId    int `db:"CommentId"`
+	ActionId     int `db:"ActionId"`
+	Murmur64Hash int `db:"Murmur64Hash"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Event2 {
+	EventId: 0,
+	EventType: 0,
+	ByUserId: 0,
+	PeerUserId: 0,
+	PostId: 0,
+	CommentId: 0,
+	ActionId: 0,
+	Murmur64Hash: 0,
+*/
 // following_list 'FollowingList'.
 type FollowingList struct {
 	Id          int    `db:"Id"`
@@ -930,11 +955,10 @@ type FilePost struct {
 */
 // action_fanout 'ActionFanout'.
 type ActionFanout struct {
-	OrderId      int `db:"OrderId"`
-	ForUserId    int `db:"ForUserId"`
-	ActionId     int `db:"ActionId"`
-	ActorUserId  int `db:"ActorUserId"`
-	Murmur64Hash int `db:"Murmur64Hash"`
+	OrderId     int `db:"OrderId"`
+	ForUserId   int `db:"ForUserId"`
+	ActionId    int `db:"ActionId"`
+	ActorUserId int `db:"ActorUserId"`
 
 	_exists, _deleted bool
 }
@@ -945,7 +969,6 @@ type ActionFanout struct {
 	ForUserId: 0,
 	ActionId: 0,
 	ActorUserId: 0,
-	Murmur64Hash: 0,
 */
 // home_fanout 'HomeFanout'.
 type HomeFanout struct {
@@ -970,6 +993,7 @@ type LogTableSql struct {
 	Action                     bool
 	Comment                    bool
 	Event                      bool
+	Event2                     bool
 	FollowingList              bool
 	FollowingListMember        bool
 	FollowingListMemberRemoved bool
@@ -1012,6 +1036,7 @@ var LogTableSqlReq = LogTableSql{
 	Action:                     true,
 	Comment:                    true,
 	Event:                      true,
+	Event2:                     true,
 	FollowingList:              true,
 	FollowingListMember:        true,
 	FollowingListMemberRemoved: true,

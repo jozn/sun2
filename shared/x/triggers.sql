@@ -86,6 +86,35 @@ $$
 
 
  #### delimiter ;*/
+################################ Event2 ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS event2_OnCreateLogger $$
+CREATE TRIGGER event2_OnCreateLogger AFTER INSERT ON event2
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event2","INSERT",NEW.EventId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS event2_OnUpdateLogger $$
+CREATE TRIGGER event2_OnUpdateLogger AFTER UPDATE ON event2
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event2","UPDATE",NEW.EventId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS event2_OnDeleteLogger $$
+CREATE TRIGGER event2_OnDeleteLogger AFTER DELETE ON event2
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Event2","DELETE",OLD.EventId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ FollowingList ######################################
 
 /* #### delimiter $$
@@ -1118,6 +1147,10 @@ DROP TRIGGER IF EXISTS comment_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS event_OnCreateLogger ;
 DROP TRIGGER IF EXISTS event_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS event_OnDeleteLogger ;
+### Event2 ##
+DROP TRIGGER IF EXISTS event2_OnCreateLogger ;
+DROP TRIGGER IF EXISTS event2_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS event2_OnDeleteLogger ;
 ### FollowingList ##
 DROP TRIGGER IF EXISTS following_list_OnCreateLogger ;
 DROP TRIGGER IF EXISTS following_list_OnUpdateLogger ;

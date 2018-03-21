@@ -84,6 +84,35 @@ func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
 }
 */
 /*
+func PBConvPB__Event2_To_Event2( o *PB_Event2) *Event2 {
+     n := &Event2{
+      EventId: int ( o.EventId ),
+      EventType: int ( o.EventType ),
+      ByUserId: int ( o.ByUserId ),
+      PeerUserId: int ( o.PeerUserId ),
+      PostId: int ( o.PostId ),
+      CommentId: int ( o.CommentId ),
+      ActionId: int ( o.ActionId ),
+      Murmur64Hash: int ( o.Murmur64Hash ),
+    }
+    return n
+}
+
+func PBConvPB_Event2_To_Event2 ( o *Event2) *PB_Event2 {
+     n := &PB_Event2{
+      EventId: int64 ( o.EventId ),
+      EventType: int32 ( o.EventType ),
+      ByUserId: int64 ( o.ByUserId ),
+      PeerUserId: int64 ( o.PeerUserId ),
+      PostId: int64 ( o.PostId ),
+      CommentId: int64 ( o.CommentId ),
+      ActionId: int64 ( o.ActionId ),
+      Murmur64Hash: int64 ( o.Murmur64Hash ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__FollowingList_To_FollowingList( o *PB_FollowingList) *FollowingList {
      n := &FollowingList{
       Id: int ( o.Id ),
@@ -1079,7 +1108,6 @@ func PBConvPB__ActionFanout_To_ActionFanout( o *PB_ActionFanout) *ActionFanout {
       ForUserId: int ( o.ForUserId ),
       ActionId: int ( o.ActionId ),
       ActorUserId: int ( o.ActorUserId ),
-      Murmur64Hash: int ( o.Murmur64Hash ),
     }
     return n
 }
@@ -1090,7 +1118,6 @@ func PBConvPB_ActionFanout_To_ActionFanout ( o *ActionFanout) *PB_ActionFanout {
       ForUserId: int32 ( o.ForUserId ),
       ActionId: int64 ( o.ActionId ),
       ActorUserId: int32 ( o.ActorUserId ),
-      Murmur64Hash: int64 ( o.Murmur64Hash ),
     }
     return n
 }

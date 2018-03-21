@@ -11,7 +11,7 @@ import (
 
 var newActions = make(chan x.Action, 1000)
 
-func saveNewActiones() {
+func saveNewActions() {
 	for act := range newActions {
 		if act.Murmur64Hash == 0 || act.ActionId == 0 || act.ActorUserId == 0 {
 			if config.IS_DEBUG {

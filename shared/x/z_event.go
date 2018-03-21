@@ -77,6 +77,30 @@ func OnEvent_LoadMany(rows []*Event) {
 	}
 }
 
+//Event2 Events
+
+func OnEvent2_AfterInsert(row *Event2) {
+	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent2_AfterUpdate(row *Event2) {
+	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent2_AfterDelete(row *Event2) {
+	RowCache.Delete("Event2:" + strconv.Itoa(row.EventId))
+}
+
+func OnEvent2_LoadOne(row *Event2) {
+	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+}
+
+func OnEvent2_LoadMany(rows []*Event2) {
+	for _, row := range rows {
+		RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+	}
+}
+
 //FollowingList Events
 
 func OnFollowingList_AfterInsert(row *FollowingList) {
