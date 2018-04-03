@@ -23,6 +23,7 @@ type Post__ struct {
 	MediaCount     int    `json:"MediaCount"`     // MediaCount -
 	SharedTo       int    `json:"SharedTo"`       // SharedTo -
 	DisableComment int    `json:"DisableComment"` // DisableComment -
+	Source         int    `json:"Source"`         // Source -
 	HasTag         int    `json:"HasTag"`         // HasTag -
 	Seq            int    `json:"Seq"`            // Seq -
 	CommentsCount  int    `json:"CommentsCount"`  // CommentsCount -
@@ -56,16 +57,16 @@ func (p *Post) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		return err
 	}
@@ -85,16 +86,16 @@ func (p *Post) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		if LogTableSqlReq.Post {
 			XOLogErr(err)
@@ -125,14 +126,14 @@ func (p *Post) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post SET ` +
-		`UserId = ?, PostTypeEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
+		`UserId = ?, PostTypeEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Source = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
 		` WHERE PostId = ?`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 
 	if LogTableSqlReq.Post {
 		XOLogErr(err)
@@ -969,6 +970,111 @@ func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " DisableComment >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Deleter) Source_In(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) Source_Ins(ins ...int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) Source_NotIn(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Deleter) Source_Eq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Source_NotEq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Source_LT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Source_LE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Source_GT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) Source_GE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2555,6 +2661,111 @@ func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
 	return d
 }
 
+func (u *__Post_Updater) Source_In(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) Source_Ins(ins ...int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) Source_NotIn(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Updater) Source_Eq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Source_NotEq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Source_LT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Source_LE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Source_GT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) Source_GE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4136,6 +4347,111 @@ func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
 	return d
 }
 
+func (u *__Post_Selector) Source_In(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) Source_Ins(ins ...int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) Source_NotIn(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Selector) Source_Eq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Source_NotEq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Source_LT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Source_LE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Source_GT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) Source_GE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Source >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -5701,6 +6017,27 @@ func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 
 //ints
 
+func (u *__Post_Updater) Source(newVal int) *__Post_Updater {
+	u.updates[" Source = ? "] = newVal
+	return u
+}
+
+func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
+	if count > 0 {
+		u.updates[" Source = Source+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Source = Source-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Post_Updater) HasTag(newVal int) *__Post_Updater {
 	u.updates[" HasTag = ? "] = newVal
 	return u
@@ -6019,6 +6356,21 @@ func (u *__Post_Selector) OrderBy_DisableComment_Asc() *__Post_Selector {
 
 func (u *__Post_Selector) Select_DisableComment() *__Post_Selector {
 	u.selectCol = "DisableComment"
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_Source_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY Source DESC "
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_Source_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY Source ASC "
+	return u
+}
+
+func (u *__Post_Selector) Select_Source() *__Post_Selector {
+	u.selectCol = "Source"
 	return u
 }
 
@@ -6455,13 +6807,13 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -6479,6 +6831,7 @@ func MassInsert_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
+		vals = append(vals, row.Source)
 		vals = append(vals, row.HasTag)
 		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
@@ -6510,13 +6863,13 @@ func MassReplace_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -6534,6 +6887,7 @@ func MassReplace_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
+		vals = append(vals, row.Source)
 		vals = append(vals, row.HasTag)
 		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
@@ -6561,6 +6915,8 @@ func MassReplace_Post(rows []Post, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

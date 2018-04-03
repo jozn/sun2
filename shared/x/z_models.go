@@ -71,31 +71,6 @@ type Event struct {
 	ActionId: 0,
 	Murmur64Hash: 0,
 */
-// event2 'Event2'.
-type Event2 struct {
-	EventId      int `db:"EventId"`
-	EventType    int `db:"EventType"`
-	ByUserId     int `db:"ByUserId"`
-	PeerUserId   int `db:"PeerUserId"`
-	PostId       int `db:"PostId"`
-	CommentId    int `db:"CommentId"`
-	ActionId     int `db:"ActionId"`
-	Murmur64Hash int `db:"Murmur64Hash"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.Event2 {
-	EventId: 0,
-	EventType: 0,
-	ByUserId: 0,
-	PeerUserId: 0,
-	PostId: 0,
-	CommentId: 0,
-	ActionId: 0,
-	Murmur64Hash: 0,
-*/
 // following_list 'FollowingList'.
 type FollowingList struct {
 	Id          int    `db:"Id"`
@@ -371,6 +346,7 @@ type Post struct {
 	MediaCount     int    `db:"MediaCount"`
 	SharedTo       int    `db:"SharedTo"`
 	DisableComment int    `db:"DisableComment"`
+	Source         int    `db:"Source"`
 	HasTag         int    `db:"HasTag"`
 	Seq            int    `db:"Seq"`
 	CommentsCount  int    `db:"CommentsCount"`
@@ -395,6 +371,7 @@ type Post struct {
 	MediaCount: 0,
 	SharedTo: 0,
 	DisableComment: 0,
+	Source: 0,
 	HasTag: 0,
 	Seq: 0,
 	CommentsCount: 0,
@@ -403,6 +380,19 @@ type Post struct {
 	EditedTime: 0,
 	CreatedTime: 0,
 	ReSharedPostId: 0,
+*/
+// post_count 'PostCount'.
+type PostCount struct {
+	PostId     int `db:"PostId"`
+	ViewsCount int `db:"ViewsCount"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostCount {
+	PostId: 0,
+	ViewsCount: 0,
 */
 // post_keys 'PostKey'.
 type PostKey struct {
@@ -418,6 +408,94 @@ type PostKey struct {
 	Id: 0,
 	PostKeyStr: "",
 	Used: 0,
+*/
+// post_link 'PostLink'.
+type PostLink struct {
+	LinkId  int    `db:"LinkId"`
+	LinkUrl string `db:"LinkUrl"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostLink {
+	LinkId: 0,
+	LinkUrl: "",
+*/
+// post_media 'PostMedia'.
+type PostMedia struct {
+	MediaId       int    `db:"MediaId"`
+	UserId        int    `db:"UserId"`
+	PostId        int    `db:"PostId"`
+	AlbumId       int    `db:"AlbumId"`
+	MediaTypeEnum int    `db:"MediaTypeEnum"`
+	Width         int    `db:"Width"`
+	Height        int    `db:"Height"`
+	Size          int    `db:"Size"`
+	Duration      int    `db:"Duration"`
+	Md5Hash       string `db:"Md5Hash"`
+	Color         string `db:"Color"`
+	CreatedTime   int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostMedia {
+	MediaId: 0,
+	UserId: 0,
+	PostId: 0,
+	AlbumId: 0,
+	MediaTypeEnum: 0,
+	Width: 0,
+	Height: 0,
+	Size: 0,
+	Duration: 0,
+	Md5Hash: "",
+	Color: "",
+	CreatedTime: 0,
+*/
+// post_mentioned 'PostMentioned'.
+type PostMentioned struct {
+	MentionedId  int `db:"MentionedId"`
+	ForUserId    int `db:"ForUserId"`
+	PostId       int `db:"PostId"`
+	PostUserId   int `db:"PostUserId"`
+	PostTypeEnum int `db:"PostTypeEnum"`
+	CreatedTime  int `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostMentioned {
+	MentionedId: 0,
+	ForUserId: 0,
+	PostId: 0,
+	PostUserId: 0,
+	PostTypeEnum: 0,
+	CreatedTime: 0,
+*/
+// post_reshared 'PostReshared'.
+type PostReshared struct {
+	ResharedId   int `db:"ResharedId"`
+	ByUserId     int `db:"ByUserId"`
+	PostId       int `db:"PostId"`
+	PostUserId   int `db:"PostUserId"`
+	PostTypeEnum int `db:"PostTypeEnum"`
+	CreatedTime  int `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostReshared {
+	ResharedId: 0,
+	ByUserId: 0,
+	PostId: 0,
+	PostUserId: 0,
+	PostTypeEnum: 0,
+	CreatedTime: 0,
 */
 // search_clicked 'SearchClicked'.
 type SearchClicked struct {
@@ -571,38 +649,6 @@ type SettingNotification struct {
 	DirectSound: 0,
 	DirectPriority: 0,
 */
-// suggested_top_posts 'SuggestedTopPost'.
-type SuggestedTopPost struct {
-	Id     int `db:"Id"`
-	PostId int `db:"PostId"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.SuggestedTopPost {
-	Id: 0,
-	PostId: 0,
-*/
-// suggested_user 'SuggestedUser'.
-type SuggestedUser struct {
-	Id          int     `db:"Id"`
-	UserId      int     `db:"UserId"`
-	TargetId    int     `db:"TargetId"`
-	Weight      float32 `db:"Weight"`
-	CreatedTime int     `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.SuggestedUser {
-	Id: 0,
-	UserId: 0,
-	TargetId: 0,
-	Weight: float32(0),
-	CreatedTime: 0,
-*/
 // tag 'Tag'.
 type Tag struct {
 	TagId         int    `db:"TagId"`
@@ -683,6 +729,15 @@ type User struct {
 	FollowingCount       int    `db:"FollowingCount"`
 	PostsCount           int    `db:"PostsCount"`
 	MediaCount           int    `db:"MediaCount"`
+	PhotoCount           int    `db:"PhotoCount"`
+	VideoCount           int    `db:"VideoCount"`
+	GifCount             int    `db:"GifCount"`
+	AudioCount           int    `db:"AudioCount"`
+	VoiceCount           int    `db:"VoiceCount"`
+	FileCount            int    `db:"FileCount"`
+	LinkCount            int    `db:"LinkCount"`
+	BoardCount           int    `db:"BoardCount"`
+	PinedCount           int    `db:"PinedCount"`
 	LikesCount           int    `db:"LikesCount"`
 	ResharedCount        int    `db:"ResharedCount"`
 	LastActionTime       int    `db:"LastActionTime"`
@@ -718,6 +773,15 @@ type User struct {
 	FollowingCount: 0,
 	PostsCount: 0,
 	MediaCount: 0,
+	PhotoCount: 0,
+	VideoCount: 0,
+	GifCount: 0,
+	AudioCount: 0,
+	VoiceCount: 0,
+	FileCount: 0,
+	LinkCount: 0,
+	BoardCount: 0,
+	PinedCount: 0,
 	LikesCount: 0,
 	ResharedCount: 0,
 	LastActionTime: 0,
@@ -987,13 +1051,44 @@ type HomeFanout struct {
 	PostId: 0,
 	PostUserId: 0,
 */
+// suggested_top_posts 'SuggestedTopPost'.
+type SuggestedTopPost struct {
+	Id     int `db:"Id"`
+	PostId int `db:"PostId"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.SuggestedTopPost {
+	Id: 0,
+	PostId: 0,
+*/
+// suggested_user 'SuggestedUser'.
+type SuggestedUser struct {
+	Id          int     `db:"Id"`
+	UserId      int     `db:"UserId"`
+	TargetId    int     `db:"TargetId"`
+	Weight      float32 `db:"Weight"`
+	CreatedTime int     `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.SuggestedUser {
+	Id: 0,
+	UserId: 0,
+	TargetId: 0,
+	Weight: float32(0),
+	CreatedTime: 0,
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
 	Action                     bool
 	Comment                    bool
 	Event                      bool
-	Event2                     bool
 	FollowingList              bool
 	FollowingListMember        bool
 	FollowingListMemberRemoved bool
@@ -1006,13 +1101,16 @@ type LogTableSql struct {
 	NotifyRemoved              bool
 	PhoneContact               bool
 	Post                       bool
+	PostCount                  bool
 	PostKey                    bool
+	PostLink                   bool
+	PostMedia                  bool
+	PostMentioned              bool
+	PostReshared               bool
 	SearchClicked              bool
 	Session                    bool
 	SettingClient              bool
 	SettingNotification        bool
-	SuggestedTopPost           bool
-	SuggestedUser              bool
 	Tag                        bool
 	TagsPost                   bool
 	TriggerLog                 bool
@@ -1029,6 +1127,8 @@ type LogTableSql struct {
 	FilePost                   bool
 	ActionFanout               bool
 	HomeFanout                 bool
+	SuggestedTopPost           bool
+	SuggestedUser              bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1036,7 +1136,6 @@ var LogTableSqlReq = LogTableSql{
 	Action:                     true,
 	Comment:                    true,
 	Event:                      true,
-	Event2:                     true,
 	FollowingList:              true,
 	FollowingListMember:        true,
 	FollowingListMemberRemoved: true,
@@ -1049,13 +1148,16 @@ var LogTableSqlReq = LogTableSql{
 	NotifyRemoved:       true,
 	PhoneContact:        true,
 	Post:                true,
+	PostCount:           true,
 	PostKey:             true,
+	PostLink:            true,
+	PostMedia:           true,
+	PostMentioned:       true,
+	PostReshared:        true,
 	SearchClicked:       true,
 	Session:             true,
 	SettingClient:       true,
 	SettingNotification: true,
-	SuggestedTopPost:    true,
-	SuggestedUser:       true,
 	Tag:                 true,
 	TagsPost:            true,
 	TriggerLog:          true,
@@ -1072,4 +1174,6 @@ var LogTableSqlReq = LogTableSql{
 	FilePost:            true,
 	ActionFanout:        true,
 	HomeFanout:          true,
+	SuggestedTopPost:    true,
+	SuggestedUser:       true,
 }

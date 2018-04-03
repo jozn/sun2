@@ -150,54 +150,6 @@ func (c _StoreImpl) PreLoadEventByEventIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetEvent2ByEventId(EventId int) (*Event2, bool) {
-	o, ok := RowCache.Get("Event2:" + strconv.Itoa(EventId))
-	if ok {
-		if obj, ok := o.(*Event2); ok {
-			return obj, true
-		}
-	}
-	obj2, err := Event2ByEventId(base.DB, EventId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.Event2 {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetEvent2ByEventId_JustCache(EventId int) (*Event2, bool) {
-	o, ok := RowCache.Get("Event2:" + strconv.Itoa(EventId))
-	if ok {
-		if obj, ok := o.(*Event2); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.Event2 {
-		XOLogErr(errors.New("_JustCache is empty for Event2: " + strconv.Itoa(EventId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadEvent2ByEventIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("Event2:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewEvent2_Selector().EventId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
 	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
 	if ok {
@@ -774,6 +726,54 @@ func (c _StoreImpl) PreLoadPostByPostIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetPostCountByPostId(PostId int) (*PostCount, bool) {
+	o, ok := RowCache.Get("PostCount:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostCount); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostCountByPostId(base.DB, PostId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostCount {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostCountByPostId_JustCache(PostId int) (*PostCount, bool) {
+	o, ok := RowCache.Get("PostCount:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostCount); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostCount {
+		XOLogErr(errors.New("_JustCache is empty for PostCount: " + strconv.Itoa(PostId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostCountByPostIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostCount:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostCount_Selector().PostId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetPostKeyById(Id int) (*PostKey, bool) {
 	o, ok := RowCache.Get("PostKey:" + strconv.Itoa(Id))
 	if ok {
@@ -817,6 +817,198 @@ func (c _StoreImpl) PreLoadPostKeyByIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPostKey_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostLinkByLinkId(LinkId int) (*PostLink, bool) {
+	o, ok := RowCache.Get("PostLink:" + strconv.Itoa(LinkId))
+	if ok {
+		if obj, ok := o.(*PostLink); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostLinkByLinkId(base.DB, LinkId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostLink {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostLinkByLinkId_JustCache(LinkId int) (*PostLink, bool) {
+	o, ok := RowCache.Get("PostLink:" + strconv.Itoa(LinkId))
+	if ok {
+		if obj, ok := o.(*PostLink); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostLink {
+		XOLogErr(errors.New("_JustCache is empty for PostLink: " + strconv.Itoa(LinkId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostLinkByLinkIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostLink:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostLink_Selector().LinkId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostMediaByMediaId(MediaId int) (*PostMedia, bool) {
+	o, ok := RowCache.Get("PostMedia:" + strconv.Itoa(MediaId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostMediaByMediaId(base.DB, MediaId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostMedia {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostMediaByMediaId_JustCache(MediaId int) (*PostMedia, bool) {
+	o, ok := RowCache.Get("PostMedia:" + strconv.Itoa(MediaId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostMedia {
+		XOLogErr(errors.New("_JustCache is empty for PostMedia: " + strconv.Itoa(MediaId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMediaByMediaIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostMedia:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostMedia_Selector().MediaId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostMentionedByPostId(PostId int) (*PostMentioned, bool) {
+	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostMentioned); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostMentionedByPostId(base.DB, PostId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostMentioned {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostMentionedByPostId_JustCache(PostId int) (*PostMentioned, bool) {
+	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostMentioned); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostMentioned {
+		XOLogErr(errors.New("_JustCache is empty for PostMentioned: " + strconv.Itoa(PostId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMentionedByPostIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostMentioned_Selector().PostId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostResharedByResharedId(ResharedId int) (*PostReshared, bool) {
+	o, ok := RowCache.Get("PostReshared:" + strconv.Itoa(ResharedId))
+	if ok {
+		if obj, ok := o.(*PostReshared); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostResharedByResharedId(base.DB, ResharedId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostReshared {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostResharedByResharedId_JustCache(ResharedId int) (*PostReshared, bool) {
+	o, ok := RowCache.Get("PostReshared:" + strconv.Itoa(ResharedId))
+	if ok {
+		if obj, ok := o.(*PostReshared); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostReshared {
+		XOLogErr(errors.New("_JustCache is empty for PostReshared: " + strconv.Itoa(ResharedId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostResharedByResharedIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostReshared:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostReshared_Selector().ResharedId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1009,102 +1201,6 @@ func (c _StoreImpl) PreLoadSettingNotificationByUserIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewSettingNotification_Selector().UserId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
-	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SuggestedTopPost); ok {
-			return obj, true
-		}
-	}
-	obj2, err := SuggestedTopPostById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetSuggestedTopPostById_JustCache(Id int) (*SuggestedTopPost, bool) {
-	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SuggestedTopPost); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLogErr(errors.New("_JustCache is empty for SuggestedTopPost: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSuggestedTopPostByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewSuggestedTopPost_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetSuggestedUserById(Id int) (*SuggestedUser, bool) {
-	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SuggestedUser); ok {
-			return obj, true
-		}
-	}
-	obj2, err := SuggestedUserById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.SuggestedUser {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetSuggestedUserById_JustCache(Id int) (*SuggestedUser, bool) {
-	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SuggestedUser); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.SuggestedUser {
-		XOLogErr(errors.New("_JustCache is empty for SuggestedUser: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSuggestedUserByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewSuggestedUser_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1873,6 +1969,102 @@ func (c _StoreImpl) PreLoadHomeFanoutByOrderIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewHomeFanout_Selector().OrderId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
+	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedTopPost); ok {
+			return obj, true
+		}
+	}
+	obj2, err := SuggestedTopPostById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSuggestedTopPostById_JustCache(Id int) (*SuggestedTopPost, bool) {
+	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedTopPost); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SuggestedTopPost {
+		XOLogErr(errors.New("_JustCache is empty for SuggestedTopPost: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSuggestedTopPostByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewSuggestedTopPost_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetSuggestedUserById(Id int) (*SuggestedUser, bool) {
+	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedUser); ok {
+			return obj, true
+		}
+	}
+	obj2, err := SuggestedUserById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.SuggestedUser {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSuggestedUserById_JustCache(Id int) (*SuggestedUser, bool) {
+	o, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*SuggestedUser); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.SuggestedUser {
+		XOLogErr(errors.New("_JustCache is empty for SuggestedUser: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSuggestedUserByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("SuggestedUser:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewSuggestedUser_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

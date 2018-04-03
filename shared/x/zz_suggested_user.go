@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SuggestedUser represents a row from 'sun.suggested_user'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SuggestedUser represents a row from 'sun_meta.suggested_user'.
 
 // Manualy copy this to project
 type SuggestedUser__ struct {
@@ -42,7 +42,7 @@ func (su *SuggestedUser) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.suggested_user (` +
+	const sqlstr = `INSERT INTO sun_meta.suggested_user (` +
 		`UserId, TargetId, Weight, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -84,7 +84,7 @@ func (su *SuggestedUser) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.suggested_user (` +
+	const sqlstr = `REPLACE INTO sun_meta.suggested_user (` +
 		`UserId, TargetId, Weight, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
@@ -135,7 +135,7 @@ func (su *SuggestedUser) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.suggested_user SET ` +
+	const sqlstr = `UPDATE sun_meta.suggested_user SET ` +
 		`UserId = ?, TargetId = ?, Weight = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
@@ -177,7 +177,7 @@ func (su *SuggestedUser) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.suggested_user WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun_meta.suggested_user WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.SuggestedUser {
@@ -1721,7 +1721,7 @@ func (u *__SuggestedUser_Selector) Order_Rand() *__SuggestedUser_Selector {
 func (u *__SuggestedUser_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.suggested_user"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_meta.suggested_user"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1940,7 +1940,7 @@ func (u *__SuggestedUser_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.suggested_user SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_meta.suggested_user SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1981,7 +1981,7 @@ func (d *__SuggestedUser_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.suggested_user WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_meta.suggested_user WHERE " + wheresStr
 
 	// run query
 	if LogTableSqlReq.SuggestedUser {
@@ -2020,7 +2020,7 @@ func MassInsert_SuggestedUser(rows []SuggestedUser, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.suggested_user (" +
+	sqlstr := "INSERT INTO sun_meta.suggested_user (" +
 		"UserId, TargetId, Weight, CreatedTime" +
 		") VALUES " + insVals
 
@@ -2057,7 +2057,7 @@ func MassReplace_SuggestedUser(rows []SuggestedUser, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.suggested_user (" +
+	sqlstr := "REPLACE INTO sun_meta.suggested_user (" +
 		"UserId, TargetId, Weight, CreatedTime" +
 		") VALUES " + insVals
 

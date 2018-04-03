@@ -69,8 +69,6 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 
 // Event - PRIMARY
 
-// Event2 - PRIMARY
-
 // FollowingList - PRIMARY
 
 // FollowingListMember - PRIMARY
@@ -531,6 +529,8 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 	}
 }
 
+// PostCount - PRIMARY
+
 // PostKey - PRIMARY
 
 //field//field//field
@@ -638,6 +638,226 @@ func (c _StoreImpl) PreLoadPostKey_ByUseds(Useds []int) {
 		}
 	}
 }
+
+// PostLink - PRIMARY
+
+// PostMedia - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'HashMd5'.
+func (c _StoreImpl) PostMedia_ByMd5Hash(Md5Hash string) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_HashMd5:" + fmt.Sprintf("%v", Md5Hash))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostMedia_Selector().Md5Hash_Eq(Md5Hash).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostMedia_HashMd5:"+fmt.Sprintf("%v", row.Md5Hash), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostMedia_ByMd5Hash_JustCache(Md5Hash string) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_HashMd5:" + fmt.Sprintf("%v", Md5Hash))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostMedia_HashMd5:" + fmt.Sprintf("%v", Md5Hash)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMedia_ByMd5Hashs(Md5Hashs []string) {
+	not_cached := make([]string, 0, len(Md5Hashs))
+
+	for _, id := range Md5Hashs {
+		_, ok := RowCacheIndex.Get("PostMedia_HashMd5:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostMedia_Selector().Md5Hash_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostMedia_HashMd5:"+fmt.Sprintf("%v", row.Md5Hash), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'CreatedTime'.
+func (c _StoreImpl) PostMedia_ByCreatedTime(CreatedTime int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_CreatedTime:" + fmt.Sprintf("%v", CreatedTime))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostMedia_Selector().CreatedTime_Eq(CreatedTime).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostMedia_CreatedTime:"+fmt.Sprintf("%v", row.CreatedTime), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostMedia_ByCreatedTime_JustCache(CreatedTime int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_CreatedTime:" + fmt.Sprintf("%v", CreatedTime))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostMedia_CreatedTime:" + fmt.Sprintf("%v", CreatedTime)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMedia_ByCreatedTimes(CreatedTimes []int) {
+	not_cached := make([]int, 0, len(CreatedTimes))
+
+	for _, id := range CreatedTimes {
+		_, ok := RowCacheIndex.Get("PostMedia_CreatedTime:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostMedia_Selector().CreatedTime_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostMedia_CreatedTime:"+fmt.Sprintf("%v", row.CreatedTime), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'AlbumId'.
+func (c _StoreImpl) PostMedia_ByAlbumId(AlbumId int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_AlbumId:" + fmt.Sprintf("%v", AlbumId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostMedia_Selector().AlbumId_Eq(AlbumId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostMedia_AlbumId:"+fmt.Sprintf("%v", row.AlbumId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostMedia_ByAlbumId_JustCache(AlbumId int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_AlbumId:" + fmt.Sprintf("%v", AlbumId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostMedia_AlbumId:" + fmt.Sprintf("%v", AlbumId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMedia_ByAlbumIds(AlbumIds []int) {
+	not_cached := make([]int, 0, len(AlbumIds))
+
+	for _, id := range AlbumIds {
+		_, ok := RowCacheIndex.Get("PostMedia_AlbumId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostMedia_Selector().AlbumId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostMedia_AlbumId:"+fmt.Sprintf("%v", row.AlbumId), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'PostId2'.
+func (c _StoreImpl) PostMedia_ByPostId(PostId int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_PostId2:" + fmt.Sprintf("%v", PostId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostMedia_Selector().PostId_Eq(PostId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostMedia_PostId2:"+fmt.Sprintf("%v", row.PostId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostMedia_ByPostId_JustCache(PostId int) (*PostMedia, bool) {
+	o, ok := RowCacheIndex.Get("PostMedia_PostId2:" + fmt.Sprintf("%v", PostId))
+	if ok {
+		if obj, ok := o.(*PostMedia); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostMedia_PostId2:" + fmt.Sprintf("%v", PostId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostMedia_ByPostIds(PostIds []int) {
+	not_cached := make([]int, 0, len(PostIds))
+
+	for _, id := range PostIds {
+		_, ok := RowCacheIndex.Get("PostMedia_PostId2:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostMedia_Selector().PostId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostMedia_PostId2:"+fmt.Sprintf("%v", row.PostId), row, 0)
+			}
+		}
+	}
+}
+
+// PostMentioned - PRIMARY
+
+// PostReshared - PRIMARY
 
 // SearchClicked - PRIMARY
 
@@ -752,10 +972,6 @@ func (c _StoreImpl) PreLoadSession_ByUserIds(UserIds []int) {
 // SettingClient - PRIMARY
 
 // SettingNotification - PRIMARY
-
-// SuggestedTopPost - PRIMARY
-
-// SuggestedUser - PRIMARY
 
 // Tag - PRIMARY
 
@@ -1379,3 +1595,7 @@ func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
 		}
 	}
 }
+
+// SuggestedTopPost - PRIMARY
+
+// SuggestedUser - PRIMARY

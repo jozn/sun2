@@ -32,6 +32,15 @@ type User__ struct {
 	FollowingCount       int    `json:"FollowingCount"`       // FollowingCount -
 	PostsCount           int    `json:"PostsCount"`           // PostsCount -
 	MediaCount           int    `json:"MediaCount"`           // MediaCount -
+	PhotoCount           int    `json:"PhotoCount"`           // PhotoCount -
+	VideoCount           int    `json:"VideoCount"`           // VideoCount -
+	GifCount             int    `json:"GifCount"`             // GifCount -
+	AudioCount           int    `json:"AudioCount"`           // AudioCount -
+	VoiceCount           int    `json:"VoiceCount"`           // VoiceCount -
+	FileCount            int    `json:"FileCount"`            // FileCount -
+	LinkCount            int    `json:"LinkCount"`            // LinkCount -
+	BoardCount           int    `json:"BoardCount"`           // BoardCount -
+	PinedCount           int    `json:"PinedCount"`           // PinedCount -
 	LikesCount           int    `json:"LikesCount"`           // LikesCount -
 	ResharedCount        int    `json:"ResharedCount"`        // ResharedCount -
 	LastActionTime       int    `json:"LastActionTime"`       // LastActionTime -
@@ -67,16 +76,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -109,16 +118,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -160,14 +169,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -1424,6 +1433,951 @@ func (d *__User_Deleter) MediaCount_GE(val int) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " MediaCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) PhotoCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PhotoCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PhotoCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) PhotoCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PhotoCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PhotoCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PhotoCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PhotoCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PhotoCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) VideoCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) VideoCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) VideoCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) VideoCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VideoCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VideoCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VideoCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VideoCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VideoCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) GifCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) GifCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) GifCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) GifCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) GifCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) GifCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) GifCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) GifCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) GifCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) AudioCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AudioCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AudioCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) AudioCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AudioCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AudioCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AudioCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AudioCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AudioCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) VoiceCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) VoiceCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) VoiceCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) VoiceCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VoiceCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VoiceCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VoiceCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VoiceCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) VoiceCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) FileCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) FileCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) FileCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) FileCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) FileCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) FileCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) FileCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) FileCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) FileCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) LinkCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) LinkCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) LinkCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) LinkCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) LinkCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) LinkCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) LinkCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) LinkCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) LinkCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) BoardCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) BoardCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) BoardCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) BoardCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) BoardCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) BoardCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) BoardCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) BoardCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) BoardCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) PinedCount_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PinedCount_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) PinedCount_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) PinedCount_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PinedCount_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PinedCount_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PinedCount_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PinedCount_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) PinedCount_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3535,6 +4489,951 @@ func (d *__User_Updater) MediaCount_GE(val int) *__User_Updater {
 	return d
 }
 
+func (u *__User_Updater) PhotoCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PhotoCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PhotoCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) PhotoCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PhotoCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PhotoCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PhotoCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PhotoCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PhotoCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) VideoCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) VideoCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) VideoCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) VideoCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VideoCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VideoCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VideoCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VideoCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VideoCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) GifCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) GifCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) GifCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) GifCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) GifCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) GifCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) GifCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) GifCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) GifCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) AudioCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AudioCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AudioCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) AudioCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AudioCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AudioCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AudioCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AudioCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AudioCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) VoiceCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) VoiceCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) VoiceCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) VoiceCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VoiceCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VoiceCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VoiceCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VoiceCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) VoiceCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) FileCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) FileCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) FileCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) FileCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) FileCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) FileCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) FileCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) FileCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) FileCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) LinkCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) LinkCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) LinkCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) LinkCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) LinkCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) LinkCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) LinkCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) LinkCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) LinkCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) BoardCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) BoardCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) BoardCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) BoardCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) BoardCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) BoardCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) BoardCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) BoardCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) BoardCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) PinedCount_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PinedCount_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) PinedCount_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) PinedCount_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PinedCount_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PinedCount_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PinedCount_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PinedCount_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) PinedCount_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Updater) LikesCount_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -5636,6 +7535,951 @@ func (d *__User_Selector) MediaCount_GE(val int) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " MediaCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) PhotoCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PhotoCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PhotoCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PhotoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) PhotoCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PhotoCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PhotoCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PhotoCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PhotoCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PhotoCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PhotoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) VideoCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) VideoCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) VideoCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VideoCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) VideoCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VideoCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VideoCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VideoCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VideoCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VideoCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VideoCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) GifCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) GifCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) GifCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GifCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) GifCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) GifCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) GifCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) GifCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) GifCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) GifCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GifCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) AudioCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AudioCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AudioCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AudioCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) AudioCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AudioCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AudioCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AudioCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AudioCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AudioCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AudioCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) VoiceCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) VoiceCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) VoiceCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VoiceCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) VoiceCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VoiceCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VoiceCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VoiceCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VoiceCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) VoiceCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VoiceCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) FileCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) FileCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) FileCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) FileCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) FileCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) FileCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) FileCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) FileCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) FileCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) LinkCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) LinkCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) LinkCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LinkCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) LinkCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) LinkCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) LinkCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) LinkCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) LinkCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) LinkCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LinkCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) BoardCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) BoardCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) BoardCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " BoardCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) BoardCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) BoardCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) BoardCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) BoardCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) BoardCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) BoardCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " BoardCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) PinedCount_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PinedCount_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) PinedCount_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) PinedCount_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PinedCount_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PinedCount_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PinedCount_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PinedCount_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) PinedCount_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -8515,6 +11359,195 @@ func (u *__User_Updater) MediaCount_Increment(count int) *__User_Updater {
 
 //ints
 
+func (u *__User_Updater) PhotoCount(newVal int) *__User_Updater {
+	u.updates[" PhotoCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) PhotoCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" PhotoCount = PhotoCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" PhotoCount = PhotoCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) VideoCount(newVal int) *__User_Updater {
+	u.updates[" VideoCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) VideoCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" VideoCount = VideoCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" VideoCount = VideoCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) GifCount(newVal int) *__User_Updater {
+	u.updates[" GifCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) GifCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" GifCount = GifCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" GifCount = GifCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) AudioCount(newVal int) *__User_Updater {
+	u.updates[" AudioCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) AudioCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" AudioCount = AudioCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" AudioCount = AudioCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) VoiceCount(newVal int) *__User_Updater {
+	u.updates[" VoiceCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) VoiceCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" VoiceCount = VoiceCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" VoiceCount = VoiceCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) FileCount(newVal int) *__User_Updater {
+	u.updates[" FileCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) FileCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" FileCount = FileCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" FileCount = FileCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) LinkCount(newVal int) *__User_Updater {
+	u.updates[" LinkCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) LinkCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" LinkCount = LinkCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" LinkCount = LinkCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) BoardCount(newVal int) *__User_Updater {
+	u.updates[" BoardCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) BoardCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" BoardCount = BoardCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" BoardCount = BoardCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) PinedCount(newVal int) *__User_Updater {
+	u.updates[" PinedCount = ? "] = newVal
+	return u
+}
+
+func (u *__User_Updater) PinedCount_Increment(count int) *__User_Updater {
+	if count > 0 {
+		u.updates[" PinedCount = PinedCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" PinedCount = PinedCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__User_Updater) LikesCount(newVal int) *__User_Updater {
 	u.updates[" LikesCount = ? "] = newVal
 	return u
@@ -9000,6 +12033,141 @@ func (u *__User_Selector) Select_MediaCount() *__User_Selector {
 	return u
 }
 
+func (u *__User_Selector) OrderBy_PhotoCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY PhotoCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_PhotoCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY PhotoCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_PhotoCount() *__User_Selector {
+	u.selectCol = "PhotoCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_VideoCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY VideoCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_VideoCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY VideoCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_VideoCount() *__User_Selector {
+	u.selectCol = "VideoCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_GifCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY GifCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_GifCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY GifCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_GifCount() *__User_Selector {
+	u.selectCol = "GifCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_AudioCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY AudioCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_AudioCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY AudioCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_AudioCount() *__User_Selector {
+	u.selectCol = "AudioCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_VoiceCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY VoiceCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_VoiceCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY VoiceCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_VoiceCount() *__User_Selector {
+	u.selectCol = "VoiceCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_FileCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY FileCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_FileCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY FileCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_FileCount() *__User_Selector {
+	u.selectCol = "FileCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_LinkCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY LinkCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_LinkCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY LinkCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_LinkCount() *__User_Selector {
+	u.selectCol = "LinkCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_BoardCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY BoardCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_BoardCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY BoardCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_BoardCount() *__User_Selector {
+	u.selectCol = "BoardCount"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_PinedCount_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY PinedCount DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_PinedCount_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY PinedCount ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_PinedCount() *__User_Selector {
+	u.selectCol = "PinedCount"
+	return u
+}
+
 func (u *__User_Selector) OrderBy_LikesCount_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY LikesCount DESC "
 	return u
@@ -9464,12 +12632,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 
 	// run query
@@ -9495,6 +12663,15 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.FollowingCount)
 		vals = append(vals, row.PostsCount)
 		vals = append(vals, row.MediaCount)
+		vals = append(vals, row.PhotoCount)
+		vals = append(vals, row.VideoCount)
+		vals = append(vals, row.GifCount)
+		vals = append(vals, row.AudioCount)
+		vals = append(vals, row.VoiceCount)
+		vals = append(vals, row.FileCount)
+		vals = append(vals, row.LinkCount)
+		vals = append(vals, row.BoardCount)
+		vals = append(vals, row.PinedCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ResharedCount)
 		vals = append(vals, row.LastActionTime)
@@ -9525,12 +12702,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
 		") VALUES " + insVals
 
 	// run query
@@ -9556,6 +12733,15 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.FollowingCount)
 		vals = append(vals, row.PostsCount)
 		vals = append(vals, row.MediaCount)
+		vals = append(vals, row.PhotoCount)
+		vals = append(vals, row.VideoCount)
+		vals = append(vals, row.GifCount)
+		vals = append(vals, row.AudioCount)
+		vals = append(vals, row.VoiceCount)
+		vals = append(vals, row.FileCount)
+		vals = append(vals, row.LinkCount)
+		vals = append(vals, row.BoardCount)
+		vals = append(vals, row.PinedCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ResharedCount)
 		vals = append(vals, row.LastActionTime)
@@ -9584,6 +12770,24 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
 
 //
 

@@ -7,8 +7,6 @@ const (
 	Comment_TableGo                    = "Comment"
 	Event_Table                        = "event"
 	Event_TableGo                      = "Event"
-	Event2_Table                       = "event2"
-	Event2_TableGo                     = "Event2"
 	FollowingList_Table                = "following_list"
 	FollowingList_TableGo              = "FollowingList"
 	FollowingListMember_Table          = "following_list_member"
@@ -33,8 +31,18 @@ const (
 	PhoneContact_TableGo               = "PhoneContact"
 	Post_Table                         = "post"
 	Post_TableGo                       = "Post"
+	PostCount_Table                    = "post_count"
+	PostCount_TableGo                  = "PostCount"
 	PostKey_Table                      = "post_keys"
 	PostKey_TableGo                    = "PostKey"
+	PostLink_Table                     = "post_link"
+	PostLink_TableGo                   = "PostLink"
+	PostMedia_Table                    = "post_media"
+	PostMedia_TableGo                  = "PostMedia"
+	PostMentioned_Table                = "post_mentioned"
+	PostMentioned_TableGo              = "PostMentioned"
+	PostReshared_Table                 = "post_reshared"
+	PostReshared_TableGo               = "PostReshared"
 	SearchClicked_Table                = "search_clicked"
 	SearchClicked_TableGo              = "SearchClicked"
 	Session_Table                      = "session"
@@ -43,10 +51,6 @@ const (
 	SettingClient_TableGo              = "SettingClient"
 	SettingNotification_Table          = "setting_notifications"
 	SettingNotification_TableGo        = "SettingNotification"
-	SuggestedTopPost_Table             = "suggested_top_posts"
-	SuggestedTopPost_TableGo           = "SuggestedTopPost"
-	SuggestedUser_Table                = "suggested_user"
-	SuggestedUser_TableGo              = "SuggestedUser"
 	Tag_Table                          = "tag"
 	Tag_TableGo                        = "Tag"
 	TagsPost_Table                     = "tags_posts"
@@ -79,6 +83,10 @@ const (
 	ActionFanout_TableGo               = "ActionFanout"
 	HomeFanout_Table                   = "home_fanout"
 	HomeFanout_TableGo                 = "HomeFanout"
+	SuggestedTopPost_Table             = "suggested_top_posts"
+	SuggestedTopPost_TableGo           = "SuggestedTopPost"
+	SuggestedUser_Table                = "suggested_user"
+	SuggestedUser_TableGo              = "SuggestedUser"
 )
 
 var Action = struct {
@@ -120,27 +128,6 @@ var Comment = struct {
 }
 
 var Event = struct {
-	EventId      string
-	EventType    string
-	ByUserId     string
-	PeerUserId   string
-	PostId       string
-	CommentId    string
-	ActionId     string
-	Murmur64Hash string
-}{
-
-	EventId:      "EventId",
-	EventType:    "EventType",
-	ByUserId:     "ByUserId",
-	PeerUserId:   "PeerUserId",
-	PostId:       "PostId",
-	CommentId:    "CommentId",
-	ActionId:     "ActionId",
-	Murmur64Hash: "Murmur64Hash",
-}
-
-var Event2 = struct {
 	EventId      string
 	EventType    string
 	ByUserId     string
@@ -391,6 +378,7 @@ var Post = struct {
 	MediaCount     string
 	SharedTo       string
 	DisableComment string
+	Source         string
 	HasTag         string
 	Seq            string
 	CommentsCount  string
@@ -411,6 +399,7 @@ var Post = struct {
 	MediaCount:     "MediaCount",
 	SharedTo:       "SharedTo",
 	DisableComment: "DisableComment",
+	Source:         "Source",
 	HasTag:         "HasTag",
 	Seq:            "Seq",
 	CommentsCount:  "CommentsCount",
@@ -419,6 +408,15 @@ var Post = struct {
 	EditedTime:     "EditedTime",
 	CreatedTime:    "CreatedTime",
 	ReSharedPostId: "ReSharedPostId",
+}
+
+var PostCount = struct {
+	PostId     string
+	ViewsCount string
+}{
+
+	PostId:     "PostId",
+	ViewsCount: "ViewsCount",
 }
 
 var PostKey = struct {
@@ -430,6 +428,78 @@ var PostKey = struct {
 	Id:         "Id",
 	PostKeyStr: "PostKeyStr",
 	Used:       "Used",
+}
+
+var PostLink = struct {
+	LinkId  string
+	LinkUrl string
+}{
+
+	LinkId:  "LinkId",
+	LinkUrl: "LinkUrl",
+}
+
+var PostMedia = struct {
+	MediaId       string
+	UserId        string
+	PostId        string
+	AlbumId       string
+	MediaTypeEnum string
+	Width         string
+	Height        string
+	Size          string
+	Duration      string
+	Md5Hash       string
+	Color         string
+	CreatedTime   string
+}{
+
+	MediaId:       "MediaId",
+	UserId:        "UserId",
+	PostId:        "PostId",
+	AlbumId:       "AlbumId",
+	MediaTypeEnum: "MediaTypeEnum",
+	Width:         "Width",
+	Height:        "Height",
+	Size:          "Size",
+	Duration:      "Duration",
+	Md5Hash:       "Md5Hash",
+	Color:         "Color",
+	CreatedTime:   "CreatedTime",
+}
+
+var PostMentioned = struct {
+	MentionedId  string
+	ForUserId    string
+	PostId       string
+	PostUserId   string
+	PostTypeEnum string
+	CreatedTime  string
+}{
+
+	MentionedId:  "MentionedId",
+	ForUserId:    "ForUserId",
+	PostId:       "PostId",
+	PostUserId:   "PostUserId",
+	PostTypeEnum: "PostTypeEnum",
+	CreatedTime:  "CreatedTime",
+}
+
+var PostReshared = struct {
+	ResharedId   string
+	ByUserId     string
+	PostId       string
+	PostUserId   string
+	PostTypeEnum string
+	CreatedTime  string
+}{
+
+	ResharedId:   "ResharedId",
+	ByUserId:     "ByUserId",
+	PostId:       "PostId",
+	PostUserId:   "PostUserId",
+	PostTypeEnum: "PostTypeEnum",
+	CreatedTime:  "CreatedTime",
 }
 
 var SearchClicked = struct {
@@ -568,30 +638,6 @@ var SettingNotification = struct {
 	DirectPriority:           "DirectPriority",
 }
 
-var SuggestedTopPost = struct {
-	Id     string
-	PostId string
-}{
-
-	Id:     "Id",
-	PostId: "PostId",
-}
-
-var SuggestedUser = struct {
-	Id          string
-	UserId      string
-	TargetId    string
-	Weight      string
-	CreatedTime string
-}{
-
-	Id:          "Id",
-	UserId:      "UserId",
-	TargetId:    "TargetId",
-	Weight:      "Weight",
-	CreatedTime: "CreatedTime",
-}
-
 var Tag = struct {
 	TagId         string
 	Name          string
@@ -659,6 +705,15 @@ var User = struct {
 	FollowingCount       string
 	PostsCount           string
 	MediaCount           string
+	PhotoCount           string
+	VideoCount           string
+	GifCount             string
+	AudioCount           string
+	VoiceCount           string
+	FileCount            string
+	LinkCount            string
+	BoardCount           string
+	PinedCount           string
 	LikesCount           string
 	ResharedCount        string
 	LastActionTime       string
@@ -690,6 +745,15 @@ var User = struct {
 	FollowingCount:       "FollowingCount",
 	PostsCount:           "PostsCount",
 	MediaCount:           "MediaCount",
+	PhotoCount:           "PhotoCount",
+	VideoCount:           "VideoCount",
+	GifCount:             "GifCount",
+	AudioCount:           "AudioCount",
+	VoiceCount:           "VoiceCount",
+	FileCount:            "FileCount",
+	LinkCount:            "LinkCount",
+	BoardCount:           "BoardCount",
+	PinedCount:           "PinedCount",
 	LikesCount:           "LikesCount",
 	ResharedCount:        "ResharedCount",
 	LastActionTime:       "LastActionTime",
@@ -910,4 +974,28 @@ var HomeFanout = struct {
 	ForUserId:  "ForUserId",
 	PostId:     "PostId",
 	PostUserId: "PostUserId",
+}
+
+var SuggestedTopPost = struct {
+	Id     string
+	PostId string
+}{
+
+	Id:     "Id",
+	PostId: "PostId",
+}
+
+var SuggestedUser = struct {
+	Id          string
+	UserId      string
+	TargetId    string
+	Weight      string
+	CreatedTime string
+}{
+
+	Id:          "Id",
+	UserId:      "UserId",
+	TargetId:    "TargetId",
+	Weight:      "Weight",
+	CreatedTime: "CreatedTime",
 }

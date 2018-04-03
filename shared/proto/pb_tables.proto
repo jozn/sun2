@@ -35,16 +35,6 @@ message PB_Event {
     int64 ActionId = 7;
     int64 Murmur64Hash = 8;
 }
-message PB_Event2 {
-    int64 EventId = 1;
-    int32 EventType = 2;
-    int64 ByUserId = 3;
-    int64 PeerUserId = 4;
-    int64 PostId = 5;
-    int64 CommentId = 6;
-    int64 ActionId = 7;
-    int64 Murmur64Hash = 8;
-}
 message PB_FollowingList {
     int32 Id = 1;
     int32 UserId = 2;
@@ -160,19 +150,58 @@ message PB_Post {
     int32 MediaCount = 8;
     int32 SharedTo = 9;
     int32 DisableComment = 10;
-    int32 HasTag = 11;
-    int32 Seq = 12;
-    int32 CommentsCount = 13;
-    int32 LikesCount = 14;
-    int32 ViewsCount = 15;
-    int32 EditedTime = 16;
-    int32 CreatedTime = 17;
-    int64 ReSharedPostId = 18;
+    int32 Source = 11;
+    int32 HasTag = 12;
+    int32 Seq = 13;
+    int32 CommentsCount = 14;
+    int32 LikesCount = 15;
+    int32 ViewsCount = 16;
+    int32 EditedTime = 17;
+    int32 CreatedTime = 18;
+    int64 ReSharedPostId = 19;
+}
+message PB_PostCount {
+    int64 PostId = 1;
+    int64 ViewsCount = 2;
 }
 message PB_PostKey {
     int32 Id = 1;
     string PostKeyStr = 2;
     int32 Used = 3;
+}
+message PB_PostLink {
+    int64 LinkId = 1;
+    string LinkUrl = 2;
+}
+message PB_PostMedia {
+    int64 MediaId = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 AlbumId = 4;
+    int32 MediaTypeEnum = 5;
+    int32 Width = 6;
+    int32 Height = 7;
+    int32 Size = 8;
+    int32 Duration = 9;
+    string Md5Hash = 10;
+    string Color = 11;
+    int32 CreatedTime = 12;
+}
+message PB_PostMentioned {
+    int64 MentionedId = 1;
+    int32 ForUserId = 2;
+    int64 PostId = 3;
+    int32 PostUserId = 4;
+    int32 PostTypeEnum = 5;
+    int32 CreatedTime = 6;
+}
+message PB_PostReshared {
+    int64 ResharedId = 1;
+    int32 ByUserId = 2;
+    int64 PostId = 3;
+    int32 PostUserId = 4;
+    int32 PostTypeEnum = 5;
+    int32 CreatedTime = 6;
 }
 message PB_SearchClicked {
     int64 Id = 1;
@@ -240,17 +269,6 @@ message PB_SettingNotification {
     int32 DirectSound = 19;
     int32 DirectPriority = 20;
 }
-message PB_SuggestedTopPost {
-    int64 Id = 1;
-    int64 PostId = 2;
-}
-message PB_SuggestedUser {
-    int32 Id = 1;
-    int32 UserId = 2;
-    int32 TargetId = 3;
-    float Weight = 4;
-    int32 CreatedTime = 5;
-}
 message PB_Tag {
     int64 TagId = 1;
     string Name = 2;
@@ -293,16 +311,25 @@ message PB_User {
     int32 FollowingCount = 17;
     int32 PostsCount = 18;
     int32 MediaCount = 19;
-    int32 LikesCount = 20;
-    int32 ResharedCount = 21;
-    int32 LastActionTime = 22;
-    int32 LastPostTime = 23;
-    int32 PrimaryFollowingList = 24;
-    int32 CreatedSe = 25;
-    int64 UpdatedMs = 26;
-    int32 OnlinePrivacyEnum = 27;
-    int32 LastActivityTime = 28;
-    string Phone2 = 29;
+    int32 PhotoCount = 20;
+    int32 VideoCount = 21;
+    int32 GifCount = 22;
+    int32 AudioCount = 23;
+    int32 VoiceCount = 24;
+    int32 FileCount = 25;
+    int32 LinkCount = 26;
+    int32 BoardCount = 27;
+    int32 PinedCount = 28;
+    int32 LikesCount = 29;
+    int32 ResharedCount = 30;
+    int32 LastActionTime = 31;
+    int32 LastPostTime = 32;
+    int32 PrimaryFollowingList = 33;
+    int32 CreatedSe = 34;
+    int64 UpdatedMs = 35;
+    int32 OnlinePrivacyEnum = 36;
+    int32 LastActivityTime = 37;
+    string Phone2 = 38;
 }
 message PB_UserMetaInfo {
     int32 Id = 1;
@@ -402,4 +429,15 @@ message PB_HomeFanout {
     int64 ForUserId = 2;
     int64 PostId = 3;
     int64 PostUserId = 4;
+}
+message PB_SuggestedTopPost {
+    int64 Id = 1;
+    int64 PostId = 2;
+}
+message PB_SuggestedUser {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 TargetId = 3;
+    float Weight = 4;
+    int32 CreatedTime = 5;
 }

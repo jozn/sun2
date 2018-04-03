@@ -9,189 +9,165 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SuggestedTopPost represents a row from 'sun_meta.suggested_top_posts'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostCount represents a row from 'sun.post_count'.
 
 // Manualy copy this to project
-type SuggestedTopPost__ struct {
-	Id     int `json:"Id"`     // Id -
-	PostId int `json:"PostId"` // PostId -
+type PostCount__ struct {
+	PostId     int `json:"PostId"`     // PostId -
+	ViewsCount int `json:"ViewsCount"` // ViewsCount -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the SuggestedTopPost exists in the database.
-func (stp *SuggestedTopPost) Exists() bool {
-	return stp._exists
+// Exists determines if the PostCount exists in the database.
+func (pc *PostCount) Exists() bool {
+	return pc._exists
 }
 
-// Deleted provides information if the SuggestedTopPost has been deleted from the database.
-func (stp *SuggestedTopPost) Deleted() bool {
-	return stp._deleted
+// Deleted provides information if the PostCount has been deleted from the database.
+func (pc *PostCount) Deleted() bool {
+	return pc._deleted
 }
 
-// Insert inserts the SuggestedTopPost to the database.
-func (stp *SuggestedTopPost) Insert(db XODB) error {
+// Insert inserts the PostCount to the database.
+func (pc *PostCount) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if stp._exists {
+	if pc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun_meta.suggested_top_posts (` +
-		`PostId` +
+	// sql insert query, primary key must be provided
+	const sqlstr = `INSERT INTO sun.post_count (` +
+		`PostId, ViewsCount` +
 		`) VALUES (` +
-		`?` +
+		`?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLog(sqlstr, stp.PostId)
+	if LogTableSqlReq.PostCount {
+		XOLog(sqlstr, pc.PostId, pc.ViewsCount)
 	}
-	res, err := db.Exec(sqlstr, stp.PostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.ViewsCount)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	// set existence
+	pc._exists = true
 
-	// set primary key and existence
-	stp.Id = int(id)
-	stp._exists = true
-
-	OnSuggestedTopPost_AfterInsert(stp)
+	OnPostCount_AfterInsert(pc)
 
 	return nil
 }
 
-// Insert inserts the SuggestedTopPost to the database.
-func (stp *SuggestedTopPost) Replace(db XODB) error {
+// Insert inserts the PostCount to the database.
+func (pc *PostCount) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun_meta.suggested_top_posts (` +
-		`PostId` +
+	const sqlstr = `REPLACE INTO sun.post_count (` +
+		`PostId, ViewsCount` +
 		`) VALUES (` +
-		`?` +
+		`?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLog(sqlstr, stp.PostId)
+	if LogTableSqlReq.PostCount {
+		XOLog(sqlstr, pc.PostId, pc.ViewsCount)
 	}
-	res, err := db.Exec(sqlstr, stp.PostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.ViewsCount)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	pc._exists = true
 
-	// set primary key and existence
-	stp.Id = int(id)
-	stp._exists = true
-
-	OnSuggestedTopPost_AfterInsert(stp)
+	OnPostCount_AfterInsert(pc)
 
 	return nil
 }
 
-// Update updates the SuggestedTopPost in the database.
-func (stp *SuggestedTopPost) Update(db XODB) error {
+// Update updates the PostCount in the database.
+func (pc *PostCount) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !stp._exists {
+	if !pc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if stp._deleted {
+	if pc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun_meta.suggested_top_posts SET ` +
-		`PostId = ?` +
-		` WHERE Id = ?`
+	const sqlstr = `UPDATE sun.post_count SET ` +
+		`ViewsCount = ?` +
+		` WHERE PostId = ?`
 
 	// run query
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLog(sqlstr, stp.PostId, stp.Id)
+	if LogTableSqlReq.PostCount {
+		XOLog(sqlstr, pc.ViewsCount, pc.PostId)
 	}
-	_, err = db.Exec(sqlstr, stp.PostId, stp.Id)
+	_, err = db.Exec(sqlstr, pc.ViewsCount, pc.PostId)
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLogErr(err)
 	}
-	OnSuggestedTopPost_AfterUpdate(stp)
+	OnPostCount_AfterUpdate(pc)
 
 	return err
 }
 
-// Save saves the SuggestedTopPost to the database.
-func (stp *SuggestedTopPost) Save(db XODB) error {
-	if stp.Exists() {
-		return stp.Update(db)
+// Save saves the PostCount to the database.
+func (pc *PostCount) Save(db XODB) error {
+	if pc.Exists() {
+		return pc.Update(db)
 	}
 
-	return stp.Replace(db)
+	return pc.Replace(db)
 }
 
-// Delete deletes the SuggestedTopPost from the database.
-func (stp *SuggestedTopPost) Delete(db XODB) error {
+// Delete deletes the PostCount from the database.
+func (pc *PostCount) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !stp._exists {
+	if !pc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if stp._deleted {
+	if pc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_meta.suggested_top_posts WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.post_count WHERE PostId = ?`
 
 	// run query
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLog(sqlstr, stp.Id)
+	if LogTableSqlReq.PostCount {
+		XOLog(sqlstr, pc.PostId)
 	}
-	_, err = db.Exec(sqlstr, stp.Id)
+	_, err = db.Exec(sqlstr, pc.PostId)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	stp._deleted = true
+	pc._deleted = true
 
-	OnSuggestedTopPost_AfterDelete(stp)
+	OnPostCount_AfterDelete(pc)
 
 	return nil
 }
@@ -202,18 +178,18 @@ func (stp *SuggestedTopPost) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __SuggestedTopPost_Deleter struct {
+type __PostCount_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __SuggestedTopPost_Updater struct {
+type __PostCount_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __SuggestedTopPost_Selector struct {
+type __PostCount_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -222,19 +198,19 @@ type __SuggestedTopPost_Selector struct {
 	offset    int
 }
 
-func NewSuggestedTopPost_Deleter() *__SuggestedTopPost_Deleter {
-	d := __SuggestedTopPost_Deleter{whereSep: " AND "}
+func NewPostCount_Deleter() *__PostCount_Deleter {
+	d := __PostCount_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewSuggestedTopPost_Updater() *__SuggestedTopPost_Updater {
-	u := __SuggestedTopPost_Updater{whereSep: " AND "}
+func NewPostCount_Updater() *__PostCount_Updater {
+	u := __PostCount_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewSuggestedTopPost_Selector() *__SuggestedTopPost_Selector {
-	u := __SuggestedTopPost_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPostCount_Selector() *__PostCount_Selector {
+	u := __PostCount_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -242,117 +218,12 @@ func NewSuggestedTopPost_Selector() *__SuggestedTopPost_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__SuggestedTopPost_Deleter) Or() *__SuggestedTopPost_Deleter {
+func (u *__PostCount_Deleter) Or() *__PostCount_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SuggestedTopPost_Deleter) Id_In(ins []int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Deleter) Id_Ins(ins ...int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Deleter) Id_NotIn(ins []int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_Eq(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_NotEq(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_LT(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_LE(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_GT(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Deleter) Id_GE(val int) *__SuggestedTopPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__SuggestedTopPost_Deleter) PostId_In(ins []int) *__SuggestedTopPost_Deleter {
+func (u *__PostCount_Deleter) PostId_In(ins []int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -365,7 +236,7 @@ func (u *__SuggestedTopPost_Deleter) PostId_In(ins []int) *__SuggestedTopPost_De
 	return u
 }
 
-func (u *__SuggestedTopPost_Deleter) PostId_Ins(ins ...int) *__SuggestedTopPost_Deleter {
+func (u *__PostCount_Deleter) PostId_Ins(ins ...int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -378,7 +249,7 @@ func (u *__SuggestedTopPost_Deleter) PostId_Ins(ins ...int) *__SuggestedTopPost_
 	return u
 }
 
-func (u *__SuggestedTopPost_Deleter) PostId_NotIn(ins []int) *__SuggestedTopPost_Deleter {
+func (u *__PostCount_Deleter) PostId_NotIn(ins []int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -391,7 +262,7 @@ func (u *__SuggestedTopPost_Deleter) PostId_NotIn(ins []int) *__SuggestedTopPost
 	return u
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_Eq(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_Eq(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -402,7 +273,7 @@ func (d *__SuggestedTopPost_Deleter) PostId_Eq(val int) *__SuggestedTopPost_Dele
 	return d
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_NotEq(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_NotEq(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -413,7 +284,7 @@ func (d *__SuggestedTopPost_Deleter) PostId_NotEq(val int) *__SuggestedTopPost_D
 	return d
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_LT(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_LT(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -424,7 +295,7 @@ func (d *__SuggestedTopPost_Deleter) PostId_LT(val int) *__SuggestedTopPost_Dele
 	return d
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_LE(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_LE(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -435,7 +306,7 @@ func (d *__SuggestedTopPost_Deleter) PostId_LE(val int) *__SuggestedTopPost_Dele
 	return d
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_GT(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_GT(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -446,129 +317,129 @@ func (d *__SuggestedTopPost_Deleter) PostId_GT(val int) *__SuggestedTopPost_Dele
 	return d
 }
 
-func (d *__SuggestedTopPost_Deleter) PostId_GE(val int) *__SuggestedTopPost_Deleter {
+func (d *__PostCount_Deleter) PostId_GE(val int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Deleter) ViewsCount_In(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ViewsCount_Ins(ins ...int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ViewsCount_NotIn(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Deleter) ViewsCount_Eq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ViewsCount_NotEq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ViewsCount_LT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ViewsCount_LE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ViewsCount_GT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ViewsCount_GE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__SuggestedTopPost_Updater) Or() *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) Or() *__PostCount_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SuggestedTopPost_Updater) Id_In(ins []int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Updater) Id_Ins(ins ...int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Updater) Id_NotIn(ins []int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__SuggestedTopPost_Updater) Id_Eq(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Updater) Id_NotEq(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Updater) Id_LT(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Updater) Id_LE(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Updater) Id_GT(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Updater) Id_GE(val int) *__SuggestedTopPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__SuggestedTopPost_Updater) PostId_In(ins []int) *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) PostId_In(ins []int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -581,7 +452,7 @@ func (u *__SuggestedTopPost_Updater) PostId_In(ins []int) *__SuggestedTopPost_Up
 	return u
 }
 
-func (u *__SuggestedTopPost_Updater) PostId_Ins(ins ...int) *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) PostId_Ins(ins ...int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -594,7 +465,7 @@ func (u *__SuggestedTopPost_Updater) PostId_Ins(ins ...int) *__SuggestedTopPost_
 	return u
 }
 
-func (u *__SuggestedTopPost_Updater) PostId_NotIn(ins []int) *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) PostId_NotIn(ins []int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -607,7 +478,7 @@ func (u *__SuggestedTopPost_Updater) PostId_NotIn(ins []int) *__SuggestedTopPost
 	return u
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_Eq(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_Eq(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -618,7 +489,7 @@ func (d *__SuggestedTopPost_Updater) PostId_Eq(val int) *__SuggestedTopPost_Upda
 	return d
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_NotEq(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_NotEq(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -629,7 +500,7 @@ func (d *__SuggestedTopPost_Updater) PostId_NotEq(val int) *__SuggestedTopPost_U
 	return d
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_LT(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_LT(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -640,7 +511,7 @@ func (d *__SuggestedTopPost_Updater) PostId_LT(val int) *__SuggestedTopPost_Upda
 	return d
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_LE(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_LE(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -651,7 +522,7 @@ func (d *__SuggestedTopPost_Updater) PostId_LE(val int) *__SuggestedTopPost_Upda
 	return d
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_GT(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_GT(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -662,129 +533,129 @@ func (d *__SuggestedTopPost_Updater) PostId_GT(val int) *__SuggestedTopPost_Upda
 	return d
 }
 
-func (d *__SuggestedTopPost_Updater) PostId_GE(val int) *__SuggestedTopPost_Updater {
+func (d *__PostCount_Updater) PostId_GE(val int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Updater) ViewsCount_In(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ViewsCount_Ins(ins ...int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ViewsCount_NotIn(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Updater) ViewsCount_Eq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ViewsCount_NotEq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ViewsCount_LT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ViewsCount_LE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ViewsCount_GT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ViewsCount_GE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 ////////ints
-func (u *__SuggestedTopPost_Selector) Or() *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) Or() *__PostCount_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) Id_In(ins []int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Selector) Id_Ins(ins ...int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__SuggestedTopPost_Selector) Id_NotIn(ins []int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__SuggestedTopPost_Selector) Id_Eq(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id = ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Selector) Id_NotEq(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id != ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Selector) Id_LT(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id < ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Selector) Id_LE(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id <= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Selector) Id_GT(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id > ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__SuggestedTopPost_Selector) Id_GE(val int) *__SuggestedTopPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Id >= ? "
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__SuggestedTopPost_Selector) PostId_In(ins []int) *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) PostId_In(ins []int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -797,7 +668,7 @@ func (u *__SuggestedTopPost_Selector) PostId_In(ins []int) *__SuggestedTopPost_S
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) PostId_Ins(ins ...int) *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) PostId_Ins(ins ...int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -810,7 +681,7 @@ func (u *__SuggestedTopPost_Selector) PostId_Ins(ins ...int) *__SuggestedTopPost
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) PostId_NotIn(ins []int) *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) PostId_NotIn(ins []int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -823,7 +694,7 @@ func (u *__SuggestedTopPost_Selector) PostId_NotIn(ins []int) *__SuggestedTopPos
 	return u
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_Eq(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_Eq(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -834,7 +705,7 @@ func (d *__SuggestedTopPost_Selector) PostId_Eq(val int) *__SuggestedTopPost_Sel
 	return d
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_NotEq(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_NotEq(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -845,7 +716,7 @@ func (d *__SuggestedTopPost_Selector) PostId_NotEq(val int) *__SuggestedTopPost_
 	return d
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_LT(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_LT(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -856,7 +727,7 @@ func (d *__SuggestedTopPost_Selector) PostId_LT(val int) *__SuggestedTopPost_Sel
 	return d
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_LE(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_LE(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -867,7 +738,7 @@ func (d *__SuggestedTopPost_Selector) PostId_LE(val int) *__SuggestedTopPost_Sel
 	return d
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_GT(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_GT(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -878,12 +749,117 @@ func (d *__SuggestedTopPost_Selector) PostId_GT(val int) *__SuggestedTopPost_Sel
 	return d
 }
 
-func (d *__SuggestedTopPost_Selector) PostId_GE(val int) *__SuggestedTopPost_Selector {
+func (d *__PostCount_Selector) PostId_GE(val int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Selector) ViewsCount_In(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ViewsCount_Ins(ins ...int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ViewsCount_NotIn(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Selector) ViewsCount_Eq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ViewsCount_NotEq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ViewsCount_LT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ViewsCount_LE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ViewsCount_GT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ViewsCount_GE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewsCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -903,33 +879,12 @@ func (d *__SuggestedTopPost_Selector) PostId_GE(val int) *__SuggestedTopPost_Sel
 
 //ints
 
-func (u *__SuggestedTopPost_Updater) Id(newVal int) *__SuggestedTopPost_Updater {
-	u.updates[" Id = ? "] = newVal
-	return u
-}
-
-func (u *__SuggestedTopPost_Updater) Id_Increment(count int) *__SuggestedTopPost_Updater {
-	if count > 0 {
-		u.updates[" Id = Id+? "] = count
-	}
-
-	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__SuggestedTopPost_Updater) PostId(newVal int) *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) PostId(newVal int) *__PostCount_Updater {
 	u.updates[" PostId = ? "] = newVal
 	return u
 }
 
-func (u *__SuggestedTopPost_Updater) PostId_Increment(count int) *__SuggestedTopPost_Updater {
+func (u *__PostCount_Updater) PostId_Increment(count int) *__PostCount_Updater {
 	if count > 0 {
 		u.updates[" PostId = PostId+? "] = count
 	}
@@ -943,61 +898,82 @@ func (u *__SuggestedTopPost_Updater) PostId_Increment(count int) *__SuggestedTop
 
 //string
 
+//ints
+
+func (u *__PostCount_Updater) ViewsCount(newVal int) *__PostCount_Updater {
+	u.updates[" ViewsCount = ? "] = newVal
+	return u
+}
+
+func (u *__PostCount_Updater) ViewsCount_Increment(count int) *__PostCount_Updater {
+	if count > 0 {
+		u.updates[" ViewsCount = ViewsCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" ViewsCount = ViewsCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__SuggestedTopPost_Selector) OrderBy_Id_Desc() *__SuggestedTopPost_Selector {
-	u.orderBy = " ORDER BY Id DESC "
-	return u
-}
-
-func (u *__SuggestedTopPost_Selector) OrderBy_Id_Asc() *__SuggestedTopPost_Selector {
-	u.orderBy = " ORDER BY Id ASC "
-	return u
-}
-
-func (u *__SuggestedTopPost_Selector) Select_Id() *__SuggestedTopPost_Selector {
-	u.selectCol = "Id"
-	return u
-}
-
-func (u *__SuggestedTopPost_Selector) OrderBy_PostId_Desc() *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) OrderBy_PostId_Desc() *__PostCount_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) OrderBy_PostId_Asc() *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) OrderBy_PostId_Asc() *__PostCount_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) Select_PostId() *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) Select_PostId() *__PostCount_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) Limit(num int) *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) OrderBy_ViewsCount_Desc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ViewsCount DESC "
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_ViewsCount_Asc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ViewsCount ASC "
+	return u
+}
+
+func (u *__PostCount_Selector) Select_ViewsCount() *__PostCount_Selector {
+	u.selectCol = "ViewsCount"
+	return u
+}
+
+func (u *__PostCount_Selector) Limit(num int) *__PostCount_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) Offset(num int) *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) Offset(num int) *__PostCount_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__SuggestedTopPost_Selector) Order_Rand() *__SuggestedTopPost_Selector {
+func (u *__PostCount_Selector) Order_Rand() *__PostCount_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__SuggestedTopPost_Selector) _stoSql() (string, []interface{}) {
+func (u *__PostCount_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun_meta.suggested_top_posts"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.post_count"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1017,20 +993,20 @@ func (u *__SuggestedTopPost_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__SuggestedTopPost_Selector) GetRow(db *sqlx.DB) (*SuggestedTopPost, error) {
+func (u *__PostCount_Selector) GetRow(db *sqlx.DB) (*PostCount, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &SuggestedTopPost{}
+	row := &PostCount{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1038,25 +1014,25 @@ func (u *__SuggestedTopPost_Selector) GetRow(db *sqlx.DB) (*SuggestedTopPost, er
 
 	row._exists = true
 
-	OnSuggestedTopPost_LoadOne(row)
+	OnPostCount_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__SuggestedTopPost_Selector) GetRows(db *sqlx.DB) ([]*SuggestedTopPost, error) {
+func (u *__PostCount_Selector) GetRows(db *sqlx.DB) ([]*PostCount, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*SuggestedTopPost
+	var rows []*PostCount
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1070,25 +1046,25 @@ func (u *__SuggestedTopPost_Selector) GetRows(db *sqlx.DB) ([]*SuggestedTopPost,
 		rows[i]._exists = true
 	}
 
-	OnSuggestedTopPost_LoadMany(rows)
+	OnPostCount_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__SuggestedTopPost_Selector) GetRows2(db *sqlx.DB) ([]SuggestedTopPost, error) {
+func (u *__PostCount_Selector) GetRows2(db *sqlx.DB) ([]PostCount, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*SuggestedTopPost
+	var rows []*PostCount
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1102,9 +1078,9 @@ func (u *__SuggestedTopPost_Selector) GetRows2(db *sqlx.DB) ([]SuggestedTopPost,
 		rows[i]._exists = true
 	}
 
-	OnSuggestedTopPost_LoadMany(rows)
+	OnPostCount_LoadMany(rows)
 
-	rows2 := make([]SuggestedTopPost, len(rows))
+	rows2 := make([]PostCount, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -1113,12 +1089,12 @@ func (u *__SuggestedTopPost_Selector) GetRows2(db *sqlx.DB) ([]SuggestedTopPost,
 	return rows2, nil
 }
 
-func (u *__SuggestedTopPost_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PostCount_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -1126,7 +1102,7 @@ func (u *__SuggestedTopPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return "", err
@@ -1135,19 +1111,19 @@ func (u *__SuggestedTopPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__SuggestedTopPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PostCount_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1156,19 +1132,19 @@ func (u *__SuggestedTopPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, err
 	return rows, nil
 }
 
-func (u *__SuggestedTopPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PostCount_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1177,19 +1153,19 @@ func (u *__SuggestedTopPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__SuggestedTopPost_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PostCount_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1199,7 +1175,7 @@ func (u *__SuggestedTopPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__SuggestedTopPost_Updater) Update(db XODB) (int, error) {
+func (u *__PostCount_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -1216,18 +1192,18 @@ func (u *__SuggestedTopPost_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun_meta.suggested_top_posts SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.post_count SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1235,7 +1211,7 @@ func (u *__SuggestedTopPost_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1244,7 +1220,7 @@ func (u *__SuggestedTopPost_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__SuggestedTopPost_Deleter) Delete(db XODB) (int, error) {
+func (d *__PostCount_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -1257,15 +1233,15 @@ func (d *__SuggestedTopPost_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun_meta.suggested_top_posts WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.post_count WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1274,7 +1250,7 @@ func (d *__SuggestedTopPost_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1283,21 +1259,21 @@ func (d *__SuggestedTopPost_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  SuggestedTopPost ////////////////
+///////////////////////// Mass insert - replace for  PostCount ////////////////
 
-func MassInsert_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
+func MassInsert_PostCount(rows []PostCount, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun_meta.suggested_top_posts (" +
-		"PostId" +
+	sqlstr := "INSERT INTO sun.post_count (" +
+		"PostId, ViewsCount" +
 		") VALUES " + insVals
 
 	// run query
@@ -1306,15 +1282,16 @@ func MassInsert_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.ViewsCount)
 
 	}
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return err
@@ -1323,15 +1300,19 @@ func MassInsert_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
 	return nil
 }
 
-func MassReplace_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
+func MassReplace_PostCount(rows []PostCount, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun_meta.suggested_top_posts (" +
-		"PostId" +
+	sqlstr := "REPLACE INTO sun.post_count (" +
+		"PostId, ViewsCount" +
 		") VALUES " + insVals
 
 	// run query
@@ -1340,21 +1321,23 @@ func MassReplace_SuggestedTopPost(rows []SuggestedTopPost, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.ViewsCount)
 
 	}
 
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.PostCount {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.SuggestedTopPost {
+		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////

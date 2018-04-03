@@ -76,30 +76,6 @@ func EventByEventId(db *sqlx.DB, eventId int) (*Event, error) {
 	return &e, nil
 }
 
-// Event2ByEventId Generated from index 'PRIMARY' -- retrieves a row from 'sun.event2' as a Event2.
-func Event2ByEventId(db *sqlx.DB, eventId int) (*Event2, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.event2 ` +
-		`WHERE EventId = ?`
-
-	XOLog(sqlstr, eventId)
-	e := Event2{
-		_exists: true,
-	}
-
-	err = db.Get(&e, sqlstr, eventId)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnEvent2_LoadOne(&e)
-
-	return &e, nil
-}
-
 // FollowingListById Generated from index 'PRIMARY' -- retrieves a row from 'sun.following_list' as a FollowingList.
 func FollowingListById(db *sqlx.DB, id int) (*FollowingList, error) {
 	var err error
@@ -388,6 +364,30 @@ func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	return &p, nil
 }
 
+// PostCountByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_count' as a PostCount.
+func PostCountByPostId(db *sqlx.DB, postId int) (*PostCount, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_count ` +
+		`WHERE PostId = ?`
+
+	XOLog(sqlstr, postId)
+	pc := PostCount{
+		_exists: true,
+	}
+
+	err = db.Get(&pc, sqlstr, postId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostCount_LoadOne(&pc)
+
+	return &pc, nil
+}
+
 // PostKeyById Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_keys' as a PostKey.
 func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
 	var err error
@@ -410,6 +410,102 @@ func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
 	OnPostKey_LoadOne(&pk)
 
 	return &pk, nil
+}
+
+// PostLinkByLinkId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_link' as a PostLink.
+func PostLinkByLinkId(db *sqlx.DB, linkId int) (*PostLink, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_link ` +
+		`WHERE LinkId = ?`
+
+	XOLog(sqlstr, linkId)
+	pl := PostLink{
+		_exists: true,
+	}
+
+	err = db.Get(&pl, sqlstr, linkId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostLink_LoadOne(&pl)
+
+	return &pl, nil
+}
+
+// PostMediaByMediaId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_media' as a PostMedia.
+func PostMediaByMediaId(db *sqlx.DB, mediaId int) (*PostMedia, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_media ` +
+		`WHERE MediaId = ?`
+
+	XOLog(sqlstr, mediaId)
+	pm := PostMedia{
+		_exists: true,
+	}
+
+	err = db.Get(&pm, sqlstr, mediaId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostMedia_LoadOne(&pm)
+
+	return &pm, nil
+}
+
+// PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndCreatedTime Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
+func PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndCreatedTime(db *sqlx.DB, mentionedId int, postId int) (*PostMentioned, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_mentioned ` +
+		`WHERE MentionedId = ? AND PostId = ?`
+
+	XOLog(sqlstr, mentionedId, postId)
+	pm := PostMentioned{
+		_exists: true,
+	}
+
+	err = db.Get(&pm, sqlstr, mentionedId, postId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostMentioned_LoadOne(&pm)
+
+	return &pm, nil
+}
+
+// PostResharedByResharedId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_reshared' as a PostReshared.
+func PostResharedByResharedId(db *sqlx.DB, resharedId int) (*PostReshared, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_reshared ` +
+		`WHERE ResharedId = ?`
+
+	XOLog(sqlstr, resharedId)
+	pr := PostReshared{
+		_exists: true,
+	}
+
+	err = db.Get(&pr, sqlstr, resharedId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostReshared_LoadOne(&pr)
+
+	return &pr, nil
 }
 
 // SearchClickedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.search_clicked' as a SearchClicked.
@@ -506,54 +602,6 @@ func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification,
 	OnSettingNotification_LoadOne(&sn)
 
 	return &sn, nil
-}
-
-// SuggestedTopPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun.suggested_top_posts' as a SuggestedTopPost.
-func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.suggested_top_posts ` +
-		`WHERE Id = ?`
-
-	XOLog(sqlstr, id)
-	stp := SuggestedTopPost{
-		_exists: true,
-	}
-
-	err = db.Get(&stp, sqlstr, id)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnSuggestedTopPost_LoadOne(&stp)
-
-	return &stp, nil
-}
-
-// SuggestedUserById Generated from index 'PRIMARY' -- retrieves a row from 'sun.suggested_user' as a SuggestedUser.
-func SuggestedUserById(db *sqlx.DB, id int) (*SuggestedUser, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.suggested_user ` +
-		`WHERE Id = ?`
-
-	XOLog(sqlstr, id)
-	su := SuggestedUser{
-		_exists: true,
-	}
-
-	err = db.Get(&su, sqlstr, id)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnSuggestedUser_LoadOne(&su)
-
-	return &su, nil
 }
 
 // TagByTagId Generated from index 'PRIMARY' -- retrieves a row from 'sun.tag' as a Tag.
@@ -938,4 +986,52 @@ func HomeFanoutByOrderId(db *sqlx.DB, orderId int) (*HomeFanout, error) {
 	OnHomeFanout_LoadOne(&hf)
 
 	return &hf, nil
+}
+
+// SuggestedTopPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.suggested_top_posts' as a SuggestedTopPost.
+func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_meta.suggested_top_posts ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	stp := SuggestedTopPost{
+		_exists: true,
+	}
+
+	err = db.Get(&stp, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSuggestedTopPost_LoadOne(&stp)
+
+	return &stp, nil
+}
+
+// SuggestedUserById Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.suggested_user' as a SuggestedUser.
+func SuggestedUserById(db *sqlx.DB, id int) (*SuggestedUser, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_meta.suggested_user ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	su := SuggestedUser{
+		_exists: true,
+	}
+
+	err = db.Get(&su, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSuggestedUser_LoadOne(&su)
+
+	return &su, nil
 }

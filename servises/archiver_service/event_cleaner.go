@@ -10,7 +10,7 @@ import (
 func cleanEvents() {
 	go func() {
 		for {
-			time.Sleep(time.Second * 10000)
+			time.Sleep(time.Second * 100)
 			old := helper.NanoTimeBeforeNowSeconds(10)
 			x.NewEvent_Deleter().EventId_LE(old).Delete(base.DB)
 		}

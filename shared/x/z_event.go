@@ -77,30 +77,6 @@ func OnEvent_LoadMany(rows []*Event) {
 	}
 }
 
-//Event2 Events
-
-func OnEvent2_AfterInsert(row *Event2) {
-	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
-}
-
-func OnEvent2_AfterUpdate(row *Event2) {
-	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
-}
-
-func OnEvent2_AfterDelete(row *Event2) {
-	RowCache.Delete("Event2:" + strconv.Itoa(row.EventId))
-}
-
-func OnEvent2_LoadOne(row *Event2) {
-	RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
-}
-
-func OnEvent2_LoadMany(rows []*Event2) {
-	for _, row := range rows {
-		RowCache.Set("Event2:"+strconv.Itoa(row.EventId), row, time.Hour*0)
-	}
-}
-
 //FollowingList Events
 
 func OnFollowingList_AfterInsert(row *FollowingList) {
@@ -389,6 +365,30 @@ func OnPost_LoadMany(rows []*Post) {
 	}
 }
 
+//PostCount Events
+
+func OnPostCount_AfterInsert(row *PostCount) {
+	RowCache.Set("PostCount:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCount_AfterUpdate(row *PostCount) {
+	RowCache.Set("PostCount:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCount_AfterDelete(row *PostCount) {
+	RowCache.Delete("PostCount:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostCount_LoadOne(row *PostCount) {
+	RowCache.Set("PostCount:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCount_LoadMany(rows []*PostCount) {
+	for _, row := range rows {
+		RowCache.Set("PostCount:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	}
+}
+
 //PostKey Events
 
 func OnPostKey_AfterInsert(row *PostKey) {
@@ -410,6 +410,102 @@ func OnPostKey_LoadOne(row *PostKey) {
 func OnPostKey_LoadMany(rows []*PostKey) {
 	for _, row := range rows {
 		RowCache.Set("PostKey:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//PostLink Events
+
+func OnPostLink_AfterInsert(row *PostLink) {
+	RowCache.Set("PostLink:"+strconv.Itoa(row.LinkId), row, time.Hour*0)
+}
+
+func OnPostLink_AfterUpdate(row *PostLink) {
+	RowCache.Set("PostLink:"+strconv.Itoa(row.LinkId), row, time.Hour*0)
+}
+
+func OnPostLink_AfterDelete(row *PostLink) {
+	RowCache.Delete("PostLink:" + strconv.Itoa(row.LinkId))
+}
+
+func OnPostLink_LoadOne(row *PostLink) {
+	RowCache.Set("PostLink:"+strconv.Itoa(row.LinkId), row, time.Hour*0)
+}
+
+func OnPostLink_LoadMany(rows []*PostLink) {
+	for _, row := range rows {
+		RowCache.Set("PostLink:"+strconv.Itoa(row.LinkId), row, time.Hour*0)
+	}
+}
+
+//PostMedia Events
+
+func OnPostMedia_AfterInsert(row *PostMedia) {
+	RowCache.Set("PostMedia:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
+}
+
+func OnPostMedia_AfterUpdate(row *PostMedia) {
+	RowCache.Set("PostMedia:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
+}
+
+func OnPostMedia_AfterDelete(row *PostMedia) {
+	RowCache.Delete("PostMedia:" + strconv.Itoa(row.MediaId))
+}
+
+func OnPostMedia_LoadOne(row *PostMedia) {
+	RowCache.Set("PostMedia:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
+}
+
+func OnPostMedia_LoadMany(rows []*PostMedia) {
+	for _, row := range rows {
+		RowCache.Set("PostMedia:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
+	}
+}
+
+//PostMentioned Events
+
+func OnPostMentioned_AfterInsert(row *PostMentioned) {
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostMentioned_AfterUpdate(row *PostMentioned) {
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostMentioned_AfterDelete(row *PostMentioned) {
+	RowCache.Delete("PostMentioned:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostMentioned_LoadOne(row *PostMentioned) {
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostMentioned_LoadMany(rows []*PostMentioned) {
+	for _, row := range rows {
+		RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	}
+}
+
+//PostReshared Events
+
+func OnPostReshared_AfterInsert(row *PostReshared) {
+	RowCache.Set("PostReshared:"+strconv.Itoa(row.ResharedId), row, time.Hour*0)
+}
+
+func OnPostReshared_AfterUpdate(row *PostReshared) {
+	RowCache.Set("PostReshared:"+strconv.Itoa(row.ResharedId), row, time.Hour*0)
+}
+
+func OnPostReshared_AfterDelete(row *PostReshared) {
+	RowCache.Delete("PostReshared:" + strconv.Itoa(row.ResharedId))
+}
+
+func OnPostReshared_LoadOne(row *PostReshared) {
+	RowCache.Set("PostReshared:"+strconv.Itoa(row.ResharedId), row, time.Hour*0)
+}
+
+func OnPostReshared_LoadMany(rows []*PostReshared) {
+	for _, row := range rows {
+		RowCache.Set("PostReshared:"+strconv.Itoa(row.ResharedId), row, time.Hour*0)
 	}
 }
 
@@ -506,54 +602,6 @@ func OnSettingNotification_LoadOne(row *SettingNotification) {
 func OnSettingNotification_LoadMany(rows []*SettingNotification) {
 	for _, row := range rows {
 		RowCache.Set("SettingNotification:"+strconv.Itoa(row.UserId), row, time.Hour*0)
-	}
-}
-
-//SuggestedTopPost Events
-
-func OnSuggestedTopPost_AfterInsert(row *SuggestedTopPost) {
-	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedTopPost_AfterUpdate(row *SuggestedTopPost) {
-	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedTopPost_AfterDelete(row *SuggestedTopPost) {
-	RowCache.Delete("SuggestedTopPost:" + strconv.Itoa(row.Id))
-}
-
-func OnSuggestedTopPost_LoadOne(row *SuggestedTopPost) {
-	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedTopPost_LoadMany(rows []*SuggestedTopPost) {
-	for _, row := range rows {
-		RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
-	}
-}
-
-//SuggestedUser Events
-
-func OnSuggestedUser_AfterInsert(row *SuggestedUser) {
-	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedUser_AfterUpdate(row *SuggestedUser) {
-	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedUser_AfterDelete(row *SuggestedUser) {
-	RowCache.Delete("SuggestedUser:" + strconv.Itoa(row.Id))
-}
-
-func OnSuggestedUser_LoadOne(row *SuggestedUser) {
-	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnSuggestedUser_LoadMany(rows []*SuggestedUser) {
-	for _, row := range rows {
-		RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
 
@@ -938,5 +986,53 @@ func OnHomeFanout_LoadOne(row *HomeFanout) {
 func OnHomeFanout_LoadMany(rows []*HomeFanout) {
 	for _, row := range rows {
 		RowCache.Set("HomeFanout:"+strconv.Itoa(row.OrderId), row, time.Hour*0)
+	}
+}
+
+//SuggestedTopPost Events
+
+func OnSuggestedTopPost_AfterInsert(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_AfterUpdate(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_AfterDelete(row *SuggestedTopPost) {
+	RowCache.Delete("SuggestedTopPost:" + strconv.Itoa(row.Id))
+}
+
+func OnSuggestedTopPost_LoadOne(row *SuggestedTopPost) {
+	RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedTopPost_LoadMany(rows []*SuggestedTopPost) {
+	for _, row := range rows {
+		RowCache.Set("SuggestedTopPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//SuggestedUser Events
+
+func OnSuggestedUser_AfterInsert(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_AfterUpdate(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_AfterDelete(row *SuggestedUser) {
+	RowCache.Delete("SuggestedUser:" + strconv.Itoa(row.Id))
+}
+
+func OnSuggestedUser_LoadOne(row *SuggestedUser) {
+	RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnSuggestedUser_LoadMany(rows []*SuggestedUser) {
+	for _, row := range rows {
+		RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }

@@ -84,35 +84,6 @@ func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
 }
 */
 /*
-func PBConvPB__Event2_To_Event2( o *PB_Event2) *Event2 {
-     n := &Event2{
-      EventId: int ( o.EventId ),
-      EventType: int ( o.EventType ),
-      ByUserId: int ( o.ByUserId ),
-      PeerUserId: int ( o.PeerUserId ),
-      PostId: int ( o.PostId ),
-      CommentId: int ( o.CommentId ),
-      ActionId: int ( o.ActionId ),
-      Murmur64Hash: int ( o.Murmur64Hash ),
-    }
-    return n
-}
-
-func PBConvPB_Event2_To_Event2 ( o *Event2) *PB_Event2 {
-     n := &PB_Event2{
-      EventId: int64 ( o.EventId ),
-      EventType: int32 ( o.EventType ),
-      ByUserId: int64 ( o.ByUserId ),
-      PeerUserId: int64 ( o.PeerUserId ),
-      PostId: int64 ( o.PostId ),
-      CommentId: int64 ( o.CommentId ),
-      ActionId: int64 ( o.ActionId ),
-      Murmur64Hash: int64 ( o.Murmur64Hash ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__FollowingList_To_FollowingList( o *PB_FollowingList) *FollowingList {
      n := &FollowingList{
       Id: int ( o.Id ),
@@ -432,6 +403,7 @@ func PBConvPB__Post_To_Post( o *PB_Post) *Post {
       MediaCount: int ( o.MediaCount ),
       SharedTo: int ( o.SharedTo ),
       DisableComment: int ( o.DisableComment ),
+      Source: int ( o.Source ),
       HasTag: int ( o.HasTag ),
       Seq: int ( o.Seq ),
       CommentsCount: int ( o.CommentsCount ),
@@ -456,6 +428,7 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
       MediaCount: int32 ( o.MediaCount ),
       SharedTo: int32 ( o.SharedTo ),
       DisableComment: int32 ( o.DisableComment ),
+      Source: int32 ( o.Source ),
       HasTag: int32 ( o.HasTag ),
       Seq: int32 ( o.Seq ),
       CommentsCount: int32 ( o.CommentsCount ),
@@ -464,6 +437,23 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
       EditedTime: int32 ( o.EditedTime ),
       CreatedTime: int32 ( o.CreatedTime ),
       ReSharedPostId: int64 ( o.ReSharedPostId ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostCount_To_PostCount( o *PB_PostCount) *PostCount {
+     n := &PostCount{
+      PostId: int ( o.PostId ),
+      ViewsCount: int ( o.ViewsCount ),
+    }
+    return n
+}
+
+func PBConvPB_PostCount_To_PostCount ( o *PostCount) *PB_PostCount {
+     n := &PB_PostCount{
+      PostId: int64 ( o.PostId ),
+      ViewsCount: int64 ( o.ViewsCount ),
     }
     return n
 }
@@ -483,6 +473,110 @@ func PBConvPB_PostKey_To_PostKey ( o *PostKey) *PB_PostKey {
       Id: int32 ( o.Id ),
       PostKeyStr: string ( o.PostKeyStr ),
       Used: int32 ( o.Used ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostLink_To_PostLink( o *PB_PostLink) *PostLink {
+     n := &PostLink{
+      LinkId: int ( o.LinkId ),
+      LinkUrl: string ( o.LinkUrl ),
+    }
+    return n
+}
+
+func PBConvPB_PostLink_To_PostLink ( o *PostLink) *PB_PostLink {
+     n := &PB_PostLink{
+      LinkId: int64 ( o.LinkId ),
+      LinkUrl: string ( o.LinkUrl ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostMedia_To_PostMedia( o *PB_PostMedia) *PostMedia {
+     n := &PostMedia{
+      MediaId: int ( o.MediaId ),
+      UserId: int ( o.UserId ),
+      PostId: int ( o.PostId ),
+      AlbumId: int ( o.AlbumId ),
+      MediaTypeEnum: int ( o.MediaTypeEnum ),
+      Width: int ( o.Width ),
+      Height: int ( o.Height ),
+      Size: int ( o.Size ),
+      Duration: int ( o.Duration ),
+      Md5Hash: string ( o.Md5Hash ),
+      Color: string ( o.Color ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PostMedia_To_PostMedia ( o *PostMedia) *PB_PostMedia {
+     n := &PB_PostMedia{
+      MediaId: int64 ( o.MediaId ),
+      UserId: int32 ( o.UserId ),
+      PostId: int64 ( o.PostId ),
+      AlbumId: int32 ( o.AlbumId ),
+      MediaTypeEnum: int32 ( o.MediaTypeEnum ),
+      Width: int32 ( o.Width ),
+      Height: int32 ( o.Height ),
+      Size: int32 ( o.Size ),
+      Duration: int32 ( o.Duration ),
+      Md5Hash: string ( o.Md5Hash ),
+      Color: string ( o.Color ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostMentioned_To_PostMentioned( o *PB_PostMentioned) *PostMentioned {
+     n := &PostMentioned{
+      MentionedId: int ( o.MentionedId ),
+      ForUserId: int ( o.ForUserId ),
+      PostId: int ( o.PostId ),
+      PostUserId: int ( o.PostUserId ),
+      PostTypeEnum: int ( o.PostTypeEnum ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PostMentioned_To_PostMentioned ( o *PostMentioned) *PB_PostMentioned {
+     n := &PB_PostMentioned{
+      MentionedId: int64 ( o.MentionedId ),
+      ForUserId: int32 ( o.ForUserId ),
+      PostId: int64 ( o.PostId ),
+      PostUserId: int32 ( o.PostUserId ),
+      PostTypeEnum: int32 ( o.PostTypeEnum ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostReshared_To_PostReshared( o *PB_PostReshared) *PostReshared {
+     n := &PostReshared{
+      ResharedId: int ( o.ResharedId ),
+      ByUserId: int ( o.ByUserId ),
+      PostId: int ( o.PostId ),
+      PostUserId: int ( o.PostUserId ),
+      PostTypeEnum: int ( o.PostTypeEnum ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PostReshared_To_PostReshared ( o *PostReshared) *PB_PostReshared {
+     n := &PB_PostReshared{
+      ResharedId: int64 ( o.ResharedId ),
+      ByUserId: int32 ( o.ByUserId ),
+      PostId: int64 ( o.PostId ),
+      PostUserId: int32 ( o.PostUserId ),
+      PostTypeEnum: int32 ( o.PostTypeEnum ),
+      CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
 }
@@ -656,46 +750,6 @@ func PBConvPB_SettingNotification_To_SettingNotification ( o *SettingNotificatio
 }
 */
 /*
-func PBConvPB__SuggestedTopPost_To_SuggestedTopPost( o *PB_SuggestedTopPost) *SuggestedTopPost {
-     n := &SuggestedTopPost{
-      Id: int ( o.Id ),
-      PostId: int ( o.PostId ),
-    }
-    return n
-}
-
-func PBConvPB_SuggestedTopPost_To_SuggestedTopPost ( o *SuggestedTopPost) *PB_SuggestedTopPost {
-     n := &PB_SuggestedTopPost{
-      Id: int64 ( o.Id ),
-      PostId: int64 ( o.PostId ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__SuggestedUser_To_SuggestedUser( o *PB_SuggestedUser) *SuggestedUser {
-     n := &SuggestedUser{
-      Id: int ( o.Id ),
-      UserId: int ( o.UserId ),
-      TargetId: int ( o.TargetId ),
-      Weight: float32 ( o.Weight ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_SuggestedUser_To_SuggestedUser ( o *SuggestedUser) *PB_SuggestedUser {
-     n := &PB_SuggestedUser{
-      Id: int32 ( o.Id ),
-      UserId: int32 ( o.UserId ),
-      TargetId: int32 ( o.TargetId ),
-      Weight: float32 ( o.Weight ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__Tag_To_Tag( o *PB_Tag) *Tag {
      n := &Tag{
       TagId: int ( o.TagId ),
@@ -788,6 +842,15 @@ func PBConvPB__User_To_User( o *PB_User) *User {
       FollowingCount: int ( o.FollowingCount ),
       PostsCount: int ( o.PostsCount ),
       MediaCount: int ( o.MediaCount ),
+      PhotoCount: int ( o.PhotoCount ),
+      VideoCount: int ( o.VideoCount ),
+      GifCount: int ( o.GifCount ),
+      AudioCount: int ( o.AudioCount ),
+      VoiceCount: int ( o.VoiceCount ),
+      FileCount: int ( o.FileCount ),
+      LinkCount: int ( o.LinkCount ),
+      BoardCount: int ( o.BoardCount ),
+      PinedCount: int ( o.PinedCount ),
       LikesCount: int ( o.LikesCount ),
       ResharedCount: int ( o.ResharedCount ),
       LastActionTime: int ( o.LastActionTime ),
@@ -823,6 +886,15 @@ func PBConvPB_User_To_User ( o *User) *PB_User {
       FollowingCount: int32 ( o.FollowingCount ),
       PostsCount: int32 ( o.PostsCount ),
       MediaCount: int32 ( o.MediaCount ),
+      PhotoCount: int32 ( o.PhotoCount ),
+      VideoCount: int32 ( o.VideoCount ),
+      GifCount: int32 ( o.GifCount ),
+      AudioCount: int32 ( o.AudioCount ),
+      VoiceCount: int32 ( o.VoiceCount ),
+      FileCount: int32 ( o.FileCount ),
+      LinkCount: int32 ( o.LinkCount ),
+      BoardCount: int32 ( o.BoardCount ),
+      PinedCount: int32 ( o.PinedCount ),
       LikesCount: int32 ( o.LikesCount ),
       ResharedCount: int32 ( o.ResharedCount ),
       LastActionTime: int32 ( o.LastActionTime ),
@@ -1139,6 +1211,46 @@ func PBConvPB_HomeFanout_To_HomeFanout ( o *HomeFanout) *PB_HomeFanout {
       ForUserId: int64 ( o.ForUserId ),
       PostId: int64 ( o.PostId ),
       PostUserId: int64 ( o.PostUserId ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__SuggestedTopPost_To_SuggestedTopPost( o *PB_SuggestedTopPost) *SuggestedTopPost {
+     n := &SuggestedTopPost{
+      Id: int ( o.Id ),
+      PostId: int ( o.PostId ),
+    }
+    return n
+}
+
+func PBConvPB_SuggestedTopPost_To_SuggestedTopPost ( o *SuggestedTopPost) *PB_SuggestedTopPost {
+     n := &PB_SuggestedTopPost{
+      Id: int64 ( o.Id ),
+      PostId: int64 ( o.PostId ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__SuggestedUser_To_SuggestedUser( o *PB_SuggestedUser) *SuggestedUser {
+     n := &SuggestedUser{
+      Id: int ( o.Id ),
+      UserId: int ( o.UserId ),
+      TargetId: int ( o.TargetId ),
+      Weight: float32 ( o.Weight ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_SuggestedUser_To_SuggestedUser ( o *SuggestedUser) *PB_SuggestedUser {
+     n := &PB_SuggestedUser{
+      Id: int32 ( o.Id ),
+      UserId: int32 ( o.UserId ),
+      TargetId: int32 ( o.TargetId ),
+      Weight: float32 ( o.Weight ),
+      CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
 }
