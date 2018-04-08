@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -17,6 +17,7 @@ type HomeFanout__ struct {
 	ForUserId  int `json:"ForUserId"`  // ForUserId -
 	PostId     int `json:"PostId"`     // PostId -
 	PostUserId int `json:"PostUserId"` // PostUserId -
+	ResharedId int `json:"ResharedId"` // ResharedId -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -42,16 +43,16 @@ func (hf *HomeFanout) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_meta.home_fanout (` +
-		`OrderId, ForUserId, PostId, PostUserId` +
+		`OrderId, ForUserId, PostId, PostUserId, ResharedId` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.HomeFanout {
-		XOLog(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId)
+		XOLog(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId)
 	}
-	_, err = db.Exec(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId)
+	_, err = db.Exec(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId)
 	if err != nil {
 		return err
 	}
@@ -71,16 +72,16 @@ func (hf *HomeFanout) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_meta.home_fanout (` +
-		`OrderId, ForUserId, PostId, PostUserId` +
+		`OrderId, ForUserId, PostId, PostUserId, ResharedId` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.HomeFanout {
-		XOLog(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId)
+		XOLog(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId)
 	}
-	_, err = db.Exec(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId)
+	_, err = db.Exec(sqlstr, hf.OrderId, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId)
 	if err != nil {
 		if LogTableSqlReq.HomeFanout {
 			XOLogErr(err)
@@ -111,14 +112,14 @@ func (hf *HomeFanout) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_meta.home_fanout SET ` +
-		`ForUserId = ?, PostId = ?, PostUserId = ?` +
+		`ForUserId = ?, PostId = ?, PostUserId = ?, ResharedId = ?` +
 		` WHERE OrderId = ?`
 
 	// run query
 	if LogTableSqlReq.HomeFanout {
-		XOLog(sqlstr, hf.ForUserId, hf.PostId, hf.PostUserId, hf.OrderId)
+		XOLog(sqlstr, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId, hf.OrderId)
 	}
-	_, err = db.Exec(sqlstr, hf.ForUserId, hf.PostId, hf.PostUserId, hf.OrderId)
+	_, err = db.Exec(sqlstr, hf.ForUserId, hf.PostId, hf.PostUserId, hf.ResharedId, hf.OrderId)
 
 	if LogTableSqlReq.HomeFanout {
 		XOLogErr(err)
@@ -645,6 +646,111 @@ func (d *__HomeFanout_Deleter) PostUserId_GE(val int) *__HomeFanout_Deleter {
 	return d
 }
 
+func (u *__HomeFanout_Deleter) ResharedId_In(ins []int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Deleter) ResharedId_Ins(ins ...int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Deleter) ResharedId_NotIn(ins []int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_Eq(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_NotEq(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_LT(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_LE(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_GT(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Deleter) ResharedId_GE(val int) *__HomeFanout_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__HomeFanout_Updater) Or() *__HomeFanout_Updater {
 	u.whereSep = " OR "
@@ -1066,6 +1172,111 @@ func (d *__HomeFanout_Updater) PostUserId_GE(val int) *__HomeFanout_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostUserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__HomeFanout_Updater) ResharedId_In(ins []int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Updater) ResharedId_Ins(ins ...int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Updater) ResharedId_NotIn(ins []int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HomeFanout_Updater) ResharedId_Eq(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Updater) ResharedId_NotEq(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Updater) ResharedId_LT(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Updater) ResharedId_LE(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Updater) ResharedId_GT(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Updater) ResharedId_GE(val int) *__HomeFanout_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1497,6 +1708,111 @@ func (d *__HomeFanout_Selector) PostUserId_GE(val int) *__HomeFanout_Selector {
 	return d
 }
 
+func (u *__HomeFanout_Selector) ResharedId_In(ins []int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Selector) ResharedId_Ins(ins ...int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HomeFanout_Selector) ResharedId_NotIn(ins []int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HomeFanout_Selector) ResharedId_Eq(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Selector) ResharedId_NotEq(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Selector) ResharedId_LT(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Selector) ResharedId_LE(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Selector) ResharedId_GT(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HomeFanout_Selector) ResharedId_GE(val int) *__HomeFanout_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResharedId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -1593,6 +1909,27 @@ func (u *__HomeFanout_Updater) PostUserId_Increment(count int) *__HomeFanout_Upd
 
 //string
 
+//ints
+
+func (u *__HomeFanout_Updater) ResharedId(newVal int) *__HomeFanout_Updater {
+	u.updates[" ResharedId = ? "] = newVal
+	return u
+}
+
+func (u *__HomeFanout_Updater) ResharedId_Increment(count int) *__HomeFanout_Updater {
+	if count > 0 {
+		u.updates[" ResharedId = ResharedId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" ResharedId = ResharedId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -1655,6 +1992,21 @@ func (u *__HomeFanout_Selector) OrderBy_PostUserId_Asc() *__HomeFanout_Selector 
 
 func (u *__HomeFanout_Selector) Select_PostUserId() *__HomeFanout_Selector {
 	u.selectCol = "PostUserId"
+	return u
+}
+
+func (u *__HomeFanout_Selector) OrderBy_ResharedId_Desc() *__HomeFanout_Selector {
+	u.orderBy = " ORDER BY ResharedId DESC "
+	return u
+}
+
+func (u *__HomeFanout_Selector) OrderBy_ResharedId_Asc() *__HomeFanout_Selector {
+	u.orderBy = " ORDER BY ResharedId ASC "
+	return u
+}
+
+func (u *__HomeFanout_Selector) Select_ResharedId() *__HomeFanout_Selector {
+	u.selectCol = "ResharedId"
 	return u
 }
 
@@ -1971,13 +2323,13 @@ func MassInsert_HomeFanout(rows []HomeFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_meta.home_fanout (" +
-		"OrderId, ForUserId, PostId, PostUserId" +
+		"OrderId, ForUserId, PostId, PostUserId, ResharedId" +
 		") VALUES " + insVals
 
 	// run query
@@ -1989,6 +2341,7 @@ func MassInsert_HomeFanout(rows []HomeFanout, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostUserId)
+		vals = append(vals, row.ResharedId)
 
 	}
 
@@ -2012,13 +2365,13 @@ func MassReplace_HomeFanout(rows []HomeFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_meta.home_fanout (" +
-		"OrderId, ForUserId, PostId, PostUserId" +
+		"OrderId, ForUserId, PostId, PostUserId, ResharedId" +
 		") VALUES " + insVals
 
 	// run query
@@ -2030,6 +2383,7 @@ func MassReplace_HomeFanout(rows []HomeFanout, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostUserId)
+		vals = append(vals, row.ResharedId)
 
 	}
 
@@ -2049,6 +2403,8 @@ func MassReplace_HomeFanout(rows []HomeFanout, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -114,14 +114,14 @@ func (pm *PostMentioned) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_mentioned SET ` +
-		`MentionedId = ?, ForUserId = ?, PostUserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, CreatedTime = ?` +
-		` WHERE PostId = ?`
+		`ForUserId = ?, PostId = ?, PostUserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, CreatedTime = ?` +
+		` WHERE MentionedId = ?`
 
 	// run query
 	if LogTableSqlReq.PostMentioned {
-		XOLog(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.PostId)
+		XOLog(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.MentionedId)
 	}
-	_, err = db.Exec(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.PostId)
+	_, err = db.Exec(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.MentionedId)
 
 	if LogTableSqlReq.PostMentioned {
 		XOLogErr(err)
@@ -155,13 +155,13 @@ func (pm *PostMentioned) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.post_mentioned WHERE PostId = ?`
+	const sqlstr = `DELETE FROM sun.post_mentioned WHERE MentionedId = ?`
 
 	// run query
 	if LogTableSqlReq.PostMentioned {
-		XOLog(sqlstr, pm.PostId)
+		XOLog(sqlstr, pm.MentionedId)
 	}
-	_, err = db.Exec(sqlstr, pm.PostId)
+	_, err = db.Exec(sqlstr, pm.MentionedId)
 	if err != nil {
 		if LogTableSqlReq.PostMentioned {
 			XOLogErr(err)

@@ -2,7 +2,7 @@ package x
 
 import (
 	"errors"
-	"ms/sun_old/base"
+	"ms/sun/shared/base"
 	"strconv"
 )
 
@@ -102,14 +102,14 @@ func (c _StoreImpl) PreLoadCommentByCommentIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetCommentDeletedByUserId(UserId int) (*CommentDeleted, bool) {
-	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(UserId))
+func (c _StoreImpl) GetCommentDeletedByCommentId(CommentId int) (*CommentDeleted, bool) {
+	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(CommentId))
 	if ok {
 		if obj, ok := o.(*CommentDeleted); ok {
 			return obj, true
 		}
 	}
-	obj2, err := CommentDeletedByUserId(base.DB, UserId)
+	obj2, err := CommentDeletedByCommentId(base.DB, CommentId)
 	if err == nil {
 		return obj2, true
 	}
@@ -119,8 +119,8 @@ func (c _StoreImpl) GetCommentDeletedByUserId(UserId int) (*CommentDeleted, bool
 	return nil, false
 }
 
-func (c _StoreImpl) GetCommentDeletedByUserId_JustCache(UserId int) (*CommentDeleted, bool) {
-	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(UserId))
+func (c _StoreImpl) GetCommentDeletedByCommentId_JustCache(CommentId int) (*CommentDeleted, bool) {
+	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(CommentId))
 	if ok {
 		if obj, ok := o.(*CommentDeleted); ok {
 			return obj, true
@@ -128,12 +128,12 @@ func (c _StoreImpl) GetCommentDeletedByUserId_JustCache(UserId int) (*CommentDel
 	}
 
 	if LogTableSqlReq.CommentDeleted {
-		XOLogErr(errors.New("_JustCache is empty for CommentDeleted: " + strconv.Itoa(UserId)))
+		XOLogErr(errors.New("_JustCache is empty for CommentDeleted: " + strconv.Itoa(CommentId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadCommentDeletedByUserIds(ids []int) {
+func (c _StoreImpl) PreLoadCommentDeletedByCommentIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
@@ -144,7 +144,7 @@ func (c _StoreImpl) PreLoadCommentDeletedByUserIds(ids []int) {
 	}
 
 	if len(not_cached) > 0 {
-		NewCommentDeleted_Selector().UserId_In(not_cached).GetRows(base.DB)
+		NewCommentDeleted_Selector().CommentId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -966,14 +966,14 @@ func (c _StoreImpl) PreLoadPostMediaByMediaIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPostMentionedByPostId(PostId int) (*PostMentioned, bool) {
-	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(PostId))
+func (c _StoreImpl) GetPostMentionedByMentionedId(MentionedId int) (*PostMentioned, bool) {
+	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(MentionedId))
 	if ok {
 		if obj, ok := o.(*PostMentioned); ok {
 			return obj, true
 		}
 	}
-	obj2, err := PostMentionedByPostId(base.DB, PostId)
+	obj2, err := PostMentionedByMentionedId(base.DB, MentionedId)
 	if err == nil {
 		return obj2, true
 	}
@@ -983,8 +983,8 @@ func (c _StoreImpl) GetPostMentionedByPostId(PostId int) (*PostMentioned, bool) 
 	return nil, false
 }
 
-func (c _StoreImpl) GetPostMentionedByPostId_JustCache(PostId int) (*PostMentioned, bool) {
-	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(PostId))
+func (c _StoreImpl) GetPostMentionedByMentionedId_JustCache(MentionedId int) (*PostMentioned, bool) {
+	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(MentionedId))
 	if ok {
 		if obj, ok := o.(*PostMentioned); ok {
 			return obj, true
@@ -992,12 +992,12 @@ func (c _StoreImpl) GetPostMentionedByPostId_JustCache(PostId int) (*PostMention
 	}
 
 	if LogTableSqlReq.PostMentioned {
-		XOLogErr(errors.New("_JustCache is empty for PostMentioned: " + strconv.Itoa(PostId)))
+		XOLogErr(errors.New("_JustCache is empty for PostMentioned: " + strconv.Itoa(MentionedId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPostMentionedByPostIds(ids []int) {
+func (c _StoreImpl) PreLoadPostMentionedByMentionedIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
@@ -1008,7 +1008,7 @@ func (c _StoreImpl) PreLoadPostMentionedByPostIds(ids []int) {
 	}
 
 	if len(not_cached) > 0 {
-		NewPostMentioned_Selector().PostId_In(not_cached).GetRows(base.DB)
+		NewPostMentioned_Selector().MentionedId_In(not_cached).GetRows(base.DB)
 	}
 }
 

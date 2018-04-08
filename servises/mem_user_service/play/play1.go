@@ -2,7 +2,7 @@ package main
 
 import (
     "ms/sun/servises/mem_user_service"
-    "ms/sun_old/helper"
+    "ms/sun/shared/helper"
     "time"
 )
 

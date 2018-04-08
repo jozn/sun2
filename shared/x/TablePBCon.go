@@ -1218,6 +1218,7 @@ func PBConvPB__HomeFanout_To_HomeFanout( o *PB_HomeFanout) *HomeFanout {
       ForUserId: int ( o.ForUserId ),
       PostId: int ( o.PostId ),
       PostUserId: int ( o.PostUserId ),
+      ResharedId: int ( o.ResharedId ),
     }
     return n
 }
@@ -1228,6 +1229,7 @@ func PBConvPB_HomeFanout_To_HomeFanout ( o *HomeFanout) *PB_HomeFanout {
       ForUserId: int64 ( o.ForUserId ),
       PostId: int64 ( o.PostId ),
       PostUserId: int64 ( o.PostUserId ),
+      ResharedId: int64 ( o.ResharedId ),
     }
     return n
 }

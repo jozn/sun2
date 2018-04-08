@@ -1,7 +1,7 @@
 package chat_service
 
 import (
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/chat_service/message_adder"
 	"ms/sun/servises/file_service"
 	"ms/sun/shared/x"

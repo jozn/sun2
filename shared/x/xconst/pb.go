@@ -127,7 +127,7 @@ const (
 	PB_SettingClient                           = "PB_SettingClient"
 	PB_SettingNotification                     = "PB_SettingNotification"
 	PB_Tag                                     = "PB_Tag"
-	PB_TagsPost                                = "PB_TagsPost"
+	PB_TagPost                                 = "PB_TagPost"
 	PB_TriggerLog                              = "PB_TriggerLog"
 	PB_User                                    = "PB_User"
 	PB_UserMetaInfo                            = "PB_UserMetaInfo"

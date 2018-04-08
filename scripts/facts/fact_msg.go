@@ -2,7 +2,7 @@ package main
 
 import (
 	"math/rand"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/chat_service"
 	"ms/sun/servises/sun_utils"
 	"ms/sun/shared/x"

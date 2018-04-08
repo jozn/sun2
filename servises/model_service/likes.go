@@ -2,7 +2,7 @@ package model_service
 
 import (
 	"ms/sun_old/base"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
 	"ms/sun/servises/memcache_service"
 	"ms/sun/shared/x"

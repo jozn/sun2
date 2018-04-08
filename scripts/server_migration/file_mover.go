@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	//"ms/sun_old/helper"
+	//"ms/sun/shared/helper"
 	"os"
 	"path/filepath"
 	"regexp"
-    //"ms/sun_old/helper"
+    //"ms/sun/shared/helper"
     "strconv"
 )
 

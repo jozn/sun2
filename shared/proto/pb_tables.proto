@@ -433,6 +433,7 @@ message PB_HomeFanout {
     int64 ForUserId = 2;
     int64 PostId = 3;
     int64 PostUserId = 4;
+    int64 ResharedId = 5;
 }
 message PB_SuggestedTopPost {
     int64 Id = 1;

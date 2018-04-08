@@ -2,7 +2,7 @@ package model_service
 
 import (
 	"ms/sun_old/base"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
     "ms/sun/servises/view_service"
 )

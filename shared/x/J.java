@@ -468,6 +468,7 @@ public class J {
 		public int ForUserId;
 		public int PostId;
 		public int PostUserId;
+		public int ResharedId;
 	}
 
 	public static class SuggestedTopPost {//oridnal: 42

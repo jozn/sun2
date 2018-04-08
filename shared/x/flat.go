@@ -1,6 +1,6 @@
 package x
 
-import "ms/sun_old/helper"
+import "ms/sun/shared/helper"
 
 type PB_CommandToServer_Flat struct {
 	ClientCallId   int
@@ -3398,6 +3398,8 @@ type PB_PostMedia_Flat struct {
 	Md5Hash       string
 	Color         string
 	CreatedTime   int
+	ViewCount     int
+	Extra         string
 }
 
 //ToPB
@@ -3416,6 +3418,8 @@ func (m *PB_PostMedia) ToFlat() *PB_PostMedia_Flat {
 		Md5Hash:       m.Md5Hash,
 		Color:         m.Color,
 		CreatedTime:   int(m.CreatedTime),
+		ViewCount:     int(m.ViewCount),
+		Extra:         m.Extra,
 	}
 	return r
 }
@@ -3436,6 +3440,8 @@ func (m *PB_PostMedia_Flat) ToPB() *PB_PostMedia {
 		Md5Hash:       m.Md5Hash,
 		Color:         m.Color,
 		CreatedTime:   int32(m.CreatedTime),
+		ViewCount:     int32(m.ViewCount),
+		Extra:         m.Extra,
 	}
 	return r
 }
@@ -3455,6 +3461,8 @@ var PB_PostMedia__FOlD = &PB_PostMedia{
 	Md5Hash:       "",
 	Color:         "",
 	CreatedTime:   0,
+	ViewCount:     0,
+	Extra:         "",
 }
 
 type PB_PostMentioned_Flat struct {
@@ -3912,45 +3920,49 @@ var PB_Tag__FOlD = &PB_Tag{
 	CreatedTime:   0,
 }
 
-type PB_TagsPost_Flat struct {
-	Id           int
-	TagId        int
-	PostId       int
-	PostTypeEnum int
-	CreatedTime  int
+type PB_TagPost_Flat struct {
+	Id               int
+	TagId            int
+	PostId           int
+	PostTypeEnum     int
+	PostCategoryEnum int
+	CreatedTime      int
 }
 
 //ToPB
-func (m *PB_TagsPost) ToFlat() *PB_TagsPost_Flat {
-	r := &PB_TagsPost_Flat{
-		Id:           int(m.Id),
-		TagId:        int(m.TagId),
-		PostId:       int(m.PostId),
-		PostTypeEnum: int(m.PostTypeEnum),
-		CreatedTime:  int(m.CreatedTime),
+func (m *PB_TagPost) ToFlat() *PB_TagPost_Flat {
+	r := &PB_TagPost_Flat{
+		Id:               int(m.Id),
+		TagId:            int(m.TagId),
+		PostId:           int(m.PostId),
+		PostTypeEnum:     int(m.PostTypeEnum),
+		PostCategoryEnum: int(m.PostCategoryEnum),
+		CreatedTime:      int(m.CreatedTime),
 	}
 	return r
 }
 
 //ToPB
-func (m *PB_TagsPost_Flat) ToPB() *PB_TagsPost {
-	r := &PB_TagsPost{
-		Id:           int64(m.Id),
-		TagId:        int32(m.TagId),
-		PostId:       int32(m.PostId),
-		PostTypeEnum: int32(m.PostTypeEnum),
-		CreatedTime:  int32(m.CreatedTime),
+func (m *PB_TagPost_Flat) ToPB() *PB_TagPost {
+	r := &PB_TagPost{
+		Id:               int64(m.Id),
+		TagId:            int32(m.TagId),
+		PostId:           int32(m.PostId),
+		PostTypeEnum:     int32(m.PostTypeEnum),
+		PostCategoryEnum: int32(m.PostCategoryEnum),
+		CreatedTime:      int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
-var PB_TagsPost__FOlD = &PB_TagsPost{
-	Id:           0,
-	TagId:        0,
-	PostId:       0,
-	PostTypeEnum: 0,
-	CreatedTime:  0,
+var PB_TagPost__FOlD = &PB_TagPost{
+	Id:               0,
+	TagId:            0,
+	PostId:           0,
+	PostTypeEnum:     0,
+	PostCategoryEnum: 0,
+	CreatedTime:      0,
 }
 
 type PB_TriggerLog_Flat struct {
@@ -4691,6 +4703,7 @@ type PB_HomeFanout_Flat struct {
 	ForUserId  int
 	PostId     int
 	PostUserId int
+	ResharedId int
 }
 
 //ToPB
@@ -4700,6 +4713,7 @@ func (m *PB_HomeFanout) ToFlat() *PB_HomeFanout_Flat {
 		ForUserId:  int(m.ForUserId),
 		PostId:     int(m.PostId),
 		PostUserId: int(m.PostUserId),
+		ResharedId: int(m.ResharedId),
 	}
 	return r
 }
@@ -4711,6 +4725,7 @@ func (m *PB_HomeFanout_Flat) ToPB() *PB_HomeFanout {
 		ForUserId:  int64(m.ForUserId),
 		PostId:     int64(m.PostId),
 		PostUserId: int64(m.PostUserId),
+		ResharedId: int64(m.ResharedId),
 	}
 	return r
 }
@@ -4721,6 +4736,7 @@ var PB_HomeFanout__FOlD = &PB_HomeFanout{
 	ForUserId:  0,
 	PostId:     0,
 	PostUserId: 0,
+	ResharedId: 0,
 }
 
 type PB_SuggestedTopPost_Flat struct {
@@ -6644,6 +6660,8 @@ r := &PB_PostMedia_Flat{
     Md5Hash:  m.Md5Hash ,
     Color:  m.Color ,
     CreatedTime:  int(m.CreatedTime) ,
+    ViewCount:  int(m.ViewCount) ,
+    Extra:  m.Extra ,
 }
 return r
 }
@@ -6767,12 +6785,13 @@ r := &PB_Tag_Flat{
 return r
 }
 
-func(m *PB_TagsPost)ToFlat() *PB_TagsPost_Flat {
-r := &PB_TagsPost_Flat{
+func(m *PB_TagPost)ToFlat() *PB_TagPost_Flat {
+r := &PB_TagPost_Flat{
     Id:  int(m.Id) ,
     TagId:  int(m.TagId) ,
     PostId:  int(m.PostId) ,
     PostTypeEnum:  int(m.PostTypeEnum) ,
+    PostCategoryEnum:  int(m.PostCategoryEnum) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -6977,6 +6996,7 @@ r := &PB_HomeFanout_Flat{
     ForUserId:  int(m.ForUserId) ,
     PostId:  int(m.PostId) ,
     PostUserId:  int(m.PostUserId) ,
+    ResharedId:  int(m.ResharedId) ,
 }
 return r
 }
@@ -8267,6 +8287,8 @@ r := &PB_PostMedia{
     Md5Hash:  m.Md5Hash ,
     Color:  m.Color ,
     CreatedTime:  int32(m.CreatedTime) ,
+    ViewCount:  int32(m.ViewCount) ,
+    Extra:  m.Extra ,
 }
 return r
 }
@@ -8390,12 +8412,13 @@ r := &PB_Tag{
 return r
 }
 
-func(m *PB_TagsPost_Flat)ToPB() *PB_TagsPost {
-r := &PB_TagsPost{
+func(m *PB_TagPost_Flat)ToPB() *PB_TagPost {
+r := &PB_TagPost{
     Id:  int64(m.Id) ,
     TagId:  int32(m.TagId) ,
     PostId:  int32(m.PostId) ,
     PostTypeEnum:  int32(m.PostTypeEnum) ,
+    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -8600,6 +8623,7 @@ r := &PB_HomeFanout{
     ForUserId:  int64(m.ForUserId) ,
     PostId:  int64(m.PostId) ,
     PostUserId:  int64(m.PostUserId) ,
+    ResharedId:  int64(m.ResharedId) ,
 }
 return r
 }
@@ -9653,6 +9677,8 @@ var PB_PostMedia__FOlD = &PB_PostMedia{
         Md5Hash:  "" ,
         Color:  "" ,
         CreatedTime:  0 ,
+        ViewCount:  0 ,
+        Extra:  "" ,
 }
 
 
@@ -9761,11 +9787,12 @@ var PB_Tag__FOlD = &PB_Tag{
 }
 
 
-var PB_TagsPost__FOlD = &PB_TagsPost{
+var PB_TagPost__FOlD = &PB_TagPost{
         Id:  0 ,
         TagId:  0 ,
         PostId:  0 ,
         PostTypeEnum:  0 ,
+        PostCategoryEnum:  0 ,
         CreatedTime:  0 ,
 }
 
@@ -9942,6 +9969,7 @@ var PB_HomeFanout__FOlD = &PB_HomeFanout{
         ForUserId:  0 ,
         PostId:  0 ,
         PostUserId:  0 ,
+        ResharedId:  0 ,
 }
 
 

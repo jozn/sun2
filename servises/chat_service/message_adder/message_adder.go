@@ -3,7 +3,7 @@ package message_adder
 import (
 	"github.com/jozn/protobuf/proto"
 	"ms/sun_old/base"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/log_service"
 	"ms/sun/servises/sun_utils"
 	"ms/sun/shared/config"

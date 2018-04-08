@@ -64,7 +64,7 @@ DROP TRIGGER IF EXISTS comment_deleted_OnCreateLogger $$
 CREATE TRIGGER comment_deleted_OnCreateLogger AFTER INSERT ON comment_deleted
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","INSERT",NEW.UserId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","INSERT",NEW.CommentId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -72,7 +72,7 @@ DROP TRIGGER IF EXISTS comment_deleted_OnUpdateLogger $$
 CREATE TRIGGER comment_deleted_OnUpdateLogger AFTER UPDATE ON comment_deleted
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","UPDATE",NEW.UserId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","UPDATE",NEW.CommentId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -80,7 +80,7 @@ DROP TRIGGER IF EXISTS comment_deleted_OnDeleteLogger $$
 CREATE TRIGGER comment_deleted_OnDeleteLogger AFTER DELETE ON comment_deleted
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","DELETE",OLD.UserId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("CommentDeleted","DELETE",OLD.CommentId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -586,7 +586,7 @@ DROP TRIGGER IF EXISTS post_mentioned_OnCreateLogger $$
 CREATE TRIGGER post_mentioned_OnCreateLogger AFTER INSERT ON post_mentioned
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","INSERT",NEW.PostId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","INSERT",NEW.MentionedId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -594,7 +594,7 @@ DROP TRIGGER IF EXISTS post_mentioned_OnUpdateLogger $$
 CREATE TRIGGER post_mentioned_OnUpdateLogger AFTER UPDATE ON post_mentioned
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","UPDATE",NEW.PostId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","UPDATE",NEW.MentionedId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -602,7 +602,7 @@ DROP TRIGGER IF EXISTS post_mentioned_OnDeleteLogger $$
 CREATE TRIGGER post_mentioned_OnDeleteLogger AFTER DELETE ON post_mentioned
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","DELETE",OLD.PostId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","DELETE",OLD.MentionedId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 

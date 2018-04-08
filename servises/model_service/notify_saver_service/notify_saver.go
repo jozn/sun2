@@ -3,7 +3,7 @@ package notify_saver_service
 import (
 	"log"
 	"ms/sun_old/base"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
 	"ms/sun/shared/config"
 	"ms/sun/shared/x"

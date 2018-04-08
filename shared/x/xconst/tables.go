@@ -979,12 +979,14 @@ var HomeFanout = struct {
 	ForUserId  string
 	PostId     string
 	PostUserId string
+	ResharedId string
 }{
 
 	OrderId:    "OrderId",
 	ForUserId:  "ForUserId",
 	PostId:     "PostId",
 	PostUserId: "PostUserId",
+	ResharedId: "ResharedId",
 }
 
 var SuggestedTopPost = struct {

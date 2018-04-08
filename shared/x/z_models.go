@@ -1053,6 +1053,7 @@ type HomeFanout struct {
 	ForUserId  int `db:"ForUserId"`
 	PostId     int `db:"PostId"`
 	PostUserId int `db:"PostUserId"`
+	ResharedId int `db:"ResharedId"`
 
 	_exists, _deleted bool
 }
@@ -1063,6 +1064,7 @@ type HomeFanout struct {
 	ForUserId: 0,
 	PostId: 0,
 	PostUserId: 0,
+	ResharedId: 0,
 */
 // suggested_top_posts 'SuggestedTopPost'.
 type SuggestedTopPost struct {

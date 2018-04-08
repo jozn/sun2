@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"sync"
 	"time"
-    "ms/sun_old/helper"
+    "ms/sun/shared/helper"
 )
 
 func main() {

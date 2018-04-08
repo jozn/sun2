@@ -1,7 +1,7 @@
 package websocket_service
 
 import (
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"sync"
 
 	"ms/sun/shared/x"

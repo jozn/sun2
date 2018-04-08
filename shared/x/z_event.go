@@ -56,24 +56,24 @@ func OnComment_LoadMany(rows []*Comment) {
 //CommentDeleted Events
 
 func OnCommentDeleted_AfterInsert(row *CommentDeleted) {
-	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.CommentId), row, time.Hour*0)
 }
 
 func OnCommentDeleted_AfterUpdate(row *CommentDeleted) {
-	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.CommentId), row, time.Hour*0)
 }
 
 func OnCommentDeleted_AfterDelete(row *CommentDeleted) {
-	RowCache.Delete("CommentDeleted:" + strconv.Itoa(row.UserId))
+	RowCache.Delete("CommentDeleted:" + strconv.Itoa(row.CommentId))
 }
 
 func OnCommentDeleted_LoadOne(row *CommentDeleted) {
-	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.CommentId), row, time.Hour*0)
 }
 
 func OnCommentDeleted_LoadMany(rows []*CommentDeleted) {
 	for _, row := range rows {
-		RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+		RowCache.Set("CommentDeleted:"+strconv.Itoa(row.CommentId), row, time.Hour*0)
 	}
 }
 
@@ -488,24 +488,24 @@ func OnPostMedia_LoadMany(rows []*PostMedia) {
 //PostMentioned Events
 
 func OnPostMentioned_AfterInsert(row *PostMentioned) {
-	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.MentionedId), row, time.Hour*0)
 }
 
 func OnPostMentioned_AfterUpdate(row *PostMentioned) {
-	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.MentionedId), row, time.Hour*0)
 }
 
 func OnPostMentioned_AfterDelete(row *PostMentioned) {
-	RowCache.Delete("PostMentioned:" + strconv.Itoa(row.PostId))
+	RowCache.Delete("PostMentioned:" + strconv.Itoa(row.MentionedId))
 }
 
 func OnPostMentioned_LoadOne(row *PostMentioned) {
-	RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	RowCache.Set("PostMentioned:"+strconv.Itoa(row.MentionedId), row, time.Hour*0)
 }
 
 func OnPostMentioned_LoadMany(rows []*PostMentioned) {
 	for _, row := range rows {
-		RowCache.Set("PostMentioned:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+		RowCache.Set("PostMentioned:"+strconv.Itoa(row.MentionedId), row, time.Hour*0)
 	}
 }
 

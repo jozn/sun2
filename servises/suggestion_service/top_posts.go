@@ -2,7 +2,7 @@ package suggestion_service
 
 import (
 	"ms/sun_old/base"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/golib/sorter"
 	"ms/sun/shared/x"
 	"sort"

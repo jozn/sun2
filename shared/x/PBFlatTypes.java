@@ -2950,6 +2950,8 @@ public class PBFlatTypes {
 	   public String Md5Hash;
 	   public String Color;
 	   public int CreatedTime;
+	   public int ViewCount;
+	   public String Extra;
 	}
 	/*
 	folding
@@ -2967,6 +2969,8 @@ public class PBFlatTypes {
     t.setMd5Hash();
     t.setColor();
     t.setCreatedTime();
+    t.setViewCount();
+    t.setExtra();
 	*/
 
 	/*
@@ -2984,6 +2988,8 @@ public class PBFlatTypes {
 	t.Md5Hash = ;
 	t.Color = ;
 	t.CreatedTime = ;
+	t.ViewCount = ;
+	t.Extra = ;
 	*/
 
 	/*
@@ -3001,6 +3007,8 @@ public class PBFlatTypes {
 	t.Md5Hash = m.getMd5Hash() ;
 	t.Color = m.getColor() ;
 	t.CreatedTime = m.getCreatedTime() ;
+	t.ViewCount = m.getViewCount() ;
+	t.Extra = m.getExtra() ;
 	*/
 
 	public class PB_PostMentioned {
@@ -3416,38 +3424,42 @@ public class PBFlatTypes {
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
-	public class PB_TagsPost {
+	public class PB_TagPost {
 	   public long Id;
 	   public int TagId;
 	   public int PostId;
 	   public int PostTypeEnum;
+	   public int PostCategoryEnum;
 	   public int CreatedTime;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_TagsPost t = new PBFlatTypes.PB_TagsPost();
+	PBFlatTypes.PB_TagPost t = new PBFlatTypes.PB_TagPost();
     t.setId();
     t.setTagId();
     t.setPostId();
     t.setPostTypeEnum();
+    t.setPostCategoryEnum();
     t.setCreatedTime();
 	*/
 
 	/*
-	PBFlatTypes.PB_TagsPost t = new PBFlatTypes.PB_TagsPost();
+	PBFlatTypes.PB_TagPost t = new PBFlatTypes.PB_TagPost();
 	t.Id = ;
 	t.TagId = ;
 	t.PostId = ;
 	t.PostTypeEnum = ;
+	t.PostCategoryEnum = ;
 	t.CreatedTime = ;
 	*/
 
 	/*
-	PB_TagsPost t = new PB_TagsPost();
+	PB_TagPost t = new PB_TagPost();
 	t.Id = m.getId() ;
 	t.TagId = m.getTagId() ;
 	t.PostId = m.getPostId() ;
 	t.PostTypeEnum = m.getPostTypeEnum() ;
+	t.PostCategoryEnum = m.getPostCategoryEnum() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -4111,6 +4123,7 @@ public class PBFlatTypes {
 	   public long ForUserId;
 	   public long PostId;
 	   public long PostUserId;
+	   public long ResharedId;
 	}
 	/*
 	folding
@@ -4119,6 +4132,7 @@ public class PBFlatTypes {
     t.setForUserId();
     t.setPostId();
     t.setPostUserId();
+    t.setResharedId();
 	*/
 
 	/*
@@ -4127,6 +4141,7 @@ public class PBFlatTypes {
 	t.ForUserId = ;
 	t.PostId = ;
 	t.PostUserId = ;
+	t.ResharedId = ;
 	*/
 
 	/*
@@ -4135,6 +4150,7 @@ public class PBFlatTypes {
 	t.ForUserId = m.getForUserId() ;
 	t.PostId = m.getPostId() ;
 	t.PostUserId = m.getPostUserId() ;
+	t.ResharedId = m.getResharedId() ;
 	*/
 
 	public class PB_SuggestedTopPost {

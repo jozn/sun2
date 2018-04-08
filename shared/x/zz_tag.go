@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -41,36 +41,23 @@ func (t *Tag) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.tag (` +
-		`Name, Count, TagStatusEnum, CreatedTime` +
+		`TagId, Name, Count, TagStatusEnum, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Tag {
-		XOLog(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.Tag {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.Tag {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	t.TagId = int(id)
+	// set existence
 	t._exists = true
 
 	OnTag_AfterInsert(t)
@@ -85,16 +72,16 @@ func (t *Tag) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.tag (` +
-		`Name, Count, TagStatusEnum, CreatedTime` +
+		`TagId, Name, Count, TagStatusEnum, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Tag {
-		XOLog(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Tag {
 			XOLogErr(err)
@@ -102,17 +89,6 @@ func (t *Tag) Replace(db XODB) error {
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.Tag {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	t.TagId = int(id)
 	t._exists = true
 
 	OnTag_AfterInsert(t)
@@ -2199,13 +2175,13 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.tag (" +
-		"Name, Count, TagStatusEnum, CreatedTime" +
+		"TagId, Name, Count, TagStatusEnum, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2213,6 +2189,7 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.TagId)
 		vals = append(vals, row.Name)
 		vals = append(vals, row.Count)
 		vals = append(vals, row.TagStatusEnum)
@@ -2235,14 +2212,18 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 }
 
 func MassReplace_Tag(rows []Tag, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.tag (" +
-		"Name, Count, TagStatusEnum, CreatedTime" +
+		"TagId, Name, Count, TagStatusEnum, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2250,6 +2231,7 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.TagId)
 		vals = append(vals, row.Name)
 		vals = append(vals, row.Count)
 		vals = append(vals, row.TagStatusEnum)
@@ -2269,6 +2251,7 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////

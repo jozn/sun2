@@ -3,7 +3,7 @@ package x
 import (
 	"errors"
 	"log"
-	"ms/sun_old/config"
+	"ms/sun/shared/config"
 	"strings"
 
 	"github.com/golang/protobuf/proto"

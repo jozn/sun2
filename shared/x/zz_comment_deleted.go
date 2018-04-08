@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -109,14 +109,14 @@ func (cd *CommentDeleted) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.comment_deleted SET ` +
-		`CommentId = ?` +
-		` WHERE UserId = ?`
+		`UserId = ?` +
+		` WHERE CommentId = ?`
 
 	// run query
 	if LogTableSqlReq.CommentDeleted {
-		XOLog(sqlstr, cd.CommentId, cd.UserId)
+		XOLog(sqlstr, cd.UserId, cd.CommentId)
 	}
-	_, err = db.Exec(sqlstr, cd.CommentId, cd.UserId)
+	_, err = db.Exec(sqlstr, cd.UserId, cd.CommentId)
 
 	if LogTableSqlReq.CommentDeleted {
 		XOLogErr(err)
@@ -150,13 +150,13 @@ func (cd *CommentDeleted) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.comment_deleted WHERE UserId = ?`
+	const sqlstr = `DELETE FROM sun.comment_deleted WHERE CommentId = ?`
 
 	// run query
 	if LogTableSqlReq.CommentDeleted {
-		XOLog(sqlstr, cd.UserId)
+		XOLog(sqlstr, cd.CommentId)
 	}
-	_, err = db.Exec(sqlstr, cd.UserId)
+	_, err = db.Exec(sqlstr, cd.CommentId)
 	if err != nil {
 		if LogTableSqlReq.CommentDeleted {
 			XOLogErr(err)

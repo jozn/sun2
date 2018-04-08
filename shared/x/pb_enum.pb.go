@@ -145,7 +145,7 @@ It has these top-level messages:
 	PB_SettingClient
 	PB_SettingNotification
 	PB_Tag
-	PB_TagsPost
+	PB_TagPost
 	PB_TriggerLog
 	PB_User
 	PB_UserMetaInfo

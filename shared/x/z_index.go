@@ -52,20 +52,20 @@ func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	return &c, nil
 }
 
-// CommentDeletedByCommentIdAndUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment_deleted' as a CommentDeleted.
-func CommentDeletedByCommentIdAndUserId(db *sqlx.DB, commentId int, userId int) (*CommentDeleted, error) {
+// CommentDeletedByCommentId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment_deleted' as a CommentDeleted.
+func CommentDeletedByCommentId(db *sqlx.DB, commentId int) (*CommentDeleted, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun.comment_deleted ` +
-		`WHERE CommentId = ? AND UserId = ?`
+		`WHERE CommentId = ?`
 
-	XOLog(sqlstr, commentId, userId)
+	XOLog(sqlstr, commentId)
 	cd := CommentDeleted{
 		_exists: true,
 	}
 
-	err = db.Get(&cd, sqlstr, commentId, userId)
+	err = db.Get(&cd, sqlstr, commentId)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
@@ -484,20 +484,20 @@ func PostMediaByMediaId(db *sqlx.DB, mediaId int) (*PostMedia, error) {
 	return &pm, nil
 }
 
-// PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndPostCategoryEnumAndCreatedTime Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
-func PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndPostCategoryEnumAndCreatedTime(db *sqlx.DB, mentionedId int, postId int) (*PostMentioned, error) {
+// PostMentionedByMentionedId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
+func PostMentionedByMentionedId(db *sqlx.DB, mentionedId int) (*PostMentioned, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun.post_mentioned ` +
-		`WHERE MentionedId = ? AND PostId = ?`
+		`WHERE MentionedId = ?`
 
-	XOLog(sqlstr, mentionedId, postId)
+	XOLog(sqlstr, mentionedId)
 	pm := PostMentioned{
 		_exists: true,
 	}
 
-	err = db.Get(&pm, sqlstr, mentionedId, postId)
+	err = db.Get(&pm, sqlstr, mentionedId)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err

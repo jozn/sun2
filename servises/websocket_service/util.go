@@ -2,7 +2,7 @@ package websocket_service
 
 import (
 	"github.com/golang/protobuf/proto"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
 )
 

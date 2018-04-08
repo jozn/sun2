@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/file_service"
 	"net/http"
     "time"

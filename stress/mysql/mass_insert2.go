@@ -6,7 +6,7 @@ import (
 	"ms/sun/shared/x"
 	"time"
     "math/rand"
-    "ms/sun_old/helper"
+    "ms/sun/shared/helper"
 )
 
 var i3 = 0

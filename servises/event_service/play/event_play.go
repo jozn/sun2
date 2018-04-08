@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"ms/sun_old/helper"
+	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
 	"ms/sun/shared/x"
 	"time"
