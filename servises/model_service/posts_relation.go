@@ -43,7 +43,7 @@ func postSaveTags(post x.Post, parser helper.TextParser) {
 	}
 }
 
-func postSaveMenthened(post x.Post, parser helper.TextParser) {
+func postSaveMentioned(post x.Post, parser helper.TextParser) {
 	x.Store.PreLoadUser_ByUserNames(parser.UserNames)
 
 	var arr []x.PostMentioned
@@ -81,7 +81,7 @@ func postTextsRelationshipsHandle(post x.Post) {
 	}
 
 	if len(parser.UserNames) > 0 {
-		postSaveMenthened(post, parser)
+		postSaveMentioned(post, parser)
 	}
 
 }
