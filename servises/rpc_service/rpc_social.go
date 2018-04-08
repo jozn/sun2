@@ -1,10 +1,10 @@
 package rpc_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/servises/model_service"
-	"ms/sun2/servises/view_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/servises/model_service"
+	"ms/sun/servises/view_service"
+	"ms/sun/shared/x"
 )
 
 type rpc_socila int

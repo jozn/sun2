@@ -2,7 +2,7 @@ package post_counter_service
 
 import (
     "time"
-    "ms/sun/helper"
+    "ms/sun_old/helper"
 )
 
 var newSeen = make(chan int) // PostId once seen

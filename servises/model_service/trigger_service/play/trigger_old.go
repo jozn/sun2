@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ms/sun/base"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/x"
 	"strings"
 	"time"
 )

@@ -1,10 +1,10 @@
 package event_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/servises/log_service"
-	"ms/sun2/shared/config"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/servises/log_service"
+	"ms/sun/shared/config"
+	"ms/sun/shared/x"
 	"time"
 )
 

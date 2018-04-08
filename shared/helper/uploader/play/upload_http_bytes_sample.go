@@ -4,10 +4,10 @@ import (
     "fmt"
     "os"
     "net/http"
-    "ms/sun2/shared/helper/uploader"
+    "ms/sun/shared/helper/uploader"
     "log"
     "github.com/jozn/protobuf/proto"
-    "ms/sun2/shared/x"
+    "ms/sun/shared/x"
 )
 
 func main() {

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"ms/sun/base"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/x"
 	"time"
     "math/rand"
-    "ms/sun/helper"
+    "ms/sun_old/helper"
 )
 
 var i3 = 0

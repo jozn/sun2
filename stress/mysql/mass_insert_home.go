@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/shared/x"
 	"time"
 )
 

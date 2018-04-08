@@ -1,8 +1,8 @@
 package message_adder
 
 import (
-	"ms/sun/helper"
-	"ms/sun2/shared/x"
+	"ms/sun_old/helper"
+	"ms/sun/shared/x"
 	"sync"
 	"time"
 )

@@ -2,9 +2,9 @@ package main
 
 import (
 	"math/rand"
-	"ms/sun/helper"
-	"ms/sun2/servises/model_service"
-    "ms/sun2/scripts/facts/fact_utils"
+	"ms/sun_old/helper"
+	"ms/sun/servises/model_service"
+    "ms/sun/scripts/facts/fact_utils"
 )
 
 func main() {

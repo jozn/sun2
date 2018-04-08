@@ -3,7 +3,7 @@ package main
 import (
     "sort"
     "fmt"
-    "ms/sun2/shared/golib/sorter"
+    "ms/sun/shared/golib/sorter"
     "math/rand"
 )
 

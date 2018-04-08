@@ -2,7 +2,7 @@ package main_test
 
 import (
 	"github.com/golang/protobuf/proto"
-	"ms/sun2/shared/x"
+	"ms/sun/shared/x"
 	"testing"
 )
 

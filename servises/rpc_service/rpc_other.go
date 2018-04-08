@@ -1,6 +1,6 @@
 package rpc_service
 
-import "ms/sun2/shared/x"
+import "ms/sun/shared/x"
 
 type rpc_other int
 

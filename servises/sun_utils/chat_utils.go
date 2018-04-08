@@ -3,8 +3,8 @@ package sun_utils
 import (
 	"errors"
 	"fmt"
-	"ms/sun/config"
-	"ms/sun/helper"
+	"ms/sun_old/config"
+	"ms/sun_old/helper"
 	"strings"
 )
 

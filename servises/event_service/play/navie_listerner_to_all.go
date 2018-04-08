@@ -1,6 +1,6 @@
 package main
 
-import "ms/sun2/servises/event_service"
+import "ms/sun/servises/event_service"
 
 func listernAndSaverActions() {
 	for {

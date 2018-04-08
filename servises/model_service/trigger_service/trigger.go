@@ -2,8 +2,8 @@ package trigger_service
 
 import (
 	"fmt"
-	"ms/sun/base"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/x"
 )
 
 type postTrig int

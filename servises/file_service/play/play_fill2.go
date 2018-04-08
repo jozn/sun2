@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
-	"ms/sun/helper"
-	"ms/sun2/servises/file_service"
+	"ms/sun_old/helper"
+	"ms/sun/servises/file_service"
 	"net/http"
     "time"
 )

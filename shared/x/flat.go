@@ -1,6 +1,6 @@
 package x
 
-import "ms/sun/helper"
+import "ms/sun_old/helper"
 
 type PB_CommandToServer_Flat struct {
 	ClientCallId   int

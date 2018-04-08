@@ -1,11 +1,11 @@
 package action_fanout_service
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/event_service"
-	"ms/sun2/servises/mem_user_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/event_service"
+	"ms/sun/servises/mem_user_service"
+	"ms/sun/shared/x"
 	"time"
 )
 

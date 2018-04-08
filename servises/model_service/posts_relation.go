@@ -1,10 +1,10 @@
 package model_service
 
 import (
-	"ms/sun/base"
-	helper2 "ms/sun/helper"
-	"ms/sun2/shared/helper"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	helper2 "ms/sun_old/helper"
+	"ms/sun/shared/helper"
+	"ms/sun/shared/x"
 )
 
 func postSaveTags(post x.Post, parser helper.TextParser) {

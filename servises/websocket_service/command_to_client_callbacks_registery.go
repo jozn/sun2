@@ -2,8 +2,8 @@ package websocket_service
 
 import (
 	"errors"
-	"ms/sun/config"
-	"ms/sun/helper"
+	"ms/sun_old/config"
+	"ms/sun_old/helper"
 	"sync"
 	"time"
 )

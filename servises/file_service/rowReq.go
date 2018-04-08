@@ -3,7 +3,7 @@ package file_service
 import (
 	"fmt"
 	"io/ioutil"
-	"ms/sun/helper"
+	"ms/sun_old/helper"
 	"net/http"
 	"net/url"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-//const GALAXY_CACHE_PARENT_DIR = `C:\Go\_gopath\src\ms\sun2\files\`
+//const GALAXY_CACHE_PARENT_DIR = `C:\Go\_gopath\src\ms\sun\files\`
 const GALAXY_CACHE_PARENT_DIR = `E:\sun\`
 const GALAXY_CACHE_PARENT_DIR_VERSION = `v1`
 

@@ -1,8 +1,8 @@
 package file_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/x"
 )
 
 func mysqlSaveMsg(row Row) {

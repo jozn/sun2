@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println(os.Getwd())
-	os.Chdir(`C:\Go\_gopath\src\ms\sun2\scripts`)
+	os.Chdir(`C:\Go\_gopath\src\ms\sun\scripts`)
 	fmt.Println(os.Getwd())
 
 	cd := []string{

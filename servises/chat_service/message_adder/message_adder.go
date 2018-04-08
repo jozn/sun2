@@ -2,12 +2,12 @@ package message_adder
 
 import (
 	"github.com/jozn/protobuf/proto"
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/log_service"
-	"ms/sun2/servises/sun_utils"
-	"ms/sun2/shared/config"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/log_service"
+	"ms/sun/servises/sun_utils"
+	"ms/sun/shared/config"
+	"ms/sun/shared/x"
 )
 //todo save MessageFiles to its tables for later retrival
 var chatLogger = log_service.NewSimpleLogger("chat")

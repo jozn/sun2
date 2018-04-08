@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spaolacci/murmur3"
 	"log"
-	"ms/sun/helper"
+	"ms/sun_old/helper"
 )
 
 func main() {

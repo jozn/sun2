@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	//"ms/sun/helper"
+	//"ms/sun_old/helper"
 	"os"
 	"path/filepath"
 	"regexp"
-	//"ms/sun/helper"
+	//"ms/sun_old/helper"
 	"io"
 	"strconv"
 	"time"
@@ -16,7 +16,7 @@ import (
 
 //const DIR = `E:\WEB\files\file\dl\file\pic\music\2013\06\`
 /*const DIR = `E:\WEB\files\file\dl\file\pic\photo\`
-const OUT_LOG = `C:\Go\_gopath\src\ms\sun2\scripts\server_migration\logs\`
+const OUT_LOG = `C:\Go\_gopath\src\ms\sun\scripts\server_migration\logs\`
 const MOVE_DIR = `E:\WEB\files\file\dl\file\pic\photo_moved\`*/
 
 const DIR = `/dl/photo/`

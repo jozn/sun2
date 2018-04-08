@@ -1,10 +1,10 @@
 package websocket_service
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/chat_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/chat_service"
+	"ms/sun/shared/x"
 	"time"
 )
 

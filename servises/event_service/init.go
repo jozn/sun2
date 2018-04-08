@@ -1,7 +1,7 @@
 package event_service
 
 import (
-	_ "ms/sun2/servises/archiver_service"
+	_ "ms/sun/servises/archiver_service"
 )
 
 type EventType int

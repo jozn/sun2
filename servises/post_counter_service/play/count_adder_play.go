@@ -2,7 +2,7 @@ package main
 
 import (
 	"math/rand"
-	"ms/sun2/servises/post_counter_service"
+	"ms/sun/servises/post_counter_service"
 	"time"
 )
 

@@ -1,6 +1,6 @@
 package view_service
 
-import "ms/sun2/shared/x"
+import "ms/sun/shared/x"
 
 func ToTagView(tags []*x.Tag) (res []*x.PB_TagView) {
 	for _, row := range tags {

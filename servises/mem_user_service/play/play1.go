@@ -1,8 +1,8 @@
 package main
 
 import (
-    "ms/sun2/servises/mem_user_service"
-    "ms/sun/helper"
+    "ms/sun/servises/mem_user_service"
+    "ms/sun_old/helper"
     "time"
 )
 

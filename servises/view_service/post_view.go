@@ -1,9 +1,9 @@
 package view_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/servises/memcache_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/servises/memcache_service"
+	"ms/sun/shared/x"
 )
 
 func PostsViews(posts []*x.Post, UserId int) (viw []*x.PB_PostView) {

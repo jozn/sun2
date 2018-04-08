@@ -1,10 +1,10 @@
 package websocket_service
 
 import (
-    "ms/sun2/shared/config"
+    "ms/sun/shared/config"
     "log"
     "net/http"
-    "ms/sun2/shared/x"
+    "ms/sun/shared/x"
     "github.com/golang/protobuf/proto"
 )
 

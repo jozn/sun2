@@ -1,10 +1,10 @@
 package model_service_bk
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/shared/x"
-    "ms/sun2/servises/view_service"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/shared/x"
+    "ms/sun/servises/view_service"
 )
 
 //////// For Comment //////////

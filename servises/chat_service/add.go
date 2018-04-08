@@ -1,10 +1,10 @@
 package chat_service
 
 import (
-	"ms/sun/helper"
-	"ms/sun2/servises/chat_service/message_adder"
-	"ms/sun2/servises/file_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/helper"
+	"ms/sun/servises/chat_service/message_adder"
+	"ms/sun/servises/file_service"
+	"ms/sun/shared/x"
 )
 
 func ChatAddNewMsg(UserId int, msg *x.PB_MessageView, blob []byte) {

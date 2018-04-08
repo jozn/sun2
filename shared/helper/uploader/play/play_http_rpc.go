@@ -5,8 +5,8 @@ import (
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"log"
-	"ms/sun2/shared/helper/uploader"
-	"ms/sun2/shared/x"
+	"ms/sun/shared/helper/uploader"
+	"ms/sun/shared/x"
 	"net/http"
 	"time"
 )

@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "ms/sun2/servises/stratup"
+	_ "ms/sun/servises/stratup"
 	"time"
 )
 

@@ -1,11 +1,11 @@
 package model_service
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/event_service"
-	"ms/sun2/servises/memcache_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/event_service"
+	"ms/sun/servises/memcache_service"
+	"ms/sun/shared/x"
 )
 
 /*
@@ -41,8 +41,8 @@ func Follow(UserId, FollowedPeerUserId int) int {
 		}
 		event_service.SaveEvent(event_service.FOLLOWED_USER_EVENT, event)
 
-		//Notify_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
-		//Action_OnFollowed(UserId, FollowedPeerUserId, flm.Id)
+		//Notify_OnFollowed(ProfileUserId, FollowedPeerUserId, flm.Id)
+		//Action_OnFollowed(ProfileUserId, FollowedPeerUserId, flm.Id)
 		return 1
 	}
 	return 0
@@ -74,8 +74,8 @@ func UnFollow(UserId, FollowedPeerUserId int) {
 		}
 		event_service.SaveEvent(event_service.UNFOLLOWED_USER_EVENT, event)
 
-		//Notify_OnUnFollowed(UserId, FollowedPeerUserId)
-		//Action_OnUnFollowed(UserId, FollowedPeerUserId, flm.Id)
+		//Notify_OnUnFollowed(ProfileUserId, FollowedPeerUserId)
+		//Action_OnUnFollowed(ProfileUserId, FollowedPeerUserId, flm.Id)
 	}
-	//n, err := NewFollowingListMember_Deleter().UserId_Eq(UserId).FollowedUserId_Eq(FollowedPeerUserId).Delete(base.DB)
+	//n, err := NewFollowingListMember_Deleter().UserId_Eq(ProfileUserId).FollowedUserId_Eq(FollowedPeerUserId).Delete(base.DB)
 }

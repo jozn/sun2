@@ -1,9 +1,9 @@
 package model_service_bk
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/shared/x"
 )
 func Comment_Add(UserId, PostId int, Text string) x.Comment {
 	cmt := x.Comment{

@@ -2,8 +2,8 @@ package fact_utils
 
 import (
     "math/rand"
-    "ms/sun2/shared/x"
-    "ms/sun/base"
+    "ms/sun/shared/x"
+    "ms/sun_old/base"
     "io/ioutil"
     "log"
 )

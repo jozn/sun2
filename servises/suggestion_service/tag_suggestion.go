@@ -1,11 +1,11 @@
 package suggestion_service
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/view_service"
-	"ms/sun2/shared/config"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/view_service"
+	"ms/sun/shared/config"
+	"ms/sun/shared/x"
 	"time"
 )
 

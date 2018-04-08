@@ -2,11 +2,11 @@ package notify_saver_service
 
 import (
 	"log"
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/event_service"
-	"ms/sun2/shared/config"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/event_service"
+	"ms/sun/shared/config"
+	"ms/sun/shared/x"
 )
 
 var newNotify = make(chan x.Notify, 1000)

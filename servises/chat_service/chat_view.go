@@ -2,9 +2,9 @@ package chat_service
 
 import (
 	"github.com/jozn/protobuf/proto"
-	"ms/sun/base"
-	"ms/sun2/servises/view_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/servises/view_service"
+	"ms/sun/shared/x"
 )
 
 //todo: support last msgView

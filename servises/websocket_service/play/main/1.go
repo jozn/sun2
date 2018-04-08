@@ -1,7 +1,7 @@
 package main
 
 import (
-    "ms/sun2/servises/websocket_service"
+    "ms/sun/servises/websocket_service"
     "net/http"
 )
 

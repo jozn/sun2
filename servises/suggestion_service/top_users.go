@@ -2,11 +2,11 @@ package suggestion_service
 
 import (
 	"math"
-	"ms/sun/base"
-	"ms/sun/ds"
-	"ms/sun/helper"
-	"ms/sun2/servises/memcache_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/ds"
+	"ms/sun_old/helper"
+	"ms/sun/servises/memcache_service"
+	"ms/sun/shared/x"
 	"time"
 )
 

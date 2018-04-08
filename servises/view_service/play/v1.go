@@ -4,10 +4,10 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/memcache_service"
-    "ms/sun2/servises/view_service"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/memcache_service"
+    "ms/sun/servises/view_service"
 )
 
 func main() {

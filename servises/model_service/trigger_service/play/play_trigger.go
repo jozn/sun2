@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"ms/sun2/shared/x"
+	"ms/sun/shared/x"
 	"time"
 )
 

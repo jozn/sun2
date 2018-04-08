@@ -2,11 +2,11 @@ package main
 
 import (
 	"math/rand"
-	"ms/sun/helper"
-	"ms/sun2/servises/chat_service"
-	"ms/sun2/servises/sun_utils"
-	"ms/sun2/shared/x"
-    "ms/sun2/scripts/facts/fact_utils"
+	"ms/sun_old/helper"
+	"ms/sun/servises/chat_service"
+	"ms/sun/servises/sun_utils"
+	"ms/sun/shared/x"
+    "ms/sun/scripts/facts/fact_utils"
 )
 
 func main() {

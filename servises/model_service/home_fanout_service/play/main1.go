@@ -1,7 +1,7 @@
 package main
 
 import(
-    _ "ms/sun2/servises/model_service/home_fanout_service"
+    _ "ms/sun/servises/model_service/home_fanout_service"
     "time"
 )
 func main()  {

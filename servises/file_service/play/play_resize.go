@@ -33,8 +33,8 @@ func (f *resizer) resizeFFMPEG() {
 
 func main() {
 	s := resizer{
-		inputFullPath:  `C:\Go\_gopath\src\ms\sun2\servises\file_service\play\img\1.jpg`,
-		outputFullPath: `C:\Go\_gopath\src\ms\sun2\servises\file_service\play\img\1_ot3.jpg`,
+		inputFullPath:  `C:\Go\_gopath\src\ms\sun\servises\file_service\play\img\1.jpg`,
+		outputFullPath: `C:\Go\_gopath\src\ms\sun\servises\file_service\play\img\1_ot3.jpg`,
 		width:          500,
 	}
 

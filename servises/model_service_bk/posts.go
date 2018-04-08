@@ -3,10 +3,10 @@ package model_service_bk
 import (
 	"bytes"
 	"image"
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/file_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/file_service"
+	"ms/sun/shared/x"
 )
 
 type PostAddParam struct {

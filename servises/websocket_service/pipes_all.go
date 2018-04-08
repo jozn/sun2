@@ -1,10 +1,10 @@
 package websocket_service
 
 import (
-	"ms/sun/helper"
+	"ms/sun_old/helper"
 	"sync"
 
-	"ms/sun2/shared/x"
+	"ms/sun/shared/x"
 
 	"github.com/gorilla/websocket"
 )

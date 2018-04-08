@@ -1,8 +1,8 @@
 package rpc_service
 
 import (
-	"ms/sun2/servises/chat_service"
-	"ms/sun2/shared/x"
+	"ms/sun/servises/chat_service"
+	"ms/sun/shared/x"
 )
 
 type rpc_chat int

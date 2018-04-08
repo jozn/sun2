@@ -3,9 +3,9 @@ package memcache_service
 import (
 	"fmt"
 	c "github.com/patrickmn/go-cache"
-	"ms/sun/base"
-	"ms/sun2/shared/golib/go_map"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/golib/go_map"
+	"ms/sun/shared/x"
 	"time"
 )
 

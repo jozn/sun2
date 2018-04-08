@@ -1,9 +1,9 @@
 package mem_user_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/shared/golib/go_map"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/golib/go_map"
+	"ms/sun/shared/x"
 )
 
 /////////////////////////// MemUser ////////////////////////////

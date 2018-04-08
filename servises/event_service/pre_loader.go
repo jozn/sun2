@@ -1,6 +1,6 @@
 package event_service
 
-import "ms/sun2/shared/x"
+import "ms/sun/shared/x"
 
 func preloadevents(events []x.Event) (res []GeneralEvent) {
 	/*postsMp := make(map[int]*x.Post, 100)

@@ -1,7 +1,7 @@
 package websocket_service
 
 import (
-	"ms/sun2/servises/log_service"
+	"ms/sun/servises/log_service"
 )
 
 const PB_ResponseToClient = "PB_ResponseToClient"

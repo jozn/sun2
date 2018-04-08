@@ -1,6 +1,6 @@
 package chat_service
 
-import "ms/sun2/shared/x"
+import "ms/sun/shared/x"
 
 func ToUpdates(UserId int, syncs []*x.ChatSync) *x.PB_Updates {
 	up := &x.PB_Updates{}

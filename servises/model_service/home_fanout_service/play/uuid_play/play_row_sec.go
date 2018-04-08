@@ -3,7 +3,7 @@ package uuid_play
 import (
 	"fmt"
 	"math/rand"
-	"ms/sun/helper"
+	"ms/sun_old/helper"
 	"time"
 )
 

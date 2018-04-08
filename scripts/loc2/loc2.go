@@ -6,14 +6,14 @@ import (
 	"github.com/hacdias/fileutils"
 	"github.com/jozn/go-jalali/jalali"
 	"io/ioutil"
-	"ms/sun/helper"
+	"ms/sun_old/helper"
 	"os"
 	"os/exec"
 	"path"
 	"time"
 )
 
-const SUN_DIR = `C:\Go\_gopath\src\ms\sun2\`
+const SUN_DIR = `C:\Go\_gopath\src\ms\sun\`
 const TMP_DIR = SUN_DIR + "scripts/tmp/"
 const SCRIPTS_DIR = SUN_DIR + "scripts/"
 const ANDROID_APP_DIR = `D:\ms\social\app\src\main\java\com\mardomsara\`

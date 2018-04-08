@@ -1,7 +1,7 @@
 package main_test
 
 import (
-	"ms/sun/ds"
+	"ms/sun_old/ds"
 	"testing"
     "math/rand"
     "fmt"

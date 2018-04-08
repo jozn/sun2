@@ -1,8 +1,8 @@
 package view_service
 
 import (
-	"ms/sun2/servises/memcache_service"
-	"ms/sun2/shared/x"
+	"ms/sun/servises/memcache_service"
+	"ms/sun/shared/x"
 )
 
 func UserViewAndMe(UserId, MeId int) *x.PB_UserView {

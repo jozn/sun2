@@ -1,7 +1,7 @@
 package file_service
 
 import (
-	//"ms/sun2/servises/file_service"
+	//"ms/sun/servises/file_service"
 	"net/url"
 	"testing"
 )

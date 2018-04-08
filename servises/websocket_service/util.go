@@ -2,8 +2,8 @@ package websocket_service
 
 import (
 	"github.com/golang/protobuf/proto"
-	"ms/sun/helper"
-	"ms/sun2/shared/x"
+	"ms/sun_old/helper"
+	"ms/sun/shared/x"
 )
 
 func newPB_CommandToClient_WithData(cmd string, protoMsg proto.Message) x.PB_CommandToClient {

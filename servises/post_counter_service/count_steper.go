@@ -1,10 +1,10 @@
 package post_counter_service
 
 import (
-    "ms/sun2/shared/x"
-    "ms/sun/base"
+    "ms/sun/shared/x"
+    "ms/sun_old/base"
     "fmt"
-    "ms/sun2/shared/config"
+    "ms/sun/shared/config"
     "github.com/labstack/gommon/log"
 )
 

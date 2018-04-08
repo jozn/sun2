@@ -1,12 +1,12 @@
 package rpc_service
 
 import (
-	"ms/sun/base"
-	"ms/sun/helper"
-	"ms/sun2/servises/memcache_service"
-	"ms/sun2/servises/suggestion_service"
-	"ms/sun2/servises/view_service"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun_old/helper"
+	"ms/sun/servises/memcache_service"
+	"ms/sun/servises/suggestion_service"
+	"ms/sun/servises/view_service"
+	"ms/sun/shared/x"
 	"regexp"
 	"strings"
 )

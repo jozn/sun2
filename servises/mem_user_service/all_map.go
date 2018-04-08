@@ -1,7 +1,7 @@
 package mem_user_service
 
 import (
-	"ms/sun2/shared/golib/go_map"
+	"ms/sun/shared/golib/go_map"
 	"sync"
 )
 

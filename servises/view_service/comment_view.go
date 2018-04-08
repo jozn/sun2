@@ -1,8 +1,8 @@
 package view_service
 
 import (
-	"ms/sun/base"
-	"ms/sun2/shared/x"
+	"ms/sun_old/base"
+	"ms/sun/shared/x"
 )
 
 func SingleCommentView(CommentId int) *x.PB_CommentView {
