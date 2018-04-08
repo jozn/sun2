@@ -46,16 +46,32 @@ type Comment struct {
 	LikesCount: 0,
 	CreatedTime: 0,
 */
+// comment_deleted 'CommentDeleted'.
+type CommentDeleted struct {
+	CommentId int `db:"CommentId"`
+	UserId    int `db:"UserId"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.CommentDeleted {
+	CommentId: 0,
+	UserId: 0,
+*/
 // event 'Event'.
 type Event struct {
-	EventId      int `db:"EventId"`
-	EventType    int `db:"EventType"`
-	ByUserId     int `db:"ByUserId"`
-	PeerUserId   int `db:"PeerUserId"`
-	PostId       int `db:"PostId"`
-	CommentId    int `db:"CommentId"`
-	ActionId     int `db:"ActionId"`
-	Murmur64Hash int `db:"Murmur64Hash"`
+	EventId      int    `db:"EventId"`
+	EventType    int    `db:"EventType"`
+	ByUserId     int    `db:"ByUserId"`
+	PeerUserId   int    `db:"PeerUserId"`
+	PostId       int    `db:"PostId"`
+	CommentId    int    `db:"CommentId"`
+	ActionId     int    `db:"ActionId"`
+	Murmur64Hash int    `db:"Murmur64Hash"`
+	ChatKey      string `db:"ChatKey"`
+	MessageId    int    `db:"MessageId"`
+	ReSharedId   int    `db:"ReSharedId"`
 
 	_exists, _deleted bool
 }
@@ -70,6 +86,9 @@ type Event struct {
 	CommentId: 0,
 	ActionId: 0,
 	Murmur64Hash: 0,
+	ChatKey: "",
+	MessageId: 0,
+	ReSharedId: 0,
 */
 // following_list 'FollowingList'.
 type FollowingList struct {
@@ -228,39 +247,6 @@ type Like struct {
 	LikeEnum: 0,
 	CreatedTime: 0,
 */
-// media 'Media'.
-type Media struct {
-	MediaId       int    `db:"MediaId"`
-	UserId        int    `db:"UserId"`
-	PostId        int    `db:"PostId"`
-	AlbumId       int    `db:"AlbumId"`
-	MediaTypeEnum int    `db:"MediaTypeEnum"`
-	Width         int    `db:"Width"`
-	Height        int    `db:"Height"`
-	Size          int    `db:"Size"`
-	Duration      int    `db:"Duration"`
-	Md5Hash       string `db:"Md5Hash"`
-	Color         string `db:"Color"`
-	CreatedTime   int    `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.Media {
-	MediaId: 0,
-	UserId: 0,
-	PostId: 0,
-	AlbumId: 0,
-	MediaTypeEnum: 0,
-	Width: 0,
-	Height: 0,
-	Size: 0,
-	Duration: 0,
-	Md5Hash: "",
-	Color: "",
-	CreatedTime: 0,
-*/
 // notify 'Notify'.
 type Notify struct {
 	NotifyId       int `db:"NotifyId"`
@@ -336,25 +322,26 @@ type PhoneContact struct {
 */
 // post 'Post'.
 type Post struct {
-	PostId         int    `db:"PostId"`
-	UserId         int    `db:"UserId"`
-	PostTypeEnum   int    `db:"PostTypeEnum"`
-	MediaId        int    `db:"MediaId"`
-	PostKey        string `db:"PostKey"`
-	Text           string `db:"Text"`
-	RichText       string `db:"RichText"`
-	MediaCount     int    `db:"MediaCount"`
-	SharedTo       int    `db:"SharedTo"`
-	DisableComment int    `db:"DisableComment"`
-	Source         int    `db:"Source"`
-	HasTag         int    `db:"HasTag"`
-	Seq            int    `db:"Seq"`
-	CommentsCount  int    `db:"CommentsCount"`
-	LikesCount     int    `db:"LikesCount"`
-	ViewsCount     int    `db:"ViewsCount"`
-	EditedTime     int    `db:"EditedTime"`
-	CreatedTime    int    `db:"CreatedTime"`
-	ReSharedPostId int    `db:"ReSharedPostId"`
+	PostId           int    `db:"PostId"`
+	UserId           int    `db:"UserId"`
+	PostTypeEnum     int    `db:"PostTypeEnum"`
+	PostCategoryEnum int    `db:"PostCategoryEnum"`
+	MediaId          int    `db:"MediaId"`
+	PostKey          string `db:"PostKey"`
+	Text             string `db:"Text"`
+	RichText         string `db:"RichText"`
+	MediaCount       int    `db:"MediaCount"`
+	SharedTo         int    `db:"SharedTo"`
+	DisableComment   int    `db:"DisableComment"`
+	Source           int    `db:"Source"`
+	HasTag           int    `db:"HasTag"`
+	Seq              int    `db:"Seq"`
+	CommentsCount    int    `db:"CommentsCount"`
+	LikesCount       int    `db:"LikesCount"`
+	ViewsCount       int    `db:"ViewsCount"`
+	EditedTime       int    `db:"EditedTime"`
+	CreatedTime      int    `db:"CreatedTime"`
+	ReSharedPostId   int    `db:"ReSharedPostId"`
 
 	_exists, _deleted bool
 }
@@ -364,6 +351,7 @@ type Post struct {
 	PostId: 0,
 	UserId: 0,
 	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
 	MediaId: 0,
 	PostKey: "",
 	Text: "",
@@ -393,6 +381,19 @@ type PostCount struct {
 := &x.PostCount {
 	PostId: 0,
 	ViewsCount: 0,
+*/
+// post_deleted 'PostDeleted'.
+type PostDeleted struct {
+	PostId int `db:"PostId"`
+	UserId int `db:"UserId"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostDeleted {
+	PostId: 0,
+	UserId: 0,
 */
 // post_keys 'PostKey'.
 type PostKey struct {
@@ -433,9 +434,12 @@ type PostMedia struct {
 	Height        int    `db:"Height"`
 	Size          int    `db:"Size"`
 	Duration      int    `db:"Duration"`
+	Extension     string `db:"Extension"`
 	Md5Hash       string `db:"Md5Hash"`
 	Color         string `db:"Color"`
 	CreatedTime   int    `db:"CreatedTime"`
+	ViewCount     int    `db:"ViewCount"`
+	Extra         string `db:"Extra"`
 
 	_exists, _deleted bool
 }
@@ -451,18 +455,22 @@ type PostMedia struct {
 	Height: 0,
 	Size: 0,
 	Duration: 0,
+	Extension: "",
 	Md5Hash: "",
 	Color: "",
 	CreatedTime: 0,
+	ViewCount: 0,
+	Extra: "",
 */
 // post_mentioned 'PostMentioned'.
 type PostMentioned struct {
-	MentionedId  int `db:"MentionedId"`
-	ForUserId    int `db:"ForUserId"`
-	PostId       int `db:"PostId"`
-	PostUserId   int `db:"PostUserId"`
-	PostTypeEnum int `db:"PostTypeEnum"`
-	CreatedTime  int `db:"CreatedTime"`
+	MentionedId      int `db:"MentionedId"`
+	ForUserId        int `db:"ForUserId"`
+	PostId           int `db:"PostId"`
+	PostUserId       int `db:"PostUserId"`
+	PostTypeEnum     int `db:"PostTypeEnum"`
+	PostCategoryEnum int `db:"PostCategoryEnum"`
+	CreatedTime      int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -474,16 +482,18 @@ type PostMentioned struct {
 	PostId: 0,
 	PostUserId: 0,
 	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
 	CreatedTime: 0,
 */
 // post_reshared 'PostReshared'.
 type PostReshared struct {
-	ResharedId   int `db:"ResharedId"`
-	ByUserId     int `db:"ByUserId"`
-	PostId       int `db:"PostId"`
-	PostUserId   int `db:"PostUserId"`
-	PostTypeEnum int `db:"PostTypeEnum"`
-	CreatedTime  int `db:"CreatedTime"`
+	ResharedId       int `db:"ResharedId"`
+	ByUserId         int `db:"ByUserId"`
+	PostId           int `db:"PostId"`
+	PostUserId       int `db:"PostUserId"`
+	PostTypeEnum     int `db:"PostTypeEnum"`
+	PostCategoryEnum int `db:"PostCategoryEnum"`
+	CreatedTime      int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -495,6 +505,7 @@ type PostReshared struct {
 	PostId: 0,
 	PostUserId: 0,
 	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
 	CreatedTime: 0,
 */
 // search_clicked 'SearchClicked'.
@@ -668,23 +679,25 @@ type Tag struct {
 	TagStatusEnum: 0,
 	CreatedTime: 0,
 */
-// tags_posts 'TagsPost'.
-type TagsPost struct {
-	Id           int `db:"Id"`
-	TagId        int `db:"TagId"`
-	PostId       int `db:"PostId"`
-	PostTypeEnum int `db:"PostTypeEnum"`
-	CreatedTime  int `db:"CreatedTime"`
+// tag_post 'TagPost'.
+type TagPost struct {
+	Id               int `db:"Id"`
+	TagId            int `db:"TagId"`
+	PostId           int `db:"PostId"`
+	PostTypeEnum     int `db:"PostTypeEnum"`
+	PostCategoryEnum int `db:"PostCategoryEnum"`
+	CreatedTime      int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &x.TagsPost {
+:= &x.TagPost {
 	Id: 0,
 	TagId: 0,
 	PostId: 0,
 	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
 	CreatedTime: 0,
 */
 // trigger_log 'TriggerLog'.
@@ -1088,6 +1101,7 @@ type SuggestedUser struct {
 type LogTableSql struct {
 	Action                     bool
 	Comment                    bool
+	CommentDeleted             bool
 	Event                      bool
 	FollowingList              bool
 	FollowingListMember        bool
@@ -1096,12 +1110,12 @@ type LogTableSql struct {
 	GroupMember                bool
 	GroupMessage               bool
 	Like                       bool
-	Media                      bool
 	Notify                     bool
 	NotifyRemoved              bool
 	PhoneContact               bool
 	Post                       bool
 	PostCount                  bool
+	PostDeleted                bool
 	PostKey                    bool
 	PostLink                   bool
 	PostMedia                  bool
@@ -1112,7 +1126,7 @@ type LogTableSql struct {
 	SettingClient              bool
 	SettingNotification        bool
 	Tag                        bool
-	TagsPost                   bool
+	TagPost                    bool
 	TriggerLog                 bool
 	User                       bool
 	UserMetaInfo               bool
@@ -1135,6 +1149,7 @@ var LogTableSqlReq = LogTableSql{
 
 	Action:                     true,
 	Comment:                    true,
+	CommentDeleted:             true,
 	Event:                      true,
 	FollowingList:              true,
 	FollowingListMember:        true,
@@ -1143,12 +1158,12 @@ var LogTableSqlReq = LogTableSql{
 	GroupMember:         true,
 	GroupMessage:        true,
 	Like:                true,
-	Media:               true,
 	Notify:              true,
 	NotifyRemoved:       true,
 	PhoneContact:        true,
 	Post:                true,
 	PostCount:           true,
+	PostDeleted:         true,
 	PostKey:             true,
 	PostLink:            true,
 	PostMedia:           true,
@@ -1159,7 +1174,7 @@ var LogTableSqlReq = LogTableSql{
 	SettingClient:       true,
 	SettingNotification: true,
 	Tag:                 true,
-	TagsPost:            true,
+	TagPost:             true,
 	TriggerLog:          true,
 	User:                true,
 	UserMetaInfo:        true,

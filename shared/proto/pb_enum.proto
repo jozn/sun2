@@ -7,6 +7,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 
 option go_package = "x";
 
+//dep
 enum MediaTypeEnum {
     MEDIA_IMAGE = 0;
     MEDIA_VIDEO = 1;
@@ -59,6 +60,12 @@ enum PostTypeEnum{
     POST_GIF = 6;
     POST_FILE = 7;
     POST_POLL = 8;
+}
+
+enum PostCategoryEnum{
+    PostCat_Text = 0;
+    PostCat_Media = 1;
+    PostCat_File = 2;
 }
 
 enum NotifyEnum{

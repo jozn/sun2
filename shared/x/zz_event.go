@@ -13,14 +13,17 @@ import (
 
 // Manualy copy this to project
 type Event__ struct {
-	EventId      int `json:"EventId"`      // EventId -
-	EventType    int `json:"EventType"`    // EventType -
-	ByUserId     int `json:"ByUserId"`     // ByUserId -
-	PeerUserId   int `json:"PeerUserId"`   // PeerUserId -
-	PostId       int `json:"PostId"`       // PostId -
-	CommentId    int `json:"CommentId"`    // CommentId -
-	ActionId     int `json:"ActionId"`     // ActionId -
-	Murmur64Hash int `json:"Murmur64Hash"` // Murmur64Hash -
+	EventId      int    `json:"EventId"`      // EventId -
+	EventType    int    `json:"EventType"`    // EventType -
+	ByUserId     int    `json:"ByUserId"`     // ByUserId -
+	PeerUserId   int    `json:"PeerUserId"`   // PeerUserId -
+	PostId       int    `json:"PostId"`       // PostId -
+	CommentId    int    `json:"CommentId"`    // CommentId -
+	ActionId     int    `json:"ActionId"`     // ActionId -
+	Murmur64Hash int    `json:"Murmur64Hash"` // Murmur64Hash -
+	ChatKey      string `json:"ChatKey"`      // ChatKey -
+	MessageId    int    `json:"MessageId"`    // MessageId -
+	ReSharedId   int    `json:"ReSharedId"`   // ReSharedId -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -46,16 +49,16 @@ func (e *Event) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
 	if err != nil {
 		return err
 	}
@@ -75,16 +78,16 @@ func (e *Event) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
 	if err != nil {
 		if LogTableSqlReq.Event {
 			XOLogErr(err)
@@ -115,14 +118,14 @@ func (e *Event) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.event SET ` +
-		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, ActionId = ?, Murmur64Hash = ?` +
+		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, ActionId = ?, Murmur64Hash = ?, ChatKey = ?, MessageId = ?, ReSharedId = ?` +
 		` WHERE EventId = ?`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.EventId)
+		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId, e.EventId)
 	}
-	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.EventId)
+	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId, e.EventId)
 
 	if LogTableSqlReq.Event {
 		XOLogErr(err)
@@ -1069,6 +1072,216 @@ func (d *__Event_Deleter) Murmur64Hash_GE(val int) *__Event_Deleter {
 	return d
 }
 
+func (u *__Event_Deleter) MessageId_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) MessageId_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) MessageId_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) MessageId_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) MessageId_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) MessageId_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) MessageId_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) MessageId_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) MessageId_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Deleter) ReSharedId_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) ReSharedId_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) ReSharedId_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) ReSharedId_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ReSharedId_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ReSharedId_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ReSharedId_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ReSharedId_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ReSharedId_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__Event_Updater) Or() *__Event_Updater {
 	u.whereSep = " OR "
@@ -1910,6 +2123,216 @@ func (d *__Event_Updater) Murmur64Hash_GE(val int) *__Event_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Murmur64Hash >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Updater) MessageId_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) MessageId_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) MessageId_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) MessageId_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) MessageId_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) MessageId_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) MessageId_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) MessageId_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) MessageId_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Updater) ReSharedId_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) ReSharedId_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) ReSharedId_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) ReSharedId_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ReSharedId_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ReSharedId_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ReSharedId_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ReSharedId_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ReSharedId_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2761,13 +3184,403 @@ func (d *__Event_Selector) Murmur64Hash_GE(val int) *__Event_Selector {
 	return d
 }
 
+func (u *__Event_Selector) MessageId_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) MessageId_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) MessageId_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) MessageId_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) MessageId_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) MessageId_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) MessageId_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) MessageId_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) MessageId_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MessageId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Selector) ReSharedId_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) ReSharedId_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) ReSharedId_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) ReSharedId_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ReSharedId_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ReSharedId_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ReSharedId_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ReSharedId_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ReSharedId_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
 
-////////ints
+func (u *__Event_Deleter) ChatKey_In(ins []string) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) ChatKey_NotIn(ins []string) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Event_Deleter) ChatKey_Like(val string) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) ChatKey_Eq(val string) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) ChatKey_NotEq(val string) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 ////////ints
+
+func (u *__Event_Updater) ChatKey_In(ins []string) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) ChatKey_NotIn(ins []string) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Event_Updater) ChatKey_Like(val string) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) ChatKey_Eq(val string) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) ChatKey_NotEq(val string) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+////////ints
+
+func (u *__Event_Selector) ChatKey_In(ins []string) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) ChatKey_NotIn(ins []string) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Event_Selector) ChatKey_Like(val string) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) ChatKey_Eq(val string) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) ChatKey_NotEq(val string) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatKey != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 /// End of wheres for selectors , updators, deletor
 
@@ -2941,6 +3754,56 @@ func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
 
 //string
 
+//ints
+
+//string
+func (u *__Event_Updater) ChatKey(newVal string) *__Event_Updater {
+	u.updates[" ChatKey = ? "] = newVal
+	return u
+}
+
+//ints
+
+func (u *__Event_Updater) MessageId(newVal int) *__Event_Updater {
+	u.updates[" MessageId = ? "] = newVal
+	return u
+}
+
+func (u *__Event_Updater) MessageId_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		u.updates[" MessageId = MessageId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" MessageId = MessageId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Event_Updater) ReSharedId(newVal int) *__Event_Updater {
+	u.updates[" ReSharedId = ? "] = newVal
+	return u
+}
+
+func (u *__Event_Updater) ReSharedId_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		u.updates[" ReSharedId = ReSharedId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" ReSharedId = ReSharedId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -3063,6 +3926,51 @@ func (u *__Event_Selector) OrderBy_Murmur64Hash_Asc() *__Event_Selector {
 
 func (u *__Event_Selector) Select_Murmur64Hash() *__Event_Selector {
 	u.selectCol = "Murmur64Hash"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_ChatKey_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY ChatKey DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_ChatKey_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY ChatKey ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_ChatKey() *__Event_Selector {
+	u.selectCol = "ChatKey"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_MessageId_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY MessageId DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_MessageId_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY MessageId ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_MessageId() *__Event_Selector {
+	u.selectCol = "MessageId"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_ReSharedId_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY ReSharedId DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_ReSharedId_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY ReSharedId ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_ReSharedId() *__Event_Selector {
+	u.selectCol = "ReSharedId"
 	return u
 }
 
@@ -3379,13 +4287,13 @@ func MassInsert_Event(rows []Event, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +
 		") VALUES " + insVals
 
 	// run query
@@ -3401,6 +4309,9 @@ func MassInsert_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.Murmur64Hash)
+		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.MessageId)
+		vals = append(vals, row.ReSharedId)
 
 	}
 
@@ -3424,13 +4335,13 @@ func MassReplace_Event(rows []Event, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +
 		") VALUES " + insVals
 
 	// run query
@@ -3446,6 +4357,9 @@ func MassReplace_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.Murmur64Hash)
+		vals = append(vals, row.ChatKey)
+		vals = append(vals, row.MessageId)
+		vals = append(vals, row.ReSharedId)
 
 	}
 
@@ -3465,6 +4379,12 @@ func MassReplace_Event(rows []Event, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
 
 //
 

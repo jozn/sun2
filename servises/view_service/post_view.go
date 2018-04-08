@@ -15,7 +15,7 @@ func PostsViews(posts []*x.Post, UserId int) (viw []*x.PB_PostView) {
 		}
 	}
 	if len(photoIds) > 0 {
-		x.Store.PreLoadMediaByMediaIds(photoIds)
+		x.Store.PreLoadPostMediaByMediaIds(photoIds)
 	}
 
 	for _, p := range posts {
@@ -81,7 +81,7 @@ func PostSingleView(post *x.Post, MeId int) *x.PB_PostView {
 	}
 
 	if x.MediaTypeEnum(post.PostTypeEnum) == x.MediaTypeEnum_MEDIA_IMAGE {
-		m, ok := x.Store.GetMediaByMediaId(post.PostId)
+		m, ok := x.Store.GetPostMediaByMediaId(post.PostId)
 		if ok {
 			v.MediaView = &x.PB_MediaView{
 				MediaId:     int64(m.MediaId),

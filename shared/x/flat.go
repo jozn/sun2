@@ -2579,6 +2579,100 @@ var PB_Comment__FOlD = &PB_Comment{
 	CreatedTime: 0,
 }
 
+type PB_CommentDeleted_Flat struct {
+	CommentId int
+	UserId    int
+}
+
+//ToPB
+func (m *PB_CommentDeleted) ToFlat() *PB_CommentDeleted_Flat {
+	r := &PB_CommentDeleted_Flat{
+		CommentId: int(m.CommentId),
+		UserId:    int(m.UserId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_CommentDeleted_Flat) ToPB() *PB_CommentDeleted {
+	r := &PB_CommentDeleted{
+		CommentId: int64(m.CommentId),
+		UserId:    int32(m.UserId),
+	}
+	return r
+}
+
+//folding
+var PB_CommentDeleted__FOlD = &PB_CommentDeleted{
+	CommentId: 0,
+	UserId:    0,
+}
+
+type PB_Event_Flat struct {
+	EventId      int
+	EventType    int
+	ByUserId     int
+	PeerUserId   int
+	PostId       int
+	CommentId    int
+	ActionId     int
+	Murmur64Hash int
+	ChatKey      string
+	MessageId    int
+	ReSharedId   int
+}
+
+//ToPB
+func (m *PB_Event) ToFlat() *PB_Event_Flat {
+	r := &PB_Event_Flat{
+		EventId:      int(m.EventId),
+		EventType:    int(m.EventType),
+		ByUserId:     int(m.ByUserId),
+		PeerUserId:   int(m.PeerUserId),
+		PostId:       int(m.PostId),
+		CommentId:    int(m.CommentId),
+		ActionId:     int(m.ActionId),
+		Murmur64Hash: int(m.Murmur64Hash),
+		ChatKey:      m.ChatKey,
+		MessageId:    int(m.MessageId),
+		ReSharedId:   int(m.ReSharedId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Event_Flat) ToPB() *PB_Event {
+	r := &PB_Event{
+		EventId:      int64(m.EventId),
+		EventType:    int32(m.EventType),
+		ByUserId:     int64(m.ByUserId),
+		PeerUserId:   int64(m.PeerUserId),
+		PostId:       int64(m.PostId),
+		CommentId:    int64(m.CommentId),
+		ActionId:     int64(m.ActionId),
+		Murmur64Hash: int64(m.Murmur64Hash),
+		ChatKey:      m.ChatKey,
+		MessageId:    int64(m.MessageId),
+		ReSharedId:   int64(m.ReSharedId),
+	}
+	return r
+}
+
+//folding
+var PB_Event__FOlD = &PB_Event{
+	EventId:      0,
+	EventType:    0,
+	ByUserId:     0,
+	PeerUserId:   0,
+	PostId:       0,
+	CommentId:    0,
+	ActionId:     0,
+	Murmur64Hash: 0,
+	ChatKey:      "",
+	MessageId:    0,
+	ReSharedId:   0,
+}
+
 type PB_FollowingList_Flat struct {
 	Id          int
 	UserId      int
@@ -2914,101 +3008,32 @@ var PB_Like__FOlD = &PB_Like{
 	CreatedTime:  0,
 }
 
-type PB_Media_Flat struct {
-	MediaId       int
-	UserId        int
-	PostId        int
-	AlbumId       int
-	MediaTypeEnum int
-	Width         int
-	Height        int
-	Size          int
-	Duration      int
-	Md5Hash       string
-	Color         string
-	CreatedTime   int
-}
-
-//ToPB
-func (m *PB_Media) ToFlat() *PB_Media_Flat {
-	r := &PB_Media_Flat{
-		MediaId:       int(m.MediaId),
-		UserId:        int(m.UserId),
-		PostId:        int(m.PostId),
-		AlbumId:       int(m.AlbumId),
-		MediaTypeEnum: int(m.MediaTypeEnum),
-		Width:         int(m.Width),
-		Height:        int(m.Height),
-		Size:          int(m.Size),
-		Duration:      int(m.Duration),
-		Md5Hash:       m.Md5Hash,
-		Color:         m.Color,
-		CreatedTime:   int(m.CreatedTime),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_Media_Flat) ToPB() *PB_Media {
-	r := &PB_Media{
-		MediaId:       int64(m.MediaId),
-		UserId:        int32(m.UserId),
-		PostId:        int64(m.PostId),
-		AlbumId:       int32(m.AlbumId),
-		MediaTypeEnum: int32(m.MediaTypeEnum),
-		Width:         int32(m.Width),
-		Height:        int32(m.Height),
-		Size:          int32(m.Size),
-		Duration:      int32(m.Duration),
-		Md5Hash:       m.Md5Hash,
-		Color:         m.Color,
-		CreatedTime:   int32(m.CreatedTime),
-	}
-	return r
-}
-
-//folding
-var PB_Media__FOlD = &PB_Media{
-	MediaId:       0,
-	UserId:        0,
-	PostId:        0,
-	AlbumId:       0,
-	MediaTypeEnum: 0,
-	Width:         0,
-	Height:        0,
-	Size:          0,
-	Duration:      0,
-	Md5Hash:       "",
-	Color:         "",
-	CreatedTime:   0,
-}
-
 type PB_Notify_Flat struct {
-	NotifyId      int
-	ForUserId     int
-	ActorUserId   int
-	NotiyTypeEnum int
-	PostId        int
-	CommentId     int
-	PeerUserId    int
-	Murmur64Hash  int
-	SeenStatus    int
-	CreatedTime   int
+	NotifyId       int
+	ForUserId      int
+	ActorUserId    int
+	NotifyTypeEnum int
+	PostId         int
+	CommentId      int
+	PeerUserId     int
+	Murmur64Hash   int
+	SeenStatus     int
+	CreatedTime    int
 }
 
 //ToPB
 func (m *PB_Notify) ToFlat() *PB_Notify_Flat {
 	r := &PB_Notify_Flat{
-		NotifyId:      int(m.NotifyId),
-		ForUserId:     int(m.ForUserId),
-		ActorUserId:   int(m.ActorUserId),
-		NotiyTypeEnum: int(m.NotiyTypeEnum),
-		PostId:        int(m.PostId),
-		CommentId:     int(m.CommentId),
-		PeerUserId:    int(m.PeerUserId),
-		Murmur64Hash:  int(m.Murmur64Hash),
-		SeenStatus:    int(m.SeenStatus),
-		CreatedTime:   int(m.CreatedTime),
+		NotifyId:       int(m.NotifyId),
+		ForUserId:      int(m.ForUserId),
+		ActorUserId:    int(m.ActorUserId),
+		NotifyTypeEnum: int(m.NotifyTypeEnum),
+		PostId:         int(m.PostId),
+		CommentId:      int(m.CommentId),
+		PeerUserId:     int(m.PeerUserId),
+		Murmur64Hash:   int(m.Murmur64Hash),
+		SeenStatus:     int(m.SeenStatus),
+		CreatedTime:    int(m.CreatedTime),
 	}
 	return r
 }
@@ -3016,32 +3041,32 @@ func (m *PB_Notify) ToFlat() *PB_Notify_Flat {
 //ToPB
 func (m *PB_Notify_Flat) ToPB() *PB_Notify {
 	r := &PB_Notify{
-		NotifyId:      int64(m.NotifyId),
-		ForUserId:     int32(m.ForUserId),
-		ActorUserId:   int32(m.ActorUserId),
-		NotiyTypeEnum: int32(m.NotiyTypeEnum),
-		PostId:        int64(m.PostId),
-		CommentId:     int64(m.CommentId),
-		PeerUserId:    int32(m.PeerUserId),
-		Murmur64Hash:  int64(m.Murmur64Hash),
-		SeenStatus:    int32(m.SeenStatus),
-		CreatedTime:   int32(m.CreatedTime),
+		NotifyId:       int64(m.NotifyId),
+		ForUserId:      int32(m.ForUserId),
+		ActorUserId:    int32(m.ActorUserId),
+		NotifyTypeEnum: int32(m.NotifyTypeEnum),
+		PostId:         int64(m.PostId),
+		CommentId:      int64(m.CommentId),
+		PeerUserId:     int32(m.PeerUserId),
+		Murmur64Hash:   int64(m.Murmur64Hash),
+		SeenStatus:     int32(m.SeenStatus),
+		CreatedTime:    int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_Notify__FOlD = &PB_Notify{
-	NotifyId:      0,
-	ForUserId:     0,
-	ActorUserId:   0,
-	NotiyTypeEnum: 0,
-	PostId:        0,
-	CommentId:     0,
-	PeerUserId:    0,
-	Murmur64Hash:  0,
-	SeenStatus:    0,
-	CreatedTime:   0,
+	NotifyId:       0,
+	ForUserId:      0,
+	ActorUserId:    0,
+	NotifyTypeEnum: 0,
+	PostId:         0,
+	CommentId:      0,
+	PeerUserId:     0,
+	Murmur64Hash:   0,
+	SeenStatus:     0,
+	CreatedTime:    0,
 }
 
 type PB_NotifyRemoved_Flat struct {
@@ -3139,43 +3164,51 @@ var PB_PhoneContact__FOlD = &PB_PhoneContact{
 }
 
 type PB_Post_Flat struct {
-	PostId         int
-	UserId         int
-	PostTypeEnum   int
-	MediaId        int
-	Text           string
-	RichText       string
-	MediaCount     int
-	SharedTo       int
-	DisableComment int
-	HasTag         int
-	CommentsCount  int
-	LikesCount     int
-	ViewsCount     int
-	EditedTime     int
-	CreatedTime    int
-	ReSharedPostId int
+	PostId           int
+	UserId           int
+	PostTypeEnum     int
+	PostCategoryEnum int
+	MediaId          int
+	PostKey          string
+	Text             string
+	RichText         string
+	MediaCount       int
+	SharedTo         int
+	DisableComment   int
+	Source           int
+	HasTag           int
+	Seq              int
+	CommentsCount    int
+	LikesCount       int
+	ViewsCount       int
+	EditedTime       int
+	CreatedTime      int
+	ReSharedPostId   int
 }
 
 //ToPB
 func (m *PB_Post) ToFlat() *PB_Post_Flat {
 	r := &PB_Post_Flat{
-		PostId:         int(m.PostId),
-		UserId:         int(m.UserId),
-		PostTypeEnum:   int(m.PostTypeEnum),
-		MediaId:        int(m.MediaId),
-		Text:           m.Text,
-		RichText:       m.RichText,
-		MediaCount:     int(m.MediaCount),
-		SharedTo:       int(m.SharedTo),
-		DisableComment: int(m.DisableComment),
-		HasTag:         int(m.HasTag),
-		CommentsCount:  int(m.CommentsCount),
-		LikesCount:     int(m.LikesCount),
-		ViewsCount:     int(m.ViewsCount),
-		EditedTime:     int(m.EditedTime),
-		CreatedTime:    int(m.CreatedTime),
-		ReSharedPostId: int(m.ReSharedPostId),
+		PostId:           int(m.PostId),
+		UserId:           int(m.UserId),
+		PostTypeEnum:     int(m.PostTypeEnum),
+		PostCategoryEnum: int(m.PostCategoryEnum),
+		MediaId:          int(m.MediaId),
+		PostKey:          m.PostKey,
+		Text:             m.Text,
+		RichText:         m.RichText,
+		MediaCount:       int(m.MediaCount),
+		SharedTo:         int(m.SharedTo),
+		DisableComment:   int(m.DisableComment),
+		Source:           int(m.Source),
+		HasTag:           int(m.HasTag),
+		Seq:              int(m.Seq),
+		CommentsCount:    int(m.CommentsCount),
+		LikesCount:       int(m.LikesCount),
+		ViewsCount:       int(m.ViewsCount),
+		EditedTime:       int(m.EditedTime),
+		CreatedTime:      int(m.CreatedTime),
+		ReSharedPostId:   int(m.ReSharedPostId),
 	}
 	return r
 }
@@ -3183,56 +3216,124 @@ func (m *PB_Post) ToFlat() *PB_Post_Flat {
 //ToPB
 func (m *PB_Post_Flat) ToPB() *PB_Post {
 	r := &PB_Post{
-		PostId:         int64(m.PostId),
-		UserId:         int32(m.UserId),
-		PostTypeEnum:   int32(m.PostTypeEnum),
-		MediaId:        int64(m.MediaId),
-		Text:           m.Text,
-		RichText:       m.RichText,
-		MediaCount:     int32(m.MediaCount),
-		SharedTo:       int32(m.SharedTo),
-		DisableComment: int32(m.DisableComment),
-		HasTag:         int32(m.HasTag),
-		CommentsCount:  int32(m.CommentsCount),
-		LikesCount:     int32(m.LikesCount),
-		ViewsCount:     int32(m.ViewsCount),
-		EditedTime:     int32(m.EditedTime),
-		CreatedTime:    int32(m.CreatedTime),
-		ReSharedPostId: int64(m.ReSharedPostId),
+		PostId:           int64(m.PostId),
+		UserId:           int32(m.UserId),
+		PostTypeEnum:     int32(m.PostTypeEnum),
+		PostCategoryEnum: int32(m.PostCategoryEnum),
+		MediaId:          int64(m.MediaId),
+		PostKey:          m.PostKey,
+		Text:             m.Text,
+		RichText:         m.RichText,
+		MediaCount:       int32(m.MediaCount),
+		SharedTo:         int32(m.SharedTo),
+		DisableComment:   int32(m.DisableComment),
+		Source:           int32(m.Source),
+		HasTag:           int32(m.HasTag),
+		Seq:              int32(m.Seq),
+		CommentsCount:    int32(m.CommentsCount),
+		LikesCount:       int32(m.LikesCount),
+		ViewsCount:       int32(m.ViewsCount),
+		EditedTime:       int32(m.EditedTime),
+		CreatedTime:      int32(m.CreatedTime),
+		ReSharedPostId:   int64(m.ReSharedPostId),
 	}
 	return r
 }
 
 //folding
 var PB_Post__FOlD = &PB_Post{
-	PostId:         0,
-	UserId:         0,
-	PostTypeEnum:   0,
-	MediaId:        0,
-	Text:           "",
-	RichText:       "",
-	MediaCount:     0,
-	SharedTo:       0,
-	DisableComment: 0,
-	HasTag:         0,
-	CommentsCount:  0,
-	LikesCount:     0,
-	ViewsCount:     0,
-	EditedTime:     0,
-	CreatedTime:    0,
-	ReSharedPostId: 0,
+	PostId:           0,
+	UserId:           0,
+	PostTypeEnum:     0,
+	PostCategoryEnum: 0,
+	MediaId:          0,
+	PostKey:          "",
+	Text:             "",
+	RichText:         "",
+	MediaCount:       0,
+	SharedTo:         0,
+	DisableComment:   0,
+	Source:           0,
+	HasTag:           0,
+	Seq:              0,
+	CommentsCount:    0,
+	LikesCount:       0,
+	ViewsCount:       0,
+	EditedTime:       0,
+	CreatedTime:      0,
+	ReSharedPostId:   0,
+}
+
+type PB_PostCount_Flat struct {
+	PostId     int
+	ViewsCount int
+}
+
+//ToPB
+func (m *PB_PostCount) ToFlat() *PB_PostCount_Flat {
+	r := &PB_PostCount_Flat{
+		PostId:     int(m.PostId),
+		ViewsCount: int(m.ViewsCount),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostCount_Flat) ToPB() *PB_PostCount {
+	r := &PB_PostCount{
+		PostId:     int64(m.PostId),
+		ViewsCount: int64(m.ViewsCount),
+	}
+	return r
+}
+
+//folding
+var PB_PostCount__FOlD = &PB_PostCount{
+	PostId:     0,
+	ViewsCount: 0,
+}
+
+type PB_PostDeleted_Flat struct {
+	PostId int
+	UserId int
+}
+
+//ToPB
+func (m *PB_PostDeleted) ToFlat() *PB_PostDeleted_Flat {
+	r := &PB_PostDeleted_Flat{
+		PostId: int(m.PostId),
+		UserId: int(m.UserId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostDeleted_Flat) ToPB() *PB_PostDeleted {
+	r := &PB_PostDeleted{
+		PostId: int64(m.PostId),
+		UserId: int32(m.UserId),
+	}
+	return r
+}
+
+//folding
+var PB_PostDeleted__FOlD = &PB_PostDeleted{
+	PostId: 0,
+	UserId: 0,
 }
 
 type PB_PostKey_Flat struct {
-	Id  int
-	Key string
+	Id         int
+	PostKeyStr string
+	Used       int
 }
 
 //ToPB
 func (m *PB_PostKey) ToFlat() *PB_PostKey_Flat {
 	r := &PB_PostKey_Flat{
-		Id:  int(m.Id),
-		Key: m.Key,
+		Id:         int(m.Id),
+		PostKeyStr: m.PostKeyStr,
+		Used:       int(m.Used),
 	}
 	return r
 }
@@ -3240,16 +3341,218 @@ func (m *PB_PostKey) ToFlat() *PB_PostKey_Flat {
 //ToPB
 func (m *PB_PostKey_Flat) ToPB() *PB_PostKey {
 	r := &PB_PostKey{
-		Id:  int32(m.Id),
-		Key: m.Key,
+		Id:         int32(m.Id),
+		PostKeyStr: m.PostKeyStr,
+		Used:       int32(m.Used),
 	}
 	return r
 }
 
 //folding
 var PB_PostKey__FOlD = &PB_PostKey{
-	Id:  0,
-	Key: "",
+	Id:         0,
+	PostKeyStr: "",
+	Used:       0,
+}
+
+type PB_PostLink_Flat struct {
+	LinkId  int
+	LinkUrl string
+}
+
+//ToPB
+func (m *PB_PostLink) ToFlat() *PB_PostLink_Flat {
+	r := &PB_PostLink_Flat{
+		LinkId:  int(m.LinkId),
+		LinkUrl: m.LinkUrl,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostLink_Flat) ToPB() *PB_PostLink {
+	r := &PB_PostLink{
+		LinkId:  int64(m.LinkId),
+		LinkUrl: m.LinkUrl,
+	}
+	return r
+}
+
+//folding
+var PB_PostLink__FOlD = &PB_PostLink{
+	LinkId:  0,
+	LinkUrl: "",
+}
+
+type PB_PostMedia_Flat struct {
+	MediaId       int
+	UserId        int
+	PostId        int
+	AlbumId       int
+	MediaTypeEnum int
+	Width         int
+	Height        int
+	Size          int
+	Duration      int
+	Extension     string
+	Md5Hash       string
+	Color         string
+	CreatedTime   int
+}
+
+//ToPB
+func (m *PB_PostMedia) ToFlat() *PB_PostMedia_Flat {
+	r := &PB_PostMedia_Flat{
+		MediaId:       int(m.MediaId),
+		UserId:        int(m.UserId),
+		PostId:        int(m.PostId),
+		AlbumId:       int(m.AlbumId),
+		MediaTypeEnum: int(m.MediaTypeEnum),
+		Width:         int(m.Width),
+		Height:        int(m.Height),
+		Size:          int(m.Size),
+		Duration:      int(m.Duration),
+		Extension:     m.Extension,
+		Md5Hash:       m.Md5Hash,
+		Color:         m.Color,
+		CreatedTime:   int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostMedia_Flat) ToPB() *PB_PostMedia {
+	r := &PB_PostMedia{
+		MediaId:       int64(m.MediaId),
+		UserId:        int32(m.UserId),
+		PostId:        int64(m.PostId),
+		AlbumId:       int32(m.AlbumId),
+		MediaTypeEnum: int32(m.MediaTypeEnum),
+		Width:         int32(m.Width),
+		Height:        int32(m.Height),
+		Size:          int32(m.Size),
+		Duration:      int32(m.Duration),
+		Extension:     m.Extension,
+		Md5Hash:       m.Md5Hash,
+		Color:         m.Color,
+		CreatedTime:   int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PostMedia__FOlD = &PB_PostMedia{
+	MediaId:       0,
+	UserId:        0,
+	PostId:        0,
+	AlbumId:       0,
+	MediaTypeEnum: 0,
+	Width:         0,
+	Height:        0,
+	Size:          0,
+	Duration:      0,
+	Extension:     "",
+	Md5Hash:       "",
+	Color:         "",
+	CreatedTime:   0,
+}
+
+type PB_PostMentioned_Flat struct {
+	MentionedId      int
+	ForUserId        int
+	PostId           int
+	PostUserId       int
+	PostTypeEnum     int
+	PostCategoryEnum int
+	CreatedTime      int
+}
+
+//ToPB
+func (m *PB_PostMentioned) ToFlat() *PB_PostMentioned_Flat {
+	r := &PB_PostMentioned_Flat{
+		MentionedId:      int(m.MentionedId),
+		ForUserId:        int(m.ForUserId),
+		PostId:           int(m.PostId),
+		PostUserId:       int(m.PostUserId),
+		PostTypeEnum:     int(m.PostTypeEnum),
+		PostCategoryEnum: int(m.PostCategoryEnum),
+		CreatedTime:      int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostMentioned_Flat) ToPB() *PB_PostMentioned {
+	r := &PB_PostMentioned{
+		MentionedId:      int64(m.MentionedId),
+		ForUserId:        int32(m.ForUserId),
+		PostId:           int64(m.PostId),
+		PostUserId:       int32(m.PostUserId),
+		PostTypeEnum:     int32(m.PostTypeEnum),
+		PostCategoryEnum: int32(m.PostCategoryEnum),
+		CreatedTime:      int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PostMentioned__FOlD = &PB_PostMentioned{
+	MentionedId:      0,
+	ForUserId:        0,
+	PostId:           0,
+	PostUserId:       0,
+	PostTypeEnum:     0,
+	PostCategoryEnum: 0,
+	CreatedTime:      0,
+}
+
+type PB_PostReshared_Flat struct {
+	ResharedId       int
+	ByUserId         int
+	PostId           int
+	PostUserId       int
+	PostTypeEnum     int
+	PostCategoryEnum int
+	CreatedTime      int
+}
+
+//ToPB
+func (m *PB_PostReshared) ToFlat() *PB_PostReshared_Flat {
+	r := &PB_PostReshared_Flat{
+		ResharedId:       int(m.ResharedId),
+		ByUserId:         int(m.ByUserId),
+		PostId:           int(m.PostId),
+		PostUserId:       int(m.PostUserId),
+		PostTypeEnum:     int(m.PostTypeEnum),
+		PostCategoryEnum: int(m.PostCategoryEnum),
+		CreatedTime:      int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostReshared_Flat) ToPB() *PB_PostReshared {
+	r := &PB_PostReshared{
+		ResharedId:       int64(m.ResharedId),
+		ByUserId:         int32(m.ByUserId),
+		PostId:           int64(m.PostId),
+		PostUserId:       int32(m.PostUserId),
+		PostTypeEnum:     int32(m.PostTypeEnum),
+		PostCategoryEnum: int32(m.PostCategoryEnum),
+		CreatedTime:      int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PostReshared__FOlD = &PB_PostReshared{
+	ResharedId:       0,
+	ByUserId:         0,
+	PostId:           0,
+	PostUserId:       0,
+	PostTypeEnum:     0,
+	PostCategoryEnum: 0,
+	CreatedTime:      0,
 }
 
 type PB_SearchClicked_Flat struct {
@@ -3298,37 +3601,35 @@ var PB_SearchClicked__FOlD = &PB_SearchClicked{
 }
 
 type PB_Session_Flat struct {
-	Id                    int
-	UserId                int
-	SessionUuid           string
-	ClientUuid            string
-	DeviceUuid            string
-	LastActivityTime      int
-	LastIpAddress         string
-	LastWifiMacAddress    string
-	LastNetworkType       string
-	LastNetworkTypeEnumId int
-	AppVersion            int
-	UpdatedTime           int
-	CreatedTime           int
+	SessionUuid         string
+	UserId              int
+	ClientUuid          string
+	DeviceUuid          string
+	LastActivityTime    int
+	LastIpAddress       string
+	LastWifiMacAddress  string
+	LastNetworkType     string
+	LastNetworkTypeEnum int
+	AppVersion          int
+	UpdatedTime         int
+	CreatedTime         int
 }
 
 //ToPB
 func (m *PB_Session) ToFlat() *PB_Session_Flat {
 	r := &PB_Session_Flat{
-		Id:                    int(m.Id),
-		UserId:                int(m.UserId),
-		SessionUuid:           m.SessionUuid,
-		ClientUuid:            m.ClientUuid,
-		DeviceUuid:            m.DeviceUuid,
-		LastActivityTime:      int(m.LastActivityTime),
-		LastIpAddress:         m.LastIpAddress,
-		LastWifiMacAddress:    m.LastWifiMacAddress,
-		LastNetworkType:       m.LastNetworkType,
-		LastNetworkTypeEnumId: int(m.LastNetworkTypeEnumId),
-		AppVersion:            int(m.AppVersion),
-		UpdatedTime:           int(m.UpdatedTime),
-		CreatedTime:           int(m.CreatedTime),
+		SessionUuid:         m.SessionUuid,
+		UserId:              int(m.UserId),
+		ClientUuid:          m.ClientUuid,
+		DeviceUuid:          m.DeviceUuid,
+		LastActivityTime:    int(m.LastActivityTime),
+		LastIpAddress:       m.LastIpAddress,
+		LastWifiMacAddress:  m.LastWifiMacAddress,
+		LastNetworkType:     m.LastNetworkType,
+		LastNetworkTypeEnum: int(m.LastNetworkTypeEnum),
+		AppVersion:          int(m.AppVersion),
+		UpdatedTime:         int(m.UpdatedTime),
+		CreatedTime:         int(m.CreatedTime),
 	}
 	return r
 }
@@ -3336,38 +3637,36 @@ func (m *PB_Session) ToFlat() *PB_Session_Flat {
 //ToPB
 func (m *PB_Session_Flat) ToPB() *PB_Session {
 	r := &PB_Session{
-		Id:                    int64(m.Id),
-		UserId:                int32(m.UserId),
-		SessionUuid:           m.SessionUuid,
-		ClientUuid:            m.ClientUuid,
-		DeviceUuid:            m.DeviceUuid,
-		LastActivityTime:      int32(m.LastActivityTime),
-		LastIpAddress:         m.LastIpAddress,
-		LastWifiMacAddress:    m.LastWifiMacAddress,
-		LastNetworkType:       m.LastNetworkType,
-		LastNetworkTypeEnumId: int32(m.LastNetworkTypeEnumId),
-		AppVersion:            int32(m.AppVersion),
-		UpdatedTime:           int32(m.UpdatedTime),
-		CreatedTime:           int32(m.CreatedTime),
+		SessionUuid:         m.SessionUuid,
+		UserId:              int32(m.UserId),
+		ClientUuid:          m.ClientUuid,
+		DeviceUuid:          m.DeviceUuid,
+		LastActivityTime:    int32(m.LastActivityTime),
+		LastIpAddress:       m.LastIpAddress,
+		LastWifiMacAddress:  m.LastWifiMacAddress,
+		LastNetworkType:     m.LastNetworkType,
+		LastNetworkTypeEnum: int32(m.LastNetworkTypeEnum),
+		AppVersion:          int32(m.AppVersion),
+		UpdatedTime:         int32(m.UpdatedTime),
+		CreatedTime:         int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_Session__FOlD = &PB_Session{
-	Id:                    0,
-	UserId:                0,
-	SessionUuid:           "",
-	ClientUuid:            "",
-	DeviceUuid:            "",
-	LastActivityTime:      0,
-	LastIpAddress:         "",
-	LastWifiMacAddress:    "",
-	LastNetworkType:       "",
-	LastNetworkTypeEnumId: 0,
-	AppVersion:            0,
-	UpdatedTime:           0,
-	CreatedTime:           0,
+	SessionUuid:         "",
+	UserId:              0,
+	ClientUuid:          "",
+	DeviceUuid:          "",
+	LastActivityTime:    0,
+	LastIpAddress:       "",
+	LastWifiMacAddress:  "",
+	LastNetworkType:     "",
+	LastNetworkTypeEnum: 0,
+	AppVersion:          0,
+	UpdatedTime:         0,
+	CreatedTime:         0,
 }
 
 type PB_SettingClient_Flat struct {
@@ -3572,76 +3871,6 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
 	DirectPriority:           0,
 }
 
-type PB_SuggestedTopPost_Flat struct {
-	Id     int
-	PostId int
-}
-
-//ToPB
-func (m *PB_SuggestedTopPost) ToFlat() *PB_SuggestedTopPost_Flat {
-	r := &PB_SuggestedTopPost_Flat{
-		Id:     int(m.Id),
-		PostId: int(m.PostId),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_SuggestedTopPost_Flat) ToPB() *PB_SuggestedTopPost {
-	r := &PB_SuggestedTopPost{
-		Id:     int64(m.Id),
-		PostId: int64(m.PostId),
-	}
-	return r
-}
-
-//folding
-var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
-	Id:     0,
-	PostId: 0,
-}
-
-type PB_SuggestedUser_Flat struct {
-	Id          int
-	UserId      int
-	TargetId    int
-	Weight      float32
-	CreatedTime int
-}
-
-//ToPB
-func (m *PB_SuggestedUser) ToFlat() *PB_SuggestedUser_Flat {
-	r := &PB_SuggestedUser_Flat{
-		Id:          int(m.Id),
-		UserId:      int(m.UserId),
-		TargetId:    int(m.TargetId),
-		Weight:      float32(m.Weight),
-		CreatedTime: int(m.CreatedTime),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_SuggestedUser_Flat) ToPB() *PB_SuggestedUser {
-	r := &PB_SuggestedUser{
-		Id:          int32(m.Id),
-		UserId:      int32(m.UserId),
-		TargetId:    int32(m.TargetId),
-		Weight:      m.Weight,
-		CreatedTime: int32(m.CreatedTime),
-	}
-	return r
-}
-
-//folding
-var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
-	Id:          0,
-	UserId:      0,
-	TargetId:    0,
-	Weight:      0.0,
-	CreatedTime: 0,
-}
-
 type PB_Tag_Flat struct {
 	TagId         int
 	Name          string
@@ -3784,10 +4013,20 @@ type PB_User_Flat struct {
 	Email                string
 	PasswordHash         string
 	PasswordSalt         string
+	PostSeq              int
 	FollowersCount       int
 	FollowingCount       int
 	PostsCount           int
 	MediaCount           int
+	PhotoCount           int
+	VideoCount           int
+	GifCount             int
+	AudioCount           int
+	VoiceCount           int
+	FileCount            int
+	LinkCount            int
+	BoardCount           int
+	PinedCount           int
 	LikesCount           int
 	ResharedCount        int
 	LastActionTime       int
@@ -3817,10 +4056,20 @@ func (m *PB_User) ToFlat() *PB_User_Flat {
 		Email:                m.Email,
 		PasswordHash:         m.PasswordHash,
 		PasswordSalt:         m.PasswordSalt,
+		PostSeq:              int(m.PostSeq),
 		FollowersCount:       int(m.FollowersCount),
 		FollowingCount:       int(m.FollowingCount),
 		PostsCount:           int(m.PostsCount),
 		MediaCount:           int(m.MediaCount),
+		PhotoCount:           int(m.PhotoCount),
+		VideoCount:           int(m.VideoCount),
+		GifCount:             int(m.GifCount),
+		AudioCount:           int(m.AudioCount),
+		VoiceCount:           int(m.VoiceCount),
+		FileCount:            int(m.FileCount),
+		LinkCount:            int(m.LinkCount),
+		BoardCount:           int(m.BoardCount),
+		PinedCount:           int(m.PinedCount),
 		LikesCount:           int(m.LikesCount),
 		ResharedCount:        int(m.ResharedCount),
 		LastActionTime:       int(m.LastActionTime),
@@ -3852,10 +4101,20 @@ func (m *PB_User_Flat) ToPB() *PB_User {
 		Email:                m.Email,
 		PasswordHash:         m.PasswordHash,
 		PasswordSalt:         m.PasswordSalt,
+		PostSeq:              int32(m.PostSeq),
 		FollowersCount:       int32(m.FollowersCount),
 		FollowingCount:       int32(m.FollowingCount),
 		PostsCount:           int32(m.PostsCount),
 		MediaCount:           int32(m.MediaCount),
+		PhotoCount:           int32(m.PhotoCount),
+		VideoCount:           int32(m.VideoCount),
+		GifCount:             int32(m.GifCount),
+		AudioCount:           int32(m.AudioCount),
+		VoiceCount:           int32(m.VoiceCount),
+		FileCount:            int32(m.FileCount),
+		LinkCount:            int32(m.LinkCount),
+		BoardCount:           int32(m.BoardCount),
+		PinedCount:           int32(m.PinedCount),
 		LikesCount:           int32(m.LikesCount),
 		ResharedCount:        int32(m.ResharedCount),
 		LastActionTime:       int32(m.LastActionTime),
@@ -3886,10 +4145,20 @@ var PB_User__FOlD = &PB_User{
 	Email:                "",
 	PasswordHash:         "",
 	PasswordSalt:         "",
+	PostSeq:              0,
 	FollowersCount:       0,
 	FollowingCount:       0,
 	PostsCount:           0,
 	MediaCount:           0,
+	PhotoCount:           0,
+	VideoCount:           0,
+	GifCount:             0,
+	AudioCount:           0,
+	VoiceCount:           0,
+	FileCount:            0,
+	LinkCount:            0,
+	BoardCount:           0,
+	PinedCount:           0,
 	LikesCount:           0,
 	ResharedCount:        0,
 	LastActionTime:       0,
@@ -4378,6 +4647,150 @@ var PB_FilePost__FOlD = &PB_FilePost{
 	Extension: "",
 	DataThumb: []byte{},
 	Data:      []byte{},
+}
+
+type PB_ActionFanout_Flat struct {
+	OrderId     int
+	ForUserId   int
+	ActionId    int
+	ActorUserId int
+}
+
+//ToPB
+func (m *PB_ActionFanout) ToFlat() *PB_ActionFanout_Flat {
+	r := &PB_ActionFanout_Flat{
+		OrderId:     int(m.OrderId),
+		ForUserId:   int(m.ForUserId),
+		ActionId:    int(m.ActionId),
+		ActorUserId: int(m.ActorUserId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_ActionFanout_Flat) ToPB() *PB_ActionFanout {
+	r := &PB_ActionFanout{
+		OrderId:     int64(m.OrderId),
+		ForUserId:   int32(m.ForUserId),
+		ActionId:    int64(m.ActionId),
+		ActorUserId: int32(m.ActorUserId),
+	}
+	return r
+}
+
+//folding
+var PB_ActionFanout__FOlD = &PB_ActionFanout{
+	OrderId:     0,
+	ForUserId:   0,
+	ActionId:    0,
+	ActorUserId: 0,
+}
+
+type PB_HomeFanout_Flat struct {
+	OrderId    int
+	ForUserId  int
+	PostId     int
+	PostUserId int
+}
+
+//ToPB
+func (m *PB_HomeFanout) ToFlat() *PB_HomeFanout_Flat {
+	r := &PB_HomeFanout_Flat{
+		OrderId:    int(m.OrderId),
+		ForUserId:  int(m.ForUserId),
+		PostId:     int(m.PostId),
+		PostUserId: int(m.PostUserId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_HomeFanout_Flat) ToPB() *PB_HomeFanout {
+	r := &PB_HomeFanout{
+		OrderId:    int64(m.OrderId),
+		ForUserId:  int64(m.ForUserId),
+		PostId:     int64(m.PostId),
+		PostUserId: int64(m.PostUserId),
+	}
+	return r
+}
+
+//folding
+var PB_HomeFanout__FOlD = &PB_HomeFanout{
+	OrderId:    0,
+	ForUserId:  0,
+	PostId:     0,
+	PostUserId: 0,
+}
+
+type PB_SuggestedTopPost_Flat struct {
+	Id     int
+	PostId int
+}
+
+//ToPB
+func (m *PB_SuggestedTopPost) ToFlat() *PB_SuggestedTopPost_Flat {
+	r := &PB_SuggestedTopPost_Flat{
+		Id:     int(m.Id),
+		PostId: int(m.PostId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SuggestedTopPost_Flat) ToPB() *PB_SuggestedTopPost {
+	r := &PB_SuggestedTopPost{
+		Id:     int64(m.Id),
+		PostId: int64(m.PostId),
+	}
+	return r
+}
+
+//folding
+var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+	Id:     0,
+	PostId: 0,
+}
+
+type PB_SuggestedUser_Flat struct {
+	Id          int
+	UserId      int
+	TargetId    int
+	Weight      float32
+	CreatedTime int
+}
+
+//ToPB
+func (m *PB_SuggestedUser) ToFlat() *PB_SuggestedUser_Flat {
+	r := &PB_SuggestedUser_Flat{
+		Id:          int(m.Id),
+		UserId:      int(m.UserId),
+		TargetId:    int(m.TargetId),
+		Weight:      float32(m.Weight),
+		CreatedTime: int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SuggestedUser_Flat) ToPB() *PB_SuggestedUser {
+	r := &PB_SuggestedUser{
+		Id:          int32(m.Id),
+		UserId:      int32(m.UserId),
+		TargetId:    int32(m.TargetId),
+		Weight:      m.Weight,
+		CreatedTime: int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
+	Id:          0,
+	UserId:      0,
+	TargetId:    0,
+	Weight:      0.0,
+	CreatedTime: 0,
 }
 
 type PB_UpdateRoomActionDoing_Flat struct {
@@ -6002,6 +6415,31 @@ r := &PB_Comment_Flat{
 return r
 }
 
+func(m *PB_CommentDeleted)ToFlat() *PB_CommentDeleted_Flat {
+r := &PB_CommentDeleted_Flat{
+    CommentId:  int(m.CommentId) ,
+    UserId:  int(m.UserId) ,
+}
+return r
+}
+
+func(m *PB_Event)ToFlat() *PB_Event_Flat {
+r := &PB_Event_Flat{
+    EventId:  int(m.EventId) ,
+    EventType:  int(m.EventType) ,
+    ByUserId:  int(m.ByUserId) ,
+    PeerUserId:  int(m.PeerUserId) ,
+    PostId:  int(m.PostId) ,
+    CommentId:  int(m.CommentId) ,
+    ActionId:  int(m.ActionId) ,
+    Murmur64Hash:  int(m.Murmur64Hash) ,
+    ChatKey:  m.ChatKey ,
+    MessageId:  int(m.MessageId) ,
+    ReSharedId:  int(m.ReSharedId) ,
+}
+return r
+}
+
 func(m *PB_FollowingList)ToFlat() *PB_FollowingList_Flat {
 r := &PB_FollowingList_Flat{
     Id:  int(m.Id) ,
@@ -6091,24 +6529,6 @@ r := &PB_Like_Flat{
 return r
 }
 
-func(m *PB_Media)ToFlat() *PB_Media_Flat {
-r := &PB_Media_Flat{
-    MediaId:  int(m.MediaId) ,
-    UserId:  int(m.UserId) ,
-    PostId:  int(m.PostId) ,
-    AlbumId:  int(m.AlbumId) ,
-    MediaTypeEnum:  int(m.MediaTypeEnum) ,
-    Width:  int(m.Width) ,
-    Height:  int(m.Height) ,
-    Size:  int(m.Size) ,
-    Duration:  int(m.Duration) ,
-    Md5Hash:  m.Md5Hash ,
-    Color:  m.Color ,
-    CreatedTime:  int(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_Notify)ToFlat() *PB_Notify_Flat {
 r := &PB_Notify_Flat{
     NotifyId:  int(m.NotifyId) ,
@@ -6155,13 +6575,17 @@ r := &PB_Post_Flat{
     PostId:  int(m.PostId) ,
     UserId:  int(m.UserId) ,
     PostTypeEnum:  int(m.PostTypeEnum) ,
+    PostCategoryEnum:  int(m.PostCategoryEnum) ,
     MediaId:  int(m.MediaId) ,
+    PostKey:  m.PostKey ,
     Text:  m.Text ,
     RichText:  m.RichText ,
     MediaCount:  int(m.MediaCount) ,
     SharedTo:  int(m.SharedTo) ,
     DisableComment:  int(m.DisableComment) ,
+    Source:  int(m.Source) ,
     HasTag:  int(m.HasTag) ,
+    Seq:  int(m.Seq) ,
     CommentsCount:  int(m.CommentsCount) ,
     LikesCount:  int(m.LikesCount) ,
     ViewsCount:  int(m.ViewsCount) ,
@@ -6172,10 +6596,80 @@ r := &PB_Post_Flat{
 return r
 }
 
+func(m *PB_PostCount)ToFlat() *PB_PostCount_Flat {
+r := &PB_PostCount_Flat{
+    PostId:  int(m.PostId) ,
+    ViewsCount:  int(m.ViewsCount) ,
+}
+return r
+}
+
+func(m *PB_PostDeleted)ToFlat() *PB_PostDeleted_Flat {
+r := &PB_PostDeleted_Flat{
+    PostId:  int(m.PostId) ,
+    UserId:  int(m.UserId) ,
+}
+return r
+}
+
 func(m *PB_PostKey)ToFlat() *PB_PostKey_Flat {
 r := &PB_PostKey_Flat{
     Id:  int(m.Id) ,
-    Key:  m.Key ,
+    PostKeyStr:  m.PostKeyStr ,
+    Used:  int(m.Used) ,
+}
+return r
+}
+
+func(m *PB_PostLink)ToFlat() *PB_PostLink_Flat {
+r := &PB_PostLink_Flat{
+    LinkId:  int(m.LinkId) ,
+    LinkUrl:  m.LinkUrl ,
+}
+return r
+}
+
+func(m *PB_PostMedia)ToFlat() *PB_PostMedia_Flat {
+r := &PB_PostMedia_Flat{
+    MediaId:  int(m.MediaId) ,
+    UserId:  int(m.UserId) ,
+    PostId:  int(m.PostId) ,
+    AlbumId:  int(m.AlbumId) ,
+    MediaTypeEnum:  int(m.MediaTypeEnum) ,
+    Width:  int(m.Width) ,
+    Height:  int(m.Height) ,
+    Size:  int(m.Size) ,
+    Duration:  int(m.Duration) ,
+    Extension:  m.Extension ,
+    Md5Hash:  m.Md5Hash ,
+    Color:  m.Color ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PostMentioned)ToFlat() *PB_PostMentioned_Flat {
+r := &PB_PostMentioned_Flat{
+    MentionedId:  int(m.MentionedId) ,
+    ForUserId:  int(m.ForUserId) ,
+    PostId:  int(m.PostId) ,
+    PostUserId:  int(m.PostUserId) ,
+    PostTypeEnum:  int(m.PostTypeEnum) ,
+    PostCategoryEnum:  int(m.PostCategoryEnum) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PostReshared)ToFlat() *PB_PostReshared_Flat {
+r := &PB_PostReshared_Flat{
+    ResharedId:  int(m.ResharedId) ,
+    ByUserId:  int(m.ByUserId) ,
+    PostId:  int(m.PostId) ,
+    PostUserId:  int(m.PostUserId) ,
+    PostTypeEnum:  int(m.PostTypeEnum) ,
+    PostCategoryEnum:  int(m.PostCategoryEnum) ,
+    CreatedTime:  int(m.CreatedTime) ,
 }
 return r
 }
@@ -6194,16 +6688,15 @@ return r
 
 func(m *PB_Session)ToFlat() *PB_Session_Flat {
 r := &PB_Session_Flat{
-    Id:  int(m.Id) ,
-    UserId:  int(m.UserId) ,
     SessionUuid:  m.SessionUuid ,
+    UserId:  int(m.UserId) ,
     ClientUuid:  m.ClientUuid ,
     DeviceUuid:  m.DeviceUuid ,
     LastActivityTime:  int(m.LastActivityTime) ,
     LastIpAddress:  m.LastIpAddress ,
     LastWifiMacAddress:  m.LastWifiMacAddress ,
     LastNetworkType:  m.LastNetworkType ,
-    LastNetworkTypeEnumId:  int(m.LastNetworkTypeEnumId) ,
+    LastNetworkTypeEnum:  int(m.LastNetworkTypeEnum) ,
     AppVersion:  int(m.AppVersion) ,
     UpdatedTime:  int(m.UpdatedTime) ,
     CreatedTime:  int(m.CreatedTime) ,
@@ -6263,25 +6756,6 @@ r := &PB_SettingNotification_Flat{
 return r
 }
 
-func(m *PB_SuggestedTopPost)ToFlat() *PB_SuggestedTopPost_Flat {
-r := &PB_SuggestedTopPost_Flat{
-    Id:  int(m.Id) ,
-    PostId:  int(m.PostId) ,
-}
-return r
-}
-
-func(m *PB_SuggestedUser)ToFlat() *PB_SuggestedUser_Flat {
-r := &PB_SuggestedUser_Flat{
-    Id:  int(m.Id) ,
-    UserId:  int(m.UserId) ,
-    TargetId:  int(m.TargetId) ,
-    Weight:  float32(m.Weight) ,
-    CreatedTime:  int(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_Tag)ToFlat() *PB_Tag_Flat {
 r := &PB_Tag_Flat{
     TagId:  int(m.TagId) ,
@@ -6332,10 +6806,20 @@ r := &PB_User_Flat{
     Email:  m.Email ,
     PasswordHash:  m.PasswordHash ,
     PasswordSalt:  m.PasswordSalt ,
+    PostSeq:  int(m.PostSeq) ,
     FollowersCount:  int(m.FollowersCount) ,
     FollowingCount:  int(m.FollowingCount) ,
     PostsCount:  int(m.PostsCount) ,
     MediaCount:  int(m.MediaCount) ,
+    PhotoCount:  int(m.PhotoCount) ,
+    VideoCount:  int(m.VideoCount) ,
+    GifCount:  int(m.GifCount) ,
+    AudioCount:  int(m.AudioCount) ,
+    VoiceCount:  int(m.VoiceCount) ,
+    FileCount:  int(m.FileCount) ,
+    LinkCount:  int(m.LinkCount) ,
+    BoardCount:  int(m.BoardCount) ,
+    PinedCount:  int(m.PinedCount) ,
     LikesCount:  int(m.LikesCount) ,
     ResharedCount:  int(m.ResharedCount) ,
     LastActionTime:  int(m.LastActionTime) ,
@@ -6477,6 +6961,45 @@ r := &PB_FilePost_Flat{
 return r
 }
 
+func(m *PB_ActionFanout)ToFlat() *PB_ActionFanout_Flat {
+r := &PB_ActionFanout_Flat{
+    OrderId:  int(m.OrderId) ,
+    ForUserId:  int(m.ForUserId) ,
+    ActionId:  int(m.ActionId) ,
+    ActorUserId:  int(m.ActorUserId) ,
+}
+return r
+}
+
+func(m *PB_HomeFanout)ToFlat() *PB_HomeFanout_Flat {
+r := &PB_HomeFanout_Flat{
+    OrderId:  int(m.OrderId) ,
+    ForUserId:  int(m.ForUserId) ,
+    PostId:  int(m.PostId) ,
+    PostUserId:  int(m.PostUserId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedTopPost)ToFlat() *PB_SuggestedTopPost_Flat {
+r := &PB_SuggestedTopPost_Flat{
+    Id:  int(m.Id) ,
+    PostId:  int(m.PostId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedUser)ToFlat() *PB_SuggestedUser_Flat {
+r := &PB_SuggestedUser_Flat{
+    Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    TargetId:  int(m.TargetId) ,
+    Weight:  float32(m.Weight) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
 func(m *PB_UpdateRoomActionDoing)ToFlat() *PB_UpdateRoomActionDoing_Flat {
 r := &PB_UpdateRoomActionDoing_Flat{
     RoomKey:  m.RoomKey ,
@@ -6574,7 +7097,7 @@ r := &PB_NotifyView_Flat{
     NotifyId:  int(m.NotifyId) ,
     ForUserId:  int(m.ForUserId) ,
     ActorUserId:  int(m.ActorUserId) ,
-    NotifyTypeEnum:  int(m.NotifyTypeEnum) ,
+    NotiyTypeEnum:  int(m.NotiyTypeEnum) ,
     PostId:  int(m.PostId) ,
     CommentId:  int(m.CommentId) ,
     PeerUserId:  int(m.PeerUserId) ,
@@ -7515,6 +8038,31 @@ r := &PB_Comment{
 return r
 }
 
+func(m *PB_CommentDeleted_Flat)ToPB() *PB_CommentDeleted {
+r := &PB_CommentDeleted{
+    CommentId:  int64(m.CommentId) ,
+    UserId:  int32(m.UserId) ,
+}
+return r
+}
+
+func(m *PB_Event_Flat)ToPB() *PB_Event {
+r := &PB_Event{
+    EventId:  int64(m.EventId) ,
+    EventType:  int32(m.EventType) ,
+    ByUserId:  int64(m.ByUserId) ,
+    PeerUserId:  int64(m.PeerUserId) ,
+    PostId:  int64(m.PostId) ,
+    CommentId:  int64(m.CommentId) ,
+    ActionId:  int64(m.ActionId) ,
+    Murmur64Hash:  int64(m.Murmur64Hash) ,
+    ChatKey:  m.ChatKey ,
+    MessageId:  int64(m.MessageId) ,
+    ReSharedId:  int64(m.ReSharedId) ,
+}
+return r
+}
+
 func(m *PB_FollowingList_Flat)ToPB() *PB_FollowingList {
 r := &PB_FollowingList{
     Id:  int32(m.Id) ,
@@ -7604,24 +8152,6 @@ r := &PB_Like{
 return r
 }
 
-func(m *PB_Media_Flat)ToPB() *PB_Media {
-r := &PB_Media{
-    MediaId:  int64(m.MediaId) ,
-    UserId:  int32(m.UserId) ,
-    PostId:  int64(m.PostId) ,
-    AlbumId:  int32(m.AlbumId) ,
-    MediaTypeEnum:  int32(m.MediaTypeEnum) ,
-    Width:  int32(m.Width) ,
-    Height:  int32(m.Height) ,
-    Size:  int32(m.Size) ,
-    Duration:  int32(m.Duration) ,
-    Md5Hash:  m.Md5Hash ,
-    Color:  m.Color ,
-    CreatedTime:  int32(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_Notify_Flat)ToPB() *PB_Notify {
 r := &PB_Notify{
     NotifyId:  int64(m.NotifyId) ,
@@ -7668,13 +8198,17 @@ r := &PB_Post{
     PostId:  int64(m.PostId) ,
     UserId:  int32(m.UserId) ,
     PostTypeEnum:  int32(m.PostTypeEnum) ,
+    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
     MediaId:  int64(m.MediaId) ,
+    PostKey:  m.PostKey ,
     Text:  m.Text ,
     RichText:  m.RichText ,
     MediaCount:  int32(m.MediaCount) ,
     SharedTo:  int32(m.SharedTo) ,
     DisableComment:  int32(m.DisableComment) ,
+    Source:  int32(m.Source) ,
     HasTag:  int32(m.HasTag) ,
+    Seq:  int32(m.Seq) ,
     CommentsCount:  int32(m.CommentsCount) ,
     LikesCount:  int32(m.LikesCount) ,
     ViewsCount:  int32(m.ViewsCount) ,
@@ -7685,10 +8219,80 @@ r := &PB_Post{
 return r
 }
 
+func(m *PB_PostCount_Flat)ToPB() *PB_PostCount {
+r := &PB_PostCount{
+    PostId:  int64(m.PostId) ,
+    ViewsCount:  int64(m.ViewsCount) ,
+}
+return r
+}
+
+func(m *PB_PostDeleted_Flat)ToPB() *PB_PostDeleted {
+r := &PB_PostDeleted{
+    PostId:  int64(m.PostId) ,
+    UserId:  int32(m.UserId) ,
+}
+return r
+}
+
 func(m *PB_PostKey_Flat)ToPB() *PB_PostKey {
 r := &PB_PostKey{
     Id:  int32(m.Id) ,
-    Key:  m.Key ,
+    PostKeyStr:  m.PostKeyStr ,
+    Used:  int32(m.Used) ,
+}
+return r
+}
+
+func(m *PB_PostLink_Flat)ToPB() *PB_PostLink {
+r := &PB_PostLink{
+    LinkId:  int64(m.LinkId) ,
+    LinkUrl:  m.LinkUrl ,
+}
+return r
+}
+
+func(m *PB_PostMedia_Flat)ToPB() *PB_PostMedia {
+r := &PB_PostMedia{
+    MediaId:  int64(m.MediaId) ,
+    UserId:  int32(m.UserId) ,
+    PostId:  int64(m.PostId) ,
+    AlbumId:  int32(m.AlbumId) ,
+    MediaTypeEnum:  int32(m.MediaTypeEnum) ,
+    Width:  int32(m.Width) ,
+    Height:  int32(m.Height) ,
+    Size:  int32(m.Size) ,
+    Duration:  int32(m.Duration) ,
+    Extension:  m.Extension ,
+    Md5Hash:  m.Md5Hash ,
+    Color:  m.Color ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PostMentioned_Flat)ToPB() *PB_PostMentioned {
+r := &PB_PostMentioned{
+    MentionedId:  int64(m.MentionedId) ,
+    ForUserId:  int32(m.ForUserId) ,
+    PostId:  int64(m.PostId) ,
+    PostUserId:  int32(m.PostUserId) ,
+    PostTypeEnum:  int32(m.PostTypeEnum) ,
+    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PostReshared_Flat)ToPB() *PB_PostReshared {
+r := &PB_PostReshared{
+    ResharedId:  int64(m.ResharedId) ,
+    ByUserId:  int32(m.ByUserId) ,
+    PostId:  int64(m.PostId) ,
+    PostUserId:  int32(m.PostUserId) ,
+    PostTypeEnum:  int32(m.PostTypeEnum) ,
+    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
+    CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
 }
@@ -7707,16 +8311,15 @@ return r
 
 func(m *PB_Session_Flat)ToPB() *PB_Session {
 r := &PB_Session{
-    Id:  int64(m.Id) ,
-    UserId:  int32(m.UserId) ,
     SessionUuid:  m.SessionUuid ,
+    UserId:  int32(m.UserId) ,
     ClientUuid:  m.ClientUuid ,
     DeviceUuid:  m.DeviceUuid ,
     LastActivityTime:  int32(m.LastActivityTime) ,
     LastIpAddress:  m.LastIpAddress ,
     LastWifiMacAddress:  m.LastWifiMacAddress ,
     LastNetworkType:  m.LastNetworkType ,
-    LastNetworkTypeEnumId:  int32(m.LastNetworkTypeEnumId) ,
+    LastNetworkTypeEnum:  int32(m.LastNetworkTypeEnum) ,
     AppVersion:  int32(m.AppVersion) ,
     UpdatedTime:  int32(m.UpdatedTime) ,
     CreatedTime:  int32(m.CreatedTime) ,
@@ -7776,25 +8379,6 @@ r := &PB_SettingNotification{
 return r
 }
 
-func(m *PB_SuggestedTopPost_Flat)ToPB() *PB_SuggestedTopPost {
-r := &PB_SuggestedTopPost{
-    Id:  int64(m.Id) ,
-    PostId:  int64(m.PostId) ,
-}
-return r
-}
-
-func(m *PB_SuggestedUser_Flat)ToPB() *PB_SuggestedUser {
-r := &PB_SuggestedUser{
-    Id:  int32(m.Id) ,
-    UserId:  int32(m.UserId) ,
-    TargetId:  int32(m.TargetId) ,
-    Weight:  m.Weight ,
-    CreatedTime:  int32(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_Tag_Flat)ToPB() *PB_Tag {
 r := &PB_Tag{
     TagId:  int64(m.TagId) ,
@@ -7845,10 +8429,20 @@ r := &PB_User{
     Email:  m.Email ,
     PasswordHash:  m.PasswordHash ,
     PasswordSalt:  m.PasswordSalt ,
+    PostSeq:  int32(m.PostSeq) ,
     FollowersCount:  int32(m.FollowersCount) ,
     FollowingCount:  int32(m.FollowingCount) ,
     PostsCount:  int32(m.PostsCount) ,
     MediaCount:  int32(m.MediaCount) ,
+    PhotoCount:  int32(m.PhotoCount) ,
+    VideoCount:  int32(m.VideoCount) ,
+    GifCount:  int32(m.GifCount) ,
+    AudioCount:  int32(m.AudioCount) ,
+    VoiceCount:  int32(m.VoiceCount) ,
+    FileCount:  int32(m.FileCount) ,
+    LinkCount:  int32(m.LinkCount) ,
+    BoardCount:  int32(m.BoardCount) ,
+    PinedCount:  int32(m.PinedCount) ,
     LikesCount:  int32(m.LikesCount) ,
     ResharedCount:  int32(m.ResharedCount) ,
     LastActionTime:  int32(m.LastActionTime) ,
@@ -7990,6 +8584,45 @@ r := &PB_FilePost{
 return r
 }
 
+func(m *PB_ActionFanout_Flat)ToPB() *PB_ActionFanout {
+r := &PB_ActionFanout{
+    OrderId:  int64(m.OrderId) ,
+    ForUserId:  int32(m.ForUserId) ,
+    ActionId:  int64(m.ActionId) ,
+    ActorUserId:  int32(m.ActorUserId) ,
+}
+return r
+}
+
+func(m *PB_HomeFanout_Flat)ToPB() *PB_HomeFanout {
+r := &PB_HomeFanout{
+    OrderId:  int64(m.OrderId) ,
+    ForUserId:  int64(m.ForUserId) ,
+    PostId:  int64(m.PostId) ,
+    PostUserId:  int64(m.PostUserId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedTopPost_Flat)ToPB() *PB_SuggestedTopPost {
+r := &PB_SuggestedTopPost{
+    Id:  int64(m.Id) ,
+    PostId:  int64(m.PostId) ,
+}
+return r
+}
+
+func(m *PB_SuggestedUser_Flat)ToPB() *PB_SuggestedUser {
+r := &PB_SuggestedUser{
+    Id:  int32(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    TargetId:  int32(m.TargetId) ,
+    Weight:  m.Weight ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
 func(m *PB_UpdateRoomActionDoing_Flat)ToPB() *PB_UpdateRoomActionDoing {
 r := &PB_UpdateRoomActionDoing{
     RoomKey:  m.RoomKey ,
@@ -8087,7 +8720,7 @@ r := &PB_NotifyView{
     NotifyId:  int64(m.NotifyId) ,
     ForUserId:  int32(m.ForUserId) ,
     ActorUserId:  int32(m.ActorUserId) ,
-    NotifyTypeEnum:  int32(m.NotifyTypeEnum) ,
+    NotiyTypeEnum:  int32(m.NotiyTypeEnum) ,
     PostId:  int64(m.PostId) ,
     CommentId:  int64(m.CommentId) ,
     PeerUserId:  int32(m.PeerUserId) ,
@@ -8826,6 +9459,27 @@ var PB_Comment__FOlD = &PB_Comment{
 }
 
 
+var PB_CommentDeleted__FOlD = &PB_CommentDeleted{
+        CommentId:  0 ,
+        UserId:  0 ,
+}
+
+
+var PB_Event__FOlD = &PB_Event{
+        EventId:  0 ,
+        EventType:  0 ,
+        ByUserId:  0 ,
+        PeerUserId:  0 ,
+        PostId:  0 ,
+        CommentId:  0 ,
+        ActionId:  0 ,
+        Murmur64Hash:  0 ,
+        ChatKey:  "" ,
+        MessageId:  0 ,
+        ReSharedId:  0 ,
+}
+
+
 var PB_FollowingList__FOlD = &PB_FollowingList{
         Id:  0 ,
         UserId:  0 ,
@@ -8901,22 +9555,6 @@ var PB_Like__FOlD = &PB_Like{
 }
 
 
-var PB_Media__FOlD = &PB_Media{
-        MediaId:  0 ,
-        UserId:  0 ,
-        PostId:  0 ,
-        AlbumId:  0 ,
-        MediaTypeEnum:  0 ,
-        Width:  0 ,
-        Height:  0 ,
-        Size:  0 ,
-        Duration:  0 ,
-        Md5Hash:  "" ,
-        Color:  "" ,
-        CreatedTime:  0 ,
-}
-
-
 var PB_Notify__FOlD = &PB_Notify{
         NotifyId:  0 ,
         ForUserId:  0 ,
@@ -8956,13 +9594,17 @@ var PB_Post__FOlD = &PB_Post{
         PostId:  0 ,
         UserId:  0 ,
         PostTypeEnum:  0 ,
+        PostCategoryEnum:  0 ,
         MediaId:  0 ,
+        PostKey:  "" ,
         Text:  "" ,
         RichText:  "" ,
         MediaCount:  0 ,
         SharedTo:  0 ,
         DisableComment:  0 ,
+        Source:  0 ,
         HasTag:  0 ,
+        Seq:  0 ,
         CommentsCount:  0 ,
         LikesCount:  0 ,
         ViewsCount:  0 ,
@@ -8972,9 +9614,67 @@ var PB_Post__FOlD = &PB_Post{
 }
 
 
+var PB_PostCount__FOlD = &PB_PostCount{
+        PostId:  0 ,
+        ViewsCount:  0 ,
+}
+
+
+var PB_PostDeleted__FOlD = &PB_PostDeleted{
+        PostId:  0 ,
+        UserId:  0 ,
+}
+
+
 var PB_PostKey__FOlD = &PB_PostKey{
         Id:  0 ,
-        Key:  "" ,
+        PostKeyStr:  "" ,
+        Used:  0 ,
+}
+
+
+var PB_PostLink__FOlD = &PB_PostLink{
+        LinkId:  0 ,
+        LinkUrl:  "" ,
+}
+
+
+var PB_PostMedia__FOlD = &PB_PostMedia{
+        MediaId:  0 ,
+        UserId:  0 ,
+        PostId:  0 ,
+        AlbumId:  0 ,
+        MediaTypeEnum:  0 ,
+        Width:  0 ,
+        Height:  0 ,
+        Size:  0 ,
+        Duration:  0 ,
+        Extension:  "" ,
+        Md5Hash:  "" ,
+        Color:  "" ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_PostMentioned__FOlD = &PB_PostMentioned{
+        MentionedId:  0 ,
+        ForUserId:  0 ,
+        PostId:  0 ,
+        PostUserId:  0 ,
+        PostTypeEnum:  0 ,
+        PostCategoryEnum:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_PostReshared__FOlD = &PB_PostReshared{
+        ResharedId:  0 ,
+        ByUserId:  0 ,
+        PostId:  0 ,
+        PostUserId:  0 ,
+        PostTypeEnum:  0 ,
+        PostCategoryEnum:  0 ,
+        CreatedTime:  0 ,
 }
 
 
@@ -8989,16 +9689,15 @@ var PB_SearchClicked__FOlD = &PB_SearchClicked{
 
 
 var PB_Session__FOlD = &PB_Session{
-        Id:  0 ,
-        UserId:  0 ,
         SessionUuid:  "" ,
+        UserId:  0 ,
         ClientUuid:  "" ,
         DeviceUuid:  "" ,
         LastActivityTime:  0 ,
         LastIpAddress:  "" ,
         LastWifiMacAddress:  "" ,
         LastNetworkType:  "" ,
-        LastNetworkTypeEnumId:  0 ,
+        LastNetworkTypeEnum:  0 ,
         AppVersion:  0 ,
         UpdatedTime:  0 ,
         CreatedTime:  0 ,
@@ -9053,21 +9752,6 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
 }
 
 
-var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
-        Id:  0 ,
-        PostId:  0 ,
-}
-
-
-var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
-        Id:  0 ,
-        UserId:  0 ,
-        TargetId:  0 ,
-        Weight:  0.0 ,
-        CreatedTime:  0 ,
-}
-
-
 var PB_Tag__FOlD = &PB_Tag{
         TagId:  0 ,
         Name:  "" ,
@@ -9111,10 +9795,20 @@ var PB_User__FOlD = &PB_User{
         Email:  "" ,
         PasswordHash:  "" ,
         PasswordSalt:  "" ,
+        PostSeq:  0 ,
         FollowersCount:  0 ,
         FollowingCount:  0 ,
         PostsCount:  0 ,
         MediaCount:  0 ,
+        PhotoCount:  0 ,
+        VideoCount:  0 ,
+        GifCount:  0 ,
+        AudioCount:  0 ,
+        VoiceCount:  0 ,
+        FileCount:  0 ,
+        LinkCount:  0 ,
+        BoardCount:  0 ,
+        PinedCount:  0 ,
         LikesCount:  0 ,
         ResharedCount:  0 ,
         LastActionTime:  0 ,
@@ -9235,6 +9929,37 @@ var PB_FilePost__FOlD = &PB_FilePost{
 }
 
 
+var PB_ActionFanout__FOlD = &PB_ActionFanout{
+        OrderId:  0 ,
+        ForUserId:  0 ,
+        ActionId:  0 ,
+        ActorUserId:  0 ,
+}
+
+
+var PB_HomeFanout__FOlD = &PB_HomeFanout{
+        OrderId:  0 ,
+        ForUserId:  0 ,
+        PostId:  0 ,
+        PostUserId:  0 ,
+}
+
+
+var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+        Id:  0 ,
+        PostId:  0 ,
+}
+
+
+var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
+        Id:  0 ,
+        UserId:  0 ,
+        TargetId:  0 ,
+        Weight:  0.0 ,
+        CreatedTime:  0 ,
+}
+
+
 var PB_UpdateRoomActionDoing__FOlD = &PB_UpdateRoomActionDoing{
         RoomKey:  "" ,
 
@@ -9319,7 +10044,7 @@ var PB_NotifyView__FOlD = &PB_NotifyView{
         NotifyId:  0 ,
         ForUserId:  0 ,
         ActorUserId:  0 ,
-        NotifyTypeEnum:  0 ,
+        NotiyTypeEnum:  0 ,
         PostId:  0 ,
         CommentId:  0 ,
         PeerUserId:  0 ,

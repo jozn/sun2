@@ -25,6 +25,10 @@ message PB_Comment {
     int32 LikesCount = 5;
     int32 CreatedTime = 6;
 }
+message PB_CommentDeleted {
+    int64 CommentId = 1;
+    int32 UserId = 2;
+}
 message PB_Event {
     int64 EventId = 1;
     int32 EventType = 2;
@@ -34,6 +38,9 @@ message PB_Event {
     int64 CommentId = 6;
     int64 ActionId = 7;
     int64 Murmur64Hash = 8;
+    string ChatKey = 9;
+    int64 MessageId = 10;
+    int64 ReSharedId = 11;
 }
 message PB_FollowingList {
     int32 Id = 1;
@@ -96,20 +103,6 @@ message PB_Like {
     int32 LikeEnum = 5;
     int32 CreatedTime = 6;
 }
-message PB_Media {
-    int64 MediaId = 1;
-    int32 UserId = 2;
-    int64 PostId = 3;
-    int32 AlbumId = 4;
-    int32 MediaTypeEnum = 5;
-    int32 Width = 6;
-    int32 Height = 7;
-    int32 Size = 8;
-    int32 Duration = 9;
-    string Md5Hash = 10;
-    string Color = 11;
-    int32 CreatedTime = 12;
-}
 message PB_Notify {
     int64 NotifyId = 1;
     int32 ForUserId = 2;
@@ -143,26 +136,31 @@ message PB_Post {
     int64 PostId = 1;
     int32 UserId = 2;
     int32 PostTypeEnum = 3;
-    int64 MediaId = 4;
-    string PostKey = 5;
-    string Text = 6;
-    string RichText = 7;
-    int32 MediaCount = 8;
-    int32 SharedTo = 9;
-    int32 DisableComment = 10;
-    int32 Source = 11;
-    int32 HasTag = 12;
-    int32 Seq = 13;
-    int32 CommentsCount = 14;
-    int32 LikesCount = 15;
-    int32 ViewsCount = 16;
-    int32 EditedTime = 17;
-    int32 CreatedTime = 18;
-    int64 ReSharedPostId = 19;
+    int32 PostCategoryEnum = 4;
+    int64 MediaId = 5;
+    string PostKey = 6;
+    string Text = 7;
+    string RichText = 8;
+    int32 MediaCount = 9;
+    int32 SharedTo = 10;
+    int32 DisableComment = 11;
+    int32 Source = 12;
+    int32 HasTag = 13;
+    int32 Seq = 14;
+    int32 CommentsCount = 15;
+    int32 LikesCount = 16;
+    int32 ViewsCount = 17;
+    int32 EditedTime = 18;
+    int32 CreatedTime = 19;
+    int64 ReSharedPostId = 20;
 }
 message PB_PostCount {
     int64 PostId = 1;
     int64 ViewsCount = 2;
+}
+message PB_PostDeleted {
+    int64 PostId = 1;
+    int32 UserId = 2;
 }
 message PB_PostKey {
     int32 Id = 1;
@@ -183,9 +181,12 @@ message PB_PostMedia {
     int32 Height = 7;
     int32 Size = 8;
     int32 Duration = 9;
-    string Md5Hash = 10;
-    string Color = 11;
-    int32 CreatedTime = 12;
+    string Extension = 10;
+    string Md5Hash = 11;
+    string Color = 12;
+    int32 CreatedTime = 13;
+    int32 ViewCount = 14;
+    string Extra = 15;
 }
 message PB_PostMentioned {
     int64 MentionedId = 1;
@@ -193,7 +194,8 @@ message PB_PostMentioned {
     int64 PostId = 3;
     int32 PostUserId = 4;
     int32 PostTypeEnum = 5;
-    int32 CreatedTime = 6;
+    int32 PostCategoryEnum = 6;
+    int32 CreatedTime = 7;
 }
 message PB_PostReshared {
     int64 ResharedId = 1;
@@ -201,7 +203,8 @@ message PB_PostReshared {
     int64 PostId = 3;
     int32 PostUserId = 4;
     int32 PostTypeEnum = 5;
-    int32 CreatedTime = 6;
+    int32 PostCategoryEnum = 6;
+    int32 CreatedTime = 7;
 }
 message PB_SearchClicked {
     int64 Id = 1;
@@ -276,12 +279,13 @@ message PB_Tag {
     int32 TagStatusEnum = 4;
     int32 CreatedTime = 5;
 }
-message PB_TagsPost {
+message PB_TagPost {
     int64 Id = 1;
     int32 TagId = 2;
     int32 PostId = 3;
     int32 PostTypeEnum = 4;
-    int32 CreatedTime = 5;
+    int32 PostCategoryEnum = 5;
+    int32 CreatedTime = 6;
 }
 message PB_TriggerLog {
     int64 Id = 1;

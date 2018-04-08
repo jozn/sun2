@@ -2233,6 +2233,88 @@ public class PBFlatTypes {
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
+	public class PB_CommentDeleted {
+	   public long CommentId;
+	   public int UserId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_CommentDeleted t = new PBFlatTypes.PB_CommentDeleted();
+    t.setCommentId();
+    t.setUserId();
+	*/
+
+	/*
+	PBFlatTypes.PB_CommentDeleted t = new PBFlatTypes.PB_CommentDeleted();
+	t.CommentId = ;
+	t.UserId = ;
+	*/
+
+	/*
+	PB_CommentDeleted t = new PB_CommentDeleted();
+	t.CommentId = m.getCommentId() ;
+	t.UserId = m.getUserId() ;
+	*/
+
+	public class PB_Event {
+	   public long EventId;
+	   public int EventType;
+	   public long ByUserId;
+	   public long PeerUserId;
+	   public long PostId;
+	   public long CommentId;
+	   public long ActionId;
+	   public long Murmur64Hash;
+	   public String ChatKey;
+	   public long MessageId;
+	   public long ReSharedId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_Event t = new PBFlatTypes.PB_Event();
+    t.setEventId();
+    t.setEventType();
+    t.setByUserId();
+    t.setPeerUserId();
+    t.setPostId();
+    t.setCommentId();
+    t.setActionId();
+    t.setMurmur64Hash();
+    t.setChatKey();
+    t.setMessageId();
+    t.setReSharedId();
+	*/
+
+	/*
+	PBFlatTypes.PB_Event t = new PBFlatTypes.PB_Event();
+	t.EventId = ;
+	t.EventType = ;
+	t.ByUserId = ;
+	t.PeerUserId = ;
+	t.PostId = ;
+	t.CommentId = ;
+	t.ActionId = ;
+	t.Murmur64Hash = ;
+	t.ChatKey = ;
+	t.MessageId = ;
+	t.ReSharedId = ;
+	*/
+
+	/*
+	PB_Event t = new PB_Event();
+	t.EventId = m.getEventId() ;
+	t.EventType = m.getEventType() ;
+	t.ByUserId = m.getByUserId() ;
+	t.PeerUserId = m.getPeerUserId() ;
+	t.PostId = m.getPostId() ;
+	t.CommentId = m.getCommentId() ;
+	t.ActionId = m.getActionId() ;
+	t.Murmur64Hash = m.getMurmur64Hash() ;
+	t.ChatKey = m.getChatKey() ;
+	t.MessageId = m.getMessageId() ;
+	t.ReSharedId = m.getReSharedId() ;
+	*/
+
 	public class PB_FollowingList {
 	   public int Id;
 	   public int UserId;
@@ -2526,74 +2608,11 @@ public class PBFlatTypes {
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
-	public class PB_Media {
-	   public long MediaId;
-	   public int UserId;
-	   public long PostId;
-	   public int AlbumId;
-	   public int MediaTypeEnum;
-	   public int Width;
-	   public int Height;
-	   public int Size;
-	   public int Duration;
-	   public String Md5Hash;
-	   public String Color;
-	   public int CreatedTime;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_Media t = new PBFlatTypes.PB_Media();
-    t.setMediaId();
-    t.setUserId();
-    t.setPostId();
-    t.setAlbumId();
-    t.setMediaTypeEnum();
-    t.setWidth();
-    t.setHeight();
-    t.setSize();
-    t.setDuration();
-    t.setMd5Hash();
-    t.setColor();
-    t.setCreatedTime();
-	*/
-
-	/*
-	PBFlatTypes.PB_Media t = new PBFlatTypes.PB_Media();
-	t.MediaId = ;
-	t.UserId = ;
-	t.PostId = ;
-	t.AlbumId = ;
-	t.MediaTypeEnum = ;
-	t.Width = ;
-	t.Height = ;
-	t.Size = ;
-	t.Duration = ;
-	t.Md5Hash = ;
-	t.Color = ;
-	t.CreatedTime = ;
-	*/
-
-	/*
-	PB_Media t = new PB_Media();
-	t.MediaId = m.getMediaId() ;
-	t.UserId = m.getUserId() ;
-	t.PostId = m.getPostId() ;
-	t.AlbumId = m.getAlbumId() ;
-	t.MediaTypeEnum = m.getMediaTypeEnum() ;
-	t.Width = m.getWidth() ;
-	t.Height = m.getHeight() ;
-	t.Size = m.getSize() ;
-	t.Duration = m.getDuration() ;
-	t.Md5Hash = m.getMd5Hash() ;
-	t.Color = m.getColor() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	*/
-
 	public class PB_Notify {
 	   public long NotifyId;
 	   public int ForUserId;
 	   public int ActorUserId;
-	   public int NotiyTypeEnum;
+	   public int NotifyTypeEnum;
 	   public long PostId;
 	   public long CommentId;
 	   public int PeerUserId;
@@ -2607,7 +2626,7 @@ public class PBFlatTypes {
     t.setNotifyId();
     t.setForUserId();
     t.setActorUserId();
-    t.setNotiyTypeEnum();
+    t.setNotifyTypeEnum();
     t.setPostId();
     t.setCommentId();
     t.setPeerUserId();
@@ -2621,7 +2640,7 @@ public class PBFlatTypes {
 	t.NotifyId = ;
 	t.ForUserId = ;
 	t.ActorUserId = ;
-	t.NotiyTypeEnum = ;
+	t.NotifyTypeEnum = ;
 	t.PostId = ;
 	t.CommentId = ;
 	t.PeerUserId = ;
@@ -2635,7 +2654,7 @@ public class PBFlatTypes {
 	t.NotifyId = m.getNotifyId() ;
 	t.ForUserId = m.getForUserId() ;
 	t.ActorUserId = m.getActorUserId() ;
-	t.NotiyTypeEnum = m.getNotiyTypeEnum() ;
+	t.NotifyTypeEnum = m.getNotifyTypeEnum() ;
 	t.PostId = m.getPostId() ;
 	t.CommentId = m.getCommentId() ;
 	t.PeerUserId = m.getPeerUserId() ;
@@ -2730,13 +2749,17 @@ public class PBFlatTypes {
 	   public long PostId;
 	   public int UserId;
 	   public int PostTypeEnum;
+	   public int PostCategoryEnum;
 	   public long MediaId;
+	   public String PostKey;
 	   public String Text;
 	   public String RichText;
 	   public int MediaCount;
 	   public int SharedTo;
 	   public int DisableComment;
+	   public int Source;
 	   public int HasTag;
+	   public int Seq;
 	   public int CommentsCount;
 	   public int LikesCount;
 	   public int ViewsCount;
@@ -2750,13 +2773,17 @@ public class PBFlatTypes {
     t.setPostId();
     t.setUserId();
     t.setPostTypeEnum();
+    t.setPostCategoryEnum();
     t.setMediaId();
+    t.setPostKey();
     t.setText();
     t.setRichText();
     t.setMediaCount();
     t.setSharedTo();
     t.setDisableComment();
+    t.setSource();
     t.setHasTag();
+    t.setSeq();
     t.setCommentsCount();
     t.setLikesCount();
     t.setViewsCount();
@@ -2770,13 +2797,17 @@ public class PBFlatTypes {
 	t.PostId = ;
 	t.UserId = ;
 	t.PostTypeEnum = ;
+	t.PostCategoryEnum = ;
 	t.MediaId = ;
+	t.PostKey = ;
 	t.Text = ;
 	t.RichText = ;
 	t.MediaCount = ;
 	t.SharedTo = ;
 	t.DisableComment = ;
+	t.Source = ;
 	t.HasTag = ;
+	t.Seq = ;
 	t.CommentsCount = ;
 	t.LikesCount = ;
 	t.ViewsCount = ;
@@ -2790,13 +2821,17 @@ public class PBFlatTypes {
 	t.PostId = m.getPostId() ;
 	t.UserId = m.getUserId() ;
 	t.PostTypeEnum = m.getPostTypeEnum() ;
+	t.PostCategoryEnum = m.getPostCategoryEnum() ;
 	t.MediaId = m.getMediaId() ;
+	t.PostKey = m.getPostKey() ;
 	t.Text = m.getText() ;
 	t.RichText = m.getRichText() ;
 	t.MediaCount = m.getMediaCount() ;
 	t.SharedTo = m.getSharedTo() ;
 	t.DisableComment = m.getDisableComment() ;
+	t.Source = m.getSource() ;
 	t.HasTag = m.getHasTag() ;
+	t.Seq = m.getSeq() ;
 	t.CommentsCount = m.getCommentsCount() ;
 	t.LikesCount = m.getLikesCount() ;
 	t.ViewsCount = m.getViewsCount() ;
@@ -2805,27 +2840,253 @@ public class PBFlatTypes {
 	t.ReSharedPostId = m.getReSharedPostId() ;
 	*/
 
+	public class PB_PostCount {
+	   public long PostId;
+	   public long ViewsCount;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostCount t = new PBFlatTypes.PB_PostCount();
+    t.setPostId();
+    t.setViewsCount();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostCount t = new PBFlatTypes.PB_PostCount();
+	t.PostId = ;
+	t.ViewsCount = ;
+	*/
+
+	/*
+	PB_PostCount t = new PB_PostCount();
+	t.PostId = m.getPostId() ;
+	t.ViewsCount = m.getViewsCount() ;
+	*/
+
+	public class PB_PostDeleted {
+	   public long PostId;
+	   public int UserId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostDeleted t = new PBFlatTypes.PB_PostDeleted();
+    t.setPostId();
+    t.setUserId();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostDeleted t = new PBFlatTypes.PB_PostDeleted();
+	t.PostId = ;
+	t.UserId = ;
+	*/
+
+	/*
+	PB_PostDeleted t = new PB_PostDeleted();
+	t.PostId = m.getPostId() ;
+	t.UserId = m.getUserId() ;
+	*/
+
 	public class PB_PostKey {
 	   public int Id;
-	   public String Key;
+	   public String PostKeyStr;
+	   public int Used;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_PostKey t = new PBFlatTypes.PB_PostKey();
     t.setId();
-    t.setKey();
+    t.setPostKeyStr();
+    t.setUsed();
 	*/
 
 	/*
 	PBFlatTypes.PB_PostKey t = new PBFlatTypes.PB_PostKey();
 	t.Id = ;
-	t.Key = ;
+	t.PostKeyStr = ;
+	t.Used = ;
 	*/
 
 	/*
 	PB_PostKey t = new PB_PostKey();
 	t.Id = m.getId() ;
-	t.Key = m.getKey() ;
+	t.PostKeyStr = m.getPostKeyStr() ;
+	t.Used = m.getUsed() ;
+	*/
+
+	public class PB_PostLink {
+	   public long LinkId;
+	   public String LinkUrl;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostLink t = new PBFlatTypes.PB_PostLink();
+    t.setLinkId();
+    t.setLinkUrl();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostLink t = new PBFlatTypes.PB_PostLink();
+	t.LinkId = ;
+	t.LinkUrl = ;
+	*/
+
+	/*
+	PB_PostLink t = new PB_PostLink();
+	t.LinkId = m.getLinkId() ;
+	t.LinkUrl = m.getLinkUrl() ;
+	*/
+
+	public class PB_PostMedia {
+	   public long MediaId;
+	   public int UserId;
+	   public long PostId;
+	   public int AlbumId;
+	   public int MediaTypeEnum;
+	   public int Width;
+	   public int Height;
+	   public int Size;
+	   public int Duration;
+	   public String Extension;
+	   public String Md5Hash;
+	   public String Color;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostMedia t = new PBFlatTypes.PB_PostMedia();
+    t.setMediaId();
+    t.setUserId();
+    t.setPostId();
+    t.setAlbumId();
+    t.setMediaTypeEnum();
+    t.setWidth();
+    t.setHeight();
+    t.setSize();
+    t.setDuration();
+    t.setExtension();
+    t.setMd5Hash();
+    t.setColor();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostMedia t = new PBFlatTypes.PB_PostMedia();
+	t.MediaId = ;
+	t.UserId = ;
+	t.PostId = ;
+	t.AlbumId = ;
+	t.MediaTypeEnum = ;
+	t.Width = ;
+	t.Height = ;
+	t.Size = ;
+	t.Duration = ;
+	t.Extension = ;
+	t.Md5Hash = ;
+	t.Color = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_PostMedia t = new PB_PostMedia();
+	t.MediaId = m.getMediaId() ;
+	t.UserId = m.getUserId() ;
+	t.PostId = m.getPostId() ;
+	t.AlbumId = m.getAlbumId() ;
+	t.MediaTypeEnum = m.getMediaTypeEnum() ;
+	t.Width = m.getWidth() ;
+	t.Height = m.getHeight() ;
+	t.Size = m.getSize() ;
+	t.Duration = m.getDuration() ;
+	t.Extension = m.getExtension() ;
+	t.Md5Hash = m.getMd5Hash() ;
+	t.Color = m.getColor() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_PostMentioned {
+	   public long MentionedId;
+	   public int ForUserId;
+	   public long PostId;
+	   public int PostUserId;
+	   public int PostTypeEnum;
+	   public int PostCategoryEnum;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostMentioned t = new PBFlatTypes.PB_PostMentioned();
+    t.setMentionedId();
+    t.setForUserId();
+    t.setPostId();
+    t.setPostUserId();
+    t.setPostTypeEnum();
+    t.setPostCategoryEnum();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostMentioned t = new PBFlatTypes.PB_PostMentioned();
+	t.MentionedId = ;
+	t.ForUserId = ;
+	t.PostId = ;
+	t.PostUserId = ;
+	t.PostTypeEnum = ;
+	t.PostCategoryEnum = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_PostMentioned t = new PB_PostMentioned();
+	t.MentionedId = m.getMentionedId() ;
+	t.ForUserId = m.getForUserId() ;
+	t.PostId = m.getPostId() ;
+	t.PostUserId = m.getPostUserId() ;
+	t.PostTypeEnum = m.getPostTypeEnum() ;
+	t.PostCategoryEnum = m.getPostCategoryEnum() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_PostReshared {
+	   public long ResharedId;
+	   public int ByUserId;
+	   public long PostId;
+	   public int PostUserId;
+	   public int PostTypeEnum;
+	   public int PostCategoryEnum;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PostReshared t = new PBFlatTypes.PB_PostReshared();
+    t.setResharedId();
+    t.setByUserId();
+    t.setPostId();
+    t.setPostUserId();
+    t.setPostTypeEnum();
+    t.setPostCategoryEnum();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_PostReshared t = new PBFlatTypes.PB_PostReshared();
+	t.ResharedId = ;
+	t.ByUserId = ;
+	t.PostId = ;
+	t.PostUserId = ;
+	t.PostTypeEnum = ;
+	t.PostCategoryEnum = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_PostReshared t = new PB_PostReshared();
+	t.ResharedId = m.getResharedId() ;
+	t.ByUserId = m.getByUserId() ;
+	t.PostId = m.getPostId() ;
+	t.PostUserId = m.getPostUserId() ;
+	t.PostTypeEnum = m.getPostTypeEnum() ;
+	t.PostCategoryEnum = m.getPostCategoryEnum() ;
+	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
 	public class PB_SearchClicked {
@@ -2868,16 +3129,15 @@ public class PBFlatTypes {
 	*/
 
 	public class PB_Session {
-	   public long Id;
-	   public int UserId;
 	   public String SessionUuid;
+	   public int UserId;
 	   public String ClientUuid;
 	   public String DeviceUuid;
 	   public int LastActivityTime;
 	   public String LastIpAddress;
 	   public String LastWifiMacAddress;
 	   public String LastNetworkType;
-	   public int LastNetworkTypeEnumId;
+	   public int LastNetworkTypeEnum;
 	   public int AppVersion;
 	   public int UpdatedTime;
 	   public int CreatedTime;
@@ -2885,16 +3145,15 @@ public class PBFlatTypes {
 	/*
 	folding
 	PBFlatTypes.PB_Session t = new PBFlatTypes.PB_Session();
-    t.setId();
-    t.setUserId();
     t.setSessionUuid();
+    t.setUserId();
     t.setClientUuid();
     t.setDeviceUuid();
     t.setLastActivityTime();
     t.setLastIpAddress();
     t.setLastWifiMacAddress();
     t.setLastNetworkType();
-    t.setLastNetworkTypeEnumId();
+    t.setLastNetworkTypeEnum();
     t.setAppVersion();
     t.setUpdatedTime();
     t.setCreatedTime();
@@ -2902,16 +3161,15 @@ public class PBFlatTypes {
 
 	/*
 	PBFlatTypes.PB_Session t = new PBFlatTypes.PB_Session();
-	t.Id = ;
-	t.UserId = ;
 	t.SessionUuid = ;
+	t.UserId = ;
 	t.ClientUuid = ;
 	t.DeviceUuid = ;
 	t.LastActivityTime = ;
 	t.LastIpAddress = ;
 	t.LastWifiMacAddress = ;
 	t.LastNetworkType = ;
-	t.LastNetworkTypeEnumId = ;
+	t.LastNetworkTypeEnum = ;
 	t.AppVersion = ;
 	t.UpdatedTime = ;
 	t.CreatedTime = ;
@@ -2919,16 +3177,15 @@ public class PBFlatTypes {
 
 	/*
 	PB_Session t = new PB_Session();
-	t.Id = m.getId() ;
-	t.UserId = m.getUserId() ;
 	t.SessionUuid = m.getSessionUuid() ;
+	t.UserId = m.getUserId() ;
 	t.ClientUuid = m.getClientUuid() ;
 	t.DeviceUuid = m.getDeviceUuid() ;
 	t.LastActivityTime = m.getLastActivityTime() ;
 	t.LastIpAddress = m.getLastIpAddress() ;
 	t.LastWifiMacAddress = m.getLastWifiMacAddress() ;
 	t.LastNetworkType = m.getLastNetworkType() ;
-	t.LastNetworkTypeEnumId = m.getLastNetworkTypeEnumId() ;
+	t.LastNetworkTypeEnum = m.getLastNetworkTypeEnum() ;
 	t.AppVersion = m.getAppVersion() ;
 	t.UpdatedTime = m.getUpdatedTime() ;
 	t.CreatedTime = m.getCreatedTime() ;
@@ -3124,64 +3381,6 @@ public class PBFlatTypes {
 	t.DirectPriority = m.getDirectPriority() ;
 	*/
 
-	public class PB_SuggestedTopPost {
-	   public long Id;
-	   public long PostId;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
-    t.setId();
-    t.setPostId();
-	*/
-
-	/*
-	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
-	t.Id = ;
-	t.PostId = ;
-	*/
-
-	/*
-	PB_SuggestedTopPost t = new PB_SuggestedTopPost();
-	t.Id = m.getId() ;
-	t.PostId = m.getPostId() ;
-	*/
-
-	public class PB_SuggestedUser {
-	   public int Id;
-	   public int UserId;
-	   public int TargetId;
-	   public float Weight;
-	   public int CreatedTime;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_SuggestedUser t = new PBFlatTypes.PB_SuggestedUser();
-    t.setId();
-    t.setUserId();
-    t.setTargetId();
-    t.setWeight();
-    t.setCreatedTime();
-	*/
-
-	/*
-	PBFlatTypes.PB_SuggestedUser t = new PBFlatTypes.PB_SuggestedUser();
-	t.Id = ;
-	t.UserId = ;
-	t.TargetId = ;
-	t.Weight = ;
-	t.CreatedTime = ;
-	*/
-
-	/*
-	PB_SuggestedUser t = new PB_SuggestedUser();
-	t.Id = m.getId() ;
-	t.UserId = m.getUserId() ;
-	t.TargetId = m.getTargetId() ;
-	t.Weight = m.getWeight() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	*/
-
 	public class PB_Tag {
 	   public long TagId;
 	   public String Name;
@@ -3306,10 +3505,20 @@ public class PBFlatTypes {
 	   public String Email;
 	   public String PasswordHash;
 	   public String PasswordSalt;
+	   public int PostSeq;
 	   public int FollowersCount;
 	   public int FollowingCount;
 	   public int PostsCount;
 	   public int MediaCount;
+	   public int PhotoCount;
+	   public int VideoCount;
+	   public int GifCount;
+	   public int AudioCount;
+	   public int VoiceCount;
+	   public int FileCount;
+	   public int LinkCount;
+	   public int BoardCount;
+	   public int PinedCount;
 	   public int LikesCount;
 	   public int ResharedCount;
 	   public int LastActionTime;
@@ -3338,10 +3547,20 @@ public class PBFlatTypes {
     t.setEmail();
     t.setPasswordHash();
     t.setPasswordSalt();
+    t.setPostSeq();
     t.setFollowersCount();
     t.setFollowingCount();
     t.setPostsCount();
     t.setMediaCount();
+    t.setPhotoCount();
+    t.setVideoCount();
+    t.setGifCount();
+    t.setAudioCount();
+    t.setVoiceCount();
+    t.setFileCount();
+    t.setLinkCount();
+    t.setBoardCount();
+    t.setPinedCount();
     t.setLikesCount();
     t.setResharedCount();
     t.setLastActionTime();
@@ -3370,10 +3589,20 @@ public class PBFlatTypes {
 	t.Email = ;
 	t.PasswordHash = ;
 	t.PasswordSalt = ;
+	t.PostSeq = ;
 	t.FollowersCount = ;
 	t.FollowingCount = ;
 	t.PostsCount = ;
 	t.MediaCount = ;
+	t.PhotoCount = ;
+	t.VideoCount = ;
+	t.GifCount = ;
+	t.AudioCount = ;
+	t.VoiceCount = ;
+	t.FileCount = ;
+	t.LinkCount = ;
+	t.BoardCount = ;
+	t.PinedCount = ;
 	t.LikesCount = ;
 	t.ResharedCount = ;
 	t.LastActionTime = ;
@@ -3402,10 +3631,20 @@ public class PBFlatTypes {
 	t.Email = m.getEmail() ;
 	t.PasswordHash = m.getPasswordHash() ;
 	t.PasswordSalt = m.getPasswordSalt() ;
+	t.PostSeq = m.getPostSeq() ;
 	t.FollowersCount = m.getFollowersCount() ;
 	t.FollowingCount = m.getFollowingCount() ;
 	t.PostsCount = m.getPostsCount() ;
 	t.MediaCount = m.getMediaCount() ;
+	t.PhotoCount = m.getPhotoCount() ;
+	t.VideoCount = m.getVideoCount() ;
+	t.GifCount = m.getGifCount() ;
+	t.AudioCount = m.getAudioCount() ;
+	t.VoiceCount = m.getVoiceCount() ;
+	t.FileCount = m.getFileCount() ;
+	t.LinkCount = m.getLinkCount() ;
+	t.BoardCount = m.getBoardCount() ;
+	t.PinedCount = m.getPinedCount() ;
 	t.LikesCount = m.getLikesCount() ;
 	t.ResharedCount = m.getResharedCount() ;
 	t.LastActionTime = m.getLastActionTime() ;
@@ -3834,6 +4073,126 @@ public class PBFlatTypes {
 	t.Extension = m.getExtension() ;
 	t.DataThumb = m.getDataThumb() ;
 	t.Data = m.getData() ;
+	*/
+
+	public class PB_ActionFanout {
+	   public long OrderId;
+	   public int ForUserId;
+	   public long ActionId;
+	   public int ActorUserId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ActionFanout t = new PBFlatTypes.PB_ActionFanout();
+    t.setOrderId();
+    t.setForUserId();
+    t.setActionId();
+    t.setActorUserId();
+	*/
+
+	/*
+	PBFlatTypes.PB_ActionFanout t = new PBFlatTypes.PB_ActionFanout();
+	t.OrderId = ;
+	t.ForUserId = ;
+	t.ActionId = ;
+	t.ActorUserId = ;
+	*/
+
+	/*
+	PB_ActionFanout t = new PB_ActionFanout();
+	t.OrderId = m.getOrderId() ;
+	t.ForUserId = m.getForUserId() ;
+	t.ActionId = m.getActionId() ;
+	t.ActorUserId = m.getActorUserId() ;
+	*/
+
+	public class PB_HomeFanout {
+	   public long OrderId;
+	   public long ForUserId;
+	   public long PostId;
+	   public long PostUserId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_HomeFanout t = new PBFlatTypes.PB_HomeFanout();
+    t.setOrderId();
+    t.setForUserId();
+    t.setPostId();
+    t.setPostUserId();
+	*/
+
+	/*
+	PBFlatTypes.PB_HomeFanout t = new PBFlatTypes.PB_HomeFanout();
+	t.OrderId = ;
+	t.ForUserId = ;
+	t.PostId = ;
+	t.PostUserId = ;
+	*/
+
+	/*
+	PB_HomeFanout t = new PB_HomeFanout();
+	t.OrderId = m.getOrderId() ;
+	t.ForUserId = m.getForUserId() ;
+	t.PostId = m.getPostId() ;
+	t.PostUserId = m.getPostUserId() ;
+	*/
+
+	public class PB_SuggestedTopPost {
+	   public long Id;
+	   public long PostId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
+    t.setId();
+    t.setPostId();
+	*/
+
+	/*
+	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
+	t.Id = ;
+	t.PostId = ;
+	*/
+
+	/*
+	PB_SuggestedTopPost t = new PB_SuggestedTopPost();
+	t.Id = m.getId() ;
+	t.PostId = m.getPostId() ;
+	*/
+
+	public class PB_SuggestedUser {
+	   public int Id;
+	   public int UserId;
+	   public int TargetId;
+	   public float Weight;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_SuggestedUser t = new PBFlatTypes.PB_SuggestedUser();
+    t.setId();
+    t.setUserId();
+    t.setTargetId();
+    t.setWeight();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_SuggestedUser t = new PBFlatTypes.PB_SuggestedUser();
+	t.Id = ;
+	t.UserId = ;
+	t.TargetId = ;
+	t.Weight = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_SuggestedUser t = new PB_SuggestedUser();
+	t.Id = m.getId() ;
+	t.UserId = m.getUserId() ;
+	t.TargetId = m.getTargetId() ;
+	t.Weight = m.getWeight() ;
+	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
 	public class PB_UpdateRoomActionDoing {

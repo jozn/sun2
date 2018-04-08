@@ -9,31 +9,32 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagsPost represents a row from 'sun.tags_posts'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagPost represents a row from 'sun.tag_post'.
 
 // Manualy copy this to project
-type TagsPost__ struct {
-	Id           int `json:"Id"`           // Id -
-	TagId        int `json:"TagId"`        // TagId -
-	PostId       int `json:"PostId"`       // PostId -
-	PostTypeEnum int `json:"PostTypeEnum"` // PostTypeEnum -
-	CreatedTime  int `json:"CreatedTime"`  // CreatedTime -
+type TagPost__ struct {
+	Id               int `json:"Id"`               // Id -
+	TagId            int `json:"TagId"`            // TagId -
+	PostId           int `json:"PostId"`           // PostId -
+	PostTypeEnum     int `json:"PostTypeEnum"`     // PostTypeEnum -
+	PostCategoryEnum int `json:"PostCategoryEnum"` // PostCategoryEnum -
+	CreatedTime      int `json:"CreatedTime"`      // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the TagsPost exists in the database.
-func (tp *TagsPost) Exists() bool {
+// Exists determines if the TagPost exists in the database.
+func (tp *TagPost) Exists() bool {
 	return tp._exists
 }
 
-// Deleted provides information if the TagsPost has been deleted from the database.
-func (tp *TagsPost) Deleted() bool {
+// Deleted provides information if the TagPost has been deleted from the database.
+func (tp *TagPost) Deleted() bool {
 	return tp._deleted
 }
 
-// Insert inserts the TagsPost to the database.
-func (tp *TagsPost) Insert(db XODB) error {
+// Insert inserts the TagPost to the database.
+func (tp *TagPost) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
@@ -42,19 +43,19 @@ func (tp *TagsPost) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.tags_posts (` +
-		`TagId, PostId, PostTypeEnum, CreatedTime` +
+	const sqlstr = `INSERT INTO sun.tag_post (` +
+		`TagId, PostId, PostTypeEnum, PostCategoryEnum, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagsPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	if LogTableSqlReq.TagPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -63,7 +64,7 @@ func (tp *TagsPost) Insert(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -73,30 +74,30 @@ func (tp *TagsPost) Insert(db XODB) error {
 	tp.Id = int(id)
 	tp._exists = true
 
-	OnTagsPost_AfterInsert(tp)
+	OnTagPost_AfterInsert(tp)
 
 	return nil
 }
 
-// Insert inserts the TagsPost to the database.
-func (tp *TagsPost) Replace(db XODB) error {
+// Insert inserts the TagPost to the database.
+func (tp *TagPost) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.tags_posts (` +
-		`TagId, PostId, PostTypeEnum, CreatedTime` +
+	const sqlstr = `REPLACE INTO sun.tag_post (` +
+		`TagId, PostId, PostTypeEnum, PostCategoryEnum, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagsPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	if LogTableSqlReq.TagPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime)
+	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -105,7 +106,7 @@ func (tp *TagsPost) Replace(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -115,13 +116,13 @@ func (tp *TagsPost) Replace(db XODB) error {
 	tp.Id = int(id)
 	tp._exists = true
 
-	OnTagsPost_AfterInsert(tp)
+	OnTagPost_AfterInsert(tp)
 
 	return nil
 }
 
-// Update updates the TagsPost in the database.
-func (tp *TagsPost) Update(db XODB) error {
+// Update updates the TagPost in the database.
+func (tp *TagPost) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -135,26 +136,26 @@ func (tp *TagsPost) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.tags_posts SET ` +
-		`TagId = ?, PostId = ?, PostTypeEnum = ?, CreatedTime = ?` +
+	const sqlstr = `UPDATE sun.tag_post SET ` +
+		`TagId = ?, PostId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagsPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime, tp.Id)
+	if LogTableSqlReq.TagPost {
+		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime, tp.Id)
 	}
-	_, err = db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.CreatedTime, tp.Id)
+	_, err = db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostTypeEnum, tp.PostCategoryEnum, tp.CreatedTime, tp.Id)
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLogErr(err)
 	}
-	OnTagsPost_AfterUpdate(tp)
+	OnTagPost_AfterUpdate(tp)
 
 	return err
 }
 
-// Save saves the TagsPost to the database.
-func (tp *TagsPost) Save(db XODB) error {
+// Save saves the TagPost to the database.
+func (tp *TagPost) Save(db XODB) error {
 	if tp.Exists() {
 		return tp.Update(db)
 	}
@@ -162,8 +163,8 @@ func (tp *TagsPost) Save(db XODB) error {
 	return tp.Replace(db)
 }
 
-// Delete deletes the TagsPost from the database.
-func (tp *TagsPost) Delete(db XODB) error {
+// Delete deletes the TagPost from the database.
+func (tp *TagPost) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -177,15 +178,15 @@ func (tp *TagsPost) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.tags_posts WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.tag_post WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, tp.Id)
 	}
 	_, err = db.Exec(sqlstr, tp.Id)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -194,7 +195,7 @@ func (tp *TagsPost) Delete(db XODB) error {
 	// set deleted
 	tp._deleted = true
 
-	OnTagsPost_AfterDelete(tp)
+	OnTagPost_AfterDelete(tp)
 
 	return nil
 }
@@ -205,18 +206,18 @@ func (tp *TagsPost) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __TagsPost_Deleter struct {
+type __TagPost_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __TagsPost_Updater struct {
+type __TagPost_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __TagsPost_Selector struct {
+type __TagPost_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -225,19 +226,19 @@ type __TagsPost_Selector struct {
 	offset    int
 }
 
-func NewTagsPost_Deleter() *__TagsPost_Deleter {
-	d := __TagsPost_Deleter{whereSep: " AND "}
+func NewTagPost_Deleter() *__TagPost_Deleter {
+	d := __TagPost_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewTagsPost_Updater() *__TagsPost_Updater {
-	u := __TagsPost_Updater{whereSep: " AND "}
+func NewTagPost_Updater() *__TagPost_Updater {
+	u := __TagPost_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewTagsPost_Selector() *__TagsPost_Selector {
-	u := __TagsPost_Selector{whereSep: " AND ", selectCol: "*"}
+func NewTagPost_Selector() *__TagPost_Selector {
+	u := __TagPost_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -245,12 +246,12 @@ func NewTagsPost_Selector() *__TagsPost_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__TagsPost_Deleter) Or() *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) Or() *__TagPost_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagsPost_Deleter) Id_In(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) Id_In(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -263,7 +264,7 @@ func (u *__TagsPost_Deleter) Id_In(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) Id_Ins(ins ...int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) Id_Ins(ins ...int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -276,7 +277,7 @@ func (u *__TagsPost_Deleter) Id_Ins(ins ...int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) Id_NotIn(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) Id_NotIn(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -289,7 +290,7 @@ func (u *__TagsPost_Deleter) Id_NotIn(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (d *__TagsPost_Deleter) Id_Eq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_Eq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -300,7 +301,7 @@ func (d *__TagsPost_Deleter) Id_Eq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) Id_NotEq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_NotEq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -311,7 +312,7 @@ func (d *__TagsPost_Deleter) Id_NotEq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) Id_LT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_LT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -322,7 +323,7 @@ func (d *__TagsPost_Deleter) Id_LT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) Id_LE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_LE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -333,7 +334,7 @@ func (d *__TagsPost_Deleter) Id_LE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) Id_GT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_GT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -344,7 +345,7 @@ func (d *__TagsPost_Deleter) Id_GT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) Id_GE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) Id_GE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -355,7 +356,7 @@ func (d *__TagsPost_Deleter) Id_GE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (u *__TagsPost_Deleter) TagId_In(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) TagId_In(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -368,7 +369,7 @@ func (u *__TagsPost_Deleter) TagId_In(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) TagId_Ins(ins ...int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) TagId_Ins(ins ...int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -381,7 +382,7 @@ func (u *__TagsPost_Deleter) TagId_Ins(ins ...int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) TagId_NotIn(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) TagId_NotIn(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -394,7 +395,7 @@ func (u *__TagsPost_Deleter) TagId_NotIn(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (d *__TagsPost_Deleter) TagId_Eq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_Eq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -405,7 +406,7 @@ func (d *__TagsPost_Deleter) TagId_Eq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) TagId_NotEq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_NotEq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -416,7 +417,7 @@ func (d *__TagsPost_Deleter) TagId_NotEq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) TagId_LT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_LT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -427,7 +428,7 @@ func (d *__TagsPost_Deleter) TagId_LT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) TagId_LE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_LE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -438,7 +439,7 @@ func (d *__TagsPost_Deleter) TagId_LE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) TagId_GT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_GT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -449,7 +450,7 @@ func (d *__TagsPost_Deleter) TagId_GT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) TagId_GE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) TagId_GE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -460,7 +461,7 @@ func (d *__TagsPost_Deleter) TagId_GE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (u *__TagsPost_Deleter) PostId_In(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostId_In(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -473,7 +474,7 @@ func (u *__TagsPost_Deleter) PostId_In(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) PostId_Ins(ins ...int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostId_Ins(ins ...int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -486,7 +487,7 @@ func (u *__TagsPost_Deleter) PostId_Ins(ins ...int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) PostId_NotIn(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostId_NotIn(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -499,7 +500,7 @@ func (u *__TagsPost_Deleter) PostId_NotIn(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (d *__TagsPost_Deleter) PostId_Eq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_Eq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -510,7 +511,7 @@ func (d *__TagsPost_Deleter) PostId_Eq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostId_NotEq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_NotEq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -521,7 +522,7 @@ func (d *__TagsPost_Deleter) PostId_NotEq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostId_LT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_LT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -532,7 +533,7 @@ func (d *__TagsPost_Deleter) PostId_LT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostId_LE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_LE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -543,7 +544,7 @@ func (d *__TagsPost_Deleter) PostId_LE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostId_GT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_GT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -554,7 +555,7 @@ func (d *__TagsPost_Deleter) PostId_GT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostId_GE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostId_GE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -565,7 +566,7 @@ func (d *__TagsPost_Deleter) PostId_GE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (u *__TagsPost_Deleter) PostTypeEnum_In(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostTypeEnum_In(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -578,7 +579,7 @@ func (u *__TagsPost_Deleter) PostTypeEnum_In(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) PostTypeEnum_Ins(ins ...int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostTypeEnum_Ins(ins ...int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -591,7 +592,7 @@ func (u *__TagsPost_Deleter) PostTypeEnum_Ins(ins ...int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) PostTypeEnum_NotIn(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostTypeEnum_NotIn(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -604,7 +605,7 @@ func (u *__TagsPost_Deleter) PostTypeEnum_NotIn(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_Eq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_Eq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -615,7 +616,7 @@ func (d *__TagsPost_Deleter) PostTypeEnum_Eq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_NotEq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_NotEq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -626,7 +627,7 @@ func (d *__TagsPost_Deleter) PostTypeEnum_NotEq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_LT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_LT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -637,7 +638,7 @@ func (d *__TagsPost_Deleter) PostTypeEnum_LT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_LE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_LE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -648,7 +649,7 @@ func (d *__TagsPost_Deleter) PostTypeEnum_LE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_GT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_GT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -659,7 +660,7 @@ func (d *__TagsPost_Deleter) PostTypeEnum_GT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) PostTypeEnum_GE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) PostTypeEnum_GE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -670,7 +671,112 @@ func (d *__TagsPost_Deleter) PostTypeEnum_GE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (u *__TagsPost_Deleter) CreatedTime_In(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) PostCategoryEnum_In(ins []int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Deleter) PostCategoryEnum_Ins(ins ...int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Deleter) PostCategoryEnum_NotIn(ins []int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_Eq(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_NotEq(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_LT(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_LE(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_GT(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Deleter) PostCategoryEnum_GE(val int) *__TagPost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__TagPost_Deleter) CreatedTime_In(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -683,7 +789,7 @@ func (u *__TagsPost_Deleter) CreatedTime_In(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) CreatedTime_Ins(ins ...int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) CreatedTime_Ins(ins ...int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -696,7 +802,7 @@ func (u *__TagsPost_Deleter) CreatedTime_Ins(ins ...int) *__TagsPost_Deleter {
 	return u
 }
 
-func (u *__TagsPost_Deleter) CreatedTime_NotIn(ins []int) *__TagsPost_Deleter {
+func (u *__TagPost_Deleter) CreatedTime_NotIn(ins []int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -709,7 +815,7 @@ func (u *__TagsPost_Deleter) CreatedTime_NotIn(ins []int) *__TagsPost_Deleter {
 	return u
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_Eq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_Eq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -720,7 +826,7 @@ func (d *__TagsPost_Deleter) CreatedTime_Eq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_NotEq(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_NotEq(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -731,7 +837,7 @@ func (d *__TagsPost_Deleter) CreatedTime_NotEq(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_LT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_LT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -742,7 +848,7 @@ func (d *__TagsPost_Deleter) CreatedTime_LT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_LE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_LE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -753,7 +859,7 @@ func (d *__TagsPost_Deleter) CreatedTime_LE(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_GT(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_GT(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -764,7 +870,7 @@ func (d *__TagsPost_Deleter) CreatedTime_GT(val int) *__TagsPost_Deleter {
 	return d
 }
 
-func (d *__TagsPost_Deleter) CreatedTime_GE(val int) *__TagsPost_Deleter {
+func (d *__TagPost_Deleter) CreatedTime_GE(val int) *__TagPost_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -776,12 +882,12 @@ func (d *__TagsPost_Deleter) CreatedTime_GE(val int) *__TagsPost_Deleter {
 }
 
 ////////ints
-func (u *__TagsPost_Updater) Or() *__TagsPost_Updater {
+func (u *__TagPost_Updater) Or() *__TagPost_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagsPost_Updater) Id_In(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) Id_In(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -794,7 +900,7 @@ func (u *__TagsPost_Updater) Id_In(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) Id_Ins(ins ...int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) Id_Ins(ins ...int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -807,7 +913,7 @@ func (u *__TagsPost_Updater) Id_Ins(ins ...int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) Id_NotIn(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) Id_NotIn(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -820,7 +926,7 @@ func (u *__TagsPost_Updater) Id_NotIn(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (d *__TagsPost_Updater) Id_Eq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_Eq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -831,7 +937,7 @@ func (d *__TagsPost_Updater) Id_Eq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) Id_NotEq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_NotEq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -842,7 +948,7 @@ func (d *__TagsPost_Updater) Id_NotEq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) Id_LT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_LT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -853,7 +959,7 @@ func (d *__TagsPost_Updater) Id_LT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) Id_LE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_LE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -864,7 +970,7 @@ func (d *__TagsPost_Updater) Id_LE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) Id_GT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_GT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -875,7 +981,7 @@ func (d *__TagsPost_Updater) Id_GT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) Id_GE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) Id_GE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -886,7 +992,7 @@ func (d *__TagsPost_Updater) Id_GE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (u *__TagsPost_Updater) TagId_In(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) TagId_In(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -899,7 +1005,7 @@ func (u *__TagsPost_Updater) TagId_In(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) TagId_Ins(ins ...int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) TagId_Ins(ins ...int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -912,7 +1018,7 @@ func (u *__TagsPost_Updater) TagId_Ins(ins ...int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) TagId_NotIn(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) TagId_NotIn(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -925,7 +1031,7 @@ func (u *__TagsPost_Updater) TagId_NotIn(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (d *__TagsPost_Updater) TagId_Eq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_Eq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -936,7 +1042,7 @@ func (d *__TagsPost_Updater) TagId_Eq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) TagId_NotEq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_NotEq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -947,7 +1053,7 @@ func (d *__TagsPost_Updater) TagId_NotEq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) TagId_LT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_LT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -958,7 +1064,7 @@ func (d *__TagsPost_Updater) TagId_LT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) TagId_LE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_LE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -969,7 +1075,7 @@ func (d *__TagsPost_Updater) TagId_LE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) TagId_GT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_GT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -980,7 +1086,7 @@ func (d *__TagsPost_Updater) TagId_GT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) TagId_GE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) TagId_GE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -991,7 +1097,7 @@ func (d *__TagsPost_Updater) TagId_GE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (u *__TagsPost_Updater) PostId_In(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostId_In(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1004,7 +1110,7 @@ func (u *__TagsPost_Updater) PostId_In(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) PostId_Ins(ins ...int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostId_Ins(ins ...int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1017,7 +1123,7 @@ func (u *__TagsPost_Updater) PostId_Ins(ins ...int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) PostId_NotIn(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostId_NotIn(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1030,7 +1136,7 @@ func (u *__TagsPost_Updater) PostId_NotIn(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (d *__TagsPost_Updater) PostId_Eq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_Eq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1041,7 +1147,7 @@ func (d *__TagsPost_Updater) PostId_Eq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostId_NotEq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_NotEq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1052,7 +1158,7 @@ func (d *__TagsPost_Updater) PostId_NotEq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostId_LT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_LT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1063,7 +1169,7 @@ func (d *__TagsPost_Updater) PostId_LT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostId_LE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_LE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1074,7 +1180,7 @@ func (d *__TagsPost_Updater) PostId_LE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostId_GT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_GT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1085,7 +1191,7 @@ func (d *__TagsPost_Updater) PostId_GT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostId_GE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostId_GE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1096,7 +1202,7 @@ func (d *__TagsPost_Updater) PostId_GE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (u *__TagsPost_Updater) PostTypeEnum_In(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostTypeEnum_In(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1109,7 +1215,7 @@ func (u *__TagsPost_Updater) PostTypeEnum_In(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) PostTypeEnum_Ins(ins ...int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostTypeEnum_Ins(ins ...int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1122,7 +1228,7 @@ func (u *__TagsPost_Updater) PostTypeEnum_Ins(ins ...int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) PostTypeEnum_NotIn(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostTypeEnum_NotIn(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1135,7 +1241,7 @@ func (u *__TagsPost_Updater) PostTypeEnum_NotIn(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_Eq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_Eq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1146,7 +1252,7 @@ func (d *__TagsPost_Updater) PostTypeEnum_Eq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_NotEq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_NotEq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1157,7 +1263,7 @@ func (d *__TagsPost_Updater) PostTypeEnum_NotEq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_LT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_LT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1168,7 +1274,7 @@ func (d *__TagsPost_Updater) PostTypeEnum_LT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_LE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_LE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1179,7 +1285,7 @@ func (d *__TagsPost_Updater) PostTypeEnum_LE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_GT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_GT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1190,7 +1296,7 @@ func (d *__TagsPost_Updater) PostTypeEnum_GT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) PostTypeEnum_GE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) PostTypeEnum_GE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1201,7 +1307,112 @@ func (d *__TagsPost_Updater) PostTypeEnum_GE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (u *__TagsPost_Updater) CreatedTime_In(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostCategoryEnum_In(ins []int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Updater) PostCategoryEnum_Ins(ins ...int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Updater) PostCategoryEnum_NotIn(ins []int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_Eq(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_NotEq(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_LT(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_LE(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_GT(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Updater) PostCategoryEnum_GE(val int) *__TagPost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__TagPost_Updater) CreatedTime_In(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1214,7 +1425,7 @@ func (u *__TagsPost_Updater) CreatedTime_In(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) CreatedTime_Ins(ins ...int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) CreatedTime_Ins(ins ...int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1227,7 +1438,7 @@ func (u *__TagsPost_Updater) CreatedTime_Ins(ins ...int) *__TagsPost_Updater {
 	return u
 }
 
-func (u *__TagsPost_Updater) CreatedTime_NotIn(ins []int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) CreatedTime_NotIn(ins []int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1240,7 +1451,7 @@ func (u *__TagsPost_Updater) CreatedTime_NotIn(ins []int) *__TagsPost_Updater {
 	return u
 }
 
-func (d *__TagsPost_Updater) CreatedTime_Eq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_Eq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1251,7 +1462,7 @@ func (d *__TagsPost_Updater) CreatedTime_Eq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) CreatedTime_NotEq(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_NotEq(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1262,7 +1473,7 @@ func (d *__TagsPost_Updater) CreatedTime_NotEq(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) CreatedTime_LT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_LT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1273,7 +1484,7 @@ func (d *__TagsPost_Updater) CreatedTime_LT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) CreatedTime_LE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_LE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1284,7 +1495,7 @@ func (d *__TagsPost_Updater) CreatedTime_LE(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) CreatedTime_GT(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_GT(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1295,7 +1506,7 @@ func (d *__TagsPost_Updater) CreatedTime_GT(val int) *__TagsPost_Updater {
 	return d
 }
 
-func (d *__TagsPost_Updater) CreatedTime_GE(val int) *__TagsPost_Updater {
+func (d *__TagPost_Updater) CreatedTime_GE(val int) *__TagPost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1307,12 +1518,12 @@ func (d *__TagsPost_Updater) CreatedTime_GE(val int) *__TagsPost_Updater {
 }
 
 ////////ints
-func (u *__TagsPost_Selector) Or() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Or() *__TagPost_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagsPost_Selector) Id_In(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) Id_In(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1325,7 +1536,7 @@ func (u *__TagsPost_Selector) Id_In(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) Id_Ins(ins ...int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) Id_Ins(ins ...int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1338,7 +1549,7 @@ func (u *__TagsPost_Selector) Id_Ins(ins ...int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) Id_NotIn(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) Id_NotIn(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1351,7 +1562,7 @@ func (u *__TagsPost_Selector) Id_NotIn(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (d *__TagsPost_Selector) Id_Eq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_Eq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1362,7 +1573,7 @@ func (d *__TagsPost_Selector) Id_Eq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) Id_NotEq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_NotEq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1373,7 +1584,7 @@ func (d *__TagsPost_Selector) Id_NotEq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) Id_LT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_LT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1384,7 +1595,7 @@ func (d *__TagsPost_Selector) Id_LT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) Id_LE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_LE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1395,7 +1606,7 @@ func (d *__TagsPost_Selector) Id_LE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) Id_GT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_GT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1406,7 +1617,7 @@ func (d *__TagsPost_Selector) Id_GT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) Id_GE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) Id_GE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1417,7 +1628,7 @@ func (d *__TagsPost_Selector) Id_GE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (u *__TagsPost_Selector) TagId_In(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) TagId_In(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1430,7 +1641,7 @@ func (u *__TagsPost_Selector) TagId_In(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) TagId_Ins(ins ...int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) TagId_Ins(ins ...int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1443,7 +1654,7 @@ func (u *__TagsPost_Selector) TagId_Ins(ins ...int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) TagId_NotIn(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) TagId_NotIn(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1456,7 +1667,7 @@ func (u *__TagsPost_Selector) TagId_NotIn(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (d *__TagsPost_Selector) TagId_Eq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_Eq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1467,7 +1678,7 @@ func (d *__TagsPost_Selector) TagId_Eq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) TagId_NotEq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_NotEq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1478,7 +1689,7 @@ func (d *__TagsPost_Selector) TagId_NotEq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) TagId_LT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_LT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1489,7 +1700,7 @@ func (d *__TagsPost_Selector) TagId_LT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) TagId_LE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_LE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1500,7 +1711,7 @@ func (d *__TagsPost_Selector) TagId_LE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) TagId_GT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_GT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1511,7 +1722,7 @@ func (d *__TagsPost_Selector) TagId_GT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) TagId_GE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) TagId_GE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1522,7 +1733,7 @@ func (d *__TagsPost_Selector) TagId_GE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (u *__TagsPost_Selector) PostId_In(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostId_In(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1535,7 +1746,7 @@ func (u *__TagsPost_Selector) PostId_In(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) PostId_Ins(ins ...int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostId_Ins(ins ...int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1548,7 +1759,7 @@ func (u *__TagsPost_Selector) PostId_Ins(ins ...int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) PostId_NotIn(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostId_NotIn(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1561,7 +1772,7 @@ func (u *__TagsPost_Selector) PostId_NotIn(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (d *__TagsPost_Selector) PostId_Eq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_Eq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1572,7 +1783,7 @@ func (d *__TagsPost_Selector) PostId_Eq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostId_NotEq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_NotEq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1583,7 +1794,7 @@ func (d *__TagsPost_Selector) PostId_NotEq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostId_LT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_LT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1594,7 +1805,7 @@ func (d *__TagsPost_Selector) PostId_LT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostId_LE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_LE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1605,7 +1816,7 @@ func (d *__TagsPost_Selector) PostId_LE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostId_GT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_GT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1616,7 +1827,7 @@ func (d *__TagsPost_Selector) PostId_GT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostId_GE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostId_GE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1627,7 +1838,7 @@ func (d *__TagsPost_Selector) PostId_GE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (u *__TagsPost_Selector) PostTypeEnum_In(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostTypeEnum_In(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1640,7 +1851,7 @@ func (u *__TagsPost_Selector) PostTypeEnum_In(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) PostTypeEnum_Ins(ins ...int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostTypeEnum_Ins(ins ...int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1653,7 +1864,7 @@ func (u *__TagsPost_Selector) PostTypeEnum_Ins(ins ...int) *__TagsPost_Selector 
 	return u
 }
 
-func (u *__TagsPost_Selector) PostTypeEnum_NotIn(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostTypeEnum_NotIn(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1666,7 +1877,7 @@ func (u *__TagsPost_Selector) PostTypeEnum_NotIn(ins []int) *__TagsPost_Selector
 	return u
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_Eq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_Eq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1677,7 +1888,7 @@ func (d *__TagsPost_Selector) PostTypeEnum_Eq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_NotEq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_NotEq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1688,7 +1899,7 @@ func (d *__TagsPost_Selector) PostTypeEnum_NotEq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_LT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_LT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1699,7 +1910,7 @@ func (d *__TagsPost_Selector) PostTypeEnum_LT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_LE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_LE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1710,7 +1921,7 @@ func (d *__TagsPost_Selector) PostTypeEnum_LE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_GT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_GT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1721,7 +1932,7 @@ func (d *__TagsPost_Selector) PostTypeEnum_GT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) PostTypeEnum_GE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) PostTypeEnum_GE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1732,7 +1943,112 @@ func (d *__TagsPost_Selector) PostTypeEnum_GE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (u *__TagsPost_Selector) CreatedTime_In(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) PostCategoryEnum_In(ins []int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Selector) PostCategoryEnum_Ins(ins ...int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__TagPost_Selector) PostCategoryEnum_NotIn(ins []int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_Eq(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_NotEq(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_LT(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_LE(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_GT(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__TagPost_Selector) PostCategoryEnum_GE(val int) *__TagPost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__TagPost_Selector) CreatedTime_In(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1745,7 +2061,7 @@ func (u *__TagsPost_Selector) CreatedTime_In(ins []int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) CreatedTime_Ins(ins ...int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) CreatedTime_Ins(ins ...int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1758,7 +2074,7 @@ func (u *__TagsPost_Selector) CreatedTime_Ins(ins ...int) *__TagsPost_Selector {
 	return u
 }
 
-func (u *__TagsPost_Selector) CreatedTime_NotIn(ins []int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) CreatedTime_NotIn(ins []int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1771,7 +2087,7 @@ func (u *__TagsPost_Selector) CreatedTime_NotIn(ins []int) *__TagsPost_Selector 
 	return u
 }
 
-func (d *__TagsPost_Selector) CreatedTime_Eq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_Eq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1782,7 +2098,7 @@ func (d *__TagsPost_Selector) CreatedTime_Eq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) CreatedTime_NotEq(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_NotEq(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1793,7 +2109,7 @@ func (d *__TagsPost_Selector) CreatedTime_NotEq(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) CreatedTime_LT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_LT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1804,7 +2120,7 @@ func (d *__TagsPost_Selector) CreatedTime_LT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) CreatedTime_LE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_LE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1815,7 +2131,7 @@ func (d *__TagsPost_Selector) CreatedTime_LE(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) CreatedTime_GT(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_GT(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1826,7 +2142,7 @@ func (d *__TagsPost_Selector) CreatedTime_GT(val int) *__TagsPost_Selector {
 	return d
 }
 
-func (d *__TagsPost_Selector) CreatedTime_GE(val int) *__TagsPost_Selector {
+func (d *__TagPost_Selector) CreatedTime_GE(val int) *__TagPost_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1851,12 +2167,12 @@ func (d *__TagsPost_Selector) CreatedTime_GE(val int) *__TagsPost_Selector {
 
 //ints
 
-func (u *__TagsPost_Updater) Id(newVal int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) Id(newVal int) *__TagPost_Updater {
 	u.updates[" Id = ? "] = newVal
 	return u
 }
 
-func (u *__TagsPost_Updater) Id_Increment(count int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) Id_Increment(count int) *__TagPost_Updater {
 	if count > 0 {
 		u.updates[" Id = Id+? "] = count
 	}
@@ -1872,12 +2188,12 @@ func (u *__TagsPost_Updater) Id_Increment(count int) *__TagsPost_Updater {
 
 //ints
 
-func (u *__TagsPost_Updater) TagId(newVal int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) TagId(newVal int) *__TagPost_Updater {
 	u.updates[" TagId = ? "] = newVal
 	return u
 }
 
-func (u *__TagsPost_Updater) TagId_Increment(count int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) TagId_Increment(count int) *__TagPost_Updater {
 	if count > 0 {
 		u.updates[" TagId = TagId+? "] = count
 	}
@@ -1893,12 +2209,12 @@ func (u *__TagsPost_Updater) TagId_Increment(count int) *__TagsPost_Updater {
 
 //ints
 
-func (u *__TagsPost_Updater) PostId(newVal int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostId(newVal int) *__TagPost_Updater {
 	u.updates[" PostId = ? "] = newVal
 	return u
 }
 
-func (u *__TagsPost_Updater) PostId_Increment(count int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostId_Increment(count int) *__TagPost_Updater {
 	if count > 0 {
 		u.updates[" PostId = PostId+? "] = count
 	}
@@ -1914,12 +2230,12 @@ func (u *__TagsPost_Updater) PostId_Increment(count int) *__TagsPost_Updater {
 
 //ints
 
-func (u *__TagsPost_Updater) PostTypeEnum(newVal int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostTypeEnum(newVal int) *__TagPost_Updater {
 	u.updates[" PostTypeEnum = ? "] = newVal
 	return u
 }
 
-func (u *__TagsPost_Updater) PostTypeEnum_Increment(count int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostTypeEnum_Increment(count int) *__TagPost_Updater {
 	if count > 0 {
 		u.updates[" PostTypeEnum = PostTypeEnum+? "] = count
 	}
@@ -1935,12 +2251,33 @@ func (u *__TagsPost_Updater) PostTypeEnum_Increment(count int) *__TagsPost_Updat
 
 //ints
 
-func (u *__TagsPost_Updater) CreatedTime(newVal int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) PostCategoryEnum(newVal int) *__TagPost_Updater {
+	u.updates[" PostCategoryEnum = ? "] = newVal
+	return u
+}
+
+func (u *__TagPost_Updater) PostCategoryEnum_Increment(count int) *__TagPost_Updater {
+	if count > 0 {
+		u.updates[" PostCategoryEnum = PostCategoryEnum+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" PostCategoryEnum = PostCategoryEnum-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__TagPost_Updater) CreatedTime(newVal int) *__TagPost_Updater {
 	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__TagsPost_Updater) CreatedTime_Increment(count int) *__TagsPost_Updater {
+func (u *__TagPost_Updater) CreatedTime_Increment(count int) *__TagPost_Updater {
 	if count > 0 {
 		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
@@ -1959,101 +2296,116 @@ func (u *__TagsPost_Updater) CreatedTime_Increment(count int) *__TagsPost_Update
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__TagsPost_Selector) OrderBy_Id_Desc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_Id_Desc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_Id_Asc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_Id_Asc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__TagsPost_Selector) Select_Id() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Select_Id() *__TagPost_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_TagId_Desc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_TagId_Desc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY TagId DESC "
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_TagId_Asc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_TagId_Asc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY TagId ASC "
 	return u
 }
 
-func (u *__TagsPost_Selector) Select_TagId() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Select_TagId() *__TagPost_Selector {
 	u.selectCol = "TagId"
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_PostId_Desc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_PostId_Desc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_PostId_Asc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_PostId_Asc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__TagsPost_Selector) Select_PostId() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Select_PostId() *__TagPost_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_PostTypeEnum_Desc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_PostTypeEnum_Desc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum DESC "
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_PostTypeEnum_Asc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_PostTypeEnum_Asc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum ASC "
 	return u
 }
 
-func (u *__TagsPost_Selector) Select_PostTypeEnum() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Select_PostTypeEnum() *__TagPost_Selector {
 	u.selectCol = "PostTypeEnum"
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_CreatedTime_Desc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_PostCategoryEnum_Desc() *__TagPost_Selector {
+	u.orderBy = " ORDER BY PostCategoryEnum DESC "
+	return u
+}
+
+func (u *__TagPost_Selector) OrderBy_PostCategoryEnum_Asc() *__TagPost_Selector {
+	u.orderBy = " ORDER BY PostCategoryEnum ASC "
+	return u
+}
+
+func (u *__TagPost_Selector) Select_PostCategoryEnum() *__TagPost_Selector {
+	u.selectCol = "PostCategoryEnum"
+	return u
+}
+
+func (u *__TagPost_Selector) OrderBy_CreatedTime_Desc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__TagsPost_Selector) OrderBy_CreatedTime_Asc() *__TagsPost_Selector {
+func (u *__TagPost_Selector) OrderBy_CreatedTime_Asc() *__TagPost_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__TagsPost_Selector) Select_CreatedTime() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Select_CreatedTime() *__TagPost_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__TagsPost_Selector) Limit(num int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) Limit(num int) *__TagPost_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__TagsPost_Selector) Offset(num int) *__TagsPost_Selector {
+func (u *__TagPost_Selector) Offset(num int) *__TagPost_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__TagsPost_Selector) Order_Rand() *__TagsPost_Selector {
+func (u *__TagPost_Selector) Order_Rand() *__TagPost_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__TagsPost_Selector) _stoSql() (string, []interface{}) {
+func (u *__TagPost_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.tags_posts"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.tag_post"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2073,20 +2425,20 @@ func (u *__TagsPost_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__TagsPost_Selector) GetRow(db *sqlx.DB) (*TagsPost, error) {
+func (u *__TagPost_Selector) GetRow(db *sqlx.DB) (*TagPost, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &TagsPost{}
+	row := &TagPost{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2094,25 +2446,25 @@ func (u *__TagsPost_Selector) GetRow(db *sqlx.DB) (*TagsPost, error) {
 
 	row._exists = true
 
-	OnTagsPost_LoadOne(row)
+	OnTagPost_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__TagsPost_Selector) GetRows(db *sqlx.DB) ([]*TagsPost, error) {
+func (u *__TagPost_Selector) GetRows(db *sqlx.DB) ([]*TagPost, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*TagsPost
+	var rows []*TagPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2126,25 +2478,25 @@ func (u *__TagsPost_Selector) GetRows(db *sqlx.DB) ([]*TagsPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagsPost_LoadMany(rows)
+	OnTagPost_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__TagsPost_Selector) GetRows2(db *sqlx.DB) ([]TagsPost, error) {
+func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*TagsPost
+	var rows []*TagPost
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2158,9 +2510,9 @@ func (u *__TagsPost_Selector) GetRows2(db *sqlx.DB) ([]TagsPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagsPost_LoadMany(rows)
+	OnTagPost_LoadMany(rows)
 
-	rows2 := make([]TagsPost, len(rows))
+	rows2 := make([]TagPost, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -2169,12 +2521,12 @@ func (u *__TagsPost_Selector) GetRows2(db *sqlx.DB) ([]TagsPost, error) {
 	return rows2, nil
 }
 
-func (u *__TagsPost_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -2182,7 +2534,7 @@ func (u *__TagsPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return "", err
@@ -2191,19 +2543,19 @@ func (u *__TagsPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__TagsPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__TagPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2212,19 +2564,19 @@ func (u *__TagsPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__TagsPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__TagPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2233,19 +2585,19 @@ func (u *__TagsPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__TagsPost_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__TagPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2255,7 +2607,7 @@ func (u *__TagsPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
+func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -2272,18 +2624,18 @@ func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.tags_posts SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.tag_post SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2291,7 +2643,7 @@ func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2300,7 +2652,7 @@ func (u *__TagsPost_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
+func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2313,15 +2665,15 @@ func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.tags_posts WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.tag_post WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2330,7 +2682,7 @@ func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2339,21 +2691,21 @@ func (d *__TagsPost_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  TagsPost ////////////////
+///////////////////////// Mass insert - replace for  TagPost ////////////////
 
-func MassInsert_TagsPost(rows []TagsPost, db XODB) error {
+func MassInsert_TagPost(rows []TagPost, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.tags_posts (" +
-		"TagId, PostId, PostTypeEnum, CreatedTime" +
+	sqlstr := "INSERT INTO sun.tag_post (" +
+		"TagId, PostId, PostTypeEnum, PostCategoryEnum, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2364,16 +2716,17 @@ func MassInsert_TagsPost(rows []TagsPost, db XODB) error {
 		vals = append(vals, row.TagId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostTypeEnum)
+		vals = append(vals, row.PostCategoryEnum)
 		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -2382,15 +2735,15 @@ func MassInsert_TagsPost(rows []TagsPost, db XODB) error {
 	return nil
 }
 
-func MassReplace_TagsPost(rows []TagsPost, db XODB) error {
+func MassReplace_TagPost(rows []TagPost, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.tags_posts (" +
-		"TagId, PostId, PostTypeEnum, CreatedTime" +
+	sqlstr := "REPLACE INTO sun.tag_post (" +
+		"TagId, PostId, PostTypeEnum, PostCategoryEnum, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2401,16 +2754,17 @@ func MassReplace_TagsPost(rows []TagsPost, db XODB) error {
 		vals = append(vals, row.TagId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostTypeEnum)
+		vals = append(vals, row.PostCategoryEnum)
 		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagsPost {
+		if LogTableSqlReq.TagPost {
 			XOLogErr(err)
 		}
 		return err
@@ -2420,6 +2774,8 @@ func MassReplace_TagsPost(rows []TagsPost, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

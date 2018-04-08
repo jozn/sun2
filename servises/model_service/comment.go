@@ -58,9 +58,26 @@ func Comment_Delete(UserId, PostId, CommentId int) bool {
 			Murmur64Hash: hash,
 		}
 
+		cd := x.CommentDeleted{
+		    CommentId: cmt.CommentId,
+		    UserId: cmt.UserId,
+        }
+        cd.Save(base.DB)
+
+        comment_Delete_Meta([]int{cmt.CommentId})
+
 		event_service.SaveEvent(event_service.UNCOMMENTED_POST_EVENT, event)
 		return true
 	}
 
 	return false
+}
+
+func comment_Delete_Meta(CommentIds []int)  {
+    if len(CommentIds) == 0 {
+        return
+    }
+
+    x.NewAction_Deleter().CommentId_In(CommentIds).Delete(base.DB)
+    x.NewNotify_Deleter().CommentId_In(CommentIds).Delete(base.DB)
 }

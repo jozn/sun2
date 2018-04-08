@@ -29,6 +29,7 @@ func (s *stepper)proccedPost(postCnt *postCount)  {
 func (s *stepper)updatePostsViewsCounts()  {
     if len(s.postIds) > 0 {
         x.NewPost_Updater().PostId_In(s.postIds).ViewsCount_Increment(s.incrSize).Update(base.DB)
+        x.NewPostCount_Updater().PostId_In(s.postIds).ViewsCount_Increment(s.incrSize).Update(base.DB)
     }
 }
 ///////////////////////////////////

@@ -53,6 +53,30 @@ func OnComment_LoadMany(rows []*Comment) {
 	}
 }
 
+//CommentDeleted Events
+
+func OnCommentDeleted_AfterInsert(row *CommentDeleted) {
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+}
+
+func OnCommentDeleted_AfterUpdate(row *CommentDeleted) {
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+}
+
+func OnCommentDeleted_AfterDelete(row *CommentDeleted) {
+	RowCache.Delete("CommentDeleted:" + strconv.Itoa(row.UserId))
+}
+
+func OnCommentDeleted_LoadOne(row *CommentDeleted) {
+	RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+}
+
+func OnCommentDeleted_LoadMany(rows []*CommentDeleted) {
+	for _, row := range rows {
+		RowCache.Set("CommentDeleted:"+strconv.Itoa(row.UserId), row, time.Hour*0)
+	}
+}
+
 //Event Events
 
 func OnEvent_AfterInsert(row *Event) {
@@ -245,30 +269,6 @@ func OnLike_LoadMany(rows []*Like) {
 	}
 }
 
-//Media Events
-
-func OnMedia_AfterInsert(row *Media) {
-	RowCache.Set("Media:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
-}
-
-func OnMedia_AfterUpdate(row *Media) {
-	RowCache.Set("Media:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
-}
-
-func OnMedia_AfterDelete(row *Media) {
-	RowCache.Delete("Media:" + strconv.Itoa(row.MediaId))
-}
-
-func OnMedia_LoadOne(row *Media) {
-	RowCache.Set("Media:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
-}
-
-func OnMedia_LoadMany(rows []*Media) {
-	for _, row := range rows {
-		RowCache.Set("Media:"+strconv.Itoa(row.MediaId), row, time.Hour*0)
-	}
-}
-
 //Notify Events
 
 func OnNotify_AfterInsert(row *Notify) {
@@ -386,6 +386,30 @@ func OnPostCount_LoadOne(row *PostCount) {
 func OnPostCount_LoadMany(rows []*PostCount) {
 	for _, row := range rows {
 		RowCache.Set("PostCount:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	}
+}
+
+//PostDeleted Events
+
+func OnPostDeleted_AfterInsert(row *PostDeleted) {
+	RowCache.Set("PostDeleted:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostDeleted_AfterUpdate(row *PostDeleted) {
+	RowCache.Set("PostDeleted:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostDeleted_AfterDelete(row *PostDeleted) {
+	RowCache.Delete("PostDeleted:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostDeleted_LoadOne(row *PostDeleted) {
+	RowCache.Set("PostDeleted:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostDeleted_LoadMany(rows []*PostDeleted) {
+	for _, row := range rows {
+		RowCache.Set("PostDeleted:"+strconv.Itoa(row.PostId), row, time.Hour*0)
 	}
 }
 
@@ -629,27 +653,27 @@ func OnTag_LoadMany(rows []*Tag) {
 	}
 }
 
-//TagsPost Events
+//TagPost Events
 
-func OnTagsPost_AfterInsert(row *TagsPost) {
-	RowCache.Set("TagsPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnTagPost_AfterInsert(row *TagPost) {
+	RowCache.Set("TagPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnTagsPost_AfterUpdate(row *TagsPost) {
-	RowCache.Set("TagsPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnTagPost_AfterUpdate(row *TagPost) {
+	RowCache.Set("TagPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnTagsPost_AfterDelete(row *TagsPost) {
-	RowCache.Delete("TagsPost:" + strconv.Itoa(row.Id))
+func OnTagPost_AfterDelete(row *TagPost) {
+	RowCache.Delete("TagPost:" + strconv.Itoa(row.Id))
 }
 
-func OnTagsPost_LoadOne(row *TagsPost) {
-	RowCache.Set("TagsPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnTagPost_LoadOne(row *TagPost) {
+	RowCache.Set("TagPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnTagsPost_LoadMany(rows []*TagsPost) {
+func OnTagPost_LoadMany(rows []*TagPost) {
 	for _, row := range rows {
-		RowCache.Set("TagsPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
+		RowCache.Set("TagPost:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
 

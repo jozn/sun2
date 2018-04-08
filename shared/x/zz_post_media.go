@@ -22,9 +22,12 @@ type PostMedia__ struct {
 	Height        int    `json:"Height"`        // Height -
 	Size          int    `json:"Size"`          // Size -
 	Duration      int    `json:"Duration"`      // Duration -
+	Extension     string `json:"Extension"`     // Extension -
 	Md5Hash       string `json:"Md5Hash"`       // Md5Hash -
 	Color         string `json:"Color"`         // Color -
 	CreatedTime   int    `json:"CreatedTime"`   // CreatedTime -
+	ViewCount     int    `json:"ViewCount"`     // ViewCount -
+	Extra         string `json:"Extra"`         // Extra -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -50,16 +53,16 @@ func (pm *PostMedia) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post_media (` +
-		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime` +
+		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostMedia {
-		XOLog(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime)
+		XOLog(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra)
 	}
-	_, err = db.Exec(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra)
 	if err != nil {
 		return err
 	}
@@ -79,16 +82,16 @@ func (pm *PostMedia) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post_media (` +
-		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime` +
+		`MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostMedia {
-		XOLog(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime)
+		XOLog(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra)
 	}
-	_, err = db.Exec(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.MediaId, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra)
 	if err != nil {
 		if LogTableSqlReq.PostMedia {
 			XOLogErr(err)
@@ -119,14 +122,14 @@ func (pm *PostMedia) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_media SET ` +
-		`UserId = ?, PostId = ?, AlbumId = ?, MediaTypeEnum = ?, Width = ?, Height = ?, Size = ?, Duration = ?, Md5Hash = ?, Color = ?, CreatedTime = ?` +
+		`UserId = ?, PostId = ?, AlbumId = ?, MediaTypeEnum = ?, Width = ?, Height = ?, Size = ?, Duration = ?, Extension = ?, Md5Hash = ?, Color = ?, CreatedTime = ?, ViewCount = ?, Extra = ?` +
 		` WHERE MediaId = ?`
 
 	// run query
 	if LogTableSqlReq.PostMedia {
-		XOLog(sqlstr, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.MediaId)
+		XOLog(sqlstr, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra, pm.MediaId)
 	}
-	_, err = db.Exec(sqlstr, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.MediaId)
+	_, err = db.Exec(sqlstr, pm.UserId, pm.PostId, pm.AlbumId, pm.MediaTypeEnum, pm.Width, pm.Height, pm.Size, pm.Duration, pm.Extension, pm.Md5Hash, pm.Color, pm.CreatedTime, pm.ViewCount, pm.Extra, pm.MediaId)
 
 	if LogTableSqlReq.PostMedia {
 		XOLogErr(err)
@@ -1283,6 +1286,111 @@ func (d *__PostMedia_Deleter) CreatedTime_GE(val int) *__PostMedia_Deleter {
 	return d
 }
 
+func (u *__PostMedia_Deleter) ViewCount_In(ins []int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Deleter) ViewCount_Ins(ins ...int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Deleter) ViewCount_NotIn(ins []int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Deleter) ViewCount_Eq(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) ViewCount_NotEq(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) ViewCount_LT(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) ViewCount_LE(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) ViewCount_GT(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) ViewCount_GE(val int) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__PostMedia_Updater) Or() *__PostMedia_Updater {
 	u.whereSep = " OR "
@@ -2334,6 +2442,111 @@ func (d *__PostMedia_Updater) CreatedTime_GE(val int) *__PostMedia_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " CreatedTime >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostMedia_Updater) ViewCount_In(ins []int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Updater) ViewCount_Ins(ins ...int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Updater) ViewCount_NotIn(ins []int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Updater) ViewCount_Eq(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) ViewCount_NotEq(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) ViewCount_LT(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) ViewCount_LE(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) ViewCount_GT(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) ViewCount_GE(val int) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3395,9 +3608,174 @@ func (d *__PostMedia_Selector) CreatedTime_GE(val int) *__PostMedia_Selector {
 	return d
 }
 
+func (u *__PostMedia_Selector) ViewCount_In(ins []int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Selector) ViewCount_Ins(ins ...int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Selector) ViewCount_NotIn(ins []int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Selector) ViewCount_Eq(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) ViewCount_NotEq(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) ViewCount_LT(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) ViewCount_LE(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) ViewCount_GT(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) ViewCount_GE(val int) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ViewCount >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
+
+func (u *__PostMedia_Deleter) Extension_In(ins []string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Deleter) Extension_NotIn(ins []string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Deleter) Extension_Like(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Deleter) Extension_Eq(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) Extension_NotEq(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__PostMedia_Deleter) Md5Hash_In(ins []string) *__PostMedia_Deleter {
 	w := whereClause{}
@@ -3519,7 +3897,127 @@ func (d *__PostMedia_Deleter) Color_NotEq(val string) *__PostMedia_Deleter {
 	return d
 }
 
+func (u *__PostMedia_Deleter) Extra_In(ins []string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Deleter) Extra_NotIn(ins []string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Deleter) Extra_Like(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Deleter) Extra_Eq(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Deleter) Extra_NotEq(val string) *__PostMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
+
+func (u *__PostMedia_Updater) Extension_In(ins []string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Updater) Extension_NotIn(ins []string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Updater) Extension_Like(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Updater) Extension_Eq(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) Extension_NotEq(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__PostMedia_Updater) Md5Hash_In(ins []string) *__PostMedia_Updater {
 	w := whereClause{}
@@ -3641,7 +4139,127 @@ func (d *__PostMedia_Updater) Color_NotEq(val string) *__PostMedia_Updater {
 	return d
 }
 
+func (u *__PostMedia_Updater) Extra_In(ins []string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Updater) Extra_NotIn(ins []string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Updater) Extra_Like(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Updater) Extra_Eq(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Updater) Extra_NotEq(val string) *__PostMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
+
+func (u *__PostMedia_Selector) Extension_In(ins []string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Selector) Extension_NotIn(ins []string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Selector) Extension_Like(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Selector) Extension_Eq(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) Extension_NotEq(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extension != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__PostMedia_Selector) Md5Hash_In(ins []string) *__PostMedia_Selector {
 	w := whereClause{}
@@ -3758,6 +4376,66 @@ func (d *__PostMedia_Selector) Color_NotEq(val string) *__PostMedia_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Color != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostMedia_Selector) Extra_In(ins []string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostMedia_Selector) Extra_NotIn(ins []string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__PostMedia_Selector) Extra_Like(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostMedia_Selector) Extra_Eq(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostMedia_Selector) Extra_NotEq(val string) *__PostMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Extra != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3959,6 +4637,14 @@ func (u *__PostMedia_Updater) Duration_Increment(count int) *__PostMedia_Updater
 //ints
 
 //string
+func (u *__PostMedia_Updater) Extension(newVal string) *__PostMedia_Updater {
+	u.updates[" Extension = ? "] = newVal
+	return u
+}
+
+//ints
+
+//string
 func (u *__PostMedia_Updater) Md5Hash(newVal string) *__PostMedia_Updater {
 	u.updates[" Md5Hash = ? "] = newVal
 	return u
@@ -3992,6 +4678,35 @@ func (u *__PostMedia_Updater) CreatedTime_Increment(count int) *__PostMedia_Upda
 }
 
 //string
+
+//ints
+
+func (u *__PostMedia_Updater) ViewCount(newVal int) *__PostMedia_Updater {
+	u.updates[" ViewCount = ? "] = newVal
+	return u
+}
+
+func (u *__PostMedia_Updater) ViewCount_Increment(count int) *__PostMedia_Updater {
+	if count > 0 {
+		u.updates[" ViewCount = ViewCount+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" ViewCount = ViewCount-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+//string
+func (u *__PostMedia_Updater) Extra(newVal string) *__PostMedia_Updater {
+	u.updates[" Extra = ? "] = newVal
+	return u
+}
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
@@ -4133,6 +4848,21 @@ func (u *__PostMedia_Selector) Select_Duration() *__PostMedia_Selector {
 	return u
 }
 
+func (u *__PostMedia_Selector) OrderBy_Extension_Desc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY Extension DESC "
+	return u
+}
+
+func (u *__PostMedia_Selector) OrderBy_Extension_Asc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY Extension ASC "
+	return u
+}
+
+func (u *__PostMedia_Selector) Select_Extension() *__PostMedia_Selector {
+	u.selectCol = "Extension"
+	return u
+}
+
 func (u *__PostMedia_Selector) OrderBy_Md5Hash_Desc() *__PostMedia_Selector {
 	u.orderBy = " ORDER BY Md5Hash DESC "
 	return u
@@ -4175,6 +4905,36 @@ func (u *__PostMedia_Selector) OrderBy_CreatedTime_Asc() *__PostMedia_Selector {
 
 func (u *__PostMedia_Selector) Select_CreatedTime() *__PostMedia_Selector {
 	u.selectCol = "CreatedTime"
+	return u
+}
+
+func (u *__PostMedia_Selector) OrderBy_ViewCount_Desc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY ViewCount DESC "
+	return u
+}
+
+func (u *__PostMedia_Selector) OrderBy_ViewCount_Asc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY ViewCount ASC "
+	return u
+}
+
+func (u *__PostMedia_Selector) Select_ViewCount() *__PostMedia_Selector {
+	u.selectCol = "ViewCount"
+	return u
+}
+
+func (u *__PostMedia_Selector) OrderBy_Extra_Desc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY Extra DESC "
+	return u
+}
+
+func (u *__PostMedia_Selector) OrderBy_Extra_Asc() *__PostMedia_Selector {
+	u.orderBy = " ORDER BY Extra ASC "
+	return u
+}
+
+func (u *__PostMedia_Selector) Select_Extra() *__PostMedia_Selector {
+	u.selectCol = "Extra"
 	return u
 }
 
@@ -4491,13 +5251,13 @@ func MassInsert_PostMedia(rows []PostMedia, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post_media (" +
-		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime" +
+		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra" +
 		") VALUES " + insVals
 
 	// run query
@@ -4514,9 +5274,12 @@ func MassInsert_PostMedia(rows []PostMedia, db XODB) error {
 		vals = append(vals, row.Height)
 		vals = append(vals, row.Size)
 		vals = append(vals, row.Duration)
+		vals = append(vals, row.Extension)
 		vals = append(vals, row.Md5Hash)
 		vals = append(vals, row.Color)
 		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.ViewCount)
+		vals = append(vals, row.Extra)
 
 	}
 
@@ -4540,13 +5303,13 @@ func MassReplace_PostMedia(rows []PostMedia, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_media (" +
-		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Md5Hash, Color, CreatedTime" +
+		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra" +
 		") VALUES " + insVals
 
 	// run query
@@ -4563,9 +5326,12 @@ func MassReplace_PostMedia(rows []PostMedia, db XODB) error {
 		vals = append(vals, row.Height)
 		vals = append(vals, row.Size)
 		vals = append(vals, row.Duration)
+		vals = append(vals, row.Extension)
 		vals = append(vals, row.Md5Hash)
 		vals = append(vals, row.Color)
 		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.ViewCount)
+		vals = append(vals, row.Extra)
 
 	}
 
@@ -4585,6 +5351,12 @@ func MassReplace_PostMedia(rows []PostMedia, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
 
 //
 

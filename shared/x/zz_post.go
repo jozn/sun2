@@ -13,25 +13,26 @@ import (
 
 // Manualy copy this to project
 type Post__ struct {
-	PostId         int    `json:"PostId"`         // PostId -
-	UserId         int    `json:"UserId"`         // UserId -
-	PostTypeEnum   int    `json:"PostTypeEnum"`   // PostTypeEnum -
-	MediaId        int    `json:"MediaId"`        // MediaId -
-	PostKey        string `json:"PostKey"`        // PostKey -
-	Text           string `json:"Text"`           // Text -
-	RichText       string `json:"RichText"`       // RichText -
-	MediaCount     int    `json:"MediaCount"`     // MediaCount -
-	SharedTo       int    `json:"SharedTo"`       // SharedTo -
-	DisableComment int    `json:"DisableComment"` // DisableComment -
-	Source         int    `json:"Source"`         // Source -
-	HasTag         int    `json:"HasTag"`         // HasTag -
-	Seq            int    `json:"Seq"`            // Seq -
-	CommentsCount  int    `json:"CommentsCount"`  // CommentsCount -
-	LikesCount     int    `json:"LikesCount"`     // LikesCount -
-	ViewsCount     int    `json:"ViewsCount"`     // ViewsCount -
-	EditedTime     int    `json:"EditedTime"`     // EditedTime -
-	CreatedTime    int    `json:"CreatedTime"`    // CreatedTime -
-	ReSharedPostId int    `json:"ReSharedPostId"` // ReSharedPostId -
+	PostId           int    `json:"PostId"`           // PostId -
+	UserId           int    `json:"UserId"`           // UserId -
+	PostTypeEnum     int    `json:"PostTypeEnum"`     // PostTypeEnum -
+	PostCategoryEnum int    `json:"PostCategoryEnum"` // PostCategoryEnum -
+	MediaId          int    `json:"MediaId"`          // MediaId -
+	PostKey          string `json:"PostKey"`          // PostKey -
+	Text             string `json:"Text"`             // Text -
+	RichText         string `json:"RichText"`         // RichText -
+	MediaCount       int    `json:"MediaCount"`       // MediaCount -
+	SharedTo         int    `json:"SharedTo"`         // SharedTo -
+	DisableComment   int    `json:"DisableComment"`   // DisableComment -
+	Source           int    `json:"Source"`           // Source -
+	HasTag           int    `json:"HasTag"`           // HasTag -
+	Seq              int    `json:"Seq"`              // Seq -
+	CommentsCount    int    `json:"CommentsCount"`    // CommentsCount -
+	LikesCount       int    `json:"LikesCount"`       // LikesCount -
+	ViewsCount       int    `json:"ViewsCount"`       // ViewsCount -
+	EditedTime       int    `json:"EditedTime"`       // EditedTime -
+	CreatedTime      int    `json:"CreatedTime"`      // CreatedTime -
+	ReSharedPostId   int    `json:"ReSharedPostId"`   // ReSharedPostId -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -57,16 +58,16 @@ func (p *Post) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		return err
 	}
@@ -86,16 +87,16 @@ func (p *Post) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
 	if err != nil {
 		if LogTableSqlReq.Post {
 			XOLogErr(err)
@@ -126,14 +127,14 @@ func (p *Post) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post SET ` +
-		`UserId = ?, PostTypeEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Source = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
+		`UserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Source = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
 		` WHERE PostId = ?`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
 
 	if LogTableSqlReq.Post {
 		XOLogErr(err)
@@ -550,6 +551,111 @@ func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostTypeEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Deleter) PostCategoryEnum_In(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) PostCategoryEnum_Ins(ins ...int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) PostCategoryEnum_NotIn(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_Eq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_NotEq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_LT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_LE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_GT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) PostCategoryEnum_GE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2241,6 +2347,111 @@ func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
 	return d
 }
 
+func (u *__Post_Updater) PostCategoryEnum_In(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) PostCategoryEnum_Ins(ins ...int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) PostCategoryEnum_NotIn(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Updater) PostCategoryEnum_Eq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostCategoryEnum_NotEq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostCategoryEnum_LT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostCategoryEnum_LE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostCategoryEnum_GT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) PostCategoryEnum_GE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Post_Updater) MediaId_In(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -3922,6 +4133,111 @@ func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostTypeEnum >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Selector) PostCategoryEnum_In(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) PostCategoryEnum_Ins(ins ...int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) PostCategoryEnum_NotIn(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Selector) PostCategoryEnum_Eq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostCategoryEnum_NotEq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostCategoryEnum_LT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostCategoryEnum_LE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostCategoryEnum_GT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) PostCategoryEnum_GE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostCategoryEnum >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5909,6 +6225,27 @@ func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
 
 //ints
 
+func (u *__Post_Updater) PostCategoryEnum(newVal int) *__Post_Updater {
+	u.updates[" PostCategoryEnum = ? "] = newVal
+	return u
+}
+
+func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
+	if count > 0 {
+		u.updates[" PostCategoryEnum = PostCategoryEnum+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" PostCategoryEnum = PostCategoryEnum-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Post_Updater) MediaId(newVal int) *__Post_Updater {
 	u.updates[" MediaId = ? "] = newVal
 	return u
@@ -6251,6 +6588,21 @@ func (u *__Post_Selector) OrderBy_PostTypeEnum_Asc() *__Post_Selector {
 
 func (u *__Post_Selector) Select_PostTypeEnum() *__Post_Selector {
 	u.selectCol = "PostTypeEnum"
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_PostCategoryEnum_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostCategoryEnum DESC "
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_PostCategoryEnum_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostCategoryEnum ASC "
+	return u
+}
+
+func (u *__Post_Selector) Select_PostCategoryEnum() *__Post_Selector {
+	u.selectCol = "PostCategoryEnum"
 	return u
 }
 
@@ -6807,13 +7159,13 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -6824,6 +7176,7 @@ func MassInsert_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostTypeEnum)
+		vals = append(vals, row.PostCategoryEnum)
 		vals = append(vals, row.MediaId)
 		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
@@ -6863,13 +7216,13 @@ func MassReplace_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
 		") VALUES " + insVals
 
 	// run query
@@ -6880,6 +7233,7 @@ func MassReplace_Post(rows []Post, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostTypeEnum)
+		vals = append(vals, row.PostCategoryEnum)
 		vals = append(vals, row.MediaId)
 		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
@@ -6915,6 +7269,8 @@ func MassReplace_Post(rows []Post, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

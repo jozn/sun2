@@ -55,6 +55,23 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
 }
 */
 /*
+func PBConvPB__CommentDeleted_To_CommentDeleted( o *PB_CommentDeleted) *CommentDeleted {
+     n := &CommentDeleted{
+      CommentId: int ( o.CommentId ),
+      UserId: int ( o.UserId ),
+    }
+    return n
+}
+
+func PBConvPB_CommentDeleted_To_CommentDeleted ( o *CommentDeleted) *PB_CommentDeleted {
+     n := &PB_CommentDeleted{
+      CommentId: int64 ( o.CommentId ),
+      UserId: int32 ( o.UserId ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__Event_To_Event( o *PB_Event) *Event {
      n := &Event{
       EventId: int ( o.EventId ),
@@ -65,6 +82,9 @@ func PBConvPB__Event_To_Event( o *PB_Event) *Event {
       CommentId: int ( o.CommentId ),
       ActionId: int ( o.ActionId ),
       Murmur64Hash: int ( o.Murmur64Hash ),
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int ( o.MessageId ),
+      ReSharedId: int ( o.ReSharedId ),
     }
     return n
 }
@@ -79,6 +99,9 @@ func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
       CommentId: int64 ( o.CommentId ),
       ActionId: int64 ( o.ActionId ),
       Murmur64Hash: int64 ( o.Murmur64Hash ),
+      ChatKey: string ( o.ChatKey ),
+      MessageId: int64 ( o.MessageId ),
+      ReSharedId: int64 ( o.ReSharedId ),
     }
     return n
 }
@@ -269,43 +292,6 @@ func PBConvPB_Like_To_Like ( o *Like) *PB_Like {
 }
 */
 /*
-func PBConvPB__Media_To_Media( o *PB_Media) *Media {
-     n := &Media{
-      MediaId: int ( o.MediaId ),
-      UserId: int ( o.UserId ),
-      PostId: int ( o.PostId ),
-      AlbumId: int ( o.AlbumId ),
-      MediaTypeEnum: int ( o.MediaTypeEnum ),
-      Width: int ( o.Width ),
-      Height: int ( o.Height ),
-      Size: int ( o.Size ),
-      Duration: int ( o.Duration ),
-      Md5Hash: string ( o.Md5Hash ),
-      Color: string ( o.Color ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_Media_To_Media ( o *Media) *PB_Media {
-     n := &PB_Media{
-      MediaId: int64 ( o.MediaId ),
-      UserId: int32 ( o.UserId ),
-      PostId: int64 ( o.PostId ),
-      AlbumId: int32 ( o.AlbumId ),
-      MediaTypeEnum: int32 ( o.MediaTypeEnum ),
-      Width: int32 ( o.Width ),
-      Height: int32 ( o.Height ),
-      Size: int32 ( o.Size ),
-      Duration: int32 ( o.Duration ),
-      Md5Hash: string ( o.Md5Hash ),
-      Color: string ( o.Color ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__Notify_To_Notify( o *PB_Notify) *Notify {
      n := &Notify{
       NotifyId: int ( o.NotifyId ),
@@ -396,6 +382,7 @@ func PBConvPB__Post_To_Post( o *PB_Post) *Post {
       PostId: int ( o.PostId ),
       UserId: int ( o.UserId ),
       PostTypeEnum: int ( o.PostTypeEnum ),
+      PostCategoryEnum: int ( o.PostCategoryEnum ),
       MediaId: int ( o.MediaId ),
       PostKey: string ( o.PostKey ),
       Text: string ( o.Text ),
@@ -421,6 +408,7 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
       PostId: int64 ( o.PostId ),
       UserId: int32 ( o.UserId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
+      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
       MediaId: int64 ( o.MediaId ),
       PostKey: string ( o.PostKey ),
       Text: string ( o.Text ),
@@ -454,6 +442,23 @@ func PBConvPB_PostCount_To_PostCount ( o *PostCount) *PB_PostCount {
      n := &PB_PostCount{
       PostId: int64 ( o.PostId ),
       ViewsCount: int64 ( o.ViewsCount ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PostDeleted_To_PostDeleted( o *PB_PostDeleted) *PostDeleted {
+     n := &PostDeleted{
+      PostId: int ( o.PostId ),
+      UserId: int ( o.UserId ),
+    }
+    return n
+}
+
+func PBConvPB_PostDeleted_To_PostDeleted ( o *PostDeleted) *PB_PostDeleted {
+     n := &PB_PostDeleted{
+      PostId: int64 ( o.PostId ),
+      UserId: int32 ( o.UserId ),
     }
     return n
 }
@@ -506,9 +511,12 @@ func PBConvPB__PostMedia_To_PostMedia( o *PB_PostMedia) *PostMedia {
       Height: int ( o.Height ),
       Size: int ( o.Size ),
       Duration: int ( o.Duration ),
+      Extension: string ( o.Extension ),
       Md5Hash: string ( o.Md5Hash ),
       Color: string ( o.Color ),
       CreatedTime: int ( o.CreatedTime ),
+      ViewCount: int ( o.ViewCount ),
+      Extra: string ( o.Extra ),
     }
     return n
 }
@@ -524,9 +532,12 @@ func PBConvPB_PostMedia_To_PostMedia ( o *PostMedia) *PB_PostMedia {
       Height: int32 ( o.Height ),
       Size: int32 ( o.Size ),
       Duration: int32 ( o.Duration ),
+      Extension: string ( o.Extension ),
       Md5Hash: string ( o.Md5Hash ),
       Color: string ( o.Color ),
       CreatedTime: int32 ( o.CreatedTime ),
+      ViewCount: int32 ( o.ViewCount ),
+      Extra: string ( o.Extra ),
     }
     return n
 }
@@ -539,6 +550,7 @@ func PBConvPB__PostMentioned_To_PostMentioned( o *PB_PostMentioned) *PostMention
       PostId: int ( o.PostId ),
       PostUserId: int ( o.PostUserId ),
       PostTypeEnum: int ( o.PostTypeEnum ),
+      PostCategoryEnum: int ( o.PostCategoryEnum ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
@@ -551,6 +563,7 @@ func PBConvPB_PostMentioned_To_PostMentioned ( o *PostMentioned) *PB_PostMention
       PostId: int64 ( o.PostId ),
       PostUserId: int32 ( o.PostUserId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
+      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -564,6 +577,7 @@ func PBConvPB__PostReshared_To_PostReshared( o *PB_PostReshared) *PostReshared {
       PostId: int ( o.PostId ),
       PostUserId: int ( o.PostUserId ),
       PostTypeEnum: int ( o.PostTypeEnum ),
+      PostCategoryEnum: int ( o.PostCategoryEnum ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
@@ -576,6 +590,7 @@ func PBConvPB_PostReshared_To_PostReshared ( o *PostReshared) *PB_PostReshared {
       PostId: int64 ( o.PostId ),
       PostUserId: int32 ( o.PostUserId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
+      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -773,23 +788,25 @@ func PBConvPB_Tag_To_Tag ( o *Tag) *PB_Tag {
 }
 */
 /*
-func PBConvPB__TagsPost_To_TagsPost( o *PB_TagsPost) *TagsPost {
-     n := &TagsPost{
+func PBConvPB__TagPost_To_TagPost( o *PB_TagPost) *TagPost {
+     n := &TagPost{
       Id: int ( o.Id ),
       TagId: int ( o.TagId ),
       PostId: int ( o.PostId ),
       PostTypeEnum: int ( o.PostTypeEnum ),
+      PostCategoryEnum: int ( o.PostCategoryEnum ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
 }
 
-func PBConvPB_TagsPost_To_TagsPost ( o *TagsPost) *PB_TagsPost {
-     n := &PB_TagsPost{
+func PBConvPB_TagPost_To_TagPost ( o *TagPost) *PB_TagPost {
+     n := &PB_TagPost{
       Id: int64 ( o.Id ),
       TagId: int32 ( o.TagId ),
       PostId: int32 ( o.PostId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
+      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n

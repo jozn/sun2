@@ -102,6 +102,54 @@ func (c _StoreImpl) PreLoadCommentByCommentIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetCommentDeletedByUserId(UserId int) (*CommentDeleted, bool) {
+	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*CommentDeleted); ok {
+			return obj, true
+		}
+	}
+	obj2, err := CommentDeletedByUserId(base.DB, UserId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.CommentDeleted {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetCommentDeletedByUserId_JustCache(UserId int) (*CommentDeleted, bool) {
+	o, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(UserId))
+	if ok {
+		if obj, ok := o.(*CommentDeleted); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.CommentDeleted {
+		XOLogErr(errors.New("_JustCache is empty for CommentDeleted: " + strconv.Itoa(UserId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadCommentDeletedByUserIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("CommentDeleted:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewCommentDeleted_Selector().UserId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetEventByEventId(EventId int) (*Event, bool) {
 	o, ok := RowCache.Get("Event:" + strconv.Itoa(EventId))
 	if ok {
@@ -486,54 +534,6 @@ func (c _StoreImpl) PreLoadLikeByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetMediaByMediaId(MediaId int) (*Media, bool) {
-	o, ok := RowCache.Get("Media:" + strconv.Itoa(MediaId))
-	if ok {
-		if obj, ok := o.(*Media); ok {
-			return obj, true
-		}
-	}
-	obj2, err := MediaByMediaId(base.DB, MediaId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.Media {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetMediaByMediaId_JustCache(MediaId int) (*Media, bool) {
-	o, ok := RowCache.Get("Media:" + strconv.Itoa(MediaId))
-	if ok {
-		if obj, ok := o.(*Media); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.Media {
-		XOLogErr(errors.New("_JustCache is empty for Media: " + strconv.Itoa(MediaId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadMediaByMediaIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("Media:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewMedia_Selector().MediaId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetNotifyByNotifyId(NotifyId int) (*Notify, bool) {
 	o, ok := RowCache.Get("Notify:" + strconv.Itoa(NotifyId))
 	if ok {
@@ -769,6 +769,54 @@ func (c _StoreImpl) PreLoadPostCountByPostIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPostCount_Selector().PostId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetPostDeletedByPostId(PostId int) (*PostDeleted, bool) {
+	o, ok := RowCache.Get("PostDeleted:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostDeleted); ok {
+			return obj, true
+		}
+	}
+	obj2, err := PostDeletedByPostId(base.DB, PostId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.PostDeleted {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetPostDeletedByPostId_JustCache(PostId int) (*PostDeleted, bool) {
+	o, ok := RowCache.Get("PostDeleted:" + strconv.Itoa(PostId))
+	if ok {
+		if obj, ok := o.(*PostDeleted); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.PostDeleted {
+		XOLogErr(errors.New("_JustCache is empty for PostDeleted: " + strconv.Itoa(PostId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostDeletedByPostIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("PostDeleted:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewPostDeleted_Selector().PostId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1254,49 +1302,49 @@ func (c _StoreImpl) PreLoadTagByTagIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetTagsPostById(Id int) (*TagsPost, bool) {
-	o, ok := RowCache.Get("TagsPost:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetTagPostById(Id int) (*TagPost, bool) {
+	o, ok := RowCache.Get("TagPost:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*TagsPost); ok {
+		if obj, ok := o.(*TagPost); ok {
 			return obj, true
 		}
 	}
-	obj2, err := TagsPostById(base.DB, Id)
+	obj2, err := TagPostById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.TagsPost {
+	if LogTableSqlReq.TagPost {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetTagsPostById_JustCache(Id int) (*TagsPost, bool) {
-	o, ok := RowCache.Get("TagsPost:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetTagPostById_JustCache(Id int) (*TagPost, bool) {
+	o, ok := RowCache.Get("TagPost:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*TagsPost); ok {
+		if obj, ok := o.(*TagPost); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.TagsPost {
-		XOLogErr(errors.New("_JustCache is empty for TagsPost: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.TagPost {
+		XOLogErr(errors.New("_JustCache is empty for TagPost: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadTagsPostByIds(ids []int) {
+func (c _StoreImpl) PreLoadTagPostByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("TagsPost:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("TagPost:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewTagsPost_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewTagPost_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

@@ -52,6 +52,30 @@ func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	return &c, nil
 }
 
+// CommentDeletedByCommentIdAndUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment_deleted' as a CommentDeleted.
+func CommentDeletedByCommentIdAndUserId(db *sqlx.DB, commentId int, userId int) (*CommentDeleted, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.comment_deleted ` +
+		`WHERE CommentId = ? AND UserId = ?`
+
+	XOLog(sqlstr, commentId, userId)
+	cd := CommentDeleted{
+		_exists: true,
+	}
+
+	err = db.Get(&cd, sqlstr, commentId, userId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnCommentDeleted_LoadOne(&cd)
+
+	return &cd, nil
+}
+
 // EventByEventId Generated from index 'PRIMARY' -- retrieves a row from 'sun.event' as a Event.
 func EventByEventId(db *sqlx.DB, eventId int) (*Event, error) {
 	var err error
@@ -244,30 +268,6 @@ func LikeById(db *sqlx.DB, id int) (*Like, error) {
 	return &l, nil
 }
 
-// MediaByMediaId Generated from index 'PRIMARY' -- retrieves a row from 'sun.media' as a Media.
-func MediaByMediaId(db *sqlx.DB, mediaId int) (*Media, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.media ` +
-		`WHERE MediaId = ?`
-
-	XOLog(sqlstr, mediaId)
-	m := Media{
-		_exists: true,
-	}
-
-	err = db.Get(&m, sqlstr, mediaId)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnMedia_LoadOne(&m)
-
-	return &m, nil
-}
-
 // NotifyByNotifyId Generated from index 'PRIMARY' -- retrieves a row from 'sun.notify' as a Notify.
 func NotifyByNotifyId(db *sqlx.DB, notifyId int) (*Notify, error) {
 	var err error
@@ -388,6 +388,30 @@ func PostCountByPostId(db *sqlx.DB, postId int) (*PostCount, error) {
 	return &pc, nil
 }
 
+// PostDeletedByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_deleted' as a PostDeleted.
+func PostDeletedByPostId(db *sqlx.DB, postId int) (*PostDeleted, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_deleted ` +
+		`WHERE PostId = ?`
+
+	XOLog(sqlstr, postId)
+	pd := PostDeleted{
+		_exists: true,
+	}
+
+	err = db.Get(&pd, sqlstr, postId)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostDeleted_LoadOne(&pd)
+
+	return &pd, nil
+}
+
 // PostKeyById Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_keys' as a PostKey.
 func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
 	var err error
@@ -460,8 +484,8 @@ func PostMediaByMediaId(db *sqlx.DB, mediaId int) (*PostMedia, error) {
 	return &pm, nil
 }
 
-// PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndCreatedTime Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
-func PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndCreatedTime(db *sqlx.DB, mentionedId int, postId int) (*PostMentioned, error) {
+// PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndPostCategoryEnumAndCreatedTime Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
+func PostMentionedByMentionedIdAndForUserIdAndPostIdAndPostUserIdAndPostTypeEnumAndPostCategoryEnumAndCreatedTime(db *sqlx.DB, mentionedId int, postId int) (*PostMentioned, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -628,16 +652,16 @@ func TagByTagId(db *sqlx.DB, tagId int) (*Tag, error) {
 	return &t, nil
 }
 
-// TagsPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun.tags_posts' as a TagsPost.
-func TagsPostById(db *sqlx.DB, id int) (*TagsPost, error) {
+// TagPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun.tag_post' as a TagPost.
+func TagPostById(db *sqlx.DB, id int) (*TagPost, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM sun.tags_posts ` +
+		`FROM sun.tag_post ` +
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	tp := TagsPost{
+	tp := TagPost{
 		_exists: true,
 	}
 
@@ -647,7 +671,7 @@ func TagsPostById(db *sqlx.DB, id int) (*TagsPost, error) {
 		return nil, err
 	}
 
-	OnTagsPost_LoadOne(&tp)
+	OnTagPost_LoadOne(&tp)
 
 	return &tp, nil
 }

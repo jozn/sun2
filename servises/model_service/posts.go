@@ -24,24 +24,25 @@ func AddPost(pp PostAddParam) (int, error) {
 	}
 	user.PostSeq += 1
 	post := &x.Post{
-		PostId:         helper.NextRowsSeqId(),
-		UserId:         pp.UserId,
-		PostTypeEnum:   int(x.PostTypeEnum_POST_TEXT),
-		MediaId:        0,
-		PostKey:        <-nextPostKey,
-		Text:           pp.Text,
-		RichText:       "",
-		MediaCount:     0,
-		SharedTo:       0,
-		DisableComment: 0,
-		HasTag:         0,
-		Seq:            user.PostSeq,
-		CommentsCount:  0,
-		LikesCount:     0,
-		ViewsCount:     1,
-		EditedTime:     0,
-		CreatedTime:    helper.TimeNow(),
-		ReSharedPostId: 0,
+		PostId:           helper.NextRowsSeqId(),
+		UserId:           pp.UserId,
+		PostTypeEnum:     int(x.PostTypeEnum_POST_TEXT),
+		PostCategoryEnum: int(x.PostCategoryEnum_PostCat_Text),
+		MediaId:          0,
+		PostKey:          <-nextPostKey,
+		Text:             pp.Text,
+		RichText:         "",
+		MediaCount:       0,
+		SharedTo:         0,
+		DisableComment:   0,
+		HasTag:           0,
+		Seq:              user.PostSeq,
+		CommentsCount:    0,
+		LikesCount:       0,
+		ViewsCount:       1,
+		EditedTime:       0,
+		CreatedTime:      helper.TimeNow(),
+		ReSharedPostId:   0,
 	}
 	if len(pp.MediaBytes) > 0 {
 		reader := bytes.NewBuffer(pp.MediaBytes)
@@ -50,7 +51,7 @@ func AddPost(pp PostAddParam) (int, error) {
 			return 0, err
 		}
 
-		media := &x.Media{
+		media := &x.PostMedia{
 			MediaId:       helper.NextRowsSeqId(),
 			UserId:        pp.UserId,
 			PostId:        post.PostId,
@@ -78,11 +79,19 @@ func AddPost(pp PostAddParam) (int, error) {
 		post.PostTypeEnum = int(x.PostTypeEnum_POST_PHOTO)
 		post.MediaId = media.MediaId
 	}
+	postCount := &x.PostCount{
+		PostId:     post.PostId,
+		ViewsCount: 0,
+	}
 	err = post.Save(base.DB)
+	_ = postCount.Save(base.DB)
 	if err != nil {
 		return 0, err
 	}
 	Counter.IncermentUserPostSeq(pp.UserId)
+
+    postTextsRelationshipsHandle(*post)
+
 	return post.PostId, nil
 }
 
@@ -91,4 +100,44 @@ func imageTypeToExt(typ string) string {
 		return "jpg"
 	}
 	return typ
+}
+
+//todo update post counter
+func DeletePostFully(userId, postId int) {
+	DeletePostsFully([]int{postId})
+}
+
+//todo: remove from cassandra too
+func DeletePostsFully(postIds []int) {
+	if len(postIds) == 0 {
+		return
+	}
+
+	x.NewPost_Deleter().PostId_In(postIds).Delete(base.DB)
+
+	//related posts types: comments,likes,...
+	x.NewAction_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewComment_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewLike_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewNotify_Deleter().PostId_In(postIds).Delete(base.DB)
+
+	//post
+	x.NewPostCount_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewPostMedia_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewPostMentioned_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewPostReshared_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewTagPost_Deleter().PostId_In(postIds).Delete(base.DB)
+
+	//metas
+	x.NewHomeFanout_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewSuggestedTopPost_Deleter().PostId_In(postIds).Delete(base.DB)
+
+	var arr []x.PostDeleted
+	for _, id := range postIds {
+		pd := x.PostDeleted{
+			PostId: id,
+		}
+		arr = append(arr, pd)
+	}
+	x.MassReplace_PostDeleted(arr, base.DB)
 }
