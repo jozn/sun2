@@ -17,7 +17,7 @@ func init()  {
 
 func DefultConnectToMysql() {
     var err error
-	DB, err = sqlx.Connect("mysql", "root:123456@tcp(localhost:3306)/ms?charset=utf8mb4")
+	DB, err = sqlx.Connect("mysql", "root:123456@tcp(localhost:3306)/sun?charset=utf8mb4")
 	helper.NoErr(err)
 	DB.MapperFunc(func(s string) string { return s })
 

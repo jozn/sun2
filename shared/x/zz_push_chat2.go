@@ -9,10 +9,10 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatSync represents a row from 'sun_chat.chat_sync'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PushChat2 represents a row from 'sun_push.push_chat2'.
 
 // Manualy copy this to project
-type ChatSync__ struct {
+type PushChat2__ struct {
 	SyncId            int    `json:"SyncId"`            // SyncId -
 	ToUserId          int    `json:"ToUserId"`          // ToUserId -
 	ChatSyncTypeId    int    `json:"ChatSyncTypeId"`    // ChatSyncTypeId -
@@ -28,155 +28,155 @@ type ChatSync__ struct {
 	_exists, _deleted bool
 }
 
-// Exists determines if the ChatSync exists in the database.
-func (cs *ChatSync) Exists() bool {
-	return cs._exists
+// Exists determines if the PushChat2 exists in the database.
+func (pc *PushChat2) Exists() bool {
+	return pc._exists
 }
 
-// Deleted provides information if the ChatSync has been deleted from the database.
-func (cs *ChatSync) Deleted() bool {
-	return cs._deleted
+// Deleted provides information if the PushChat2 has been deleted from the database.
+func (pc *PushChat2) Deleted() bool {
+	return pc._deleted
 }
 
-// Insert inserts the ChatSync to the database.
-func (cs *ChatSync) Insert(db XODB) error {
+// Insert inserts the PushChat2 to the database.
+func (pc *PushChat2) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if cs._exists {
+	if pc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun_chat.chat_sync (` +
+	const sqlstr = `INSERT INTO sun_push.push_chat2 (` +
 		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.ChatSync {
-		XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	if LogTableSqlReq.PushChat2 {
+		XOLog(sqlstr, pc.SyncId, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, pc.SyncId, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime)
 	if err != nil {
 		return err
 	}
 
 	// set existence
-	cs._exists = true
+	pc._exists = true
 
-	OnChatSync_AfterInsert(cs)
+	OnPushChat2_AfterInsert(pc)
 
 	return nil
 }
 
-// Insert inserts the ChatSync to the database.
-func (cs *ChatSync) Replace(db XODB) error {
+// Insert inserts the PushChat2 to the database.
+func (pc *PushChat2) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun_chat.chat_sync (` +
+	const sqlstr = `REPLACE INTO sun_push.push_chat2 (` +
 		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.ChatSync {
-		XOLog(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	if LogTableSqlReq.PushChat2 {
+		XOLog(sqlstr, pc.SyncId, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, cs.SyncId, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime)
+	_, err = db.Exec(sqlstr, pc.SyncId, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	cs._exists = true
+	pc._exists = true
 
-	OnChatSync_AfterInsert(cs)
+	OnPushChat2_AfterInsert(pc)
 
 	return nil
 }
 
-// Update updates the ChatSync in the database.
-func (cs *ChatSync) Update(db XODB) error {
+// Update updates the PushChat2 in the database.
+func (pc *PushChat2) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !cs._exists {
+	if !pc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if cs._deleted {
+	if pc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun_chat.chat_sync SET ` +
+	const sqlstr = `UPDATE sun_push.push_chat2 SET ` +
 		`ToUserId = ?, ChatSyncTypeId = ?, RoomKey = ?, ChatKey = ?, FromHighMessageId = ?, ToLowMessageId = ?, MessageId = ?, MessagePb = ?, MessageJson = ?, CreatedTime = ?` +
 		` WHERE SyncId = ?`
 
 	// run query
-	if LogTableSqlReq.ChatSync {
-		XOLog(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	if LogTableSqlReq.PushChat2 {
+		XOLog(sqlstr, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime, pc.SyncId)
 	}
-	_, err = db.Exec(sqlstr, cs.ToUserId, cs.ChatSyncTypeId, cs.RoomKey, cs.ChatKey, cs.FromHighMessageId, cs.ToLowMessageId, cs.MessageId, cs.MessagePb, cs.MessageJson, cs.CreatedTime, cs.SyncId)
+	_, err = db.Exec(sqlstr, pc.ToUserId, pc.ChatSyncTypeId, pc.RoomKey, pc.ChatKey, pc.FromHighMessageId, pc.ToLowMessageId, pc.MessageId, pc.MessagePb, pc.MessageJson, pc.CreatedTime, pc.SyncId)
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLogErr(err)
 	}
-	OnChatSync_AfterUpdate(cs)
+	OnPushChat2_AfterUpdate(pc)
 
 	return err
 }
 
-// Save saves the ChatSync to the database.
-func (cs *ChatSync) Save(db XODB) error {
-	if cs.Exists() {
-		return cs.Update(db)
+// Save saves the PushChat2 to the database.
+func (pc *PushChat2) Save(db XODB) error {
+	if pc.Exists() {
+		return pc.Update(db)
 	}
 
-	return cs.Replace(db)
+	return pc.Replace(db)
 }
 
-// Delete deletes the ChatSync from the database.
-func (cs *ChatSync) Delete(db XODB) error {
+// Delete deletes the PushChat2 from the database.
+func (pc *PushChat2) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !cs._exists {
+	if !pc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if cs._deleted {
+	if pc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_chat.chat_sync WHERE SyncId = ?`
+	const sqlstr = `DELETE FROM sun_push.push_chat2 WHERE SyncId = ?`
 
 	// run query
-	if LogTableSqlReq.ChatSync {
-		XOLog(sqlstr, cs.SyncId)
+	if LogTableSqlReq.PushChat2 {
+		XOLog(sqlstr, pc.SyncId)
 	}
-	_, err = db.Exec(sqlstr, cs.SyncId)
+	_, err = db.Exec(sqlstr, pc.SyncId)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	cs._deleted = true
+	pc._deleted = true
 
-	OnChatSync_AfterDelete(cs)
+	OnPushChat2_AfterDelete(pc)
 
 	return nil
 }
@@ -187,18 +187,18 @@ func (cs *ChatSync) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __ChatSync_Deleter struct {
+type __PushChat2_Deleter struct {
 	wheres   []whereClause
 	whereSep string
 }
 
-type __ChatSync_Updater struct {
+type __PushChat2_Updater struct {
 	wheres   []whereClause
 	updates  map[string]interface{}
 	whereSep string
 }
 
-type __ChatSync_Selector struct {
+type __PushChat2_Selector struct {
 	wheres    []whereClause
 	selectCol string
 	whereSep  string
@@ -207,19 +207,19 @@ type __ChatSync_Selector struct {
 	offset    int
 }
 
-func NewChatSync_Deleter() *__ChatSync_Deleter {
-	d := __ChatSync_Deleter{whereSep: " AND "}
+func NewPushChat2_Deleter() *__PushChat2_Deleter {
+	d := __PushChat2_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewChatSync_Updater() *__ChatSync_Updater {
-	u := __ChatSync_Updater{whereSep: " AND "}
+func NewPushChat2_Updater() *__PushChat2_Updater {
+	u := __PushChat2_Updater{whereSep: " AND "}
 	u.updates = make(map[string]interface{}, 10)
 	return &u
 }
 
-func NewChatSync_Selector() *__ChatSync_Selector {
-	u := __ChatSync_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPushChat2_Selector() *__PushChat2_Selector {
+	u := __PushChat2_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
@@ -227,12 +227,12 @@ func NewChatSync_Selector() *__ChatSync_Selector {
 //// for ints all selector updater, deleter
 
 ////////ints
-func (u *__ChatSync_Deleter) Or() *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) Or() *__PushChat2_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatSync_Deleter) SyncId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) SyncId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -245,7 +245,7 @@ func (u *__ChatSync_Deleter) SyncId_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) SyncId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) SyncId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -258,7 +258,7 @@ func (u *__ChatSync_Deleter) SyncId_Ins(ins ...int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) SyncId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) SyncId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -271,7 +271,7 @@ func (u *__ChatSync_Deleter) SyncId_NotIn(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) SyncId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -282,7 +282,7 @@ func (d *__ChatSync_Deleter) SyncId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) SyncId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -293,7 +293,7 @@ func (d *__ChatSync_Deleter) SyncId_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) SyncId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -304,7 +304,7 @@ func (d *__ChatSync_Deleter) SyncId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) SyncId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -315,7 +315,7 @@ func (d *__ChatSync_Deleter) SyncId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) SyncId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -326,7 +326,7 @@ func (d *__ChatSync_Deleter) SyncId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) SyncId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) SyncId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -337,7 +337,7 @@ func (d *__ChatSync_Deleter) SyncId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) ToUserId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToUserId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -350,7 +350,7 @@ func (u *__ChatSync_Deleter) ToUserId_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) ToUserId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToUserId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -363,7 +363,7 @@ func (u *__ChatSync_Deleter) ToUserId_Ins(ins ...int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) ToUserId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToUserId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -376,7 +376,7 @@ func (u *__ChatSync_Deleter) ToUserId_NotIn(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) ToUserId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -387,7 +387,7 @@ func (d *__ChatSync_Deleter) ToUserId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToUserId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -398,7 +398,7 @@ func (d *__ChatSync_Deleter) ToUserId_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToUserId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -409,7 +409,7 @@ func (d *__ChatSync_Deleter) ToUserId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToUserId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -420,7 +420,7 @@ func (d *__ChatSync_Deleter) ToUserId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToUserId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -431,7 +431,7 @@ func (d *__ChatSync_Deleter) ToUserId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToUserId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToUserId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -442,7 +442,7 @@ func (d *__ChatSync_Deleter) ToUserId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) ChatSyncTypeId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatSyncTypeId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -455,7 +455,7 @@ func (u *__ChatSync_Deleter) ChatSyncTypeId_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatSyncTypeId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -468,7 +468,7 @@ func (u *__ChatSync_Deleter) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Deleter 
 	return u
 }
 
-func (u *__ChatSync_Deleter) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatSyncTypeId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -481,7 +481,7 @@ func (u *__ChatSync_Deleter) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Deleter
 	return u
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -492,7 +492,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -503,7 +503,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -514,7 +514,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -525,7 +525,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -536,7 +536,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatSyncTypeId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatSyncTypeId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -547,7 +547,7 @@ func (d *__ChatSync_Deleter) ChatSyncTypeId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) FromHighMessageId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) FromHighMessageId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -560,7 +560,7 @@ func (u *__ChatSync_Deleter) FromHighMessageId_In(ins []int) *__ChatSync_Deleter
 	return u
 }
 
-func (u *__ChatSync_Deleter) FromHighMessageId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) FromHighMessageId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -573,7 +573,7 @@ func (u *__ChatSync_Deleter) FromHighMessageId_Ins(ins ...int) *__ChatSync_Delet
 	return u
 }
 
-func (u *__ChatSync_Deleter) FromHighMessageId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) FromHighMessageId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -586,7 +586,7 @@ func (u *__ChatSync_Deleter) FromHighMessageId_NotIn(ins []int) *__ChatSync_Dele
 	return u
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -597,7 +597,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -608,7 +608,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_NotEq(val int) *__ChatSync_Delete
 	return d
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -619,7 +619,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -630,7 +630,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -641,7 +641,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) FromHighMessageId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) FromHighMessageId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -652,7 +652,7 @@ func (d *__ChatSync_Deleter) FromHighMessageId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) ToLowMessageId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToLowMessageId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -665,7 +665,7 @@ func (u *__ChatSync_Deleter) ToLowMessageId_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) ToLowMessageId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToLowMessageId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -678,7 +678,7 @@ func (u *__ChatSync_Deleter) ToLowMessageId_Ins(ins ...int) *__ChatSync_Deleter 
 	return u
 }
 
-func (u *__ChatSync_Deleter) ToLowMessageId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ToLowMessageId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -691,7 +691,7 @@ func (u *__ChatSync_Deleter) ToLowMessageId_NotIn(ins []int) *__ChatSync_Deleter
 	return u
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -702,7 +702,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -713,7 +713,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -724,7 +724,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -735,7 +735,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -746,7 +746,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ToLowMessageId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ToLowMessageId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -757,7 +757,7 @@ func (d *__ChatSync_Deleter) ToLowMessageId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) MessageId_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageId_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -770,7 +770,7 @@ func (u *__ChatSync_Deleter) MessageId_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) MessageId_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageId_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -783,7 +783,7 @@ func (u *__ChatSync_Deleter) MessageId_Ins(ins ...int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) MessageId_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageId_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -796,7 +796,7 @@ func (u *__ChatSync_Deleter) MessageId_NotIn(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) MessageId_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -807,7 +807,7 @@ func (d *__ChatSync_Deleter) MessageId_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageId_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -818,7 +818,7 @@ func (d *__ChatSync_Deleter) MessageId_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageId_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -829,7 +829,7 @@ func (d *__ChatSync_Deleter) MessageId_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageId_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -840,7 +840,7 @@ func (d *__ChatSync_Deleter) MessageId_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageId_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -851,7 +851,7 @@ func (d *__ChatSync_Deleter) MessageId_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageId_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageId_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -862,7 +862,7 @@ func (d *__ChatSync_Deleter) MessageId_GE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) CreatedTime_In(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) CreatedTime_In(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -875,7 +875,7 @@ func (u *__ChatSync_Deleter) CreatedTime_In(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) CreatedTime_Ins(ins ...int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) CreatedTime_Ins(ins ...int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -888,7 +888,7 @@ func (u *__ChatSync_Deleter) CreatedTime_Ins(ins ...int) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) CreatedTime_NotIn(ins []int) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) CreatedTime_NotIn(ins []int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -901,7 +901,7 @@ func (u *__ChatSync_Deleter) CreatedTime_NotIn(ins []int) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_Eq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_Eq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -912,7 +912,7 @@ func (d *__ChatSync_Deleter) CreatedTime_Eq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_NotEq(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_NotEq(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -923,7 +923,7 @@ func (d *__ChatSync_Deleter) CreatedTime_NotEq(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_LT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_LT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -934,7 +934,7 @@ func (d *__ChatSync_Deleter) CreatedTime_LT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_LE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_LE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -945,7 +945,7 @@ func (d *__ChatSync_Deleter) CreatedTime_LE(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_GT(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_GT(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -956,7 +956,7 @@ func (d *__ChatSync_Deleter) CreatedTime_GT(val int) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) CreatedTime_GE(val int) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) CreatedTime_GE(val int) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -968,12 +968,12 @@ func (d *__ChatSync_Deleter) CreatedTime_GE(val int) *__ChatSync_Deleter {
 }
 
 ////////ints
-func (u *__ChatSync_Updater) Or() *__ChatSync_Updater {
+func (u *__PushChat2_Updater) Or() *__PushChat2_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatSync_Updater) SyncId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) SyncId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -986,7 +986,7 @@ func (u *__ChatSync_Updater) SyncId_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) SyncId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) SyncId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -999,7 +999,7 @@ func (u *__ChatSync_Updater) SyncId_Ins(ins ...int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) SyncId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) SyncId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1012,7 +1012,7 @@ func (u *__ChatSync_Updater) SyncId_NotIn(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) SyncId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1023,7 +1023,7 @@ func (d *__ChatSync_Updater) SyncId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) SyncId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1034,7 +1034,7 @@ func (d *__ChatSync_Updater) SyncId_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) SyncId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1045,7 +1045,7 @@ func (d *__ChatSync_Updater) SyncId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) SyncId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1056,7 +1056,7 @@ func (d *__ChatSync_Updater) SyncId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) SyncId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1067,7 +1067,7 @@ func (d *__ChatSync_Updater) SyncId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) SyncId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) SyncId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1078,7 +1078,7 @@ func (d *__ChatSync_Updater) SyncId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) ToUserId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToUserId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1091,7 +1091,7 @@ func (u *__ChatSync_Updater) ToUserId_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) ToUserId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToUserId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1104,7 +1104,7 @@ func (u *__ChatSync_Updater) ToUserId_Ins(ins ...int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) ToUserId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToUserId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1117,7 +1117,7 @@ func (u *__ChatSync_Updater) ToUserId_NotIn(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) ToUserId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1128,7 +1128,7 @@ func (d *__ChatSync_Updater) ToUserId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToUserId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1139,7 +1139,7 @@ func (d *__ChatSync_Updater) ToUserId_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToUserId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1150,7 +1150,7 @@ func (d *__ChatSync_Updater) ToUserId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToUserId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1161,7 +1161,7 @@ func (d *__ChatSync_Updater) ToUserId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToUserId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1172,7 +1172,7 @@ func (d *__ChatSync_Updater) ToUserId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToUserId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToUserId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1183,7 +1183,7 @@ func (d *__ChatSync_Updater) ToUserId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) ChatSyncTypeId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatSyncTypeId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1196,7 +1196,7 @@ func (u *__ChatSync_Updater) ChatSyncTypeId_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatSyncTypeId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1209,7 +1209,7 @@ func (u *__ChatSync_Updater) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Updater 
 	return u
 }
 
-func (u *__ChatSync_Updater) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatSyncTypeId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1222,7 +1222,7 @@ func (u *__ChatSync_Updater) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Updater
 	return u
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1233,7 +1233,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1244,7 +1244,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1255,7 +1255,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1266,7 +1266,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1277,7 +1277,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatSyncTypeId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatSyncTypeId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1288,7 +1288,7 @@ func (d *__ChatSync_Updater) ChatSyncTypeId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) FromHighMessageId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) FromHighMessageId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1301,7 +1301,7 @@ func (u *__ChatSync_Updater) FromHighMessageId_In(ins []int) *__ChatSync_Updater
 	return u
 }
 
-func (u *__ChatSync_Updater) FromHighMessageId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) FromHighMessageId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1314,7 +1314,7 @@ func (u *__ChatSync_Updater) FromHighMessageId_Ins(ins ...int) *__ChatSync_Updat
 	return u
 }
 
-func (u *__ChatSync_Updater) FromHighMessageId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) FromHighMessageId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1327,7 +1327,7 @@ func (u *__ChatSync_Updater) FromHighMessageId_NotIn(ins []int) *__ChatSync_Upda
 	return u
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1338,7 +1338,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1349,7 +1349,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_NotEq(val int) *__ChatSync_Update
 	return d
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1360,7 +1360,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1371,7 +1371,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1382,7 +1382,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) FromHighMessageId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) FromHighMessageId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1393,7 +1393,7 @@ func (d *__ChatSync_Updater) FromHighMessageId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) ToLowMessageId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToLowMessageId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1406,7 +1406,7 @@ func (u *__ChatSync_Updater) ToLowMessageId_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) ToLowMessageId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToLowMessageId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1419,7 +1419,7 @@ func (u *__ChatSync_Updater) ToLowMessageId_Ins(ins ...int) *__ChatSync_Updater 
 	return u
 }
 
-func (u *__ChatSync_Updater) ToLowMessageId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToLowMessageId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1432,7 +1432,7 @@ func (u *__ChatSync_Updater) ToLowMessageId_NotIn(ins []int) *__ChatSync_Updater
 	return u
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1443,7 +1443,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1454,7 +1454,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1465,7 +1465,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1476,7 +1476,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1487,7 +1487,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ToLowMessageId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ToLowMessageId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1498,7 +1498,7 @@ func (d *__ChatSync_Updater) ToLowMessageId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) MessageId_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageId_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1511,7 +1511,7 @@ func (u *__ChatSync_Updater) MessageId_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) MessageId_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageId_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1524,7 +1524,7 @@ func (u *__ChatSync_Updater) MessageId_Ins(ins ...int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) MessageId_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageId_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1537,7 +1537,7 @@ func (u *__ChatSync_Updater) MessageId_NotIn(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) MessageId_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1548,7 +1548,7 @@ func (d *__ChatSync_Updater) MessageId_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageId_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1559,7 +1559,7 @@ func (d *__ChatSync_Updater) MessageId_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageId_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1570,7 +1570,7 @@ func (d *__ChatSync_Updater) MessageId_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageId_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1581,7 +1581,7 @@ func (d *__ChatSync_Updater) MessageId_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageId_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1592,7 +1592,7 @@ func (d *__ChatSync_Updater) MessageId_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageId_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageId_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1603,7 +1603,7 @@ func (d *__ChatSync_Updater) MessageId_GE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) CreatedTime_In(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) CreatedTime_In(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1616,7 +1616,7 @@ func (u *__ChatSync_Updater) CreatedTime_In(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) CreatedTime_Ins(ins ...int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) CreatedTime_Ins(ins ...int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1629,7 +1629,7 @@ func (u *__ChatSync_Updater) CreatedTime_Ins(ins ...int) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) CreatedTime_NotIn(ins []int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) CreatedTime_NotIn(ins []int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1642,7 +1642,7 @@ func (u *__ChatSync_Updater) CreatedTime_NotIn(ins []int) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) CreatedTime_Eq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_Eq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1653,7 +1653,7 @@ func (d *__ChatSync_Updater) CreatedTime_Eq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) CreatedTime_NotEq(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_NotEq(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1664,7 +1664,7 @@ func (d *__ChatSync_Updater) CreatedTime_NotEq(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) CreatedTime_LT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_LT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1675,7 +1675,7 @@ func (d *__ChatSync_Updater) CreatedTime_LT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) CreatedTime_LE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_LE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1686,7 +1686,7 @@ func (d *__ChatSync_Updater) CreatedTime_LE(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) CreatedTime_GT(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_GT(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1697,7 +1697,7 @@ func (d *__ChatSync_Updater) CreatedTime_GT(val int) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) CreatedTime_GE(val int) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) CreatedTime_GE(val int) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1709,12 +1709,12 @@ func (d *__ChatSync_Updater) CreatedTime_GE(val int) *__ChatSync_Updater {
 }
 
 ////////ints
-func (u *__ChatSync_Selector) Or() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Or() *__PushChat2_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatSync_Selector) SyncId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) SyncId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1727,7 +1727,7 @@ func (u *__ChatSync_Selector) SyncId_In(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) SyncId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) SyncId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1740,7 +1740,7 @@ func (u *__ChatSync_Selector) SyncId_Ins(ins ...int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) SyncId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) SyncId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1753,7 +1753,7 @@ func (u *__ChatSync_Selector) SyncId_NotIn(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (d *__ChatSync_Selector) SyncId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1764,7 +1764,7 @@ func (d *__ChatSync_Selector) SyncId_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) SyncId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1775,7 +1775,7 @@ func (d *__ChatSync_Selector) SyncId_NotEq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) SyncId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1786,7 +1786,7 @@ func (d *__ChatSync_Selector) SyncId_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) SyncId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1797,7 +1797,7 @@ func (d *__ChatSync_Selector) SyncId_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) SyncId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1808,7 +1808,7 @@ func (d *__ChatSync_Selector) SyncId_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) SyncId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) SyncId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1819,7 +1819,7 @@ func (d *__ChatSync_Selector) SyncId_GE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) ToUserId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToUserId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1832,7 +1832,7 @@ func (u *__ChatSync_Selector) ToUserId_In(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) ToUserId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToUserId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1845,7 +1845,7 @@ func (u *__ChatSync_Selector) ToUserId_Ins(ins ...int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) ToUserId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToUserId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1858,7 +1858,7 @@ func (u *__ChatSync_Selector) ToUserId_NotIn(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (d *__ChatSync_Selector) ToUserId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1869,7 +1869,7 @@ func (d *__ChatSync_Selector) ToUserId_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToUserId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1880,7 +1880,7 @@ func (d *__ChatSync_Selector) ToUserId_NotEq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToUserId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1891,7 +1891,7 @@ func (d *__ChatSync_Selector) ToUserId_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToUserId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1902,7 +1902,7 @@ func (d *__ChatSync_Selector) ToUserId_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToUserId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1913,7 +1913,7 @@ func (d *__ChatSync_Selector) ToUserId_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToUserId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToUserId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1924,7 +1924,7 @@ func (d *__ChatSync_Selector) ToUserId_GE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) ChatSyncTypeId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatSyncTypeId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1937,7 +1937,7 @@ func (u *__ChatSync_Selector) ChatSyncTypeId_In(ins []int) *__ChatSync_Selector 
 	return u
 }
 
-func (u *__ChatSync_Selector) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatSyncTypeId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1950,7 +1950,7 @@ func (u *__ChatSync_Selector) ChatSyncTypeId_Ins(ins ...int) *__ChatSync_Selecto
 	return u
 }
 
-func (u *__ChatSync_Selector) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatSyncTypeId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1963,7 +1963,7 @@ func (u *__ChatSync_Selector) ChatSyncTypeId_NotIn(ins []int) *__ChatSync_Select
 	return u
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1974,7 +1974,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1985,7 +1985,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_NotEq(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1996,7 +1996,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2007,7 +2007,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2018,7 +2018,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatSyncTypeId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatSyncTypeId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2029,7 +2029,7 @@ func (d *__ChatSync_Selector) ChatSyncTypeId_GE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) FromHighMessageId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) FromHighMessageId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2042,7 +2042,7 @@ func (u *__ChatSync_Selector) FromHighMessageId_In(ins []int) *__ChatSync_Select
 	return u
 }
 
-func (u *__ChatSync_Selector) FromHighMessageId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) FromHighMessageId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2055,7 +2055,7 @@ func (u *__ChatSync_Selector) FromHighMessageId_Ins(ins ...int) *__ChatSync_Sele
 	return u
 }
 
-func (u *__ChatSync_Selector) FromHighMessageId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) FromHighMessageId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2068,7 +2068,7 @@ func (u *__ChatSync_Selector) FromHighMessageId_NotIn(ins []int) *__ChatSync_Sel
 	return u
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2079,7 +2079,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_Eq(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2090,7 +2090,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_NotEq(val int) *__ChatSync_Selec
 	return d
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2101,7 +2101,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_LT(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2112,7 +2112,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_LE(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2123,7 +2123,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_GT(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) FromHighMessageId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) FromHighMessageId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2134,7 +2134,7 @@ func (d *__ChatSync_Selector) FromHighMessageId_GE(val int) *__ChatSync_Selector
 	return d
 }
 
-func (u *__ChatSync_Selector) ToLowMessageId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToLowMessageId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2147,7 +2147,7 @@ func (u *__ChatSync_Selector) ToLowMessageId_In(ins []int) *__ChatSync_Selector 
 	return u
 }
 
-func (u *__ChatSync_Selector) ToLowMessageId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToLowMessageId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2160,7 +2160,7 @@ func (u *__ChatSync_Selector) ToLowMessageId_Ins(ins ...int) *__ChatSync_Selecto
 	return u
 }
 
-func (u *__ChatSync_Selector) ToLowMessageId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ToLowMessageId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2173,7 +2173,7 @@ func (u *__ChatSync_Selector) ToLowMessageId_NotIn(ins []int) *__ChatSync_Select
 	return u
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2184,7 +2184,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2195,7 +2195,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_NotEq(val int) *__ChatSync_Selector
 	return d
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2206,7 +2206,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2217,7 +2217,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2228,7 +2228,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ToLowMessageId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ToLowMessageId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2239,7 +2239,7 @@ func (d *__ChatSync_Selector) ToLowMessageId_GE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) MessageId_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageId_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2252,7 +2252,7 @@ func (u *__ChatSync_Selector) MessageId_In(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) MessageId_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageId_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2265,7 +2265,7 @@ func (u *__ChatSync_Selector) MessageId_Ins(ins ...int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) MessageId_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageId_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2278,7 +2278,7 @@ func (u *__ChatSync_Selector) MessageId_NotIn(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (d *__ChatSync_Selector) MessageId_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2289,7 +2289,7 @@ func (d *__ChatSync_Selector) MessageId_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageId_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2300,7 +2300,7 @@ func (d *__ChatSync_Selector) MessageId_NotEq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageId_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2311,7 +2311,7 @@ func (d *__ChatSync_Selector) MessageId_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageId_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2322,7 +2322,7 @@ func (d *__ChatSync_Selector) MessageId_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageId_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2333,7 +2333,7 @@ func (d *__ChatSync_Selector) MessageId_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageId_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageId_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2344,7 +2344,7 @@ func (d *__ChatSync_Selector) MessageId_GE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) CreatedTime_In(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) CreatedTime_In(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2357,7 +2357,7 @@ func (u *__ChatSync_Selector) CreatedTime_In(ins []int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) CreatedTime_Ins(ins ...int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) CreatedTime_Ins(ins ...int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2370,7 +2370,7 @@ func (u *__ChatSync_Selector) CreatedTime_Ins(ins ...int) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) CreatedTime_NotIn(ins []int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) CreatedTime_NotIn(ins []int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2383,7 +2383,7 @@ func (u *__ChatSync_Selector) CreatedTime_NotIn(ins []int) *__ChatSync_Selector 
 	return u
 }
 
-func (d *__ChatSync_Selector) CreatedTime_Eq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_Eq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2394,7 +2394,7 @@ func (d *__ChatSync_Selector) CreatedTime_Eq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) CreatedTime_NotEq(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_NotEq(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2405,7 +2405,7 @@ func (d *__ChatSync_Selector) CreatedTime_NotEq(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) CreatedTime_LT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_LT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2416,7 +2416,7 @@ func (d *__ChatSync_Selector) CreatedTime_LT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) CreatedTime_LE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_LE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2427,7 +2427,7 @@ func (d *__ChatSync_Selector) CreatedTime_LE(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) CreatedTime_GT(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_GT(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2438,7 +2438,7 @@ func (d *__ChatSync_Selector) CreatedTime_GT(val int) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) CreatedTime_GE(val int) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) CreatedTime_GE(val int) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2453,7 +2453,7 @@ func (d *__ChatSync_Selector) CreatedTime_GE(val int) *__ChatSync_Selector {
 
 ////////ints
 
-func (u *__ChatSync_Deleter) RoomKey_In(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) RoomKey_In(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2466,7 +2466,7 @@ func (u *__ChatSync_Deleter) RoomKey_In(ins []string) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) RoomKey_NotIn(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) RoomKey_NotIn(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2480,7 +2480,7 @@ func (u *__ChatSync_Deleter) RoomKey_NotIn(ins []string) *__ChatSync_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Deleter) RoomKey_Like(val string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) RoomKey_Like(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2491,7 +2491,7 @@ func (u *__ChatSync_Deleter) RoomKey_Like(val string) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) RoomKey_Eq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) RoomKey_Eq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2502,7 +2502,7 @@ func (d *__ChatSync_Deleter) RoomKey_Eq(val string) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) RoomKey_NotEq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) RoomKey_NotEq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2513,7 +2513,7 @@ func (d *__ChatSync_Deleter) RoomKey_NotEq(val string) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) ChatKey_In(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatKey_In(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2526,7 +2526,7 @@ func (u *__ChatSync_Deleter) ChatKey_In(ins []string) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) ChatKey_NotIn(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatKey_NotIn(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2540,7 +2540,7 @@ func (u *__ChatSync_Deleter) ChatKey_NotIn(ins []string) *__ChatSync_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Deleter) ChatKey_Like(val string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) ChatKey_Like(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2551,7 +2551,7 @@ func (u *__ChatSync_Deleter) ChatKey_Like(val string) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) ChatKey_Eq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatKey_Eq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2562,7 +2562,7 @@ func (d *__ChatSync_Deleter) ChatKey_Eq(val string) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) ChatKey_NotEq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) ChatKey_NotEq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2573,7 +2573,7 @@ func (d *__ChatSync_Deleter) ChatKey_NotEq(val string) *__ChatSync_Deleter {
 	return d
 }
 
-func (u *__ChatSync_Deleter) MessageJson_In(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageJson_In(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2586,7 +2586,7 @@ func (u *__ChatSync_Deleter) MessageJson_In(ins []string) *__ChatSync_Deleter {
 	return u
 }
 
-func (u *__ChatSync_Deleter) MessageJson_NotIn(ins []string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageJson_NotIn(ins []string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2600,7 +2600,7 @@ func (u *__ChatSync_Deleter) MessageJson_NotIn(ins []string) *__ChatSync_Deleter
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Deleter) MessageJson_Like(val string) *__ChatSync_Deleter {
+func (u *__PushChat2_Deleter) MessageJson_Like(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2611,7 +2611,7 @@ func (u *__ChatSync_Deleter) MessageJson_Like(val string) *__ChatSync_Deleter {
 	return u
 }
 
-func (d *__ChatSync_Deleter) MessageJson_Eq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageJson_Eq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2622,7 +2622,7 @@ func (d *__ChatSync_Deleter) MessageJson_Eq(val string) *__ChatSync_Deleter {
 	return d
 }
 
-func (d *__ChatSync_Deleter) MessageJson_NotEq(val string) *__ChatSync_Deleter {
+func (d *__PushChat2_Deleter) MessageJson_NotEq(val string) *__PushChat2_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2635,7 +2635,7 @@ func (d *__ChatSync_Deleter) MessageJson_NotEq(val string) *__ChatSync_Deleter {
 
 ////////ints
 
-func (u *__ChatSync_Updater) RoomKey_In(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) RoomKey_In(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2648,7 +2648,7 @@ func (u *__ChatSync_Updater) RoomKey_In(ins []string) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) RoomKey_NotIn(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) RoomKey_NotIn(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2662,7 +2662,7 @@ func (u *__ChatSync_Updater) RoomKey_NotIn(ins []string) *__ChatSync_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Updater) RoomKey_Like(val string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) RoomKey_Like(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2673,7 +2673,7 @@ func (u *__ChatSync_Updater) RoomKey_Like(val string) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) RoomKey_Eq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) RoomKey_Eq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2684,7 +2684,7 @@ func (d *__ChatSync_Updater) RoomKey_Eq(val string) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) RoomKey_NotEq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) RoomKey_NotEq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2695,7 +2695,7 @@ func (d *__ChatSync_Updater) RoomKey_NotEq(val string) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) ChatKey_In(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatKey_In(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2708,7 +2708,7 @@ func (u *__ChatSync_Updater) ChatKey_In(ins []string) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) ChatKey_NotIn(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatKey_NotIn(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2722,7 +2722,7 @@ func (u *__ChatSync_Updater) ChatKey_NotIn(ins []string) *__ChatSync_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Updater) ChatKey_Like(val string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatKey_Like(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2733,7 +2733,7 @@ func (u *__ChatSync_Updater) ChatKey_Like(val string) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) ChatKey_Eq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatKey_Eq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2744,7 +2744,7 @@ func (d *__ChatSync_Updater) ChatKey_Eq(val string) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) ChatKey_NotEq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) ChatKey_NotEq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2755,7 +2755,7 @@ func (d *__ChatSync_Updater) ChatKey_NotEq(val string) *__ChatSync_Updater {
 	return d
 }
 
-func (u *__ChatSync_Updater) MessageJson_In(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageJson_In(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2768,7 +2768,7 @@ func (u *__ChatSync_Updater) MessageJson_In(ins []string) *__ChatSync_Updater {
 	return u
 }
 
-func (u *__ChatSync_Updater) MessageJson_NotIn(ins []string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageJson_NotIn(ins []string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2782,7 +2782,7 @@ func (u *__ChatSync_Updater) MessageJson_NotIn(ins []string) *__ChatSync_Updater
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Updater) MessageJson_Like(val string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageJson_Like(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2793,7 +2793,7 @@ func (u *__ChatSync_Updater) MessageJson_Like(val string) *__ChatSync_Updater {
 	return u
 }
 
-func (d *__ChatSync_Updater) MessageJson_Eq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageJson_Eq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2804,7 +2804,7 @@ func (d *__ChatSync_Updater) MessageJson_Eq(val string) *__ChatSync_Updater {
 	return d
 }
 
-func (d *__ChatSync_Updater) MessageJson_NotEq(val string) *__ChatSync_Updater {
+func (d *__PushChat2_Updater) MessageJson_NotEq(val string) *__PushChat2_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2817,7 +2817,7 @@ func (d *__ChatSync_Updater) MessageJson_NotEq(val string) *__ChatSync_Updater {
 
 ////////ints
 
-func (u *__ChatSync_Selector) RoomKey_In(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) RoomKey_In(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2830,7 +2830,7 @@ func (u *__ChatSync_Selector) RoomKey_In(ins []string) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) RoomKey_NotIn(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) RoomKey_NotIn(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2844,7 +2844,7 @@ func (u *__ChatSync_Selector) RoomKey_NotIn(ins []string) *__ChatSync_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Selector) RoomKey_Like(val string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) RoomKey_Like(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2855,7 +2855,7 @@ func (u *__ChatSync_Selector) RoomKey_Like(val string) *__ChatSync_Selector {
 	return u
 }
 
-func (d *__ChatSync_Selector) RoomKey_Eq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) RoomKey_Eq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2866,7 +2866,7 @@ func (d *__ChatSync_Selector) RoomKey_Eq(val string) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) RoomKey_NotEq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) RoomKey_NotEq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2877,7 +2877,7 @@ func (d *__ChatSync_Selector) RoomKey_NotEq(val string) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) ChatKey_In(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatKey_In(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2890,7 +2890,7 @@ func (u *__ChatSync_Selector) ChatKey_In(ins []string) *__ChatSync_Selector {
 	return u
 }
 
-func (u *__ChatSync_Selector) ChatKey_NotIn(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatKey_NotIn(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2904,7 +2904,7 @@ func (u *__ChatSync_Selector) ChatKey_NotIn(ins []string) *__ChatSync_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Selector) ChatKey_Like(val string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) ChatKey_Like(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2915,7 +2915,7 @@ func (u *__ChatSync_Selector) ChatKey_Like(val string) *__ChatSync_Selector {
 	return u
 }
 
-func (d *__ChatSync_Selector) ChatKey_Eq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatKey_Eq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2926,7 +2926,7 @@ func (d *__ChatSync_Selector) ChatKey_Eq(val string) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) ChatKey_NotEq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) ChatKey_NotEq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2937,7 +2937,7 @@ func (d *__ChatSync_Selector) ChatKey_NotEq(val string) *__ChatSync_Selector {
 	return d
 }
 
-func (u *__ChatSync_Selector) MessageJson_In(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageJson_In(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2950,7 +2950,7 @@ func (u *__ChatSync_Selector) MessageJson_In(ins []string) *__ChatSync_Selector 
 	return u
 }
 
-func (u *__ChatSync_Selector) MessageJson_NotIn(ins []string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageJson_NotIn(ins []string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2964,7 +2964,7 @@ func (u *__ChatSync_Selector) MessageJson_NotIn(ins []string) *__ChatSync_Select
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__ChatSync_Selector) MessageJson_Like(val string) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) MessageJson_Like(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2975,7 +2975,7 @@ func (u *__ChatSync_Selector) MessageJson_Like(val string) *__ChatSync_Selector 
 	return u
 }
 
-func (d *__ChatSync_Selector) MessageJson_Eq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageJson_Eq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2986,7 +2986,7 @@ func (d *__ChatSync_Selector) MessageJson_Eq(val string) *__ChatSync_Selector {
 	return d
 }
 
-func (d *__ChatSync_Selector) MessageJson_NotEq(val string) *__ChatSync_Selector {
+func (d *__PushChat2_Selector) MessageJson_NotEq(val string) *__PushChat2_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3003,12 +3003,12 @@ func (d *__ChatSync_Selector) MessageJson_NotEq(val string) *__ChatSync_Selector
 
 //ints
 
-func (u *__ChatSync_Updater) SyncId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) SyncId(newVal int) *__PushChat2_Updater {
 	u.updates[" SyncId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) SyncId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) SyncId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" SyncId = SyncId+? "] = count
 	}
@@ -3024,12 +3024,12 @@ func (u *__ChatSync_Updater) SyncId_Increment(count int) *__ChatSync_Updater {
 
 //ints
 
-func (u *__ChatSync_Updater) ToUserId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToUserId(newVal int) *__PushChat2_Updater {
 	u.updates[" ToUserId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) ToUserId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToUserId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" ToUserId = ToUserId+? "] = count
 	}
@@ -3045,12 +3045,12 @@ func (u *__ChatSync_Updater) ToUserId_Increment(count int) *__ChatSync_Updater {
 
 //ints
 
-func (u *__ChatSync_Updater) ChatSyncTypeId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatSyncTypeId(newVal int) *__PushChat2_Updater {
 	u.updates[" ChatSyncTypeId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) ChatSyncTypeId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatSyncTypeId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" ChatSyncTypeId = ChatSyncTypeId+? "] = count
 	}
@@ -3067,7 +3067,7 @@ func (u *__ChatSync_Updater) ChatSyncTypeId_Increment(count int) *__ChatSync_Upd
 //ints
 
 //string
-func (u *__ChatSync_Updater) RoomKey(newVal string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) RoomKey(newVal string) *__PushChat2_Updater {
 	u.updates[" RoomKey = ? "] = newVal
 	return u
 }
@@ -3075,19 +3075,19 @@ func (u *__ChatSync_Updater) RoomKey(newVal string) *__ChatSync_Updater {
 //ints
 
 //string
-func (u *__ChatSync_Updater) ChatKey(newVal string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ChatKey(newVal string) *__PushChat2_Updater {
 	u.updates[" ChatKey = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__ChatSync_Updater) FromHighMessageId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) FromHighMessageId(newVal int) *__PushChat2_Updater {
 	u.updates[" FromHighMessageId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) FromHighMessageId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) FromHighMessageId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" FromHighMessageId = FromHighMessageId+? "] = count
 	}
@@ -3103,12 +3103,12 @@ func (u *__ChatSync_Updater) FromHighMessageId_Increment(count int) *__ChatSync_
 
 //ints
 
-func (u *__ChatSync_Updater) ToLowMessageId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToLowMessageId(newVal int) *__PushChat2_Updater {
 	u.updates[" ToLowMessageId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) ToLowMessageId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) ToLowMessageId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" ToLowMessageId = ToLowMessageId+? "] = count
 	}
@@ -3124,12 +3124,12 @@ func (u *__ChatSync_Updater) ToLowMessageId_Increment(count int) *__ChatSync_Upd
 
 //ints
 
-func (u *__ChatSync_Updater) MessageId(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageId(newVal int) *__PushChat2_Updater {
 	u.updates[" MessageId = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) MessageId_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageId_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" MessageId = MessageId+? "] = count
 	}
@@ -3150,19 +3150,19 @@ func (u *__ChatSync_Updater) MessageId_Increment(count int) *__ChatSync_Updater 
 //ints
 
 //string
-func (u *__ChatSync_Updater) MessageJson(newVal string) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) MessageJson(newVal string) *__PushChat2_Updater {
 	u.updates[" MessageJson = ? "] = newVal
 	return u
 }
 
 //ints
 
-func (u *__ChatSync_Updater) CreatedTime(newVal int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) CreatedTime(newVal int) *__PushChat2_Updater {
 	u.updates[" CreatedTime = ? "] = newVal
 	return u
 }
 
-func (u *__ChatSync_Updater) CreatedTime_Increment(count int) *__ChatSync_Updater {
+func (u *__PushChat2_Updater) CreatedTime_Increment(count int) *__PushChat2_Updater {
 	if count > 0 {
 		u.updates[" CreatedTime = CreatedTime+? "] = count
 	}
@@ -3181,191 +3181,191 @@ func (u *__ChatSync_Updater) CreatedTime_Increment(count int) *__ChatSync_Update
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__ChatSync_Selector) OrderBy_SyncId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_SyncId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY SyncId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_SyncId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_SyncId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY SyncId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_SyncId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_SyncId() *__PushChat2_Selector {
 	u.selectCol = "SyncId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ToUserId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ToUserId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ToUserId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ToUserId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ToUserId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ToUserId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_ToUserId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_ToUserId() *__PushChat2_Selector {
 	u.selectCol = "ToUserId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ChatSyncTypeId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ChatSyncTypeId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ChatSyncTypeId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ChatSyncTypeId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ChatSyncTypeId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ChatSyncTypeId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_ChatSyncTypeId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_ChatSyncTypeId() *__PushChat2_Selector {
 	u.selectCol = "ChatSyncTypeId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_RoomKey_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_RoomKey_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY RoomKey DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_RoomKey_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_RoomKey_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY RoomKey ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_RoomKey() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_RoomKey() *__PushChat2_Selector {
 	u.selectCol = "RoomKey"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ChatKey_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ChatKey_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ChatKey DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ChatKey_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ChatKey_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ChatKey ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_ChatKey() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_ChatKey() *__PushChat2_Selector {
 	u.selectCol = "ChatKey"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_FromHighMessageId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_FromHighMessageId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY FromHighMessageId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_FromHighMessageId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_FromHighMessageId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY FromHighMessageId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_FromHighMessageId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_FromHighMessageId() *__PushChat2_Selector {
 	u.selectCol = "FromHighMessageId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ToLowMessageId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ToLowMessageId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ToLowMessageId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_ToLowMessageId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_ToLowMessageId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY ToLowMessageId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_ToLowMessageId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_ToLowMessageId() *__PushChat2_Selector {
 	u.selectCol = "ToLowMessageId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessageId_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessageId_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessageId DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessageId_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessageId_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessageId ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_MessageId() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_MessageId() *__PushChat2_Selector {
 	u.selectCol = "MessageId"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessagePb_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessagePb_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessagePb DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessagePb_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessagePb_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessagePb ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_MessagePb() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_MessagePb() *__PushChat2_Selector {
 	u.selectCol = "MessagePb"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessageJson_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessageJson_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessageJson DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_MessageJson_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_MessageJson_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY MessageJson ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_MessageJson() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_MessageJson() *__PushChat2_Selector {
 	u.selectCol = "MessageJson"
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_CreatedTime_Desc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_CreatedTime_Desc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__ChatSync_Selector) OrderBy_CreatedTime_Asc() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) OrderBy_CreatedTime_Asc() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__ChatSync_Selector) Select_CreatedTime() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Select_CreatedTime() *__PushChat2_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__ChatSync_Selector) Limit(num int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Limit(num int) *__PushChat2_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__ChatSync_Selector) Offset(num int) *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Offset(num int) *__PushChat2_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__ChatSync_Selector) Order_Rand() *__ChatSync_Selector {
+func (u *__PushChat2_Selector) Order_Rand() *__PushChat2_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__ChatSync_Selector) _stoSql() (string, []interface{}) {
+func (u *__PushChat2_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.chat_sync"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_push.push_chat2"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3385,20 +3385,20 @@ func (u *__ChatSync_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__ChatSync_Selector) GetRow(db *sqlx.DB) (*ChatSync, error) {
+func (u *__PushChat2_Selector) GetRow(db *sqlx.DB) (*PushChat2, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &ChatSync{}
+	row := &PushChat2{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3406,25 +3406,25 @@ func (u *__ChatSync_Selector) GetRow(db *sqlx.DB) (*ChatSync, error) {
 
 	row._exists = true
 
-	OnChatSync_LoadOne(row)
+	OnPushChat2_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__ChatSync_Selector) GetRows(db *sqlx.DB) ([]*ChatSync, error) {
+func (u *__PushChat2_Selector) GetRows(db *sqlx.DB) ([]*PushChat2, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*ChatSync
+	var rows []*PushChat2
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3438,25 +3438,25 @@ func (u *__ChatSync_Selector) GetRows(db *sqlx.DB) ([]*ChatSync, error) {
 		rows[i]._exists = true
 	}
 
-	OnChatSync_LoadMany(rows)
+	OnPushChat2_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__ChatSync_Selector) GetRows2(db *sqlx.DB) ([]ChatSync, error) {
+func (u *__PushChat2_Selector) GetRows2(db *sqlx.DB) ([]PushChat2, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*ChatSync
+	var rows []*PushChat2
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3470,9 +3470,9 @@ func (u *__ChatSync_Selector) GetRows2(db *sqlx.DB) ([]ChatSync, error) {
 		rows[i]._exists = true
 	}
 
-	OnChatSync_LoadMany(rows)
+	OnPushChat2_LoadMany(rows)
 
-	rows2 := make([]ChatSync, len(rows))
+	rows2 := make([]PushChat2, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -3481,12 +3481,12 @@ func (u *__ChatSync_Selector) GetRows2(db *sqlx.DB) ([]ChatSync, error) {
 	return rows2, nil
 }
 
-func (u *__ChatSync_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PushChat2_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -3494,7 +3494,7 @@ func (u *__ChatSync_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return "", err
@@ -3503,19 +3503,19 @@ func (u *__ChatSync_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__ChatSync_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PushChat2_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3524,19 +3524,19 @@ func (u *__ChatSync_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__ChatSync_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PushChat2_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3545,19 +3545,19 @@ func (u *__ChatSync_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__ChatSync_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PushChat2_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3567,7 +3567,7 @@ func (u *__ChatSync_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
+func (u *__PushChat2_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -3584,18 +3584,18 @@ func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun_chat.chat_sync SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_push.push_chat2 SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3603,7 +3603,7 @@ func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3612,7 +3612,7 @@ func (u *__ChatSync_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
+func (d *__PushChat2_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -3625,15 +3625,15 @@ func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun_chat.chat_sync WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_push.push_chat2 WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3642,7 +3642,7 @@ func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3651,9 +3651,9 @@ func (d *__ChatSync_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  ChatSync ////////////////
+///////////////////////// Mass insert - replace for  PushChat2 ////////////////
 
-func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
+func MassInsert_PushChat2(rows []PushChat2, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -3664,7 +3664,7 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun_chat.chat_sync (" +
+	sqlstr := "INSERT INTO sun_push.push_chat2 (" +
 		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
@@ -3687,12 +3687,12 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return err
@@ -3701,7 +3701,7 @@ func MassInsert_ChatSync(rows []ChatSync, db XODB) error {
 	return nil
 }
 
-func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
+func MassReplace_PushChat2(rows []PushChat2, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -3712,7 +3712,7 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun_chat.chat_sync (" +
+	sqlstr := "REPLACE INTO sun_push.push_chat2 (" +
 		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
 		") VALUES " + insVals
 
@@ -3735,12 +3735,12 @@ func MassReplace_ChatSync(rows []ChatSync, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.ChatSync {
+	if LogTableSqlReq.PushChat2 {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.ChatSync {
+		if LogTableSqlReq.PushChat2 {
 			XOLogErr(err)
 		}
 		return err

@@ -153,79 +153,6 @@ type FollowingListMemberRemoved struct {
 	UnFollowedUserId: 0,
 	UpdatedTime: 0,
 */
-// group 'Group'.
-type Group struct {
-	GroupId          int    `db:"GroupId"`
-	GroupName        string `db:"GroupName"`
-	MembersCount     int    `db:"MembersCount"`
-	GroupPrivacyEnum int    `db:"GroupPrivacyEnum"`
-	CreatorUserId    int    `db:"CreatorUserId"`
-	CreatedTime      int    `db:"CreatedTime"`
-	UpdatedMs        int    `db:"UpdatedMs"`
-	CurrentSeq       int    `db:"CurrentSeq"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.Group {
-	GroupId: 0,
-	GroupName: "",
-	MembersCount: 0,
-	GroupPrivacyEnum: 0,
-	CreatorUserId: 0,
-	CreatedTime: 0,
-	UpdatedMs: 0,
-	CurrentSeq: 0,
-*/
-// group_member 'GroupMember'.
-type GroupMember struct {
-	Id              int    `db:"Id"`
-	GroupId         int    `db:"GroupId"`
-	GroupKey        string `db:"GroupKey"`
-	UserId          int    `db:"UserId"`
-	ByUserId        int    `db:"ByUserId"`
-	GroupRoleEnumId int    `db:"GroupRoleEnumId"`
-	CreatedTime     int    `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.GroupMember {
-	Id: 0,
-	GroupId: 0,
-	GroupKey: "",
-	UserId: 0,
-	ByUserId: 0,
-	GroupRoleEnumId: 0,
-	CreatedTime: 0,
-*/
-// group_message 'GroupMessage'.
-type GroupMessage struct {
-	MessageId          int    `db:"MessageId"`
-	RoomKey            string `db:"RoomKey"`
-	UserId             int    `db:"UserId"`
-	MessageFileId      int    `db:"MessageFileId"`
-	MessageTypeEnum    int    `db:"MessageTypeEnum"`
-	Text               string `db:"Text"`
-	CreatedMs          int    `db:"CreatedMs"`
-	DeliveryStatusEnum int    `db:"DeliveryStatusEnum"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.GroupMessage {
-	MessageId: 0,
-	RoomKey: "",
-	UserId: 0,
-	MessageFileId: 0,
-	MessageTypeEnum: 0,
-	Text: "",
-	CreatedMs: 0,
-	DeliveryStatusEnum: 0,
-*/
 // likes 'Like'.
 type Like struct {
 	Id           int `db:"Id"`
@@ -884,37 +811,6 @@ type ChatLastMessage struct {
 	LastMsgPb: []byte{},
 	LastMsgJson: "",
 */
-// chat_sync 'ChatSync'.
-type ChatSync struct {
-	SyncId            int    `db:"SyncId"`
-	ToUserId          int    `db:"ToUserId"`
-	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
-	RoomKey           string `db:"RoomKey"`
-	ChatKey           string `db:"ChatKey"`
-	FromHighMessageId int    `db:"FromHighMessageId"`
-	ToLowMessageId    int    `db:"ToLowMessageId"`
-	MessageId         int    `db:"MessageId"`
-	MessagePb         []byte `db:"MessagePb"`
-	MessageJson       string `db:"MessageJson"`
-	CreatedTime       int    `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.ChatSync {
-	SyncId: 0,
-	ToUserId: 0,
-	ChatSyncTypeId: 0,
-	RoomKey: "",
-	ChatKey: "",
-	FromHighMessageId: 0,
-	ToLowMessageId: 0,
-	MessageId: 0,
-	MessagePb: []byte{},
-	MessageJson: "",
-	CreatedTime: 0,
-*/
 // direct_message 'DirectMessage'.
 type DirectMessage struct {
 	ChatKey            string `db:"ChatKey"`
@@ -946,51 +842,78 @@ type DirectMessage struct {
 	DeliviryStatusEnum: 0,
 	ExtraPB: []byte{},
 */
-// home 'Home'.
-type Home struct {
-	Id        int `db:"Id"`
-	ForUserId int `db:"ForUserId"`
-	PostId    int `db:"PostId"`
+// group 'Group'.
+type Group struct {
+	GroupId          int    `db:"GroupId"`
+	GroupName        string `db:"GroupName"`
+	MembersCount     int    `db:"MembersCount"`
+	GroupPrivacyEnum int    `db:"GroupPrivacyEnum"`
+	CreatorUserId    int    `db:"CreatorUserId"`
+	CreatedTime      int    `db:"CreatedTime"`
+	UpdatedMs        int    `db:"UpdatedMs"`
+	CurrentSeq       int    `db:"CurrentSeq"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &x.Home {
-	Id: 0,
-	ForUserId: 0,
-	PostId: 0,
-*/
-// message_file 'MessageFile'.
-type MessageFile struct {
-	MessageFileId int    `db:"MessageFileId"`
-	FileTypeEnum  int    `db:"FileTypeEnum"`
-	UserId        int    `db:"UserId"` //orginal user id
-	Title         string `db:"Title"`
-	Size          int    `db:"Size"`
-	Width         int    `db:"Width"`
-	Height        int    `db:"Height"`
-	Duration      int    `db:"Duration"`
-	Extension     string `db:"Extension"`
-	Md5Hash       string `db:"Md5Hash"`
-	CreatedTime   int    `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.MessageFile {
-	MessageFileId: 0,
-	FileTypeEnum: 0,
-	UserId: 0,
-	Title: "",
-	Size: 0,
-	Width: 0,
-	Height: 0,
-	Duration: 0,
-	Extension: "",
-	Md5Hash: "",
+:= &x.Group {
+	GroupId: 0,
+	GroupName: "",
+	MembersCount: 0,
+	GroupPrivacyEnum: 0,
+	CreatorUserId: 0,
 	CreatedTime: 0,
+	UpdatedMs: 0,
+	CurrentSeq: 0,
+*/
+// group_member 'GroupMember'.
+type GroupMember struct {
+	Id              int    `db:"Id"`
+	GroupId         int    `db:"GroupId"`
+	GroupKey        string `db:"GroupKey"`
+	UserId          int    `db:"UserId"`
+	ByUserId        int    `db:"ByUserId"`
+	GroupRoleEnumId int    `db:"GroupRoleEnumId"`
+	CreatedTime     int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.GroupMember {
+	Id: 0,
+	GroupId: 0,
+	GroupKey: "",
+	UserId: 0,
+	ByUserId: 0,
+	GroupRoleEnumId: 0,
+	CreatedTime: 0,
+*/
+// group_message 'GroupMessage'.
+type GroupMessage struct {
+	MessageId          int    `db:"MessageId"`
+	RoomKey            string `db:"RoomKey"`
+	UserId             int    `db:"UserId"`
+	MessageFileId      int    `db:"MessageFileId"`
+	MessageTypeEnum    int    `db:"MessageTypeEnum"`
+	Text               string `db:"Text"`
+	CreatedMs          int    `db:"CreatedMs"`
+	DeliveryStatusEnum int    `db:"DeliveryStatusEnum"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.GroupMessage {
+	MessageId: 0,
+	RoomKey: "",
+	UserId: 0,
+	MessageFileId: 0,
+	MessageTypeEnum: 0,
+	Text: "",
+	CreatedMs: 0,
+	DeliveryStatusEnum: 0,
 */
 // file_msg 'FileMsg'.
 type FileMsg struct {
@@ -1098,6 +1021,105 @@ type SuggestedUser struct {
 	Weight: float32(0),
 	CreatedTime: 0,
 */
+// chat_sync2 'ChatSync2'.
+type ChatSync2 struct {
+	SyncId            int    `db:"SyncId"`
+	ToUserId          int    `db:"ToUserId"`
+	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
+	RoomKey           string `db:"RoomKey"`
+	ChatKey           string `db:"ChatKey"`
+	FromHighMessageId int    `db:"FromHighMessageId"`
+	ToLowMessageId    int    `db:"ToLowMessageId"`
+	MessageId         int    `db:"MessageId"`
+	MessagePb         []byte `db:"MessagePb"`
+	MessageJson       string `db:"MessageJson"`
+	CreatedTime       int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ChatSync2 {
+	SyncId: 0,
+	ToUserId: 0,
+	ChatSyncTypeId: 0,
+	RoomKey: "",
+	ChatKey: "",
+	FromHighMessageId: 0,
+	ToLowMessageId: 0,
+	MessageId: 0,
+	MessagePb: []byte{},
+	MessageJson: "",
+	CreatedTime: 0,
+*/
+// push_chat 'PushChat'.
+type PushChat struct {
+	PushId            int    `db:"PushId"`
+	ToUserId          int    `db:"ToUserId"`
+	PushTypeId        int    `db:"PushTypeId"`
+	RoomKey           string `db:"RoomKey"`
+	ChatKey           string `db:"ChatKey"`
+	Seq               int    `db:"Seq"`
+	UnseenCount       int    `db:"UnseenCount"`
+	FromHighMessageId int    `db:"FromHighMessageId"`
+	ToLowMessageId    int    `db:"ToLowMessageId"`
+	MessageId         int    `db:"MessageId"`
+	MessageFileId     int    `db:"MessageFileId"`
+	MessagePb         []byte `db:"MessagePb"`
+	MessageJson       string `db:"MessageJson"`
+	CreatedTime       int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PushChat {
+	PushId: 0,
+	ToUserId: 0,
+	PushTypeId: 0,
+	RoomKey: "",
+	ChatKey: "",
+	Seq: 0,
+	UnseenCount: 0,
+	FromHighMessageId: 0,
+	ToLowMessageId: 0,
+	MessageId: 0,
+	MessageFileId: 0,
+	MessagePb: []byte{},
+	MessageJson: "",
+	CreatedTime: 0,
+*/
+// push_chat2 'PushChat2'.
+type PushChat2 struct {
+	SyncId            int    `db:"SyncId"`
+	ToUserId          int    `db:"ToUserId"`
+	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
+	RoomKey           string `db:"RoomKey"`
+	ChatKey           string `db:"ChatKey"`
+	FromHighMessageId int    `db:"FromHighMessageId"`
+	ToLowMessageId    int    `db:"ToLowMessageId"`
+	MessageId         int    `db:"MessageId"`
+	MessagePb         []byte `db:"MessagePb"`
+	MessageJson       string `db:"MessageJson"`
+	CreatedTime       int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PushChat2 {
+	SyncId: 0,
+	ToUserId: 0,
+	ChatSyncTypeId: 0,
+	RoomKey: "",
+	ChatKey: "",
+	FromHighMessageId: 0,
+	ToLowMessageId: 0,
+	MessageId: 0,
+	MessagePb: []byte{},
+	MessageJson: "",
+	CreatedTime: 0,
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -1108,9 +1130,6 @@ type LogTableSql struct {
 	FollowingList              bool
 	FollowingListMember        bool
 	FollowingListMemberRemoved bool
-	Group                      bool
-	GroupMember                bool
-	GroupMessage               bool
 	Like                       bool
 	Notify                     bool
 	NotifyRemoved              bool
@@ -1135,16 +1154,19 @@ type LogTableSql struct {
 	UserPassword               bool
 	Chat                       bool
 	ChatLastMessage            bool
-	ChatSync                   bool
 	DirectMessage              bool
-	Home                       bool
-	MessageFile                bool
+	Group                      bool
+	GroupMember                bool
+	GroupMessage               bool
 	FileMsg                    bool
 	FilePost                   bool
 	ActionFanout               bool
 	HomeFanout                 bool
 	SuggestedTopPost           bool
 	SuggestedUser              bool
+	ChatSync2                  bool
+	PushChat                   bool
+	PushChat2                  bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1156,9 +1178,6 @@ var LogTableSqlReq = LogTableSql{
 	FollowingList:              true,
 	FollowingListMember:        true,
 	FollowingListMemberRemoved: true,
-	Group:               true,
-	GroupMember:         true,
-	GroupMessage:        true,
 	Like:                true,
 	Notify:              true,
 	NotifyRemoved:       true,
@@ -1183,14 +1202,17 @@ var LogTableSqlReq = LogTableSql{
 	UserPassword:        true,
 	Chat:                true,
 	ChatLastMessage:     true,
-	ChatSync:            true,
 	DirectMessage:       true,
-	Home:                true,
-	MessageFile:         true,
+	Group:               true,
+	GroupMember:         true,
+	GroupMessage:        true,
 	FileMsg:             true,
 	FilePost:            true,
 	ActionFanout:        true,
 	HomeFanout:          true,
 	SuggestedTopPost:    true,
 	SuggestedUser:       true,
+	ChatSync2:           true,
+	PushChat:            true,
+	PushChat2:           true,
 }

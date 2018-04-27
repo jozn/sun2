@@ -66,35 +66,6 @@ message PB_FollowingListMemberRemoved {
     int32 UnFollowedUserId = 4;
     int32 UpdatedTime = 5;
 }
-message PB_Group {
-    int64 GroupId = 1;
-    string GroupName = 2;
-    int32 MembersCount = 3;
-    int32 GroupPrivacyEnum = 4;
-    int32 CreatorUserId = 5;
-    int32 CreatedTime = 6;
-    int64 UpdatedMs = 7;
-    int32 CurrentSeq = 8;
-}
-message PB_GroupMember {
-    int64 Id = 1;
-    int64 GroupId = 2;
-    string GroupKey = 3;
-    int32 UserId = 4;
-    int32 ByUserId = 5;
-    int32 GroupRoleEnumId = 6;
-    int32 CreatedTime = 7;
-}
-message PB_GroupMessage {
-    int64 MessageId = 1;
-    string RoomKey = 2;
-    int32 UserId = 3;
-    int64 MessageFileId = 4;
-    int32 MessageTypeEnum = 5;
-    string Text = 6;
-    int64 CreatedMs = 7;
-    int32 DeliveryStatusEnum = 8;
-}
 message PB_Like {
     int64 Id = 1;
     int64 PostId = 2;
@@ -364,19 +335,6 @@ message PB_ChatLastMessage {
     bytes LastMsgPb = 3;
     string LastMsgJson = 4;
 }
-message PB_ChatSync {
-    int64 SyncId = 1;
-    int32 ToUserId = 2;
-    int32 ChatSyncTypeId = 3;
-    string RoomKey = 4;
-    string ChatKey = 5;
-    int64 FromHighMessageId = 6;
-    int64 ToLowMessageId = 7;
-    int64 MessageId = 8;
-    bytes MessagePb = 9;
-    string MessageJson = 10;
-    int32 CreatedTime = 11;
-}
 message PB_DirectMessage {
     string ChatKey = 1;
     int64 MessageId = 2;
@@ -390,23 +348,34 @@ message PB_DirectMessage {
     int32 DeliviryStatusEnum = 10;
     bytes ExtraPB = 11;
 }
-message PB_Home {
-    int64 Id = 1;
-    int32 ForUserId = 2;
-    int64 PostId = 3;
+message PB_Group {
+    int64 GroupId = 1;
+    string GroupName = 2;
+    int32 MembersCount = 3;
+    int32 GroupPrivacyEnum = 4;
+    int32 CreatorUserId = 5;
+    int32 CreatedTime = 6;
+    int64 UpdatedMs = 7;
+    int32 CurrentSeq = 8;
 }
-message PB_MessageFile {
-    int64 MessageFileId = 1;
-    int32 FileTypeEnum = 2;
+message PB_GroupMember {
+    int64 Id = 1;
+    int64 GroupId = 2;
+    string GroupKey = 3;
+    int32 UserId = 4;
+    int32 ByUserId = 5;
+    int32 GroupRoleEnumId = 6;
+    int32 CreatedTime = 7;
+}
+message PB_GroupMessage {
+    int64 MessageId = 1;
+    string RoomKey = 2;
     int32 UserId = 3;
-    string Title = 4;
-    int32 Size = 5;
-    int32 Width = 6;
-    int32 Height = 7;
-    int32 Duration = 8;
-    string Extension = 9;
-    string Md5Hash = 10;
-    int32 CreatedTime = 11;
+    int64 MessageFileId = 4;
+    int32 MessageTypeEnum = 5;
+    string Text = 6;
+    int64 CreatedMs = 7;
+    int32 DeliveryStatusEnum = 8;
 }
 message PB_FileMsg {
     int64 Id = 1;
@@ -445,4 +414,46 @@ message PB_SuggestedUser {
     int32 TargetId = 3;
     float Weight = 4;
     int32 CreatedTime = 5;
+}
+message PB_ChatSync2 {
+    int64 SyncId = 1;
+    int32 ToUserId = 2;
+    int32 ChatSyncTypeId = 3;
+    string RoomKey = 4;
+    string ChatKey = 5;
+    int64 FromHighMessageId = 6;
+    int64 ToLowMessageId = 7;
+    int64 MessageId = 8;
+    bytes MessagePb = 9;
+    string MessageJson = 10;
+    int32 CreatedTime = 11;
+}
+message PB_PushChat {
+    int64 PushId = 1;
+    int32 ToUserId = 2;
+    int32 PushTypeId = 3;
+    string RoomKey = 4;
+    string ChatKey = 5;
+    int32 Seq = 6;
+    int32 UnseenCount = 7;
+    int64 FromHighMessageId = 8;
+    int64 ToLowMessageId = 9;
+    int64 MessageId = 10;
+    int64 MessageFileId = 11;
+    bytes MessagePb = 12;
+    string MessageJson = 13;
+    int32 CreatedTime = 14;
+}
+message PB_PushChat2 {
+    int64 SyncId = 1;
+    int32 ToUserId = 2;
+    int32 ChatSyncTypeId = 3;
+    string RoomKey = 4;
+    string ChatKey = 5;
+    int64 FromHighMessageId = 6;
+    int64 ToLowMessageId = 7;
+    int64 MessageId = 8;
+    bytes MessagePb = 9;
+    string MessageJson = 10;
+    int32 CreatedTime = 11;
 }

@@ -173,78 +173,6 @@ func OnFollowingListMemberRemoved_LoadMany(rows []*FollowingListMemberRemoved) {
 	}
 }
 
-//Group Events
-
-func OnGroup_AfterInsert(row *Group) {
-	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
-}
-
-func OnGroup_AfterUpdate(row *Group) {
-	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
-}
-
-func OnGroup_AfterDelete(row *Group) {
-	RowCache.Delete("Group:" + strconv.Itoa(row.GroupId))
-}
-
-func OnGroup_LoadOne(row *Group) {
-	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
-}
-
-func OnGroup_LoadMany(rows []*Group) {
-	for _, row := range rows {
-		RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
-	}
-}
-
-//GroupMember Events
-
-func OnGroupMember_AfterInsert(row *GroupMember) {
-	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnGroupMember_AfterUpdate(row *GroupMember) {
-	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnGroupMember_AfterDelete(row *GroupMember) {
-	RowCache.Delete("GroupMember:" + strconv.Itoa(row.Id))
-}
-
-func OnGroupMember_LoadOne(row *GroupMember) {
-	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
-}
-
-func OnGroupMember_LoadMany(rows []*GroupMember) {
-	for _, row := range rows {
-		RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
-	}
-}
-
-//GroupMessage Events
-
-func OnGroupMessage_AfterInsert(row *GroupMessage) {
-	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
-}
-
-func OnGroupMessage_AfterUpdate(row *GroupMessage) {
-	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
-}
-
-func OnGroupMessage_AfterDelete(row *GroupMessage) {
-	RowCache.Delete("GroupMessage:" + strconv.Itoa(row.MessageId))
-}
-
-func OnGroupMessage_LoadOne(row *GroupMessage) {
-	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
-}
-
-func OnGroupMessage_LoadMany(rows []*GroupMessage) {
-	for _, row := range rows {
-		RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
-	}
-}
-
 //Like Events
 
 func OnLike_AfterInsert(row *Like) {
@@ -821,30 +749,6 @@ func OnChatLastMessage_LoadMany(rows []*ChatLastMessage) {
 	}
 }
 
-//ChatSync Events
-
-func OnChatSync_AfterInsert(row *ChatSync) {
-	RowCache.Set("ChatSync:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
-}
-
-func OnChatSync_AfterUpdate(row *ChatSync) {
-	RowCache.Set("ChatSync:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
-}
-
-func OnChatSync_AfterDelete(row *ChatSync) {
-	RowCache.Delete("ChatSync:" + strconv.Itoa(row.SyncId))
-}
-
-func OnChatSync_LoadOne(row *ChatSync) {
-	RowCache.Set("ChatSync:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
-}
-
-func OnChatSync_LoadMany(rows []*ChatSync) {
-	for _, row := range rows {
-		RowCache.Set("ChatSync:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
-	}
-}
-
 //DirectMessage Events
 
 func OnDirectMessage_AfterInsert(row *DirectMessage) {
@@ -869,51 +773,75 @@ func OnDirectMessage_LoadMany(rows []*DirectMessage) {
 	}
 }
 
-//Home Events
+//Group Events
 
-func OnHome_AfterInsert(row *Home) {
-	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnGroup_AfterInsert(row *Group) {
+	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
 }
 
-func OnHome_AfterUpdate(row *Home) {
-	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnGroup_AfterUpdate(row *Group) {
+	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
 }
 
-func OnHome_AfterDelete(row *Home) {
-	RowCache.Delete("Home:" + strconv.Itoa(row.Id))
+func OnGroup_AfterDelete(row *Group) {
+	RowCache.Delete("Group:" + strconv.Itoa(row.GroupId))
 }
 
-func OnHome_LoadOne(row *Home) {
-	RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+func OnGroup_LoadOne(row *Group) {
+	RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
 }
 
-func OnHome_LoadMany(rows []*Home) {
+func OnGroup_LoadMany(rows []*Group) {
 	for _, row := range rows {
-		RowCache.Set("Home:"+strconv.Itoa(row.Id), row, time.Hour*0)
+		RowCache.Set("Group:"+strconv.Itoa(row.GroupId), row, time.Hour*0)
 	}
 }
 
-//MessageFile Events
+//GroupMember Events
 
-func OnMessageFile_AfterInsert(row *MessageFile) {
-	RowCache.Set("MessageFile:"+strconv.Itoa(row.MessageFileId), row, time.Hour*0)
+func OnGroupMember_AfterInsert(row *GroupMember) {
+	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnMessageFile_AfterUpdate(row *MessageFile) {
-	RowCache.Set("MessageFile:"+strconv.Itoa(row.MessageFileId), row, time.Hour*0)
+func OnGroupMember_AfterUpdate(row *GroupMember) {
+	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnMessageFile_AfterDelete(row *MessageFile) {
-	RowCache.Delete("MessageFile:" + strconv.Itoa(row.MessageFileId))
+func OnGroupMember_AfterDelete(row *GroupMember) {
+	RowCache.Delete("GroupMember:" + strconv.Itoa(row.Id))
 }
 
-func OnMessageFile_LoadOne(row *MessageFile) {
-	RowCache.Set("MessageFile:"+strconv.Itoa(row.MessageFileId), row, time.Hour*0)
+func OnGroupMember_LoadOne(row *GroupMember) {
+	RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
-func OnMessageFile_LoadMany(rows []*MessageFile) {
+func OnGroupMember_LoadMany(rows []*GroupMember) {
 	for _, row := range rows {
-		RowCache.Set("MessageFile:"+strconv.Itoa(row.MessageFileId), row, time.Hour*0)
+		RowCache.Set("GroupMember:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//GroupMessage Events
+
+func OnGroupMessage_AfterInsert(row *GroupMessage) {
+	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
+}
+
+func OnGroupMessage_AfterUpdate(row *GroupMessage) {
+	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
+}
+
+func OnGroupMessage_AfterDelete(row *GroupMessage) {
+	RowCache.Delete("GroupMessage:" + strconv.Itoa(row.MessageId))
+}
+
+func OnGroupMessage_LoadOne(row *GroupMessage) {
+	RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
+}
+
+func OnGroupMessage_LoadMany(rows []*GroupMessage) {
+	for _, row := range rows {
+		RowCache.Set("GroupMessage:"+strconv.Itoa(row.MessageId), row, time.Hour*0)
 	}
 }
 
@@ -1058,5 +986,77 @@ func OnSuggestedUser_LoadOne(row *SuggestedUser) {
 func OnSuggestedUser_LoadMany(rows []*SuggestedUser) {
 	for _, row := range rows {
 		RowCache.Set("SuggestedUser:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//ChatSync2 Events
+
+func OnChatSync2_AfterInsert(row *ChatSync2) {
+	RowCache.Set("ChatSync2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnChatSync2_AfterUpdate(row *ChatSync2) {
+	RowCache.Set("ChatSync2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnChatSync2_AfterDelete(row *ChatSync2) {
+	RowCache.Delete("ChatSync2:" + strconv.Itoa(row.SyncId))
+}
+
+func OnChatSync2_LoadOne(row *ChatSync2) {
+	RowCache.Set("ChatSync2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnChatSync2_LoadMany(rows []*ChatSync2) {
+	for _, row := range rows {
+		RowCache.Set("ChatSync2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+	}
+}
+
+//PushChat Events
+
+func OnPushChat_AfterInsert(row *PushChat) {
+	RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Hour*0)
+}
+
+func OnPushChat_AfterUpdate(row *PushChat) {
+	RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Hour*0)
+}
+
+func OnPushChat_AfterDelete(row *PushChat) {
+	RowCache.Delete("PushChat:" + strconv.Itoa(row.PushId))
+}
+
+func OnPushChat_LoadOne(row *PushChat) {
+	RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Hour*0)
+}
+
+func OnPushChat_LoadMany(rows []*PushChat) {
+	for _, row := range rows {
+		RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Hour*0)
+	}
+}
+
+//PushChat2 Events
+
+func OnPushChat2_AfterInsert(row *PushChat2) {
+	RowCache.Set("PushChat2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnPushChat2_AfterUpdate(row *PushChat2) {
+	RowCache.Set("PushChat2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnPushChat2_AfterDelete(row *PushChat2) {
+	RowCache.Delete("PushChat2:" + strconv.Itoa(row.SyncId))
+}
+
+func OnPushChat2_LoadOne(row *PushChat2) {
+	RowCache.Set("PushChat2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
+}
+
+func OnPushChat2_LoadMany(rows []*PushChat2) {
+	for _, row := range rows {
+		RowCache.Set("PushChat2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
 	}
 }

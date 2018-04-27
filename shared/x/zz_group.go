@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Group represents a row from 'sun.group'.
+) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Group represents a row from 'sun_chat.group'.
 
 // Manualy copy this to project
 type Group__ struct {
@@ -45,7 +45,7 @@ func (g *Group) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.group (` +
+	const sqlstr = `INSERT INTO sun_chat.group (` +
 		`GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -74,7 +74,7 @@ func (g *Group) Replace(db XODB) error {
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.group (` +
+	const sqlstr = `REPLACE INTO sun_chat.group (` +
 		`GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -114,7 +114,7 @@ func (g *Group) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.group SET ` +
+	const sqlstr = `UPDATE sun_chat.group SET ` +
 		`GroupName = ?, MembersCount = ?, GroupPrivacyEnum = ?, CreatorUserId = ?, CreatedTime = ?, UpdatedMs = ?, CurrentSeq = ?` +
 		` WHERE GroupId = ?`
 
@@ -156,7 +156,7 @@ func (g *Group) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.group WHERE GroupId = ?`
+	const sqlstr = `DELETE FROM sun_chat.group WHERE GroupId = ?`
 
 	// run query
 	if LogTableSqlReq.Group {
@@ -2937,7 +2937,7 @@ func (u *__Group_Selector) Order_Rand() *__Group_Selector {
 func (u *__Group_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.group"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.group"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3156,7 +3156,7 @@ func (u *__Group_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.group SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.group SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -3197,7 +3197,7 @@ func (d *__Group_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.group WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.group WHERE " + wheresStr
 
 	// run query
 	if LogTableSqlReq.Group {
@@ -3236,7 +3236,7 @@ func MassInsert_Group(rows []Group, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun.group (" +
+	sqlstr := "INSERT INTO sun_chat.group (" +
 		"GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq" +
 		") VALUES " + insVals
 
@@ -3281,7 +3281,7 @@ func MassReplace_Group(rows []Group, db XODB) error {
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun.group (" +
+	sqlstr := "REPLACE INTO sun_chat.group (" +
 		"GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq" +
 		") VALUES " + insVals
 

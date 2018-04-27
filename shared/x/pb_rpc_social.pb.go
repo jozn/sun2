@@ -25,7 +25,7 @@ type PB_SocialParam_AddComment struct {
 func (m *PB_SocialParam_AddComment) Reset()                    { *m = PB_SocialParam_AddComment{} }
 func (m *PB_SocialParam_AddComment) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_AddComment) ProtoMessage()               {}
-func (*PB_SocialParam_AddComment) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{0} }
+func (*PB_SocialParam_AddComment) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
 
 func (m *PB_SocialParam_AddComment) GetPostId() int64 {
 	if m != nil {
@@ -49,7 +49,7 @@ type PB_SocialResponse_AddComment struct {
 func (m *PB_SocialResponse_AddComment) Reset()                    { *m = PB_SocialResponse_AddComment{} }
 func (m *PB_SocialResponse_AddComment) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_AddComment) ProtoMessage()               {}
-func (*PB_SocialResponse_AddComment) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{1} }
+func (*PB_SocialResponse_AddComment) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{1} }
 
 func (m *PB_SocialResponse_AddComment) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -74,7 +74,7 @@ type PB_SocialParam_DeleteComment struct {
 func (m *PB_SocialParam_DeleteComment) Reset()                    { *m = PB_SocialParam_DeleteComment{} }
 func (m *PB_SocialParam_DeleteComment) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_DeleteComment) ProtoMessage()               {}
-func (*PB_SocialParam_DeleteComment) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{2} }
+func (*PB_SocialParam_DeleteComment) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{2} }
 
 func (m *PB_SocialParam_DeleteComment) GetPostId() int64 {
 	if m != nil {
@@ -98,7 +98,7 @@ type PB_SocialResponse_DeleteComment struct {
 func (m *PB_SocialResponse_DeleteComment) Reset()                    { *m = PB_SocialResponse_DeleteComment{} }
 func (m *PB_SocialResponse_DeleteComment) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_DeleteComment) ProtoMessage()               {}
-func (*PB_SocialResponse_DeleteComment) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{3} }
+func (*PB_SocialResponse_DeleteComment) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{3} }
 
 func (m *PB_SocialResponse_DeleteComment) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -124,7 +124,7 @@ type PB_SocialParam_AddPost struct {
 func (m *PB_SocialParam_AddPost) Reset()                    { *m = PB_SocialParam_AddPost{} }
 func (m *PB_SocialParam_AddPost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_AddPost) ProtoMessage()               {}
-func (*PB_SocialParam_AddPost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{4} }
+func (*PB_SocialParam_AddPost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{4} }
 
 func (m *PB_SocialParam_AddPost) GetText() string {
 	if m != nil {
@@ -148,7 +148,7 @@ type PB_SocialResponse_AddPost struct {
 func (m *PB_SocialResponse_AddPost) Reset()                    { *m = PB_SocialResponse_AddPost{} }
 func (m *PB_SocialResponse_AddPost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_AddPost) ProtoMessage()               {}
-func (*PB_SocialResponse_AddPost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{5} }
+func (*PB_SocialResponse_AddPost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{5} }
 
 func (m *PB_SocialResponse_AddPost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -173,7 +173,7 @@ type PB_SocialParam_EditPost struct {
 func (m *PB_SocialParam_EditPost) Reset()                    { *m = PB_SocialParam_EditPost{} }
 func (m *PB_SocialParam_EditPost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_EditPost) ProtoMessage()               {}
-func (*PB_SocialParam_EditPost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{6} }
+func (*PB_SocialParam_EditPost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{6} }
 
 func (m *PB_SocialParam_EditPost) GetPostId() int64 {
 	if m != nil {
@@ -197,7 +197,7 @@ type PB_SocialResponse_EditPost struct {
 func (m *PB_SocialResponse_EditPost) Reset()                    { *m = PB_SocialResponse_EditPost{} }
 func (m *PB_SocialResponse_EditPost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_EditPost) ProtoMessage()               {}
-func (*PB_SocialResponse_EditPost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{7} }
+func (*PB_SocialResponse_EditPost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{7} }
 
 func (m *PB_SocialResponse_EditPost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -221,7 +221,7 @@ type PB_SocialParam_DeletePost struct {
 func (m *PB_SocialParam_DeletePost) Reset()                    { *m = PB_SocialParam_DeletePost{} }
 func (m *PB_SocialParam_DeletePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_DeletePost) ProtoMessage()               {}
-func (*PB_SocialParam_DeletePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{8} }
+func (*PB_SocialParam_DeletePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{8} }
 
 func (m *PB_SocialParam_DeletePost) GetPostId() int64 {
 	if m != nil {
@@ -238,7 +238,7 @@ type PB_SocialResponse_DeletePost struct {
 func (m *PB_SocialResponse_DeletePost) Reset()                    { *m = PB_SocialResponse_DeletePost{} }
 func (m *PB_SocialResponse_DeletePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_DeletePost) ProtoMessage()               {}
-func (*PB_SocialResponse_DeletePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{9} }
+func (*PB_SocialResponse_DeletePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{9} }
 
 func (m *PB_SocialResponse_DeletePost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -262,7 +262,7 @@ type PB_SocialParam_ArchivePost struct {
 func (m *PB_SocialParam_ArchivePost) Reset()                    { *m = PB_SocialParam_ArchivePost{} }
 func (m *PB_SocialParam_ArchivePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_ArchivePost) ProtoMessage()               {}
-func (*PB_SocialParam_ArchivePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{10} }
+func (*PB_SocialParam_ArchivePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{10} }
 
 func (m *PB_SocialParam_ArchivePost) GetPostId() int64 {
 	if m != nil {
@@ -279,7 +279,7 @@ type PB_SocialResponse_ArchivePost struct {
 func (m *PB_SocialResponse_ArchivePost) Reset()                    { *m = PB_SocialResponse_ArchivePost{} }
 func (m *PB_SocialResponse_ArchivePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_ArchivePost) ProtoMessage()               {}
-func (*PB_SocialResponse_ArchivePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{11} }
+func (*PB_SocialResponse_ArchivePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{11} }
 
 func (m *PB_SocialResponse_ArchivePost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -303,7 +303,7 @@ type PB_SocialParam_LikePost struct {
 func (m *PB_SocialParam_LikePost) Reset()                    { *m = PB_SocialParam_LikePost{} }
 func (m *PB_SocialParam_LikePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_LikePost) ProtoMessage()               {}
-func (*PB_SocialParam_LikePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{12} }
+func (*PB_SocialParam_LikePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{12} }
 
 func (m *PB_SocialParam_LikePost) GetPostId() int64 {
 	if m != nil {
@@ -320,7 +320,7 @@ type PB_SocialResponse_LikePost struct {
 func (m *PB_SocialResponse_LikePost) Reset()                    { *m = PB_SocialResponse_LikePost{} }
 func (m *PB_SocialResponse_LikePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_LikePost) ProtoMessage()               {}
-func (*PB_SocialResponse_LikePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{13} }
+func (*PB_SocialResponse_LikePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{13} }
 
 func (m *PB_SocialResponse_LikePost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -344,7 +344,7 @@ type PB_SocialParam_UnLikePost struct {
 func (m *PB_SocialParam_UnLikePost) Reset()                    { *m = PB_SocialParam_UnLikePost{} }
 func (m *PB_SocialParam_UnLikePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_UnLikePost) ProtoMessage()               {}
-func (*PB_SocialParam_UnLikePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{14} }
+func (*PB_SocialParam_UnLikePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{14} }
 
 func (m *PB_SocialParam_UnLikePost) GetPostId() int64 {
 	if m != nil {
@@ -361,7 +361,7 @@ type PB_SocialResponse_UnLikePost struct {
 func (m *PB_SocialResponse_UnLikePost) Reset()                    { *m = PB_SocialResponse_UnLikePost{} }
 func (m *PB_SocialResponse_UnLikePost) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_UnLikePost) ProtoMessage()               {}
-func (*PB_SocialResponse_UnLikePost) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{15} }
+func (*PB_SocialResponse_UnLikePost) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{15} }
 
 func (m *PB_SocialResponse_UnLikePost) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -385,7 +385,7 @@ type PB_SocialParam_FollowUser struct {
 func (m *PB_SocialParam_FollowUser) Reset()                    { *m = PB_SocialParam_FollowUser{} }
 func (m *PB_SocialParam_FollowUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_FollowUser) ProtoMessage()               {}
-func (*PB_SocialParam_FollowUser) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{16} }
+func (*PB_SocialParam_FollowUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{16} }
 
 func (m *PB_SocialParam_FollowUser) GetUserId() int64 {
 	if m != nil {
@@ -401,7 +401,7 @@ type PB_SocialResponse_FollowUser struct {
 func (m *PB_SocialResponse_FollowUser) Reset()                    { *m = PB_SocialResponse_FollowUser{} }
 func (m *PB_SocialResponse_FollowUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_FollowUser) ProtoMessage()               {}
-func (*PB_SocialResponse_FollowUser) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{17} }
+func (*PB_SocialResponse_FollowUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{17} }
 
 func (m *PB_SocialResponse_FollowUser) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -418,7 +418,7 @@ type PB_SocialParam_UnFollowUser struct {
 func (m *PB_SocialParam_UnFollowUser) Reset()                    { *m = PB_SocialParam_UnFollowUser{} }
 func (m *PB_SocialParam_UnFollowUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialParam_UnFollowUser) ProtoMessage()               {}
-func (*PB_SocialParam_UnFollowUser) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{18} }
+func (*PB_SocialParam_UnFollowUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{18} }
 
 func (m *PB_SocialParam_UnFollowUser) GetUserId() int64 {
 	if m != nil {
@@ -434,7 +434,7 @@ type PB_SocialResponse_UnFollowUser struct {
 func (m *PB_SocialResponse_UnFollowUser) Reset()                    { *m = PB_SocialResponse_UnFollowUser{} }
 func (m *PB_SocialResponse_UnFollowUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_SocialResponse_UnFollowUser) ProtoMessage()               {}
-func (*PB_SocialResponse_UnFollowUser) Descriptor() ([]byte, []int) { return fileDescriptor7, []int{19} }
+func (*PB_SocialResponse_UnFollowUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{19} }
 
 func (m *PB_SocialResponse_UnFollowUser) GetExtra() *PB_ResponseExtra {
 	if m != nil {
@@ -843,9 +843,9 @@ var _RPC_Social_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_social.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_social.proto", fileDescriptor7) }
+func init() { proto.RegisterFile("pb_rpc_social.proto", fileDescriptor8) }
 
-var fileDescriptor7 = []byte{
+var fileDescriptor8 = []byte{
 	// 610 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x5b, 0x6f, 0xd3, 0x30,
 	0x18, 0x55, 0xe8, 0xb6, 0x76, 0x5f, 0x0b, 0xd3, 0x82, 0xb4, 0x15, 0xb7, 0xdd, 0x2a, 0xbf, 0x50,

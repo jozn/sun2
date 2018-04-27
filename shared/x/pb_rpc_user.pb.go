@@ -26,7 +26,7 @@ type PB_UserParam_BlockUser struct {
 func (m *PB_UserParam_BlockUser) Reset()                    { *m = PB_UserParam_BlockUser{} }
 func (m *PB_UserParam_BlockUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_BlockUser) ProtoMessage()               {}
-func (*PB_UserParam_BlockUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{0} }
+func (*PB_UserParam_BlockUser) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{0} }
 
 func (m *PB_UserParam_BlockUser) GetUserId() int32 {
 	if m != nil {
@@ -51,7 +51,7 @@ type PB_UserResponse_BlockUser struct {
 func (m *PB_UserResponse_BlockUser) Reset()                    { *m = PB_UserResponse_BlockUser{} }
 func (m *PB_UserResponse_BlockUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_BlockUser) ProtoMessage()               {}
-func (*PB_UserResponse_BlockUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{1} }
+func (*PB_UserResponse_BlockUser) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{1} }
 
 func (m *PB_UserResponse_BlockUser) GetByUserId() int32 {
 	if m != nil {
@@ -83,7 +83,7 @@ type PB_UserParam_UnBlockUser struct {
 func (m *PB_UserParam_UnBlockUser) Reset()                    { *m = PB_UserParam_UnBlockUser{} }
 func (m *PB_UserParam_UnBlockUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_UnBlockUser) ProtoMessage()               {}
-func (*PB_UserParam_UnBlockUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{2} }
+func (*PB_UserParam_UnBlockUser) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{2} }
 
 func (m *PB_UserParam_UnBlockUser) GetOffset() int32 {
 	if m != nil {
@@ -106,7 +106,7 @@ type PB_UserResponse_UnBlockUser struct {
 func (m *PB_UserResponse_UnBlockUser) Reset()                    { *m = PB_UserResponse_UnBlockUser{} }
 func (m *PB_UserResponse_UnBlockUser) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_UnBlockUser) ProtoMessage()               {}
-func (*PB_UserResponse_UnBlockUser) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{3} }
+func (*PB_UserResponse_UnBlockUser) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{3} }
 
 func (m *PB_UserResponse_UnBlockUser) GetUsers() []*UserView {
 	if m != nil {
@@ -124,7 +124,7 @@ type PB_UserParam_BlockedList struct {
 func (m *PB_UserParam_BlockedList) Reset()                    { *m = PB_UserParam_BlockedList{} }
 func (m *PB_UserParam_BlockedList) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_BlockedList) ProtoMessage()               {}
-func (*PB_UserParam_BlockedList) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{4} }
+func (*PB_UserParam_BlockedList) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{4} }
 
 func (m *PB_UserParam_BlockedList) GetUserId() int32 {
 	if m != nil {
@@ -149,7 +149,7 @@ type PB_UserResponse_BlockedList struct {
 func (m *PB_UserResponse_BlockedList) Reset()                    { *m = PB_UserResponse_BlockedList{} }
 func (m *PB_UserResponse_BlockedList) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_BlockedList) ProtoMessage()               {}
-func (*PB_UserResponse_BlockedList) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{5} }
+func (*PB_UserResponse_BlockedList) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{5} }
 
 func (m *PB_UserResponse_BlockedList) GetByUserId() int32 {
 	if m != nil {
@@ -180,7 +180,7 @@ type PB_UserParam_UpdateAbout struct {
 func (m *PB_UserParam_UpdateAbout) Reset()                    { *m = PB_UserParam_UpdateAbout{} }
 func (m *PB_UserParam_UpdateAbout) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_UpdateAbout) ProtoMessage()               {}
-func (*PB_UserParam_UpdateAbout) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{6} }
+func (*PB_UserParam_UpdateAbout) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{6} }
 
 func (m *PB_UserParam_UpdateAbout) GetNewAbout() string {
 	if m != nil {
@@ -197,7 +197,7 @@ type PB_UserResponse_UpdateAbout struct {
 func (m *PB_UserResponse_UpdateAbout) Reset()                    { *m = PB_UserResponse_UpdateAbout{} }
 func (m *PB_UserResponse_UpdateAbout) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_UpdateAbout) ProtoMessage()               {}
-func (*PB_UserResponse_UpdateAbout) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{7} }
+func (*PB_UserResponse_UpdateAbout) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{7} }
 
 func (m *PB_UserResponse_UpdateAbout) GetUserId() int32 {
 	if m != nil {
@@ -221,7 +221,7 @@ type PB_UserParam_UpdateUserName struct {
 func (m *PB_UserParam_UpdateUserName) Reset()                    { *m = PB_UserParam_UpdateUserName{} }
 func (m *PB_UserParam_UpdateUserName) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_UpdateUserName) ProtoMessage()               {}
-func (*PB_UserParam_UpdateUserName) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{8} }
+func (*PB_UserParam_UpdateUserName) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{8} }
 
 func (m *PB_UserParam_UpdateUserName) GetNewUserName() string {
 	if m != nil {
@@ -238,7 +238,7 @@ type PB_UserResponse_UpdateUserName struct {
 func (m *PB_UserResponse_UpdateUserName) Reset()                    { *m = PB_UserResponse_UpdateUserName{} }
 func (m *PB_UserResponse_UpdateUserName) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_UpdateUserName) ProtoMessage()               {}
-func (*PB_UserResponse_UpdateUserName) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{9} }
+func (*PB_UserResponse_UpdateUserName) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{9} }
 
 func (m *PB_UserResponse_UpdateUserName) GetUserId() int32 {
 	if m != nil {
@@ -262,7 +262,7 @@ type PB_UserParam_ChangeAvatar struct {
 func (m *PB_UserParam_ChangeAvatar) Reset()                    { *m = PB_UserParam_ChangeAvatar{} }
 func (m *PB_UserParam_ChangeAvatar) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_ChangeAvatar) ProtoMessage()               {}
-func (*PB_UserParam_ChangeAvatar) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{10} }
+func (*PB_UserParam_ChangeAvatar) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{10} }
 
 func (m *PB_UserParam_ChangeAvatar) GetNone() bool {
 	if m != nil {
@@ -284,7 +284,7 @@ type PB_UserResponse_ChangeAvatar struct {
 func (m *PB_UserResponse_ChangeAvatar) Reset()                    { *m = PB_UserResponse_ChangeAvatar{} }
 func (m *PB_UserResponse_ChangeAvatar) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_ChangeAvatar) ProtoMessage()               {}
-func (*PB_UserResponse_ChangeAvatar) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{11} }
+func (*PB_UserResponse_ChangeAvatar) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{11} }
 
 //
 type PB_UserParam_ChangePrivacy struct {
@@ -294,7 +294,7 @@ type PB_UserParam_ChangePrivacy struct {
 func (m *PB_UserParam_ChangePrivacy) Reset()                    { *m = PB_UserParam_ChangePrivacy{} }
 func (m *PB_UserParam_ChangePrivacy) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_ChangePrivacy) ProtoMessage()               {}
-func (*PB_UserParam_ChangePrivacy) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{12} }
+func (*PB_UserParam_ChangePrivacy) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{12} }
 
 func (m *PB_UserParam_ChangePrivacy) GetLevel() ProfilePrivacyLevelEnum {
 	if m != nil {
@@ -310,7 +310,7 @@ func (m *PB_UserResponseOffline_ChangePrivacy) Reset()         { *m = PB_UserRes
 func (m *PB_UserResponseOffline_ChangePrivacy) String() string { return proto.CompactTextString(m) }
 func (*PB_UserResponseOffline_ChangePrivacy) ProtoMessage()    {}
 func (*PB_UserResponseOffline_ChangePrivacy) Descriptor() ([]byte, []int) {
-	return fileDescriptor8, []int{13}
+	return fileDescriptor9, []int{13}
 }
 
 //
@@ -321,7 +321,7 @@ type PB_UserParam_CheckUserName struct {
 func (m *PB_UserParam_CheckUserName) Reset()                    { *m = PB_UserParam_CheckUserName{} }
 func (m *PB_UserParam_CheckUserName) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserParam_CheckUserName) ProtoMessage()               {}
-func (*PB_UserParam_CheckUserName) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{14} }
+func (*PB_UserParam_CheckUserName) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{14} }
 
 func (m *PB_UserParam_CheckUserName) GetLevel() ProfilePrivacyLevelEnum {
 	if m != nil {
@@ -336,7 +336,7 @@ type PB_UserResponse_CheckUserName struct {
 func (m *PB_UserResponse_CheckUserName) Reset()                    { *m = PB_UserResponse_CheckUserName{} }
 func (m *PB_UserResponse_CheckUserName) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserResponse_CheckUserName) ProtoMessage()               {}
-func (*PB_UserResponse_CheckUserName) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{15} }
+func (*PB_UserResponse_CheckUserName) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{15} }
 
 // ///////////////////////////// Extract from herer /////////////////////////////
 type UserView struct {
@@ -345,7 +345,7 @@ type UserView struct {
 func (m *UserView) Reset()                    { *m = UserView{} }
 func (m *UserView) String() string            { return proto.CompactTextString(m) }
 func (*UserView) ProtoMessage()               {}
-func (*UserView) Descriptor() ([]byte, []int) { return fileDescriptor8, []int{16} }
+func (*UserView) Descriptor() ([]byte, []int) { return fileDescriptor9, []int{16} }
 
 func init() {
 	proto.RegisterType((*PB_UserParam_BlockUser)(nil), "PB_UserParam_BlockUser")
@@ -670,9 +670,9 @@ var _RPC_User_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_user.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_user.proto", fileDescriptor8) }
+func init() { proto.RegisterFile("pb_rpc_user.proto", fileDescriptor9) }
 
-var fileDescriptor8 = []byte{
+var fileDescriptor9 = []byte{
 	// 606 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x55, 0xcd, 0x6f, 0xda, 0x4e,
 	0x10, 0x95, 0x21, 0x44, 0x30, 0x10, 0xa4, 0xac, 0x7e, 0xca, 0x0f, 0x36, 0x04, 0xd0, 0xaa, 0x8d,

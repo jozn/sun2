@@ -233,6 +233,96 @@ var PB_Pager__FOlD = &PB_Pager{
 	Last:  0,
 }
 
+type PB_UpdateRoomActionDoing2_Flat struct {
+	RoomKey    string
+	ActionType RoomActionDoingEnum
+}
+
+//ToPB
+func (m *PB_UpdateRoomActionDoing2) ToFlat() *PB_UpdateRoomActionDoing2_Flat {
+	r := &PB_UpdateRoomActionDoing2_Flat{
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UpdateRoomActionDoing2_Flat) ToPB() *PB_UpdateRoomActionDoing2 {
+	r := &PB_UpdateRoomActionDoing2{
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//folding
+var PB_UpdateRoomActionDoing2__FOlD = &PB_UpdateRoomActionDoing2{
+	RoomKey: "",
+}
+
+type PB_UpdateMessageMeta2_Flat struct {
+	RoomKey   string
+	MessageId int
+}
+
+//ToPB
+func (m *PB_UpdateMessageMeta2) ToFlat() *PB_UpdateMessageMeta2_Flat {
+	r := &PB_UpdateMessageMeta2_Flat{
+		RoomKey:   m.RoomKey,
+		MessageId: int(m.MessageId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UpdateMessageMeta2_Flat) ToPB() *PB_UpdateMessageMeta2 {
+	r := &PB_UpdateMessageMeta2{
+		RoomKey:   m.RoomKey,
+		MessageId: int64(m.MessageId),
+	}
+	return r
+}
+
+//folding
+var PB_UpdateMessageMeta2__FOlD = &PB_UpdateMessageMeta2{
+	RoomKey:   "",
+	MessageId: 0,
+}
+
+type PB_Push_Flat struct {
+	LastPushId              int
+	LastChatPushId          int
+	NewMessages             PB_MessageView
+	Chats                   PB_ChatView
+	MessagesReachedServer   PB_UpdateMessageMeta2
+	MessagesDeliveredToUser PB_UpdateMessageMeta2
+	MessagesSeenByPeer      PB_UpdateMessageMeta2
+	RoomActionDoing         PB_UpdateRoomActionDoing2
+}
+
+//ToPB
+func (m *PB_Push) ToFlat() *PB_Push_Flat {
+	r := &PB_Push_Flat{
+		LastPushId:     int(m.LastPushId),
+		LastChatPushId: int(m.LastChatPushId),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Push_Flat) ToPB() *PB_Push {
+	r := &PB_Push{
+		LastPushId:     int64(m.LastPushId),
+		LastChatPushId: int64(m.LastChatPushId),
+	}
+	return r
+}
+
+//folding
+var PB_Push__FOlD = &PB_Push{
+	LastPushId:     0,
+	LastChatPushId: 0,
+}
+
 type PB_UserParam_CheckUserName2_Flat struct {
 }
 
@@ -2808,161 +2898,6 @@ var PB_FollowingListMemberRemoved__FOlD = &PB_FollowingListMemberRemoved{
 	UpdatedTime:      0,
 }
 
-type PB_Group_Flat struct {
-	GroupId          int
-	GroupName        string
-	MembersCount     int
-	GroupPrivacyEnum int
-	CreatorUserId    int
-	CreatedTime      int
-	UpdatedMs        int
-	CurrentSeq       int
-}
-
-//ToPB
-func (m *PB_Group) ToFlat() *PB_Group_Flat {
-	r := &PB_Group_Flat{
-		GroupId:          int(m.GroupId),
-		GroupName:        m.GroupName,
-		MembersCount:     int(m.MembersCount),
-		GroupPrivacyEnum: int(m.GroupPrivacyEnum),
-		CreatorUserId:    int(m.CreatorUserId),
-		CreatedTime:      int(m.CreatedTime),
-		UpdatedMs:        int(m.UpdatedMs),
-		CurrentSeq:       int(m.CurrentSeq),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_Group_Flat) ToPB() *PB_Group {
-	r := &PB_Group{
-		GroupId:          int64(m.GroupId),
-		GroupName:        m.GroupName,
-		MembersCount:     int32(m.MembersCount),
-		GroupPrivacyEnum: int32(m.GroupPrivacyEnum),
-		CreatorUserId:    int32(m.CreatorUserId),
-		CreatedTime:      int32(m.CreatedTime),
-		UpdatedMs:        int64(m.UpdatedMs),
-		CurrentSeq:       int32(m.CurrentSeq),
-	}
-	return r
-}
-
-//folding
-var PB_Group__FOlD = &PB_Group{
-	GroupId:          0,
-	GroupName:        "",
-	MembersCount:     0,
-	GroupPrivacyEnum: 0,
-	CreatorUserId:    0,
-	CreatedTime:      0,
-	UpdatedMs:        0,
-	CurrentSeq:       0,
-}
-
-type PB_GroupMember_Flat struct {
-	Id              int
-	GroupId         int
-	GroupKey        string
-	UserId          int
-	ByUserId        int
-	GroupRoleEnumId int
-	CreatedTime     int
-}
-
-//ToPB
-func (m *PB_GroupMember) ToFlat() *PB_GroupMember_Flat {
-	r := &PB_GroupMember_Flat{
-		Id:              int(m.Id),
-		GroupId:         int(m.GroupId),
-		GroupKey:        m.GroupKey,
-		UserId:          int(m.UserId),
-		ByUserId:        int(m.ByUserId),
-		GroupRoleEnumId: int(m.GroupRoleEnumId),
-		CreatedTime:     int(m.CreatedTime),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_GroupMember_Flat) ToPB() *PB_GroupMember {
-	r := &PB_GroupMember{
-		Id:              int64(m.Id),
-		GroupId:         int64(m.GroupId),
-		GroupKey:        m.GroupKey,
-		UserId:          int32(m.UserId),
-		ByUserId:        int32(m.ByUserId),
-		GroupRoleEnumId: int32(m.GroupRoleEnumId),
-		CreatedTime:     int32(m.CreatedTime),
-	}
-	return r
-}
-
-//folding
-var PB_GroupMember__FOlD = &PB_GroupMember{
-	Id:              0,
-	GroupId:         0,
-	GroupKey:        "",
-	UserId:          0,
-	ByUserId:        0,
-	GroupRoleEnumId: 0,
-	CreatedTime:     0,
-}
-
-type PB_GroupMessage_Flat struct {
-	MessageId          int
-	RoomKey            string
-	UserId             int
-	MessageFileId      int
-	MessageTypeEnum    int
-	Text               string
-	CreatedMs          int
-	DeliveryStatusEnum int
-}
-
-//ToPB
-func (m *PB_GroupMessage) ToFlat() *PB_GroupMessage_Flat {
-	r := &PB_GroupMessage_Flat{
-		MessageId:          int(m.MessageId),
-		RoomKey:            m.RoomKey,
-		UserId:             int(m.UserId),
-		MessageFileId:      int(m.MessageFileId),
-		MessageTypeEnum:    int(m.MessageTypeEnum),
-		Text:               m.Text,
-		CreatedMs:          int(m.CreatedMs),
-		DeliveryStatusEnum: int(m.DeliveryStatusEnum),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_GroupMessage_Flat) ToPB() *PB_GroupMessage {
-	r := &PB_GroupMessage{
-		MessageId:          int64(m.MessageId),
-		RoomKey:            m.RoomKey,
-		UserId:             int32(m.UserId),
-		MessageFileId:      int64(m.MessageFileId),
-		MessageTypeEnum:    int32(m.MessageTypeEnum),
-		Text:               m.Text,
-		CreatedMs:          int64(m.CreatedMs),
-		DeliveryStatusEnum: int32(m.DeliveryStatusEnum),
-	}
-	return r
-}
-
-//folding
-var PB_GroupMessage__FOlD = &PB_GroupMessage{
-	MessageId:          0,
-	RoomKey:            "",
-	UserId:             0,
-	MessageFileId:      0,
-	MessageTypeEnum:    0,
-	Text:               "",
-	CreatedMs:          0,
-	DeliveryStatusEnum: 0,
-}
-
 type PB_Like_Flat struct {
 	Id           int
 	PostId       int
@@ -4351,71 +4286,6 @@ var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
 	LastMsgJson: "",
 }
 
-type PB_ChatSync_Flat struct {
-	SyncId            int
-	ToUserId          int
-	ChatSyncTypeId    int
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId int
-	ToLowMessageId    int
-	MessageId         int
-	MessagePb         []byte
-	MessageJson       string
-	CreatedTime       int
-}
-
-//ToPB
-func (m *PB_ChatSync) ToFlat() *PB_ChatSync_Flat {
-	r := &PB_ChatSync_Flat{
-		SyncId:            int(m.SyncId),
-		ToUserId:          int(m.ToUserId),
-		ChatSyncTypeId:    int(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int(m.FromHighMessageId),
-		ToLowMessageId:    int(m.ToLowMessageId),
-		MessageId:         int(m.MessageId),
-		MessagePb:         []byte(m.MessagePb),
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int(m.CreatedTime),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_ChatSync_Flat) ToPB() *PB_ChatSync {
-	r := &PB_ChatSync{
-		SyncId:            int64(m.SyncId),
-		ToUserId:          int32(m.ToUserId),
-		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int64(m.FromHighMessageId),
-		ToLowMessageId:    int64(m.ToLowMessageId),
-		MessageId:         int64(m.MessageId),
-		MessagePb:         m.MessagePb,
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int32(m.CreatedTime),
-	}
-	return r
-}
-
-//folding
-var PB_ChatSync__FOlD = &PB_ChatSync{
-	SyncId:            0,
-	ToUserId:          0,
-	ChatSyncTypeId:    0,
-	RoomKey:           "",
-	ChatKey:           "",
-	FromHighMessageId: 0,
-	ToLowMessageId:    0,
-	MessageId:         0,
-	MessagePb:         []byte{},
-	MessageJson:       "",
-	CreatedTime:       0,
-}
-
 type PB_DirectMessage_Flat struct {
 	ChatKey            string
 	MessageId          int
@@ -4481,102 +4351,159 @@ var PB_DirectMessage__FOlD = &PB_DirectMessage{
 	ExtraPB:            []byte{},
 }
 
-type PB_Home_Flat struct {
-	Id        int
-	ForUserId int
-	PostId    int
+type PB_Group_Flat struct {
+	GroupId          int
+	GroupName        string
+	MembersCount     int
+	GroupPrivacyEnum int
+	CreatorUserId    int
+	CreatedTime      int
+	UpdatedMs        int
+	CurrentSeq       int
 }
 
 //ToPB
-func (m *PB_Home) ToFlat() *PB_Home_Flat {
-	r := &PB_Home_Flat{
-		Id:        int(m.Id),
-		ForUserId: int(m.ForUserId),
-		PostId:    int(m.PostId),
+func (m *PB_Group) ToFlat() *PB_Group_Flat {
+	r := &PB_Group_Flat{
+		GroupId:          int(m.GroupId),
+		GroupName:        m.GroupName,
+		MembersCount:     int(m.MembersCount),
+		GroupPrivacyEnum: int(m.GroupPrivacyEnum),
+		CreatorUserId:    int(m.CreatorUserId),
+		CreatedTime:      int(m.CreatedTime),
+		UpdatedMs:        int(m.UpdatedMs),
+		CurrentSeq:       int(m.CurrentSeq),
 	}
 	return r
 }
 
 //ToPB
-func (m *PB_Home_Flat) ToPB() *PB_Home {
-	r := &PB_Home{
-		Id:        int64(m.Id),
-		ForUserId: int32(m.ForUserId),
-		PostId:    int64(m.PostId),
-	}
-	return r
-}
-
-//folding
-var PB_Home__FOlD = &PB_Home{
-	Id:        0,
-	ForUserId: 0,
-	PostId:    0,
-}
-
-type PB_MessageFile_Flat struct {
-	MessageFileId int
-	FileTypeEnum  int
-	UserId        int
-	Title         string
-	Size          int
-	Width         int
-	Height        int
-	Duration      int
-	Extension     string
-	Md5Hash       string
-	CreatedTime   int
-}
-
-//ToPB
-func (m *PB_MessageFile) ToFlat() *PB_MessageFile_Flat {
-	r := &PB_MessageFile_Flat{
-		MessageFileId: int(m.MessageFileId),
-		FileTypeEnum:  int(m.FileTypeEnum),
-		UserId:        int(m.UserId),
-		Title:         m.Title,
-		Size:          int(m.Size),
-		Width:         int(m.Width),
-		Height:        int(m.Height),
-		Duration:      int(m.Duration),
-		Extension:     m.Extension,
-		Md5Hash:       m.Md5Hash,
-		CreatedTime:   int(m.CreatedTime),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_MessageFile_Flat) ToPB() *PB_MessageFile {
-	r := &PB_MessageFile{
-		MessageFileId: int64(m.MessageFileId),
-		FileTypeEnum:  int32(m.FileTypeEnum),
-		UserId:        int32(m.UserId),
-		Title:         m.Title,
-		Size:          int32(m.Size),
-		Width:         int32(m.Width),
-		Height:        int32(m.Height),
-		Duration:      int32(m.Duration),
-		Extension:     m.Extension,
-		Md5Hash:       m.Md5Hash,
-		CreatedTime:   int32(m.CreatedTime),
+func (m *PB_Group_Flat) ToPB() *PB_Group {
+	r := &PB_Group{
+		GroupId:          int64(m.GroupId),
+		GroupName:        m.GroupName,
+		MembersCount:     int32(m.MembersCount),
+		GroupPrivacyEnum: int32(m.GroupPrivacyEnum),
+		CreatorUserId:    int32(m.CreatorUserId),
+		CreatedTime:      int32(m.CreatedTime),
+		UpdatedMs:        int64(m.UpdatedMs),
+		CurrentSeq:       int32(m.CurrentSeq),
 	}
 	return r
 }
 
 //folding
-var PB_MessageFile__FOlD = &PB_MessageFile{
-	MessageFileId: 0,
-	FileTypeEnum:  0,
-	UserId:        0,
-	Title:         "",
-	Size:          0,
-	Width:         0,
-	Height:        0,
-	Duration:      0,
-	Extension:     "",
-	Md5Hash:       "",
-	CreatedTime:   0,
+var PB_Group__FOlD = &PB_Group{
+	GroupId:          0,
+	GroupName:        "",
+	MembersCount:     0,
+	GroupPrivacyEnum: 0,
+	CreatorUserId:    0,
+	CreatedTime:      0,
+	UpdatedMs:        0,
+	CurrentSeq:       0,
+}
+
+type PB_GroupMember_Flat struct {
+	Id              int
+	GroupId         int
+	GroupKey        string
+	UserId          int
+	ByUserId        int
+	GroupRoleEnumId int
+	CreatedTime     int
+}
+
+//ToPB
+func (m *PB_GroupMember) ToFlat() *PB_GroupMember_Flat {
+	r := &PB_GroupMember_Flat{
+		Id:              int(m.Id),
+		GroupId:         int(m.GroupId),
+		GroupKey:        m.GroupKey,
+		UserId:          int(m.UserId),
+		ByUserId:        int(m.ByUserId),
+		GroupRoleEnumId: int(m.GroupRoleEnumId),
+		CreatedTime:     int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_GroupMember_Flat) ToPB() *PB_GroupMember {
+	r := &PB_GroupMember{
+		Id:              int64(m.Id),
+		GroupId:         int64(m.GroupId),
+		GroupKey:        m.GroupKey,
+		UserId:          int32(m.UserId),
+		ByUserId:        int32(m.ByUserId),
+		GroupRoleEnumId: int32(m.GroupRoleEnumId),
+		CreatedTime:     int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_GroupMember__FOlD = &PB_GroupMember{
+	Id:              0,
+	GroupId:         0,
+	GroupKey:        "",
+	UserId:          0,
+	ByUserId:        0,
+	GroupRoleEnumId: 0,
+	CreatedTime:     0,
+}
+
+type PB_GroupMessage_Flat struct {
+	MessageId          int
+	RoomKey            string
+	UserId             int
+	MessageFileId      int
+	MessageTypeEnum    int
+	Text               string
+	CreatedMs          int
+	DeliveryStatusEnum int
+}
+
+//ToPB
+func (m *PB_GroupMessage) ToFlat() *PB_GroupMessage_Flat {
+	r := &PB_GroupMessage_Flat{
+		MessageId:          int(m.MessageId),
+		RoomKey:            m.RoomKey,
+		UserId:             int(m.UserId),
+		MessageFileId:      int(m.MessageFileId),
+		MessageTypeEnum:    int(m.MessageTypeEnum),
+		Text:               m.Text,
+		CreatedMs:          int(m.CreatedMs),
+		DeliveryStatusEnum: int(m.DeliveryStatusEnum),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_GroupMessage_Flat) ToPB() *PB_GroupMessage {
+	r := &PB_GroupMessage{
+		MessageId:          int64(m.MessageId),
+		RoomKey:            m.RoomKey,
+		UserId:             int32(m.UserId),
+		MessageFileId:      int64(m.MessageFileId),
+		MessageTypeEnum:    int32(m.MessageTypeEnum),
+		Text:               m.Text,
+		CreatedMs:          int64(m.CreatedMs),
+		DeliveryStatusEnum: int32(m.DeliveryStatusEnum),
+	}
+	return r
+}
+
+//folding
+var PB_GroupMessage__FOlD = &PB_GroupMessage{
+	MessageId:          0,
+	RoomKey:            "",
+	UserId:             0,
+	MessageFileId:      0,
+	MessageTypeEnum:    0,
+	Text:               "",
+	CreatedMs:          0,
+	DeliveryStatusEnum: 0,
 }
 
 type PB_FileMsg_Flat struct {
@@ -4807,6 +4734,213 @@ var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
 	TargetId:    0,
 	Weight:      0.0,
 	CreatedTime: 0,
+}
+
+type PB_ChatSync2_Flat struct {
+	SyncId            int
+	ToUserId          int
+	ChatSyncTypeId    int
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId int
+	ToLowMessageId    int
+	MessageId         int
+	MessagePb         []byte
+	MessageJson       string
+	CreatedTime       int
+}
+
+//ToPB
+func (m *PB_ChatSync2) ToFlat() *PB_ChatSync2_Flat {
+	r := &PB_ChatSync2_Flat{
+		SyncId:            int(m.SyncId),
+		ToUserId:          int(m.ToUserId),
+		ChatSyncTypeId:    int(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int(m.FromHighMessageId),
+		ToLowMessageId:    int(m.ToLowMessageId),
+		MessageId:         int(m.MessageId),
+		MessagePb:         []byte(m.MessagePb),
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_ChatSync2_Flat) ToPB() *PB_ChatSync2 {
+	r := &PB_ChatSync2{
+		SyncId:            int64(m.SyncId),
+		ToUserId:          int32(m.ToUserId),
+		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int64(m.FromHighMessageId),
+		ToLowMessageId:    int64(m.ToLowMessageId),
+		MessageId:         int64(m.MessageId),
+		MessagePb:         m.MessagePb,
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_ChatSync2__FOlD = &PB_ChatSync2{
+	SyncId:            0,
+	ToUserId:          0,
+	ChatSyncTypeId:    0,
+	RoomKey:           "",
+	ChatKey:           "",
+	FromHighMessageId: 0,
+	ToLowMessageId:    0,
+	MessageId:         0,
+	MessagePb:         []byte{},
+	MessageJson:       "",
+	CreatedTime:       0,
+}
+
+type PB_PushChat_Flat struct {
+	PushId            int
+	ToUserId          int
+	PushTypeId        int
+	RoomKey           string
+	ChatKey           string
+	Seq               int
+	UnseenCount       int
+	FromHighMessageId int
+	ToLowMessageId    int
+	MessageId         int
+	MessageFileId     int
+	MessagePb         []byte
+	MessageJson       string
+	CreatedTime       int
+}
+
+//ToPB
+func (m *PB_PushChat) ToFlat() *PB_PushChat_Flat {
+	r := &PB_PushChat_Flat{
+		PushId:            int(m.PushId),
+		ToUserId:          int(m.ToUserId),
+		PushTypeId:        int(m.PushTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		Seq:               int(m.Seq),
+		UnseenCount:       int(m.UnseenCount),
+		FromHighMessageId: int(m.FromHighMessageId),
+		ToLowMessageId:    int(m.ToLowMessageId),
+		MessageId:         int(m.MessageId),
+		MessageFileId:     int(m.MessageFileId),
+		MessagePb:         []byte(m.MessagePb),
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PushChat_Flat) ToPB() *PB_PushChat {
+	r := &PB_PushChat{
+		PushId:            int64(m.PushId),
+		ToUserId:          int32(m.ToUserId),
+		PushTypeId:        int32(m.PushTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		Seq:               int32(m.Seq),
+		UnseenCount:       int32(m.UnseenCount),
+		FromHighMessageId: int64(m.FromHighMessageId),
+		ToLowMessageId:    int64(m.ToLowMessageId),
+		MessageId:         int64(m.MessageId),
+		MessageFileId:     int64(m.MessageFileId),
+		MessagePb:         m.MessagePb,
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PushChat__FOlD = &PB_PushChat{
+	PushId:            0,
+	ToUserId:          0,
+	PushTypeId:        0,
+	RoomKey:           "",
+	ChatKey:           "",
+	Seq:               0,
+	UnseenCount:       0,
+	FromHighMessageId: 0,
+	ToLowMessageId:    0,
+	MessageId:         0,
+	MessageFileId:     0,
+	MessagePb:         []byte{},
+	MessageJson:       "",
+	CreatedTime:       0,
+}
+
+type PB_PushChat2_Flat struct {
+	SyncId            int
+	ToUserId          int
+	ChatSyncTypeId    int
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId int
+	ToLowMessageId    int
+	MessageId         int
+	MessagePb         []byte
+	MessageJson       string
+	CreatedTime       int
+}
+
+//ToPB
+func (m *PB_PushChat2) ToFlat() *PB_PushChat2_Flat {
+	r := &PB_PushChat2_Flat{
+		SyncId:            int(m.SyncId),
+		ToUserId:          int(m.ToUserId),
+		ChatSyncTypeId:    int(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int(m.FromHighMessageId),
+		ToLowMessageId:    int(m.ToLowMessageId),
+		MessageId:         int(m.MessageId),
+		MessagePb:         []byte(m.MessagePb),
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PushChat2_Flat) ToPB() *PB_PushChat2 {
+	r := &PB_PushChat2{
+		SyncId:            int64(m.SyncId),
+		ToUserId:          int32(m.ToUserId),
+		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
+		RoomKey:           m.RoomKey,
+		ChatKey:           m.ChatKey,
+		FromHighMessageId: int64(m.FromHighMessageId),
+		ToLowMessageId:    int64(m.ToLowMessageId),
+		MessageId:         int64(m.MessageId),
+		MessagePb:         m.MessagePb,
+		MessageJson:       m.MessageJson,
+		CreatedTime:       int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_PushChat2__FOlD = &PB_PushChat2{
+	SyncId:            0,
+	ToUserId:          0,
+	ChatSyncTypeId:    0,
+	RoomKey:           "",
+	ChatKey:           "",
+	FromHighMessageId: 0,
+	ToLowMessageId:    0,
+	MessageId:         0,
+	MessagePb:         []byte{},
+	MessageJson:       "",
+	CreatedTime:       0,
 }
 
 type PB_UpdateRoomActionDoing_Flat struct {
@@ -5709,6 +5843,36 @@ r := &PB_Pager_Flat{
 return r
 }
 
+func(m *PB_UpdateRoomActionDoing2)ToFlat() *PB_UpdateRoomActionDoing2_Flat {
+r := &PB_UpdateRoomActionDoing2_Flat{
+    RoomKey:  m.RoomKey ,
+
+}
+return r
+}
+
+func(m *PB_UpdateMessageMeta2)ToFlat() *PB_UpdateMessageMeta2_Flat {
+r := &PB_UpdateMessageMeta2_Flat{
+    RoomKey:  m.RoomKey ,
+    MessageId:  int(m.MessageId) ,
+}
+return r
+}
+
+func(m *PB_Push)ToFlat() *PB_Push_Flat {
+r := &PB_Push_Flat{
+    LastPushId:  int(m.LastPushId) ,
+    LastChatPushId:  int(m.LastChatPushId) ,
+
+
+
+
+
+
+}
+return r
+}
+
 func(m *PB_UserParam_CheckUserName2)ToFlat() *PB_UserParam_CheckUserName2_Flat {
 r := &PB_UserParam_CheckUserName2_Flat{
 }
@@ -6492,47 +6656,6 @@ r := &PB_FollowingListMemberRemoved_Flat{
 return r
 }
 
-func(m *PB_Group)ToFlat() *PB_Group_Flat {
-r := &PB_Group_Flat{
-    GroupId:  int(m.GroupId) ,
-    GroupName:  m.GroupName ,
-    MembersCount:  int(m.MembersCount) ,
-    GroupPrivacyEnum:  int(m.GroupPrivacyEnum) ,
-    CreatorUserId:  int(m.CreatorUserId) ,
-    CreatedTime:  int(m.CreatedTime) ,
-    UpdatedMs:  int(m.UpdatedMs) ,
-    CurrentSeq:  int(m.CurrentSeq) ,
-}
-return r
-}
-
-func(m *PB_GroupMember)ToFlat() *PB_GroupMember_Flat {
-r := &PB_GroupMember_Flat{
-    Id:  int(m.Id) ,
-    GroupId:  int(m.GroupId) ,
-    GroupKey:  m.GroupKey ,
-    UserId:  int(m.UserId) ,
-    ByUserId:  int(m.ByUserId) ,
-    GroupRoleEnumId:  int(m.GroupRoleEnumId) ,
-    CreatedTime:  int(m.CreatedTime) ,
-}
-return r
-}
-
-func(m *PB_GroupMessage)ToFlat() *PB_GroupMessage_Flat {
-r := &PB_GroupMessage_Flat{
-    MessageId:  int(m.MessageId) ,
-    RoomKey:  m.RoomKey ,
-    UserId:  int(m.UserId) ,
-    MessageFileId:  int(m.MessageFileId) ,
-    MessageTypeEnum:  int(m.MessageTypeEnum) ,
-    Text:  m.Text ,
-    CreatedMs:  int(m.CreatedMs) ,
-    DeliveryStatusEnum:  int(m.DeliveryStatusEnum) ,
-}
-return r
-}
-
 func(m *PB_Like)ToFlat() *PB_Like_Flat {
 r := &PB_Like_Flat{
     Id:  int(m.Id) ,
@@ -6898,23 +7021,6 @@ r := &PB_ChatLastMessage_Flat{
 return r
 }
 
-func(m *PB_ChatSync)ToFlat() *PB_ChatSync_Flat {
-r := &PB_ChatSync_Flat{
-    SyncId:  int(m.SyncId) ,
-    ToUserId:  int(m.ToUserId) ,
-    ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int(m.FromHighMessageId) ,
-    ToLowMessageId:  int(m.ToLowMessageId) ,
-    MessageId:  int(m.MessageId) ,
-    MessagePb:  []byte(m.MessagePb) ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_DirectMessage)ToFlat() *PB_DirectMessage_Flat {
 r := &PB_DirectMessage_Flat{
     ChatKey:  m.ChatKey ,
@@ -6932,28 +7038,43 @@ r := &PB_DirectMessage_Flat{
 return r
 }
 
-func(m *PB_Home)ToFlat() *PB_Home_Flat {
-r := &PB_Home_Flat{
-    Id:  int(m.Id) ,
-    ForUserId:  int(m.ForUserId) ,
-    PostId:  int(m.PostId) ,
+func(m *PB_Group)ToFlat() *PB_Group_Flat {
+r := &PB_Group_Flat{
+    GroupId:  int(m.GroupId) ,
+    GroupName:  m.GroupName ,
+    MembersCount:  int(m.MembersCount) ,
+    GroupPrivacyEnum:  int(m.GroupPrivacyEnum) ,
+    CreatorUserId:  int(m.CreatorUserId) ,
+    CreatedTime:  int(m.CreatedTime) ,
+    UpdatedMs:  int(m.UpdatedMs) ,
+    CurrentSeq:  int(m.CurrentSeq) ,
 }
 return r
 }
 
-func(m *PB_MessageFile)ToFlat() *PB_MessageFile_Flat {
-r := &PB_MessageFile_Flat{
-    MessageFileId:  int(m.MessageFileId) ,
-    FileTypeEnum:  int(m.FileTypeEnum) ,
+func(m *PB_GroupMember)ToFlat() *PB_GroupMember_Flat {
+r := &PB_GroupMember_Flat{
+    Id:  int(m.Id) ,
+    GroupId:  int(m.GroupId) ,
+    GroupKey:  m.GroupKey ,
     UserId:  int(m.UserId) ,
-    Title:  m.Title ,
-    Size:  int(m.Size) ,
-    Width:  int(m.Width) ,
-    Height:  int(m.Height) ,
-    Duration:  int(m.Duration) ,
-    Extension:  m.Extension ,
-    Md5Hash:  m.Md5Hash ,
+    ByUserId:  int(m.ByUserId) ,
+    GroupRoleEnumId:  int(m.GroupRoleEnumId) ,
     CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_GroupMessage)ToFlat() *PB_GroupMessage_Flat {
+r := &PB_GroupMessage_Flat{
+    MessageId:  int(m.MessageId) ,
+    RoomKey:  m.RoomKey ,
+    UserId:  int(m.UserId) ,
+    MessageFileId:  int(m.MessageFileId) ,
+    MessageTypeEnum:  int(m.MessageTypeEnum) ,
+    Text:  m.Text ,
+    CreatedMs:  int(m.CreatedMs) ,
+    DeliveryStatusEnum:  int(m.DeliveryStatusEnum) ,
 }
 return r
 }
@@ -7015,6 +7136,60 @@ r := &PB_SuggestedUser_Flat{
     UserId:  int(m.UserId) ,
     TargetId:  int(m.TargetId) ,
     Weight:  float32(m.Weight) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_ChatSync2)ToFlat() *PB_ChatSync2_Flat {
+r := &PB_ChatSync2_Flat{
+    SyncId:  int(m.SyncId) ,
+    ToUserId:  int(m.ToUserId) ,
+    ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int(m.FromHighMessageId) ,
+    ToLowMessageId:  int(m.ToLowMessageId) ,
+    MessageId:  int(m.MessageId) ,
+    MessagePb:  []byte(m.MessagePb) ,
+    MessageJson:  m.MessageJson ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PushChat)ToFlat() *PB_PushChat_Flat {
+r := &PB_PushChat_Flat{
+    PushId:  int(m.PushId) ,
+    ToUserId:  int(m.ToUserId) ,
+    PushTypeId:  int(m.PushTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    Seq:  int(m.Seq) ,
+    UnseenCount:  int(m.UnseenCount) ,
+    FromHighMessageId:  int(m.FromHighMessageId) ,
+    ToLowMessageId:  int(m.ToLowMessageId) ,
+    MessageId:  int(m.MessageId) ,
+    MessageFileId:  int(m.MessageFileId) ,
+    MessagePb:  []byte(m.MessagePb) ,
+    MessageJson:  m.MessageJson ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PushChat2)ToFlat() *PB_PushChat2_Flat {
+r := &PB_PushChat2_Flat{
+    SyncId:  int(m.SyncId) ,
+    ToUserId:  int(m.ToUserId) ,
+    ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int(m.FromHighMessageId) ,
+    ToLowMessageId:  int(m.ToLowMessageId) ,
+    MessageId:  int(m.MessageId) ,
+    MessagePb:  []byte(m.MessagePb) ,
+    MessageJson:  m.MessageJson ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -7332,6 +7507,36 @@ r := &PB_Pager{
     Page:  int64(m.Page) ,
     Limit:  int64(m.Limit) ,
     Last:  int64(m.Last) ,
+}
+return r
+}
+
+func(m *PB_UpdateRoomActionDoing2_Flat)ToPB() *PB_UpdateRoomActionDoing2 {
+r := &PB_UpdateRoomActionDoing2{
+    RoomKey:  m.RoomKey ,
+
+}
+return r
+}
+
+func(m *PB_UpdateMessageMeta2_Flat)ToPB() *PB_UpdateMessageMeta2 {
+r := &PB_UpdateMessageMeta2{
+    RoomKey:  m.RoomKey ,
+    MessageId:  int64(m.MessageId) ,
+}
+return r
+}
+
+func(m *PB_Push_Flat)ToPB() *PB_Push {
+r := &PB_Push{
+    LastPushId:  int64(m.LastPushId) ,
+    LastChatPushId:  int64(m.LastChatPushId) ,
+
+
+
+
+
+
 }
 return r
 }
@@ -8119,47 +8324,6 @@ r := &PB_FollowingListMemberRemoved{
 return r
 }
 
-func(m *PB_Group_Flat)ToPB() *PB_Group {
-r := &PB_Group{
-    GroupId:  int64(m.GroupId) ,
-    GroupName:  m.GroupName ,
-    MembersCount:  int32(m.MembersCount) ,
-    GroupPrivacyEnum:  int32(m.GroupPrivacyEnum) ,
-    CreatorUserId:  int32(m.CreatorUserId) ,
-    CreatedTime:  int32(m.CreatedTime) ,
-    UpdatedMs:  int64(m.UpdatedMs) ,
-    CurrentSeq:  int32(m.CurrentSeq) ,
-}
-return r
-}
-
-func(m *PB_GroupMember_Flat)ToPB() *PB_GroupMember {
-r := &PB_GroupMember{
-    Id:  int64(m.Id) ,
-    GroupId:  int64(m.GroupId) ,
-    GroupKey:  m.GroupKey ,
-    UserId:  int32(m.UserId) ,
-    ByUserId:  int32(m.ByUserId) ,
-    GroupRoleEnumId:  int32(m.GroupRoleEnumId) ,
-    CreatedTime:  int32(m.CreatedTime) ,
-}
-return r
-}
-
-func(m *PB_GroupMessage_Flat)ToPB() *PB_GroupMessage {
-r := &PB_GroupMessage{
-    MessageId:  int64(m.MessageId) ,
-    RoomKey:  m.RoomKey ,
-    UserId:  int32(m.UserId) ,
-    MessageFileId:  int64(m.MessageFileId) ,
-    MessageTypeEnum:  int32(m.MessageTypeEnum) ,
-    Text:  m.Text ,
-    CreatedMs:  int64(m.CreatedMs) ,
-    DeliveryStatusEnum:  int32(m.DeliveryStatusEnum) ,
-}
-return r
-}
-
 func(m *PB_Like_Flat)ToPB() *PB_Like {
 r := &PB_Like{
     Id:  int64(m.Id) ,
@@ -8525,23 +8689,6 @@ r := &PB_ChatLastMessage{
 return r
 }
 
-func(m *PB_ChatSync_Flat)ToPB() *PB_ChatSync {
-r := &PB_ChatSync{
-    SyncId:  int64(m.SyncId) ,
-    ToUserId:  int32(m.ToUserId) ,
-    ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int64(m.FromHighMessageId) ,
-    ToLowMessageId:  int64(m.ToLowMessageId) ,
-    MessageId:  int64(m.MessageId) ,
-    MessagePb:  m.MessagePb ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int32(m.CreatedTime) ,
-}
-return r
-}
-
 func(m *PB_DirectMessage_Flat)ToPB() *PB_DirectMessage {
 r := &PB_DirectMessage{
     ChatKey:  m.ChatKey ,
@@ -8559,28 +8706,43 @@ r := &PB_DirectMessage{
 return r
 }
 
-func(m *PB_Home_Flat)ToPB() *PB_Home {
-r := &PB_Home{
-    Id:  int64(m.Id) ,
-    ForUserId:  int32(m.ForUserId) ,
-    PostId:  int64(m.PostId) ,
+func(m *PB_Group_Flat)ToPB() *PB_Group {
+r := &PB_Group{
+    GroupId:  int64(m.GroupId) ,
+    GroupName:  m.GroupName ,
+    MembersCount:  int32(m.MembersCount) ,
+    GroupPrivacyEnum:  int32(m.GroupPrivacyEnum) ,
+    CreatorUserId:  int32(m.CreatorUserId) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+    UpdatedMs:  int64(m.UpdatedMs) ,
+    CurrentSeq:  int32(m.CurrentSeq) ,
 }
 return r
 }
 
-func(m *PB_MessageFile_Flat)ToPB() *PB_MessageFile {
-r := &PB_MessageFile{
-    MessageFileId:  int64(m.MessageFileId) ,
-    FileTypeEnum:  int32(m.FileTypeEnum) ,
+func(m *PB_GroupMember_Flat)ToPB() *PB_GroupMember {
+r := &PB_GroupMember{
+    Id:  int64(m.Id) ,
+    GroupId:  int64(m.GroupId) ,
+    GroupKey:  m.GroupKey ,
     UserId:  int32(m.UserId) ,
-    Title:  m.Title ,
-    Size:  int32(m.Size) ,
-    Width:  int32(m.Width) ,
-    Height:  int32(m.Height) ,
-    Duration:  int32(m.Duration) ,
-    Extension:  m.Extension ,
-    Md5Hash:  m.Md5Hash ,
+    ByUserId:  int32(m.ByUserId) ,
+    GroupRoleEnumId:  int32(m.GroupRoleEnumId) ,
     CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_GroupMessage_Flat)ToPB() *PB_GroupMessage {
+r := &PB_GroupMessage{
+    MessageId:  int64(m.MessageId) ,
+    RoomKey:  m.RoomKey ,
+    UserId:  int32(m.UserId) ,
+    MessageFileId:  int64(m.MessageFileId) ,
+    MessageTypeEnum:  int32(m.MessageTypeEnum) ,
+    Text:  m.Text ,
+    CreatedMs:  int64(m.CreatedMs) ,
+    DeliveryStatusEnum:  int32(m.DeliveryStatusEnum) ,
 }
 return r
 }
@@ -8642,6 +8804,60 @@ r := &PB_SuggestedUser{
     UserId:  int32(m.UserId) ,
     TargetId:  int32(m.TargetId) ,
     Weight:  m.Weight ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_ChatSync2_Flat)ToPB() *PB_ChatSync2 {
+r := &PB_ChatSync2{
+    SyncId:  int64(m.SyncId) ,
+    ToUserId:  int32(m.ToUserId) ,
+    ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int64(m.FromHighMessageId) ,
+    ToLowMessageId:  int64(m.ToLowMessageId) ,
+    MessageId:  int64(m.MessageId) ,
+    MessagePb:  m.MessagePb ,
+    MessageJson:  m.MessageJson ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PushChat_Flat)ToPB() *PB_PushChat {
+r := &PB_PushChat{
+    PushId:  int64(m.PushId) ,
+    ToUserId:  int32(m.ToUserId) ,
+    PushTypeId:  int32(m.PushTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    Seq:  int32(m.Seq) ,
+    UnseenCount:  int32(m.UnseenCount) ,
+    FromHighMessageId:  int64(m.FromHighMessageId) ,
+    ToLowMessageId:  int64(m.ToLowMessageId) ,
+    MessageId:  int64(m.MessageId) ,
+    MessageFileId:  int64(m.MessageFileId) ,
+    MessagePb:  m.MessagePb ,
+    MessageJson:  m.MessageJson ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_PushChat2_Flat)ToPB() *PB_PushChat2 {
+r := &PB_PushChat2{
+    SyncId:  int64(m.SyncId) ,
+    ToUserId:  int32(m.ToUserId) ,
+    ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
+    RoomKey:  m.RoomKey ,
+    ChatKey:  m.ChatKey ,
+    FromHighMessageId:  int64(m.FromHighMessageId) ,
+    ToLowMessageId:  int64(m.ToLowMessageId) ,
+    MessageId:  int64(m.MessageId) ,
+    MessagePb:  m.MessagePb ,
+    MessageJson:  m.MessageJson ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -8946,6 +9162,30 @@ var PB_Pager__FOlD = &PB_Pager{
         Page:  0 ,
         Limit:  0 ,
         Last:  0 ,
+}
+
+
+var PB_UpdateRoomActionDoing2__FOlD = &PB_UpdateRoomActionDoing2{
+        RoomKey:  "" ,
+
+}
+
+
+var PB_UpdateMessageMeta2__FOlD = &PB_UpdateMessageMeta2{
+        RoomKey:  "" ,
+        MessageId:  0 ,
+}
+
+
+var PB_Push__FOlD = &PB_Push{
+        LastPushId:  0 ,
+        LastChatPushId:  0 ,
+
+
+
+
+
+
 }
 
 
@@ -9534,41 +9774,6 @@ var PB_FollowingListMemberRemoved__FOlD = &PB_FollowingListMemberRemoved{
 }
 
 
-var PB_Group__FOlD = &PB_Group{
-        GroupId:  0 ,
-        GroupName:  "" ,
-        MembersCount:  0 ,
-        GroupPrivacyEnum:  0 ,
-        CreatorUserId:  0 ,
-        CreatedTime:  0 ,
-        UpdatedMs:  0 ,
-        CurrentSeq:  0 ,
-}
-
-
-var PB_GroupMember__FOlD = &PB_GroupMember{
-        Id:  0 ,
-        GroupId:  0 ,
-        GroupKey:  "" ,
-        UserId:  0 ,
-        ByUserId:  0 ,
-        GroupRoleEnumId:  0 ,
-        CreatedTime:  0 ,
-}
-
-
-var PB_GroupMessage__FOlD = &PB_GroupMessage{
-        MessageId:  0 ,
-        RoomKey:  "" ,
-        UserId:  0 ,
-        MessageFileId:  0 ,
-        MessageTypeEnum:  0 ,
-        Text:  "" ,
-        CreatedMs:  0 ,
-        DeliveryStatusEnum:  0 ,
-}
-
-
 var PB_Like__FOlD = &PB_Like{
         Id:  0 ,
         PostId:  0 ,
@@ -9886,21 +10091,6 @@ var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
 }
 
 
-var PB_ChatSync__FOlD = &PB_ChatSync{
-        SyncId:  0 ,
-        ToUserId:  0 ,
-        ChatSyncTypeId:  0 ,
-        RoomKey:  "" ,
-        ChatKey:  "" ,
-        FromHighMessageId:  0 ,
-        ToLowMessageId:  0 ,
-        MessageId:  0 ,
-        MessagePb:  []byte{} ,
-        MessageJson:  "" ,
-        CreatedTime:  0 ,
-}
-
-
 var PB_DirectMessage__FOlD = &PB_DirectMessage{
         ChatKey:  "" ,
         MessageId:  0 ,
@@ -9916,25 +10106,38 @@ var PB_DirectMessage__FOlD = &PB_DirectMessage{
 }
 
 
-var PB_Home__FOlD = &PB_Home{
-        Id:  0 ,
-        ForUserId:  0 ,
-        PostId:  0 ,
+var PB_Group__FOlD = &PB_Group{
+        GroupId:  0 ,
+        GroupName:  "" ,
+        MembersCount:  0 ,
+        GroupPrivacyEnum:  0 ,
+        CreatorUserId:  0 ,
+        CreatedTime:  0 ,
+        UpdatedMs:  0 ,
+        CurrentSeq:  0 ,
 }
 
 
-var PB_MessageFile__FOlD = &PB_MessageFile{
-        MessageFileId:  0 ,
-        FileTypeEnum:  0 ,
+var PB_GroupMember__FOlD = &PB_GroupMember{
+        Id:  0 ,
+        GroupId:  0 ,
+        GroupKey:  "" ,
         UserId:  0 ,
-        Title:  "" ,
-        Size:  0 ,
-        Width:  0 ,
-        Height:  0 ,
-        Duration:  0 ,
-        Extension:  "" ,
-        Md5Hash:  "" ,
+        ByUserId:  0 ,
+        GroupRoleEnumId:  0 ,
         CreatedTime:  0 ,
+}
+
+
+var PB_GroupMessage__FOlD = &PB_GroupMessage{
+        MessageId:  0 ,
+        RoomKey:  "" ,
+        UserId:  0 ,
+        MessageFileId:  0 ,
+        MessageTypeEnum:  0 ,
+        Text:  "" ,
+        CreatedMs:  0 ,
+        DeliveryStatusEnum:  0 ,
 }
 
 
@@ -9984,6 +10187,54 @@ var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
         UserId:  0 ,
         TargetId:  0 ,
         Weight:  0.0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_ChatSync2__FOlD = &PB_ChatSync2{
+        SyncId:  0 ,
+        ToUserId:  0 ,
+        ChatSyncTypeId:  0 ,
+        RoomKey:  "" ,
+        ChatKey:  "" ,
+        FromHighMessageId:  0 ,
+        ToLowMessageId:  0 ,
+        MessageId:  0 ,
+        MessagePb:  []byte{} ,
+        MessageJson:  "" ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_PushChat__FOlD = &PB_PushChat{
+        PushId:  0 ,
+        ToUserId:  0 ,
+        PushTypeId:  0 ,
+        RoomKey:  "" ,
+        ChatKey:  "" ,
+        Seq:  0 ,
+        UnseenCount:  0 ,
+        FromHighMessageId:  0 ,
+        ToLowMessageId:  0 ,
+        MessageId:  0 ,
+        MessageFileId:  0 ,
+        MessagePb:  []byte{} ,
+        MessageJson:  "" ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_PushChat2__FOlD = &PB_PushChat2{
+        SyncId:  0 ,
+        ToUserId:  0 ,
+        ChatSyncTypeId:  0 ,
+        RoomKey:  "" ,
+        ChatKey:  "" ,
+        FromHighMessageId:  0 ,
+        ToLowMessageId:  0 ,
+        MessageId:  0 ,
+        MessagePb:  []byte{} ,
+        MessageJson:  "" ,
         CreatedTime:  0 ,
 }
 

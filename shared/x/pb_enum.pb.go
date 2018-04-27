@@ -7,6 +7,7 @@ Package x is a generated protocol buffer package.
 It is generated from these files:
 	pb_enum.proto
 	pb_global.proto
+	pb_push.proto
 	pb_rpc_auth2.proto
 	pb_rpc_chat.proto
 	pb_rpc_other.proto
@@ -26,6 +27,9 @@ It has these top-level messages:
 	PB_ResponseToClient
 	PB_ResponseExtra
 	PB_Pager
+	PB_UpdateRoomActionDoing2
+	PB_UpdateMessageMeta2
+	PB_Push
 	PB_UserParam_CheckUserName2
 	PB_UserResponse_CheckUserName2
 	PB_ChatParam_AddNewMessage
@@ -125,9 +129,6 @@ It has these top-level messages:
 	PB_FollowingList
 	PB_FollowingListMember
 	PB_FollowingListMemberRemoved
-	PB_Group
-	PB_GroupMember
-	PB_GroupMessage
 	PB_Like
 	PB_Notify
 	PB_NotifyRemoved
@@ -152,16 +153,19 @@ It has these top-level messages:
 	PB_UserPassword
 	PB_Chat
 	PB_ChatLastMessage
-	PB_ChatSync
 	PB_DirectMessage
-	PB_Home
-	PB_MessageFile
+	PB_Group
+	PB_GroupMember
+	PB_GroupMessage
 	PB_FileMsg
 	PB_FilePost
 	PB_ActionFanout
 	PB_HomeFanout
 	PB_SuggestedTopPost
 	PB_SuggestedUser
+	PB_ChatSync2
+	PB_PushChat
+	PB_PushChat2
 	PB_UpdateRoomActionDoing
 	PB_UpdateMessageMeta
 	PB_Updates

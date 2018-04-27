@@ -27,7 +27,7 @@ type PB_ChatParam_AddNewMessage struct {
 func (m *PB_ChatParam_AddNewMessage) Reset()                    { *m = PB_ChatParam_AddNewMessage{} }
 func (m *PB_ChatParam_AddNewMessage) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatParam_AddNewMessage) ProtoMessage()               {}
-func (*PB_ChatParam_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
+func (*PB_ChatParam_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 func (m *PB_ChatParam_AddNewMessage) GetMessageView() *PB_MessageView {
 	if m != nil {
@@ -50,7 +50,7 @@ type PB_ChatResponse_AddNewMessage struct {
 func (m *PB_ChatResponse_AddNewMessage) Reset()                    { *m = PB_ChatResponse_AddNewMessage{} }
 func (m *PB_ChatResponse_AddNewMessage) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_AddNewMessage) ProtoMessage()               {}
-func (*PB_ChatResponse_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{1} }
+func (*PB_ChatResponse_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
 
 func (m *PB_ChatResponse_AddNewMessage) GetMessageView() *PB_MessageView {
 	if m != nil {
@@ -69,7 +69,7 @@ type PB_ChatParam_SetRoomActionDoing struct {
 func (m *PB_ChatParam_SetRoomActionDoing) Reset()                    { *m = PB_ChatParam_SetRoomActionDoing{} }
 func (m *PB_ChatParam_SetRoomActionDoing) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatParam_SetRoomActionDoing) ProtoMessage()               {}
-func (*PB_ChatParam_SetRoomActionDoing) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{2} }
+func (*PB_ChatParam_SetRoomActionDoing) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
 
 func (m *PB_ChatParam_SetRoomActionDoing) GetGroupId() int64 {
 	if m != nil {
@@ -99,7 +99,7 @@ func (m *PB_ChatResponse_SetRoomActionDoing) Reset()         { *m = PB_ChatRespo
 func (m *PB_ChatResponse_SetRoomActionDoing) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_SetRoomActionDoing) ProtoMessage()    {}
 func (*PB_ChatResponse_SetRoomActionDoing) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{3}
+	return fileDescriptor4, []int{3}
 }
 
 // ///////////////////////////////////
@@ -112,7 +112,7 @@ func (m *PB_ChatParam_SetMessagesAsReceived) Reset()         { *m = PB_ChatParam
 func (m *PB_ChatParam_SetMessagesAsReceived) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatParam_SetMessagesAsReceived) ProtoMessage()    {}
 func (*PB_ChatParam_SetMessagesAsReceived) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{4}
+	return fileDescriptor4, []int{4}
 }
 
 func (m *PB_ChatParam_SetMessagesAsReceived) GetRoomKey() string {
@@ -136,7 +136,7 @@ func (m *PB_ChatResponse_SetMessagesAsReceived) Reset()         { *m = PB_ChatRe
 func (m *PB_ChatResponse_SetMessagesAsReceived) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_SetMessagesAsReceived) ProtoMessage()    {}
 func (*PB_ChatResponse_SetMessagesAsReceived) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{5}
+	return fileDescriptor4, []int{5}
 }
 
 // ///////////////////////////////////
@@ -154,7 +154,7 @@ func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) Reset() {
 func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatParam_SetChatMessagesRangeAsSeen) ProtoMessage()    {}
 func (*PB_ChatParam_SetChatMessagesRangeAsSeen) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{6}
+	return fileDescriptor4, []int{6}
 }
 
 func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetRoomKey() string {
@@ -203,7 +203,7 @@ func (m *PB_ChatResponse_SetChatMessagesRangeAsSeen) String() string {
 }
 func (*PB_ChatResponse_SetChatMessagesRangeAsSeen) ProtoMessage() {}
 func (*PB_ChatResponse_SetChatMessagesRangeAsSeen) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{7}
+	return fileDescriptor4, []int{7}
 }
 
 // ///////////////////////////////////
@@ -215,7 +215,7 @@ type PB_ChatParam_DeleteChatHistory struct {
 func (m *PB_ChatParam_DeleteChatHistory) Reset()                    { *m = PB_ChatParam_DeleteChatHistory{} }
 func (m *PB_ChatParam_DeleteChatHistory) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatParam_DeleteChatHistory) ProtoMessage()               {}
-func (*PB_ChatParam_DeleteChatHistory) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{8} }
+func (*PB_ChatParam_DeleteChatHistory) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{8} }
 
 func (m *PB_ChatParam_DeleteChatHistory) GetChatKey() string {
 	if m != nil {
@@ -238,7 +238,7 @@ func (m *PB_ChatResponse_DeleteChatHistory) Reset()         { *m = PB_ChatRespon
 func (m *PB_ChatResponse_DeleteChatHistory) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_DeleteChatHistory) ProtoMessage()    {}
 func (*PB_ChatResponse_DeleteChatHistory) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{9}
+	return fileDescriptor4, []int{9}
 }
 
 // ///////////////////////////////////
@@ -252,7 +252,7 @@ func (m *PB_ChatParam_DeleteMessagesByIds) Reset()         { *m = PB_ChatParam_D
 func (m *PB_ChatParam_DeleteMessagesByIds) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatParam_DeleteMessagesByIds) ProtoMessage()    {}
 func (*PB_ChatParam_DeleteMessagesByIds) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{10}
+	return fileDescriptor4, []int{10}
 }
 
 func (m *PB_ChatParam_DeleteMessagesByIds) GetChatKey() string {
@@ -283,7 +283,7 @@ func (m *PB_ChatResponse_DeleteMessagesByIds) Reset()         { *m = PB_ChatResp
 func (m *PB_ChatResponse_DeleteMessagesByIds) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_DeleteMessagesByIds) ProtoMessage()    {}
 func (*PB_ChatResponse_DeleteMessagesByIds) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{11}
+	return fileDescriptor4, []int{11}
 }
 
 // ///////////////////////////////////
@@ -296,7 +296,7 @@ type PB_ChatParam_EditMessage struct {
 func (m *PB_ChatParam_EditMessage) Reset()                    { *m = PB_ChatParam_EditMessage{} }
 func (m *PB_ChatParam_EditMessage) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatParam_EditMessage) ProtoMessage()               {}
-func (*PB_ChatParam_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{12} }
+func (*PB_ChatParam_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{12} }
 
 func (m *PB_ChatParam_EditMessage) GetRoomKey() string {
 	if m != nil {
@@ -325,7 +325,7 @@ type PB_ChatResponse_EditMessage struct {
 func (m *PB_ChatResponse_EditMessage) Reset()                    { *m = PB_ChatResponse_EditMessage{} }
 func (m *PB_ChatResponse_EditMessage) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_EditMessage) ProtoMessage()               {}
-func (*PB_ChatResponse_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{13} }
+func (*PB_ChatResponse_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{13} }
 
 type PB_ChatParam_GetChatList struct {
 }
@@ -333,7 +333,7 @@ type PB_ChatParam_GetChatList struct {
 func (m *PB_ChatParam_GetChatList) Reset()                    { *m = PB_ChatParam_GetChatList{} }
 func (m *PB_ChatParam_GetChatList) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatParam_GetChatList) ProtoMessage()               {}
-func (*PB_ChatParam_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{14} }
+func (*PB_ChatParam_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{14} }
 
 type PB_ChatResponse_GetChatList struct {
 	Chats []*PB_ChatView `protobuf:"bytes,2,rep,name=Chats" json:"Chats,omitempty"`
@@ -342,7 +342,7 @@ type PB_ChatResponse_GetChatList struct {
 func (m *PB_ChatResponse_GetChatList) Reset()                    { *m = PB_ChatResponse_GetChatList{} }
 func (m *PB_ChatResponse_GetChatList) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_GetChatList) ProtoMessage()               {}
-func (*PB_ChatResponse_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{15} }
+func (*PB_ChatResponse_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{15} }
 
 func (m *PB_ChatResponse_GetChatList) GetChats() []*PB_ChatView {
 	if m != nil {
@@ -362,7 +362,7 @@ func (m *PB_ChatParam_GetChatHistoryToOlder) Reset()         { *m = PB_ChatParam
 func (m *PB_ChatParam_GetChatHistoryToOlder) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatParam_GetChatHistoryToOlder) ProtoMessage()    {}
 func (*PB_ChatParam_GetChatHistoryToOlder) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{16}
+	return fileDescriptor4, []int{16}
 }
 
 func (m *PB_ChatParam_GetChatHistoryToOlder) GetChatKey() string {
@@ -395,7 +395,7 @@ func (m *PB_ChatResponse_GetChatHistoryToOlder) Reset()         { *m = PB_ChatRe
 func (m *PB_ChatResponse_GetChatHistoryToOlder) String() string { return proto.CompactTextString(m) }
 func (*PB_ChatResponse_GetChatHistoryToOlder) ProtoMessage()    {}
 func (*PB_ChatResponse_GetChatHistoryToOlder) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{17}
+	return fileDescriptor4, []int{17}
 }
 
 func (m *PB_ChatResponse_GetChatHistoryToOlder) GetMessagesViews() []*PB_MessageView {
@@ -769,9 +769,9 @@ var _RPC_Chat_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_chat.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor3) }
+func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor4) }
 
-var fileDescriptor3 = []byte{
+var fileDescriptor4 = []byte{
 	// 805 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0xeb, 0x6e, 0xdb, 0x36,
 	0x14, 0x86, 0xaa, 0xba, 0x73, 0x8e, 0xeb, 0x6e, 0xe6, 0xda, 0x41, 0x53, 0xdb, 0x54, 0xa5, 0xd3,

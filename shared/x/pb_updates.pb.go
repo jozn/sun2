@@ -20,7 +20,7 @@ type PB_UpdateRoomActionDoing struct {
 func (m *PB_UpdateRoomActionDoing) Reset()                    { *m = PB_UpdateRoomActionDoing{} }
 func (m *PB_UpdateRoomActionDoing) String() string            { return proto.CompactTextString(m) }
 func (*PB_UpdateRoomActionDoing) ProtoMessage()               {}
-func (*PB_UpdateRoomActionDoing) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{0} }
+func (*PB_UpdateRoomActionDoing) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
 
 func (m *PB_UpdateRoomActionDoing) GetRoomKey() string {
 	if m != nil {
@@ -44,7 +44,7 @@ type PB_UpdateMessageMeta struct {
 func (m *PB_UpdateMessageMeta) Reset()                    { *m = PB_UpdateMessageMeta{} }
 func (m *PB_UpdateMessageMeta) String() string            { return proto.CompactTextString(m) }
 func (*PB_UpdateMessageMeta) ProtoMessage()               {}
-func (*PB_UpdateMessageMeta) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{1} }
+func (*PB_UpdateMessageMeta) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
 
 func (m *PB_UpdateMessageMeta) GetRoomKey() string {
 	if m != nil {
@@ -76,7 +76,7 @@ type PB_Updates struct {
 func (m *PB_Updates) Reset()                    { *m = PB_Updates{} }
 func (m *PB_Updates) String() string            { return proto.CompactTextString(m) }
 func (*PB_Updates) ProtoMessage()               {}
-func (*PB_Updates) Descriptor() ([]byte, []int) { return fileDescriptor10, []int{2} }
+func (*PB_Updates) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{2} }
 
 func (m *PB_Updates) GetLastChatSyncId() int64 {
 	if m != nil {
@@ -133,9 +133,9 @@ func init() {
 	proto.RegisterType((*PB_Updates)(nil), "PB_Updates")
 }
 
-func init() { proto.RegisterFile("pb_updates.proto", fileDescriptor10) }
+func init() { proto.RegisterFile("pb_updates.proto", fileDescriptor11) }
 
-var fileDescriptor10 = []byte{
+var fileDescriptor11 = []byte{
 	// 355 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0x4f, 0x4f, 0xc2, 0x40,
 	0x10, 0xc5, 0x53, 0x1a, 0x54, 0x06, 0x05, 0xdd, 0x80, 0xae, 0xc6, 0x18, 0xd2, 0x83, 0xe1, 0xd4,

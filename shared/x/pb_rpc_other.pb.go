@@ -24,7 +24,7 @@ type PB_OtherParam_Echo struct {
 func (m *PB_OtherParam_Echo) Reset()                    { *m = PB_OtherParam_Echo{} }
 func (m *PB_OtherParam_Echo) String() string            { return proto.CompactTextString(m) }
 func (*PB_OtherParam_Echo) ProtoMessage()               {}
-func (*PB_OtherParam_Echo) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (*PB_OtherParam_Echo) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{0} }
 
 func (m *PB_OtherParam_Echo) GetText() string {
 	if m != nil {
@@ -40,7 +40,7 @@ type PB_OtherResponse_Echo struct {
 func (m *PB_OtherResponse_Echo) Reset()                    { *m = PB_OtherResponse_Echo{} }
 func (m *PB_OtherResponse_Echo) String() string            { return proto.CompactTextString(m) }
 func (*PB_OtherResponse_Echo) ProtoMessage()               {}
-func (*PB_OtherResponse_Echo) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (*PB_OtherResponse_Echo) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{1} }
 
 func (m *PB_OtherResponse_Echo) GetText() string {
 	if m != nil {
@@ -126,9 +126,9 @@ var _RPC_Other_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_other.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_other.proto", fileDescriptor4) }
+func init() { proto.RegisterFile("pb_rpc_other.proto", fileDescriptor5) }
 
-var fileDescriptor4 = []byte{
+var fileDescriptor5 = []byte{
 	// 146 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2a, 0x48, 0x8a, 0x2f,
 	0x2a, 0x48, 0x8e, 0xcf, 0x2f, 0xc9, 0x48, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x57, 0xd2,

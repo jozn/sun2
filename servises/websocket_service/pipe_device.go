@@ -30,7 +30,7 @@ func (pipe *UserDevicePipe) ServeIncomingCalls() {
 		defer func() {
 			if r := recover(); r != nil {
 				if config.IS_DEBUG {
-					log.Panic("recverd in ServeSendToUserDevice err: ", r)
+					log.Panic("recverd in serveSendToUserDevice err: ", r)
 				}
 				logPipes.DevPrintln("Recovered in ws messaging clinet request", r)
 				pipe.ShutDownCompletely()
@@ -71,7 +71,7 @@ func (pipe *UserDevicePipe) ServeSendToUserDevice() {
 		defer func() {
 			if r := recover(); r != nil {
 				if config.IS_DEBUG {
-					log.Panic("recverd in ServeSendToUserDevice err: ", r)
+					log.Panic("recverd in serveSendToUserDevice err: ", r)
 				} else {
 					pipe.ShutDownCompletely()
 				}

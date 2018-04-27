@@ -182,91 +182,6 @@ func PBConvPB_FollowingListMemberRemoved_To_FollowingListMemberRemoved ( o *Foll
 }
 */
 /*
-func PBConvPB__Group_To_Group( o *PB_Group) *Group {
-     n := &Group{
-      GroupId: int ( o.GroupId ),
-      GroupName: string ( o.GroupName ),
-      MembersCount: int ( o.MembersCount ),
-      GroupPrivacyEnum: int ( o.GroupPrivacyEnum ),
-      CreatorUserId: int ( o.CreatorUserId ),
-      CreatedTime: int ( o.CreatedTime ),
-      UpdatedMs: int ( o.UpdatedMs ),
-      CurrentSeq: int ( o.CurrentSeq ),
-    }
-    return n
-}
-
-func PBConvPB_Group_To_Group ( o *Group) *PB_Group {
-     n := &PB_Group{
-      GroupId: int64 ( o.GroupId ),
-      GroupName: string ( o.GroupName ),
-      MembersCount: int32 ( o.MembersCount ),
-      GroupPrivacyEnum: int32 ( o.GroupPrivacyEnum ),
-      CreatorUserId: int32 ( o.CreatorUserId ),
-      CreatedTime: int32 ( o.CreatedTime ),
-      UpdatedMs: int64 ( o.UpdatedMs ),
-      CurrentSeq: int32 ( o.CurrentSeq ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__GroupMember_To_GroupMember( o *PB_GroupMember) *GroupMember {
-     n := &GroupMember{
-      Id: int ( o.Id ),
-      GroupId: int ( o.GroupId ),
-      GroupKey: string ( o.GroupKey ),
-      UserId: int ( o.UserId ),
-      ByUserId: int ( o.ByUserId ),
-      GroupRoleEnumId: int ( o.GroupRoleEnumId ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_GroupMember_To_GroupMember ( o *GroupMember) *PB_GroupMember {
-     n := &PB_GroupMember{
-      Id: int64 ( o.Id ),
-      GroupId: int64 ( o.GroupId ),
-      GroupKey: string ( o.GroupKey ),
-      UserId: int32 ( o.UserId ),
-      ByUserId: int32 ( o.ByUserId ),
-      GroupRoleEnumId: int32 ( o.GroupRoleEnumId ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__GroupMessage_To_GroupMessage( o *PB_GroupMessage) *GroupMessage {
-     n := &GroupMessage{
-      MessageId: int ( o.MessageId ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int ( o.UserId ),
-      MessageFileId: int ( o.MessageFileId ),
-      MessageTypeEnum: int ( o.MessageTypeEnum ),
-      Text: string ( o.Text ),
-      CreatedMs: int ( o.CreatedMs ),
-      DeliveryStatusEnum: int ( o.DeliveryStatusEnum ),
-    }
-    return n
-}
-
-func PBConvPB_GroupMessage_To_GroupMessage ( o *GroupMessage) *PB_GroupMessage {
-     n := &PB_GroupMessage{
-      MessageId: int64 ( o.MessageId ),
-      RoomKey: string ( o.RoomKey ),
-      UserId: int32 ( o.UserId ),
-      MessageFileId: int64 ( o.MessageFileId ),
-      MessageTypeEnum: int32 ( o.MessageTypeEnum ),
-      Text: string ( o.Text ),
-      CreatedMs: int64 ( o.CreatedMs ),
-      DeliveryStatusEnum: int32 ( o.DeliveryStatusEnum ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__Like_To_Like( o *PB_Like) *Like {
      n := &Like{
       Id: int ( o.Id ),
@@ -1021,41 +936,6 @@ func PBConvPB_ChatLastMessage_To_ChatLastMessage ( o *ChatLastMessage) *PB_ChatL
 }
 */
 /*
-func PBConvPB__ChatSync_To_ChatSync( o *PB_ChatSync) *ChatSync {
-     n := &ChatSync{
-      SyncId: int ( o.SyncId ),
-      ToUserId: int ( o.ToUserId ),
-      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int ( o.FromHighMessageId ),
-      ToLowMessageId: int ( o.ToLowMessageId ),
-      MessageId: int ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_ChatSync_To_ChatSync ( o *ChatSync) *PB_ChatSync {
-     n := &PB_ChatSync{
-      SyncId: int64 ( o.SyncId ),
-      ToUserId: int32 ( o.ToUserId ),
-      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int64 ( o.FromHighMessageId ),
-      ToLowMessageId: int64 ( o.ToLowMessageId ),
-      MessageId: int64 ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__DirectMessage_To_DirectMessage( o *PB_DirectMessage) *DirectMessage {
      n := &DirectMessage{
       ChatKey: string ( o.ChatKey ),
@@ -1091,55 +971,86 @@ func PBConvPB_DirectMessage_To_DirectMessage ( o *DirectMessage) *PB_DirectMessa
 }
 */
 /*
-func PBConvPB__Home_To_Home( o *PB_Home) *Home {
-     n := &Home{
-      Id: int ( o.Id ),
-      ForUserId: int ( o.ForUserId ),
-      PostId: int ( o.PostId ),
+func PBConvPB__Group_To_Group( o *PB_Group) *Group {
+     n := &Group{
+      GroupId: int ( o.GroupId ),
+      GroupName: string ( o.GroupName ),
+      MembersCount: int ( o.MembersCount ),
+      GroupPrivacyEnum: int ( o.GroupPrivacyEnum ),
+      CreatorUserId: int ( o.CreatorUserId ),
+      CreatedTime: int ( o.CreatedTime ),
+      UpdatedMs: int ( o.UpdatedMs ),
+      CurrentSeq: int ( o.CurrentSeq ),
     }
     return n
 }
 
-func PBConvPB_Home_To_Home ( o *Home) *PB_Home {
-     n := &PB_Home{
-      Id: int64 ( o.Id ),
-      ForUserId: int32 ( o.ForUserId ),
-      PostId: int64 ( o.PostId ),
+func PBConvPB_Group_To_Group ( o *Group) *PB_Group {
+     n := &PB_Group{
+      GroupId: int64 ( o.GroupId ),
+      GroupName: string ( o.GroupName ),
+      MembersCount: int32 ( o.MembersCount ),
+      GroupPrivacyEnum: int32 ( o.GroupPrivacyEnum ),
+      CreatorUserId: int32 ( o.CreatorUserId ),
+      CreatedTime: int32 ( o.CreatedTime ),
+      UpdatedMs: int64 ( o.UpdatedMs ),
+      CurrentSeq: int32 ( o.CurrentSeq ),
     }
     return n
 }
 */
 /*
-func PBConvPB__MessageFile_To_MessageFile( o *PB_MessageFile) *MessageFile {
-     n := &MessageFile{
-      MessageFileId: int ( o.MessageFileId ),
-      FileTypeEnum: int ( o.FileTypeEnum ),
+func PBConvPB__GroupMember_To_GroupMember( o *PB_GroupMember) *GroupMember {
+     n := &GroupMember{
+      Id: int ( o.Id ),
+      GroupId: int ( o.GroupId ),
+      GroupKey: string ( o.GroupKey ),
       UserId: int ( o.UserId ),
-      Title: string ( o.Title ),
-      Size: int ( o.Size ),
-      Width: int ( o.Width ),
-      Height: int ( o.Height ),
-      Duration: int ( o.Duration ),
-      Extension: string ( o.Extension ),
-      Md5Hash: string ( o.Md5Hash ),
+      ByUserId: int ( o.ByUserId ),
+      GroupRoleEnumId: int ( o.GroupRoleEnumId ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
 }
 
-func PBConvPB_MessageFile_To_MessageFile ( o *MessageFile) *PB_MessageFile {
-     n := &PB_MessageFile{
-      MessageFileId: int64 ( o.MessageFileId ),
-      FileTypeEnum: int32 ( o.FileTypeEnum ),
+func PBConvPB_GroupMember_To_GroupMember ( o *GroupMember) *PB_GroupMember {
+     n := &PB_GroupMember{
+      Id: int64 ( o.Id ),
+      GroupId: int64 ( o.GroupId ),
+      GroupKey: string ( o.GroupKey ),
       UserId: int32 ( o.UserId ),
-      Title: string ( o.Title ),
-      Size: int32 ( o.Size ),
-      Width: int32 ( o.Width ),
-      Height: int32 ( o.Height ),
-      Duration: int32 ( o.Duration ),
-      Extension: string ( o.Extension ),
-      Md5Hash: string ( o.Md5Hash ),
+      ByUserId: int32 ( o.ByUserId ),
+      GroupRoleEnumId: int32 ( o.GroupRoleEnumId ),
       CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__GroupMessage_To_GroupMessage( o *PB_GroupMessage) *GroupMessage {
+     n := &GroupMessage{
+      MessageId: int ( o.MessageId ),
+      RoomKey: string ( o.RoomKey ),
+      UserId: int ( o.UserId ),
+      MessageFileId: int ( o.MessageFileId ),
+      MessageTypeEnum: int ( o.MessageTypeEnum ),
+      Text: string ( o.Text ),
+      CreatedMs: int ( o.CreatedMs ),
+      DeliveryStatusEnum: int ( o.DeliveryStatusEnum ),
+    }
+    return n
+}
+
+func PBConvPB_GroupMessage_To_GroupMessage ( o *GroupMessage) *PB_GroupMessage {
+     n := &PB_GroupMessage{
+      MessageId: int64 ( o.MessageId ),
+      RoomKey: string ( o.RoomKey ),
+      UserId: int32 ( o.UserId ),
+      MessageFileId: int64 ( o.MessageFileId ),
+      MessageTypeEnum: int32 ( o.MessageTypeEnum ),
+      Text: string ( o.Text ),
+      CreatedMs: int64 ( o.CreatedMs ),
+      DeliveryStatusEnum: int32 ( o.DeliveryStatusEnum ),
     }
     return n
 }
@@ -1269,6 +1180,117 @@ func PBConvPB_SuggestedUser_To_SuggestedUser ( o *SuggestedUser) *PB_SuggestedUs
       UserId: int32 ( o.UserId ),
       TargetId: int32 ( o.TargetId ),
       Weight: float32 ( o.Weight ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__ChatSync2_To_ChatSync2( o *PB_ChatSync2) *ChatSync2 {
+     n := &ChatSync2{
+      SyncId: int ( o.SyncId ),
+      ToUserId: int ( o.ToUserId ),
+      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int ( o.FromHighMessageId ),
+      ToLowMessageId: int ( o.ToLowMessageId ),
+      MessageId: int ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_ChatSync2_To_ChatSync2 ( o *ChatSync2) *PB_ChatSync2 {
+     n := &PB_ChatSync2{
+      SyncId: int64 ( o.SyncId ),
+      ToUserId: int32 ( o.ToUserId ),
+      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int64 ( o.FromHighMessageId ),
+      ToLowMessageId: int64 ( o.ToLowMessageId ),
+      MessageId: int64 ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PushChat_To_PushChat( o *PB_PushChat) *PushChat {
+     n := &PushChat{
+      PushId: int ( o.PushId ),
+      ToUserId: int ( o.ToUserId ),
+      PushTypeId: int ( o.PushTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      Seq: int ( o.Seq ),
+      UnseenCount: int ( o.UnseenCount ),
+      FromHighMessageId: int ( o.FromHighMessageId ),
+      ToLowMessageId: int ( o.ToLowMessageId ),
+      MessageId: int ( o.MessageId ),
+      MessageFileId: int ( o.MessageFileId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PushChat_To_PushChat ( o *PushChat) *PB_PushChat {
+     n := &PB_PushChat{
+      PushId: int64 ( o.PushId ),
+      ToUserId: int32 ( o.ToUserId ),
+      PushTypeId: int32 ( o.PushTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      Seq: int32 ( o.Seq ),
+      UnseenCount: int32 ( o.UnseenCount ),
+      FromHighMessageId: int64 ( o.FromHighMessageId ),
+      ToLowMessageId: int64 ( o.ToLowMessageId ),
+      MessageId: int64 ( o.MessageId ),
+      MessageFileId: int64 ( o.MessageFileId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__PushChat2_To_PushChat2( o *PB_PushChat2) *PushChat2 {
+     n := &PushChat2{
+      SyncId: int ( o.SyncId ),
+      ToUserId: int ( o.ToUserId ),
+      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int ( o.FromHighMessageId ),
+      ToLowMessageId: int ( o.ToLowMessageId ),
+      MessageId: int ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_PushChat2_To_PushChat2 ( o *PushChat2) *PB_PushChat2 {
+     n := &PB_PushChat2{
+      SyncId: int64 ( o.SyncId ),
+      ToUserId: int32 ( o.ToUserId ),
+      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
+      RoomKey: string ( o.RoomKey ),
+      ChatKey: string ( o.ChatKey ),
+      FromHighMessageId: int64 ( o.FromHighMessageId ),
+      ToLowMessageId: int64 ( o.ToLowMessageId ),
+      MessageId: int64 ( o.MessageId ),
+      MessagePb: []byte ( o.MessagePb ),
+      MessageJson: string ( o.MessageJson ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n

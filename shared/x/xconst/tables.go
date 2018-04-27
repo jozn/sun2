@@ -15,12 +15,6 @@ const (
 	FollowingListMember_TableGo        = "FollowingListMember"
 	FollowingListMemberRemoved_Table   = "following_list_member_removed"
 	FollowingListMemberRemoved_TableGo = "FollowingListMemberRemoved"
-	Group_Table                        = "group"
-	Group_TableGo                      = "Group"
-	GroupMember_Table                  = "group_member"
-	GroupMember_TableGo                = "GroupMember"
-	GroupMessage_Table                 = "group_message"
-	GroupMessage_TableGo               = "GroupMessage"
 	Like_Table                         = "likes"
 	Like_TableGo                       = "Like"
 	Notify_Table                       = "notify"
@@ -69,14 +63,14 @@ const (
 	Chat_TableGo                       = "Chat"
 	ChatLastMessage_Table              = "chat_last_message"
 	ChatLastMessage_TableGo            = "ChatLastMessage"
-	ChatSync_Table                     = "chat_sync"
-	ChatSync_TableGo                   = "ChatSync"
 	DirectMessage_Table                = "direct_message"
 	DirectMessage_TableGo              = "DirectMessage"
-	Home_Table                         = "home"
-	Home_TableGo                       = "Home"
-	MessageFile_Table                  = "message_file"
-	MessageFile_TableGo                = "MessageFile"
+	Group_Table                        = "group"
+	Group_TableGo                      = "Group"
+	GroupMember_Table                  = "group_member"
+	GroupMember_TableGo                = "GroupMember"
+	GroupMessage_Table                 = "group_message"
+	GroupMessage_TableGo               = "GroupMessage"
 	FileMsg_Table                      = "file_msg"
 	FileMsg_TableGo                    = "FileMsg"
 	FilePost_Table                     = "file_post"
@@ -89,6 +83,12 @@ const (
 	SuggestedTopPost_TableGo           = "SuggestedTopPost"
 	SuggestedUser_Table                = "suggested_user"
 	SuggestedUser_TableGo              = "SuggestedUser"
+	ChatSync2_Table                    = "chat_sync2"
+	ChatSync2_TableGo                  = "ChatSync2"
+	PushChat_Table                     = "push_chat"
+	PushChat_TableGo                   = "PushChat"
+	PushChat2_Table                    = "push_chat2"
+	PushChat2_TableGo                  = "PushChat2"
 )
 
 var Action = struct {
@@ -214,67 +214,6 @@ var FollowingListMemberRemoved = struct {
 	UserId:           "UserId",
 	UnFollowedUserId: "UnFollowedUserId",
 	UpdatedTime:      "UpdatedTime",
-}
-
-var Group = struct {
-	GroupId          string
-	GroupName        string
-	MembersCount     string
-	GroupPrivacyEnum string
-	CreatorUserId    string
-	CreatedTime      string
-	UpdatedMs        string
-	CurrentSeq       string
-}{
-
-	GroupId:          "GroupId",
-	GroupName:        "GroupName",
-	MembersCount:     "MembersCount",
-	GroupPrivacyEnum: "GroupPrivacyEnum",
-	CreatorUserId:    "CreatorUserId",
-	CreatedTime:      "CreatedTime",
-	UpdatedMs:        "UpdatedMs",
-	CurrentSeq:       "CurrentSeq",
-}
-
-var GroupMember = struct {
-	Id              string
-	GroupId         string
-	GroupKey        string
-	UserId          string
-	ByUserId        string
-	GroupRoleEnumId string
-	CreatedTime     string
-}{
-
-	Id:              "Id",
-	GroupId:         "GroupId",
-	GroupKey:        "GroupKey",
-	UserId:          "UserId",
-	ByUserId:        "ByUserId",
-	GroupRoleEnumId: "GroupRoleEnumId",
-	CreatedTime:     "CreatedTime",
-}
-
-var GroupMessage = struct {
-	MessageId          string
-	RoomKey            string
-	UserId             string
-	MessageFileId      string
-	MessageTypeEnum    string
-	Text               string
-	CreatedMs          string
-	DeliveryStatusEnum string
-}{
-
-	MessageId:          "MessageId",
-	RoomKey:            "RoomKey",
-	UserId:             "UserId",
-	MessageFileId:      "MessageFileId",
-	MessageTypeEnum:    "MessageTypeEnum",
-	Text:               "Text",
-	CreatedMs:          "CreatedMs",
-	DeliveryStatusEnum: "DeliveryStatusEnum",
 }
 
 var Like = struct {
@@ -839,33 +778,6 @@ var ChatLastMessage = struct {
 	LastMsgJson: "LastMsgJson",
 }
 
-var ChatSync = struct {
-	SyncId            string
-	ToUserId          string
-	ChatSyncTypeId    string
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId string
-	ToLowMessageId    string
-	MessageId         string
-	MessagePb         string
-	MessageJson       string
-	CreatedTime       string
-}{
-
-	SyncId:            "SyncId",
-	ToUserId:          "ToUserId",
-	ChatSyncTypeId:    "ChatSyncTypeId",
-	RoomKey:           "RoomKey",
-	ChatKey:           "ChatKey",
-	FromHighMessageId: "FromHighMessageId",
-	ToLowMessageId:    "ToLowMessageId",
-	MessageId:         "MessageId",
-	MessagePb:         "MessagePb",
-	MessageJson:       "MessageJson",
-	CreatedTime:       "CreatedTime",
-}
-
 var DirectMessage = struct {
 	ChatKey            string
 	MessageId          string
@@ -893,42 +805,65 @@ var DirectMessage = struct {
 	ExtraPB:            "ExtraPB",
 }
 
-var Home = struct {
-	Id        string
-	ForUserId string
-	PostId    string
+var Group = struct {
+	GroupId          string
+	GroupName        string
+	MembersCount     string
+	GroupPrivacyEnum string
+	CreatorUserId    string
+	CreatedTime      string
+	UpdatedMs        string
+	CurrentSeq       string
 }{
 
-	Id:        "Id",
-	ForUserId: "ForUserId",
-	PostId:    "PostId",
+	GroupId:          "GroupId",
+	GroupName:        "GroupName",
+	MembersCount:     "MembersCount",
+	GroupPrivacyEnum: "GroupPrivacyEnum",
+	CreatorUserId:    "CreatorUserId",
+	CreatedTime:      "CreatedTime",
+	UpdatedMs:        "UpdatedMs",
+	CurrentSeq:       "CurrentSeq",
 }
 
-var MessageFile = struct {
-	MessageFileId string
-	FileTypeEnum  string
-	UserId        string
-	Title         string
-	Size          string
-	Width         string
-	Height        string
-	Duration      string
-	Extension     string
-	Md5Hash       string
-	CreatedTime   string
+var GroupMember = struct {
+	Id              string
+	GroupId         string
+	GroupKey        string
+	UserId          string
+	ByUserId        string
+	GroupRoleEnumId string
+	CreatedTime     string
 }{
 
-	MessageFileId: "MessageFileId",
-	FileTypeEnum:  "FileTypeEnum",
-	UserId:        "UserId",
-	Title:         "Title",
-	Size:          "Size",
-	Width:         "Width",
-	Height:        "Height",
-	Duration:      "Duration",
-	Extension:     "Extension",
-	Md5Hash:       "Md5Hash",
-	CreatedTime:   "CreatedTime",
+	Id:              "Id",
+	GroupId:         "GroupId",
+	GroupKey:        "GroupKey",
+	UserId:          "UserId",
+	ByUserId:        "ByUserId",
+	GroupRoleEnumId: "GroupRoleEnumId",
+	CreatedTime:     "CreatedTime",
+}
+
+var GroupMessage = struct {
+	MessageId          string
+	RoomKey            string
+	UserId             string
+	MessageFileId      string
+	MessageTypeEnum    string
+	Text               string
+	CreatedMs          string
+	DeliveryStatusEnum string
+}{
+
+	MessageId:          "MessageId",
+	RoomKey:            "RoomKey",
+	UserId:             "UserId",
+	MessageFileId:      "MessageFileId",
+	MessageTypeEnum:    "MessageTypeEnum",
+	Text:               "Text",
+	CreatedMs:          "CreatedMs",
+	DeliveryStatusEnum: "DeliveryStatusEnum",
 }
 
 var FileMsg = struct {
@@ -1011,4 +946,91 @@ var SuggestedUser = struct {
 	TargetId:    "TargetId",
 	Weight:      "Weight",
 	CreatedTime: "CreatedTime",
+}
+
+var ChatSync2 = struct {
+	SyncId            string
+	ToUserId          string
+	ChatSyncTypeId    string
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId string
+	ToLowMessageId    string
+	MessageId         string
+	MessagePb         string
+	MessageJson       string
+	CreatedTime       string
+}{
+
+	SyncId:            "SyncId",
+	ToUserId:          "ToUserId",
+	ChatSyncTypeId:    "ChatSyncTypeId",
+	RoomKey:           "RoomKey",
+	ChatKey:           "ChatKey",
+	FromHighMessageId: "FromHighMessageId",
+	ToLowMessageId:    "ToLowMessageId",
+	MessageId:         "MessageId",
+	MessagePb:         "MessagePb",
+	MessageJson:       "MessageJson",
+	CreatedTime:       "CreatedTime",
+}
+
+var PushChat = struct {
+	PushId            string
+	ToUserId          string
+	PushTypeId        string
+	RoomKey           string
+	ChatKey           string
+	Seq               string
+	UnseenCount       string
+	FromHighMessageId string
+	ToLowMessageId    string
+	MessageId         string
+	MessageFileId     string
+	MessagePb         string
+	MessageJson       string
+	CreatedTime       string
+}{
+
+	PushId:            "PushId",
+	ToUserId:          "ToUserId",
+	PushTypeId:        "PushTypeId",
+	RoomKey:           "RoomKey",
+	ChatKey:           "ChatKey",
+	Seq:               "Seq",
+	UnseenCount:       "UnseenCount",
+	FromHighMessageId: "FromHighMessageId",
+	ToLowMessageId:    "ToLowMessageId",
+	MessageId:         "MessageId",
+	MessageFileId:     "MessageFileId",
+	MessagePb:         "MessagePb",
+	MessageJson:       "MessageJson",
+	CreatedTime:       "CreatedTime",
+}
+
+var PushChat2 = struct {
+	SyncId            string
+	ToUserId          string
+	ChatSyncTypeId    string
+	RoomKey           string
+	ChatKey           string
+	FromHighMessageId string
+	ToLowMessageId    string
+	MessageId         string
+	MessagePb         string
+	MessageJson       string
+	CreatedTime       string
+}{
+
+	SyncId:            "SyncId",
+	ToUserId:          "ToUserId",
+	ChatSyncTypeId:    "ChatSyncTypeId",
+	RoomKey:           "RoomKey",
+	ChatKey:           "ChatKey",
+	FromHighMessageId: "FromHighMessageId",
+	ToLowMessageId:    "ToLowMessageId",
+	MessageId:         "MessageId",
+	MessagePb:         "MessagePb",
+	MessageJson:       "MessageJson",
+	CreatedTime:       "CreatedTime",
 }

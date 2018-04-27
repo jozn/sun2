@@ -191,6 +191,99 @@ public class PBFlatTypes {
 	t.Last = m.getLast() ;
 	*/
 
+	public class PB_UpdateRoomActionDoing2 {
+	   public String RoomKey;
+	   public RoomActionDoingEnum ActionType;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_UpdateRoomActionDoing2 t = new PBFlatTypes.PB_UpdateRoomActionDoing2();
+    t.setRoomKey();
+    t.setActionType();
+	*/
+
+	/*
+	PBFlatTypes.PB_UpdateRoomActionDoing2 t = new PBFlatTypes.PB_UpdateRoomActionDoing2();
+	t.RoomKey = ;
+	t.ActionType = ;
+	*/
+
+	/*
+	PB_UpdateRoomActionDoing2 t = new PB_UpdateRoomActionDoing2();
+	t.RoomKey = m.getRoomKey() ;
+	t.ActionType = m.getActionType() ;
+	*/
+
+	public class PB_UpdateMessageMeta2 {
+	   public String RoomKey;
+	   public long MessageId;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_UpdateMessageMeta2 t = new PBFlatTypes.PB_UpdateMessageMeta2();
+    t.setRoomKey();
+    t.setMessageId();
+	*/
+
+	/*
+	PBFlatTypes.PB_UpdateMessageMeta2 t = new PBFlatTypes.PB_UpdateMessageMeta2();
+	t.RoomKey = ;
+	t.MessageId = ;
+	*/
+
+	/*
+	PB_UpdateMessageMeta2 t = new PB_UpdateMessageMeta2();
+	t.RoomKey = m.getRoomKey() ;
+	t.MessageId = m.getMessageId() ;
+	*/
+
+	public class PB_Push {
+	   public long LastPushId;
+	   public long LastChatPushId;
+	   public PB_MessageView NewMessages;
+	   public PB_ChatView Chats;
+	   public PB_UpdateMessageMeta2 MessagesReachedServer;
+	   public PB_UpdateMessageMeta2 MessagesDeliveredToUser;
+	   public PB_UpdateMessageMeta2 MessagesSeenByPeer;
+	   public PB_UpdateRoomActionDoing2 RoomActionDoing;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_Push t = new PBFlatTypes.PB_Push();
+    t.setLastPushId();
+    t.setLastChatPushId();
+    t.setNewMessages();
+    t.setChats();
+    t.setMessagesReachedServer();
+    t.setMessagesDeliveredToUser();
+    t.setMessagesSeenByPeer();
+    t.setRoomActionDoing();
+	*/
+
+	/*
+	PBFlatTypes.PB_Push t = new PBFlatTypes.PB_Push();
+	t.LastPushId = ;
+	t.LastChatPushId = ;
+	t.NewMessages = ;
+	t.Chats = ;
+	t.MessagesReachedServer = ;
+	t.MessagesDeliveredToUser = ;
+	t.MessagesSeenByPeer = ;
+	t.RoomActionDoing = ;
+	*/
+
+	/*
+	PB_Push t = new PB_Push();
+	t.LastPushId = m.getLastPushId() ;
+	t.LastChatPushId = m.getLastChatPushId() ;
+	t.NewMessages = m.getNewMessages() ;
+	t.Chats = m.getChats() ;
+	t.MessagesReachedServer = m.getMessagesReachedServer() ;
+	t.MessagesDeliveredToUser = m.getMessagesDeliveredToUser() ;
+	t.MessagesSeenByPeer = m.getMessagesSeenByPeer() ;
+	t.RoomActionDoing = m.getRoomActionDoing() ;
+	*/
+
 	public class PB_UserParam_CheckUserName2 {
 	}
 	/*
@@ -2432,143 +2525,6 @@ public class PBFlatTypes {
 	t.UpdatedTime = m.getUpdatedTime() ;
 	*/
 
-	public class PB_Group {
-	   public long GroupId;
-	   public String GroupName;
-	   public int MembersCount;
-	   public int GroupPrivacyEnum;
-	   public int CreatorUserId;
-	   public int CreatedTime;
-	   public long UpdatedMs;
-	   public int CurrentSeq;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_Group t = new PBFlatTypes.PB_Group();
-    t.setGroupId();
-    t.setGroupName();
-    t.setMembersCount();
-    t.setGroupPrivacyEnum();
-    t.setCreatorUserId();
-    t.setCreatedTime();
-    t.setUpdatedMs();
-    t.setCurrentSeq();
-	*/
-
-	/*
-	PBFlatTypes.PB_Group t = new PBFlatTypes.PB_Group();
-	t.GroupId = ;
-	t.GroupName = ;
-	t.MembersCount = ;
-	t.GroupPrivacyEnum = ;
-	t.CreatorUserId = ;
-	t.CreatedTime = ;
-	t.UpdatedMs = ;
-	t.CurrentSeq = ;
-	*/
-
-	/*
-	PB_Group t = new PB_Group();
-	t.GroupId = m.getGroupId() ;
-	t.GroupName = m.getGroupName() ;
-	t.MembersCount = m.getMembersCount() ;
-	t.GroupPrivacyEnum = m.getGroupPrivacyEnum() ;
-	t.CreatorUserId = m.getCreatorUserId() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	t.UpdatedMs = m.getUpdatedMs() ;
-	t.CurrentSeq = m.getCurrentSeq() ;
-	*/
-
-	public class PB_GroupMember {
-	   public long Id;
-	   public long GroupId;
-	   public String GroupKey;
-	   public int UserId;
-	   public int ByUserId;
-	   public int GroupRoleEnumId;
-	   public int CreatedTime;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_GroupMember t = new PBFlatTypes.PB_GroupMember();
-    t.setId();
-    t.setGroupId();
-    t.setGroupKey();
-    t.setUserId();
-    t.setByUserId();
-    t.setGroupRoleEnumId();
-    t.setCreatedTime();
-	*/
-
-	/*
-	PBFlatTypes.PB_GroupMember t = new PBFlatTypes.PB_GroupMember();
-	t.Id = ;
-	t.GroupId = ;
-	t.GroupKey = ;
-	t.UserId = ;
-	t.ByUserId = ;
-	t.GroupRoleEnumId = ;
-	t.CreatedTime = ;
-	*/
-
-	/*
-	PB_GroupMember t = new PB_GroupMember();
-	t.Id = m.getId() ;
-	t.GroupId = m.getGroupId() ;
-	t.GroupKey = m.getGroupKey() ;
-	t.UserId = m.getUserId() ;
-	t.ByUserId = m.getByUserId() ;
-	t.GroupRoleEnumId = m.getGroupRoleEnumId() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	*/
-
-	public class PB_GroupMessage {
-	   public long MessageId;
-	   public String RoomKey;
-	   public int UserId;
-	   public long MessageFileId;
-	   public int MessageTypeEnum;
-	   public String Text;
-	   public long CreatedMs;
-	   public int DeliveryStatusEnum;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_GroupMessage t = new PBFlatTypes.PB_GroupMessage();
-    t.setMessageId();
-    t.setRoomKey();
-    t.setUserId();
-    t.setMessageFileId();
-    t.setMessageTypeEnum();
-    t.setText();
-    t.setCreatedMs();
-    t.setDeliveryStatusEnum();
-	*/
-
-	/*
-	PBFlatTypes.PB_GroupMessage t = new PBFlatTypes.PB_GroupMessage();
-	t.MessageId = ;
-	t.RoomKey = ;
-	t.UserId = ;
-	t.MessageFileId = ;
-	t.MessageTypeEnum = ;
-	t.Text = ;
-	t.CreatedMs = ;
-	t.DeliveryStatusEnum = ;
-	*/
-
-	/*
-	PB_GroupMessage t = new PB_GroupMessage();
-	t.MessageId = m.getMessageId() ;
-	t.RoomKey = m.getRoomKey() ;
-	t.UserId = m.getUserId() ;
-	t.MessageFileId = m.getMessageFileId() ;
-	t.MessageTypeEnum = m.getMessageTypeEnum() ;
-	t.Text = m.getText() ;
-	t.CreatedMs = m.getCreatedMs() ;
-	t.DeliveryStatusEnum = m.getDeliveryStatusEnum() ;
-	*/
-
 	public class PB_Like {
 	   public long Id;
 	   public long PostId;
@@ -3813,65 +3769,6 @@ public class PBFlatTypes {
 	t.LastMsgJson = m.getLastMsgJson() ;
 	*/
 
-	public class PB_ChatSync {
-	   public long SyncId;
-	   public int ToUserId;
-	   public int ChatSyncTypeId;
-	   public String RoomKey;
-	   public String ChatKey;
-	   public long FromHighMessageId;
-	   public long ToLowMessageId;
-	   public long MessageId;
-	   public byte[] MessagePb;
-	   public String MessageJson;
-	   public int CreatedTime;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_ChatSync t = new PBFlatTypes.PB_ChatSync();
-    t.setSyncId();
-    t.setToUserId();
-    t.setChatSyncTypeId();
-    t.setRoomKey();
-    t.setChatKey();
-    t.setFromHighMessageId();
-    t.setToLowMessageId();
-    t.setMessageId();
-    t.setMessagePb();
-    t.setMessageJson();
-    t.setCreatedTime();
-	*/
-
-	/*
-	PBFlatTypes.PB_ChatSync t = new PBFlatTypes.PB_ChatSync();
-	t.SyncId = ;
-	t.ToUserId = ;
-	t.ChatSyncTypeId = ;
-	t.RoomKey = ;
-	t.ChatKey = ;
-	t.FromHighMessageId = ;
-	t.ToLowMessageId = ;
-	t.MessageId = ;
-	t.MessagePb = ;
-	t.MessageJson = ;
-	t.CreatedTime = ;
-	*/
-
-	/*
-	PB_ChatSync t = new PB_ChatSync();
-	t.SyncId = m.getSyncId() ;
-	t.ToUserId = m.getToUserId() ;
-	t.ChatSyncTypeId = m.getChatSyncTypeId() ;
-	t.RoomKey = m.getRoomKey() ;
-	t.ChatKey = m.getChatKey() ;
-	t.FromHighMessageId = m.getFromHighMessageId() ;
-	t.ToLowMessageId = m.getToLowMessageId() ;
-	t.MessageId = m.getMessageId() ;
-	t.MessagePb = m.getMessagePb() ;
-	t.MessageJson = m.getMessageJson() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	*/
-
 	public class PB_DirectMessage {
 	   public String ChatKey;
 	   public long MessageId;
@@ -3931,90 +3828,141 @@ public class PBFlatTypes {
 	t.ExtraPB = m.getExtraPB() ;
 	*/
 
-	public class PB_Home {
-	   public long Id;
-	   public int ForUserId;
-	   public long PostId;
+	public class PB_Group {
+	   public long GroupId;
+	   public String GroupName;
+	   public int MembersCount;
+	   public int GroupPrivacyEnum;
+	   public int CreatorUserId;
+	   public int CreatedTime;
+	   public long UpdatedMs;
+	   public int CurrentSeq;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_Home t = new PBFlatTypes.PB_Home();
-    t.setId();
-    t.setForUserId();
-    t.setPostId();
+	PBFlatTypes.PB_Group t = new PBFlatTypes.PB_Group();
+    t.setGroupId();
+    t.setGroupName();
+    t.setMembersCount();
+    t.setGroupPrivacyEnum();
+    t.setCreatorUserId();
+    t.setCreatedTime();
+    t.setUpdatedMs();
+    t.setCurrentSeq();
 	*/
 
 	/*
-	PBFlatTypes.PB_Home t = new PBFlatTypes.PB_Home();
-	t.Id = ;
-	t.ForUserId = ;
-	t.PostId = ;
+	PBFlatTypes.PB_Group t = new PBFlatTypes.PB_Group();
+	t.GroupId = ;
+	t.GroupName = ;
+	t.MembersCount = ;
+	t.GroupPrivacyEnum = ;
+	t.CreatorUserId = ;
+	t.CreatedTime = ;
+	t.UpdatedMs = ;
+	t.CurrentSeq = ;
 	*/
 
 	/*
-	PB_Home t = new PB_Home();
-	t.Id = m.getId() ;
-	t.ForUserId = m.getForUserId() ;
-	t.PostId = m.getPostId() ;
+	PB_Group t = new PB_Group();
+	t.GroupId = m.getGroupId() ;
+	t.GroupName = m.getGroupName() ;
+	t.MembersCount = m.getMembersCount() ;
+	t.GroupPrivacyEnum = m.getGroupPrivacyEnum() ;
+	t.CreatorUserId = m.getCreatorUserId() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	t.UpdatedMs = m.getUpdatedMs() ;
+	t.CurrentSeq = m.getCurrentSeq() ;
 	*/
 
-	public class PB_MessageFile {
-	   public long MessageFileId;
-	   public int FileTypeEnum;
+	public class PB_GroupMember {
+	   public long Id;
+	   public long GroupId;
+	   public String GroupKey;
 	   public int UserId;
-	   public String Title;
-	   public int Size;
-	   public int Width;
-	   public int Height;
-	   public int Duration;
-	   public String Extension;
-	   public String Md5Hash;
+	   public int ByUserId;
+	   public int GroupRoleEnumId;
 	   public int CreatedTime;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_MessageFile t = new PBFlatTypes.PB_MessageFile();
-    t.setMessageFileId();
-    t.setFileTypeEnum();
+	PBFlatTypes.PB_GroupMember t = new PBFlatTypes.PB_GroupMember();
+    t.setId();
+    t.setGroupId();
+    t.setGroupKey();
     t.setUserId();
-    t.setTitle();
-    t.setSize();
-    t.setWidth();
-    t.setHeight();
-    t.setDuration();
-    t.setExtension();
-    t.setMd5Hash();
+    t.setByUserId();
+    t.setGroupRoleEnumId();
     t.setCreatedTime();
 	*/
 
 	/*
-	PBFlatTypes.PB_MessageFile t = new PBFlatTypes.PB_MessageFile();
-	t.MessageFileId = ;
-	t.FileTypeEnum = ;
+	PBFlatTypes.PB_GroupMember t = new PBFlatTypes.PB_GroupMember();
+	t.Id = ;
+	t.GroupId = ;
+	t.GroupKey = ;
 	t.UserId = ;
-	t.Title = ;
-	t.Size = ;
-	t.Width = ;
-	t.Height = ;
-	t.Duration = ;
-	t.Extension = ;
-	t.Md5Hash = ;
+	t.ByUserId = ;
+	t.GroupRoleEnumId = ;
 	t.CreatedTime = ;
 	*/
 
 	/*
-	PB_MessageFile t = new PB_MessageFile();
-	t.MessageFileId = m.getMessageFileId() ;
-	t.FileTypeEnum = m.getFileTypeEnum() ;
+	PB_GroupMember t = new PB_GroupMember();
+	t.Id = m.getId() ;
+	t.GroupId = m.getGroupId() ;
+	t.GroupKey = m.getGroupKey() ;
 	t.UserId = m.getUserId() ;
-	t.Title = m.getTitle() ;
-	t.Size = m.getSize() ;
-	t.Width = m.getWidth() ;
-	t.Height = m.getHeight() ;
-	t.Duration = m.getDuration() ;
-	t.Extension = m.getExtension() ;
-	t.Md5Hash = m.getMd5Hash() ;
+	t.ByUserId = m.getByUserId() ;
+	t.GroupRoleEnumId = m.getGroupRoleEnumId() ;
 	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_GroupMessage {
+	   public long MessageId;
+	   public String RoomKey;
+	   public int UserId;
+	   public long MessageFileId;
+	   public int MessageTypeEnum;
+	   public String Text;
+	   public long CreatedMs;
+	   public int DeliveryStatusEnum;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_GroupMessage t = new PBFlatTypes.PB_GroupMessage();
+    t.setMessageId();
+    t.setRoomKey();
+    t.setUserId();
+    t.setMessageFileId();
+    t.setMessageTypeEnum();
+    t.setText();
+    t.setCreatedMs();
+    t.setDeliveryStatusEnum();
+	*/
+
+	/*
+	PBFlatTypes.PB_GroupMessage t = new PBFlatTypes.PB_GroupMessage();
+	t.MessageId = ;
+	t.RoomKey = ;
+	t.UserId = ;
+	t.MessageFileId = ;
+	t.MessageTypeEnum = ;
+	t.Text = ;
+	t.CreatedMs = ;
+	t.DeliveryStatusEnum = ;
+	*/
+
+	/*
+	PB_GroupMessage t = new PB_GroupMessage();
+	t.MessageId = m.getMessageId() ;
+	t.RoomKey = m.getRoomKey() ;
+	t.UserId = m.getUserId() ;
+	t.MessageFileId = m.getMessageFileId() ;
+	t.MessageTypeEnum = m.getMessageTypeEnum() ;
+	t.Text = m.getText() ;
+	t.CreatedMs = m.getCreatedMs() ;
+	t.DeliveryStatusEnum = m.getDeliveryStatusEnum() ;
 	*/
 
 	public class PB_FileMsg {
@@ -4208,6 +4156,195 @@ public class PBFlatTypes {
 	t.UserId = m.getUserId() ;
 	t.TargetId = m.getTargetId() ;
 	t.Weight = m.getWeight() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_ChatSync2 {
+	   public long SyncId;
+	   public int ToUserId;
+	   public int ChatSyncTypeId;
+	   public String RoomKey;
+	   public String ChatKey;
+	   public long FromHighMessageId;
+	   public long ToLowMessageId;
+	   public long MessageId;
+	   public byte[] MessagePb;
+	   public String MessageJson;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ChatSync2 t = new PBFlatTypes.PB_ChatSync2();
+    t.setSyncId();
+    t.setToUserId();
+    t.setChatSyncTypeId();
+    t.setRoomKey();
+    t.setChatKey();
+    t.setFromHighMessageId();
+    t.setToLowMessageId();
+    t.setMessageId();
+    t.setMessagePb();
+    t.setMessageJson();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_ChatSync2 t = new PBFlatTypes.PB_ChatSync2();
+	t.SyncId = ;
+	t.ToUserId = ;
+	t.ChatSyncTypeId = ;
+	t.RoomKey = ;
+	t.ChatKey = ;
+	t.FromHighMessageId = ;
+	t.ToLowMessageId = ;
+	t.MessageId = ;
+	t.MessagePb = ;
+	t.MessageJson = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_ChatSync2 t = new PB_ChatSync2();
+	t.SyncId = m.getSyncId() ;
+	t.ToUserId = m.getToUserId() ;
+	t.ChatSyncTypeId = m.getChatSyncTypeId() ;
+	t.RoomKey = m.getRoomKey() ;
+	t.ChatKey = m.getChatKey() ;
+	t.FromHighMessageId = m.getFromHighMessageId() ;
+	t.ToLowMessageId = m.getToLowMessageId() ;
+	t.MessageId = m.getMessageId() ;
+	t.MessagePb = m.getMessagePb() ;
+	t.MessageJson = m.getMessageJson() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_PushChat {
+	   public long PushId;
+	   public int ToUserId;
+	   public int PushTypeId;
+	   public String RoomKey;
+	   public String ChatKey;
+	   public int Seq;
+	   public int UnseenCount;
+	   public long FromHighMessageId;
+	   public long ToLowMessageId;
+	   public long MessageId;
+	   public long MessageFileId;
+	   public byte[] MessagePb;
+	   public String MessageJson;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PushChat t = new PBFlatTypes.PB_PushChat();
+    t.setPushId();
+    t.setToUserId();
+    t.setPushTypeId();
+    t.setRoomKey();
+    t.setChatKey();
+    t.setSeq();
+    t.setUnseenCount();
+    t.setFromHighMessageId();
+    t.setToLowMessageId();
+    t.setMessageId();
+    t.setMessageFileId();
+    t.setMessagePb();
+    t.setMessageJson();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_PushChat t = new PBFlatTypes.PB_PushChat();
+	t.PushId = ;
+	t.ToUserId = ;
+	t.PushTypeId = ;
+	t.RoomKey = ;
+	t.ChatKey = ;
+	t.Seq = ;
+	t.UnseenCount = ;
+	t.FromHighMessageId = ;
+	t.ToLowMessageId = ;
+	t.MessageId = ;
+	t.MessageFileId = ;
+	t.MessagePb = ;
+	t.MessageJson = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_PushChat t = new PB_PushChat();
+	t.PushId = m.getPushId() ;
+	t.ToUserId = m.getToUserId() ;
+	t.PushTypeId = m.getPushTypeId() ;
+	t.RoomKey = m.getRoomKey() ;
+	t.ChatKey = m.getChatKey() ;
+	t.Seq = m.getSeq() ;
+	t.UnseenCount = m.getUnseenCount() ;
+	t.FromHighMessageId = m.getFromHighMessageId() ;
+	t.ToLowMessageId = m.getToLowMessageId() ;
+	t.MessageId = m.getMessageId() ;
+	t.MessageFileId = m.getMessageFileId() ;
+	t.MessagePb = m.getMessagePb() ;
+	t.MessageJson = m.getMessageJson() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_PushChat2 {
+	   public long SyncId;
+	   public int ToUserId;
+	   public int ChatSyncTypeId;
+	   public String RoomKey;
+	   public String ChatKey;
+	   public long FromHighMessageId;
+	   public long ToLowMessageId;
+	   public long MessageId;
+	   public byte[] MessagePb;
+	   public String MessageJson;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_PushChat2 t = new PBFlatTypes.PB_PushChat2();
+    t.setSyncId();
+    t.setToUserId();
+    t.setChatSyncTypeId();
+    t.setRoomKey();
+    t.setChatKey();
+    t.setFromHighMessageId();
+    t.setToLowMessageId();
+    t.setMessageId();
+    t.setMessagePb();
+    t.setMessageJson();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_PushChat2 t = new PBFlatTypes.PB_PushChat2();
+	t.SyncId = ;
+	t.ToUserId = ;
+	t.ChatSyncTypeId = ;
+	t.RoomKey = ;
+	t.ChatKey = ;
+	t.FromHighMessageId = ;
+	t.ToLowMessageId = ;
+	t.MessageId = ;
+	t.MessagePb = ;
+	t.MessageJson = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_PushChat2 t = new PB_PushChat2();
+	t.SyncId = m.getSyncId() ;
+	t.ToUserId = m.getToUserId() ;
+	t.ChatSyncTypeId = m.getChatSyncTypeId() ;
+	t.RoomKey = m.getRoomKey() ;
+	t.ChatKey = m.getChatKey() ;
+	t.FromHighMessageId = m.getFromHighMessageId() ;
+	t.ToLowMessageId = m.getToLowMessageId() ;
+	t.MessageId = m.getMessageId() ;
+	t.MessagePb = m.getMessagePb() ;
+	t.MessageJson = m.getMessageJson() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 

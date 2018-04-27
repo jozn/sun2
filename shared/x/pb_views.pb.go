@@ -40,7 +40,7 @@ type PB_PostView struct {
 func (m *PB_PostView) Reset()                    { *m = PB_PostView{} }
 func (m *PB_PostView) String() string            { return proto.CompactTextString(m) }
 func (*PB_PostView) ProtoMessage()               {}
-func (*PB_PostView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{0} }
+func (*PB_PostView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{0} }
 
 func (m *PB_PostView) GetPostId() int64 {
 	if m != nil {
@@ -206,7 +206,7 @@ type PB_MediaView struct {
 func (m *PB_MediaView) Reset()                    { *m = PB_MediaView{} }
 func (m *PB_MediaView) String() string            { return proto.CompactTextString(m) }
 func (*PB_MediaView) ProtoMessage()               {}
-func (*PB_MediaView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{1} }
+func (*PB_MediaView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{1} }
 
 func (m *PB_MediaView) GetMediaId() int64 {
 	if m != nil {
@@ -304,7 +304,7 @@ type PB_ActionView struct {
 func (m *PB_ActionView) Reset()                    { *m = PB_ActionView{} }
 func (m *PB_ActionView) String() string            { return proto.CompactTextString(m) }
 func (*PB_ActionView) ProtoMessage()               {}
-func (*PB_ActionView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{2} }
+func (*PB_ActionView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{2} }
 
 func (m *PB_ActionView) GetActionId() int64 {
 	if m != nil {
@@ -416,7 +416,7 @@ type PB_NotifyView struct {
 func (m *PB_NotifyView) Reset()                    { *m = PB_NotifyView{} }
 func (m *PB_NotifyView) String() string            { return proto.CompactTextString(m) }
 func (*PB_NotifyView) ProtoMessage()               {}
-func (*PB_NotifyView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{3} }
+func (*PB_NotifyView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{3} }
 
 func (m *PB_NotifyView) GetNotifyId() int64 {
 	if m != nil {
@@ -522,7 +522,7 @@ type PB_CommentView struct {
 func (m *PB_CommentView) Reset()                    { *m = PB_CommentView{} }
 func (m *PB_CommentView) String() string            { return proto.CompactTextString(m) }
 func (*PB_CommentView) ProtoMessage()               {}
-func (*PB_CommentView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{4} }
+func (*PB_CommentView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{4} }
 
 func (m *PB_CommentView) GetCommentId() int64 {
 	if m != nil {
@@ -601,7 +601,7 @@ type PB_UserView struct {
 func (m *PB_UserView) Reset()                    { *m = PB_UserView{} }
 func (m *PB_UserView) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserView) ProtoMessage()               {}
-func (*PB_UserView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{5} }
+func (*PB_UserView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{5} }
 
 func (m *PB_UserView) GetUserId() int32 {
 	if m != nil {
@@ -743,7 +743,7 @@ type PB_TopProfileView struct {
 func (m *PB_TopProfileView) Reset()                    { *m = PB_TopProfileView{} }
 func (m *PB_TopProfileView) String() string            { return proto.CompactTextString(m) }
 func (*PB_TopProfileView) ProtoMessage()               {}
-func (*PB_TopProfileView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{6} }
+func (*PB_TopProfileView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{6} }
 
 func (m *PB_TopProfileView) GetUser() *PB_UserView {
 	if m != nil {
@@ -762,7 +762,7 @@ type PB_UserViewRowify struct {
 func (m *PB_UserViewRowify) Reset()                    { *m = PB_UserViewRowify{} }
 func (m *PB_UserViewRowify) String() string            { return proto.CompactTextString(m) }
 func (*PB_UserViewRowify) ProtoMessage()               {}
-func (*PB_UserViewRowify) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{7} }
+func (*PB_UserViewRowify) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{7} }
 
 func (m *PB_UserViewRowify) GetId() int64 {
 	if m != nil {
@@ -793,7 +793,7 @@ type PB_PostViewRowify struct {
 func (m *PB_PostViewRowify) Reset()                    { *m = PB_PostViewRowify{} }
 func (m *PB_PostViewRowify) String() string            { return proto.CompactTextString(m) }
 func (*PB_PostViewRowify) ProtoMessage()               {}
-func (*PB_PostViewRowify) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{8} }
+func (*PB_PostViewRowify) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{8} }
 
 func (m *PB_PostViewRowify) GetId() int64 {
 	if m != nil {
@@ -821,7 +821,7 @@ type PB_TagView struct {
 func (m *PB_TagView) Reset()                    { *m = PB_TagView{} }
 func (m *PB_TagView) String() string            { return proto.CompactTextString(m) }
 func (*PB_TagView) ProtoMessage()               {}
-func (*PB_TagView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{9} }
+func (*PB_TagView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{9} }
 
 func (m *PB_TagView) GetTagId() int64 {
 	if m != nil {
@@ -866,7 +866,7 @@ type PB_TopTagWithSamplePosts struct {
 func (m *PB_TopTagWithSamplePosts) Reset()                    { *m = PB_TopTagWithSamplePosts{} }
 func (m *PB_TopTagWithSamplePosts) String() string            { return proto.CompactTextString(m) }
 func (*PB_TopTagWithSamplePosts) ProtoMessage()               {}
-func (*PB_TopTagWithSamplePosts) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{10} }
+func (*PB_TopTagWithSamplePosts) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{10} }
 
 func (m *PB_TopTagWithSamplePosts) GetTagView() *PB_TagView {
 	if m != nil {
@@ -902,7 +902,7 @@ type PB_ChatView struct {
 func (m *PB_ChatView) Reset()                    { *m = PB_ChatView{} }
 func (m *PB_ChatView) String() string            { return proto.CompactTextString(m) }
 func (*PB_ChatView) ProtoMessage()               {}
-func (*PB_ChatView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{11} }
+func (*PB_ChatView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{11} }
 
 func (m *PB_ChatView) GetChatKey() string {
 	if m != nil {
@@ -1013,7 +1013,7 @@ type PB_MessageView struct {
 func (m *PB_MessageView) Reset()                    { *m = PB_MessageView{} }
 func (m *PB_MessageView) String() string            { return proto.CompactTextString(m) }
 func (*PB_MessageView) ProtoMessage()               {}
-func (*PB_MessageView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{12} }
+func (*PB_MessageView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{12} }
 
 func (m *PB_MessageView) GetChatKey() string {
 	if m != nil {
@@ -1112,7 +1112,7 @@ type PB_MessageFileView struct {
 func (m *PB_MessageFileView) Reset()                    { *m = PB_MessageFileView{} }
 func (m *PB_MessageFileView) String() string            { return proto.CompactTextString(m) }
 func (*PB_MessageFileView) ProtoMessage()               {}
-func (*PB_MessageFileView) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{13} }
+func (*PB_MessageFileView) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{13} }
 
 func (m *PB_MessageFileView) GetMessageFileId() int64 {
 	if m != nil {
@@ -1171,7 +1171,7 @@ type PB_MessageTableExtra struct {
 func (m *PB_MessageTableExtra) Reset()                    { *m = PB_MessageTableExtra{} }
 func (m *PB_MessageTableExtra) String() string            { return proto.CompactTextString(m) }
 func (*PB_MessageTableExtra) ProtoMessage()               {}
-func (*PB_MessageTableExtra) Descriptor() ([]byte, []int) { return fileDescriptor11, []int{14} }
+func (*PB_MessageTableExtra) Descriptor() ([]byte, []int) { return fileDescriptor12, []int{14} }
 
 func (m *PB_MessageTableExtra) GetMessageFileView() *PB_MessageFileView {
 	if m != nil {
@@ -1198,9 +1198,9 @@ func init() {
 	proto.RegisterType((*PB_MessageTableExtra)(nil), "PB_MessageTableExtra")
 }
 
-func init() { proto.RegisterFile("pb_views.proto", fileDescriptor11) }
+func init() { proto.RegisterFile("pb_views.proto", fileDescriptor12) }
 
-var fileDescriptor11 = []byte{
+var fileDescriptor12 = []byte{
 	// 1568 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x58, 0xdd, 0x6e, 0xe3, 0xc4,
 	0x17, 0x97, 0xeb, 0xba, 0x49, 0x4e, 0x9a, 0x74, 0x77, 0xfe, 0xdd, 0xbf, 0xac, 0xaa, 0x5a, 0x45,
