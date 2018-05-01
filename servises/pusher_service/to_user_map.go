@@ -1,6 +1,7 @@
 package pusher_service
 
 import (
+	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 	"io"
@@ -10,16 +11,19 @@ import (
 	"ms/sun/shared/x"
 	"sync"
 	"time"
-    "fmt"
 )
 
-type userMultiDevicePusher struct {
+type userMultiPipes struct {
 	userId    int
 	data      chan x.PB_Push
-	devicesWS []*wsSingleDevicePipe
+	devicesWS []*wsSinglePipe
 }
 
-func (ud *userMultiDevicePusher) startLoop_go() {
+func (ud *userMultiPipes) start() {
+	go ud.startLoop_go()
+}
+
+func (ud *userMultiPipes) startLoop_go() {
 	for pb_push := range ud.data {
 		for _, dev := range ud.devicesWS {
 			if dev != nil && dev.isOpen {
@@ -29,7 +33,7 @@ func (ud *userMultiDevicePusher) startLoop_go() {
 	}
 }
 
-func (ud *userMultiDevicePusher) shouldClean() bool {
+func (ud *userMultiPipes) shouldClean() bool {
 	i := 0
 	for _, dev := range ud.devicesWS {
 		if dev != nil && dev.isOpen {
@@ -42,11 +46,15 @@ func (ud *userMultiDevicePusher) shouldClean() bool {
 	return false
 }
 
+func (ud *userMultiPipes) finish() {
+
+}
+
 ////////////////////
 var pipId = 0
-var cnt  = 0
+var cnt = 0
 
-type wsSingleDevicePipe struct {
+type wsSinglePipe struct {
 	pipId    int
 	userId   int
 	isOpen   bool
@@ -55,7 +63,12 @@ type wsSingleDevicePipe struct {
 	ioStream io.Writer //if debug ws is irrelevant
 }
 
-func (pipe *wsSingleDevicePipe) startLoop_go() {
+func (pipe *wsSinglePipe) start() {
+	go pipe.startLoop_go()
+	go pipe.startRecivingFrames_go()
+}
+
+func (pipe *wsSinglePipe) startLoop_go() {
 	logPush.Printf("startLoop_go() : user: %d \n", pipe.userId)
 	defer func() {
 		if r := recover(); r != nil {
@@ -69,13 +82,13 @@ func (pipe *wsSingleDevicePipe) startLoop_go() {
 		}
 	}()
 	for r := range pipe.data {
-		logPush.Printf("wsSingleDevicePipe data: %v \n", r)
+		logPush.Printf("wsSinglePipe data: %v \n", r)
 		if !pipe.isOpen {
 			continue
 		}
 		var strout = ""
 		if config.IS_DEBUG {
-            strout = fmt.Sprintf("<- to device: %d ,%s \n", pipe.userId, helper.ToJson(r))
+			strout = fmt.Sprintf("<- to device: %d ,%s \n", pipe.userId, helper.ToJson(r))
 			logPushPipes.DevPrint(strout)
 		}
 		bts, err := proto.Marshal(&r)
@@ -91,21 +104,56 @@ func (pipe *wsSingleDevicePipe) startLoop_go() {
 	}
 }
 
+func (pipe *wsSinglePipe) startRecivingFrames_go() {
+	defer func() {
+		if r := recover(); r != nil {
+			Monitor.TotalWebSocketsReceivedPanics += 1
+			if config.IS_DEBUG {
+				log.Panic("recverd in serveSendToUserDevice err: ", r)
+			}
+			logPushPipes.DevPrintln("Recovered in ws messaging clinet request", r)
+			pipe.isOpen = false
+		}
+	}()
+
+	if pipe.ws != nil {
+		for {
+			messageType, bytes, err := pipe.ws.ReadMessage() //blocking
+
+			logPushPipes.DevPrintln("messageType: ", " ::", messageType, string(bytes))
+			if messageType == websocket.CloseMessage || err != nil {
+				Monitor.TotalWebSocketsClosed += 1
+				pipe.isOpen = false
+				logPushPipes.DevPrintf("closeing pip for userId: %v , messageType:%v , err: %v", pipe.userId, messageType, err)
+				return
+			}
+
+			if messageType == websocket.TextMessage {
+				Monitor.TotalWebSocketsReceivedText += 1
+			}
+
+			if messageType == websocket.BinaryMessage {
+				Monitor.TotalWebSocketsReceivedBinary += 1
+			}
+		}
+	}
+}
+
 ///////////////////
 var allPipesMap *pipesMap = newPipesMap()
 
 type pipesMap struct {
-	mp map[int]*userMultiDevicePusher
+	mp map[int]*userMultiPipes
 	m  sync.RWMutex
 }
 
 func newPipesMap() *pipesMap {
 	return &pipesMap{
-		mp: make(map[int]*userMultiDevicePusher, 1000),
+		mp: make(map[int]*userMultiPipes, 1000),
 	}
 }
 
-func (m *pipesMap) getForUser(userId int) (ud *userMultiDevicePusher, ok bool) {
+func (m *pipesMap) getForUser(userId int) (ud *userMultiPipes, ok bool) {
 	m.m.RLock()
 	defer m.m.RUnlock()
 	ud, ok = m.mp[userId]
@@ -113,15 +161,16 @@ func (m *pipesMap) getForUser(userId int) (ud *userMultiDevicePusher, ok bool) {
 }
 
 func (m *pipesMap) addUserDevice(userId int, ws *websocket.Conn, ioStream io.Writer) {
+	Monitor.TotalUsersAdded += 1
 	pipId++
-	pipe := &wsSingleDevicePipe{
+	pipe := &wsSinglePipe{
 		pipId:  pipId,
 		userId: userId,
 		isOpen: true,
-		data:   make(chan x.PB_Push, 1),
+		data:   make(chan x.PB_Push, 10),
 		ws:     ws,
 	}
-	go pipe.startLoop_go()
+	pipe.start()
 	if ioStream != nil {
 		pipe.ioStream = ioStream
 	}
@@ -129,17 +178,17 @@ func (m *pipesMap) addUserDevice(userId int, ws *websocket.Conn, ioStream io.Wri
 	defer m.m.Unlock()
 	ud, ok := m.mp[userId]
 	if !ok {
-		ud = &userMultiDevicePusher{
+		ud = &userMultiPipes{
 			userId: userId,
 			data:   make(chan x.PB_Push, 100),
 		}
-		go ud.startLoop_go()
+		ud.start()
 		m.mp[userId] = ud
-		logPush.Printf("add userMultiDevicePusher to AllMapPipes: user: %d \n", userId)
+		logPush.DevPrintf("add userMultiPipes to AllMapPipes: user: %d \n", userId)
 	}
 	ud.devicesWS = append(ud.devicesWS, pipe)
 
-	logPush.Printf("addUserDevice() : user: %d , userMultiDevicePusher: %v \n", userId, ud)
+	logPush.DevPrintf("addUserDevice() : user: %d , userMultiPipes: %v \n", userId, ud)
 
 }
 
@@ -150,7 +199,8 @@ func (m *pipesMap) cleanUnConnectedUsersLoop() {
 		for userId, ud := range m.mp {
 			if ud.shouldClean() {
 				delete(m.mp, userId)
-				logPushPipes.Println("cleaned userid:", userId)
+				ud.finish()
+				logPushPipes.DevPrintln("cleaned userid:", userId)
 			}
 		}
 		m.m.Unlock()

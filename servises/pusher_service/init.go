@@ -14,4 +14,6 @@ func init() {
 	go loadChatPushersLoop()
 	go routePushChatLoop()
 	go allPipesMap.cleanUnConnectedUsersLoop()
+
+	Monitor.PrintLoop1Min()
 }

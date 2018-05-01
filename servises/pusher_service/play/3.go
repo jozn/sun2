@@ -2,7 +2,6 @@ package main
 
 import (
 	"ms/sun/servises/pusher_service"
-	"os"
 	"time"
     "runtime"
     "ms/sun/shared/x"
@@ -14,20 +13,21 @@ func main() {
 	//i := 0
 
 	go func() {
-		for i := 0; i < 100; i += 2 {
-			pusher_service.ServeMockStream(i, os.Stderr)
+		for i := 1; i < 100; i += 5 {
+			//pusher_service.ServeMockStream(i, os.Stderr)
+			pusher_service.ServeMockStream(i, nil)
 		}
 	}()
 
     go func() {
         for {
-            time.Sleep(time.Second * 10)
+            time.Sleep(time.Hour * 10)
             fmt.Println("Gc + len rows" ,len(x.RowCache.Items()))
             x.RowCache.Flush()
             runtime.GC()
             m := &runtime.MemStats{}
             runtime.ReadMemStats(m)
-            helper.PertyPrint(m)
+            helper.PertyPrintNew(m)
         }
     }()
 

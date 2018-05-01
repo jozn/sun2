@@ -1282,4 +1282,57 @@ func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
 
 // PushChat - PRIMARY
 
+//field//field//field
+
+///// Generated from index 'Seq'.
+func (c _StoreImpl) PushChat_BySeq(Seq int) (*PushChat, bool) {
+	o, ok := RowCacheIndex.Get("PushChat_Seq:" + fmt.Sprintf("%v", Seq))
+	if ok {
+		if obj, ok := o.(*PushChat); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPushChat_Selector().Seq_Eq(Seq).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PushChat_Seq:"+fmt.Sprintf("%v", row.Seq), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PushChat_BySeq_JustCache(Seq int) (*PushChat, bool) {
+	o, ok := RowCacheIndex.Get("PushChat_Seq:" + fmt.Sprintf("%v", Seq))
+	if ok {
+		if obj, ok := o.(*PushChat); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PushChat_Seq:" + fmt.Sprintf("%v", Seq)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPushChat_BySeqs(Seqs []int) {
+	not_cached := make([]int, 0, len(Seqs))
+
+	for _, id := range Seqs {
+		_, ok := RowCacheIndex.Get("PushChat_Seq:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPushChat_Selector().Seq_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PushChat_Seq:"+fmt.Sprintf("%v", row.Seq), row, 0)
+			}
+		}
+	}
+}
+
 // PushChat2 - PRIMARY

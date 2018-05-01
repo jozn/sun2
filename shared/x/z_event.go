@@ -1033,7 +1033,7 @@ func OnPushChat_LoadOne(row *PushChat) {
 
 func OnPushChat_LoadMany(rows []*PushChat) {
 	for _, row := range rows {
-		RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Second*10)
+		RowCache.Set("PushChat:"+strconv.Itoa(row.PushId), row, time.Hour*0)
 	}
 }
 

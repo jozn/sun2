@@ -14,6 +14,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+    "github.com/davecgh/go-spew/spew"
 )
 
 func TimeNow() int {
@@ -114,6 +115,10 @@ func ToJsonPerety2(structoo interface{}) string {
 
 func PertyPrint(a interface{}) {
 	fmt.Printf("%# v \n", pretty.Formatter(a))
+}
+func PertyPrintNew(a interface{}) {
+    spew.Dump(a)
+    //spew.Sdump("%v",a)
 }
 
 func PertyPrint2(a interface{}) {
