@@ -1,16 +1,16 @@
 package pusher_service
 
 import (
-	"fmt"
 	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
+    "ms/sun/servises/pusher_service/push_translator"
 )
 
 var pushChatRouteChan = make(chan *x.PushChat, 10000)
 
 //var pushChatGroup = make(chan *x.PushChat, 10000)
 //var pushChatPosts = make(chan *x.PushChat, 10000)
-var m = 1
+
 
 func routePushChatLoop() {
 	defer helper.JustRecover()
@@ -22,18 +22,16 @@ func routePushChatLoop() {
 			//fmt.Println("mmm: ",pc)
 			Monitor.TotalRowsProceedWiltActiveUser += 1
 			Monitor.TotalChatRowsProceedWiltActiveUser += 1
-			pb := x.PB_Push{
+			/*pb := x.PB_Push{
 				LastPushId:     int64(m),
 				LastChatPushId: int64(pc.ToUserId),
-			}
-			m++
+			}*/
+			pb := push_translator.ChatPushToPbChat(pc)
+
 			devs.data <- pb
 			_ = pb
 			_ = devs
 
-			if m%1000 == 0 {
-				fmt.Println(m)
-			}
 		}
 	}
 }

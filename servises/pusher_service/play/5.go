@@ -6,6 +6,7 @@ import (
     "fmt"
     //"github.com/tonnerre/golang-pretty"
     "github.com/kr/pretty"
+    "github.com/davecgh/go-spew/spew"
 )
 
 type MonitorAllTime struct {
@@ -26,6 +27,10 @@ type MonitorAllTime struct {
     ActiveTimeSeconds                  int
 }
 
+func (k MonitorAllTime)Ajlk()  {
+
+}
+
 func main() {
 
     go func() {
@@ -38,9 +43,14 @@ func main() {
             //fmt.Printf("%+%v \n", pretty.Formatter(m))
             fmt.Printf("8 %#+ v 22\n", m)
             pretty.Print(m)
-            pretty.Print("==========\n")
-            fmt.Printf("%#+ v", pretty.Formatter(m))
-            pretty.Logln(m)
+            pretty.Print("\n==========\n")
+            //fmt.Printf("%#+ v", pretty.Formatter(m))
+            //pretty.Logln(m)
+            //c:= spew.C
+            //spew.Config.DisableMethods = true
+            spew.Config.DisablePointerAddresses = true
+            spew.Config.DisablePointerMethods = true
+            spew.Dump(m)
             time.Sleep(time.Minute)
         }
     }()
