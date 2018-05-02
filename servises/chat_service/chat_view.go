@@ -1,10 +1,11 @@
 package chat_service
 
 import (
-	"github.com/jozn/protobuf/proto"
+	//"github.com/golang/protobuf/proto"
 	"ms/sun_old/base"
 	"ms/sun/servises/view_service"
 	"ms/sun/shared/x"
+    "github.com/golang/protobuf/proto"
 )
 
 //todo: support last msgView

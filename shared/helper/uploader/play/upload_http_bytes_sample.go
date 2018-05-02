@@ -6,7 +6,7 @@ import (
     "net/http"
     "ms/sun/shared/helper/uploader"
     "log"
-    "github.com/jozn/protobuf/proto"
+    "github.com/golang/protobuf/proto"
     "ms/sun/shared/x"
 )
 

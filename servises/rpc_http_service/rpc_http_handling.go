@@ -1,7 +1,6 @@
-package websocket_service
+package rpc_http_service
 
 import (
-	"github.com/golang/protobuf/proto"
 	"github.com/labstack/gommon/log"
 	"io/ioutil"
 	"ms/sun/shared/helper"
@@ -9,9 +8,12 @@ import (
 	"ms/sun/shared/config"
 	"ms/sun/shared/x"
 	"net/http"
+    "fmt"
+    "github.com/golang/protobuf/proto"
 )
 
 func ServeHttpRpc(w http.ResponseWriter, r *http.Request) {
+    fmt.Println(r)
 	//defer recover()
 	err := r.ParseMultipartForm(1280000)
 	helper.NoErr(err)
@@ -60,3 +62,15 @@ func ServeHttpRpc(w http.ResponseWriter, r *http.Request) {
 	x.HandleRpcs(cmd, userParam, rpc_service.RpcAll, handler)
 }
 
+
+type RPC_UserParam_Imple struct {
+    userId int
+}
+
+func (s RPC_UserParam_Imple) GetUserId() int {
+    return s.userId
+}
+
+func (s RPC_UserParam_Imple) IsUser() bool {
+    return s.userId > 0
+}

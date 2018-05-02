@@ -1,7 +1,7 @@
 package message_adder
 
 import (
-	"github.com/jozn/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 	"ms/sun_old/base"
 	"ms/sun/shared/helper"
 	"ms/sun/servises/log_service"
