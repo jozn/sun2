@@ -2,12 +2,12 @@ package chat_service
 
 import "ms/sun/shared/x"
 
-func ToUpdates(UserId int, syncs []*x.ChatSync) *x.PB_Updates {
+func ToUpdates(UserId int, syncs []*x.PushChat) *x.PB_Updates {
 	up := &x.PB_Updates{}
     roomKeys := []string{}
 
 	for _, sync := range syncs {
-		switch sync.ChatSyncTypeId {
+		switch sync.PushTypeId {
 		case CHAT_SYNC_NEW_MESSAGE:
             roomKeys = append(roomKeys, sync.RoomKey)
 		case CHAT_SYNC_MSG_RECIVED_TO_SERVER:

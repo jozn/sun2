@@ -287,7 +287,7 @@ func (rpc_page) GetTagPage(param *x.PB_PageParam_GetTagPage, userParam x.RPC_Use
 		return
 	}
 
-	selector := x.NewTagsPost_Selector().Select_PostId().TagId_Eq(tag.TagId).OrderBy_Id_Desc().Limit(limit)
+	selector := x.NewTagPost_Selector().Select_PostId().TagId_Eq(tag.TagId).OrderBy_Id_Desc().Limit(limit)
 	if param.Last > 0 {
 		selector.Id_LT(int(param.Last))
 	}
@@ -337,7 +337,8 @@ func (rpc_page) SearchUsersPage(param *x.PB_PageParam_SearchUsersPage, userParam
 				LastName_Like(q0)
 		}
 
-		UsersIds, err := selector.Limit(30).GetIntSlice(base.DB)
+		var UsersIds []int
+		UsersIds, err = selector.Limit(30).GetIntSlice(base.DB)
 
 		if err != nil {
 			return

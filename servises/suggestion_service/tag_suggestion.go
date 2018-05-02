@@ -53,7 +53,7 @@ func reloadTopPostsForTopTags() {
 	var newTopTagsWithPosts = make([]*x.PB_TopTagWithSamplePosts, 0, 50)
 
 	for _, t := range tags {
-		postsIds, err := x.NewTagsPost_Selector().Select_PostId().TagId_Eq(int(t.TagId)).
+		postsIds, err := x.NewTagPost_Selector().Select_PostId().TagId_Eq(int(t.TagId)).
 			PostTypeEnum_Eq(int(x.PostTypeEnum_POST_PHOTO)).
 			Limit(4).
 			OrderBy_Id_Desc().

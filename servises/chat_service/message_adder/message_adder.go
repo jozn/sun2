@@ -118,10 +118,10 @@ func (s *chatDirect) listenForAdding() {
 		s.User1Chat.Update(base.DB)
 		s.User2Chat.Update(base.DB)
 
-		upToMe := &x.ChatSync{
-			SyncId:         helper.NextRowsSeqId(),
+		upToMe := &x.PushChat{
+			PushId:         helper.NextRowsSeqId(),
 			ToUserId:       adderUserId,
-			ChatSyncTypeId: 3, //chat_service.CHAT_SYNC_MSG_RECIVED_TO_SERVER,
+			PushTypeId: 3, //chat_service.CHAT_SYNC_MSG_RECIVED_TO_SERVER,
 			RoomKey:        msgPb.RoomKey,
 			ChatKey:        "",
 			MessageId:      int(msgPb.MessageId),
@@ -131,10 +131,10 @@ func (s *chatDirect) listenForAdding() {
 		}
 
 		msgBlob, _ := proto.Marshal(msgPb)
-		upToPeer := &x.ChatSync{
-			SyncId:         helper.NextRowsSeqId(),
+		upToPeer := &x.PushChat{
+			PushId:         helper.NextRowsSeqId(),
 			ToUserId:       peerUserId,
-			ChatSyncTypeId: 2, //chat_service.CHAT_SYNC_NEW_MESSAGE,
+			PushTypeId: 2, //chat_service.CHAT_SYNC_NEW_MESSAGE,
 			RoomKey:        msgPb.RoomKey,
 			ChatKey:        "",
 			MessageId:      int(msgPb.MessageId),

@@ -77,12 +77,12 @@ func genSuggestionForUser(ForUserId int) {
 		mpFollowing[uid] = true
 	}
 
-	suggestions := make([]x.RecommendUser, 0, 200)
+	suggestions := make([]x.SuggestedUser, 0, 200)
 
 	cnt1 := 0
 	for _, uid := range myContacts {
 		if !mpFollowing[uid] {
-			row := x.RecommendUser{
+			row := x.SuggestedUser{
 				UserId:      ForUserId,
 				TargetId:    uid,
 				Weight:      0.5,
@@ -99,7 +99,7 @@ func genSuggestionForUser(ForUserId int) {
 	cnt2 := 0
 	for _, uid := range followedMe {
 		if !mpFollowing[uid] {
-			row := x.RecommendUser{
+			row := x.SuggestedUser{
 				UserId:      ForUserId,
 				TargetId:    uid,
 				Weight:      0.2,
@@ -116,7 +116,7 @@ func genSuggestionForUser(ForUserId int) {
 	cnt3 := 0
 	for _, uid := range TopUsers {
 		if !mpFollowing[uid] {
-			row := x.RecommendUser{
+			row := x.SuggestedUser{
 				UserId:      ForUserId,
 				TargetId:    uid,
 				Weight:      0.3,
@@ -130,7 +130,7 @@ func genSuggestionForUser(ForUserId int) {
 		}
 	}
 
-	x.MassInsert_RecommendUser(suggestions, base.DB)
+	x.MassInsert_SuggestedUser(suggestions, base.DB)
 }
 
 func genTopTrendingUsers() []int {
