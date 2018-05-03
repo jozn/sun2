@@ -539,6 +539,33 @@ func PBConvPB_SearchClicked_To_SearchClicked ( o *SearchClicked) *PB_SearchClick
 /*
 func PBConvPB__Session_To_Session( o *PB_Session) *Session {
      n := &Session{
+      Id: int ( o.Id ),
+      SessionUuid: string ( o.SessionUuid ),
+      UserId: int ( o.UserId ),
+      LastIpAddress: string ( o.LastIpAddress ),
+      AppVersion: int ( o.AppVersion ),
+      ActiveTime: int ( o.ActiveTime ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
+     n := &PB_Session{
+      Id: int64 ( o.Id ),
+      SessionUuid: string ( o.SessionUuid ),
+      UserId: int32 ( o.UserId ),
+      LastIpAddress: string ( o.LastIpAddress ),
+      AppVersion: int32 ( o.AppVersion ),
+      ActiveTime: int32 ( o.ActiveTime ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__SessionCopy_To_SessionCopy( o *PB_SessionCopy) *SessionCopy {
+     n := &SessionCopy{
       SessionUuid: string ( o.SessionUuid ),
       UserId: int ( o.UserId ),
       ClientUuid: string ( o.ClientUuid ),
@@ -555,8 +582,8 @@ func PBConvPB__Session_To_Session( o *PB_Session) *Session {
     return n
 }
 
-func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
-     n := &PB_Session{
+func PBConvPB_SessionCopy_To_SessionCopy ( o *SessionCopy) *PB_SessionCopy {
+     n := &PB_SessionCopy{
       SessionUuid: string ( o.SessionUuid ),
       UserId: int32 ( o.UserId ),
       ClientUuid: string ( o.ClientUuid ),

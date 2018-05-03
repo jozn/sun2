@@ -43,6 +43,8 @@ const (
 	SearchClicked_TableGo              = "SearchClicked"
 	Session_Table                      = "session"
 	Session_TableGo                    = "Session"
+	SessionCopy_Table                  = "session_copy"
+	SessionCopy_TableGo                = "SessionCopy"
 	SettingClient_Table                = "setting_client"
 	SettingClient_TableGo              = "SettingClient"
 	SettingNotification_Table          = "setting_notifications"
@@ -472,6 +474,25 @@ var SearchClicked = struct {
 }
 
 var Session = struct {
+	Id            string
+	SessionUuid   string
+	UserId        string
+	LastIpAddress string
+	AppVersion    string
+	ActiveTime    string
+	CreatedTime   string
+}{
+
+	Id:            "Id",
+	SessionUuid:   "SessionUuid",
+	UserId:        "UserId",
+	LastIpAddress: "LastIpAddress",
+	AppVersion:    "AppVersion",
+	ActiveTime:    "ActiveTime",
+	CreatedTime:   "CreatedTime",
+}
+
+var SessionCopy = struct {
 	SessionUuid         string
 	UserId              string
 	ClientUuid          string

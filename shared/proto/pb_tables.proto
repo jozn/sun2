@@ -186,6 +186,15 @@ message PB_SearchClicked {
     int32 CreatedTime = 6;
 }
 message PB_Session {
+    int64 Id = 1;
+    string SessionUuid = 2;
+    int32 UserId = 3;
+    string LastIpAddress = 4;
+    int32 AppVersion = 5;
+    int32 ActiveTime = 6;
+    int32 CreatedTime = 7;
+}
+message PB_SessionCopy {
     string SessionUuid = 1;
     int32 UserId = 2;
     string ClientUuid = 3;

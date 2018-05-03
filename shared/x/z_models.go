@@ -458,6 +458,29 @@ type SearchClicked struct {
 */
 // session 'Session'.
 type Session struct {
+	Id            int    `db:"Id"`
+	SessionUuid   string `db:"SessionUuid"`
+	UserId        int    `db:"UserId"`
+	LastIpAddress string `db:"LastIpAddress"`
+	AppVersion    int    `db:"AppVersion"`
+	ActiveTime    int    `db:"ActiveTime"`
+	CreatedTime   int    `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Session {
+	Id: 0,
+	SessionUuid: "",
+	UserId: 0,
+	LastIpAddress: "",
+	AppVersion: 0,
+	ActiveTime: 0,
+	CreatedTime: 0,
+*/
+// session_copy 'SessionCopy'.
+type SessionCopy struct {
 	SessionUuid         string `db:"SessionUuid"`
 	UserId              int    `db:"UserId"`
 	ClientUuid          string `db:"ClientUuid"`
@@ -475,7 +498,7 @@ type Session struct {
 }
 
 /*
-:= &x.Session {
+:= &x.SessionCopy {
 	SessionUuid: "",
 	UserId: 0,
 	ClientUuid: "",
@@ -1202,6 +1225,7 @@ type LogTableSql struct {
 	PostReshared               bool
 	SearchClicked              bool
 	Session                    bool
+	SessionCopy                bool
 	SettingClient              bool
 	SettingNotification        bool
 	Tag                        bool
@@ -1252,6 +1276,7 @@ var LogTableSqlReq = LogTableSql{
 	PostReshared:        true,
 	SearchClicked:       true,
 	Session:             true,
+	SessionCopy:         true,
 	SettingClient:       true,
 	SettingNotification: true,
 	Tag:                 true,

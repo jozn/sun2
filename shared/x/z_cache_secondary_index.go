@@ -594,58 +594,7 @@ func (c _StoreImpl) PreLoadPostMedia_ByPostIds(PostIds []int) {
 
 // Session - PRIMARY
 
-//field//field//field
-
-///// Generated from index 'SessionUuid2'.
-func (c _StoreImpl) Session_BySessionUuid(SessionUuid string) (*Session, bool) {
-	o, ok := RowCacheIndex.Get("Session_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid))
-	if ok {
-		if obj, ok := o.(*Session); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewSession_Selector().SessionUuid_Eq(SessionUuid).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("Session_SessionUuid2:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) Session_BySessionUuid_JustCache(SessionUuid string) (*Session, bool) {
-	o, ok := RowCacheIndex.Get("Session_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid))
-	if ok {
-		if obj, ok := o.(*Session); ok {
-			return obj, true
-		}
-	}
-
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Session_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid)))
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSession_BySessionUuids(SessionUuids []string) {
-	not_cached := make([]string, 0, len(SessionUuids))
-
-	for _, id := range SessionUuids {
-		_, ok := RowCacheIndex.Get("Session_SessionUuid2:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewSession_Selector().SessionUuid_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("Session_SessionUuid2:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
-			}
-		}
-	}
-}
+// Session - SessionUuid_2
 
 //field//field//field
 
@@ -695,6 +644,167 @@ func (c _StoreImpl) PreLoadSession_ByUserIds(UserIds []int) {
 		if err == nil {
 			for _, row := range rows {
 				RowCacheIndex.Set("Session_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'SessionUuid'.
+func (c _StoreImpl) Session_BySessionUuid(SessionUuid string) (*Session, bool) {
+	o, ok := RowCacheIndex.Get("Session_SessionUuid:" + fmt.Sprintf("%v", SessionUuid))
+	if ok {
+		if obj, ok := o.(*Session); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewSession_Selector().SessionUuid_Eq(SessionUuid).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("Session_SessionUuid:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) Session_BySessionUuid_JustCache(SessionUuid string) (*Session, bool) {
+	o, ok := RowCacheIndex.Get("Session_SessionUuid:" + fmt.Sprintf("%v", SessionUuid))
+	if ok {
+		if obj, ok := o.(*Session); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Session_SessionUuid:" + fmt.Sprintf("%v", SessionUuid)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSession_BySessionUuids(SessionUuids []string) {
+	not_cached := make([]string, 0, len(SessionUuids))
+
+	for _, id := range SessionUuids {
+		_, ok := RowCacheIndex.Get("Session_SessionUuid:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewSession_Selector().SessionUuid_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("Session_SessionUuid:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
+			}
+		}
+	}
+}
+
+// SessionCopy - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'SessionUuid2'.
+func (c _StoreImpl) SessionCopy_BySessionUuid(SessionUuid string) (*SessionCopy, bool) {
+	o, ok := RowCacheIndex.Get("SessionCopy_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid))
+	if ok {
+		if obj, ok := o.(*SessionCopy); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewSessionCopy_Selector().SessionUuid_Eq(SessionUuid).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("SessionCopy_SessionUuid2:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) SessionCopy_BySessionUuid_JustCache(SessionUuid string) (*SessionCopy, bool) {
+	o, ok := RowCacheIndex.Get("SessionCopy_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid))
+	if ok {
+		if obj, ok := o.(*SessionCopy); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "SessionCopy_SessionUuid2:" + fmt.Sprintf("%v", SessionUuid)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSessionCopy_BySessionUuids(SessionUuids []string) {
+	not_cached := make([]string, 0, len(SessionUuids))
+
+	for _, id := range SessionUuids {
+		_, ok := RowCacheIndex.Get("SessionCopy_SessionUuid2:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewSessionCopy_Selector().SessionUuid_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("SessionCopy_SessionUuid2:"+fmt.Sprintf("%v", row.SessionUuid), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'UserId'.
+func (c _StoreImpl) SessionCopy_ByUserId(UserId int) (*SessionCopy, bool) {
+	o, ok := RowCacheIndex.Get("SessionCopy_UserId:" + fmt.Sprintf("%v", UserId))
+	if ok {
+		if obj, ok := o.(*SessionCopy); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewSessionCopy_Selector().UserId_Eq(UserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("SessionCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) SessionCopy_ByUserId_JustCache(UserId int) (*SessionCopy, bool) {
+	o, ok := RowCacheIndex.Get("SessionCopy_UserId:" + fmt.Sprintf("%v", UserId))
+	if ok {
+		if obj, ok := o.(*SessionCopy); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "SessionCopy_UserId:" + fmt.Sprintf("%v", UserId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSessionCopy_ByUserIds(UserIds []int) {
+	not_cached := make([]int, 0, len(UserIds))
+
+	for _, id := range UserIds {
+		_, ok := RowCacheIndex.Get("SessionCopy_UserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewSessionCopy_Selector().UserId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("SessionCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
 			}
 		}
 	}

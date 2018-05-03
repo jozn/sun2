@@ -7,7 +7,6 @@ import (
 	"ms/sun/servises/rpc_http_service/client_http"
 	"ms/sun/shared/x"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -18,6 +17,7 @@ func main() {
 	}()
 	i := 0
 	fmt.Println("1")
+	//os.Stdout = nil
 	for {
 		i++
 		fmt.Println("--------------------------------------")
@@ -28,7 +28,7 @@ func main() {
 		res, err := x.RPC_AllClinetsPlay.RPC_Other.Echo(d, client_http.FN)
 
 		fmt.Printf("result of rpc final: %#+v  %s \n", res, err)
-		time.Sleep(time.Millisecond * 300)
+		//time.Sleep(time.Millisecond * 300)
 
 	}
 

@@ -1,6 +1,7 @@
 package rpc_http_service
 
 import (
+	"math/rand"
 	"ms/sun/shared/base"
 	"ms/sun/shared/x"
 	"time"
@@ -14,6 +15,9 @@ func saveToDbLoggs_go() {
 	for {
 		select {
 		case c := <-rpcLogSaveChan:
+			if rand.Intn(1000) != 500 {
+				//continue
+			}
 			arr = append(arr, c)
 		case <-tick.C:
 			arr2 := arr

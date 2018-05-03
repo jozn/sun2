@@ -488,24 +488,48 @@ func OnSearchClicked_LoadMany(rows []*SearchClicked) {
 //Session Events
 
 func OnSession_AfterInsert(row *Session) {
-	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
+	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
 func OnSession_AfterUpdate(row *Session) {
-	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
+	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
 func OnSession_AfterDelete(row *Session) {
-	RowCache.Delete("Session:" + row.SessionUuid)
+	RowCache.Delete("Session:" + strconv.Itoa(row.Id))
 }
 
 func OnSession_LoadOne(row *Session) {
-	RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
+	RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
 }
 
 func OnSession_LoadMany(rows []*Session) {
 	for _, row := range rows {
-		RowCache.Set("Session:"+row.SessionUuid, row, time.Hour*0)
+		RowCache.Set("Session:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//SessionCopy Events
+
+func OnSessionCopy_AfterInsert(row *SessionCopy) {
+	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
+}
+
+func OnSessionCopy_AfterUpdate(row *SessionCopy) {
+	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
+}
+
+func OnSessionCopy_AfterDelete(row *SessionCopy) {
+	RowCache.Delete("SessionCopy:" + row.SessionUuid)
+}
+
+func OnSessionCopy_LoadOne(row *SessionCopy) {
+	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
+}
+
+func OnSessionCopy_LoadMany(rows []*SessionCopy) {
+	for _, row := range rows {
+		RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
 	}
 }
 

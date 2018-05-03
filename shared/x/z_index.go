@@ -484,20 +484,20 @@ func SearchClickedById(db *sqlx.DB, id int) (*SearchClicked, error) {
 	return &sc, nil
 }
 
-// SessionBySessionUuid Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.
-func SessionBySessionUuid(db *sqlx.DB, sessionUuid string) (*Session, error) {
+// SessionById Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.
+func SessionById(db *sqlx.DB, id int) (*Session, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun.session ` +
-		`WHERE SessionUuid = ?`
+		`WHERE Id = ?`
 
-	XOLog(sqlstr, sessionUuid)
+	XOLog(sqlstr, id)
 	s := Session{
 		_exists: true,
 	}
 
-	err = db.Get(&s, sqlstr, sessionUuid)
+	err = db.Get(&s, sqlstr, id)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
@@ -506,6 +506,30 @@ func SessionBySessionUuid(db *sqlx.DB, sessionUuid string) (*Session, error) {
 	OnSession_LoadOne(&s)
 
 	return &s, nil
+}
+
+// SessionCopyBySessionUuid Generated from index 'PRIMARY' -- retrieves a row from 'sun.session_copy' as a SessionCopy.
+func SessionCopyBySessionUuid(db *sqlx.DB, sessionUuid string) (*SessionCopy, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.session_copy ` +
+		`WHERE SessionUuid = ?`
+
+	XOLog(sqlstr, sessionUuid)
+	sc := SessionCopy{
+		_exists: true,
+	}
+
+	err = db.Get(&sc, sqlstr, sessionUuid)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSessionCopy_LoadOne(&sc)
+
+	return &sc, nil
 }
 
 // SettingClientByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_client' as a SettingClient.
