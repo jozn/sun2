@@ -1040,30 +1040,34 @@ var PushChat2 = struct {
 }
 
 var HTTPRPCLog = struct {
-	Id           string
-	Time         string
-	MethodFull   string
-	MethodParent string
-	UserId       string
-	SessionId    string
-	StatusCode   string
-	InputSize    string
-	OutputSize   string
-	ReqestJson   string
-	ResponseJson string
+	Id              string
+	Time            string
+	MethodFull      string
+	MethodParent    string
+	UserId          string
+	SessionId       string
+	StatusCode      string
+	InputSize       string
+	OutputSize      string
+	ReqestJson      string
+	ResponseJson    string
+	ReqestParamJson string
+	ResponseMsgJson string
 }{
 
-	Id:           "Id",
-	Time:         "Time",
-	MethodFull:   "MethodFull",
-	MethodParent: "MethodParent",
-	UserId:       "UserId",
-	SessionId:    "SessionId",
-	StatusCode:   "StatusCode",
-	InputSize:    "InputSize",
-	OutputSize:   "OutputSize",
-	ReqestJson:   "ReqestJson",
-	ResponseJson: "ResponseJson",
+	Id:              "Id",
+	Time:            "Time",
+	MethodFull:      "MethodFull",
+	MethodParent:    "MethodParent",
+	UserId:          "UserId",
+	SessionId:       "SessionId",
+	StatusCode:      "StatusCode",
+	InputSize:       "InputSize",
+	OutputSize:      "OutputSize",
+	ReqestJson:      "ReqestJson",
+	ResponseJson:    "ResponseJson",
+	ReqestParamJson: "ReqestParamJson",
+	ResponseMsgJson: "ResponseMsgJson",
 }
 
 var MetricLog = struct {

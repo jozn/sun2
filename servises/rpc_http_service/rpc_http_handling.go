@@ -17,6 +17,7 @@ func ServeHttpRpc(w http.ResponseWriter, r *http.Request) {
     //fmt.Println(r)
 	//defer recover()
     fmt.Println(")))))))))))))))))")
+
 	err := r.ParseMultipartForm(1280000)
 	helper.NoErr(err)
 	session := r.Form.Get("SessionUid")
@@ -62,7 +63,8 @@ func ServeHttpRpc(w http.ResponseWriter, r *http.Request) {
 
 	//log.Printf(" serving &s command via http rpc \n", cmd.Command)
 	monitor_service.AddRpc(cmd.Command)
-    fmt.Println("+++++++++++++++++++=")
+    //fmt.Println("+++++++++++++++++++=")
+
 	x.HandleRpcs(cmd, userParam, rpc_service.RpcAll, handler)
 }
 

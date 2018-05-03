@@ -1310,6 +1310,8 @@ func PBConvPB__HTTPRPCLog_To_HTTPRPCLog( o *PB_HTTPRPCLog) *HTTPRPCLog {
       OutputSize: int ( o.OutputSize ),
       ReqestJson: string ( o.ReqestJson ),
       ResponseJson: string ( o.ResponseJson ),
+      ReqestParamJson: string ( o.ReqestParamJson ),
+      ResponseMsgJson: string ( o.ResponseMsgJson ),
     }
     return n
 }
@@ -1327,6 +1329,8 @@ func PBConvPB_HTTPRPCLog_To_HTTPRPCLog ( o *HTTPRPCLog) *PB_HTTPRPCLog {
       OutputSize: int32 ( o.OutputSize ),
       ReqestJson: string ( o.ReqestJson ),
       ResponseJson: string ( o.ResponseJson ),
+      ReqestParamJson: string ( o.ReqestParamJson ),
+      ResponseMsgJson: string ( o.ResponseMsgJson ),
     }
     return n
 }

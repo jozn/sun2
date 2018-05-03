@@ -469,6 +469,8 @@ message PB_HTTPRPCLog {
     int32 OutputSize = 9;
     string ReqestJson = 10;
     string ResponseJson = 11;
+    string ReqestParamJson = 12;
+    string ResponseMsgJson = 13;
 }
 message PB_MetricLog {
     int32 Id = 1;

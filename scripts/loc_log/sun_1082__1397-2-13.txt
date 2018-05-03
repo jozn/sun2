@@ -3,7 +3,7 @@
 classified 221 filesDuplicate file check 221 files (37 known unique)     221 unique files.                              
 Counting:  100Counting:  200     209 files ignored.
 
-http://cloc.sourceforge.net v 1.64  T=0.42 s (52.4 files/s, 2958.9 lines/s)
+http://cloc.sourceforge.net v 1.64  T=0.31 s (70.5 files/s, 3980.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ SUM:                            22            172             83            987
        1 unique file.                              
        2 files ignored.
 
-http://cloc.sourceforge.net v 1.64  T=0.04 s (24.0 files/s, 17940.7 lines/s)
+http://cloc.sourceforge.net v 1.64  T=0.03 s (29.8 files/s, 22293.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------

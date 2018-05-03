@@ -507,6 +507,8 @@ public class J {
 		public int OutputSize;
 		public String ReqestJson;
 		public String ResponseJson;
+		public String ReqestParamJson;
+		public String ResponseMsgJson;
 	}
 
 	public static class MetricLog {//oridnal: 45

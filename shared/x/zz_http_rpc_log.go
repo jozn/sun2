@@ -13,17 +13,19 @@ import (
 
 // Manualy copy this to project
 type HTTPRPCLog__ struct {
-	Id           int    `json:"Id"`           // Id -
-	Time         string `json:"Time"`         // Time -
-	MethodFull   string `json:"MethodFull"`   // MethodFull -
-	MethodParent string `json:"MethodParent"` // MethodParent -
-	UserId       int    `json:"UserId"`       // UserId -
-	SessionId    string `json:"SessionId"`    // SessionId -
-	StatusCode   int    `json:"StatusCode"`   // StatusCode -
-	InputSize    int    `json:"InputSize"`    // InputSize -
-	OutputSize   int    `json:"OutputSize"`   // OutputSize -
-	ReqestJson   string `json:"ReqestJson"`   // ReqestJson -
-	ResponseJson string `json:"ResponseJson"` // ResponseJson -
+	Id              int    `json:"Id"`              // Id -
+	Time            string `json:"Time"`            // Time -
+	MethodFull      string `json:"MethodFull"`      // MethodFull -
+	MethodParent    string `json:"MethodParent"`    // MethodParent -
+	UserId          int    `json:"UserId"`          // UserId -
+	SessionId       string `json:"SessionId"`       // SessionId -
+	StatusCode      int    `json:"StatusCode"`      // StatusCode -
+	InputSize       int    `json:"InputSize"`       // InputSize -
+	OutputSize      int    `json:"OutputSize"`      // OutputSize -
+	ReqestJson      string `json:"ReqestJson"`      // ReqestJson -
+	ResponseJson    string `json:"ResponseJson"`    // ResponseJson -
+	ReqestParamJson string `json:"ReqestParamJson"` // ReqestParamJson -
+	ResponseMsgJson string `json:"ResponseMsgJson"` // ResponseMsgJson -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -49,16 +51,16 @@ func (hrl *HTTPRPCLog) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun_log.http_rpc_log (` +
-		`Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson` +
+		`Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson, ReqestParamJson, ResponseMsgJson` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.HTTPRPCLog {
-		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson)
+		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson)
 	}
-	res, err := db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson)
+	res, err := db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson)
 	if err != nil {
 		if LogTableSqlReq.HTTPRPCLog {
 			XOLogErr(err)
@@ -91,16 +93,16 @@ func (hrl *HTTPRPCLog) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_log.http_rpc_log (` +
-		`Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson` +
+		`Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson, ReqestParamJson, ResponseMsgJson` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.HTTPRPCLog {
-		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson)
+		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson)
 	}
-	res, err := db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson)
+	res, err := db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson)
 	if err != nil {
 		if LogTableSqlReq.HTTPRPCLog {
 			XOLogErr(err)
@@ -142,14 +144,14 @@ func (hrl *HTTPRPCLog) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_log.http_rpc_log SET ` +
-		`Time = ?, MethodFull = ?, MethodParent = ?, UserId = ?, SessionId = ?, StatusCode = ?, InputSize = ?, OutputSize = ?, ReqestJson = ?, ResponseJson = ?` +
+		`Time = ?, MethodFull = ?, MethodParent = ?, UserId = ?, SessionId = ?, StatusCode = ?, InputSize = ?, OutputSize = ?, ReqestJson = ?, ResponseJson = ?, ReqestParamJson = ?, ResponseMsgJson = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.HTTPRPCLog {
-		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.Id)
+		XOLog(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson, hrl.Id)
 	}
-	_, err = db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.Id)
+	_, err = db.Exec(sqlstr, hrl.Time, hrl.MethodFull, hrl.MethodParent, hrl.UserId, hrl.SessionId, hrl.StatusCode, hrl.InputSize, hrl.OutputSize, hrl.ReqestJson, hrl.ResponseJson, hrl.ReqestParamJson, hrl.ResponseMsgJson, hrl.Id)
 
 	if LogTableSqlReq.HTTPRPCLog {
 		XOLogErr(err)
@@ -2207,6 +2209,126 @@ func (d *__HTTPRPCLog_Deleter) ResponseJson_NotEq(val string) *__HTTPRPCLog_Dele
 	return d
 }
 
+func (u *__HTTPRPCLog_Deleter) ReqestParamJson_In(ins []string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Deleter) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Deleter) ReqestParamJson_Like(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Deleter) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Deleter) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_Like(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 
 func (u *__HTTPRPCLog_Updater) Time_In(ins []string) *__HTTPRPCLog_Updater {
@@ -2564,6 +2686,126 @@ func (d *__HTTPRPCLog_Updater) ResponseJson_NotEq(val string) *__HTTPRPCLog_Upda
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ResponseJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__HTTPRPCLog_Updater) ReqestParamJson_In(ins []string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Updater) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Updater) ReqestParamJson_Like(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Updater) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Updater) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__HTTPRPCLog_Updater) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Updater) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Updater) ResponseMsgJson_Like(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Updater) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Updater) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson != ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2931,6 +3173,126 @@ func (d *__HTTPRPCLog_Selector) ResponseJson_NotEq(val string) *__HTTPRPCLog_Sel
 	return d
 }
 
+func (u *__HTTPRPCLog_Selector) ReqestParamJson_In(ins []string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Selector) ReqestParamJson_Like(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Selector) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Selector) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReqestParamJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__HTTPRPCLog_Selector) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__HTTPRPCLog_Selector) ResponseMsgJson_Like(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson LIKE ? "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__HTTPRPCLog_Selector) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__HTTPRPCLog_Selector) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ResponseMsgJson != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 /// End of wheres for selectors , updators, deletor
 
 /////////////////////////////// Updater /////////////////////////////
@@ -3085,6 +3447,22 @@ func (u *__HTTPRPCLog_Updater) ReqestJson(newVal string) *__HTTPRPCLog_Updater {
 //string
 func (u *__HTTPRPCLog_Updater) ResponseJson(newVal string) *__HTTPRPCLog_Updater {
 	u.updates[" ResponseJson = ? "] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__HTTPRPCLog_Updater) ReqestParamJson(newVal string) *__HTTPRPCLog_Updater {
+	u.updates[" ReqestParamJson = ? "] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__HTTPRPCLog_Updater) ResponseMsgJson(newVal string) *__HTTPRPCLog_Updater {
+	u.updates[" ResponseMsgJson = ? "] = newVal
 	return u
 }
 
@@ -3255,6 +3633,36 @@ func (u *__HTTPRPCLog_Selector) OrderBy_ResponseJson_Asc() *__HTTPRPCLog_Selecto
 
 func (u *__HTTPRPCLog_Selector) Select_ResponseJson() *__HTTPRPCLog_Selector {
 	u.selectCol = "ResponseJson"
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) OrderBy_ReqestParamJson_Desc() *__HTTPRPCLog_Selector {
+	u.orderBy = " ORDER BY ReqestParamJson DESC "
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) OrderBy_ReqestParamJson_Asc() *__HTTPRPCLog_Selector {
+	u.orderBy = " ORDER BY ReqestParamJson ASC "
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) Select_ReqestParamJson() *__HTTPRPCLog_Selector {
+	u.selectCol = "ReqestParamJson"
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) OrderBy_ResponseMsgJson_Desc() *__HTTPRPCLog_Selector {
+	u.orderBy = " ORDER BY ResponseMsgJson DESC "
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) OrderBy_ResponseMsgJson_Asc() *__HTTPRPCLog_Selector {
+	u.orderBy = " ORDER BY ResponseMsgJson ASC "
+	return u
+}
+
+func (u *__HTTPRPCLog_Selector) Select_ResponseMsgJson() *__HTTPRPCLog_Selector {
+	u.selectCol = "ResponseMsgJson"
 	return u
 }
 
@@ -3572,12 +3980,12 @@ func MassInsert_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 	var err error
 	ln := len(rows)
 	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_log.http_rpc_log (" +
-		"Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson" +
+		"Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson, ReqestParamJson, ResponseMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -3595,6 +4003,8 @@ func MassInsert_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 		vals = append(vals, row.OutputSize)
 		vals = append(vals, row.ReqestJson)
 		vals = append(vals, row.ResponseJson)
+		vals = append(vals, row.ReqestParamJson)
+		vals = append(vals, row.ResponseMsgJson)
 
 	}
 
@@ -3615,12 +4025,12 @@ func MassInsert_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 func MassReplace_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_log.http_rpc_log (" +
-		"Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson" +
+		"Time, MethodFull, MethodParent, UserId, SessionId, StatusCode, InputSize, OutputSize, ReqestJson, ResponseJson, ReqestParamJson, ResponseMsgJson" +
 		") VALUES " + insVals
 
 	// run query
@@ -3638,6 +4048,8 @@ func MassReplace_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 		vals = append(vals, row.OutputSize)
 		vals = append(vals, row.ReqestJson)
 		vals = append(vals, row.ResponseJson)
+		vals = append(vals, row.ReqestParamJson)
+		vals = append(vals, row.ResponseMsgJson)
 
 	}
 
@@ -3656,6 +4068,10 @@ func MassReplace_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
 
 //
 

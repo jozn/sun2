@@ -1122,17 +1122,19 @@ type PushChat2 struct {
 */
 // http_rpc_log 'HTTPRPCLog'.
 type HTTPRPCLog struct {
-	Id           int    `db:"Id"`
-	Time         string `db:"Time"`
-	MethodFull   string `db:"MethodFull"`
-	MethodParent string `db:"MethodParent"`
-	UserId       int    `db:"UserId"`
-	SessionId    string `db:"SessionId"`
-	StatusCode   int    `db:"StatusCode"`
-	InputSize    int    `db:"InputSize"`
-	OutputSize   int    `db:"OutputSize"`
-	ReqestJson   string `db:"ReqestJson"`
-	ResponseJson string `db:"ResponseJson"`
+	Id              int    `db:"Id"`
+	Time            string `db:"Time"`
+	MethodFull      string `db:"MethodFull"`
+	MethodParent    string `db:"MethodParent"`
+	UserId          int    `db:"UserId"`
+	SessionId       string `db:"SessionId"`
+	StatusCode      int    `db:"StatusCode"`
+	InputSize       int    `db:"InputSize"`
+	OutputSize      int    `db:"OutputSize"`
+	ReqestJson      string `db:"ReqestJson"`
+	ResponseJson    string `db:"ResponseJson"`
+	ReqestParamJson string `db:"ReqestParamJson"`
+	ResponseMsgJson string `db:"ResponseMsgJson"`
 
 	_exists, _deleted bool
 }
@@ -1150,6 +1152,8 @@ type HTTPRPCLog struct {
 	OutputSize: 0,
 	ReqestJson: "",
 	ResponseJson: "",
+	ReqestParamJson: "",
+	ResponseMsgJson: "",
 */
 // metric_log 'MetricLog'.
 type MetricLog struct {
