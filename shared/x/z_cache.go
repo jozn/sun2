@@ -2117,3 +2117,99 @@ func (c _StoreImpl) PreLoadPushChat2BySyncIds(ids []int) {
 }
 
 // yes 222 int
+
+func (c _StoreImpl) GetHTTPRPCLogById(Id int) (*HTTPRPCLog, bool) {
+	o, ok := RowCache.Get("HTTPRPCLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*HTTPRPCLog); ok {
+			return obj, true
+		}
+	}
+	obj2, err := HTTPRPCLogById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.HTTPRPCLog {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetHTTPRPCLogById_JustCache(Id int) (*HTTPRPCLog, bool) {
+	o, ok := RowCache.Get("HTTPRPCLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*HTTPRPCLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.HTTPRPCLog {
+		XOLogErr(errors.New("_JustCache is empty for HTTPRPCLog: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadHTTPRPCLogByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("HTTPRPCLog:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewHTTPRPCLog_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetMetricLogById(Id int) (*MetricLog, bool) {
+	o, ok := RowCache.Get("MetricLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*MetricLog); ok {
+			return obj, true
+		}
+	}
+	obj2, err := MetricLogById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.MetricLog {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetMetricLogById_JustCache(Id int) (*MetricLog, bool) {
+	o, ok := RowCache.Get("MetricLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*MetricLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.MetricLog {
+		XOLogErr(errors.New("_JustCache is empty for MetricLog: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadMetricLogByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("MetricLog:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewMetricLog_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int

@@ -21,13 +21,13 @@ func main() {
     for  {
         fmt.Println("--------------------------------------")
         d := &x.PB_OtherParam_Echo{
-            Text: "salam",
+            Text: "salam with love from: ",
         }
 
         res, err := x.RPC_AllClinetsPlay.RPC_Other.Echo(d, client_http.FN)
 
         fmt.Printf("result of rpc final: %#+v  %s \n",res, err)
-        time.Sleep(time.Second)
+        time.Sleep(time.Second*5)
     }
 
 

@@ -1060,3 +1060,51 @@ func OnPushChat2_LoadMany(rows []*PushChat2) {
 		RowCache.Set("PushChat2:"+strconv.Itoa(row.SyncId), row, time.Hour*0)
 	}
 }
+
+//HTTPRPCLog Events
+
+func OnHTTPRPCLog_AfterInsert(row *HTTPRPCLog) {
+	RowCache.Set("HTTPRPCLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHTTPRPCLog_AfterUpdate(row *HTTPRPCLog) {
+	RowCache.Set("HTTPRPCLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHTTPRPCLog_AfterDelete(row *HTTPRPCLog) {
+	RowCache.Delete("HTTPRPCLog:" + strconv.Itoa(row.Id))
+}
+
+func OnHTTPRPCLog_LoadOne(row *HTTPRPCLog) {
+	RowCache.Set("HTTPRPCLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnHTTPRPCLog_LoadMany(rows []*HTTPRPCLog) {
+	for _, row := range rows {
+		RowCache.Set("HTTPRPCLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//MetricLog Events
+
+func OnMetricLog_AfterInsert(row *MetricLog) {
+	RowCache.Set("MetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnMetricLog_AfterUpdate(row *MetricLog) {
+	RowCache.Set("MetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnMetricLog_AfterDelete(row *MetricLog) {
+	RowCache.Delete("MetricLog:" + strconv.Itoa(row.Id))
+}
+
+func OnMetricLog_LoadOne(row *MetricLog) {
+	RowCache.Set("MetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnMetricLog_LoadMany(rows []*MetricLog) {
+	for _, row := range rows {
+		RowCache.Set("MetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}

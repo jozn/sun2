@@ -129,6 +129,7 @@ type rpcParamHandler struct {
 	responseHandler RPC_ResponseHandlerInterface
 }
 
+//todo: this method can be outputed from x package
 ////////////// map of rpc methods to all
 func HandleRpcs(cmd PB_CommandToServer, params RPC_UserParam, rpcHandler RPC_AllHandlersInteract, responseHandler RPC_ResponseHandlerInterface) {
 

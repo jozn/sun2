@@ -457,3 +457,25 @@ message PB_PushChat2 {
     string MessageJson = 10;
     int32 CreatedTime = 11;
 }
+message PB_HTTPRPCLog {
+    int32 Id = 1;
+    string Time = 2;
+    string MethodFull = 3;
+    string MethodParent = 4;
+    int32 UserId = 5;
+    string SessionId = 6;
+    int32 StatusCode = 7;
+    int32 InputSize = 8;
+    int32 OutputSize = 9;
+    string ReqestJson = 10;
+    string ResponseJson = 11;
+}
+message PB_MetricLog {
+    int32 Id = 1;
+    int32 InstanceId = 2;
+    string StartFrom = 3;
+    string EndTo = 4;
+    int32 StartTime = 5;
+    string Duration = 6;
+    string MetericsJson = 7;
+}

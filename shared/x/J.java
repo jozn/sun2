@@ -495,4 +495,28 @@ public class J {
 		public int CreatedTime;
 	}
 
+	public static class HTTPRPCLog {//oridnal: 44
+		public int Id;
+		public String Time;
+		public String MethodFull;
+		public String MethodParent;
+		public int UserId;
+		public String SessionId;
+		public int StatusCode;
+		public int InputSize;
+		public int OutputSize;
+		public String ReqestJson;
+		public String ResponseJson;
+	}
+
+	public static class MetricLog {//oridnal: 45
+		public int Id;
+		public int InstanceId;
+		public String StartFrom;
+		public String EndTo;
+		public int StartTime;
+		public String Duration;
+		public String MetericsJson;
+	}
+
 }

@@ -1296,3 +1296,65 @@ func PBConvPB_PushChat2_To_PushChat2 ( o *PushChat2) *PB_PushChat2 {
     return n
 }
 */
+/*
+func PBConvPB__HTTPRPCLog_To_HTTPRPCLog( o *PB_HTTPRPCLog) *HTTPRPCLog {
+     n := &HTTPRPCLog{
+      Id: int ( o.Id ),
+      Time: string ( o.Time ),
+      MethodFull: string ( o.MethodFull ),
+      MethodParent: string ( o.MethodParent ),
+      UserId: int ( o.UserId ),
+      SessionId: string ( o.SessionId ),
+      StatusCode: int ( o.StatusCode ),
+      InputSize: int ( o.InputSize ),
+      OutputSize: int ( o.OutputSize ),
+      ReqestJson: string ( o.ReqestJson ),
+      ResponseJson: string ( o.ResponseJson ),
+    }
+    return n
+}
+
+func PBConvPB_HTTPRPCLog_To_HTTPRPCLog ( o *HTTPRPCLog) *PB_HTTPRPCLog {
+     n := &PB_HTTPRPCLog{
+      Id: int32 ( o.Id ),
+      Time: string ( o.Time ),
+      MethodFull: string ( o.MethodFull ),
+      MethodParent: string ( o.MethodParent ),
+      UserId: int32 ( o.UserId ),
+      SessionId: string ( o.SessionId ),
+      StatusCode: int32 ( o.StatusCode ),
+      InputSize: int32 ( o.InputSize ),
+      OutputSize: int32 ( o.OutputSize ),
+      ReqestJson: string ( o.ReqestJson ),
+      ResponseJson: string ( o.ResponseJson ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__MetricLog_To_MetricLog( o *PB_MetricLog) *MetricLog {
+     n := &MetricLog{
+      Id: int ( o.Id ),
+      InstanceId: int ( o.InstanceId ),
+      StartFrom: string ( o.StartFrom ),
+      EndTo: string ( o.EndTo ),
+      StartTime: int ( o.StartTime ),
+      Duration: string ( o.Duration ),
+      MetericsJson: string ( o.MetericsJson ),
+    }
+    return n
+}
+
+func PBConvPB_MetricLog_To_MetricLog ( o *MetricLog) *PB_MetricLog {
+     n := &PB_MetricLog{
+      Id: int32 ( o.Id ),
+      InstanceId: int32 ( o.InstanceId ),
+      StartFrom: string ( o.StartFrom ),
+      EndTo: string ( o.EndTo ),
+      StartTime: int32 ( o.StartTime ),
+      Duration: string ( o.Duration ),
+      MetericsJson: string ( o.MetericsJson ),
+    }
+    return n
+}
+*/

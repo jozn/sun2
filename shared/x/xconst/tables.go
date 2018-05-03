@@ -89,6 +89,10 @@ const (
 	PushChat_TableGo                   = "PushChat"
 	PushChat2_Table                    = "push_chat2"
 	PushChat2_TableGo                  = "PushChat2"
+	HTTPRPCLog_Table                   = "http_rpc_log"
+	HTTPRPCLog_TableGo                 = "HTTPRPCLog"
+	MetricLog_Table                    = "metric_log"
+	MetricLog_TableGo                  = "MetricLog"
 )
 
 var Action = struct {
@@ -1033,4 +1037,50 @@ var PushChat2 = struct {
 	MessagePb:         "MessagePb",
 	MessageJson:       "MessageJson",
 	CreatedTime:       "CreatedTime",
+}
+
+var HTTPRPCLog = struct {
+	Id           string
+	Time         string
+	MethodFull   string
+	MethodParent string
+	UserId       string
+	SessionId    string
+	StatusCode   string
+	InputSize    string
+	OutputSize   string
+	ReqestJson   string
+	ResponseJson string
+}{
+
+	Id:           "Id",
+	Time:         "Time",
+	MethodFull:   "MethodFull",
+	MethodParent: "MethodParent",
+	UserId:       "UserId",
+	SessionId:    "SessionId",
+	StatusCode:   "StatusCode",
+	InputSize:    "InputSize",
+	OutputSize:   "OutputSize",
+	ReqestJson:   "ReqestJson",
+	ResponseJson: "ResponseJson",
+}
+
+var MetricLog = struct {
+	Id           string
+	InstanceId   string
+	StartFrom    string
+	EndTo        string
+	StartTime    string
+	Duration     string
+	MetericsJson string
+}{
+
+	Id:           "Id",
+	InstanceId:   "InstanceId",
+	StartFrom:    "StartFrom",
+	EndTo:        "EndTo",
+	StartTime:    "StartTime",
+	Duration:     "Duration",
+	MetericsJson: "MetericsJson",
 }

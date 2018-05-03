@@ -1059,3 +1059,51 @@ func PushChat2BySyncId(db *sqlx.DB, syncId int) (*PushChat2, error) {
 
 	return &pc, nil
 }
+
+// HTTPRPCLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun_log.http_rpc_log' as a HTTPRPCLog.
+func HTTPRPCLogById(db *sqlx.DB, id int) (*HTTPRPCLog, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_log.http_rpc_log ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	hrl := HTTPRPCLog{
+		_exists: true,
+	}
+
+	err = db.Get(&hrl, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnHTTPRPCLog_LoadOne(&hrl)
+
+	return &hrl, nil
+}
+
+// MetricLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun_log.metric_log' as a MetricLog.
+func MetricLogById(db *sqlx.DB, id int) (*MetricLog, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_log.metric_log ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	ml := MetricLog{
+		_exists: true,
+	}
+
+	err = db.Get(&ml, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnMetricLog_LoadOne(&ml)
+
+	return &ml, nil
+}

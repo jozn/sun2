@@ -1120,6 +1120,60 @@ type PushChat2 struct {
 	MessageJson: "",
 	CreatedTime: 0,
 */
+// http_rpc_log 'HTTPRPCLog'.
+type HTTPRPCLog struct {
+	Id           int    `db:"Id"`
+	Time         string `db:"Time"`
+	MethodFull   string `db:"MethodFull"`
+	MethodParent string `db:"MethodParent"`
+	UserId       int    `db:"UserId"`
+	SessionId    string `db:"SessionId"`
+	StatusCode   int    `db:"StatusCode"`
+	InputSize    int    `db:"InputSize"`
+	OutputSize   int    `db:"OutputSize"`
+	ReqestJson   string `db:"ReqestJson"`
+	ResponseJson string `db:"ResponseJson"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.HTTPRPCLog {
+	Id: 0,
+	Time: "",
+	MethodFull: "",
+	MethodParent: "",
+	UserId: 0,
+	SessionId: "",
+	StatusCode: 0,
+	InputSize: 0,
+	OutputSize: 0,
+	ReqestJson: "",
+	ResponseJson: "",
+*/
+// metric_log 'MetricLog'.
+type MetricLog struct {
+	Id           int    `db:"Id"`
+	InstanceId   int    `db:"InstanceId"`
+	StartFrom    string `db:"StartFrom"`
+	EndTo        string `db:"EndTo"`
+	StartTime    int    `db:"StartTime"`
+	Duration     string `db:"Duration"`
+	MetericsJson string `db:"MetericsJson"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.MetricLog {
+	Id: 0,
+	InstanceId: 0,
+	StartFrom: "",
+	EndTo: "",
+	StartTime: 0,
+	Duration: "",
+	MetericsJson: "",
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -1167,6 +1221,8 @@ type LogTableSql struct {
 	ChatSync2                  bool
 	PushChat                   bool
 	PushChat2                  bool
+	HTTPRPCLog                 bool
+	MetricLog                  bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1215,4 +1271,6 @@ var LogTableSqlReq = LogTableSql{
 	ChatSync2:           true,
 	PushChat:            true,
 	PushChat2:           true,
+	HTTPRPCLog:          true,
+	MetricLog:           true,
 }

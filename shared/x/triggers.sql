@@ -1275,6 +1275,64 @@ $$
 
 
  #### delimiter ;*/
+################################ HTTPRPCLog ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS http_rpc_log_OnCreateLogger $$
+CREATE TRIGGER http_rpc_log_OnCreateLogger AFTER INSERT ON http_rpc_log
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HTTPRPCLog","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS http_rpc_log_OnUpdateLogger $$
+CREATE TRIGGER http_rpc_log_OnUpdateLogger AFTER UPDATE ON http_rpc_log
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HTTPRPCLog","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS http_rpc_log_OnDeleteLogger $$
+CREATE TRIGGER http_rpc_log_OnDeleteLogger AFTER DELETE ON http_rpc_log
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("HTTPRPCLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ MetricLog ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS metric_log_OnCreateLogger $$
+CREATE TRIGGER metric_log_OnCreateLogger AFTER INSERT ON metric_log
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("MetricLog","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS metric_log_OnUpdateLogger $$
+CREATE TRIGGER metric_log_OnUpdateLogger AFTER UPDATE ON metric_log
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("MetricLog","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS metric_log_OnDeleteLogger $$
+CREATE TRIGGER metric_log_OnDeleteLogger AFTER DELETE ON metric_log
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("MetricLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 
 ###############################################################################################
 ################################## Delete of all triggers #####################################
@@ -1456,4 +1514,12 @@ DROP TRIGGER IF EXISTS push_chat_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS push_chat2_OnCreateLogger ;
 DROP TRIGGER IF EXISTS push_chat2_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS push_chat2_OnDeleteLogger ;
+### HTTPRPCLog ##
+DROP TRIGGER IF EXISTS http_rpc_log_OnCreateLogger ;
+DROP TRIGGER IF EXISTS http_rpc_log_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS http_rpc_log_OnDeleteLogger ;
+### MetricLog ##
+DROP TRIGGER IF EXISTS metric_log_OnCreateLogger ;
+DROP TRIGGER IF EXISTS metric_log_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS metric_log_OnDeleteLogger ;
 */
