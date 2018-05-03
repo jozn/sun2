@@ -564,43 +564,6 @@ func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
 }
 */
 /*
-func PBConvPB__SessionCopy_To_SessionCopy( o *PB_SessionCopy) *SessionCopy {
-     n := &SessionCopy{
-      SessionUuid: string ( o.SessionUuid ),
-      UserId: int ( o.UserId ),
-      ClientUuid: string ( o.ClientUuid ),
-      DeviceUuid: string ( o.DeviceUuid ),
-      LastActivityTime: int ( o.LastActivityTime ),
-      LastIpAddress: string ( o.LastIpAddress ),
-      LastWifiMacAddress: string ( o.LastWifiMacAddress ),
-      LastNetworkType: string ( o.LastNetworkType ),
-      LastNetworkTypeEnum: int ( o.LastNetworkTypeEnum ),
-      AppVersion: int ( o.AppVersion ),
-      UpdatedTime: int ( o.UpdatedTime ),
-      CreatedTime: int ( o.CreatedTime ),
-    }
-    return n
-}
-
-func PBConvPB_SessionCopy_To_SessionCopy ( o *SessionCopy) *PB_SessionCopy {
-     n := &PB_SessionCopy{
-      SessionUuid: string ( o.SessionUuid ),
-      UserId: int32 ( o.UserId ),
-      ClientUuid: string ( o.ClientUuid ),
-      DeviceUuid: string ( o.DeviceUuid ),
-      LastActivityTime: int32 ( o.LastActivityTime ),
-      LastIpAddress: string ( o.LastIpAddress ),
-      LastWifiMacAddress: string ( o.LastWifiMacAddress ),
-      LastNetworkType: string ( o.LastNetworkType ),
-      LastNetworkTypeEnum: int32 ( o.LastNetworkTypeEnum ),
-      AppVersion: int32 ( o.AppVersion ),
-      UpdatedTime: int32 ( o.UpdatedTime ),
-      CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__SettingClient_To_SettingClient( o *PB_SettingClient) *SettingClient {
      n := &SettingClient{
       UserId: int ( o.UserId ),

@@ -608,35 +608,6 @@ $$
 
 
  #### delimiter ;*/
-################################ SessionCopy ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS session_copy_OnCreateLogger $$
-CREATE TRIGGER session_copy_OnCreateLogger AFTER INSERT ON session_copy
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("SessionCopy","INSERT",NEW.SessionUuid, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS session_copy_OnUpdateLogger $$
-CREATE TRIGGER session_copy_OnUpdateLogger AFTER UPDATE ON session_copy
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("SessionCopy","UPDATE",NEW.SessionUuid, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS session_copy_OnDeleteLogger $$
-CREATE TRIGGER session_copy_OnDeleteLogger AFTER DELETE ON session_copy
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("SessionCopy","DELETE",OLD.SessionUuid, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ SettingClient ######################################
 
 /* #### delimiter $$
@@ -1451,10 +1422,6 @@ DROP TRIGGER IF EXISTS search_clicked_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS session_OnCreateLogger ;
 DROP TRIGGER IF EXISTS session_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS session_OnDeleteLogger ;
-### SessionCopy ##
-DROP TRIGGER IF EXISTS session_copy_OnCreateLogger ;
-DROP TRIGGER IF EXISTS session_copy_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS session_copy_OnDeleteLogger ;
 ### SettingClient ##
 DROP TRIGGER IF EXISTS setting_client_OnCreateLogger ;
 DROP TRIGGER IF EXISTS setting_client_OnUpdateLogger ;

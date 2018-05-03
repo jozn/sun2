@@ -509,30 +509,6 @@ func OnSession_LoadMany(rows []*Session) {
 	}
 }
 
-//SessionCopy Events
-
-func OnSessionCopy_AfterInsert(row *SessionCopy) {
-	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
-}
-
-func OnSessionCopy_AfterUpdate(row *SessionCopy) {
-	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
-}
-
-func OnSessionCopy_AfterDelete(row *SessionCopy) {
-	RowCache.Delete("SessionCopy:" + row.SessionUuid)
-}
-
-func OnSessionCopy_LoadOne(row *SessionCopy) {
-	RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
-}
-
-func OnSessionCopy_LoadMany(rows []*SessionCopy) {
-	for _, row := range rows {
-		RowCache.Set("SessionCopy:"+row.SessionUuid, row, time.Hour*0)
-	}
-}
-
 //SettingClient Events
 
 func OnSettingClient_AfterInsert(row *SettingClient) {

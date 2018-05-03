@@ -479,39 +479,6 @@ type Session struct {
 	ActiveTime: 0,
 	CreatedTime: 0,
 */
-// session_copy 'SessionCopy'.
-type SessionCopy struct {
-	SessionUuid         string `db:"SessionUuid"`
-	UserId              int    `db:"UserId"`
-	ClientUuid          string `db:"ClientUuid"`
-	DeviceUuid          string `db:"DeviceUuid"`
-	LastActivityTime    int    `db:"LastActivityTime"`
-	LastIpAddress       string `db:"LastIpAddress"`
-	LastWifiMacAddress  string `db:"LastWifiMacAddress"`
-	LastNetworkType     string `db:"LastNetworkType"`
-	LastNetworkTypeEnum int    `db:"LastNetworkTypeEnum"`
-	AppVersion          int    `db:"AppVersion"`
-	UpdatedTime         int    `db:"UpdatedTime"`
-	CreatedTime         int    `db:"CreatedTime"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.SessionCopy {
-	SessionUuid: "",
-	UserId: 0,
-	ClientUuid: "",
-	DeviceUuid: "",
-	LastActivityTime: 0,
-	LastIpAddress: "",
-	LastWifiMacAddress: "",
-	LastNetworkType: "",
-	LastNetworkTypeEnum: 0,
-	AppVersion: 0,
-	UpdatedTime: 0,
-	CreatedTime: 0,
-*/
 // setting_client 'SettingClient'.
 type SettingClient struct {
 	UserId                    int `db:"UserId"`
@@ -1225,7 +1192,6 @@ type LogTableSql struct {
 	PostReshared               bool
 	SearchClicked              bool
 	Session                    bool
-	SessionCopy                bool
 	SettingClient              bool
 	SettingNotification        bool
 	Tag                        bool
@@ -1276,7 +1242,6 @@ var LogTableSqlReq = LogTableSql{
 	PostReshared:        true,
 	SearchClicked:       true,
 	Session:             true,
-	SessionCopy:         true,
 	SettingClient:       true,
 	SettingNotification: true,
 	Tag:                 true,

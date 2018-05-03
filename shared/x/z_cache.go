@@ -1014,54 +1014,6 @@ func (c _StoreImpl) PreLoadSessionByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSessionCopyBySessionUuid(SessionUuid string) (*SessionCopy, bool) {
-	o, ok := RowCache.Get("SessionCopy:" + SessionUuid)
-	if ok {
-		if obj, ok := o.(*SessionCopy); ok {
-			return obj, true
-		}
-	}
-	obj2, err := SessionCopyBySessionUuid(base.DB, SessionUuid)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.SessionCopy {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetSessionCopyBySessionUuid_JustCache(SessionUuid string) (*SessionCopy, bool) {
-	o, ok := RowCache.Get("SessionCopy:" + SessionUuid)
-	if ok {
-		if obj, ok := o.(*SessionCopy); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.SessionCopy {
-		XOLogErr(errors.New("_JustCache is empty for SessionCopy: " + SessionUuid))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSessionCopyBySessionUuids(ids []string) {
-	not_cached := make([]string, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("SessionCopy:" + id)
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewSessionCopy_Selector().SessionUuid_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 string
-
 func (c _StoreImpl) GetSettingClientByUserId(UserId int) (*SettingClient, bool) {
 	o, ok := RowCache.Get("SettingClient:" + strconv.Itoa(UserId))
 	if ok {

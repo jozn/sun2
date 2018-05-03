@@ -209,22 +209,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class SessionCopy {//oridnal: 21
-		public String SessionUuid;
-		public int UserId;
-		public String ClientUuid;
-		public String DeviceUuid;
-		public int LastActivityTime;
-		public String LastIpAddress;
-		public String LastWifiMacAddress;
-		public String LastNetworkType;
-		public int LastNetworkTypeEnum;
-		public int AppVersion;
-		public int UpdatedTime;
-		public int CreatedTime;
-	}
-
-	public static class SettingClient {//oridnal: 22
+	public static class SettingClient {//oridnal: 21
 		public int UserId;
 		public int AutoDownloadWifiVoice;
 		public int AutoDownloadWifiImage;
@@ -247,7 +232,7 @@ public class J {
 		public int SaveToGallery;
 	}
 
-	public static class SettingNotification {//oridnal: 23
+	public static class SettingNotification {//oridnal: 22
 		public int UserId;
 		public int SocialLedOn;
 		public String SocialLedColor;
@@ -270,7 +255,7 @@ public class J {
 		public int DirectPriority;
 	}
 
-	public static class Tag {//oridnal: 24
+	public static class Tag {//oridnal: 23
 		public int TagId;
 		public String Name;
 		public int Count;
@@ -278,7 +263,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TagPost {//oridnal: 25
+	public static class TagPost {//oridnal: 24
 		public int Id;
 		public int TagId;
 		public int PostId;
@@ -287,7 +272,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class TriggerLog {//oridnal: 26
+	public static class TriggerLog {//oridnal: 25
 		public int Id;
 		public String ModelName;
 		public String ChangeType;
@@ -296,7 +281,7 @@ public class J {
 		public int CreatedSe;
 	}
 
-	public static class User {//oridnal: 27
+	public static class User {//oridnal: 26
 		public int UserId;
 		public String UserName;
 		public String UserNameLower;
@@ -337,20 +322,20 @@ public class J {
 		public String Phone2;
 	}
 
-	public static class UserMetaInfo {//oridnal: 28
+	public static class UserMetaInfo {//oridnal: 27
 		public int Id;
 		public int UserId;
 		public int IsNotificationDirty;
 		public int LastUserRecGen;
 	}
 
-	public static class UserPassword {//oridnal: 29
+	public static class UserPassword {//oridnal: 28
 		public int UserId;
 		public String Password;
 		public int CreatedTime;
 	}
 
-	public static class Chat {//oridnal: 30
+	public static class Chat {//oridnal: 29
 		public String ChatKey;
 		public String RoomKey;
 		public int RoomTypeEnum;
@@ -363,14 +348,14 @@ public class J {
 		public int UpdatedMs;
 	}
 
-	public static class ChatLastMessage {//oridnal: 31
+	public static class ChatLastMessage {//oridnal: 30
 		public String ChatKey;
 		public int ForUserId;
 		public UNKNOWN LastMsgPb;
 		public String LastMsgJson;
 	}
 
-	public static class DirectMessage {//oridnal: 32
+	public static class DirectMessage {//oridnal: 31
 		public String ChatKey;
 		public int MessageId;
 		public String RoomKey;
@@ -384,7 +369,7 @@ public class J {
 		public UNKNOWN ExtraPB;
 	}
 
-	public static class Group {//oridnal: 33
+	public static class Group {//oridnal: 32
 		public int GroupId;
 		public String GroupName;
 		public int MembersCount;
@@ -395,7 +380,7 @@ public class J {
 		public int CurrentSeq;
 	}
 
-	public static class GroupMember {//oridnal: 34
+	public static class GroupMember {//oridnal: 33
 		public int Id;
 		public int GroupId;
 		public String GroupKey;
@@ -405,7 +390,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class GroupMessage {//oridnal: 35
+	public static class GroupMessage {//oridnal: 34
 		public int MessageId;
 		public String RoomKey;
 		public int UserId;
@@ -416,7 +401,7 @@ public class J {
 		public int DeliveryStatusEnum;
 	}
 
-	public static class FileMsg {//oridnal: 36
+	public static class FileMsg {//oridnal: 35
 		public int Id;
 		public int FileType;
 		public String Extension;
@@ -424,7 +409,7 @@ public class J {
 		public UNKNOWN Data;
 	}
 
-	public static class FilePost {//oridnal: 37
+	public static class FilePost {//oridnal: 36
 		public int Id;
 		public int FileType;
 		public String Extension;
@@ -432,14 +417,14 @@ public class J {
 		public UNKNOWN Data;
 	}
 
-	public static class ActionFanout {//oridnal: 38
+	public static class ActionFanout {//oridnal: 37
 		public int OrderId;
 		public int ForUserId;
 		public int ActionId;
 		public int ActorUserId;
 	}
 
-	public static class HomeFanout {//oridnal: 39
+	public static class HomeFanout {//oridnal: 38
 		public int OrderId;
 		public int ForUserId;
 		public int PostId;
@@ -447,12 +432,12 @@ public class J {
 		public int ResharedId;
 	}
 
-	public static class SuggestedTopPost {//oridnal: 40
+	public static class SuggestedTopPost {//oridnal: 39
 		public int Id;
 		public int PostId;
 	}
 
-	public static class SuggestedUser {//oridnal: 41
+	public static class SuggestedUser {//oridnal: 40
 		public int Id;
 		public int UserId;
 		public int TargetId;
@@ -460,7 +445,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class ChatSync2 {//oridnal: 42
+	public static class ChatSync2 {//oridnal: 41
 		public int SyncId;
 		public int ToUserId;
 		public int ChatSyncTypeId;
@@ -474,7 +459,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class PushChat {//oridnal: 43
+	public static class PushChat {//oridnal: 42
 		public int PushId;
 		public int ToUserId;
 		public int PushTypeId;
@@ -491,7 +476,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class PushChat2 {//oridnal: 44
+	public static class PushChat2 {//oridnal: 43
 		public int SyncId;
 		public int ToUserId;
 		public int ChatSyncTypeId;
@@ -505,7 +490,7 @@ public class J {
 		public int CreatedTime;
 	}
 
-	public static class HTTPRPCLog {//oridnal: 45
+	public static class HTTPRPCLog {//oridnal: 44
 		public int Id;
 		public String Time;
 		public String MethodFull;
@@ -521,7 +506,7 @@ public class J {
 		public String ResponseMsgJson;
 	}
 
-	public static class MetricLog {//oridnal: 46
+	public static class MetricLog {//oridnal: 45
 		public int Id;
 		public int InstanceId;
 		public String StartFrom;

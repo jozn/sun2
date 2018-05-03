@@ -43,8 +43,6 @@ const (
 	SearchClicked_TableGo              = "SearchClicked"
 	Session_Table                      = "session"
 	Session_TableGo                    = "Session"
-	SessionCopy_Table                  = "session_copy"
-	SessionCopy_TableGo                = "SessionCopy"
 	SettingClient_Table                = "setting_client"
 	SettingClient_TableGo              = "SettingClient"
 	SettingNotification_Table          = "setting_notifications"
@@ -490,35 +488,6 @@ var Session = struct {
 	AppVersion:    "AppVersion",
 	ActiveTime:    "ActiveTime",
 	CreatedTime:   "CreatedTime",
-}
-
-var SessionCopy = struct {
-	SessionUuid         string
-	UserId              string
-	ClientUuid          string
-	DeviceUuid          string
-	LastActivityTime    string
-	LastIpAddress       string
-	LastWifiMacAddress  string
-	LastNetworkType     string
-	LastNetworkTypeEnum string
-	AppVersion          string
-	UpdatedTime         string
-	CreatedTime         string
-}{
-
-	SessionUuid:         "SessionUuid",
-	UserId:              "UserId",
-	ClientUuid:          "ClientUuid",
-	DeviceUuid:          "DeviceUuid",
-	LastActivityTime:    "LastActivityTime",
-	LastIpAddress:       "LastIpAddress",
-	LastWifiMacAddress:  "LastWifiMacAddress",
-	LastNetworkType:     "LastNetworkType",
-	LastNetworkTypeEnum: "LastNetworkTypeEnum",
-	AppVersion:          "AppVersion",
-	UpdatedTime:         "UpdatedTime",
-	CreatedTime:         "CreatedTime",
 }
 
 var SettingClient = struct {

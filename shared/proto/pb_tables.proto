@@ -194,20 +194,6 @@ message PB_Session {
     int32 ActiveTime = 6;
     int32 CreatedTime = 7;
 }
-message PB_SessionCopy {
-    string SessionUuid = 1;
-    int32 UserId = 2;
-    string ClientUuid = 3;
-    string DeviceUuid = 4;
-    int32 LastActivityTime = 5;
-    string LastIpAddress = 6;
-    string LastWifiMacAddress = 7;
-    string LastNetworkType = 8;
-    int32 LastNetworkTypeEnum = 9;
-    int32 AppVersion = 10;
-    int32 UpdatedTime = 11;
-    int32 CreatedTime = 12;
-}
 message PB_SettingClient {
     int32 UserId = 1;
     int32 AutoDownloadWifiVoice = 2;
