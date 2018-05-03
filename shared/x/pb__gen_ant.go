@@ -4,7 +4,6 @@ import (
 	"errors"
 	"log"
 	"ms/sun/shared/config"
-	"strings"
 
 	"github.com/golang/protobuf/proto"
 )
@@ -123,1299 +122,1380 @@ func noDevErr(err error) {
 	}
 }
 
+type rpcParamHandler struct {
+	cmd             PB_CommandToServer
+	params          RPC_UserParam
+	rpcHandler      RPC_AllHandlersInteract
+	responseHandler RPC_ResponseHandlerInterface
+}
+
 ////////////// map of rpc methods to all
 func HandleRpcs(cmd PB_CommandToServer, params RPC_UserParam, rpcHandler RPC_AllHandlersInteract, responseHandler RPC_ResponseHandlerInterface) {
 
-	splits := strings.Split(cmd.Command, ".")
-
-	if len(splits) != 2 {
-		noDevErr(errors.New("HandleRpcs: splic is not 2 parts"))
-		return
+	fn, ok := mpRpcMethods[cmd.Command]
+	if !ok {
+		if config.IS_DEBUG {
+			log.Panic("HandleRpcs:  command not registerd for ", cmd.Command)
+		}
 	}
 
-	switch splits[0] {
-
-	case "RPC_Auth":
-
-		//rpc,ok := rpcHandler.RPC_Auth
-		rpc := rpcHandler.RPC_Auth
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Auth")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "CheckPhone": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.CheckPhone(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.CheckPhone",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.CheckPhone",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SendCode": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SendCode(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.SendCode",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.SendCode",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SendCodeToSms": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SendCodeToSms(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.SendCodeToSms",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.SendCodeToSms",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SendCodeToTelgram": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SendCodeToTelgram(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.SendCodeToTelgram",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.SendCodeToTelgram",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SingUp": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SingUp(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.SingUp",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.SingUp",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SingIn": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SingIn(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.SingIn",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.SingIn",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "LogOut": //each pb_service_method
-			load := &PB_UserParam_CheckUserName2{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.LogOut(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Auth.LogOut",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName2",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName2","RPC_Auth.LogOut",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_Chat":
-
-		//rpc,ok := rpcHandler.RPC_Chat
-		rpc := rpcHandler.RPC_Chat
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Chat")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "AddNewMessage": //each pb_service_method
-			load := &PB_ChatParam_AddNewMessage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.AddNewMessage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.AddNewMessage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_AddNewMessage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_AddNewMessage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_AddNewMessage","RPC_Chat.AddNewMessage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SetRoomActionDoing": //each pb_service_method
-			load := &PB_ChatParam_SetRoomActionDoing{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SetRoomActionDoing(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.SetRoomActionDoing",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_SetRoomActionDoing",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetRoomActionDoing",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetRoomActionDoing","RPC_Chat.SetRoomActionDoing",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SetMessagesAsReceived": //each pb_service_method
-			load := &PB_ChatParam_SetMessagesAsReceived{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SetMessagesAsReceived(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.SetMessagesAsReceived",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_SetMessagesAsReceived",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetMessagesAsReceived",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetMessagesAsReceived","RPC_Chat.SetMessagesAsReceived",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SetMessagesRangeAsSeen": //each pb_service_method
-			load := &PB_ChatParam_SetChatMessagesRangeAsSeen{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SetMessagesRangeAsSeen(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.SetMessagesRangeAsSeen",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_SetChatMessagesRangeAsSeen",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetChatMessagesRangeAsSeen",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_SetChatMessagesRangeAsSeen","RPC_Chat.SetMessagesRangeAsSeen",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "DeleteChatHistory": //each pb_service_method
-			load := &PB_ChatParam_DeleteChatHistory{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.DeleteChatHistory(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.DeleteChatHistory",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_DeleteChatHistory",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_DeleteChatHistory",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_DeleteChatHistory","RPC_Chat.DeleteChatHistory",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "DeleteMessagesByIds": //each pb_service_method
-			load := &PB_ChatParam_DeleteMessagesByIds{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.DeleteMessagesByIds(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.DeleteMessagesByIds",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_DeleteMessagesByIds",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_DeleteMessagesByIds",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_DeleteMessagesByIds","RPC_Chat.DeleteMessagesByIds",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "EditMessage": //each pb_service_method
-			load := &PB_ChatParam_EditMessage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.EditMessage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.EditMessage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_EditMessage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_EditMessage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_EditMessage","RPC_Chat.EditMessage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetChatList": //each pb_service_method
-			load := &PB_ChatParam_GetChatList{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetChatList(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.GetChatList",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_GetChatList",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_GetChatList",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_GetChatList","RPC_Chat.GetChatList",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetChatHistoryToOlder": //each pb_service_method
-			load := &PB_ChatParam_GetChatHistoryToOlder{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetChatHistoryToOlder(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Chat.GetChatHistoryToOlder",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_ChatResponse_GetChatHistoryToOlder",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_GetChatHistoryToOlder",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_ChatResponse_GetChatHistoryToOlder","RPC_Chat.GetChatHistoryToOlder",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_Other":
-
-		//rpc,ok := rpcHandler.RPC_Other
-		rpc := rpcHandler.RPC_Other
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Other")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "Echo": //each pb_service_method
-			load := &PB_OtherParam_Echo{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.Echo(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Other.Echo",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_OtherResponse_Echo",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_OtherResponse_Echo",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_OtherResponse_Echo","RPC_Other.Echo",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_Page":
-
-		//rpc,ok := rpcHandler.RPC_Page
-		rpc := rpcHandler.RPC_Page
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Page")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "GetCommentsPage": //each pb_service_method
-			load := &PB_PageParam_GetCommentsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetCommentsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetCommentsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetCommentsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetCommentsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetCommentsPage","RPC_Page.GetCommentsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetHomePage": //each pb_service_method
-			load := &PB_PageParam_GetHomePage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetHomePage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetHomePage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetHomePage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetHomePage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetHomePage","RPC_Page.GetHomePage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetProfilePage": //each pb_service_method
-			load := &PB_PageParam_GetProfilePage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetProfilePage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetProfilePage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetProfilePage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetProfilePage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetProfilePage","RPC_Page.GetProfilePage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetLikesPage": //each pb_service_method
-			load := &PB_PageParam_GetLikesPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetLikesPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetLikesPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetLikesPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetLikesPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetLikesPage","RPC_Page.GetLikesPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetFollowersPage": //each pb_service_method
-			load := &PB_PageParam_GetFollowersPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetFollowersPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetFollowersPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetFollowersPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetFollowersPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetFollowersPage","RPC_Page.GetFollowersPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetFollowingsPage": //each pb_service_method
-			load := &PB_PageParam_GetFollowingsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetFollowingsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetFollowingsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetFollowingsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetFollowingsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetFollowingsPage","RPC_Page.GetFollowingsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetNotifiesPage": //each pb_service_method
-			load := &PB_PageParam_GetNotifiesPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetNotifiesPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetNotifiesPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetNotifiesPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetNotifiesPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetNotifiesPage","RPC_Page.GetNotifiesPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetUserActionsPage": //each pb_service_method
-			load := &PB_PageParam_GetUserActionsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetUserActionsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetUserActionsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetUserActionsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetUserActionsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetUserActionsPage","RPC_Page.GetUserActionsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetSuggestedPostsPage": //each pb_service_method
-			load := &PB_PageParam_GetSuggestedPostsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetSuggestedPostsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetSuggestedPostsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetSuggestedPostsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedPostsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedPostsPage","RPC_Page.GetSuggestedPostsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetSuggestedUsersPage": //each pb_service_method
-			load := &PB_PageParam_GetSuggestedUsersPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetSuggestedUsersPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetSuggestedUsersPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetSuggestedUsersPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsersPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedUsersPage","RPC_Page.GetSuggestedUsersPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetSuggestedTagsPage": //each pb_service_method
-			load := &PB_PageParam_GetSuggestedTagsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetSuggestedTagsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetSuggestedTagsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetSuggestedTagsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedTagsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetSuggestedTagsPage","RPC_Page.GetSuggestedTagsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetLastPostsPage": //each pb_service_method
-			load := &PB_PageParam_GetLastPostsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetLastPostsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetLastPostsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetLastPostsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetLastPostsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetLastPostsPage","RPC_Page.GetLastPostsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetTagPage": //each pb_service_method
-			load := &PB_PageParam_GetTagPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetTagPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.GetTagPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_GetTagPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetTagPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_GetTagPage","RPC_Page.GetTagPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SearchTagsPage": //each pb_service_method
-			load := &PB_PageParam_SearchTagsPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SearchTagsPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.SearchTagsPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_SearchTagsPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_SearchTagsPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_SearchTagsPage","RPC_Page.SearchTagsPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "SearchUsersPage": //each pb_service_method
-			load := &PB_PageParam_SearchUsersPage{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SearchUsersPage(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Page.SearchUsersPage",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_PageResponse_SearchUsersPage",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_SearchUsersPage",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_PageResponse_SearchUsersPage","RPC_Page.SearchUsersPage",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_Search":
-
-		//rpc,ok := rpcHandler.RPC_Search
-		rpc := rpcHandler.RPC_Search
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Search")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "SearchTags": //each pb_service_method
-			load := &PB_SearchResponse_AddNewC{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.SearchTags(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Search.SearchTags",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SearchResponse_AddNewC",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SearchResponse_AddNewC",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SearchResponse_AddNewC","RPC_Search.SearchTags",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_Social":
-
-		//rpc,ok := rpcHandler.RPC_Social
-		rpc := rpcHandler.RPC_Social
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_Social")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "AddComment": //each pb_service_method
-			load := &PB_SocialParam_AddComment{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.AddComment(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.AddComment",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_AddComment",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_AddComment",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_AddComment","RPC_Social.AddComment",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "DeleteComment": //each pb_service_method
-			load := &PB_SocialParam_DeleteComment{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.DeleteComment(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.DeleteComment",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_DeleteComment",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_DeleteComment",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_DeleteComment","RPC_Social.DeleteComment",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "AddPost": //each pb_service_method
-			load := &PB_SocialParam_AddPost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.AddPost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.AddPost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_AddPost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_AddPost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_AddPost","RPC_Social.AddPost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "EditPost": //each pb_service_method
-			load := &PB_SocialParam_EditPost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.EditPost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.EditPost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_EditPost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_EditPost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_EditPost","RPC_Social.EditPost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "DeletePost": //each pb_service_method
-			load := &PB_SocialParam_DeletePost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.DeletePost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.DeletePost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_DeletePost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_DeletePost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_DeletePost","RPC_Social.DeletePost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "ArchivePost": //each pb_service_method
-			load := &PB_SocialParam_ArchivePost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.ArchivePost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.ArchivePost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_ArchivePost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_ArchivePost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_ArchivePost","RPC_Social.ArchivePost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "LikePost": //each pb_service_method
-			load := &PB_SocialParam_LikePost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.LikePost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.LikePost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_LikePost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_LikePost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_LikePost","RPC_Social.LikePost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "UnLikePost": //each pb_service_method
-			load := &PB_SocialParam_UnLikePost{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.UnLikePost(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.UnLikePost",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_UnLikePost",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_UnLikePost",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_UnLikePost","RPC_Social.UnLikePost",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "FollowUser": //each pb_service_method
-			load := &PB_SocialParam_FollowUser{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.FollowUser(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.FollowUser",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_FollowUser",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_FollowUser",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_FollowUser","RPC_Social.FollowUser",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "UnFollowUser": //each pb_service_method
-			load := &PB_SocialParam_UnFollowUser{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.UnFollowUser(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_Social.UnFollowUser",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_SocialResponse_UnFollowUser",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_UnFollowUser",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_SocialResponse_UnFollowUser","RPC_Social.UnFollowUser",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	case "RPC_User":
-
-		//rpc,ok := rpcHandler.RPC_User
-		rpc := rpcHandler.RPC_User
-		/*if !ok {
-		    e:=errors.New("rpcHandler could not be cast to : RPC_User")
-		    noDevErr(e)
-		    RPC_ResponseHandler.HandelError(e)
-		    return
-		}*/
-
-		switch splits[1] {
-		case "BlockUser": //each pb_service_method
-			load := &PB_UserParam_BlockUser{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.BlockUser(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.BlockUser",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_BlockUser",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_BlockUser",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_BlockUser","RPC_User.BlockUser",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "UnBlockUser": //each pb_service_method
-			load := &PB_UserParam_UnBlockUser{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.UnBlockUser(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.UnBlockUser",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_UnBlockUser",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UnBlockUser",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UnBlockUser","RPC_User.UnBlockUser",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "GetBlockedList": //each pb_service_method
-			load := &PB_UserParam_BlockedList{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.GetBlockedList(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.GetBlockedList",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_BlockedList",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_BlockedList",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_BlockedList","RPC_User.GetBlockedList",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "UpdateAbout": //each pb_service_method
-			load := &PB_UserParam_UpdateAbout{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.UpdateAbout(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.UpdateAbout",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_UpdateAbout",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UpdateAbout",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UpdateAbout","RPC_User.UpdateAbout",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "UpdateUserName": //each pb_service_method
-			load := &PB_UserParam_UpdateUserName{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.UpdateUserName(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.UpdateUserName",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_UpdateUserName",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UpdateUserName",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_UpdateUserName","RPC_User.UpdateUserName",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "ChangePrivacy": //each pb_service_method
-			load := &PB_UserParam_ChangePrivacy{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.ChangePrivacy(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.ChangePrivacy",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponseOffline_ChangePrivacy",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponseOffline_ChangePrivacy",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponseOffline_ChangePrivacy","RPC_User.ChangePrivacy",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "ChangeAvatar": //each pb_service_method
-			load := &PB_UserParam_ChangeAvatar{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.ChangeAvatar(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.ChangeAvatar",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_ChangeAvatar",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_ChangeAvatar",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_ChangeAvatar","RPC_User.ChangeAvatar",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		case "CheckUserName": //each pb_service_method
-			load := &PB_UserParam_CheckUserName{}
-			err := proto.Unmarshal(cmd.Data, load)
-			if err == nil {
-				res, err := rpc.CheckUserName(load, params)
-				if err == nil {
-					out := RpcResponseOutput{
-						RpcName:         "RPC_User.CheckUserName",
-						UserParam:       params,
-						CommandToServer: cmd,
-						PBClassName:     "PB_UserResponse_CheckUserName",
-						ResponseData:    &res,
-						RpcParamPassed:  load,
-					}
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName",cmd, params)
-					//RPC_ResponseHandler.HandleOfflineResult(res,"PB_UserResponse_CheckUserName","RPC_User.CheckUserName",cmd, params , load)
-					responseHandler.HandleOfflineResult(out)
-				} else {
-					responseHandler.HandelError(err)
-				}
-			} else {
-				responseHandler.HandelError(err)
-			}
-		default:
-			noDevErr(errors.New("rpc method is does not exist: " + cmd.Command))
-		}
-	default:
-		noDevErr(errors.New("rpc dosent exisit for: " + cmd.Command))
+	p := rpcParamHandler{
+		cmd:             cmd,
+		params:          params,
+		rpcHandler:      rpcHandler,
+		responseHandler: responseHandler,
 	}
+	fn(p)
+}
+
+var mpRpcMethods = map[string]func(p rpcParamHandler){
+
+	// rpc: RPC_Auth
+
+	"RPC_Auth.CheckPhone": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.CheckPhone"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.CheckPhone(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.CheckPhone",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.SendCode": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.SendCode"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.SendCode(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.SendCode",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.SendCodeToSms": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.SendCodeToSms"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.SendCodeToSms(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.SendCodeToSms",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.SendCodeToTelgram": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.SendCodeToTelgram"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.SendCodeToTelgram(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.SendCodeToTelgram",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.SingUp": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.SingUp"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.SingUp(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.SingUp",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.SingIn": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.SingIn"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.SingIn(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.SingIn",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Auth.LogOut": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Auth == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Auth.LogOut"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName2{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Auth.LogOut(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Auth.LogOut",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName2",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_Chat
+
+	"RPC_Chat.AddNewMessage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.AddNewMessage"))
+			return
+		}
+		load := &PB_ChatParam_AddNewMessage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.AddNewMessage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.AddNewMessage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_AddNewMessage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.SetRoomActionDoing": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.SetRoomActionDoing"))
+			return
+		}
+		load := &PB_ChatParam_SetRoomActionDoing{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.SetRoomActionDoing(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.SetRoomActionDoing",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_SetRoomActionDoing",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.SetMessagesAsReceived": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.SetMessagesAsReceived"))
+			return
+		}
+		load := &PB_ChatParam_SetMessagesAsReceived{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.SetMessagesAsReceived(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.SetMessagesAsReceived",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_SetMessagesAsReceived",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.SetMessagesRangeAsSeen": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.SetMessagesRangeAsSeen"))
+			return
+		}
+		load := &PB_ChatParam_SetChatMessagesRangeAsSeen{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.SetMessagesRangeAsSeen(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.SetMessagesRangeAsSeen",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_SetChatMessagesRangeAsSeen",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.DeleteChatHistory": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.DeleteChatHistory"))
+			return
+		}
+		load := &PB_ChatParam_DeleteChatHistory{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.DeleteChatHistory(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.DeleteChatHistory",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_DeleteChatHistory",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.DeleteMessagesByIds": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.DeleteMessagesByIds"))
+			return
+		}
+		load := &PB_ChatParam_DeleteMessagesByIds{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.DeleteMessagesByIds(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.DeleteMessagesByIds",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_DeleteMessagesByIds",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.EditMessage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.EditMessage"))
+			return
+		}
+		load := &PB_ChatParam_EditMessage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.EditMessage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.EditMessage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_EditMessage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.GetChatList": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.GetChatList"))
+			return
+		}
+		load := &PB_ChatParam_GetChatList{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.GetChatList(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.GetChatList",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_GetChatList",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Chat.GetChatHistoryToOlder": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Chat == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.GetChatHistoryToOlder"))
+			return
+		}
+		load := &PB_ChatParam_GetChatHistoryToOlder{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Chat.GetChatHistoryToOlder(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Chat.GetChatHistoryToOlder",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_ChatResponse_GetChatHistoryToOlder",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_Other
+
+	"RPC_Other.Echo": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Other == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Other.Echo"))
+			return
+		}
+		load := &PB_OtherParam_Echo{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Other.Echo(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Other.Echo",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_OtherResponse_Echo",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_Page
+
+	"RPC_Page.GetCommentsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetCommentsPage"))
+			return
+		}
+		load := &PB_PageParam_GetCommentsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetCommentsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetCommentsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetCommentsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetHomePage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetHomePage"))
+			return
+		}
+		load := &PB_PageParam_GetHomePage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetHomePage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetHomePage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetHomePage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetProfilePage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetProfilePage"))
+			return
+		}
+		load := &PB_PageParam_GetProfilePage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetProfilePage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetProfilePage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetProfilePage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetLikesPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetLikesPage"))
+			return
+		}
+		load := &PB_PageParam_GetLikesPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetLikesPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetLikesPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetLikesPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetFollowersPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetFollowersPage"))
+			return
+		}
+		load := &PB_PageParam_GetFollowersPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetFollowersPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetFollowersPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetFollowersPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetFollowingsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetFollowingsPage"))
+			return
+		}
+		load := &PB_PageParam_GetFollowingsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetFollowingsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetFollowingsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetFollowingsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetNotifiesPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetNotifiesPage"))
+			return
+		}
+		load := &PB_PageParam_GetNotifiesPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetNotifiesPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetNotifiesPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetNotifiesPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetUserActionsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetUserActionsPage"))
+			return
+		}
+		load := &PB_PageParam_GetUserActionsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetUserActionsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetUserActionsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetUserActionsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetSuggestedPostsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetSuggestedPostsPage"))
+			return
+		}
+		load := &PB_PageParam_GetSuggestedPostsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetSuggestedPostsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetSuggestedPostsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetSuggestedPostsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetSuggestedUsersPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetSuggestedUsersPage"))
+			return
+		}
+		load := &PB_PageParam_GetSuggestedUsersPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetSuggestedUsersPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetSuggestedUsersPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetSuggestedUsersPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetSuggestedTagsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetSuggestedTagsPage"))
+			return
+		}
+		load := &PB_PageParam_GetSuggestedTagsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetSuggestedTagsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetSuggestedTagsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetSuggestedTagsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetLastPostsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetLastPostsPage"))
+			return
+		}
+		load := &PB_PageParam_GetLastPostsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetLastPostsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetLastPostsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetLastPostsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.GetTagPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.GetTagPage"))
+			return
+		}
+		load := &PB_PageParam_GetTagPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.GetTagPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.GetTagPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_GetTagPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.SearchTagsPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.SearchTagsPage"))
+			return
+		}
+		load := &PB_PageParam_SearchTagsPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.SearchTagsPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.SearchTagsPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_SearchTagsPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Page.SearchUsersPage": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Page == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Page.SearchUsersPage"))
+			return
+		}
+		load := &PB_PageParam_SearchUsersPage{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Page.SearchUsersPage(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Page.SearchUsersPage",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_PageResponse_SearchUsersPage",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_Search
+
+	"RPC_Search.SearchTags": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Search == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Search.SearchTags"))
+			return
+		}
+		load := &PB_SearchResponse_AddNewC{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Search.SearchTags(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Search.SearchTags",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SearchResponse_AddNewC",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_Social
+
+	"RPC_Social.AddComment": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.AddComment"))
+			return
+		}
+		load := &PB_SocialParam_AddComment{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.AddComment(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.AddComment",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_AddComment",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.DeleteComment": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.DeleteComment"))
+			return
+		}
+		load := &PB_SocialParam_DeleteComment{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.DeleteComment(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.DeleteComment",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_DeleteComment",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.AddPost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.AddPost"))
+			return
+		}
+		load := &PB_SocialParam_AddPost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.AddPost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.AddPost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_AddPost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.EditPost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.EditPost"))
+			return
+		}
+		load := &PB_SocialParam_EditPost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.EditPost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.EditPost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_EditPost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.DeletePost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.DeletePost"))
+			return
+		}
+		load := &PB_SocialParam_DeletePost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.DeletePost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.DeletePost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_DeletePost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.ArchivePost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.ArchivePost"))
+			return
+		}
+		load := &PB_SocialParam_ArchivePost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.ArchivePost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.ArchivePost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_ArchivePost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.LikePost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.LikePost"))
+			return
+		}
+		load := &PB_SocialParam_LikePost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.LikePost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.LikePost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_LikePost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.UnLikePost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.UnLikePost"))
+			return
+		}
+		load := &PB_SocialParam_UnLikePost{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.UnLikePost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.UnLikePost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_UnLikePost",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.FollowUser": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.FollowUser"))
+			return
+		}
+		load := &PB_SocialParam_FollowUser{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.FollowUser(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.FollowUser",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_FollowUser",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.UnFollowUser": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.UnFollowUser"))
+			return
+		}
+		load := &PB_SocialParam_UnFollowUser{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.UnFollowUser(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.UnFollowUser",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_SocialResponse_UnFollowUser",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+
+	// rpc: RPC_User
+
+	"RPC_User.BlockUser": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.BlockUser"))
+			return
+		}
+		load := &PB_UserParam_BlockUser{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.BlockUser(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.BlockUser",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_BlockUser",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.UnBlockUser": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.UnBlockUser"))
+			return
+		}
+		load := &PB_UserParam_UnBlockUser{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.UnBlockUser(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.UnBlockUser",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_UnBlockUser",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.GetBlockedList": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.GetBlockedList"))
+			return
+		}
+		load := &PB_UserParam_BlockedList{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.GetBlockedList(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.GetBlockedList",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_BlockedList",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.UpdateAbout": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.UpdateAbout"))
+			return
+		}
+		load := &PB_UserParam_UpdateAbout{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.UpdateAbout(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.UpdateAbout",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_UpdateAbout",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.UpdateUserName": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.UpdateUserName"))
+			return
+		}
+		load := &PB_UserParam_UpdateUserName{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.UpdateUserName(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.UpdateUserName",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_UpdateUserName",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.ChangePrivacy": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.ChangePrivacy"))
+			return
+		}
+		load := &PB_UserParam_ChangePrivacy{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.ChangePrivacy(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.ChangePrivacy",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponseOffline_ChangePrivacy",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.ChangeAvatar": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.ChangeAvatar"))
+			return
+		}
+		load := &PB_UserParam_ChangeAvatar{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.ChangeAvatar(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.ChangeAvatar",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_ChangeAvatar",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_User.CheckUserName": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_User == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_User.CheckUserName"))
+			return
+		}
+		load := &PB_UserParam_CheckUserName{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_User.CheckUserName(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_User.CheckUserName",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "PB_UserResponse_CheckUserName",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
 }
 
 /////////////// Direct in PB_CommandToClient /////////////

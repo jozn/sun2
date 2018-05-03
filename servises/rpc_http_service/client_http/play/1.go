@@ -6,8 +6,8 @@ import (
     //"ms/sun_old/models/x"
     "ms/sun/shared/x"
     "net/http"
-    "time"
     "ms/sun/servises/rpc_http_service/client_http"
+    "time"
 )
 
 func main() {
@@ -18,13 +18,18 @@ func main() {
     }()
 
     fmt.Println("1")
-    d := &x.PB_OtherParam_Echo{
-        Text: "salam",
+    for  {
+        fmt.Println("--------------------------------------")
+        d := &x.PB_OtherParam_Echo{
+            Text: "salam",
+        }
+
+        res, err := x.RPC_AllClinetsPlay.RPC_Other.Echo(d, client_http.FN)
+
+        fmt.Printf("result of rpc final: %#+v  %s \n",res, err)
+        time.Sleep(time.Second)
     }
 
-    res, err := x.RPC_AllClinetsPlay.RPC_Other.Echo(d, client_http.FN)
 
-    fmt.Printf("result of rpc final: %#+v  %s \n",res, err)
 
-    time.Sleep(time.Minute)
 }
