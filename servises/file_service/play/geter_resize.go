@@ -15,7 +15,8 @@ func main() {
 	for _, id := range ids {
 		go func(c int) {
 			ch <- 1
-			u := fmt.Sprintf("http://localhost:5151/post_file/%d_1080.jpg", c)
+			//u := fmt.Sprintf("http://localhost:5151/post_file/%d_1080.jpg", c)
+			u := fmt.Sprintf("http://localhost:5151/post_file/%d_thumb.jpg", c)
             i++
 			fmt.Println(i, u)
 			http.Get(u)

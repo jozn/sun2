@@ -12,7 +12,7 @@ import (
 )
 
 //const GALAXY_CACHE_PARENT_DIR = `C:\Go\_gopath\src\ms\sun\files\`
-const GALAXY_CACHE_PARENT_DIR = `E:\sun\`
+const GALAXY_CACHE_PARENT_DIR = `D:\sun\`
 const GALAXY_CACHE_PARENT_DIR_VERSION = `v1`
 
 type rowReq struct {

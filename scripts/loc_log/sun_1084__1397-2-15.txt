@@ -1,9 +1,9 @@
 =================================== Sun ===================================
-     100 files     200 files     222 text files.
-classified 222 filesDuplicate file check 222 files (37 known unique)     222 unique files.                              
-Counting:  100Counting:  200     210 files ignored.
+     100 files     200 files     225 text files.
+classified 225 filesDuplicate file check 225 files (38 known unique)     225 unique files.                              
+Counting:  100Counting:  200     213 files ignored.
 
-http://cloc.sourceforge.net v 1.64  T=0.30 s (72.7 files/s, 4105.1 lines/s)
+http://cloc.sourceforge.net v 1.64  T=0.30 s (72.3 files/s, 4081.7 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ SUM:                            22            172             83            987
        1 unique file.                              
        2 files ignored.
 
-http://cloc.sourceforge.net v 1.64  T=0.03 s (31.2 files/s, 23352.5 lines/s)
+http://cloc.sourceforge.net v 1.64  T=0.04 s (25.6 files/s, 19164.8 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
