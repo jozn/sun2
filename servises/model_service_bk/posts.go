@@ -5,7 +5,7 @@ import (
 	"image"
 	"ms/sun_old/base"
 	"ms/sun/shared/helper"
-	"ms/sun/servises/file_service"
+	"ms/sun/servises/file_service_old"
 	"ms/sun/shared/x"
 )
 
@@ -57,13 +57,13 @@ func AddPost(pp PostAddParam) (int, error) {
 			Color:         helper.ExtractColoer(img),
 			CreatedTime:   helper.TimeNow(),
 		}
-		rowCassndra := file_service.Row{
+		rowCassndra := file_service_old.Row{
 			Id:        media.MediaId,
 			Data:      pp.MediaBytes,
-			FileType:  int(file_service.IMAGE),
+			FileType:  int(file_service_old.IMAGE),
 			Extension: "." + imageTypeToExt(imgType),
 		}
-		file_service.SavePostFile(rowCassndra)
+		file_service_old.SavePostFile(rowCassndra)
 		err = media.Save(base.DB)
 		if err != nil {
 			return 0, err

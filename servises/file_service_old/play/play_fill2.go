@@ -6,7 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"ms/sun/shared/helper"
-	"ms/sun/servises/file_service"
+	"ms/sun/servises/file_service_old"
 	"net/http"
     "time"
 )
@@ -16,7 +16,7 @@ var size int = 0
 
 func main() {
 	Insert_many(0)
-	file_service.Run()
+	file_service_old.Run()
 	http.HandleFunc("/hi", func(writer http.ResponseWriter, r *http.Request) {
 		writer.Write([]byte("hi"))
 	})
@@ -39,7 +39,7 @@ func insertPost() {
 	if err != nil {
 		return
 	}
-	cas := file_service.Row{
+	cas := file_service_old.Row{
 		Id:        helper.NextRowsSeqId(),
 		Data:      bs,
 		FileType:  1,
@@ -47,7 +47,7 @@ func insertPost() {
 		DataThumb: []byte{},
 	}
 	cnt++
-	file_service.SavePostFile(cas)
+	file_service_old.SavePostFile(cas)
 }
 
 func insertMsg() {
@@ -55,7 +55,7 @@ func insertMsg() {
     if err != nil {
         return
     }
-    cas := file_service.Row{
+    cas := file_service_old.Row{
         Id:        helper.NextRowsSeqId(),
         Data:      bs,
         FileType:  1,
@@ -63,7 +63,7 @@ func insertMsg() {
         DataThumb: []byte{},
     }
     cnt++
-    file_service.SaveMsgFile(cas)
+    file_service_old.SaveMsgFile(cas)
 }
 
 func RandImage() (fn string, bs []byte, err error) {

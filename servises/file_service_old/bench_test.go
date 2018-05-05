@@ -1,4 +1,4 @@
-package file_service
+package file_service_old
 
 import (
 	//"ms/sun/servises/file_service"

@@ -1,13 +1,13 @@
 package main
 
 import (
-    "ms/sun/servises/file_service"
+    "ms/sun/servises/file_service_old"
     "net/http"
     "time"
 )
 
 func main()  {
-    file_service.Run()
+    file_service_old.Run()
     http.HandleFunc("/hi", func(writer http.ResponseWriter, r *http.Request) {
         writer.Write([]byte("hi"))
     })
