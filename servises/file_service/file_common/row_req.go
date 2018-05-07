@@ -10,30 +10,29 @@ import (
 )
 
 //const GALAXY_CACHE_PARENT_DIR = `C:\Go\_gopath\src\ms\sun\files\`
-const GALAXY_CACHE_PARENT_DIR = `D:\sun\`
-const GALAXY_CACHE_PARENT_DIR_VERSION = `v1`
+const CACHE_DIR_VERSION = `v1`
 
 type RowReq struct {
 	FullUrlPath                  string
 	FileCategory                 FileCategory
-	FileName                     string
-	FileDataStoreId              int //64bit
-	FileExtensionWithoutDot      string
-	FileFormat                   fileFormat
-	RequestedImageSize           int
-	IsThumb                      bool
-	RowCacheOutRelativePathDir   string
-	RowCacheOutRelativePath      string
-	RowCacheOutRelativePathSized string
-	RowCacheOutRelativePathThumb string
-	RowCacheOutDiskPathDir       string
-	RowCacheOutDiskPath          string
-	RowCacheOutDiskPathSized     string
-	RowCacheOutDiskPathThumb     string
-	IsLocalDiskCacheAvailable    bool
-	CacheFullModuleDirectory     string // "/web/galxy/chat/"
-	SelectedCacheDiskPath        string //web/file/a disk
-	Err                          error
+	FileName                         string
+	FileDataStoreId                  int //64bit
+	FileExtensionWithoutDot          string
+	FileFormat                       fileFormat
+	RequestedImageSize               int
+	IsThumb                          bool
+	RowCacheOutRelativePathDir       string
+	RowCacheOutRelativePath          string
+	RowCacheOutRelativePathSized     string
+	RowCacheOutRelativePathThumb     string
+	RowCacheOutDiskPathDir           string
+	RowCacheOutDiskPath              string
+	RowCacheOutDiskPathSized         string
+	RowCacheOutDiskPathThumb         string
+	IsOrginalLocalDiskCacheAvailable bool
+	CacheFullModuleDirectory         string // "/web/galxy/chat/"
+	SelectedCacheDiskPath            string //web/file/a disk
+	Err                              error
 }
 
 func NewRowReq(category FileCategory, url *url.URL) (row *RowReq) {
@@ -41,9 +40,10 @@ func NewRowReq(category FileCategory, url *url.URL) (row *RowReq) {
 	row = &RowReq{
 		FullUrlPath:              url.Path,
 		FileCategory:             category,
-		CacheFullModuleDirectory: GALAXY_CACHE_PARENT_DIR_VERSION + "/" + category.cachePath + "/", //"cache/",
+		CacheFullModuleDirectory: CACHE_DIR_VERSION + "/" + category.cachePath + "/",
 	}
 	row.extractParams()
+	row.CacheFullModuleDirectory = row.CacheFullModuleDirectory + row.FileExtensionWithoutDot + "/"
 	//row.FileExtensionWithoutDot = "media"
 
 	row.setOutputCacheFullPath()
@@ -125,7 +125,7 @@ func (r *RowReq) createRowOutCacheDir() {
     RowCacheOutRelativePath:       "D:\\sun\\/v1/post_file/15/18/50/64/1518506476136010007.jpg",
     RowCacheOutRelativePathSized:  "D:\\sun\\/v1/post_file/15/18/50/64/1518506476136010007_180.jpg",
     RowCacheOutRelativePathThumb:  "D:\\sun\\/v1/post_file/15/18/50/64/1518506476136010007_thumb.jpg",
-    IsLocalDiskCacheAvailable: false,
+    IsOrginalLocalDiskCacheAvailable: false,
     CacheFullModuleDirectory:  "D:\\sun\\/v1/post_file/",
     Err:                       nil,
 }

@@ -61,7 +61,7 @@ func serveOriginalHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.R
 	fmt.Println("serveOriginalHTTP")
 	//file_disk_cache.SelectDisk(row, config)
 	//path, ok := file_disk_cache.IsLocalCacheAvailable(row, config)
-	if row.IsLocalDiskCacheAvailable {
+	if row.IsOrginalLocalDiskCacheAvailable {
 		http.ServeFile(w, r, row.RowCacheOutDiskPath)
 		return
 	}
@@ -124,7 +124,7 @@ func serveThumbHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Requ
 		res.ResizeFFMPEG()
 	}
 	var err error
-	if row.IsLocalDiskCacheAvailable {
+	if row.IsOrginalLocalDiskCacheAvailable {
 		//this means we have not thumb in db - so just resize the original to 100px
 		resizing()
 	} else {

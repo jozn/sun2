@@ -14,6 +14,7 @@ func SelectDisk(req *file_common.RowReq, config *file_common.FileServingConfig) 
         //check if we have the file in others disks, if we have choose that disk
         for _, parentDir := range config.DiskDirs {
             fullpath := parentDir + req.RowCacheOutRelativePath
+            //todo:?? cache this beacus it is relative expensive to run 50 micro second
             if IsFileExists(fullpath) {
                 diskPath = parentDir
                 isOriginalExists = true
@@ -26,7 +27,7 @@ func SelectDisk(req *file_common.RowReq, config *file_common.FileServingConfig) 
 		req.RowCacheOutDiskPathSized = diskPath + req.RowCacheOutRelativePathSized
 		req.RowCacheOutDiskPathThumb = diskPath + req.RowCacheOutRelativePathThumb
 
-		req.IsLocalDiskCacheAvailable = isOriginalExists
+		req.IsOrginalLocalDiskCacheAvailable = isOriginalExists
 	}
 }
 
