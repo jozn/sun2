@@ -26,7 +26,8 @@ func (f *Resizer) ResizeFFMPEG() {
 	}
 	cmd := exec.Command("ffmpeg", arg...)
 	err := cmd.Run()
+    fmt.Println(cmd)
 	if err != nil {
-		println(err)
+		fmt.Println(err)
 	}
 }

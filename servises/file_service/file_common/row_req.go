@@ -26,6 +26,10 @@ type RowReq struct {
 	RowCacheOutRelativePath      string
 	RowCacheOutRelativePathSized string
 	RowCacheOutRelativePathThumb string
+	RowCacheOutDiskPathDir       string
+	RowCacheOutDiskPath          string
+	RowCacheOutDiskPathSized     string
+	RowCacheOutDiskPathThumb     string
 	IsLocalDiskCacheAvailable    bool
 	CacheFullModuleDirectory     string // "/web/galxy/chat/"
 	SelectedCacheDiskPath        string //web/file/a disk
@@ -106,7 +110,6 @@ func (r *RowReq) extractParams() {
 func (r *RowReq) createRowOutCacheDir() {
 	os.MkdirAll(r.RowCacheOutRelativePathDir, os.ModeDir)
 }
-
 
 /*
 &file_service_old.RowReq{

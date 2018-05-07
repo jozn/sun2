@@ -24,15 +24,16 @@ func Run() {
 	}
 	//http.Handle("/getFile/", &fileCategory{})
 	//http.Handle("/", &fileCategory{})
-    http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-        writer.Write([]byte("hi uu "))
-    })
+	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		writer.Write([]byte("hi uu "))
+	})
 }
 func handler(category file_common.FileCategory) (string, func(http.ResponseWriter, *http.Request)) {
 	path := "/" + category.UrlPath + "/"
-    helper.PertyPrint(path)
+	helper.PertyPrint(path)
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		row := file_common.NewRowReq(category, r.URL)
+		file_disk_cache.SelectDisk(row, config)
 
 		helper.PertyPrint(row)
 		if row == nil {
@@ -57,35 +58,35 @@ func handler(category file_common.FileCategory) (string, func(http.ResponseWrite
 }
 
 func serveOriginalHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Request) {
-    fmt.Println("serveOriginalHTTP")
-	file_disk_cache.SelectDisk(row, config)
-	path, ok := file_disk_cache.IsLocalCacheAvailable(row, config)
-	if ok {
-		http.ServeFile(w, r, path)
+	fmt.Println("serveOriginalHTTP")
+	//file_disk_cache.SelectDisk(row, config)
+	//path, ok := file_disk_cache.IsLocalCacheAvailable(row, config)
+	if row.IsLocalDiskCacheAvailable {
+		http.ServeFile(w, r, row.RowCacheOutDiskPath)
 		return
 	}
 	err := loadOriginalFromStore(row)
 	if err == nil {
-		http.ServeFile(w, r, row.RowCacheOutRelativePath)
+		http.ServeFile(w, r, row.RowCacheOutDiskPath)
 	} else {
 		http.NotFound(w, r)
 	}
 }
 
 func serveResizeHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Request) {
-    fmt.Println("serveResizeHTTP")
+	fmt.Println("serveResizeHTTP")
 
-    if !allowedSize[row.RequestedImageSize] {
+	if !allowedSize[row.RequestedImageSize] {
 		http.Error(w, file_common.ErrResizeNotAllowed.Error(), http.StatusNotFound)
 		return
 	}
-	cachePath := row.SelectedCacheDiskPath + row.RowCacheOutRelativePathSized
-	if file_disk_cache.IsFileExists(cachePath) {
-		http.ServeFile(w, r, cachePath)
+	cachePathSized := row.RowCacheOutDiskPathSized //row.SelectedCacheDiskPath + row.RowCacheOutRelativePathSized
+	if file_disk_cache.IsFileExists(cachePathSized) {
+		http.ServeFile(w, r, cachePathSized)
 		return
 	}
 	var err error
-	if file_disk_cache.IsFileExists(row.SelectedCacheDiskPath + row.RowCacheOutRelativePath) {
+	if file_disk_cache.IsFileExists(row.RowCacheOutDiskPath) {
 
 	} else {
 		err = loadOriginalFromStore(row)
@@ -93,37 +94,37 @@ func serveResizeHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Req
 
 	if err == nil {
 		res := file_service.Resizer{
-			InputFullPath:  row.SelectedCacheDiskPath + row.RowCacheOutRelativePath,
-			OutputFullPath: cachePath,
+			InputFullPath:  row.RowCacheOutDiskPath,
+			OutputFullPath: cachePathSized,
 			Width:          row.RequestedImageSize,
 			Quality:        90,
 		}
 		res.ResizeFFMPEG()
-		http.ServeFile(w, r, cachePath)
+		http.ServeFile(w, r, cachePathSized)
 	} else {
 		http.NotFound(w, r)
 	}
 }
 
 func serveThumbHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Request) {
-    fmt.Println("serveThumbHTTP")
+	fmt.Println("serveThumbHTTP")
 
-    cachePath := row.SelectedCacheDiskPath + row.RowCacheOutRelativePathThumb
-	if file_disk_cache.IsFileExists(cachePath) {
-		http.ServeFile(w, r, cachePath)
+	cachePathThumb := row.RowCacheOutDiskPathThumb
+	if file_disk_cache.IsFileExists(cachePathThumb) {
+		http.ServeFile(w, r, cachePathThumb)
 		return
 	}
 	resizing := func() {
 		res := file_service.Resizer{
-			InputFullPath:  row.SelectedCacheDiskPath + row.RowCacheOutRelativePath,
-			OutputFullPath: cachePath,
+			InputFullPath:  row.RowCacheOutDiskPath,
+			OutputFullPath: cachePathThumb,
 			Width:          150,
 			Quality:        90,
 		}
 		res.ResizeFFMPEG()
 	}
 	var err error
-	if file_disk_cache.IsFileExists(row.SelectedCacheDiskPath + row.RowCacheOutRelativePath) {
+	if row.IsLocalDiskCacheAvailable {
 		//this means we have not thumb in db - so just resize the original to 100px
 		resizing()
 	} else {
@@ -131,11 +132,11 @@ func serveThumbHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Requ
 	}
 
 	if err == nil {
-		if file_disk_cache.IsFileExists(cachePath) {
-			http.ServeFile(w, r, cachePath)
+		if file_disk_cache.IsFileExists(cachePathThumb) {
+			http.ServeFile(w, r, cachePathThumb)
 		} else {
 			resizing()
-			http.ServeFile(w, r, cachePath)
+			http.ServeFile(w, r, cachePathThumb)
 		}
 	} else {
 		http.NotFound(w, r)
@@ -143,22 +144,22 @@ func serveThumbHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Requ
 }
 
 func loadOriginalFromStore(row *file_common.RowReq) error {
-    fmt.Println("loadOriginalFromStore", row)
+	fmt.Println("loadOriginalFromStore", row)
 	cassRow, err := row.FileCategory.GetterOfStore(row.FileDataStoreId)
 	if err == nil {
 		createRowOutCacheDir(row)
-		ioutil.WriteFile(row.SelectedCacheDiskPath+row.RowCacheOutRelativePath, cassRow.Data, os.ModePerm)
+		ioutil.WriteFile(row.RowCacheOutDiskPath, cassRow.Data, os.ModePerm)
 		if len(cassRow.DataThumb) > 0 {
-			ioutil.WriteFile(row.SelectedCacheDiskPath+row.RowCacheOutRelativePathThumb, cassRow.DataThumb, os.ModePerm)
+			ioutil.WriteFile(row.RowCacheOutDiskPathThumb, cassRow.DataThumb, os.ModePerm)
 		}
 		return nil
 	}
-    fmt.Println("err: ", err)
+	fmt.Println("err: ", err)
 	return err
 }
 
 func createRowOutCacheDir(r *file_common.RowReq) {
-	os.MkdirAll(r.SelectedCacheDiskPath + r.RowCacheOutRelativePathDir, os.ModeDir)
+	os.MkdirAll(r.RowCacheOutDiskPathDir, os.ModeDir)
 }
 
 var allowedSize = map[int]bool{
