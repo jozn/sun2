@@ -194,6 +194,7 @@ message PB_MessageView {
 
 message PB_MessageFileView {
     int64 MessageFileId = 1;
+    int32 AccessHash = 8;
     int32 FileTypeEnum = 2;
     int32 Size = 3;
     int32 Width = 4;

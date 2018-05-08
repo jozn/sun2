@@ -861,33 +861,37 @@ var GroupMessage = struct {
 }
 
 var FileMsg = struct {
-	Id        string
-	FileType  string
-	Extension string
-	DataThumb string
-	Data      string
+	Id         string
+	AccessHash string
+	FileType   string
+	Extension  string
+	DataThumb  string
+	Data       string
 }{
 
-	Id:        "Id",
-	FileType:  "FileType",
-	Extension: "Extension",
-	DataThumb: "DataThumb",
-	Data:      "Data",
+	Id:         "Id",
+	AccessHash: "AccessHash",
+	FileType:   "FileType",
+	Extension:  "Extension",
+	DataThumb:  "DataThumb",
+	Data:       "Data",
 }
 
 var FilePost = struct {
-	Id        string
-	FileType  string
-	Extension string
-	DataThumb string
-	Data      string
+	Id         string
+	AccessHash string
+	FileType   string
+	Extension  string
+	DataThumb  string
+	Data       string
 }{
 
-	Id:        "Id",
-	FileType:  "FileType",
-	Extension: "Extension",
-	DataThumb: "DataThumb",
-	Data:      "Data",
+	Id:         "Id",
+	AccessHash: "AccessHash",
+	FileType:   "FileType",
+	Extension:  "Extension",
+	DataThumb:  "DataThumb",
+	Data:       "Data",
 }
 
 var ActionFanout = struct {

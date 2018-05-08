@@ -374,17 +374,19 @@ message PB_GroupMessage {
 }
 message PB_FileMsg {
     int64 Id = 1;
-    int32 FileType = 2;
-    string Extension = 3;
-    bytes DataThumb = 4;
-    bytes Data = 5;
+    int32 AccessHash = 2;
+    int32 FileType = 3;
+    string Extension = 4;
+    bytes DataThumb = 5;
+    bytes Data = 6;
 }
 message PB_FilePost {
     int64 Id = 1;
-    int32 FileType = 2;
-    string Extension = 3;
-    bytes DataThumb = 4;
-    bytes Data = 5;
+    int32 AccessHash = 2;
+    int32 FileType = 3;
+    string Extension = 4;
+    bytes DataThumb = 5;
+    bytes Data = 6;
 }
 message PB_ActionFanout {
     int64 OrderId = 1;

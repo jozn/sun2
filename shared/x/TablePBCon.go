@@ -1049,6 +1049,7 @@ func PBConvPB_GroupMessage_To_GroupMessage ( o *GroupMessage) *PB_GroupMessage {
 func PBConvPB__FileMsg_To_FileMsg( o *PB_FileMsg) *FileMsg {
      n := &FileMsg{
       Id: int ( o.Id ),
+      AccessHash: int ( o.AccessHash ),
       FileType: int ( o.FileType ),
       Extension: string ( o.Extension ),
       DataThumb: []byte ( o.DataThumb ),
@@ -1060,6 +1061,7 @@ func PBConvPB__FileMsg_To_FileMsg( o *PB_FileMsg) *FileMsg {
 func PBConvPB_FileMsg_To_FileMsg ( o *FileMsg) *PB_FileMsg {
      n := &PB_FileMsg{
       Id: int64 ( o.Id ),
+      AccessHash: int32 ( o.AccessHash ),
       FileType: int32 ( o.FileType ),
       Extension: string ( o.Extension ),
       DataThumb: []byte ( o.DataThumb ),
@@ -1072,6 +1074,7 @@ func PBConvPB_FileMsg_To_FileMsg ( o *FileMsg) *PB_FileMsg {
 func PBConvPB__FilePost_To_FilePost( o *PB_FilePost) *FilePost {
      n := &FilePost{
       Id: int ( o.Id ),
+      AccessHash: int ( o.AccessHash ),
       FileType: int ( o.FileType ),
       Extension: string ( o.Extension ),
       DataThumb: []byte ( o.DataThumb ),
@@ -1083,6 +1086,7 @@ func PBConvPB__FilePost_To_FilePost( o *PB_FilePost) *FilePost {
 func PBConvPB_FilePost_To_FilePost ( o *FilePost) *PB_FilePost {
      n := &PB_FilePost{
       Id: int64 ( o.Id ),
+      AccessHash: int32 ( o.AccessHash ),
       FileType: int32 ( o.FileType ),
       Extension: string ( o.Extension ),
       DataThumb: []byte ( o.DataThumb ),

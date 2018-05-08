@@ -2,6 +2,7 @@ package file_service
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"ms/sun/servises/file_service/file_common"
 	"ms/sun/servises/file_service/file_disk_cache"
@@ -9,6 +10,7 @@ import (
 	"ms/sun/shared/helper"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var config = &file_common.FileServingConfig{
@@ -80,6 +82,12 @@ func serveResizeHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Req
 		http.Error(w, file_common.ErrResizeNotAllowed.Error(), http.StatusNotFound)
 		return
 	}
+
+	if !allowedResizingExceptionsMap[row.FileExtensionWithDot] {
+		http.Error(w, "can not resize this file.", http.StatusBadRequest)
+		return
+	}
+
 	cachePathSized := row.RowCacheOutDiskPathSized //row.SelectedCacheDiskPath + row.RowCacheOutRelativePathSized
 	if file_disk_cache.IsFileExists(cachePathSized) {
 		http.ServeFile(w, r, cachePathSized)
@@ -108,6 +116,11 @@ func serveResizeHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Req
 
 func serveThumbHTTP(row *file_common.RowReq, w http.ResponseWriter, r *http.Request) {
 	fmt.Println("serveThumbHTTP")
+
+	if !allowedThumbExceptionsMap[row.FileExtensionWithDot] {
+		http.Error(w, "can not have thumbs of this file.", http.StatusBadRequest)
+		return
+	}
 
 	cachePathThumb := row.RowCacheOutDiskPathThumb
 	if file_disk_cache.IsFileExists(cachePathThumb) {
@@ -148,9 +161,34 @@ func loadOriginalFromStore(row *file_common.RowReq) error {
 	cassRow, err := row.FileCategory.GetterOfStore(row.FileDataStoreId)
 	if err == nil {
 		createRowOutCacheDir(row)
-		ioutil.WriteFile(row.RowCacheOutDiskPath, cassRow.Data, os.ModePerm)
-		if len(cassRow.DataThumb) > 0 {
-			ioutil.WriteFile(row.RowCacheOutDiskPathThumb, cassRow.DataThumb, os.ModePerm)
+		if row.FileExtensionWithDot == cassRow.Extension {
+			ioutil.WriteFile(row.RowCacheOutDiskPath, cassRow.Data, os.ModePerm)
+			if len(cassRow.DataThumb) > 0 {
+				ioutil.WriteFile(row.RowCacheOutDiskPathThumb, cassRow.DataThumb, os.ModePerm)
+			}
+		} else if (row.FileExtensionWithDot != "") && (cassRow.Extension != "") && (strings.Index(row.FileExtensionWithDot, ".") != -1) && (strings.Index(cassRow.Extension, ".") != -1) {
+			//to do add convert if supported
+            fmt.Println("=========================== ")
+		    orginalExtenPath := strings.Replace(row.RowCacheOutDiskPath, row.FileExtensionWithDot, cassRow.Extension, -1)
+			ioutil.WriteFile(orginalExtenPath, cassRow.Data, os.ModePerm)
+			if len(cassRow.DataThumb) > 0 {
+				//ioutil.WriteFile(row.RowCacheOutDiskPathThumb, cassRow.DataThumb, os.ModePerm)
+			}
+
+			res := file_service.Resizer{
+				InputFullPath:  orginalExtenPath,
+				OutputFullPath: row.RowCacheOutDiskPath,
+				Width:          150,
+				Quality:        90,
+			}
+			res.ResizeFFMPEG()
+		} else {
+			return errors.New("can't convert files, with mismatch stored and requested")
+		}
+
+		//covert if nessory
+		if row.FileExtensionWithDot != cassRow.Extension {
+
 		}
 		return nil
 	}

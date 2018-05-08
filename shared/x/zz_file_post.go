@@ -13,11 +13,12 @@ import (
 
 // Manualy copy this to project
 type FilePost__ struct {
-	Id        int    `json:"Id"`        // Id -
-	FileType  int    `json:"FileType"`  // FileType -
-	Extension string `json:"Extension"` // Extension -
-	DataThumb []byte `json:"DataThumb"` // DataThumb -
-	Data      []byte `json:"Data"`      // Data -
+	Id         int    `json:"Id"`         // Id -
+	AccessHash int    `json:"AccessHash"` // AccessHash -
+	FileType   int    `json:"FileType"`   // FileType -
+	Extension  string `json:"Extension"`  // Extension -
+	DataThumb  []byte `json:"DataThumb"`  // DataThumb -
+	Data       []byte `json:"Data"`       // Data -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -43,16 +44,16 @@ func (fp *FilePost) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_file.file_post (` +
-		`Id, FileType, Extension, DataThumb, Data` +
+		`Id, AccessHash, FileType, Extension, DataThumb, Data` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.Id, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
 	}
-	_, err = db.Exec(sqlstr, fp.Id, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
 	if err != nil {
 		return err
 	}
@@ -72,16 +73,16 @@ func (fp *FilePost) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_file.file_post (` +
-		`Id, FileType, Extension, DataThumb, Data` +
+		`Id, AccessHash, FileType, Extension, DataThumb, Data` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.Id, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
 	}
-	_, err = db.Exec(sqlstr, fp.Id, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
 	if err != nil {
 		if LogTableSqlReq.FilePost {
 			XOLogErr(err)
@@ -112,14 +113,14 @@ func (fp *FilePost) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_file.file_post SET ` +
-		`FileType = ?, Extension = ?, DataThumb = ?, Data = ?` +
+		`AccessHash = ?, FileType = ?, Extension = ?, DataThumb = ?, Data = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
+		XOLog(sqlstr, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
 	}
-	_, err = db.Exec(sqlstr, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
+	_, err = db.Exec(sqlstr, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
 
 	if LogTableSqlReq.FilePost {
 		XOLogErr(err)
@@ -326,6 +327,111 @@ func (d *__FilePost_Deleter) Id_GE(val int) *__FilePost_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Id >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Deleter) AccessHash_In(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) AccessHash_Ins(ins ...int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) AccessHash_NotIn(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Deleter) AccessHash_Eq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) AccessHash_NotEq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) AccessHash_LT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) AccessHash_LE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) AccessHash_GT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) AccessHash_GE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -547,6 +653,111 @@ func (d *__FilePost_Updater) Id_GE(val int) *__FilePost_Updater {
 	return d
 }
 
+func (u *__FilePost_Updater) AccessHash_In(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) AccessHash_Ins(ins ...int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) AccessHash_NotIn(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Updater) AccessHash_Eq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) AccessHash_NotEq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) AccessHash_LT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) AccessHash_LE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) AccessHash_GT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) AccessHash_GE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__FilePost_Updater) FileType_In(ins []int) *__FilePost_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -758,6 +969,111 @@ func (d *__FilePost_Selector) Id_GE(val int) *__FilePost_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Id >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Selector) AccessHash_In(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) AccessHash_Ins(ins ...int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) AccessHash_NotIn(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Selector) AccessHash_Eq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) AccessHash_NotEq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) AccessHash_LT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) AccessHash_LE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) AccessHash_GT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) AccessHash_GE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1083,6 +1399,27 @@ func (u *__FilePost_Updater) Id_Increment(count int) *__FilePost_Updater {
 
 //ints
 
+func (u *__FilePost_Updater) AccessHash(newVal int) *__FilePost_Updater {
+	u.updates[" AccessHash = ? "] = newVal
+	return u
+}
+
+func (u *__FilePost_Updater) AccessHash_Increment(count int) *__FilePost_Updater {
+	if count > 0 {
+		u.updates[" AccessHash = AccessHash+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" AccessHash = AccessHash-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__FilePost_Updater) FileType(newVal int) *__FilePost_Updater {
 	u.updates[" FileType = ? "] = newVal
 	return u
@@ -1135,6 +1472,21 @@ func (u *__FilePost_Selector) OrderBy_Id_Asc() *__FilePost_Selector {
 
 func (u *__FilePost_Selector) Select_Id() *__FilePost_Selector {
 	u.selectCol = "Id"
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_AccessHash_Desc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY AccessHash DESC "
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_AccessHash_Asc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY AccessHash ASC "
+	return u
+}
+
+func (u *__FilePost_Selector) Select_AccessHash() *__FilePost_Selector {
+	u.selectCol = "AccessHash"
 	return u
 }
 
@@ -1511,13 +1863,13 @@ func MassInsert_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_file.file_post (" +
-		"Id, FileType, Extension, DataThumb, Data" +
+		"Id, AccessHash, FileType, Extension, DataThumb, Data" +
 		") VALUES " + insVals
 
 	// run query
@@ -1526,6 +1878,7 @@ func MassInsert_FilePost(rows []FilePost, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Id)
+		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.FileType)
 		vals = append(vals, row.Extension)
 		vals = append(vals, row.DataThumb)
@@ -1553,13 +1906,13 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_file.file_post (" +
-		"Id, FileType, Extension, DataThumb, Data" +
+		"Id, AccessHash, FileType, Extension, DataThumb, Data" +
 		") VALUES " + insVals
 
 	// run query
@@ -1568,6 +1921,7 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Id)
+		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.FileType)
 		vals = append(vals, row.Extension)
 		vals = append(vals, row.DataThumb)
@@ -1591,6 +1945,8 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

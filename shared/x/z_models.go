@@ -907,11 +907,12 @@ type GroupMessage struct {
 */
 // file_msg 'FileMsg'.
 type FileMsg struct {
-	Id        int    `db:"Id"`
-	FileType  int    `db:"FileType"`
-	Extension string `db:"Extension"`
-	DataThumb []byte `db:"DataThumb"`
-	Data      []byte `db:"Data"`
+	Id         int    `db:"Id"`
+	AccessHash int    `db:"AccessHash"`
+	FileType   int    `db:"FileType"`
+	Extension  string `db:"Extension"`
+	DataThumb  []byte `db:"DataThumb"`
+	Data       []byte `db:"Data"`
 
 	_exists, _deleted bool
 }
@@ -919,6 +920,7 @@ type FileMsg struct {
 /*
 := &x.FileMsg {
 	Id: 0,
+	AccessHash: 0,
 	FileType: 0,
 	Extension: "",
 	DataThumb: []byte{},
@@ -926,11 +928,12 @@ type FileMsg struct {
 */
 // file_post 'FilePost'.
 type FilePost struct {
-	Id        int    `db:"Id"`
-	FileType  int    `db:"FileType"`
-	Extension string `db:"Extension"`
-	DataThumb []byte `db:"DataThumb"`
-	Data      []byte `db:"Data"`
+	Id         int    `db:"Id"`
+	AccessHash int    `db:"AccessHash"`
+	FileType   int    `db:"FileType"`
+	Extension  string `db:"Extension"`
+	DataThumb  []byte `db:"DataThumb"`
+	Data       []byte `db:"Data"`
 
 	_exists, _deleted bool
 }
@@ -938,6 +941,7 @@ type FilePost struct {
 /*
 := &x.FilePost {
 	Id: 0,
+	AccessHash: 0,
 	FileType: 0,
 	Extension: "",
 	DataThumb: []byte{},

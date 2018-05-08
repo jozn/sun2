@@ -403,6 +403,7 @@ public class J {
 
 	public static class FileMsg {//oridnal: 35
 		public int Id;
+		public int AccessHash;
 		public int FileType;
 		public String Extension;
 		public UNKNOWN DataThumb;
@@ -411,6 +412,7 @@ public class J {
 
 	public static class FilePost {//oridnal: 36
 		public int Id;
+		public int AccessHash;
 		public int FileType;
 		public String Extension;
 		public UNKNOWN DataThumb;
