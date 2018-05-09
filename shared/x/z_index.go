@@ -1107,3 +1107,75 @@ func MetricLogById(db *sqlx.DB, id int) (*MetricLog, error) {
 
 	return &ml, nil
 }
+
+// XfileServiceInfoLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun_log.xfile_service_info_log' as a XfileServiceInfoLog.
+func XfileServiceInfoLogById(db *sqlx.DB, id int) (*XfileServiceInfoLog, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_log.xfile_service_info_log ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	xsil := XfileServiceInfoLog{
+		_exists: true,
+	}
+
+	err = db.Get(&xsil, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnXfileServiceInfoLog_LoadOne(&xsil)
+
+	return &xsil, nil
+}
+
+// XfileServiceMetricLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun_log.xfile_service_metric_log' as a XfileServiceMetricLog.
+func XfileServiceMetricLogById(db *sqlx.DB, id int) (*XfileServiceMetricLog, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_log.xfile_service_metric_log ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	xsml := XfileServiceMetricLog{
+		_exists: true,
+	}
+
+	err = db.Get(&xsml, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnXfileServiceMetricLog_LoadOne(&xsml)
+
+	return &xsml, nil
+}
+
+// XfileServiceRequestLogById Generated from index 'PRIMARY' -- retrieves a row from 'sun_log.xfile_service_request_log' as a XfileServiceRequestLog.
+func XfileServiceRequestLogById(db *sqlx.DB, id int) (*XfileServiceRequestLog, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_log.xfile_service_request_log ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	xsrl := XfileServiceRequestLog{
+		_exists: true,
+	}
+
+	err = db.Get(&xsrl, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnXfileServiceRequestLog_LoadOne(&xsrl)
+
+	return &xsrl, nil
+}

@@ -1184,6 +1184,59 @@ type MetricLog struct {
 	Duration: "",
 	MetericsJson: "",
 */
+// xfile_service_info_log 'XfileServiceInfoLog'.
+type XfileServiceInfoLog struct {
+	Id          int    `db:"Id"`
+	InstanceId  int    `db:"InstanceId"`
+	Url         string `db:"Url"`
+	CreatedTime string `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.XfileServiceInfoLog {
+	Id: 0,
+	InstanceId: 0,
+	Url: "",
+	CreatedTime: "",
+*/
+// xfile_service_metric_log 'XfileServiceMetricLog'.
+type XfileServiceMetricLog struct {
+	Id         int    `db:"Id"`
+	InstanceId int    `db:"InstanceId"`
+	MetricJson string `db:"MetricJson"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.XfileServiceMetricLog {
+	Id: 0,
+	InstanceId: 0,
+	MetricJson: "",
+*/
+// xfile_service_request_log 'XfileServiceRequestLog'.
+type XfileServiceRequestLog struct {
+	Id          int    `db:"Id"`
+	LocalSeq    int    `db:"LocalSeq"`
+	InstanceId  int    `db:"InstanceId"`
+	Url         string `db:"Url"`
+	HttpCode    int    `db:"HttpCode"`
+	CreatedTime string `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.XfileServiceRequestLog {
+	Id: 0,
+	LocalSeq: 0,
+	InstanceId: 0,
+	Url: "",
+	HttpCode: 0,
+	CreatedTime: "",
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -1233,6 +1286,9 @@ type LogTableSql struct {
 	PushChat2                  bool
 	HTTPRPCLog                 bool
 	MetricLog                  bool
+	XfileServiceInfoLog        bool
+	XfileServiceMetricLog      bool
+	XfileServiceRequestLog     bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1244,43 +1300,46 @@ var LogTableSqlReq = LogTableSql{
 	FollowingList:              true,
 	FollowingListMember:        true,
 	FollowingListMemberRemoved: true,
-	Like:                true,
-	Notify:              true,
-	NotifyRemoved:       true,
-	PhoneContact:        true,
-	Post:                true,
-	PostCount:           true,
-	PostDeleted:         true,
-	PostKey:             true,
-	PostLink:            true,
-	PostMedia:           true,
-	PostMentioned:       true,
-	PostReshared:        true,
-	SearchClicked:       true,
-	Session:             true,
-	SettingClient:       true,
-	SettingNotification: true,
-	Tag:                 true,
-	TagPost:             true,
-	TriggerLog:          true,
-	User:                true,
-	UserMetaInfo:        true,
-	UserPassword:        true,
-	Chat:                true,
-	ChatLastMessage:     true,
-	DirectMessage:       true,
-	Group:               true,
-	GroupMember:         true,
-	GroupMessage:        true,
-	FileMsg:             true,
-	FilePost:            true,
-	ActionFanout:        true,
-	HomeFanout:          true,
-	SuggestedTopPost:    true,
-	SuggestedUser:       true,
-	ChatSync2:           true,
-	PushChat:            true,
-	PushChat2:           true,
-	HTTPRPCLog:          true,
-	MetricLog:           true,
+	Like:                   true,
+	Notify:                 true,
+	NotifyRemoved:          true,
+	PhoneContact:           true,
+	Post:                   true,
+	PostCount:              true,
+	PostDeleted:            true,
+	PostKey:                true,
+	PostLink:               true,
+	PostMedia:              true,
+	PostMentioned:          true,
+	PostReshared:           true,
+	SearchClicked:          true,
+	Session:                true,
+	SettingClient:          true,
+	SettingNotification:    true,
+	Tag:                    true,
+	TagPost:                true,
+	TriggerLog:             true,
+	User:                   true,
+	UserMetaInfo:           true,
+	UserPassword:           true,
+	Chat:                   true,
+	ChatLastMessage:        true,
+	DirectMessage:          true,
+	Group:                  true,
+	GroupMember:            true,
+	GroupMessage:           true,
+	FileMsg:                true,
+	FilePost:               true,
+	ActionFanout:           true,
+	HomeFanout:             true,
+	SuggestedTopPost:       true,
+	SuggestedUser:          true,
+	ChatSync2:              true,
+	PushChat:               true,
+	PushChat2:              true,
+	HTTPRPCLog:             true,
+	MetricLog:              true,
+	XfileServiceInfoLog:    true,
+	XfileServiceMetricLog:  true,
+	XfileServiceRequestLog: true,
 }

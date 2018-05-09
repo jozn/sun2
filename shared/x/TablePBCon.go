@@ -1368,3 +1368,68 @@ func PBConvPB_MetricLog_To_MetricLog ( o *MetricLog) *PB_MetricLog {
     return n
 }
 */
+/*
+func PBConvPB__XfileServiceInfoLog_To_XfileServiceInfoLog( o *PB_XfileServiceInfoLog) *XfileServiceInfoLog {
+     n := &XfileServiceInfoLog{
+      Id: int ( o.Id ),
+      InstanceId: int ( o.InstanceId ),
+      Url: string ( o.Url ),
+      CreatedTime: string ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_XfileServiceInfoLog_To_XfileServiceInfoLog ( o *XfileServiceInfoLog) *PB_XfileServiceInfoLog {
+     n := &PB_XfileServiceInfoLog{
+      Id: int64 ( o.Id ),
+      InstanceId: int32 ( o.InstanceId ),
+      Url: string ( o.Url ),
+      CreatedTime: string ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__XfileServiceMetricLog_To_XfileServiceMetricLog( o *PB_XfileServiceMetricLog) *XfileServiceMetricLog {
+     n := &XfileServiceMetricLog{
+      Id: int ( o.Id ),
+      InstanceId: int ( o.InstanceId ),
+      MetricJson: string ( o.MetricJson ),
+    }
+    return n
+}
+
+func PBConvPB_XfileServiceMetricLog_To_XfileServiceMetricLog ( o *XfileServiceMetricLog) *PB_XfileServiceMetricLog {
+     n := &PB_XfileServiceMetricLog{
+      Id: int64 ( o.Id ),
+      InstanceId: int32 ( o.InstanceId ),
+      MetricJson: string ( o.MetricJson ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__XfileServiceRequestLog_To_XfileServiceRequestLog( o *PB_XfileServiceRequestLog) *XfileServiceRequestLog {
+     n := &XfileServiceRequestLog{
+      Id: int ( o.Id ),
+      LocalSeq: int ( o.LocalSeq ),
+      InstanceId: int ( o.InstanceId ),
+      Url: string ( o.Url ),
+      HttpCode: int ( o.HttpCode ),
+      CreatedTime: string ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_XfileServiceRequestLog_To_XfileServiceRequestLog ( o *XfileServiceRequestLog) *PB_XfileServiceRequestLog {
+     n := &PB_XfileServiceRequestLog{
+      Id: int64 ( o.Id ),
+      LocalSeq: int32 ( o.LocalSeq ),
+      InstanceId: int32 ( o.InstanceId ),
+      Url: string ( o.Url ),
+      HttpCode: int32 ( o.HttpCode ),
+      CreatedTime: string ( o.CreatedTime ),
+    }
+    return n
+}
+*/

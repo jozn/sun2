@@ -484,3 +484,22 @@ message PB_MetricLog {
     string Duration = 6;
     string MetericsJson = 7;
 }
+message PB_XfileServiceInfoLog {
+    int64 Id = 1;
+    int32 InstanceId = 2;
+    string Url = 3;
+    string CreatedTime = 4;
+}
+message PB_XfileServiceMetricLog {
+    int64 Id = 1;
+    int32 InstanceId = 2;
+    string MetricJson = 3;
+}
+message PB_XfileServiceRequestLog {
+    int64 Id = 1;
+    int32 LocalSeq = 2;
+    int32 InstanceId = 3;
+    string Url = 4;
+    int32 HttpCode = 5;
+    string CreatedTime = 6;
+}

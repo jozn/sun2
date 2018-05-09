@@ -93,6 +93,12 @@ const (
 	HTTPRPCLog_TableGo                 = "HTTPRPCLog"
 	MetricLog_Table                    = "metric_log"
 	MetricLog_TableGo                  = "MetricLog"
+	XfileServiceInfoLog_Table          = "xfile_service_info_log"
+	XfileServiceInfoLog_TableGo        = "XfileServiceInfoLog"
+	XfileServiceMetricLog_Table        = "xfile_service_metric_log"
+	XfileServiceMetricLog_TableGo      = "XfileServiceMetricLog"
+	XfileServiceRequestLog_Table       = "xfile_service_request_log"
+	XfileServiceRequestLog_TableGo     = "XfileServiceRequestLog"
 )
 
 var Action = struct {
@@ -1093,4 +1099,45 @@ var MetricLog = struct {
 	StartTime:    "StartTime",
 	Duration:     "Duration",
 	MetericsJson: "MetericsJson",
+}
+
+var XfileServiceInfoLog = struct {
+	Id          string
+	InstanceId  string
+	Url         string
+	CreatedTime string
+}{
+
+	Id:          "Id",
+	InstanceId:  "InstanceId",
+	Url:         "Url",
+	CreatedTime: "CreatedTime",
+}
+
+var XfileServiceMetricLog = struct {
+	Id         string
+	InstanceId string
+	MetricJson string
+}{
+
+	Id:         "Id",
+	InstanceId: "InstanceId",
+	MetricJson: "MetricJson",
+}
+
+var XfileServiceRequestLog = struct {
+	Id          string
+	LocalSeq    string
+	InstanceId  string
+	Url         string
+	HttpCode    string
+	CreatedTime string
+}{
+
+	Id:          "Id",
+	LocalSeq:    "LocalSeq",
+	InstanceId:  "InstanceId",
+	Url:         "Url",
+	HttpCode:    "HttpCode",
+	CreatedTime: "CreatedTime",
 }

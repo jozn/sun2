@@ -2213,3 +2213,147 @@ func (c _StoreImpl) PreLoadMetricLogByIds(ids []int) {
 }
 
 // yes 222 int
+
+func (c _StoreImpl) GetXfileServiceInfoLogById(Id int) (*XfileServiceInfoLog, bool) {
+	o, ok := RowCache.Get("XfileServiceInfoLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceInfoLog); ok {
+			return obj, true
+		}
+	}
+	obj2, err := XfileServiceInfoLogById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.XfileServiceInfoLog {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetXfileServiceInfoLogById_JustCache(Id int) (*XfileServiceInfoLog, bool) {
+	o, ok := RowCache.Get("XfileServiceInfoLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceInfoLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.XfileServiceInfoLog {
+		XOLogErr(errors.New("_JustCache is empty for XfileServiceInfoLog: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadXfileServiceInfoLogByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("XfileServiceInfoLog:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewXfileServiceInfoLog_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetXfileServiceMetricLogById(Id int) (*XfileServiceMetricLog, bool) {
+	o, ok := RowCache.Get("XfileServiceMetricLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceMetricLog); ok {
+			return obj, true
+		}
+	}
+	obj2, err := XfileServiceMetricLogById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.XfileServiceMetricLog {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetXfileServiceMetricLogById_JustCache(Id int) (*XfileServiceMetricLog, bool) {
+	o, ok := RowCache.Get("XfileServiceMetricLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceMetricLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.XfileServiceMetricLog {
+		XOLogErr(errors.New("_JustCache is empty for XfileServiceMetricLog: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadXfileServiceMetricLogByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("XfileServiceMetricLog:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewXfileServiceMetricLog_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetXfileServiceRequestLogById(Id int) (*XfileServiceRequestLog, bool) {
+	o, ok := RowCache.Get("XfileServiceRequestLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceRequestLog); ok {
+			return obj, true
+		}
+	}
+	obj2, err := XfileServiceRequestLogById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.XfileServiceRequestLog {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetXfileServiceRequestLogById_JustCache(Id int) (*XfileServiceRequestLog, bool) {
+	o, ok := RowCache.Get("XfileServiceRequestLog:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*XfileServiceRequestLog); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.XfileServiceRequestLog {
+		XOLogErr(errors.New("_JustCache is empty for XfileServiceRequestLog: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadXfileServiceRequestLogByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("XfileServiceRequestLog:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewXfileServiceRequestLog_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int

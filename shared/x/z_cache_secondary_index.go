@@ -1342,3 +1342,9 @@ func (c _StoreImpl) PreLoadPushChat_BySeqs(Seqs []int) {
 // HTTPRPCLog - PRIMARY
 
 // MetricLog - PRIMARY
+
+// XfileServiceInfoLog - PRIMARY
+
+// XfileServiceMetricLog - PRIMARY
+
+// XfileServiceRequestLog - PRIMARY

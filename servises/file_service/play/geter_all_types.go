@@ -33,14 +33,14 @@ func main() {
 	fn := func() {
 		filePosts, _ := x.NewFilePost_Selector().GetRows(base.DB)
 		for _, filePost := range filePosts {
-			u := fmt.Sprintf("http://localhost:5153/post_file/%s", name(filePost))
+			u := fmt.Sprintf("http://localhost:1100/post_file/%s", name(filePost))
 			fmt.Println(i, u)
 			http.Get(u)
 			i++
 		}
 
 		for _, filePost := range filePosts {
-			u := fmt.Sprintf("http://localhost:5153/post_file/%s", name500(filePost))
+			u := fmt.Sprintf("http://localhost:1100/post_file/%s", name500(filePost))
 			fmt.Println(i, u)
 			//http.Get(u)
 			i++
@@ -48,7 +48,7 @@ func main() {
 
 		fileMsgs, _ := x.NewFileMsg_Selector().GetRows(base.DB)
 		for _, id := range fileMsgs {
-			u := fmt.Sprintf("http://localhost:5153/msg_file/%s", nameMsg(id))
+			u := fmt.Sprintf("http://localhost:1100/msg_file/%s", nameMsg(id))
 			fmt.Println(i, u)
 			http.Get(u)
 			i++

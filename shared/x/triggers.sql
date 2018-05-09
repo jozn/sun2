@@ -1333,6 +1333,93 @@ $$
 
 
  #### delimiter ;*/
+################################ XfileServiceInfoLog ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnCreateLogger $$
+CREATE TRIGGER xfile_service_info_log_OnCreateLogger AFTER INSERT ON xfile_service_info_log
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceInfoLog","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnUpdateLogger $$
+CREATE TRIGGER xfile_service_info_log_OnUpdateLogger AFTER UPDATE ON xfile_service_info_log
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceInfoLog","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnDeleteLogger $$
+CREATE TRIGGER xfile_service_info_log_OnDeleteLogger AFTER DELETE ON xfile_service_info_log
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceInfoLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ XfileServiceMetricLog ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnCreateLogger $$
+CREATE TRIGGER xfile_service_metric_log_OnCreateLogger AFTER INSERT ON xfile_service_metric_log
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceMetricLog","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnUpdateLogger $$
+CREATE TRIGGER xfile_service_metric_log_OnUpdateLogger AFTER UPDATE ON xfile_service_metric_log
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceMetricLog","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnDeleteLogger $$
+CREATE TRIGGER xfile_service_metric_log_OnDeleteLogger AFTER DELETE ON xfile_service_metric_log
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceMetricLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ XfileServiceRequestLog ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnCreateLogger $$
+CREATE TRIGGER xfile_service_request_log_OnCreateLogger AFTER INSERT ON xfile_service_request_log
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceRequestLog","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnUpdateLogger $$
+CREATE TRIGGER xfile_service_request_log_OnUpdateLogger AFTER UPDATE ON xfile_service_request_log
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceRequestLog","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnDeleteLogger $$
+CREATE TRIGGER xfile_service_request_log_OnDeleteLogger AFTER DELETE ON xfile_service_request_log
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceRequestLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 
 ###############################################################################################
 ################################## Delete of all triggers #####################################
@@ -1522,4 +1609,16 @@ DROP TRIGGER IF EXISTS http_rpc_log_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS metric_log_OnCreateLogger ;
 DROP TRIGGER IF EXISTS metric_log_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS metric_log_OnDeleteLogger ;
+### XfileServiceInfoLog ##
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnCreateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_info_log_OnDeleteLogger ;
+### XfileServiceMetricLog ##
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnCreateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_metric_log_OnDeleteLogger ;
+### XfileServiceRequestLog ##
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnCreateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS xfile_service_request_log_OnDeleteLogger ;
 */

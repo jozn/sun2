@@ -1108,3 +1108,75 @@ func OnMetricLog_LoadMany(rows []*MetricLog) {
 		RowCache.Set("MetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
+
+//XfileServiceInfoLog Events
+
+func OnXfileServiceInfoLog_AfterInsert(row *XfileServiceInfoLog) {
+	RowCache.Set("XfileServiceInfoLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceInfoLog_AfterUpdate(row *XfileServiceInfoLog) {
+	RowCache.Set("XfileServiceInfoLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceInfoLog_AfterDelete(row *XfileServiceInfoLog) {
+	RowCache.Delete("XfileServiceInfoLog:" + strconv.Itoa(row.Id))
+}
+
+func OnXfileServiceInfoLog_LoadOne(row *XfileServiceInfoLog) {
+	RowCache.Set("XfileServiceInfoLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceInfoLog_LoadMany(rows []*XfileServiceInfoLog) {
+	for _, row := range rows {
+		RowCache.Set("XfileServiceInfoLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//XfileServiceMetricLog Events
+
+func OnXfileServiceMetricLog_AfterInsert(row *XfileServiceMetricLog) {
+	RowCache.Set("XfileServiceMetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceMetricLog_AfterUpdate(row *XfileServiceMetricLog) {
+	RowCache.Set("XfileServiceMetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceMetricLog_AfterDelete(row *XfileServiceMetricLog) {
+	RowCache.Delete("XfileServiceMetricLog:" + strconv.Itoa(row.Id))
+}
+
+func OnXfileServiceMetricLog_LoadOne(row *XfileServiceMetricLog) {
+	RowCache.Set("XfileServiceMetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceMetricLog_LoadMany(rows []*XfileServiceMetricLog) {
+	for _, row := range rows {
+		RowCache.Set("XfileServiceMetricLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//XfileServiceRequestLog Events
+
+func OnXfileServiceRequestLog_AfterInsert(row *XfileServiceRequestLog) {
+	RowCache.Set("XfileServiceRequestLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceRequestLog_AfterUpdate(row *XfileServiceRequestLog) {
+	RowCache.Set("XfileServiceRequestLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceRequestLog_AfterDelete(row *XfileServiceRequestLog) {
+	RowCache.Delete("XfileServiceRequestLog:" + strconv.Itoa(row.Id))
+}
+
+func OnXfileServiceRequestLog_LoadOne(row *XfileServiceRequestLog) {
+	RowCache.Set("XfileServiceRequestLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnXfileServiceRequestLog_LoadMany(rows []*XfileServiceRequestLog) {
+	for _, row := range rows {
+		RowCache.Set("XfileServiceRequestLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}

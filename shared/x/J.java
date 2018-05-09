@@ -524,4 +524,26 @@ public class J {
 		public String MetericsJson;
 	}
 
+	public static class XfileServiceInfoLog {//oridnal: 46
+		public int Id;
+		public int InstanceId;
+		public String Url;
+		public String CreatedTime;
+	}
+
+	public static class XfileServiceMetricLog {//oridnal: 47
+		public int Id;
+		public int InstanceId;
+		public String MetricJson;
+	}
+
+	public static class XfileServiceRequestLog {//oridnal: 48
+		public int Id;
+		public int LocalSeq;
+		public int InstanceId;
+		public String Url;
+		public int HttpCode;
+		public String CreatedTime;
+	}
+
 }

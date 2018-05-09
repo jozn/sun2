@@ -34,26 +34,39 @@ func handler(category file_common.FileCategory) (string, func(http.ResponseWrite
 	path := "/" + category.UrlPath + "/"
 	helper.PertyPrint(path)
 	fn := func(w http.ResponseWriter, r *http.Request) {
+
+		wrap := &httpWirterWrapper{
+			w: w,
+			r: r,
+		}
+
 		row := file_common.NewRowReq(category, r.URL)
 		file_disk_cache.SelectDisk(row, config)
+		wrap.req = row
+
+        //fmt.Println("111111111111***************************")
+		defer func() {
+		    //fmt.Println("***************************")
+			httpMonitorChan <- wrap
+		}()
 
 		helper.PertyPrint(row)
 		if row == nil {
-			http.NotFound(w, r)
+			http.NotFound(wrap, r)
 			return
 		}
 		if row.Err != nil {
-			http.Error(w, row.Err.Error(), http.StatusBadRequest)
+			http.Error(wrap, row.Err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		switch {
 		case row.RequestedImageSize > 0:
-			serveResizeHTTP(row, w, r)
+			serveResizeHTTP(row, wrap, r)
 		case row.IsThumb:
-			serveThumbHTTP(row, w, r)
+			serveThumbHTTP(row, wrap, r)
 		default:
-			serveOriginalHTTP(row, w, r)
+			serveOriginalHTTP(row, wrap, r)
 		}
 	}
 	return path, fn
@@ -169,9 +182,9 @@ func loadOriginalFromStore(row *file_common.RowReq) error {
 		} else if (row.FileExtensionWithDot != "") && (cassRow.Extension != "") && (strings.Index(row.FileExtensionWithDot, ".") != -1) && (strings.Index(cassRow.Extension, ".") != -1) {
 			//to do add convert if supported
 			if !allowedConvertingExceptionsMap[cassRow.Extension] || !allowedConvertingExceptionsMap[row.FileExtensionWithDot] {
-                return errors.New("can't convert this files files.")
-            }
-			fmt.Println("=========================== ")
+				return errors.New("can't convert this files files.")
+			}
+			//fmt.Println("=========================== ")
 			orginalExtenPath := strings.Replace(row.RowCacheOutDiskPath, row.FileExtensionWithDot, cassRow.Extension, -1)
 			ioutil.WriteFile(orginalExtenPath, cassRow.Data, os.ModePerm)
 			if len(cassRow.DataThumb) > 0 {
