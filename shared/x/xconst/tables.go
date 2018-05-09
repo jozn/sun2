@@ -864,7 +864,10 @@ var FileMsg = struct {
 	Id         string
 	AccessHash string
 	FileType   string
+	Width      string
+	Height     string
 	Extension  string
+	UserId     string
 	DataThumb  string
 	Data       string
 }{
@@ -872,7 +875,10 @@ var FileMsg = struct {
 	Id:         "Id",
 	AccessHash: "AccessHash",
 	FileType:   "FileType",
+	Width:      "Width",
+	Height:     "Height",
 	Extension:  "Extension",
+	UserId:     "UserId",
 	DataThumb:  "DataThumb",
 	Data:       "Data",
 }
@@ -881,7 +887,10 @@ var FilePost = struct {
 	Id         string
 	AccessHash string
 	FileType   string
+	Width      string
+	Height     string
 	Extension  string
+	UserId     string
 	DataThumb  string
 	Data       string
 }{
@@ -889,7 +898,10 @@ var FilePost = struct {
 	Id:         "Id",
 	AccessHash: "AccessHash",
 	FileType:   "FileType",
+	Width:      "Width",
+	Height:     "Height",
 	Extension:  "Extension",
+	UserId:     "UserId",
 	DataThumb:  "DataThumb",
 	Data:       "Data",
 }

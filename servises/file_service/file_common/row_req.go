@@ -73,7 +73,7 @@ func (r *RowReq) setOutputCacheFullPath() (err error) {
 
 // matches : [[/1518506476136010007_thumb.jpg 1518506476136010007_thumb.jpg _thumb]]
 //var fileRegex = regexp.MustCompile(`/(\w+(_[[:alpha:]]+)\..+)`)
-var fileRegex = regexp.MustCompile(`/([0-9]+(_[[:alnum:]]+)?(\.\w+)?)`)
+var fileRegex = regexp.MustCompile(`/([0-9]+(_[[:alnum:]]+)?(\.[\w\.]+)?)`)
 
 func (r *RowReq) extractParams() {
 	parts := fileRegex.FindStringSubmatch(r.FullUrlPath)

@@ -910,7 +910,10 @@ type FileMsg struct {
 	Id         int    `db:"Id"`
 	AccessHash int    `db:"AccessHash"`
 	FileType   int    `db:"FileType"`
+	Width      int    `db:"Width"`
+	Height     int    `db:"Height"`
 	Extension  string `db:"Extension"`
+	UserId     int    `db:"UserId"`
 	DataThumb  []byte `db:"DataThumb"`
 	Data       []byte `db:"Data"`
 
@@ -922,7 +925,10 @@ type FileMsg struct {
 	Id: 0,
 	AccessHash: 0,
 	FileType: 0,
+	Width: 0,
+	Height: 0,
 	Extension: "",
+	UserId: 0,
 	DataThumb: []byte{},
 	Data: []byte{},
 */
@@ -931,7 +937,10 @@ type FilePost struct {
 	Id         int    `db:"Id"`
 	AccessHash int    `db:"AccessHash"`
 	FileType   int    `db:"FileType"`
+	Width      int    `db:"Width"`
+	Height     int    `db:"Height"`
 	Extension  string `db:"Extension"`
+	UserId     int    `db:"UserId"`
 	DataThumb  []byte `db:"DataThumb"`
 	Data       []byte `db:"Data"`
 
@@ -943,7 +952,10 @@ type FilePost struct {
 	Id: 0,
 	AccessHash: 0,
 	FileType: 0,
+	Width: 0,
+	Height: 0,
 	Extension: "",
+	UserId: 0,
 	DataThumb: []byte{},
 	Data: []byte{},
 */

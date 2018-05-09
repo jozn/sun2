@@ -168,17 +168,24 @@ func loadOriginalFromStore(row *file_common.RowReq) error {
 			}
 		} else if (row.FileExtensionWithDot != "") && (cassRow.Extension != "") && (strings.Index(row.FileExtensionWithDot, ".") != -1) && (strings.Index(cassRow.Extension, ".") != -1) {
 			//to do add convert if supported
-            fmt.Println("=========================== ")
-		    orginalExtenPath := strings.Replace(row.RowCacheOutDiskPath, row.FileExtensionWithDot, cassRow.Extension, -1)
+			if !allowedConvertingExceptionsMap[cassRow.Extension] || !allowedConvertingExceptionsMap[row.FileExtensionWithDot] {
+                return errors.New("can't convert this files files.")
+            }
+			fmt.Println("=========================== ")
+			orginalExtenPath := strings.Replace(row.RowCacheOutDiskPath, row.FileExtensionWithDot, cassRow.Extension, -1)
 			ioutil.WriteFile(orginalExtenPath, cassRow.Data, os.ModePerm)
 			if len(cassRow.DataThumb) > 0 {
 				//ioutil.WriteFile(row.RowCacheOutDiskPathThumb, cassRow.DataThumb, os.ModePerm)
 			}
 
+			width := 250
+			if cassRow.Width > 0 {
+				width = cassRow.Width
+			}
 			res := file_service.Resizer{
 				InputFullPath:  orginalExtenPath,
 				OutputFullPath: row.RowCacheOutDiskPath,
-				Width:          150,
+				Width:          width,
 				Quality:        90,
 			}
 			res.ResizeFFMPEG()

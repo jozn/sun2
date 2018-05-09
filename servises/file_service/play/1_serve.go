@@ -15,7 +15,7 @@ func main()  {
         time.Sleep(time.Second)
         http.Get("http://localhost:5152/post_file/1518506476136010007_180.jpg")
     }()
-    http.ListenAndServe(":5153", nil)
+    http.ListenAndServe(":1100", nil)
 
     time.Sleep(time.Hour)
 }

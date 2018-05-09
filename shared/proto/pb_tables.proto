@@ -376,17 +376,23 @@ message PB_FileMsg {
     int64 Id = 1;
     int32 AccessHash = 2;
     int32 FileType = 3;
-    string Extension = 4;
-    bytes DataThumb = 5;
-    bytes Data = 6;
+    int32 Width = 4;
+    int32 Height = 5;
+    string Extension = 6;
+    int32 UserId = 7;
+    bytes DataThumb = 8;
+    bytes Data = 9;
 }
 message PB_FilePost {
     int64 Id = 1;
     int32 AccessHash = 2;
     int32 FileType = 3;
-    string Extension = 4;
-    bytes DataThumb = 5;
-    bytes Data = 6;
+    int32 Width = 4;
+    int32 Height = 5;
+    string Extension = 6;
+    int32 UserId = 7;
+    bytes DataThumb = 8;
+    bytes Data = 9;
 }
 message PB_ActionFanout {
     int64 OrderId = 1;

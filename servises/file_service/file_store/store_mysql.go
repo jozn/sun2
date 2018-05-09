@@ -1,9 +1,8 @@
 package file_store
 
 import (
-
+	"ms/sun/shared/base"
 	"ms/sun/shared/x"
-    "ms/sun/shared/base"
 )
 
 func MysqlSaveMsg(row Row) {
@@ -14,9 +13,9 @@ func MysqlSaveMsg(row Row) {
 		DataThumb: row.DataThumb,
 		Data:      row.Data,
 	}
-    if r.DataThumb == nil {
-        r.DataThumb = []byte{}
-    }
+	if r.DataThumb == nil {
+		r.DataThumb = []byte{}
+	}
 	r.Save(base.DB)
 }
 
@@ -45,7 +44,10 @@ func MysqlGetmsgFile(id int) (*Row, error) {
 	row := &Row{
 		Id:        r.Id,
 		FileType:  r.FileType,
+		Width:     r.Width,
+		Height:    r.Height,
 		Extension: r.Extension,
+		UserId:    r.UserId,
 		DataThumb: r.DataThumb,
 		Data:      r.Data,
 	}
@@ -63,7 +65,10 @@ func MysqlGetPostFile(id int) (*Row, error) {
 	row := &Row{
 		Id:        r.Id,
 		FileType:  r.FileType,
+		Width:     r.Width,
+		Height:    r.Height,
 		Extension: r.Extension,
+		UserId:    r.UserId,
 		DataThumb: r.DataThumb,
 		Data:      r.Data,
 	}

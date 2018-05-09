@@ -405,7 +405,10 @@ public class J {
 		public int Id;
 		public int AccessHash;
 		public int FileType;
+		public int Width;
+		public int Height;
 		public String Extension;
+		public int UserId;
 		public UNKNOWN DataThumb;
 		public UNKNOWN Data;
 	}
@@ -414,7 +417,10 @@ public class J {
 		public int Id;
 		public int AccessHash;
 		public int FileType;
+		public int Width;
+		public int Height;
 		public String Extension;
+		public int UserId;
 		public UNKNOWN DataThumb;
 		public UNKNOWN Data;
 	}

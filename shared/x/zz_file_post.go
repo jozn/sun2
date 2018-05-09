@@ -16,7 +16,10 @@ type FilePost__ struct {
 	Id         int    `json:"Id"`         // Id -
 	AccessHash int    `json:"AccessHash"` // AccessHash -
 	FileType   int    `json:"FileType"`   // FileType -
+	Width      int    `json:"Width"`      // Width -
+	Height     int    `json:"Height"`     // Height -
 	Extension  string `json:"Extension"`  // Extension -
+	UserId     int    `json:"UserId"`     // UserId -
 	DataThumb  []byte `json:"DataThumb"`  // DataThumb -
 	Data       []byte `json:"Data"`       // Data -
 	// xo fields
@@ -44,16 +47,16 @@ func (fp *FilePost) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_file.file_post (` +
-		`Id, AccessHash, FileType, Extension, DataThumb, Data` +
+		`Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data)
 	}
-	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data)
 	if err != nil {
 		return err
 	}
@@ -73,16 +76,16 @@ func (fp *FilePost) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_file.file_post (` +
-		`Id, AccessHash, FileType, Extension, DataThumb, Data` +
+		`Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+		XOLog(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data)
 	}
-	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data)
+	_, err = db.Exec(sqlstr, fp.Id, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data)
 	if err != nil {
 		if LogTableSqlReq.FilePost {
 			XOLogErr(err)
@@ -113,14 +116,14 @@ func (fp *FilePost) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_file.file_post SET ` +
-		`AccessHash = ?, FileType = ?, Extension = ?, DataThumb = ?, Data = ?` +
+		`AccessHash = ?, FileType = ?, Width = ?, Height = ?, Extension = ?, UserId = ?, DataThumb = ?, Data = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.FilePost {
-		XOLog(sqlstr, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
+		XOLog(sqlstr, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data, fp.Id)
 	}
-	_, err = db.Exec(sqlstr, fp.AccessHash, fp.FileType, fp.Extension, fp.DataThumb, fp.Data, fp.Id)
+	_, err = db.Exec(sqlstr, fp.AccessHash, fp.FileType, fp.Width, fp.Height, fp.Extension, fp.UserId, fp.DataThumb, fp.Data, fp.Id)
 
 	if LogTableSqlReq.FilePost {
 		XOLogErr(err)
@@ -542,6 +545,321 @@ func (d *__FilePost_Deleter) FileType_GE(val int) *__FilePost_Deleter {
 	return d
 }
 
+func (u *__FilePost_Deleter) Width_In(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) Width_Ins(ins ...int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) Width_NotIn(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Deleter) Width_Eq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Width_NotEq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Width_LT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Width_LE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Width_GT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Width_GE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Deleter) Height_In(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) Height_Ins(ins ...int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) Height_NotIn(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Deleter) Height_Eq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Height_NotEq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Height_LT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Height_LE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Height_GT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) Height_GE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Deleter) UserId_In(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) UserId_Ins(ins ...int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Deleter) UserId_NotIn(ins []int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Deleter) UserId_Eq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) UserId_NotEq(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) UserId_LT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) UserId_LE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) UserId_GT(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Deleter) UserId_GE(val int) *__FilePost_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
 func (u *__FilePost_Updater) Or() *__FilePost_Updater {
 	u.whereSep = " OR "
@@ -858,6 +1176,321 @@ func (d *__FilePost_Updater) FileType_GE(val int) *__FilePost_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " FileType >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Updater) Width_In(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) Width_Ins(ins ...int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) Width_NotIn(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Updater) Width_Eq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Width_NotEq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Width_LT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Width_LE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Width_GT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Width_GE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Updater) Height_In(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) Height_Ins(ins ...int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) Height_NotIn(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Updater) Height_Eq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Height_NotEq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Height_LT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Height_LE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Height_GT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) Height_GE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Updater) UserId_In(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) UserId_Ins(ins ...int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Updater) UserId_NotIn(ins []int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Updater) UserId_Eq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) UserId_NotEq(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) UserId_LT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) UserId_LE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) UserId_GT(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Updater) UserId_GE(val int) *__FilePost_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1184,6 +1817,321 @@ func (d *__FilePost_Selector) FileType_GE(val int) *__FilePost_Selector {
 	return d
 }
 
+func (u *__FilePost_Selector) Width_In(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) Width_Ins(ins ...int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) Width_NotIn(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Selector) Width_Eq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Width_NotEq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Width_LT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Width_LE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Width_GT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Width_GE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Width >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Selector) Height_In(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) Height_Ins(ins ...int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) Height_NotIn(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Selector) Height_Eq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Height_NotEq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Height_LT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Height_LE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Height_GT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) Height_GE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Height >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__FilePost_Selector) UserId_In(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) UserId_Ins(ins ...int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__FilePost_Selector) UserId_NotIn(ins []int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__FilePost_Selector) UserId_Eq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId = ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) UserId_NotEq(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId != ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) UserId_LT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId < ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) UserId_LE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId <= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) UserId_GT(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId > ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__FilePost_Selector) UserId_GE(val int) *__FilePost_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserId >= ? "
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -1441,11 +2389,74 @@ func (u *__FilePost_Updater) FileType_Increment(count int) *__FilePost_Updater {
 
 //ints
 
+func (u *__FilePost_Updater) Width(newVal int) *__FilePost_Updater {
+	u.updates[" Width = ? "] = newVal
+	return u
+}
+
+func (u *__FilePost_Updater) Width_Increment(count int) *__FilePost_Updater {
+	if count > 0 {
+		u.updates[" Width = Width+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Width = Width-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__FilePost_Updater) Height(newVal int) *__FilePost_Updater {
+	u.updates[" Height = ? "] = newVal
+	return u
+}
+
+func (u *__FilePost_Updater) Height_Increment(count int) *__FilePost_Updater {
+	if count > 0 {
+		u.updates[" Height = Height+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" Height = Height-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 //string
 func (u *__FilePost_Updater) Extension(newVal string) *__FilePost_Updater {
 	u.updates[" Extension = ? "] = newVal
 	return u
 }
+
+//ints
+
+func (u *__FilePost_Updater) UserId(newVal int) *__FilePost_Updater {
+	u.updates[" UserId = ? "] = newVal
+	return u
+}
+
+func (u *__FilePost_Updater) UserId_Increment(count int) *__FilePost_Updater {
+	if count > 0 {
+		u.updates[" UserId = UserId+? "] = count
+	}
+
+	if count < 0 {
+		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
 
 //ints
 
@@ -1505,6 +2516,36 @@ func (u *__FilePost_Selector) Select_FileType() *__FilePost_Selector {
 	return u
 }
 
+func (u *__FilePost_Selector) OrderBy_Width_Desc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY Width DESC "
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_Width_Asc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY Width ASC "
+	return u
+}
+
+func (u *__FilePost_Selector) Select_Width() *__FilePost_Selector {
+	u.selectCol = "Width"
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_Height_Desc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY Height DESC "
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_Height_Asc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY Height ASC "
+	return u
+}
+
+func (u *__FilePost_Selector) Select_Height() *__FilePost_Selector {
+	u.selectCol = "Height"
+	return u
+}
+
 func (u *__FilePost_Selector) OrderBy_Extension_Desc() *__FilePost_Selector {
 	u.orderBy = " ORDER BY Extension DESC "
 	return u
@@ -1517,6 +2558,21 @@ func (u *__FilePost_Selector) OrderBy_Extension_Asc() *__FilePost_Selector {
 
 func (u *__FilePost_Selector) Select_Extension() *__FilePost_Selector {
 	u.selectCol = "Extension"
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_UserId_Desc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY UserId DESC "
+	return u
+}
+
+func (u *__FilePost_Selector) OrderBy_UserId_Asc() *__FilePost_Selector {
+	u.orderBy = " ORDER BY UserId ASC "
+	return u
+}
+
+func (u *__FilePost_Selector) Select_UserId() *__FilePost_Selector {
+	u.selectCol = "UserId"
 	return u
 }
 
@@ -1863,13 +2919,13 @@ func MassInsert_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun_file.file_post (" +
-		"Id, AccessHash, FileType, Extension, DataThumb, Data" +
+		"Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data" +
 		") VALUES " + insVals
 
 	// run query
@@ -1880,7 +2936,10 @@ func MassInsert_FilePost(rows []FilePost, db XODB) error {
 		vals = append(vals, row.Id)
 		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.FileType)
+		vals = append(vals, row.Width)
+		vals = append(vals, row.Height)
 		vals = append(vals, row.Extension)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.DataThumb)
 		vals = append(vals, row.Data)
 
@@ -1906,13 +2965,13 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	//s:= "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun_file.file_post (" +
-		"Id, AccessHash, FileType, Extension, DataThumb, Data" +
+		"Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data" +
 		") VALUES " + insVals
 
 	// run query
@@ -1923,7 +2982,10 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 		vals = append(vals, row.Id)
 		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.FileType)
+		vals = append(vals, row.Width)
+		vals = append(vals, row.Height)
 		vals = append(vals, row.Extension)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.DataThumb)
 		vals = append(vals, row.Data)
 
@@ -1945,6 +3007,12 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
 
 //
 

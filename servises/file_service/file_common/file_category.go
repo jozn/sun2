@@ -21,23 +21,27 @@ func (c FileCategory) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 ////////////////////////////////
 
+var MsgFileCategory = FileCategory{
+	UrlPath:       "msg_file",
+	cachePath:     "msg_file",
+	SetterToStore: file_store.MysqlSaveMsg,
+	GetterOfStore: file_store.MysqlGetmsgFile,
+}
+
+var PostFileCategory = FileCategory{
+	UrlPath:       "post_file",
+	cachePath:     "post_file",
+	SetterToStore: file_store.MysqlSavePost,
+	GetterOfStore: file_store.MysqlGetPostFile,
+}
+
+var AvatarFileCategory = FileCategory{
+	UrlPath:       "avatar",
+	cachePath:     "avatar",
+	SetterToStore: file_store.MysqlSavePost,
+	GetterOfStore: file_store.MysqlGetPostFile,
+}
+
 var HttpCategories = []FileCategory{
-	{
-		UrlPath:       "msg_file",
-		cachePath:     "msg_file",
-		SetterToStore: file_store.MysqlSaveMsg,
-		GetterOfStore: file_store.MysqlGetmsgFile,
-	},
-	{
-		UrlPath:       "post_file",
-		cachePath:     "post_file",
-		SetterToStore: file_store.MysqlSavePost,
-		GetterOfStore: file_store.MysqlGetPostFile,
-	},
-	{
-		UrlPath:       "avatar",
-		cachePath:     "avatar",
-		SetterToStore: file_store.MysqlSavePost,
-		GetterOfStore: file_store.MysqlGetPostFile,
-	},
+	MsgFileCategory, PostFileCategory, AvatarFileCategory,
 }
