@@ -1058,6 +1058,23 @@ type ChatSync2 struct {
 	MessageJson: "",
 	CreatedTime: 0,
 */
+// lower_table 'LowerTable'.
+type LowerTable struct {
+	Id           int    `db:"id"`
+	Text         string `db:"text"`
+	TimeStamp    int    `db:"time_stamp"`
+	AnyThingMore int    `db:"any_thing_more_"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.LowerTable {
+	Id: 0,
+	Text: "",
+	TimeStamp: 0,
+	AnyThingMore: 0,
+*/
 // push_chat 'PushChat'.
 type PushChat struct {
 	PushId            int    `db:"PushId"`
@@ -1282,6 +1299,7 @@ type LogTableSql struct {
 	SuggestedTopPost           bool
 	SuggestedUser              bool
 	ChatSync2                  bool
+	LowerTable                 bool
 	PushChat                   bool
 	PushChat2                  bool
 	HTTPRPCLog                 bool
@@ -1335,6 +1353,7 @@ var LogTableSqlReq = LogTableSql{
 	SuggestedTopPost:       true,
 	SuggestedUser:          true,
 	ChatSync2:              true,
+	LowerTable:             true,
 	PushChat:               true,
 	PushChat2:              true,
 	HTTPRPCLog:             true,

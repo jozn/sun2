@@ -1217,6 +1217,35 @@ $$
 
 
  #### delimiter ;*/
+################################ LowerTable ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS lower_table_OnCreateLogger $$
+CREATE TRIGGER lower_table_OnCreateLogger AFTER INSERT ON lower_table
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","INSERT",NEW.id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS lower_table_OnUpdateLogger $$
+CREATE TRIGGER lower_table_OnUpdateLogger AFTER UPDATE ON lower_table
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","UPDATE",NEW.id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS lower_table_OnDeleteLogger $$
+CREATE TRIGGER lower_table_OnDeleteLogger AFTER DELETE ON lower_table
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","DELETE",OLD.id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ PushChat ######################################
 
 /* #### delimiter $$
@@ -1593,6 +1622,10 @@ DROP TRIGGER IF EXISTS suggested_user_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS chat_sync2_OnCreateLogger ;
 DROP TRIGGER IF EXISTS chat_sync2_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS chat_sync2_OnDeleteLogger ;
+### LowerTable ##
+DROP TRIGGER IF EXISTS lower_table_OnCreateLogger ;
+DROP TRIGGER IF EXISTS lower_table_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS lower_table_OnDeleteLogger ;
 ### PushChat ##
 DROP TRIGGER IF EXISTS push_chat_OnCreateLogger ;
 DROP TRIGGER IF EXISTS push_chat_OnUpdateLogger ;

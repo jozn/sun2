@@ -431,6 +431,12 @@ message PB_ChatSync2 {
     string MessageJson = 10;
     int32 CreatedTime = 11;
 }
+message PB_LowerTable {
+    int32 id = 1;
+    string text = 2;
+    int32 time_stamp = 3;
+    int32 any_thing_more_ = 4;
+}
 message PB_PushChat {
     int64 PushId = 1;
     int32 ToUserId = 2;

@@ -1013,6 +1013,30 @@ func OnChatSync2_LoadMany(rows []*ChatSync2) {
 	}
 }
 
+//LowerTable Events
+
+func OnLowerTable_AfterInsert(row *LowerTable) {
+	RowCache.Set("LowerTable:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnLowerTable_AfterUpdate(row *LowerTable) {
+	RowCache.Set("LowerTable:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnLowerTable_AfterDelete(row *LowerTable) {
+	RowCache.Delete("LowerTable:" + strconv.Itoa(row.Id))
+}
+
+func OnLowerTable_LoadOne(row *LowerTable) {
+	RowCache.Set("LowerTable:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnLowerTable_LoadMany(rows []*LowerTable) {
+	for _, row := range rows {
+		RowCache.Set("LowerTable:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
 //PushChat Events
 
 func OnPushChat_AfterInsert(row *PushChat) {

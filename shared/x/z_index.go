@@ -1012,6 +1012,30 @@ func ChatSync2BySyncId(db *sqlx.DB, syncId int) (*ChatSync2, error) {
 	return &cs, nil
 }
 
+// LowerTableById Generated from index 'PRIMARY' -- retrieves a row from 'sun_push.lower_table' as a LowerTable.
+func LowerTableById(db *sqlx.DB, id int) (*LowerTable, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_push.lower_table ` +
+		`WHERE id = ?`
+
+	XOLog(sqlstr, id)
+	lt := LowerTable{
+		_exists: true,
+	}
+
+	err = db.Get(&lt, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnLowerTable_LoadOne(&lt)
+
+	return &lt, nil
+}
+
 // PushChatByPushId Generated from index 'PRIMARY' -- retrieves a row from 'sun_push.push_chat' as a PushChat.
 func PushChatByPushId(db *sqlx.DB, pushId int) (*PushChat, error) {
 	var err error

@@ -1282,6 +1282,8 @@ func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
 
 // ChatSync2 - PRIMARY
 
+// LowerTable - PRIMARY
+
 // PushChat - PRIMARY
 
 //field//field//field

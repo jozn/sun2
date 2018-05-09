@@ -2022,6 +2022,54 @@ func (c _StoreImpl) PreLoadChatSync2BySyncIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetLowerTableById(Id int) (*LowerTable, bool) {
+	o, ok := RowCache.Get("LowerTable:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*LowerTable); ok {
+			return obj, true
+		}
+	}
+	obj2, err := LowerTableById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.LowerTable {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetLowerTableById_JustCache(Id int) (*LowerTable, bool) {
+	o, ok := RowCache.Get("LowerTable:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*LowerTable); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.LowerTable {
+		XOLogErr(errors.New("_JustCache is empty for LowerTable: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadLowerTableByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("LowerTable:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewLowerTable_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetPushChatByPushId(PushId int) (*PushChat, bool) {
 	o, ok := RowCache.Get("PushChat:" + strconv.Itoa(PushId))
 	if ok {

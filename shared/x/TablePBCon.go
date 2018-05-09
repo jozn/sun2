@@ -1227,6 +1227,27 @@ func PBConvPB_ChatSync2_To_ChatSync2 ( o *ChatSync2) *PB_ChatSync2 {
 }
 */
 /*
+func PBConvPB__LowerTable_To_LowerTable( o *PB_LowerTable) *LowerTable {
+     n := &LowerTable{
+      id: int ( o.id ),
+      text: string ( o.text ),
+      time_stamp: int ( o.time_stamp ),
+      any_thing_more_: int ( o.any_thing_more_ ),
+    }
+    return n
+}
+
+func PBConvPB_LowerTable_To_LowerTable ( o *LowerTable) *PB_LowerTable {
+     n := &PB_LowerTable{
+      id: int32 ( o.id ),
+      text: string ( o.text ),
+      time_stamp: int32 ( o.time_stamp ),
+      any_thing_more_: int32 ( o.any_thing_more_ ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__PushChat_To_PushChat( o *PB_PushChat) *PushChat {
      n := &PushChat{
       PushId: int ( o.PushId ),

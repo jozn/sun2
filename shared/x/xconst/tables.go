@@ -85,6 +85,8 @@ const (
 	SuggestedUser_TableGo              = "SuggestedUser"
 	ChatSync2_Table                    = "chat_sync2"
 	ChatSync2_TableGo                  = "ChatSync2"
+	LowerTable_Table                   = "lower_table"
+	LowerTable_TableGo                 = "LowerTable"
 	PushChat_Table                     = "push_chat"
 	PushChat_TableGo                   = "PushChat"
 	PushChat2_Table                    = "push_chat2"
@@ -989,6 +991,19 @@ var ChatSync2 = struct {
 	MessagePb:         "MessagePb",
 	MessageJson:       "MessageJson",
 	CreatedTime:       "CreatedTime",
+}
+
+var LowerTable = struct {
+	Id           string
+	Text         string
+	TimeStamp    string
+	AnyThingMore string
+}{
+
+	Id:           "id",
+	Text:         "text",
+	TimeStamp:    "time_stamp",
+	AnyThingMore: "any_thing_more_",
 }
 
 var PushChat = struct {
