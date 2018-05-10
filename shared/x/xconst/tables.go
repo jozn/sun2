@@ -101,6 +101,8 @@ const (
 	XfileServiceMetricLog_TableGo      = "XfileServiceMetricLog"
 	XfileServiceRequestLog_Table       = "xfile_service_request_log"
 	XfileServiceRequestLog_TableGo     = "XfileServiceRequestLog"
+	Account_Table                      = "accounts"
+	Account_TableGo                    = "Account"
 )
 
 var Action = struct {
@@ -980,17 +982,17 @@ var ChatSync2 = struct {
 	CreatedTime       string
 }{
 
-	SyncId:            "SyncId",
-	ToUserId:          "ToUserId",
-	ChatSyncTypeId:    "ChatSyncTypeId",
-	RoomKey:           "RoomKey",
-	ChatKey:           "ChatKey",
-	FromHighMessageId: "FromHighMessageId",
-	ToLowMessageId:    "ToLowMessageId",
-	MessageId:         "MessageId",
-	MessagePb:         "MessagePb",
-	MessageJson:       "MessageJson",
-	CreatedTime:       "CreatedTime",
+	SyncId:            "sync_id",
+	ToUserId:          "to_user_id",
+	ChatSyncTypeId:    "chat_sync_type_id",
+	RoomKey:           "room_key",
+	ChatKey:           "chat_key",
+	FromHighMessageId: "from_high_message_id",
+	ToLowMessageId:    "to_low_message_id",
+	MessageId:         "message_id",
+	MessagePb:         "message_pb",
+	MessageJson:       "message_json",
+	CreatedTime:       "created_time",
 }
 
 var LowerTable = struct {
@@ -1053,17 +1055,17 @@ var PushChat2 = struct {
 	CreatedTime       string
 }{
 
-	SyncId:            "SyncId",
-	ToUserId:          "ToUserId",
-	ChatSyncTypeId:    "ChatSyncTypeId",
-	RoomKey:           "RoomKey",
-	ChatKey:           "ChatKey",
-	FromHighMessageId: "FromHighMessageId",
-	ToLowMessageId:    "ToLowMessageId",
-	MessageId:         "MessageId",
-	MessagePb:         "MessagePb",
-	MessageJson:       "MessageJson",
-	CreatedTime:       "CreatedTime",
+	SyncId:            "sync_id",
+	ToUserId:          "to_user_id",
+	ChatSyncTypeId:    "chat_sync_type_id",
+	RoomKey:           "room_key",
+	ChatKey:           "chat_key",
+	FromHighMessageId: "from_high_message_id",
+	ToLowMessageId:    "to_low_message_id",
+	MessageId:         "message_id",
+	MessagePb:         "message_pb",
+	MessageJson:       "message_json",
+	CreatedTime:       "created_time",
 }
 
 var HTTPRPCLog = struct {
@@ -1155,4 +1157,13 @@ var XfileServiceRequestLog = struct {
 	Url:         "Url",
 	HttpCode:    "HttpCode",
 	CreatedTime: "CreatedTime",
+}
+
+var Account = struct {
+	Id      string
+	Balance string
+}{
+
+	Id:      "id",
+	Balance: "balance",
 }

@@ -454,17 +454,17 @@ public class J {
 	}
 
 	public static class ChatSync2 {//oridnal: 41
-		public int SyncId; //SyncId
-		public int ToUserId; //ToUserId
-		public int ChatSyncTypeId; //ChatSyncTypeId
-		public String RoomKey; //RoomKey
-		public String ChatKey; //ChatKey
-		public int FromHighMessageId; //FromHighMessageId
-		public int ToLowMessageId; //ToLowMessageId
-		public int MessageId; //MessageId
-		public UNKNOWN MessagePb; //MessagePb
-		public String MessageJson; //MessageJson
-		public int CreatedTime; //CreatedTime
+		public int SyncId; //sync_id
+		public int ToUserId; //to_user_id
+		public int ChatSyncTypeId; //chat_sync_type_id
+		public String RoomKey; //room_key
+		public String ChatKey; //chat_key
+		public int FromHighMessageId; //from_high_message_id
+		public int ToLowMessageId; //to_low_message_id
+		public int MessageId; //message_id
+		public UNKNOWN MessagePb; //message_pb
+		public String MessageJson; //message_json
+		public int CreatedTime; //created_time
 	}
 
 	public static class LowerTable {//oridnal: 42
@@ -492,17 +492,17 @@ public class J {
 	}
 
 	public static class PushChat2 {//oridnal: 44
-		public int SyncId; //SyncId
-		public int ToUserId; //ToUserId
-		public int ChatSyncTypeId; //ChatSyncTypeId
-		public String RoomKey; //RoomKey
-		public String ChatKey; //ChatKey
-		public int FromHighMessageId; //FromHighMessageId
-		public int ToLowMessageId; //ToLowMessageId
-		public int MessageId; //MessageId
-		public UNKNOWN MessagePb; //MessagePb
-		public String MessageJson; //MessageJson
-		public int CreatedTime; //CreatedTime
+		public int SyncId; //sync_id
+		public int ToUserId; //to_user_id
+		public int ChatSyncTypeId; //chat_sync_type_id
+		public String RoomKey; //room_key
+		public String ChatKey; //chat_key
+		public int FromHighMessageId; //from_high_message_id
+		public int ToLowMessageId; //to_low_message_id
+		public int MessageId; //message_id
+		public UNKNOWN MessagePb; //message_pb
+		public String MessageJson; //message_json
+		public int CreatedTime; //created_time
 	}
 
 	public static class HTTPRPCLog {//oridnal: 45
@@ -551,6 +551,11 @@ public class J {
 		public String Url; //Url
 		public int HttpCode; //HttpCode
 		public String CreatedTime; //CreatedTime
+	}
+
+	public static class Account {//oridnal: 50
+		public int Id; //id
+		public double Balance; //balance
 	}
 
 }

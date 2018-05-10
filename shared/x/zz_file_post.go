@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FilePost represents a row from 'sun_file.file_post'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FilePost represents a row from 'sun_file.file_post'.
 
 // Manualy copy this to project
 type FilePost__ struct {
@@ -186,23 +188,30 @@ func (fp *FilePost) Delete(db XODB) error {
 
 // orma types
 type __FilePost_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __FilePost_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __FilePost_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewFilePost_Deleter() *__FilePost_Deleter {
@@ -212,7 +221,7 @@ func NewFilePost_Deleter() *__FilePost_Deleter {
 
 func NewFilePost_Updater() *__FilePost_Updater {
 	u := __FilePost_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -221,8 +230,35 @@ func NewFilePost_Selector() *__FilePost_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__FilePost_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__FilePost_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FilePost_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FilePost_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__FilePost_Deleter) Or() *__FilePost_Deleter {
@@ -237,7 +273,7 @@ func (u *__FilePost_Deleter) Id_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -250,7 +286,7 @@ func (u *__FilePost_Deleter) Id_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -263,7 +299,7 @@ func (u *__FilePost_Deleter) Id_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -274,7 +310,7 @@ func (d *__FilePost_Deleter) Id_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -285,7 +321,7 @@ func (d *__FilePost_Deleter) Id_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -296,7 +332,7 @@ func (d *__FilePost_Deleter) Id_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +343,7 @@ func (d *__FilePost_Deleter) Id_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +354,7 @@ func (d *__FilePost_Deleter) Id_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +365,7 @@ func (d *__FilePost_Deleter) Id_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -342,7 +378,7 @@ func (u *__FilePost_Deleter) AccessHash_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -355,7 +391,7 @@ func (u *__FilePost_Deleter) AccessHash_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -368,7 +404,7 @@ func (u *__FilePost_Deleter) AccessHash_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -379,7 +415,7 @@ func (d *__FilePost_Deleter) AccessHash_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash = ? "
+	w.condition = " AccessHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -390,7 +426,7 @@ func (d *__FilePost_Deleter) AccessHash_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash != ? "
+	w.condition = " AccessHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -401,7 +437,7 @@ func (d *__FilePost_Deleter) AccessHash_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash < ? "
+	w.condition = " AccessHash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +448,7 @@ func (d *__FilePost_Deleter) AccessHash_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash <= ? "
+	w.condition = " AccessHash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +459,7 @@ func (d *__FilePost_Deleter) AccessHash_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash > ? "
+	w.condition = " AccessHash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +470,7 @@ func (d *__FilePost_Deleter) AccessHash_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash >= ? "
+	w.condition = " AccessHash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -447,7 +483,7 @@ func (u *__FilePost_Deleter) FileType_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -460,7 +496,7 @@ func (u *__FilePost_Deleter) FileType_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -473,7 +509,7 @@ func (u *__FilePost_Deleter) FileType_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +520,7 @@ func (d *__FilePost_Deleter) FileType_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType = ? "
+	w.condition = " FileType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -495,7 +531,7 @@ func (d *__FilePost_Deleter) FileType_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType != ? "
+	w.condition = " FileType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -506,7 +542,7 @@ func (d *__FilePost_Deleter) FileType_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType < ? "
+	w.condition = " FileType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +553,7 @@ func (d *__FilePost_Deleter) FileType_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType <= ? "
+	w.condition = " FileType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +564,7 @@ func (d *__FilePost_Deleter) FileType_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType > ? "
+	w.condition = " FileType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +575,7 @@ func (d *__FilePost_Deleter) FileType_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType >= ? "
+	w.condition = " FileType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -552,7 +588,7 @@ func (u *__FilePost_Deleter) Width_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -565,7 +601,7 @@ func (u *__FilePost_Deleter) Width_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -578,7 +614,7 @@ func (u *__FilePost_Deleter) Width_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +625,7 @@ func (d *__FilePost_Deleter) Width_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -600,7 +636,7 @@ func (d *__FilePost_Deleter) Width_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -611,7 +647,7 @@ func (d *__FilePost_Deleter) Width_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +658,7 @@ func (d *__FilePost_Deleter) Width_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +669,7 @@ func (d *__FilePost_Deleter) Width_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,7 +680,7 @@ func (d *__FilePost_Deleter) Width_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -657,7 +693,7 @@ func (u *__FilePost_Deleter) Height_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -670,7 +706,7 @@ func (u *__FilePost_Deleter) Height_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -683,7 +719,7 @@ func (u *__FilePost_Deleter) Height_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -694,7 +730,7 @@ func (d *__FilePost_Deleter) Height_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -705,7 +741,7 @@ func (d *__FilePost_Deleter) Height_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -716,7 +752,7 @@ func (d *__FilePost_Deleter) Height_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -727,7 +763,7 @@ func (d *__FilePost_Deleter) Height_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,7 +774,7 @@ func (d *__FilePost_Deleter) Height_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -749,7 +785,7 @@ func (d *__FilePost_Deleter) Height_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -762,7 +798,7 @@ func (u *__FilePost_Deleter) UserId_In(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -775,7 +811,7 @@ func (u *__FilePost_Deleter) UserId_Ins(ins ...int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -788,7 +824,7 @@ func (u *__FilePost_Deleter) UserId_NotIn(ins []int) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -799,7 +835,7 @@ func (d *__FilePost_Deleter) UserId_Eq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -810,7 +846,7 @@ func (d *__FilePost_Deleter) UserId_NotEq(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -821,7 +857,7 @@ func (d *__FilePost_Deleter) UserId_LT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -832,7 +868,7 @@ func (d *__FilePost_Deleter) UserId_LE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -843,7 +879,7 @@ func (d *__FilePost_Deleter) UserId_GT(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,10 +890,23 @@ func (d *__FilePost_Deleter) UserId_GE(val int) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FilePost_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FilePost_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -873,7 +922,7 @@ func (u *__FilePost_Updater) Id_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -886,7 +935,7 @@ func (u *__FilePost_Updater) Id_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -899,7 +948,7 @@ func (u *__FilePost_Updater) Id_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -910,7 +959,7 @@ func (d *__FilePost_Updater) Id_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -921,7 +970,7 @@ func (d *__FilePost_Updater) Id_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -932,7 +981,7 @@ func (d *__FilePost_Updater) Id_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -943,7 +992,7 @@ func (d *__FilePost_Updater) Id_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -954,7 +1003,7 @@ func (d *__FilePost_Updater) Id_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -965,7 +1014,7 @@ func (d *__FilePost_Updater) Id_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -978,7 +1027,7 @@ func (u *__FilePost_Updater) AccessHash_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -991,7 +1040,7 @@ func (u *__FilePost_Updater) AccessHash_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1004,7 +1053,7 @@ func (u *__FilePost_Updater) AccessHash_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1015,7 +1064,7 @@ func (d *__FilePost_Updater) AccessHash_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash = ? "
+	w.condition = " AccessHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1026,7 +1075,7 @@ func (d *__FilePost_Updater) AccessHash_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash != ? "
+	w.condition = " AccessHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1037,7 +1086,7 @@ func (d *__FilePost_Updater) AccessHash_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash < ? "
+	w.condition = " AccessHash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1048,7 +1097,7 @@ func (d *__FilePost_Updater) AccessHash_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash <= ? "
+	w.condition = " AccessHash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1059,7 +1108,7 @@ func (d *__FilePost_Updater) AccessHash_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash > ? "
+	w.condition = " AccessHash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1070,7 +1119,7 @@ func (d *__FilePost_Updater) AccessHash_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash >= ? "
+	w.condition = " AccessHash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1083,7 +1132,7 @@ func (u *__FilePost_Updater) FileType_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1096,7 +1145,7 @@ func (u *__FilePost_Updater) FileType_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1109,7 +1158,7 @@ func (u *__FilePost_Updater) FileType_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1120,7 +1169,7 @@ func (d *__FilePost_Updater) FileType_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType = ? "
+	w.condition = " FileType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1131,7 +1180,7 @@ func (d *__FilePost_Updater) FileType_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType != ? "
+	w.condition = " FileType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1142,7 +1191,7 @@ func (d *__FilePost_Updater) FileType_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType < ? "
+	w.condition = " FileType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1153,7 +1202,7 @@ func (d *__FilePost_Updater) FileType_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType <= ? "
+	w.condition = " FileType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1164,7 +1213,7 @@ func (d *__FilePost_Updater) FileType_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType > ? "
+	w.condition = " FileType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1175,7 +1224,7 @@ func (d *__FilePost_Updater) FileType_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType >= ? "
+	w.condition = " FileType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1188,7 +1237,7 @@ func (u *__FilePost_Updater) Width_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1201,7 +1250,7 @@ func (u *__FilePost_Updater) Width_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1214,7 +1263,7 @@ func (u *__FilePost_Updater) Width_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1225,7 +1274,7 @@ func (d *__FilePost_Updater) Width_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1236,7 +1285,7 @@ func (d *__FilePost_Updater) Width_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1247,7 +1296,7 @@ func (d *__FilePost_Updater) Width_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1258,7 +1307,7 @@ func (d *__FilePost_Updater) Width_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1269,7 +1318,7 @@ func (d *__FilePost_Updater) Width_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1280,7 +1329,7 @@ func (d *__FilePost_Updater) Width_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1293,7 +1342,7 @@ func (u *__FilePost_Updater) Height_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1306,7 +1355,7 @@ func (u *__FilePost_Updater) Height_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1319,7 +1368,7 @@ func (u *__FilePost_Updater) Height_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1330,7 +1379,7 @@ func (d *__FilePost_Updater) Height_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1341,7 +1390,7 @@ func (d *__FilePost_Updater) Height_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1352,7 +1401,7 @@ func (d *__FilePost_Updater) Height_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1363,7 +1412,7 @@ func (d *__FilePost_Updater) Height_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1374,7 +1423,7 @@ func (d *__FilePost_Updater) Height_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1385,7 +1434,7 @@ func (d *__FilePost_Updater) Height_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1398,7 +1447,7 @@ func (u *__FilePost_Updater) UserId_In(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1411,7 +1460,7 @@ func (u *__FilePost_Updater) UserId_Ins(ins ...int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1424,7 +1473,7 @@ func (u *__FilePost_Updater) UserId_NotIn(ins []int) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1435,7 +1484,7 @@ func (d *__FilePost_Updater) UserId_Eq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1446,7 +1495,7 @@ func (d *__FilePost_Updater) UserId_NotEq(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1457,7 +1506,7 @@ func (d *__FilePost_Updater) UserId_LT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1468,7 +1517,7 @@ func (d *__FilePost_Updater) UserId_LE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1479,7 +1528,7 @@ func (d *__FilePost_Updater) UserId_GT(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1490,10 +1539,23 @@ func (d *__FilePost_Updater) UserId_GE(val int) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FilePost_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FilePost_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1509,7 +1571,7 @@ func (u *__FilePost_Selector) Id_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1522,7 +1584,7 @@ func (u *__FilePost_Selector) Id_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1535,7 +1597,7 @@ func (u *__FilePost_Selector) Id_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1546,7 +1608,7 @@ func (d *__FilePost_Selector) Id_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1557,7 +1619,7 @@ func (d *__FilePost_Selector) Id_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1568,7 +1630,7 @@ func (d *__FilePost_Selector) Id_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1579,7 +1641,7 @@ func (d *__FilePost_Selector) Id_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1590,7 +1652,7 @@ func (d *__FilePost_Selector) Id_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1601,7 +1663,7 @@ func (d *__FilePost_Selector) Id_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1614,7 +1676,7 @@ func (u *__FilePost_Selector) AccessHash_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1627,7 +1689,7 @@ func (u *__FilePost_Selector) AccessHash_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1640,7 +1702,7 @@ func (u *__FilePost_Selector) AccessHash_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccessHash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1651,7 +1713,7 @@ func (d *__FilePost_Selector) AccessHash_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash = ? "
+	w.condition = " AccessHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1662,7 +1724,7 @@ func (d *__FilePost_Selector) AccessHash_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash != ? "
+	w.condition = " AccessHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1673,7 +1735,7 @@ func (d *__FilePost_Selector) AccessHash_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash < ? "
+	w.condition = " AccessHash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1684,7 +1746,7 @@ func (d *__FilePost_Selector) AccessHash_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash <= ? "
+	w.condition = " AccessHash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1695,7 +1757,7 @@ func (d *__FilePost_Selector) AccessHash_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash > ? "
+	w.condition = " AccessHash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1706,7 +1768,7 @@ func (d *__FilePost_Selector) AccessHash_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccessHash >= ? "
+	w.condition = " AccessHash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1719,7 +1781,7 @@ func (u *__FilePost_Selector) FileType_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1732,7 +1794,7 @@ func (u *__FilePost_Selector) FileType_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1745,7 +1807,7 @@ func (u *__FilePost_Selector) FileType_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FileType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FileType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1756,7 +1818,7 @@ func (d *__FilePost_Selector) FileType_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType = ? "
+	w.condition = " FileType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1767,7 +1829,7 @@ func (d *__FilePost_Selector) FileType_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType != ? "
+	w.condition = " FileType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1778,7 +1840,7 @@ func (d *__FilePost_Selector) FileType_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType < ? "
+	w.condition = " FileType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1789,7 +1851,7 @@ func (d *__FilePost_Selector) FileType_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType <= ? "
+	w.condition = " FileType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1800,7 +1862,7 @@ func (d *__FilePost_Selector) FileType_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType > ? "
+	w.condition = " FileType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1811,7 +1873,7 @@ func (d *__FilePost_Selector) FileType_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FileType >= ? "
+	w.condition = " FileType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1824,7 +1886,7 @@ func (u *__FilePost_Selector) Width_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1837,7 +1899,7 @@ func (u *__FilePost_Selector) Width_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1850,7 +1912,7 @@ func (u *__FilePost_Selector) Width_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1861,7 +1923,7 @@ func (d *__FilePost_Selector) Width_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1872,7 +1934,7 @@ func (d *__FilePost_Selector) Width_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1883,7 +1945,7 @@ func (d *__FilePost_Selector) Width_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1894,7 +1956,7 @@ func (d *__FilePost_Selector) Width_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1905,7 +1967,7 @@ func (d *__FilePost_Selector) Width_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1916,7 +1978,7 @@ func (d *__FilePost_Selector) Width_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1929,7 +1991,7 @@ func (u *__FilePost_Selector) Height_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1942,7 +2004,7 @@ func (u *__FilePost_Selector) Height_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1955,7 +2017,7 @@ func (u *__FilePost_Selector) Height_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1966,7 +2028,7 @@ func (d *__FilePost_Selector) Height_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1977,7 +2039,7 @@ func (d *__FilePost_Selector) Height_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1988,7 +2050,7 @@ func (d *__FilePost_Selector) Height_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1999,7 +2061,7 @@ func (d *__FilePost_Selector) Height_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2010,7 +2072,7 @@ func (d *__FilePost_Selector) Height_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2021,7 +2083,7 @@ func (d *__FilePost_Selector) Height_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2034,7 +2096,7 @@ func (u *__FilePost_Selector) UserId_In(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2047,7 +2109,7 @@ func (u *__FilePost_Selector) UserId_Ins(ins ...int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2060,7 +2122,7 @@ func (u *__FilePost_Selector) UserId_NotIn(ins []int) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2071,7 +2133,7 @@ func (d *__FilePost_Selector) UserId_Eq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2082,7 +2144,7 @@ func (d *__FilePost_Selector) UserId_NotEq(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2093,7 +2155,7 @@ func (d *__FilePost_Selector) UserId_LT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2104,7 +2166,7 @@ func (d *__FilePost_Selector) UserId_LE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2115,7 +2177,7 @@ func (d *__FilePost_Selector) UserId_GT(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2126,7 +2188,7 @@ func (d *__FilePost_Selector) UserId_GE(val int) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2143,7 +2205,7 @@ func (u *__FilePost_Deleter) Extension_In(ins []string) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2156,7 +2218,7 @@ func (u *__FilePost_Deleter) Extension_NotIn(ins []string) *__FilePost_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2168,7 +2230,7 @@ func (u *__FilePost_Deleter) Extension_Like(val string) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2179,7 +2241,7 @@ func (d *__FilePost_Deleter) Extension_Eq(val string) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2190,7 +2252,7 @@ func (d *__FilePost_Deleter) Extension_NotEq(val string) *__FilePost_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2205,7 +2267,7 @@ func (u *__FilePost_Updater) Extension_In(ins []string) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2218,7 +2280,7 @@ func (u *__FilePost_Updater) Extension_NotIn(ins []string) *__FilePost_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2230,7 +2292,7 @@ func (u *__FilePost_Updater) Extension_Like(val string) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2241,7 +2303,7 @@ func (d *__FilePost_Updater) Extension_Eq(val string) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2252,7 +2314,7 @@ func (d *__FilePost_Updater) Extension_NotEq(val string) *__FilePost_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2267,7 +2329,7 @@ func (u *__FilePost_Selector) Extension_In(ins []string) *__FilePost_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2280,7 +2342,7 @@ func (u *__FilePost_Selector) Extension_NotIn(ins []string) *__FilePost_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2292,7 +2354,7 @@ func (u *__FilePost_Selector) Extension_Like(val string) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2303,7 +2365,7 @@ func (d *__FilePost_Selector) Extension_Eq(val string) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2314,7 +2376,7 @@ func (d *__FilePost_Selector) Extension_NotEq(val string) *__FilePost_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2327,17 +2389,23 @@ func (d *__FilePost_Selector) Extension_NotEq(val string) *__FilePost_Selector {
 //ints
 
 func (u *__FilePost_Updater) Id(newVal int) *__FilePost_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) Id_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2348,17 +2416,23 @@ func (u *__FilePost_Updater) Id_Increment(count int) *__FilePost_Updater {
 //ints
 
 func (u *__FilePost_Updater) AccessHash(newVal int) *__FilePost_Updater {
-	u.updates[" AccessHash = ? "] = newVal
+	up := updateCol{" AccessHash = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AccessHash = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) AccessHash_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" AccessHash = AccessHash+? "] = count
+		up := updateCol{" AccessHash = AccessHash+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AccessHash = AccessHash+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AccessHash = AccessHash-? "] = -(count) //make it positive
+		up := updateCol{" AccessHash = AccessHash- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AccessHash = AccessHash- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2369,17 +2443,23 @@ func (u *__FilePost_Updater) AccessHash_Increment(count int) *__FilePost_Updater
 //ints
 
 func (u *__FilePost_Updater) FileType(newVal int) *__FilePost_Updater {
-	u.updates[" FileType = ? "] = newVal
+	up := updateCol{" FileType = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" FileType = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) FileType_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" FileType = FileType+? "] = count
+		up := updateCol{" FileType = FileType+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" FileType = FileType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" FileType = FileType-? "] = -(count) //make it positive
+		up := updateCol{" FileType = FileType- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" FileType = FileType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2390,17 +2470,23 @@ func (u *__FilePost_Updater) FileType_Increment(count int) *__FilePost_Updater {
 //ints
 
 func (u *__FilePost_Updater) Width(newVal int) *__FilePost_Updater {
-	u.updates[" Width = ? "] = newVal
+	up := updateCol{" Width = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Width = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) Width_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" Width = Width+? "] = count
+		up := updateCol{" Width = Width+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Width = Width+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Width = Width-? "] = -(count) //make it positive
+		up := updateCol{" Width = Width- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Width = Width- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2411,17 +2497,23 @@ func (u *__FilePost_Updater) Width_Increment(count int) *__FilePost_Updater {
 //ints
 
 func (u *__FilePost_Updater) Height(newVal int) *__FilePost_Updater {
-	u.updates[" Height = ? "] = newVal
+	up := updateCol{" Height = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Height = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) Height_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" Height = Height+? "] = count
+		up := updateCol{" Height = Height+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Height = Height+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Height = Height-? "] = -(count) //make it positive
+		up := updateCol{" Height = Height- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Height = Height- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2433,24 +2525,32 @@ func (u *__FilePost_Updater) Height_Increment(count int) *__FilePost_Updater {
 
 //string
 func (u *__FilePost_Updater) Extension(newVal string) *__FilePost_Updater {
-	u.updates[" Extension = ? "] = newVal
+	up := updateCol{"Extension = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Extension = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__FilePost_Updater) UserId(newVal int) *__FilePost_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FilePost_Updater) UserId_Increment(count int) *__FilePost_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2832,9 +2932,13 @@ func (u *__FilePost_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2919,10 +3023,10 @@ func MassInsert_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(9, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_file.file_post (" +
 		"Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data" +
@@ -2965,10 +3069,9 @@ func MassReplace_FilePost(rows []FilePost, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(9, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_file.file_post (" +
 		"Id, AccessHash, FileType, Width, Height, Extension, UserId, DataThumb, Data" +

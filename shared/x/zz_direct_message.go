@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun_chat.direct_message'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// DirectMessage represents a row from 'sun_chat.direct_message'.
 
 // Manualy copy this to project
 type DirectMessage__ struct {
@@ -188,23 +190,30 @@ func (dm *DirectMessage) Delete(db XODB) error {
 
 // orma types
 type __DirectMessage_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __DirectMessage_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __DirectMessage_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewDirectMessage_Deleter() *__DirectMessage_Deleter {
@@ -214,7 +223,7 @@ func NewDirectMessage_Deleter() *__DirectMessage_Deleter {
 
 func NewDirectMessage_Updater() *__DirectMessage_Updater {
 	u := __DirectMessage_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -223,8 +232,35 @@ func NewDirectMessage_Selector() *__DirectMessage_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__DirectMessage_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__DirectMessage_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__DirectMessage_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__DirectMessage_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__DirectMessage_Deleter) Or() *__DirectMessage_Deleter {
@@ -239,7 +275,7 @@ func (u *__DirectMessage_Deleter) MessageId_In(ins []int) *__DirectMessage_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -252,7 +288,7 @@ func (u *__DirectMessage_Deleter) MessageId_Ins(ins ...int) *__DirectMessage_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -265,7 +301,7 @@ func (u *__DirectMessage_Deleter) MessageId_NotIn(ins []int) *__DirectMessage_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -276,7 +312,7 @@ func (d *__DirectMessage_Deleter) MessageId_Eq(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -287,7 +323,7 @@ func (d *__DirectMessage_Deleter) MessageId_NotEq(val int) *__DirectMessage_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -298,7 +334,7 @@ func (d *__DirectMessage_Deleter) MessageId_LT(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -309,7 +345,7 @@ func (d *__DirectMessage_Deleter) MessageId_LE(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -320,7 +356,7 @@ func (d *__DirectMessage_Deleter) MessageId_GT(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -331,7 +367,7 @@ func (d *__DirectMessage_Deleter) MessageId_GE(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -344,7 +380,7 @@ func (u *__DirectMessage_Deleter) UserId_In(ins []int) *__DirectMessage_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -357,7 +393,7 @@ func (u *__DirectMessage_Deleter) UserId_Ins(ins ...int) *__DirectMessage_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -370,7 +406,7 @@ func (u *__DirectMessage_Deleter) UserId_NotIn(ins []int) *__DirectMessage_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -381,7 +417,7 @@ func (d *__DirectMessage_Deleter) UserId_Eq(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -392,7 +428,7 @@ func (d *__DirectMessage_Deleter) UserId_NotEq(val int) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -403,7 +439,7 @@ func (d *__DirectMessage_Deleter) UserId_LT(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -414,7 +450,7 @@ func (d *__DirectMessage_Deleter) UserId_LE(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -425,7 +461,7 @@ func (d *__DirectMessage_Deleter) UserId_GT(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -436,7 +472,7 @@ func (d *__DirectMessage_Deleter) UserId_GE(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -449,7 +485,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_In(ins []int) *__DirectMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -462,7 +498,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_Ins(ins ...int) *__DirectMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -475,7 +511,7 @@ func (u *__DirectMessage_Deleter) MessageFileId_NotIn(ins []int) *__DirectMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -486,7 +522,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_Eq(val int) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -497,7 +533,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_NotEq(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -508,7 +544,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_LT(val int) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -519,7 +555,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_LE(val int) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -530,7 +566,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_GT(val int) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -541,7 +577,7 @@ func (d *__DirectMessage_Deleter) MessageFileId_GE(val int) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -554,7 +590,7 @@ func (u *__DirectMessage_Deleter) MessageTypeEnum_In(ins []int) *__DirectMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -567,7 +603,7 @@ func (u *__DirectMessage_Deleter) MessageTypeEnum_Ins(ins ...int) *__DirectMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -580,7 +616,7 @@ func (u *__DirectMessage_Deleter) MessageTypeEnum_NotIn(ins []int) *__DirectMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -591,7 +627,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_Eq(val int) *__DirectMessage_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -602,7 +638,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_NotEq(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -613,7 +649,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_LT(val int) *__DirectMessage_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +660,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_LE(val int) *__DirectMessage_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +671,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_GT(val int) *__DirectMessage_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +682,7 @@ func (d *__DirectMessage_Deleter) MessageTypeEnum_GE(val int) *__DirectMessage_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -659,7 +695,7 @@ func (u *__DirectMessage_Deleter) CreatedTime_In(ins []int) *__DirectMessage_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -672,7 +708,7 @@ func (u *__DirectMessage_Deleter) CreatedTime_Ins(ins ...int) *__DirectMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -685,7 +721,7 @@ func (u *__DirectMessage_Deleter) CreatedTime_NotIn(ins []int) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -696,7 +732,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_Eq(val int) *__DirectMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -707,7 +743,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_NotEq(val int) *__DirectMessage_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -718,7 +754,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_LT(val int) *__DirectMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -729,7 +765,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_LE(val int) *__DirectMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -740,7 +776,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_GT(val int) *__DirectMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -751,7 +787,7 @@ func (d *__DirectMessage_Deleter) CreatedTime_GE(val int) *__DirectMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -764,7 +800,7 @@ func (u *__DirectMessage_Deleter) Seq_In(ins []int) *__DirectMessage_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -777,7 +813,7 @@ func (u *__DirectMessage_Deleter) Seq_Ins(ins ...int) *__DirectMessage_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -790,7 +826,7 @@ func (u *__DirectMessage_Deleter) Seq_NotIn(ins []int) *__DirectMessage_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -801,7 +837,7 @@ func (d *__DirectMessage_Deleter) Seq_Eq(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -812,7 +848,7 @@ func (d *__DirectMessage_Deleter) Seq_NotEq(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -823,7 +859,7 @@ func (d *__DirectMessage_Deleter) Seq_LT(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -834,7 +870,7 @@ func (d *__DirectMessage_Deleter) Seq_LE(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -845,7 +881,7 @@ func (d *__DirectMessage_Deleter) Seq_GT(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -856,7 +892,7 @@ func (d *__DirectMessage_Deleter) Seq_GE(val int) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -869,7 +905,7 @@ func (u *__DirectMessage_Deleter) DeliviryStatusEnum_In(ins []int) *__DirectMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -882,7 +918,7 @@ func (u *__DirectMessage_Deleter) DeliviryStatusEnum_Ins(ins ...int) *__DirectMe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -895,7 +931,7 @@ func (u *__DirectMessage_Deleter) DeliviryStatusEnum_NotIn(ins []int) *__DirectM
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -906,7 +942,7 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_Eq(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -917,7 +953,7 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_NotEq(val int) *__DirectMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -928,7 +964,7 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_LT(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -939,7 +975,7 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_LE(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -950,7 +986,7 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_GT(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -961,10 +997,23 @@ func (d *__DirectMessage_Deleter) DeliviryStatusEnum_GE(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__DirectMessage_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__DirectMessage_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -980,7 +1029,7 @@ func (u *__DirectMessage_Updater) MessageId_In(ins []int) *__DirectMessage_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -993,7 +1042,7 @@ func (u *__DirectMessage_Updater) MessageId_Ins(ins ...int) *__DirectMessage_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1006,7 +1055,7 @@ func (u *__DirectMessage_Updater) MessageId_NotIn(ins []int) *__DirectMessage_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1017,7 +1066,7 @@ func (d *__DirectMessage_Updater) MessageId_Eq(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1028,7 +1077,7 @@ func (d *__DirectMessage_Updater) MessageId_NotEq(val int) *__DirectMessage_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1039,7 +1088,7 @@ func (d *__DirectMessage_Updater) MessageId_LT(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1050,7 +1099,7 @@ func (d *__DirectMessage_Updater) MessageId_LE(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1061,7 +1110,7 @@ func (d *__DirectMessage_Updater) MessageId_GT(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1072,7 +1121,7 @@ func (d *__DirectMessage_Updater) MessageId_GE(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1085,7 +1134,7 @@ func (u *__DirectMessage_Updater) UserId_In(ins []int) *__DirectMessage_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1098,7 +1147,7 @@ func (u *__DirectMessage_Updater) UserId_Ins(ins ...int) *__DirectMessage_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1111,7 +1160,7 @@ func (u *__DirectMessage_Updater) UserId_NotIn(ins []int) *__DirectMessage_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1122,7 +1171,7 @@ func (d *__DirectMessage_Updater) UserId_Eq(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1133,7 +1182,7 @@ func (d *__DirectMessage_Updater) UserId_NotEq(val int) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1144,7 +1193,7 @@ func (d *__DirectMessage_Updater) UserId_LT(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1155,7 +1204,7 @@ func (d *__DirectMessage_Updater) UserId_LE(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1166,7 +1215,7 @@ func (d *__DirectMessage_Updater) UserId_GT(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1177,7 +1226,7 @@ func (d *__DirectMessage_Updater) UserId_GE(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1190,7 +1239,7 @@ func (u *__DirectMessage_Updater) MessageFileId_In(ins []int) *__DirectMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1203,7 +1252,7 @@ func (u *__DirectMessage_Updater) MessageFileId_Ins(ins ...int) *__DirectMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1216,7 +1265,7 @@ func (u *__DirectMessage_Updater) MessageFileId_NotIn(ins []int) *__DirectMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1227,7 +1276,7 @@ func (d *__DirectMessage_Updater) MessageFileId_Eq(val int) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1238,7 +1287,7 @@ func (d *__DirectMessage_Updater) MessageFileId_NotEq(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1249,7 +1298,7 @@ func (d *__DirectMessage_Updater) MessageFileId_LT(val int) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1260,7 +1309,7 @@ func (d *__DirectMessage_Updater) MessageFileId_LE(val int) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1271,7 +1320,7 @@ func (d *__DirectMessage_Updater) MessageFileId_GT(val int) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1282,7 +1331,7 @@ func (d *__DirectMessage_Updater) MessageFileId_GE(val int) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1295,7 +1344,7 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_In(ins []int) *__DirectMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1308,7 +1357,7 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_Ins(ins ...int) *__DirectMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1321,7 +1370,7 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_NotIn(ins []int) *__DirectMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1332,7 +1381,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_Eq(val int) *__DirectMessage_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1343,7 +1392,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_NotEq(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1354,7 +1403,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_LT(val int) *__DirectMessage_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1365,7 +1414,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_LE(val int) *__DirectMessage_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1425,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_GT(val int) *__DirectMessage_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1436,7 @@ func (d *__DirectMessage_Updater) MessageTypeEnum_GE(val int) *__DirectMessage_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1449,7 @@ func (u *__DirectMessage_Updater) CreatedTime_In(ins []int) *__DirectMessage_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1413,7 +1462,7 @@ func (u *__DirectMessage_Updater) CreatedTime_Ins(ins ...int) *__DirectMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1426,7 +1475,7 @@ func (u *__DirectMessage_Updater) CreatedTime_NotIn(ins []int) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1486,7 @@ func (d *__DirectMessage_Updater) CreatedTime_Eq(val int) *__DirectMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1497,7 @@ func (d *__DirectMessage_Updater) CreatedTime_NotEq(val int) *__DirectMessage_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1459,7 +1508,7 @@ func (d *__DirectMessage_Updater) CreatedTime_LT(val int) *__DirectMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1470,7 +1519,7 @@ func (d *__DirectMessage_Updater) CreatedTime_LE(val int) *__DirectMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1481,7 +1530,7 @@ func (d *__DirectMessage_Updater) CreatedTime_GT(val int) *__DirectMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1492,7 +1541,7 @@ func (d *__DirectMessage_Updater) CreatedTime_GE(val int) *__DirectMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1505,7 +1554,7 @@ func (u *__DirectMessage_Updater) Seq_In(ins []int) *__DirectMessage_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1518,7 +1567,7 @@ func (u *__DirectMessage_Updater) Seq_Ins(ins ...int) *__DirectMessage_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1531,7 +1580,7 @@ func (u *__DirectMessage_Updater) Seq_NotIn(ins []int) *__DirectMessage_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1542,7 +1591,7 @@ func (d *__DirectMessage_Updater) Seq_Eq(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1553,7 +1602,7 @@ func (d *__DirectMessage_Updater) Seq_NotEq(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1564,7 +1613,7 @@ func (d *__DirectMessage_Updater) Seq_LT(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1575,7 +1624,7 @@ func (d *__DirectMessage_Updater) Seq_LE(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1586,7 +1635,7 @@ func (d *__DirectMessage_Updater) Seq_GT(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1597,7 +1646,7 @@ func (d *__DirectMessage_Updater) Seq_GE(val int) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1610,7 +1659,7 @@ func (u *__DirectMessage_Updater) DeliviryStatusEnum_In(ins []int) *__DirectMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1623,7 +1672,7 @@ func (u *__DirectMessage_Updater) DeliviryStatusEnum_Ins(ins ...int) *__DirectMe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1636,7 +1685,7 @@ func (u *__DirectMessage_Updater) DeliviryStatusEnum_NotIn(ins []int) *__DirectM
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1647,7 +1696,7 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_Eq(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1658,7 +1707,7 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_NotEq(val int) *__DirectMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1669,7 +1718,7 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_LT(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1729,7 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_LE(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1691,7 +1740,7 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_GT(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1702,10 +1751,23 @@ func (d *__DirectMessage_Updater) DeliviryStatusEnum_GE(val int) *__DirectMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__DirectMessage_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__DirectMessage_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1721,7 +1783,7 @@ func (u *__DirectMessage_Selector) MessageId_In(ins []int) *__DirectMessage_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1734,7 +1796,7 @@ func (u *__DirectMessage_Selector) MessageId_Ins(ins ...int) *__DirectMessage_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1747,7 +1809,7 @@ func (u *__DirectMessage_Selector) MessageId_NotIn(ins []int) *__DirectMessage_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1758,7 +1820,7 @@ func (d *__DirectMessage_Selector) MessageId_Eq(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1769,7 +1831,7 @@ func (d *__DirectMessage_Selector) MessageId_NotEq(val int) *__DirectMessage_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1780,7 +1842,7 @@ func (d *__DirectMessage_Selector) MessageId_LT(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1791,7 +1853,7 @@ func (d *__DirectMessage_Selector) MessageId_LE(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1802,7 +1864,7 @@ func (d *__DirectMessage_Selector) MessageId_GT(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1813,7 +1875,7 @@ func (d *__DirectMessage_Selector) MessageId_GE(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1826,7 +1888,7 @@ func (u *__DirectMessage_Selector) UserId_In(ins []int) *__DirectMessage_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1839,7 +1901,7 @@ func (u *__DirectMessage_Selector) UserId_Ins(ins ...int) *__DirectMessage_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1852,7 +1914,7 @@ func (u *__DirectMessage_Selector) UserId_NotIn(ins []int) *__DirectMessage_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1863,7 +1925,7 @@ func (d *__DirectMessage_Selector) UserId_Eq(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1874,7 +1936,7 @@ func (d *__DirectMessage_Selector) UserId_NotEq(val int) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1885,7 +1947,7 @@ func (d *__DirectMessage_Selector) UserId_LT(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1896,7 +1958,7 @@ func (d *__DirectMessage_Selector) UserId_LE(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1907,7 +1969,7 @@ func (d *__DirectMessage_Selector) UserId_GT(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1918,7 +1980,7 @@ func (d *__DirectMessage_Selector) UserId_GE(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1931,7 +1993,7 @@ func (u *__DirectMessage_Selector) MessageFileId_In(ins []int) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1944,7 +2006,7 @@ func (u *__DirectMessage_Selector) MessageFileId_Ins(ins ...int) *__DirectMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1957,7 +2019,7 @@ func (u *__DirectMessage_Selector) MessageFileId_NotIn(ins []int) *__DirectMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1968,7 +2030,7 @@ func (d *__DirectMessage_Selector) MessageFileId_Eq(val int) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1979,7 +2041,7 @@ func (d *__DirectMessage_Selector) MessageFileId_NotEq(val int) *__DirectMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1990,7 +2052,7 @@ func (d *__DirectMessage_Selector) MessageFileId_LT(val int) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2001,7 +2063,7 @@ func (d *__DirectMessage_Selector) MessageFileId_LE(val int) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2012,7 +2074,7 @@ func (d *__DirectMessage_Selector) MessageFileId_GT(val int) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2023,7 +2085,7 @@ func (d *__DirectMessage_Selector) MessageFileId_GE(val int) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2036,7 +2098,7 @@ func (u *__DirectMessage_Selector) MessageTypeEnum_In(ins []int) *__DirectMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2049,7 +2111,7 @@ func (u *__DirectMessage_Selector) MessageTypeEnum_Ins(ins ...int) *__DirectMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2062,7 +2124,7 @@ func (u *__DirectMessage_Selector) MessageTypeEnum_NotIn(ins []int) *__DirectMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2073,7 +2135,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_Eq(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2084,7 +2146,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_NotEq(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2095,7 +2157,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_LT(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2106,7 +2168,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_LE(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2117,7 +2179,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_GT(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2128,7 +2190,7 @@ func (d *__DirectMessage_Selector) MessageTypeEnum_GE(val int) *__DirectMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2141,7 +2203,7 @@ func (u *__DirectMessage_Selector) CreatedTime_In(ins []int) *__DirectMessage_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2154,7 +2216,7 @@ func (u *__DirectMessage_Selector) CreatedTime_Ins(ins ...int) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2167,7 +2229,7 @@ func (u *__DirectMessage_Selector) CreatedTime_NotIn(ins []int) *__DirectMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2178,7 +2240,7 @@ func (d *__DirectMessage_Selector) CreatedTime_Eq(val int) *__DirectMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2189,7 +2251,7 @@ func (d *__DirectMessage_Selector) CreatedTime_NotEq(val int) *__DirectMessage_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2200,7 +2262,7 @@ func (d *__DirectMessage_Selector) CreatedTime_LT(val int) *__DirectMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2211,7 +2273,7 @@ func (d *__DirectMessage_Selector) CreatedTime_LE(val int) *__DirectMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2222,7 +2284,7 @@ func (d *__DirectMessage_Selector) CreatedTime_GT(val int) *__DirectMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2233,7 +2295,7 @@ func (d *__DirectMessage_Selector) CreatedTime_GE(val int) *__DirectMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2246,7 +2308,7 @@ func (u *__DirectMessage_Selector) Seq_In(ins []int) *__DirectMessage_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2259,7 +2321,7 @@ func (u *__DirectMessage_Selector) Seq_Ins(ins ...int) *__DirectMessage_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2272,7 +2334,7 @@ func (u *__DirectMessage_Selector) Seq_NotIn(ins []int) *__DirectMessage_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2283,7 +2345,7 @@ func (d *__DirectMessage_Selector) Seq_Eq(val int) *__DirectMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2294,7 +2356,7 @@ func (d *__DirectMessage_Selector) Seq_NotEq(val int) *__DirectMessage_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2305,7 +2367,7 @@ func (d *__DirectMessage_Selector) Seq_LT(val int) *__DirectMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2316,7 +2378,7 @@ func (d *__DirectMessage_Selector) Seq_LE(val int) *__DirectMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2327,7 +2389,7 @@ func (d *__DirectMessage_Selector) Seq_GT(val int) *__DirectMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2338,7 +2400,7 @@ func (d *__DirectMessage_Selector) Seq_GE(val int) *__DirectMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2351,7 +2413,7 @@ func (u *__DirectMessage_Selector) DeliviryStatusEnum_In(ins []int) *__DirectMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2364,7 +2426,7 @@ func (u *__DirectMessage_Selector) DeliviryStatusEnum_Ins(ins ...int) *__DirectM
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2377,7 +2439,7 @@ func (u *__DirectMessage_Selector) DeliviryStatusEnum_NotIn(ins []int) *__Direct
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliviryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2388,7 +2450,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_Eq(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum = ? "
+	w.condition = " DeliviryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2399,7 +2461,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_NotEq(val int) *__DirectMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum != ? "
+	w.condition = " DeliviryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2410,7 +2472,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_LT(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum < ? "
+	w.condition = " DeliviryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2421,7 +2483,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_LE(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum <= ? "
+	w.condition = " DeliviryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2432,7 +2494,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_GT(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum > ? "
+	w.condition = " DeliviryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2443,7 +2505,7 @@ func (d *__DirectMessage_Selector) DeliviryStatusEnum_GE(val int) *__DirectMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliviryStatusEnum >= ? "
+	w.condition = " DeliviryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2460,7 +2522,7 @@ func (u *__DirectMessage_Deleter) ChatKey_In(ins []string) *__DirectMessage_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2473,7 +2535,7 @@ func (u *__DirectMessage_Deleter) ChatKey_NotIn(ins []string) *__DirectMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2485,7 +2547,7 @@ func (u *__DirectMessage_Deleter) ChatKey_Like(val string) *__DirectMessage_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2496,7 +2558,7 @@ func (d *__DirectMessage_Deleter) ChatKey_Eq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2569,7 @@ func (d *__DirectMessage_Deleter) ChatKey_NotEq(val string) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2520,7 +2582,7 @@ func (u *__DirectMessage_Deleter) RoomKey_In(ins []string) *__DirectMessage_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2533,7 +2595,7 @@ func (u *__DirectMessage_Deleter) RoomKey_NotIn(ins []string) *__DirectMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2545,7 +2607,7 @@ func (u *__DirectMessage_Deleter) RoomKey_Like(val string) *__DirectMessage_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2556,7 +2618,7 @@ func (d *__DirectMessage_Deleter) RoomKey_Eq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2567,7 +2629,7 @@ func (d *__DirectMessage_Deleter) RoomKey_NotEq(val string) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2580,7 +2642,7 @@ func (u *__DirectMessage_Deleter) Text_In(ins []string) *__DirectMessage_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2593,7 +2655,7 @@ func (u *__DirectMessage_Deleter) Text_NotIn(ins []string) *__DirectMessage_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2605,7 +2667,7 @@ func (u *__DirectMessage_Deleter) Text_Like(val string) *__DirectMessage_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2616,7 +2678,7 @@ func (d *__DirectMessage_Deleter) Text_Eq(val string) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2627,7 +2689,7 @@ func (d *__DirectMessage_Deleter) Text_NotEq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2642,7 +2704,7 @@ func (u *__DirectMessage_Updater) ChatKey_In(ins []string) *__DirectMessage_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2655,7 +2717,7 @@ func (u *__DirectMessage_Updater) ChatKey_NotIn(ins []string) *__DirectMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2667,7 +2729,7 @@ func (u *__DirectMessage_Updater) ChatKey_Like(val string) *__DirectMessage_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2678,7 +2740,7 @@ func (d *__DirectMessage_Updater) ChatKey_Eq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2689,7 +2751,7 @@ func (d *__DirectMessage_Updater) ChatKey_NotEq(val string) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2702,7 +2764,7 @@ func (u *__DirectMessage_Updater) RoomKey_In(ins []string) *__DirectMessage_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2715,7 +2777,7 @@ func (u *__DirectMessage_Updater) RoomKey_NotIn(ins []string) *__DirectMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2727,7 +2789,7 @@ func (u *__DirectMessage_Updater) RoomKey_Like(val string) *__DirectMessage_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2738,7 +2800,7 @@ func (d *__DirectMessage_Updater) RoomKey_Eq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2749,7 +2811,7 @@ func (d *__DirectMessage_Updater) RoomKey_NotEq(val string) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2762,7 +2824,7 @@ func (u *__DirectMessage_Updater) Text_In(ins []string) *__DirectMessage_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2775,7 +2837,7 @@ func (u *__DirectMessage_Updater) Text_NotIn(ins []string) *__DirectMessage_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2849,7 @@ func (u *__DirectMessage_Updater) Text_Like(val string) *__DirectMessage_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2798,7 +2860,7 @@ func (d *__DirectMessage_Updater) Text_Eq(val string) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2809,7 +2871,7 @@ func (d *__DirectMessage_Updater) Text_NotEq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2824,7 +2886,7 @@ func (u *__DirectMessage_Selector) ChatKey_In(ins []string) *__DirectMessage_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2837,7 +2899,7 @@ func (u *__DirectMessage_Selector) ChatKey_NotIn(ins []string) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2849,7 +2911,7 @@ func (u *__DirectMessage_Selector) ChatKey_Like(val string) *__DirectMessage_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2860,7 +2922,7 @@ func (d *__DirectMessage_Selector) ChatKey_Eq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2871,7 +2933,7 @@ func (d *__DirectMessage_Selector) ChatKey_NotEq(val string) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2884,7 +2946,7 @@ func (u *__DirectMessage_Selector) RoomKey_In(ins []string) *__DirectMessage_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2897,7 +2959,7 @@ func (u *__DirectMessage_Selector) RoomKey_NotIn(ins []string) *__DirectMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2909,7 +2971,7 @@ func (u *__DirectMessage_Selector) RoomKey_Like(val string) *__DirectMessage_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2920,7 +2982,7 @@ func (d *__DirectMessage_Selector) RoomKey_Eq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2931,7 +2993,7 @@ func (d *__DirectMessage_Selector) RoomKey_NotEq(val string) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2944,7 +3006,7 @@ func (u *__DirectMessage_Selector) Text_In(ins []string) *__DirectMessage_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2957,7 +3019,7 @@ func (u *__DirectMessage_Selector) Text_NotIn(ins []string) *__DirectMessage_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2969,7 +3031,7 @@ func (u *__DirectMessage_Selector) Text_Like(val string) *__DirectMessage_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2980,7 +3042,7 @@ func (d *__DirectMessage_Selector) Text_Eq(val string) *__DirectMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2991,7 +3053,7 @@ func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3005,24 +3067,32 @@ func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selec
 
 //string
 func (u *__DirectMessage_Updater) ChatKey(newVal string) *__DirectMessage_Updater {
-	u.updates[" ChatKey = ? "] = newVal
+	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__DirectMessage_Updater) MessageId(newVal int) *__DirectMessage_Updater {
-	u.updates[" MessageId = ? "] = newVal
+	up := updateCol{" MessageId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) MessageId_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageId = MessageId+? "] = count
+		up := updateCol{" MessageId = MessageId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageId = MessageId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageId = MessageId-? "] = -(count) //make it positive
+		up := updateCol{" MessageId = MessageId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageId = MessageId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3034,24 +3104,32 @@ func (u *__DirectMessage_Updater) MessageId_Increment(count int) *__DirectMessag
 
 //string
 func (u *__DirectMessage_Updater) RoomKey(newVal string) *__DirectMessage_Updater {
-	u.updates[" RoomKey = ? "] = newVal
+	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__DirectMessage_Updater) UserId(newVal int) *__DirectMessage_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) UserId_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3062,17 +3140,23 @@ func (u *__DirectMessage_Updater) UserId_Increment(count int) *__DirectMessage_U
 //ints
 
 func (u *__DirectMessage_Updater) MessageFileId(newVal int) *__DirectMessage_Updater {
-	u.updates[" MessageFileId = ? "] = newVal
+	up := updateCol{" MessageFileId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageFileId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) MessageFileId_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageFileId = MessageFileId+? "] = count
+		up := updateCol{" MessageFileId = MessageFileId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageFileId = MessageFileId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageFileId = MessageFileId-? "] = -(count) //make it positive
+		up := updateCol{" MessageFileId = MessageFileId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageFileId = MessageFileId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3083,17 +3167,23 @@ func (u *__DirectMessage_Updater) MessageFileId_Increment(count int) *__DirectMe
 //ints
 
 func (u *__DirectMessage_Updater) MessageTypeEnum(newVal int) *__DirectMessage_Updater {
-	u.updates[" MessageTypeEnum = ? "] = newVal
+	up := updateCol{" MessageTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) MessageTypeEnum_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum+? "] = count
+		up := updateCol{" MessageTypeEnum = MessageTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageTypeEnum = MessageTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" MessageTypeEnum = MessageTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageTypeEnum = MessageTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3105,24 +3195,32 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_Increment(count int) *__Direct
 
 //string
 func (u *__DirectMessage_Updater) Text(newVal string) *__DirectMessage_Updater {
-	u.updates[" Text = ? "] = newVal
+	up := updateCol{"Text = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__DirectMessage_Updater) CreatedTime(newVal int) *__DirectMessage_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) CreatedTime_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3133,17 +3231,23 @@ func (u *__DirectMessage_Updater) CreatedTime_Increment(count int) *__DirectMess
 //ints
 
 func (u *__DirectMessage_Updater) Seq(newVal int) *__DirectMessage_Updater {
-	u.updates[" Seq = ? "] = newVal
+	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Seq = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) Seq_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
+		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
+		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3154,17 +3258,23 @@ func (u *__DirectMessage_Updater) Seq_Increment(count int) *__DirectMessage_Upda
 //ints
 
 func (u *__DirectMessage_Updater) DeliviryStatusEnum(newVal int) *__DirectMessage_Updater {
-	u.updates[" DeliviryStatusEnum = ? "] = newVal
+	up := updateCol{" DeliviryStatusEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DeliviryStatusEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__DirectMessage_Updater) DeliviryStatusEnum_Increment(count int) *__DirectMessage_Updater {
 	if count > 0 {
-		u.updates[" DeliviryStatusEnum = DeliviryStatusEnum+? "] = count
+		up := updateCol{" DeliviryStatusEnum = DeliviryStatusEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DeliviryStatusEnum = DeliviryStatusEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DeliviryStatusEnum = DeliviryStatusEnum-? "] = -(count) //make it positive
+		up := updateCol{" DeliviryStatusEnum = DeliviryStatusEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DeliviryStatusEnum = DeliviryStatusEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3572,9 +3682,13 @@ func (u *__DirectMessage_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3659,10 +3773,10 @@ func MassInsert_DirectMessage(rows []DirectMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.direct_message (" +
 		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB" +
@@ -3707,10 +3821,9 @@ func MassReplace_DirectMessage(rows []DirectMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.direct_message (" +
 		"ChatKey, MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedTime, Seq, DeliviryStatusEnum, ExtraPB" +

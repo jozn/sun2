@@ -989,19 +989,19 @@ func SuggestedUserById(db *sqlx.DB, id int) (*SuggestedUser, error) {
 }
 
 // ChatSync2BySyncId Generated from index 'PRIMARY' -- retrieves a row from 'sun_push.chat_sync2' as a ChatSync2.
-func ChatSync2BySyncId(db *sqlx.DB, syncId int) (*ChatSync2, error) {
+func ChatSync2BySyncId(db *sqlx.DB, sync_id int) (*ChatSync2, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun_push.chat_sync2 ` +
-		`WHERE SyncId = ?`
+		`WHERE sync_id = ?`
 
-	XOLog(sqlstr, syncId)
+	XOLog(sqlstr, sync_id)
 	cs := ChatSync2{
 		_exists: true,
 	}
 
-	err = db.Get(&cs, sqlstr, syncId)
+	err = db.Get(&cs, sqlstr, sync_id)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
@@ -1061,19 +1061,19 @@ func PushChatByPushId(db *sqlx.DB, pushId int) (*PushChat, error) {
 }
 
 // PushChat2BySyncId Generated from index 'PRIMARY' -- retrieves a row from 'sun_push.push_chat2' as a PushChat2.
-func PushChat2BySyncId(db *sqlx.DB, syncId int) (*PushChat2, error) {
+func PushChat2BySyncId(db *sqlx.DB, sync_id int) (*PushChat2, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun_push.push_chat2 ` +
-		`WHERE SyncId = ?`
+		`WHERE sync_id = ?`
 
-	XOLog(sqlstr, syncId)
+	XOLog(sqlstr, sync_id)
 	pc := PushChat2{
 		_exists: true,
 	}
 
-	err = db.Get(&pc, sqlstr, syncId)
+	err = db.Get(&pc, sqlstr, sync_id)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
@@ -1202,4 +1202,28 @@ func XfileServiceRequestLogById(db *sqlx.DB, id int) (*XfileServiceRequestLog, e
 	OnXfileServiceRequestLog_LoadOne(&xsrl)
 
 	return &xsrl, nil
+}
+
+// AccountById Generated from index 'primary' -- retrieves a row from 'suncdb.accounts' as a Account.
+func AccountById(db *sqlx.DB, id int) (*Account, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM suncdb.accounts ` +
+		`WHERE id = ?`
+
+	XOLog(sqlstr, id)
+	a := Account{
+		_exists: true,
+	}
+
+	err = db.Get(&a, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnAccount_LoadOne(&a)
+
+	return &a, nil
 }

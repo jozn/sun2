@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotification represents a row from 'sun.setting_notifications'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotification represents a row from 'sun.setting_notifications'.
 
 // Manualy copy this to project
 type SettingNotification__ struct {
@@ -197,23 +199,30 @@ func (sn *SettingNotification) Delete(db XODB) error {
 
 // orma types
 type __SettingNotification_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SettingNotification_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SettingNotification_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewSettingNotification_Deleter() *__SettingNotification_Deleter {
@@ -223,7 +232,7 @@ func NewSettingNotification_Deleter() *__SettingNotification_Deleter {
 
 func NewSettingNotification_Updater() *__SettingNotification_Updater {
 	u := __SettingNotification_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -232,8 +241,35 @@ func NewSettingNotification_Selector() *__SettingNotification_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__SettingNotification_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__SettingNotification_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingNotification_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingNotification_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__SettingNotification_Deleter) Or() *__SettingNotification_Deleter {
@@ -248,7 +284,7 @@ func (u *__SettingNotification_Deleter) UserId_In(ins []int) *__SettingNotificat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -261,7 +297,7 @@ func (u *__SettingNotification_Deleter) UserId_Ins(ins ...int) *__SettingNotific
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -274,7 +310,7 @@ func (u *__SettingNotification_Deleter) UserId_NotIn(ins []int) *__SettingNotifi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -285,7 +321,7 @@ func (d *__SettingNotification_Deleter) UserId_Eq(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -296,7 +332,7 @@ func (d *__SettingNotification_Deleter) UserId_NotEq(val int) *__SettingNotifica
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +343,7 @@ func (d *__SettingNotification_Deleter) UserId_LT(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +354,7 @@ func (d *__SettingNotification_Deleter) UserId_LE(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +365,7 @@ func (d *__SettingNotification_Deleter) UserId_GT(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +376,7 @@ func (d *__SettingNotification_Deleter) UserId_GE(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -353,7 +389,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -366,7 +402,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -379,7 +415,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -390,7 +426,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn = ? "
+	w.condition = " SocialLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -401,7 +437,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn != ? "
+	w.condition = " SocialLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +448,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn < ? "
+	w.condition = " SocialLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +459,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn <= ? "
+	w.condition = " SocialLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +470,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn > ? "
+	w.condition = " SocialLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +481,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn >= ? "
+	w.condition = " SocialLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -458,7 +494,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -471,7 +507,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +520,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -495,7 +531,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou = ? "
+	w.condition = " ReqestToFollowYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -506,7 +542,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou != ? "
+	w.condition = " ReqestToFollowYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +553,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou < ? "
+	w.condition = " ReqestToFollowYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +564,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou <= ? "
+	w.condition = " ReqestToFollowYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +575,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou > ? "
+	w.condition = " ReqestToFollowYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +586,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou >= ? "
+	w.condition = " ReqestToFollowYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +599,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -576,7 +612,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +625,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -600,7 +636,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou = ? "
+	w.condition = " FollowedYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -611,7 +647,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou != ? "
+	w.condition = " FollowedYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +658,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou < ? "
+	w.condition = " FollowedYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +669,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou <= ? "
+	w.condition = " FollowedYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,7 +680,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou > ? "
+	w.condition = " FollowedYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -655,7 +691,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou >= ? "
+	w.condition = " FollowedYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,7 +704,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_In(ins []int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -681,7 +717,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_Ins(ins ...int)
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -694,7 +730,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_NotIn(ins []int
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -705,7 +741,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_Eq(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest = ? "
+	w.condition = " AccptedYourFollowRequest = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -716,7 +752,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_NotEq(val int) 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest != ? "
+	w.condition = " AccptedYourFollowRequest != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -727,7 +763,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest < ? "
+	w.condition = " AccptedYourFollowRequest < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,7 +774,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest <= ? "
+	w.condition = " AccptedYourFollowRequest <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -749,7 +785,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest > ? "
+	w.condition = " AccptedYourFollowRequest > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -760,7 +796,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest >= ? "
+	w.condition = " AccptedYourFollowRequest >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -773,7 +809,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -786,7 +822,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -799,7 +835,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -810,7 +846,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked = ? "
+	w.condition = " YourPostLiked = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -821,7 +857,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked != ? "
+	w.condition = " YourPostLiked != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -832,7 +868,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked < ? "
+	w.condition = " YourPostLiked < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -843,7 +879,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked <= ? "
+	w.condition = " YourPostLiked <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,7 +890,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked > ? "
+	w.condition = " YourPostLiked > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -865,7 +901,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked >= ? "
+	w.condition = " YourPostLiked >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -878,7 +914,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -891,7 +927,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -904,7 +940,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -915,7 +951,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented = ? "
+	w.condition = " YourPostCommented = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -926,7 +962,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented != ? "
+	w.condition = " YourPostCommented != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -937,7 +973,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented < ? "
+	w.condition = " YourPostCommented < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +984,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented <= ? "
+	w.condition = " YourPostCommented <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -959,7 +995,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented > ? "
+	w.condition = " YourPostCommented > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -970,7 +1006,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented >= ? "
+	w.condition = " YourPostCommented >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -983,7 +1019,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -996,7 +1032,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1009,7 +1045,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1020,7 +1056,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost = ? "
+	w.condition = " MenthenedYouInPost = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1031,7 +1067,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost != ? "
+	w.condition = " MenthenedYouInPost != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1042,7 +1078,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost < ? "
+	w.condition = " MenthenedYouInPost < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1053,7 +1089,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost <= ? "
+	w.condition = " MenthenedYouInPost <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1064,7 +1100,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost > ? "
+	w.condition = " MenthenedYouInPost > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1075,7 +1111,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost >= ? "
+	w.condition = " MenthenedYouInPost >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1088,7 +1124,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_In(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1101,7 +1137,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_Ins(ins ...int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1114,7 +1150,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_NotIn(ins []int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1125,7 +1161,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_Eq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment = ? "
+	w.condition = " MenthenedYouInComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1136,7 +1172,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_NotEq(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment != ? "
+	w.condition = " MenthenedYouInComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1147,7 +1183,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_LT(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment < ? "
+	w.condition = " MenthenedYouInComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1158,7 +1194,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_LE(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment <= ? "
+	w.condition = " MenthenedYouInComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1169,7 +1205,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_GT(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment > ? "
+	w.condition = " MenthenedYouInComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1180,7 +1216,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_GE(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment >= ? "
+	w.condition = " MenthenedYouInComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1193,7 +1229,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1206,7 +1242,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1219,7 +1255,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1230,7 +1266,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined = ? "
+	w.condition = " YourContactsJoined = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1241,7 +1277,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined != ? "
+	w.condition = " YourContactsJoined != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1252,7 +1288,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined < ? "
+	w.condition = " YourContactsJoined < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1263,7 +1299,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined <= ? "
+	w.condition = " YourContactsJoined <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1274,7 +1310,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined > ? "
+	w.condition = " YourContactsJoined > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1285,7 +1321,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined >= ? "
+	w.condition = " YourContactsJoined >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1298,7 +1334,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1311,7 +1347,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1324,7 +1360,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1335,7 +1371,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage = ? "
+	w.condition = " DirectMessage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1346,7 +1382,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage != ? "
+	w.condition = " DirectMessage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1357,7 +1393,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage < ? "
+	w.condition = " DirectMessage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1368,7 +1404,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage <= ? "
+	w.condition = " DirectMessage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1379,7 +1415,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage > ? "
+	w.condition = " DirectMessage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1390,7 +1426,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage >= ? "
+	w.condition = " DirectMessage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1403,7 +1439,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1416,7 +1452,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1429,7 +1465,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1440,7 +1476,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert = ? "
+	w.condition = " DirectAlert = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1451,7 +1487,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert != ? "
+	w.condition = " DirectAlert != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1462,7 +1498,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert < ? "
+	w.condition = " DirectAlert < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1473,7 +1509,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert <= ? "
+	w.condition = " DirectAlert <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1484,7 +1520,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert > ? "
+	w.condition = " DirectAlert > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1495,7 +1531,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert >= ? "
+	w.condition = " DirectAlert >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1508,7 +1544,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1521,7 +1557,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1570,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1545,7 +1581,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview = ? "
+	w.condition = " DirectPerview = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1556,7 +1592,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview != ? "
+	w.condition = " DirectPerview != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1567,7 +1603,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview < ? "
+	w.condition = " DirectPerview < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1578,7 +1614,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview <= ? "
+	w.condition = " DirectPerview <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1589,7 +1625,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview > ? "
+	w.condition = " DirectPerview > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1600,7 +1636,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview >= ? "
+	w.condition = " DirectPerview >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1613,7 +1649,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1626,7 +1662,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1639,7 +1675,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1650,7 +1686,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn = ? "
+	w.condition = " DirectLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1661,7 +1697,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn != ? "
+	w.condition = " DirectLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1672,7 +1708,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn < ? "
+	w.condition = " DirectLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1683,7 +1719,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn <= ? "
+	w.condition = " DirectLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,7 +1730,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn > ? "
+	w.condition = " DirectLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1705,7 +1741,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn >= ? "
+	w.condition = " DirectLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1718,7 +1754,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1731,7 +1767,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1744,7 +1780,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1755,7 +1791,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor = ? "
+	w.condition = " DirectLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1766,7 +1802,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor != ? "
+	w.condition = " DirectLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1777,7 +1813,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor < ? "
+	w.condition = " DirectLedColor < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1788,7 +1824,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor <= ? "
+	w.condition = " DirectLedColor <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1799,7 +1835,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor > ? "
+	w.condition = " DirectLedColor > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1810,7 +1846,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor >= ? "
+	w.condition = " DirectLedColor >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1823,7 +1859,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1836,7 +1872,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1849,7 +1885,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1860,7 +1896,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate = ? "
+	w.condition = " DirectVibrate = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1871,7 +1907,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate != ? "
+	w.condition = " DirectVibrate != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1882,7 +1918,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate < ? "
+	w.condition = " DirectVibrate < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1893,7 +1929,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate <= ? "
+	w.condition = " DirectVibrate <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1904,7 +1940,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate > ? "
+	w.condition = " DirectVibrate > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1915,7 +1951,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate >= ? "
+	w.condition = " DirectVibrate >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1928,7 +1964,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1941,7 +1977,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1954,7 +1990,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1965,7 +2001,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup = ? "
+	w.condition = " DirectPopup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1976,7 +2012,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup != ? "
+	w.condition = " DirectPopup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1987,7 +2023,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup < ? "
+	w.condition = " DirectPopup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1998,7 +2034,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup <= ? "
+	w.condition = " DirectPopup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2009,7 +2045,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup > ? "
+	w.condition = " DirectPopup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2020,7 +2056,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup >= ? "
+	w.condition = " DirectPopup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2033,7 +2069,7 @@ func (u *__SettingNotification_Deleter) DirectSound_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2046,7 +2082,7 @@ func (u *__SettingNotification_Deleter) DirectSound_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2059,7 +2095,7 @@ func (u *__SettingNotification_Deleter) DirectSound_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2070,7 +2106,7 @@ func (d *__SettingNotification_Deleter) DirectSound_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound = ? "
+	w.condition = " DirectSound = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2081,7 +2117,7 @@ func (d *__SettingNotification_Deleter) DirectSound_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound != ? "
+	w.condition = " DirectSound != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2092,7 +2128,7 @@ func (d *__SettingNotification_Deleter) DirectSound_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound < ? "
+	w.condition = " DirectSound < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2103,7 +2139,7 @@ func (d *__SettingNotification_Deleter) DirectSound_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound <= ? "
+	w.condition = " DirectSound <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2114,7 +2150,7 @@ func (d *__SettingNotification_Deleter) DirectSound_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound > ? "
+	w.condition = " DirectSound > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2125,7 +2161,7 @@ func (d *__SettingNotification_Deleter) DirectSound_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound >= ? "
+	w.condition = " DirectSound >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2138,7 +2174,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2151,7 +2187,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2164,7 +2200,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2175,7 +2211,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority = ? "
+	w.condition = " DirectPriority = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2186,7 +2222,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority != ? "
+	w.condition = " DirectPriority != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2197,7 +2233,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority < ? "
+	w.condition = " DirectPriority < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2208,7 +2244,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority <= ? "
+	w.condition = " DirectPriority <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2219,7 +2255,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority > ? "
+	w.condition = " DirectPriority > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2230,10 +2266,23 @@ func (d *__SettingNotification_Deleter) DirectPriority_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority >= ? "
+	w.condition = " DirectPriority >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingNotification_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingNotification_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -2249,7 +2298,7 @@ func (u *__SettingNotification_Updater) UserId_In(ins []int) *__SettingNotificat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2262,7 +2311,7 @@ func (u *__SettingNotification_Updater) UserId_Ins(ins ...int) *__SettingNotific
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2275,7 +2324,7 @@ func (u *__SettingNotification_Updater) UserId_NotIn(ins []int) *__SettingNotifi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2286,7 +2335,7 @@ func (d *__SettingNotification_Updater) UserId_Eq(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2297,7 +2346,7 @@ func (d *__SettingNotification_Updater) UserId_NotEq(val int) *__SettingNotifica
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2308,7 +2357,7 @@ func (d *__SettingNotification_Updater) UserId_LT(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2319,7 +2368,7 @@ func (d *__SettingNotification_Updater) UserId_LE(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2330,7 +2379,7 @@ func (d *__SettingNotification_Updater) UserId_GT(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2341,7 +2390,7 @@ func (d *__SettingNotification_Updater) UserId_GE(val int) *__SettingNotificatio
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2354,7 +2403,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2367,7 +2416,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2380,7 +2429,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2391,7 +2440,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn = ? "
+	w.condition = " SocialLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2402,7 +2451,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn != ? "
+	w.condition = " SocialLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2413,7 +2462,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn < ? "
+	w.condition = " SocialLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2424,7 +2473,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn <= ? "
+	w.condition = " SocialLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2435,7 +2484,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn > ? "
+	w.condition = " SocialLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2446,7 +2495,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn >= ? "
+	w.condition = " SocialLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2459,7 +2508,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2472,7 +2521,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2485,7 +2534,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2496,7 +2545,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou = ? "
+	w.condition = " ReqestToFollowYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2556,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou != ? "
+	w.condition = " ReqestToFollowYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2518,7 +2567,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou < ? "
+	w.condition = " ReqestToFollowYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2529,7 +2578,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou <= ? "
+	w.condition = " ReqestToFollowYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2540,7 +2589,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou > ? "
+	w.condition = " ReqestToFollowYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2551,7 +2600,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou >= ? "
+	w.condition = " ReqestToFollowYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2564,7 +2613,7 @@ func (u *__SettingNotification_Updater) FollowedYou_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2577,7 +2626,7 @@ func (u *__SettingNotification_Updater) FollowedYou_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2590,7 +2639,7 @@ func (u *__SettingNotification_Updater) FollowedYou_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2601,7 +2650,7 @@ func (d *__SettingNotification_Updater) FollowedYou_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou = ? "
+	w.condition = " FollowedYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2612,7 +2661,7 @@ func (d *__SettingNotification_Updater) FollowedYou_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou != ? "
+	w.condition = " FollowedYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2623,7 +2672,7 @@ func (d *__SettingNotification_Updater) FollowedYou_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou < ? "
+	w.condition = " FollowedYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2634,7 +2683,7 @@ func (d *__SettingNotification_Updater) FollowedYou_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou <= ? "
+	w.condition = " FollowedYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2645,7 +2694,7 @@ func (d *__SettingNotification_Updater) FollowedYou_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou > ? "
+	w.condition = " FollowedYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2656,7 +2705,7 @@ func (d *__SettingNotification_Updater) FollowedYou_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou >= ? "
+	w.condition = " FollowedYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2669,7 +2718,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_In(ins []int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2682,7 +2731,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Ins(ins ...int)
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2695,7 +2744,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_NotIn(ins []int
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2706,7 +2755,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_Eq(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest = ? "
+	w.condition = " AccptedYourFollowRequest = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2717,7 +2766,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_NotEq(val int) 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest != ? "
+	w.condition = " AccptedYourFollowRequest != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2728,7 +2777,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest < ? "
+	w.condition = " AccptedYourFollowRequest < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2739,7 +2788,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest <= ? "
+	w.condition = " AccptedYourFollowRequest <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2750,7 +2799,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest > ? "
+	w.condition = " AccptedYourFollowRequest > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2761,7 +2810,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest >= ? "
+	w.condition = " AccptedYourFollowRequest >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2774,7 +2823,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2836,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2800,7 +2849,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2811,7 +2860,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked = ? "
+	w.condition = " YourPostLiked = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2822,7 +2871,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked != ? "
+	w.condition = " YourPostLiked != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2833,7 +2882,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked < ? "
+	w.condition = " YourPostLiked < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2844,7 +2893,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked <= ? "
+	w.condition = " YourPostLiked <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2855,7 +2904,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked > ? "
+	w.condition = " YourPostLiked > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2866,7 +2915,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked >= ? "
+	w.condition = " YourPostLiked >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2879,7 +2928,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2892,7 +2941,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2905,7 +2954,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2916,7 +2965,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented = ? "
+	w.condition = " YourPostCommented = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2927,7 +2976,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented != ? "
+	w.condition = " YourPostCommented != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2938,7 +2987,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented < ? "
+	w.condition = " YourPostCommented < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2949,7 +2998,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented <= ? "
+	w.condition = " YourPostCommented <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2960,7 +3009,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented > ? "
+	w.condition = " YourPostCommented > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2971,7 +3020,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented >= ? "
+	w.condition = " YourPostCommented >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2984,7 +3033,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2997,7 +3046,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3010,7 +3059,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3021,7 +3070,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost = ? "
+	w.condition = " MenthenedYouInPost = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3032,7 +3081,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost != ? "
+	w.condition = " MenthenedYouInPost != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3043,7 +3092,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost < ? "
+	w.condition = " MenthenedYouInPost < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3054,7 +3103,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost <= ? "
+	w.condition = " MenthenedYouInPost <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3065,7 +3114,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost > ? "
+	w.condition = " MenthenedYouInPost > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3076,7 +3125,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost >= ? "
+	w.condition = " MenthenedYouInPost >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3089,7 +3138,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_In(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3102,7 +3151,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_Ins(ins ...int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3115,7 +3164,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_NotIn(ins []int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3126,7 +3175,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_Eq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment = ? "
+	w.condition = " MenthenedYouInComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3137,7 +3186,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_NotEq(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment != ? "
+	w.condition = " MenthenedYouInComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3148,7 +3197,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_LT(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment < ? "
+	w.condition = " MenthenedYouInComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3159,7 +3208,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_LE(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment <= ? "
+	w.condition = " MenthenedYouInComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3170,7 +3219,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_GT(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment > ? "
+	w.condition = " MenthenedYouInComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3181,7 +3230,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_GE(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment >= ? "
+	w.condition = " MenthenedYouInComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3194,7 +3243,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3207,7 +3256,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3220,7 +3269,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3231,7 +3280,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined = ? "
+	w.condition = " YourContactsJoined = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3242,7 +3291,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined != ? "
+	w.condition = " YourContactsJoined != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3253,7 +3302,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined < ? "
+	w.condition = " YourContactsJoined < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3264,7 +3313,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined <= ? "
+	w.condition = " YourContactsJoined <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3275,7 +3324,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined > ? "
+	w.condition = " YourContactsJoined > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3286,7 +3335,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined >= ? "
+	w.condition = " YourContactsJoined >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3299,7 +3348,7 @@ func (u *__SettingNotification_Updater) DirectMessage_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3312,7 +3361,7 @@ func (u *__SettingNotification_Updater) DirectMessage_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3325,7 +3374,7 @@ func (u *__SettingNotification_Updater) DirectMessage_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3336,7 +3385,7 @@ func (d *__SettingNotification_Updater) DirectMessage_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage = ? "
+	w.condition = " DirectMessage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3347,7 +3396,7 @@ func (d *__SettingNotification_Updater) DirectMessage_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage != ? "
+	w.condition = " DirectMessage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3358,7 +3407,7 @@ func (d *__SettingNotification_Updater) DirectMessage_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage < ? "
+	w.condition = " DirectMessage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3369,7 +3418,7 @@ func (d *__SettingNotification_Updater) DirectMessage_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage <= ? "
+	w.condition = " DirectMessage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3380,7 +3429,7 @@ func (d *__SettingNotification_Updater) DirectMessage_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage > ? "
+	w.condition = " DirectMessage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3391,7 +3440,7 @@ func (d *__SettingNotification_Updater) DirectMessage_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage >= ? "
+	w.condition = " DirectMessage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3404,7 +3453,7 @@ func (u *__SettingNotification_Updater) DirectAlert_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3417,7 +3466,7 @@ func (u *__SettingNotification_Updater) DirectAlert_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3430,7 +3479,7 @@ func (u *__SettingNotification_Updater) DirectAlert_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3441,7 +3490,7 @@ func (d *__SettingNotification_Updater) DirectAlert_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert = ? "
+	w.condition = " DirectAlert = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3452,7 +3501,7 @@ func (d *__SettingNotification_Updater) DirectAlert_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert != ? "
+	w.condition = " DirectAlert != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3463,7 +3512,7 @@ func (d *__SettingNotification_Updater) DirectAlert_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert < ? "
+	w.condition = " DirectAlert < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3474,7 +3523,7 @@ func (d *__SettingNotification_Updater) DirectAlert_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert <= ? "
+	w.condition = " DirectAlert <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3485,7 +3534,7 @@ func (d *__SettingNotification_Updater) DirectAlert_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert > ? "
+	w.condition = " DirectAlert > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3496,7 +3545,7 @@ func (d *__SettingNotification_Updater) DirectAlert_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert >= ? "
+	w.condition = " DirectAlert >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3509,7 +3558,7 @@ func (u *__SettingNotification_Updater) DirectPerview_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3522,7 +3571,7 @@ func (u *__SettingNotification_Updater) DirectPerview_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3535,7 +3584,7 @@ func (u *__SettingNotification_Updater) DirectPerview_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3546,7 +3595,7 @@ func (d *__SettingNotification_Updater) DirectPerview_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview = ? "
+	w.condition = " DirectPerview = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3557,7 +3606,7 @@ func (d *__SettingNotification_Updater) DirectPerview_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview != ? "
+	w.condition = " DirectPerview != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3568,7 +3617,7 @@ func (d *__SettingNotification_Updater) DirectPerview_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview < ? "
+	w.condition = " DirectPerview < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3579,7 +3628,7 @@ func (d *__SettingNotification_Updater) DirectPerview_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview <= ? "
+	w.condition = " DirectPerview <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3590,7 +3639,7 @@ func (d *__SettingNotification_Updater) DirectPerview_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview > ? "
+	w.condition = " DirectPerview > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3601,7 +3650,7 @@ func (d *__SettingNotification_Updater) DirectPerview_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview >= ? "
+	w.condition = " DirectPerview >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3614,7 +3663,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3627,7 +3676,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3640,7 +3689,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3651,7 +3700,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn = ? "
+	w.condition = " DirectLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3662,7 +3711,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn != ? "
+	w.condition = " DirectLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3673,7 +3722,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn < ? "
+	w.condition = " DirectLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3684,7 +3733,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn <= ? "
+	w.condition = " DirectLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3695,7 +3744,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn > ? "
+	w.condition = " DirectLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3706,7 +3755,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn >= ? "
+	w.condition = " DirectLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3719,7 +3768,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3732,7 +3781,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3745,7 +3794,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3756,7 +3805,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor = ? "
+	w.condition = " DirectLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3767,7 +3816,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor != ? "
+	w.condition = " DirectLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3778,7 +3827,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor < ? "
+	w.condition = " DirectLedColor < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3789,7 +3838,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor <= ? "
+	w.condition = " DirectLedColor <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3800,7 +3849,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor > ? "
+	w.condition = " DirectLedColor > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3811,7 +3860,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor >= ? "
+	w.condition = " DirectLedColor >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3824,7 +3873,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_In(ins []int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3837,7 +3886,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3850,7 +3899,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3861,7 +3910,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_Eq(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate = ? "
+	w.condition = " DirectVibrate = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3872,7 +3921,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_NotEq(val int) *__SettingN
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate != ? "
+	w.condition = " DirectVibrate != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3883,7 +3932,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_LT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate < ? "
+	w.condition = " DirectVibrate < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3894,7 +3943,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_LE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate <= ? "
+	w.condition = " DirectVibrate <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3905,7 +3954,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_GT(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate > ? "
+	w.condition = " DirectVibrate > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3916,7 +3965,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_GE(val int) *__SettingNoti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate >= ? "
+	w.condition = " DirectVibrate >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3929,7 +3978,7 @@ func (u *__SettingNotification_Updater) DirectPopup_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3942,7 +3991,7 @@ func (u *__SettingNotification_Updater) DirectPopup_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3955,7 +4004,7 @@ func (u *__SettingNotification_Updater) DirectPopup_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3966,7 +4015,7 @@ func (d *__SettingNotification_Updater) DirectPopup_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup = ? "
+	w.condition = " DirectPopup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3977,7 +4026,7 @@ func (d *__SettingNotification_Updater) DirectPopup_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup != ? "
+	w.condition = " DirectPopup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3988,7 +4037,7 @@ func (d *__SettingNotification_Updater) DirectPopup_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup < ? "
+	w.condition = " DirectPopup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3999,7 +4048,7 @@ func (d *__SettingNotification_Updater) DirectPopup_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup <= ? "
+	w.condition = " DirectPopup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4010,7 +4059,7 @@ func (d *__SettingNotification_Updater) DirectPopup_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup > ? "
+	w.condition = " DirectPopup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4021,7 +4070,7 @@ func (d *__SettingNotification_Updater) DirectPopup_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup >= ? "
+	w.condition = " DirectPopup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4034,7 +4083,7 @@ func (u *__SettingNotification_Updater) DirectSound_In(ins []int) *__SettingNoti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4047,7 +4096,7 @@ func (u *__SettingNotification_Updater) DirectSound_Ins(ins ...int) *__SettingNo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4060,7 +4109,7 @@ func (u *__SettingNotification_Updater) DirectSound_NotIn(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4071,7 +4120,7 @@ func (d *__SettingNotification_Updater) DirectSound_Eq(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound = ? "
+	w.condition = " DirectSound = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4082,7 +4131,7 @@ func (d *__SettingNotification_Updater) DirectSound_NotEq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound != ? "
+	w.condition = " DirectSound != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4093,7 +4142,7 @@ func (d *__SettingNotification_Updater) DirectSound_LT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound < ? "
+	w.condition = " DirectSound < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4104,7 +4153,7 @@ func (d *__SettingNotification_Updater) DirectSound_LE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound <= ? "
+	w.condition = " DirectSound <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4115,7 +4164,7 @@ func (d *__SettingNotification_Updater) DirectSound_GT(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound > ? "
+	w.condition = " DirectSound > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4126,7 +4175,7 @@ func (d *__SettingNotification_Updater) DirectSound_GE(val int) *__SettingNotifi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound >= ? "
+	w.condition = " DirectSound >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4139,7 +4188,7 @@ func (u *__SettingNotification_Updater) DirectPriority_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4152,7 +4201,7 @@ func (u *__SettingNotification_Updater) DirectPriority_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4165,7 +4214,7 @@ func (u *__SettingNotification_Updater) DirectPriority_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4176,7 +4225,7 @@ func (d *__SettingNotification_Updater) DirectPriority_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority = ? "
+	w.condition = " DirectPriority = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4187,7 +4236,7 @@ func (d *__SettingNotification_Updater) DirectPriority_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority != ? "
+	w.condition = " DirectPriority != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4198,7 +4247,7 @@ func (d *__SettingNotification_Updater) DirectPriority_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority < ? "
+	w.condition = " DirectPriority < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4209,7 +4258,7 @@ func (d *__SettingNotification_Updater) DirectPriority_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority <= ? "
+	w.condition = " DirectPriority <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4220,7 +4269,7 @@ func (d *__SettingNotification_Updater) DirectPriority_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority > ? "
+	w.condition = " DirectPriority > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4231,10 +4280,23 @@ func (d *__SettingNotification_Updater) DirectPriority_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority >= ? "
+	w.condition = " DirectPriority >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingNotification_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingNotification_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -4250,7 +4312,7 @@ func (u *__SettingNotification_Selector) UserId_In(ins []int) *__SettingNotifica
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4263,7 +4325,7 @@ func (u *__SettingNotification_Selector) UserId_Ins(ins ...int) *__SettingNotifi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4276,7 +4338,7 @@ func (u *__SettingNotification_Selector) UserId_NotIn(ins []int) *__SettingNotif
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4287,7 +4349,7 @@ func (d *__SettingNotification_Selector) UserId_Eq(val int) *__SettingNotificati
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4298,7 +4360,7 @@ func (d *__SettingNotification_Selector) UserId_NotEq(val int) *__SettingNotific
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4309,7 +4371,7 @@ func (d *__SettingNotification_Selector) UserId_LT(val int) *__SettingNotificati
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4320,7 +4382,7 @@ func (d *__SettingNotification_Selector) UserId_LE(val int) *__SettingNotificati
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4331,7 +4393,7 @@ func (d *__SettingNotification_Selector) UserId_GT(val int) *__SettingNotificati
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4342,7 +4404,7 @@ func (d *__SettingNotification_Selector) UserId_GE(val int) *__SettingNotificati
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4355,7 +4417,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4368,7 +4430,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4381,7 +4443,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4392,7 +4454,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn = ? "
+	w.condition = " SocialLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4403,7 +4465,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn != ? "
+	w.condition = " SocialLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4414,7 +4476,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn < ? "
+	w.condition = " SocialLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4425,7 +4487,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn <= ? "
+	w.condition = " SocialLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4436,7 +4498,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn > ? "
+	w.condition = " SocialLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4447,7 +4509,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedOn >= ? "
+	w.condition = " SocialLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4460,7 +4522,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4473,7 +4535,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4486,7 +4548,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestToFollowYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4497,7 +4559,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou = ? "
+	w.condition = " ReqestToFollowYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4508,7 +4570,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou != ? "
+	w.condition = " ReqestToFollowYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4519,7 +4581,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou < ? "
+	w.condition = " ReqestToFollowYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4530,7 +4592,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou <= ? "
+	w.condition = " ReqestToFollowYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4541,7 +4603,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou > ? "
+	w.condition = " ReqestToFollowYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4552,7 +4614,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestToFollowYou >= ? "
+	w.condition = " ReqestToFollowYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4565,7 +4627,7 @@ func (u *__SettingNotification_Selector) FollowedYou_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4578,7 +4640,7 @@ func (u *__SettingNotification_Selector) FollowedYou_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4591,7 +4653,7 @@ func (u *__SettingNotification_Selector) FollowedYou_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FollowedYou NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " FollowedYou NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4602,7 +4664,7 @@ func (d *__SettingNotification_Selector) FollowedYou_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou = ? "
+	w.condition = " FollowedYou = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4613,7 +4675,7 @@ func (d *__SettingNotification_Selector) FollowedYou_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou != ? "
+	w.condition = " FollowedYou != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4624,7 +4686,7 @@ func (d *__SettingNotification_Selector) FollowedYou_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou < ? "
+	w.condition = " FollowedYou < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4635,7 +4697,7 @@ func (d *__SettingNotification_Selector) FollowedYou_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou <= ? "
+	w.condition = " FollowedYou <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4646,7 +4708,7 @@ func (d *__SettingNotification_Selector) FollowedYou_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou > ? "
+	w.condition = " FollowedYou > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4657,7 +4719,7 @@ func (d *__SettingNotification_Selector) FollowedYou_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FollowedYou >= ? "
+	w.condition = " FollowedYou >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4670,7 +4732,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_In(ins []int) 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4683,7 +4745,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_Ins(ins ...int
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4696,7 +4758,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_NotIn(ins []in
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AccptedYourFollowRequest NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4707,7 +4769,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_Eq(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest = ? "
+	w.condition = " AccptedYourFollowRequest = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4718,7 +4780,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_NotEq(val int)
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest != ? "
+	w.condition = " AccptedYourFollowRequest != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4729,7 +4791,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LT(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest < ? "
+	w.condition = " AccptedYourFollowRequest < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4740,7 +4802,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LE(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest <= ? "
+	w.condition = " AccptedYourFollowRequest <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4751,7 +4813,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GT(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest > ? "
+	w.condition = " AccptedYourFollowRequest > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4762,7 +4824,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GE(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AccptedYourFollowRequest >= ? "
+	w.condition = " AccptedYourFollowRequest >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4775,7 +4837,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4788,7 +4850,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4801,7 +4863,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostLiked NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostLiked NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4812,7 +4874,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked = ? "
+	w.condition = " YourPostLiked = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4823,7 +4885,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked != ? "
+	w.condition = " YourPostLiked != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4834,7 +4896,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked < ? "
+	w.condition = " YourPostLiked < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4845,7 +4907,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked <= ? "
+	w.condition = " YourPostLiked <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4856,7 +4918,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked > ? "
+	w.condition = " YourPostLiked > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4867,7 +4929,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostLiked >= ? "
+	w.condition = " YourPostLiked >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4880,7 +4942,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4893,7 +4955,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4906,7 +4968,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourPostCommented NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourPostCommented NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4917,7 +4979,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented = ? "
+	w.condition = " YourPostCommented = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4928,7 +4990,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented != ? "
+	w.condition = " YourPostCommented != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4939,7 +5001,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented < ? "
+	w.condition = " YourPostCommented < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4950,7 +5012,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented <= ? "
+	w.condition = " YourPostCommented <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4961,7 +5023,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented > ? "
+	w.condition = " YourPostCommented > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4972,7 +5034,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourPostCommented >= ? "
+	w.condition = " YourPostCommented >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4985,7 +5047,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4998,7 +5060,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5011,7 +5073,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInPost NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5022,7 +5084,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost = ? "
+	w.condition = " MenthenedYouInPost = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5033,7 +5095,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost != ? "
+	w.condition = " MenthenedYouInPost != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5044,7 +5106,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost < ? "
+	w.condition = " MenthenedYouInPost < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5055,7 +5117,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost <= ? "
+	w.condition = " MenthenedYouInPost <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5066,7 +5128,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost > ? "
+	w.condition = " MenthenedYouInPost > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5077,7 +5139,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInPost >= ? "
+	w.condition = " MenthenedYouInPost >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5090,7 +5152,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_In(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5103,7 +5165,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_Ins(ins ...int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5116,7 +5178,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_NotIn(ins []int) 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MenthenedYouInComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5127,7 +5189,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_Eq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment = ? "
+	w.condition = " MenthenedYouInComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5138,7 +5200,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_NotEq(val int) *_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment != ? "
+	w.condition = " MenthenedYouInComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5149,7 +5211,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_LT(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment < ? "
+	w.condition = " MenthenedYouInComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5160,7 +5222,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_LE(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment <= ? "
+	w.condition = " MenthenedYouInComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5171,7 +5233,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_GT(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment > ? "
+	w.condition = " MenthenedYouInComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5182,7 +5244,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_GE(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MenthenedYouInComment >= ? "
+	w.condition = " MenthenedYouInComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5195,7 +5257,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5208,7 +5270,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5221,7 +5283,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " YourContactsJoined NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " YourContactsJoined NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5232,7 +5294,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined = ? "
+	w.condition = " YourContactsJoined = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5243,7 +5305,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined != ? "
+	w.condition = " YourContactsJoined != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5254,7 +5316,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined < ? "
+	w.condition = " YourContactsJoined < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5265,7 +5327,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined <= ? "
+	w.condition = " YourContactsJoined <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5276,7 +5338,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined > ? "
+	w.condition = " YourContactsJoined > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5287,7 +5349,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " YourContactsJoined >= ? "
+	w.condition = " YourContactsJoined >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5300,7 +5362,7 @@ func (u *__SettingNotification_Selector) DirectMessage_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5313,7 +5375,7 @@ func (u *__SettingNotification_Selector) DirectMessage_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5326,7 +5388,7 @@ func (u *__SettingNotification_Selector) DirectMessage_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectMessage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectMessage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5337,7 +5399,7 @@ func (d *__SettingNotification_Selector) DirectMessage_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage = ? "
+	w.condition = " DirectMessage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5348,7 +5410,7 @@ func (d *__SettingNotification_Selector) DirectMessage_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage != ? "
+	w.condition = " DirectMessage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5359,7 +5421,7 @@ func (d *__SettingNotification_Selector) DirectMessage_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage < ? "
+	w.condition = " DirectMessage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5370,7 +5432,7 @@ func (d *__SettingNotification_Selector) DirectMessage_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage <= ? "
+	w.condition = " DirectMessage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5381,7 +5443,7 @@ func (d *__SettingNotification_Selector) DirectMessage_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage > ? "
+	w.condition = " DirectMessage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5392,7 +5454,7 @@ func (d *__SettingNotification_Selector) DirectMessage_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectMessage >= ? "
+	w.condition = " DirectMessage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5405,7 +5467,7 @@ func (u *__SettingNotification_Selector) DirectAlert_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5418,7 +5480,7 @@ func (u *__SettingNotification_Selector) DirectAlert_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5431,7 +5493,7 @@ func (u *__SettingNotification_Selector) DirectAlert_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectAlert NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectAlert NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5442,7 +5504,7 @@ func (d *__SettingNotification_Selector) DirectAlert_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert = ? "
+	w.condition = " DirectAlert = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5453,7 +5515,7 @@ func (d *__SettingNotification_Selector) DirectAlert_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert != ? "
+	w.condition = " DirectAlert != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5464,7 +5526,7 @@ func (d *__SettingNotification_Selector) DirectAlert_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert < ? "
+	w.condition = " DirectAlert < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5475,7 +5537,7 @@ func (d *__SettingNotification_Selector) DirectAlert_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert <= ? "
+	w.condition = " DirectAlert <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5486,7 +5548,7 @@ func (d *__SettingNotification_Selector) DirectAlert_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert > ? "
+	w.condition = " DirectAlert > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5497,7 +5559,7 @@ func (d *__SettingNotification_Selector) DirectAlert_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectAlert >= ? "
+	w.condition = " DirectAlert >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5510,7 +5572,7 @@ func (u *__SettingNotification_Selector) DirectPerview_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5523,7 +5585,7 @@ func (u *__SettingNotification_Selector) DirectPerview_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5536,7 +5598,7 @@ func (u *__SettingNotification_Selector) DirectPerview_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPerview NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPerview NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5547,7 +5609,7 @@ func (d *__SettingNotification_Selector) DirectPerview_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview = ? "
+	w.condition = " DirectPerview = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5558,7 +5620,7 @@ func (d *__SettingNotification_Selector) DirectPerview_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview != ? "
+	w.condition = " DirectPerview != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5569,7 +5631,7 @@ func (d *__SettingNotification_Selector) DirectPerview_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview < ? "
+	w.condition = " DirectPerview < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5580,7 +5642,7 @@ func (d *__SettingNotification_Selector) DirectPerview_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview <= ? "
+	w.condition = " DirectPerview <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5591,7 +5653,7 @@ func (d *__SettingNotification_Selector) DirectPerview_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview > ? "
+	w.condition = " DirectPerview > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5602,7 +5664,7 @@ func (d *__SettingNotification_Selector) DirectPerview_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPerview >= ? "
+	w.condition = " DirectPerview >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5615,7 +5677,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5628,7 +5690,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5641,7 +5703,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedOn NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedOn NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5652,7 +5714,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn = ? "
+	w.condition = " DirectLedOn = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5663,7 +5725,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn != ? "
+	w.condition = " DirectLedOn != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5674,7 +5736,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn < ? "
+	w.condition = " DirectLedOn < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5685,7 +5747,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn <= ? "
+	w.condition = " DirectLedOn <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5696,7 +5758,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn > ? "
+	w.condition = " DirectLedOn > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5707,7 +5769,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedOn >= ? "
+	w.condition = " DirectLedOn >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5720,7 +5782,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5733,7 +5795,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5746,7 +5808,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5757,7 +5819,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_Eq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor = ? "
+	w.condition = " DirectLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5768,7 +5830,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor != ? "
+	w.condition = " DirectLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5779,7 +5841,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_LT(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor < ? "
+	w.condition = " DirectLedColor < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5790,7 +5852,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_LE(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor <= ? "
+	w.condition = " DirectLedColor <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5801,7 +5863,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_GT(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor > ? "
+	w.condition = " DirectLedColor > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5812,7 +5874,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_GE(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectLedColor >= ? "
+	w.condition = " DirectLedColor >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5825,7 +5887,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_In(ins []int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5838,7 +5900,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5851,7 +5913,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectVibrate NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectVibrate NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5862,7 +5924,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_Eq(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate = ? "
+	w.condition = " DirectVibrate = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5873,7 +5935,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate != ? "
+	w.condition = " DirectVibrate != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5884,7 +5946,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_LT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate < ? "
+	w.condition = " DirectVibrate < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5895,7 +5957,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_LE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate <= ? "
+	w.condition = " DirectVibrate <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5906,7 +5968,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_GT(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate > ? "
+	w.condition = " DirectVibrate > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5917,7 +5979,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_GE(val int) *__SettingNot
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectVibrate >= ? "
+	w.condition = " DirectVibrate >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5930,7 +5992,7 @@ func (u *__SettingNotification_Selector) DirectPopup_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5943,7 +6005,7 @@ func (u *__SettingNotification_Selector) DirectPopup_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5956,7 +6018,7 @@ func (u *__SettingNotification_Selector) DirectPopup_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPopup NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPopup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5967,7 +6029,7 @@ func (d *__SettingNotification_Selector) DirectPopup_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup = ? "
+	w.condition = " DirectPopup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5978,7 +6040,7 @@ func (d *__SettingNotification_Selector) DirectPopup_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup != ? "
+	w.condition = " DirectPopup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5989,7 +6051,7 @@ func (d *__SettingNotification_Selector) DirectPopup_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup < ? "
+	w.condition = " DirectPopup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6000,7 +6062,7 @@ func (d *__SettingNotification_Selector) DirectPopup_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup <= ? "
+	w.condition = " DirectPopup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6011,7 +6073,7 @@ func (d *__SettingNotification_Selector) DirectPopup_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup > ? "
+	w.condition = " DirectPopup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6022,7 +6084,7 @@ func (d *__SettingNotification_Selector) DirectPopup_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPopup >= ? "
+	w.condition = " DirectPopup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6035,7 +6097,7 @@ func (u *__SettingNotification_Selector) DirectSound_In(ins []int) *__SettingNot
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6048,7 +6110,7 @@ func (u *__SettingNotification_Selector) DirectSound_Ins(ins ...int) *__SettingN
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6061,7 +6123,7 @@ func (u *__SettingNotification_Selector) DirectSound_NotIn(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectSound NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectSound NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6072,7 +6134,7 @@ func (d *__SettingNotification_Selector) DirectSound_Eq(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound = ? "
+	w.condition = " DirectSound = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6083,7 +6145,7 @@ func (d *__SettingNotification_Selector) DirectSound_NotEq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound != ? "
+	w.condition = " DirectSound != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6094,7 +6156,7 @@ func (d *__SettingNotification_Selector) DirectSound_LT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound < ? "
+	w.condition = " DirectSound < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6105,7 +6167,7 @@ func (d *__SettingNotification_Selector) DirectSound_LE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound <= ? "
+	w.condition = " DirectSound <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6116,7 +6178,7 @@ func (d *__SettingNotification_Selector) DirectSound_GT(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound > ? "
+	w.condition = " DirectSound > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6127,7 +6189,7 @@ func (d *__SettingNotification_Selector) DirectSound_GE(val int) *__SettingNotif
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectSound >= ? "
+	w.condition = " DirectSound >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6140,7 +6202,7 @@ func (u *__SettingNotification_Selector) DirectPriority_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6153,7 +6215,7 @@ func (u *__SettingNotification_Selector) DirectPriority_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6166,7 +6228,7 @@ func (u *__SettingNotification_Selector) DirectPriority_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DirectPriority NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DirectPriority NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6177,7 +6239,7 @@ func (d *__SettingNotification_Selector) DirectPriority_Eq(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority = ? "
+	w.condition = " DirectPriority = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6188,7 +6250,7 @@ func (d *__SettingNotification_Selector) DirectPriority_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority != ? "
+	w.condition = " DirectPriority != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6199,7 +6261,7 @@ func (d *__SettingNotification_Selector) DirectPriority_LT(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority < ? "
+	w.condition = " DirectPriority < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6210,7 +6272,7 @@ func (d *__SettingNotification_Selector) DirectPriority_LE(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority <= ? "
+	w.condition = " DirectPriority <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6221,7 +6283,7 @@ func (d *__SettingNotification_Selector) DirectPriority_GT(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority > ? "
+	w.condition = " DirectPriority > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6232,7 +6294,7 @@ func (d *__SettingNotification_Selector) DirectPriority_GE(val int) *__SettingNo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DirectPriority >= ? "
+	w.condition = " DirectPriority >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6249,7 +6311,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_In(ins []string) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6262,7 +6324,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_NotIn(ins []string) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6274,7 +6336,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_Like(val string) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor LIKE ? "
+	w.condition = " SocialLedColor LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6285,7 +6347,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_Eq(val string) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = ? "
+	w.condition = " SocialLedColor = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6296,7 +6358,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_NotEq(val string) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != ? "
+	w.condition = " SocialLedColor != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6311,7 +6373,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_In(ins []string) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6324,7 +6386,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_NotIn(ins []string) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6336,7 +6398,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_Like(val string) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor LIKE ? "
+	w.condition = " SocialLedColor LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6347,7 +6409,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_Eq(val string) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = ? "
+	w.condition = " SocialLedColor = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6358,7 +6420,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_NotEq(val string) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != ? "
+	w.condition = " SocialLedColor != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6373,7 +6435,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_In(ins []string) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6386,7 +6448,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_NotIn(ins []string) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SocialLedColor NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SocialLedColor NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6398,7 +6460,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_Like(val string) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor LIKE ? "
+	w.condition = " SocialLedColor LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6409,7 +6471,7 @@ func (d *__SettingNotification_Selector) SocialLedColor_Eq(val string) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = ? "
+	w.condition = " SocialLedColor = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6420,7 +6482,7 @@ func (d *__SettingNotification_Selector) SocialLedColor_NotEq(val string) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != ? "
+	w.condition = " SocialLedColor != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6433,17 +6495,23 @@ func (d *__SettingNotification_Selector) SocialLedColor_NotEq(val string) *__Set
 //ints
 
 func (u *__SettingNotification_Updater) UserId(newVal int) *__SettingNotification_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) UserId_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6454,17 +6522,23 @@ func (u *__SettingNotification_Updater) UserId_Increment(count int) *__SettingNo
 //ints
 
 func (u *__SettingNotification_Updater) SocialLedOn(newVal int) *__SettingNotification_Updater {
-	u.updates[" SocialLedOn = ? "] = newVal
+	up := updateCol{" SocialLedOn = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SocialLedOn = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) SocialLedOn_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" SocialLedOn = SocialLedOn+? "] = count
+		up := updateCol{" SocialLedOn = SocialLedOn+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SocialLedOn = SocialLedOn+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" SocialLedOn = SocialLedOn-? "] = -(count) //make it positive
+		up := updateCol{" SocialLedOn = SocialLedOn- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SocialLedOn = SocialLedOn- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6476,24 +6550,32 @@ func (u *__SettingNotification_Updater) SocialLedOn_Increment(count int) *__Sett
 
 //string
 func (u *__SettingNotification_Updater) SocialLedColor(newVal string) *__SettingNotification_Updater {
-	u.updates[" SocialLedColor = ? "] = newVal
+	up := updateCol{"SocialLedColor = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" SocialLedColor = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__SettingNotification_Updater) ReqestToFollowYou(newVal int) *__SettingNotification_Updater {
-	u.updates[" ReqestToFollowYou = ? "] = newVal
+	up := updateCol{" ReqestToFollowYou = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReqestToFollowYou = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) ReqestToFollowYou_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" ReqestToFollowYou = ReqestToFollowYou+? "] = count
+		up := updateCol{" ReqestToFollowYou = ReqestToFollowYou+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ReqestToFollowYou = ReqestToFollowYou+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ReqestToFollowYou = ReqestToFollowYou-? "] = -(count) //make it positive
+		up := updateCol{" ReqestToFollowYou = ReqestToFollowYou- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ReqestToFollowYou = ReqestToFollowYou- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6504,17 +6586,23 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_Increment(count int) *
 //ints
 
 func (u *__SettingNotification_Updater) FollowedYou(newVal int) *__SettingNotification_Updater {
-	u.updates[" FollowedYou = ? "] = newVal
+	up := updateCol{" FollowedYou = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" FollowedYou = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) FollowedYou_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" FollowedYou = FollowedYou+? "] = count
+		up := updateCol{" FollowedYou = FollowedYou+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" FollowedYou = FollowedYou+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" FollowedYou = FollowedYou-? "] = -(count) //make it positive
+		up := updateCol{" FollowedYou = FollowedYou- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" FollowedYou = FollowedYou- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6525,17 +6613,23 @@ func (u *__SettingNotification_Updater) FollowedYou_Increment(count int) *__Sett
 //ints
 
 func (u *__SettingNotification_Updater) AccptedYourFollowRequest(newVal int) *__SettingNotification_Updater {
-	u.updates[" AccptedYourFollowRequest = ? "] = newVal
+	up := updateCol{" AccptedYourFollowRequest = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AccptedYourFollowRequest = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" AccptedYourFollowRequest = AccptedYourFollowRequest+? "] = count
+		up := updateCol{" AccptedYourFollowRequest = AccptedYourFollowRequest+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AccptedYourFollowRequest = AccptedYourFollowRequest+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AccptedYourFollowRequest = AccptedYourFollowRequest-? "] = -(count) //make it positive
+		up := updateCol{" AccptedYourFollowRequest = AccptedYourFollowRequest- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AccptedYourFollowRequest = AccptedYourFollowRequest- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6546,17 +6640,23 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Increment(count
 //ints
 
 func (u *__SettingNotification_Updater) YourPostLiked(newVal int) *__SettingNotification_Updater {
-	u.updates[" YourPostLiked = ? "] = newVal
+	up := updateCol{" YourPostLiked = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" YourPostLiked = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) YourPostLiked_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" YourPostLiked = YourPostLiked+? "] = count
+		up := updateCol{" YourPostLiked = YourPostLiked+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" YourPostLiked = YourPostLiked+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" YourPostLiked = YourPostLiked-? "] = -(count) //make it positive
+		up := updateCol{" YourPostLiked = YourPostLiked- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" YourPostLiked = YourPostLiked- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6567,17 +6667,23 @@ func (u *__SettingNotification_Updater) YourPostLiked_Increment(count int) *__Se
 //ints
 
 func (u *__SettingNotification_Updater) YourPostCommented(newVal int) *__SettingNotification_Updater {
-	u.updates[" YourPostCommented = ? "] = newVal
+	up := updateCol{" YourPostCommented = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" YourPostCommented = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) YourPostCommented_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" YourPostCommented = YourPostCommented+? "] = count
+		up := updateCol{" YourPostCommented = YourPostCommented+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" YourPostCommented = YourPostCommented+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" YourPostCommented = YourPostCommented-? "] = -(count) //make it positive
+		up := updateCol{" YourPostCommented = YourPostCommented- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" YourPostCommented = YourPostCommented- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6588,17 +6694,23 @@ func (u *__SettingNotification_Updater) YourPostCommented_Increment(count int) *
 //ints
 
 func (u *__SettingNotification_Updater) MenthenedYouInPost(newVal int) *__SettingNotification_Updater {
-	u.updates[" MenthenedYouInPost = ? "] = newVal
+	up := updateCol{" MenthenedYouInPost = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MenthenedYouInPost = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) MenthenedYouInPost_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" MenthenedYouInPost = MenthenedYouInPost+? "] = count
+		up := updateCol{" MenthenedYouInPost = MenthenedYouInPost+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MenthenedYouInPost = MenthenedYouInPost+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MenthenedYouInPost = MenthenedYouInPost-? "] = -(count) //make it positive
+		up := updateCol{" MenthenedYouInPost = MenthenedYouInPost- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MenthenedYouInPost = MenthenedYouInPost- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6609,17 +6721,23 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_Increment(count int) 
 //ints
 
 func (u *__SettingNotification_Updater) MenthenedYouInComment(newVal int) *__SettingNotification_Updater {
-	u.updates[" MenthenedYouInComment = ? "] = newVal
+	up := updateCol{" MenthenedYouInComment = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MenthenedYouInComment = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) MenthenedYouInComment_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" MenthenedYouInComment = MenthenedYouInComment+? "] = count
+		up := updateCol{" MenthenedYouInComment = MenthenedYouInComment+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MenthenedYouInComment = MenthenedYouInComment+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MenthenedYouInComment = MenthenedYouInComment-? "] = -(count) //make it positive
+		up := updateCol{" MenthenedYouInComment = MenthenedYouInComment- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MenthenedYouInComment = MenthenedYouInComment- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6630,17 +6748,23 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_Increment(count in
 //ints
 
 func (u *__SettingNotification_Updater) YourContactsJoined(newVal int) *__SettingNotification_Updater {
-	u.updates[" YourContactsJoined = ? "] = newVal
+	up := updateCol{" YourContactsJoined = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" YourContactsJoined = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) YourContactsJoined_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" YourContactsJoined = YourContactsJoined+? "] = count
+		up := updateCol{" YourContactsJoined = YourContactsJoined+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" YourContactsJoined = YourContactsJoined+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" YourContactsJoined = YourContactsJoined-? "] = -(count) //make it positive
+		up := updateCol{" YourContactsJoined = YourContactsJoined- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" YourContactsJoined = YourContactsJoined- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6651,17 +6775,23 @@ func (u *__SettingNotification_Updater) YourContactsJoined_Increment(count int) 
 //ints
 
 func (u *__SettingNotification_Updater) DirectMessage(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectMessage = ? "] = newVal
+	up := updateCol{" DirectMessage = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectMessage = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectMessage_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectMessage = DirectMessage+? "] = count
+		up := updateCol{" DirectMessage = DirectMessage+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectMessage = DirectMessage+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectMessage = DirectMessage-? "] = -(count) //make it positive
+		up := updateCol{" DirectMessage = DirectMessage- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectMessage = DirectMessage- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6672,17 +6802,23 @@ func (u *__SettingNotification_Updater) DirectMessage_Increment(count int) *__Se
 //ints
 
 func (u *__SettingNotification_Updater) DirectAlert(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectAlert = ? "] = newVal
+	up := updateCol{" DirectAlert = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectAlert = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectAlert_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectAlert = DirectAlert+? "] = count
+		up := updateCol{" DirectAlert = DirectAlert+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectAlert = DirectAlert+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectAlert = DirectAlert-? "] = -(count) //make it positive
+		up := updateCol{" DirectAlert = DirectAlert- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectAlert = DirectAlert- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6693,17 +6829,23 @@ func (u *__SettingNotification_Updater) DirectAlert_Increment(count int) *__Sett
 //ints
 
 func (u *__SettingNotification_Updater) DirectPerview(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectPerview = ? "] = newVal
+	up := updateCol{" DirectPerview = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectPerview = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectPerview_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectPerview = DirectPerview+? "] = count
+		up := updateCol{" DirectPerview = DirectPerview+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectPerview = DirectPerview+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectPerview = DirectPerview-? "] = -(count) //make it positive
+		up := updateCol{" DirectPerview = DirectPerview- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectPerview = DirectPerview- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6714,17 +6856,23 @@ func (u *__SettingNotification_Updater) DirectPerview_Increment(count int) *__Se
 //ints
 
 func (u *__SettingNotification_Updater) DirectLedOn(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectLedOn = ? "] = newVal
+	up := updateCol{" DirectLedOn = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectLedOn = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectLedOn_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectLedOn = DirectLedOn+? "] = count
+		up := updateCol{" DirectLedOn = DirectLedOn+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectLedOn = DirectLedOn+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectLedOn = DirectLedOn-? "] = -(count) //make it positive
+		up := updateCol{" DirectLedOn = DirectLedOn- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectLedOn = DirectLedOn- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6735,17 +6883,23 @@ func (u *__SettingNotification_Updater) DirectLedOn_Increment(count int) *__Sett
 //ints
 
 func (u *__SettingNotification_Updater) DirectLedColor(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectLedColor = ? "] = newVal
+	up := updateCol{" DirectLedColor = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectLedColor = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectLedColor_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectLedColor = DirectLedColor+? "] = count
+		up := updateCol{" DirectLedColor = DirectLedColor+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectLedColor = DirectLedColor+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectLedColor = DirectLedColor-? "] = -(count) //make it positive
+		up := updateCol{" DirectLedColor = DirectLedColor- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectLedColor = DirectLedColor- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6756,17 +6910,23 @@ func (u *__SettingNotification_Updater) DirectLedColor_Increment(count int) *__S
 //ints
 
 func (u *__SettingNotification_Updater) DirectVibrate(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectVibrate = ? "] = newVal
+	up := updateCol{" DirectVibrate = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectVibrate = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectVibrate_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectVibrate = DirectVibrate+? "] = count
+		up := updateCol{" DirectVibrate = DirectVibrate+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectVibrate = DirectVibrate+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectVibrate = DirectVibrate-? "] = -(count) //make it positive
+		up := updateCol{" DirectVibrate = DirectVibrate- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectVibrate = DirectVibrate- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6777,17 +6937,23 @@ func (u *__SettingNotification_Updater) DirectVibrate_Increment(count int) *__Se
 //ints
 
 func (u *__SettingNotification_Updater) DirectPopup(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectPopup = ? "] = newVal
+	up := updateCol{" DirectPopup = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectPopup = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectPopup_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectPopup = DirectPopup+? "] = count
+		up := updateCol{" DirectPopup = DirectPopup+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectPopup = DirectPopup+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectPopup = DirectPopup-? "] = -(count) //make it positive
+		up := updateCol{" DirectPopup = DirectPopup- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectPopup = DirectPopup- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6798,17 +6964,23 @@ func (u *__SettingNotification_Updater) DirectPopup_Increment(count int) *__Sett
 //ints
 
 func (u *__SettingNotification_Updater) DirectSound(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectSound = ? "] = newVal
+	up := updateCol{" DirectSound = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectSound = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectSound_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectSound = DirectSound+? "] = count
+		up := updateCol{" DirectSound = DirectSound+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectSound = DirectSound+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectSound = DirectSound-? "] = -(count) //make it positive
+		up := updateCol{" DirectSound = DirectSound- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectSound = DirectSound- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6819,17 +6991,23 @@ func (u *__SettingNotification_Updater) DirectSound_Increment(count int) *__Sett
 //ints
 
 func (u *__SettingNotification_Updater) DirectPriority(newVal int) *__SettingNotification_Updater {
-	u.updates[" DirectPriority = ? "] = newVal
+	up := updateCol{" DirectPriority = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DirectPriority = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingNotification_Updater) DirectPriority_Increment(count int) *__SettingNotification_Updater {
 	if count > 0 {
-		u.updates[" DirectPriority = DirectPriority+? "] = count
+		up := updateCol{" DirectPriority = DirectPriority+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DirectPriority = DirectPriority+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DirectPriority = DirectPriority-? "] = -(count) //make it positive
+		up := updateCol{" DirectPriority = DirectPriority- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DirectPriority = DirectPriority- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -7368,9 +7546,13 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -7455,10 +7637,10 @@ func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.setting_notifications (" +
 		"UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority" +
@@ -7512,10 +7694,9 @@ func MassReplace_SettingNotification(rows []SettingNotification, db XODB) error 
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.setting_notifications (" +
 		"UserId, SocialLedOn, SocialLedColor, ReqestToFollowYou, FollowedYou, AccptedYourFollowRequest, YourPostLiked, YourPostCommented, MenthenedYouInPost, MenthenedYouInComment, YourContactsJoined, DirectMessage, DirectAlert, DirectPerview, DirectLedOn, DirectLedColor, DirectVibrate, DirectPopup, DirectSound, DirectPriority" +

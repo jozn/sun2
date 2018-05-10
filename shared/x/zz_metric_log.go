@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// MetricLog represents a row from 'sun_log.metric_log'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// MetricLog represents a row from 'sun_log.metric_log'.
 
 // Manualy copy this to project
 type MetricLog__ struct {
@@ -208,23 +209,30 @@ func (ml *MetricLog) Delete(db XODB) error {
 
 // orma types
 type __MetricLog_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __MetricLog_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __MetricLog_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewMetricLog_Deleter() *__MetricLog_Deleter {
@@ -234,7 +242,7 @@ func NewMetricLog_Deleter() *__MetricLog_Deleter {
 
 func NewMetricLog_Updater() *__MetricLog_Updater {
 	u := __MetricLog_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -243,8 +251,35 @@ func NewMetricLog_Selector() *__MetricLog_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__MetricLog_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__MetricLog_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__MetricLog_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__MetricLog_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__MetricLog_Deleter) Or() *__MetricLog_Deleter {
@@ -259,7 +294,7 @@ func (u *__MetricLog_Deleter) Id_In(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -272,7 +307,7 @@ func (u *__MetricLog_Deleter) Id_Ins(ins ...int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -285,7 +320,7 @@ func (u *__MetricLog_Deleter) Id_NotIn(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -296,7 +331,7 @@ func (d *__MetricLog_Deleter) Id_Eq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +342,7 @@ func (d *__MetricLog_Deleter) Id_NotEq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +353,7 @@ func (d *__MetricLog_Deleter) Id_LT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +364,7 @@ func (d *__MetricLog_Deleter) Id_LE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +375,7 @@ func (d *__MetricLog_Deleter) Id_GT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -351,7 +386,7 @@ func (d *__MetricLog_Deleter) Id_GE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -364,7 +399,7 @@ func (u *__MetricLog_Deleter) InstanceId_In(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -377,7 +412,7 @@ func (u *__MetricLog_Deleter) InstanceId_Ins(ins ...int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -390,7 +425,7 @@ func (u *__MetricLog_Deleter) InstanceId_NotIn(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -401,7 +436,7 @@ func (d *__MetricLog_Deleter) InstanceId_Eq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +447,7 @@ func (d *__MetricLog_Deleter) InstanceId_NotEq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +458,7 @@ func (d *__MetricLog_Deleter) InstanceId_LT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +469,7 @@ func (d *__MetricLog_Deleter) InstanceId_LE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +480,7 @@ func (d *__MetricLog_Deleter) InstanceId_GT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -456,7 +491,7 @@ func (d *__MetricLog_Deleter) InstanceId_GE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -469,7 +504,7 @@ func (u *__MetricLog_Deleter) StartTime_In(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -482,7 +517,7 @@ func (u *__MetricLog_Deleter) StartTime_Ins(ins ...int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -495,7 +530,7 @@ func (u *__MetricLog_Deleter) StartTime_NotIn(ins []int) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -506,7 +541,7 @@ func (d *__MetricLog_Deleter) StartTime_Eq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime = ? "
+	w.condition = " StartTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +552,7 @@ func (d *__MetricLog_Deleter) StartTime_NotEq(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime != ? "
+	w.condition = " StartTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +563,7 @@ func (d *__MetricLog_Deleter) StartTime_LT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime < ? "
+	w.condition = " StartTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +574,7 @@ func (d *__MetricLog_Deleter) StartTime_LE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime <= ? "
+	w.condition = " StartTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +585,7 @@ func (d *__MetricLog_Deleter) StartTime_GT(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime > ? "
+	w.condition = " StartTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -561,10 +596,23 @@ func (d *__MetricLog_Deleter) StartTime_GE(val int) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime >= ? "
+	w.condition = " StartTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__MetricLog_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__MetricLog_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -580,7 +628,7 @@ func (u *__MetricLog_Updater) Id_In(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -593,7 +641,7 @@ func (u *__MetricLog_Updater) Id_Ins(ins ...int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -606,7 +654,7 @@ func (u *__MetricLog_Updater) Id_NotIn(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -617,7 +665,7 @@ func (d *__MetricLog_Updater) Id_Eq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -628,7 +676,7 @@ func (d *__MetricLog_Updater) Id_NotEq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -639,7 +687,7 @@ func (d *__MetricLog_Updater) Id_LT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -650,7 +698,7 @@ func (d *__MetricLog_Updater) Id_LE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -661,7 +709,7 @@ func (d *__MetricLog_Updater) Id_GT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -672,7 +720,7 @@ func (d *__MetricLog_Updater) Id_GE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -685,7 +733,7 @@ func (u *__MetricLog_Updater) InstanceId_In(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -698,7 +746,7 @@ func (u *__MetricLog_Updater) InstanceId_Ins(ins ...int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -711,7 +759,7 @@ func (u *__MetricLog_Updater) InstanceId_NotIn(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -722,7 +770,7 @@ func (d *__MetricLog_Updater) InstanceId_Eq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -733,7 +781,7 @@ func (d *__MetricLog_Updater) InstanceId_NotEq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -744,7 +792,7 @@ func (d *__MetricLog_Updater) InstanceId_LT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -755,7 +803,7 @@ func (d *__MetricLog_Updater) InstanceId_LE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -766,7 +814,7 @@ func (d *__MetricLog_Updater) InstanceId_GT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -777,7 +825,7 @@ func (d *__MetricLog_Updater) InstanceId_GE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -790,7 +838,7 @@ func (u *__MetricLog_Updater) StartTime_In(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -803,7 +851,7 @@ func (u *__MetricLog_Updater) StartTime_Ins(ins ...int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -816,7 +864,7 @@ func (u *__MetricLog_Updater) StartTime_NotIn(ins []int) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -827,7 +875,7 @@ func (d *__MetricLog_Updater) StartTime_Eq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime = ? "
+	w.condition = " StartTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -838,7 +886,7 @@ func (d *__MetricLog_Updater) StartTime_NotEq(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime != ? "
+	w.condition = " StartTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -849,7 +897,7 @@ func (d *__MetricLog_Updater) StartTime_LT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime < ? "
+	w.condition = " StartTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -860,7 +908,7 @@ func (d *__MetricLog_Updater) StartTime_LE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime <= ? "
+	w.condition = " StartTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -871,7 +919,7 @@ func (d *__MetricLog_Updater) StartTime_GT(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime > ? "
+	w.condition = " StartTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -882,10 +930,23 @@ func (d *__MetricLog_Updater) StartTime_GE(val int) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime >= ? "
+	w.condition = " StartTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__MetricLog_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__MetricLog_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -901,7 +962,7 @@ func (u *__MetricLog_Selector) Id_In(ins []int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -914,7 +975,7 @@ func (u *__MetricLog_Selector) Id_Ins(ins ...int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -927,7 +988,7 @@ func (u *__MetricLog_Selector) Id_NotIn(ins []int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -938,7 +999,7 @@ func (d *__MetricLog_Selector) Id_Eq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -949,7 +1010,7 @@ func (d *__MetricLog_Selector) Id_NotEq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -960,7 +1021,7 @@ func (d *__MetricLog_Selector) Id_LT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -971,7 +1032,7 @@ func (d *__MetricLog_Selector) Id_LE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -982,7 +1043,7 @@ func (d *__MetricLog_Selector) Id_GT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -993,7 +1054,7 @@ func (d *__MetricLog_Selector) Id_GE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1006,7 +1067,7 @@ func (u *__MetricLog_Selector) InstanceId_In(ins []int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1019,7 +1080,7 @@ func (u *__MetricLog_Selector) InstanceId_Ins(ins ...int) *__MetricLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1032,7 +1093,7 @@ func (u *__MetricLog_Selector) InstanceId_NotIn(ins []int) *__MetricLog_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1043,7 +1104,7 @@ func (d *__MetricLog_Selector) InstanceId_Eq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1054,7 +1115,7 @@ func (d *__MetricLog_Selector) InstanceId_NotEq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1065,7 +1126,7 @@ func (d *__MetricLog_Selector) InstanceId_LT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1076,7 +1137,7 @@ func (d *__MetricLog_Selector) InstanceId_LE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1087,7 +1148,7 @@ func (d *__MetricLog_Selector) InstanceId_GT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1098,7 +1159,7 @@ func (d *__MetricLog_Selector) InstanceId_GE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1111,7 +1172,7 @@ func (u *__MetricLog_Selector) StartTime_In(ins []int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1124,7 +1185,7 @@ func (u *__MetricLog_Selector) StartTime_Ins(ins ...int) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1137,7 +1198,7 @@ func (u *__MetricLog_Selector) StartTime_NotIn(ins []int) *__MetricLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1148,7 +1209,7 @@ func (d *__MetricLog_Selector) StartTime_Eq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime = ? "
+	w.condition = " StartTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1159,7 +1220,7 @@ func (d *__MetricLog_Selector) StartTime_NotEq(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime != ? "
+	w.condition = " StartTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1170,7 +1231,7 @@ func (d *__MetricLog_Selector) StartTime_LT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime < ? "
+	w.condition = " StartTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1181,7 +1242,7 @@ func (d *__MetricLog_Selector) StartTime_LE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime <= ? "
+	w.condition = " StartTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1192,7 +1253,7 @@ func (d *__MetricLog_Selector) StartTime_GT(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime > ? "
+	w.condition = " StartTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1203,7 +1264,7 @@ func (d *__MetricLog_Selector) StartTime_GE(val int) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartTime >= ? "
+	w.condition = " StartTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1220,7 +1281,7 @@ func (u *__MetricLog_Deleter) StartFrom_In(ins []string) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1233,7 +1294,7 @@ func (u *__MetricLog_Deleter) StartFrom_NotIn(ins []string) *__MetricLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1245,7 +1306,7 @@ func (u *__MetricLog_Deleter) StartFrom_Like(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom LIKE ? "
+	w.condition = " StartFrom LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1256,7 +1317,7 @@ func (d *__MetricLog_Deleter) StartFrom_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = ? "
+	w.condition = " StartFrom = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1267,7 +1328,7 @@ func (d *__MetricLog_Deleter) StartFrom_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != ? "
+	w.condition = " StartFrom != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1280,7 +1341,7 @@ func (u *__MetricLog_Deleter) EndTo_In(ins []string) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1293,7 +1354,7 @@ func (u *__MetricLog_Deleter) EndTo_NotIn(ins []string) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1305,7 +1366,7 @@ func (u *__MetricLog_Deleter) EndTo_Like(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo LIKE ? "
+	w.condition = " EndTo LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1316,7 +1377,7 @@ func (d *__MetricLog_Deleter) EndTo_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = ? "
+	w.condition = " EndTo = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1327,7 +1388,7 @@ func (d *__MetricLog_Deleter) EndTo_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != ? "
+	w.condition = " EndTo != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1340,7 +1401,7 @@ func (u *__MetricLog_Deleter) Duration_In(ins []string) *__MetricLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1353,7 +1414,7 @@ func (u *__MetricLog_Deleter) Duration_NotIn(ins []string) *__MetricLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1365,7 +1426,7 @@ func (u *__MetricLog_Deleter) Duration_Like(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration LIKE ? "
+	w.condition = " Duration LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1376,7 +1437,7 @@ func (d *__MetricLog_Deleter) Duration_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1448,7 @@ func (d *__MetricLog_Deleter) Duration_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1461,7 @@ func (u *__MetricLog_Deleter) MetericsJson_In(ins []string) *__MetricLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1413,7 +1474,7 @@ func (u *__MetricLog_Deleter) MetericsJson_NotIn(ins []string) *__MetricLog_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1425,7 +1486,7 @@ func (u *__MetricLog_Deleter) MetericsJson_Like(val string) *__MetricLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson LIKE ? "
+	w.condition = " MetericsJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1436,7 +1497,7 @@ func (d *__MetricLog_Deleter) MetericsJson_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = ? "
+	w.condition = " MetericsJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1447,7 +1508,7 @@ func (d *__MetricLog_Deleter) MetericsJson_NotEq(val string) *__MetricLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != ? "
+	w.condition = " MetericsJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1462,7 +1523,7 @@ func (u *__MetricLog_Updater) StartFrom_In(ins []string) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1475,7 +1536,7 @@ func (u *__MetricLog_Updater) StartFrom_NotIn(ins []string) *__MetricLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1487,7 +1548,7 @@ func (u *__MetricLog_Updater) StartFrom_Like(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom LIKE ? "
+	w.condition = " StartFrom LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1498,7 +1559,7 @@ func (d *__MetricLog_Updater) StartFrom_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = ? "
+	w.condition = " StartFrom = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1509,7 +1570,7 @@ func (d *__MetricLog_Updater) StartFrom_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != ? "
+	w.condition = " StartFrom != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1522,7 +1583,7 @@ func (u *__MetricLog_Updater) EndTo_In(ins []string) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1535,7 +1596,7 @@ func (u *__MetricLog_Updater) EndTo_NotIn(ins []string) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1547,7 +1608,7 @@ func (u *__MetricLog_Updater) EndTo_Like(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo LIKE ? "
+	w.condition = " EndTo LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1558,7 +1619,7 @@ func (d *__MetricLog_Updater) EndTo_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = ? "
+	w.condition = " EndTo = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1569,7 +1630,7 @@ func (d *__MetricLog_Updater) EndTo_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != ? "
+	w.condition = " EndTo != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1582,7 +1643,7 @@ func (u *__MetricLog_Updater) Duration_In(ins []string) *__MetricLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1595,7 +1656,7 @@ func (u *__MetricLog_Updater) Duration_NotIn(ins []string) *__MetricLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1607,7 +1668,7 @@ func (u *__MetricLog_Updater) Duration_Like(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration LIKE ? "
+	w.condition = " Duration LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1618,7 +1679,7 @@ func (d *__MetricLog_Updater) Duration_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1629,7 +1690,7 @@ func (d *__MetricLog_Updater) Duration_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1642,7 +1703,7 @@ func (u *__MetricLog_Updater) MetericsJson_In(ins []string) *__MetricLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1655,7 +1716,7 @@ func (u *__MetricLog_Updater) MetericsJson_NotIn(ins []string) *__MetricLog_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1667,7 +1728,7 @@ func (u *__MetricLog_Updater) MetericsJson_Like(val string) *__MetricLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson LIKE ? "
+	w.condition = " MetericsJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1678,7 +1739,7 @@ func (d *__MetricLog_Updater) MetericsJson_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = ? "
+	w.condition = " MetericsJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1689,7 +1750,7 @@ func (d *__MetricLog_Updater) MetericsJson_NotEq(val string) *__MetricLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != ? "
+	w.condition = " MetericsJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1704,7 +1765,7 @@ func (u *__MetricLog_Selector) StartFrom_In(ins []string) *__MetricLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1717,7 +1778,7 @@ func (u *__MetricLog_Selector) StartFrom_NotIn(ins []string) *__MetricLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartFrom NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StartFrom NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1729,7 +1790,7 @@ func (u *__MetricLog_Selector) StartFrom_Like(val string) *__MetricLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom LIKE ? "
+	w.condition = " StartFrom LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1740,7 +1801,7 @@ func (d *__MetricLog_Selector) StartFrom_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = ? "
+	w.condition = " StartFrom = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1751,7 +1812,7 @@ func (d *__MetricLog_Selector) StartFrom_NotEq(val string) *__MetricLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != ? "
+	w.condition = " StartFrom != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1764,7 +1825,7 @@ func (u *__MetricLog_Selector) EndTo_In(ins []string) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1777,7 +1838,7 @@ func (u *__MetricLog_Selector) EndTo_NotIn(ins []string) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EndTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EndTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1789,7 +1850,7 @@ func (u *__MetricLog_Selector) EndTo_Like(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo LIKE ? "
+	w.condition = " EndTo LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1800,7 +1861,7 @@ func (d *__MetricLog_Selector) EndTo_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = ? "
+	w.condition = " EndTo = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1811,7 +1872,7 @@ func (d *__MetricLog_Selector) EndTo_NotEq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != ? "
+	w.condition = " EndTo != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1824,7 +1885,7 @@ func (u *__MetricLog_Selector) Duration_In(ins []string) *__MetricLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1837,7 +1898,7 @@ func (u *__MetricLog_Selector) Duration_NotIn(ins []string) *__MetricLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1849,7 +1910,7 @@ func (u *__MetricLog_Selector) Duration_Like(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration LIKE ? "
+	w.condition = " Duration LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1860,7 +1921,7 @@ func (d *__MetricLog_Selector) Duration_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1871,7 +1932,7 @@ func (d *__MetricLog_Selector) Duration_NotEq(val string) *__MetricLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1884,7 +1945,7 @@ func (u *__MetricLog_Selector) MetericsJson_In(ins []string) *__MetricLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1897,7 +1958,7 @@ func (u *__MetricLog_Selector) MetericsJson_NotIn(ins []string) *__MetricLog_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetericsJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetericsJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1909,7 +1970,7 @@ func (u *__MetricLog_Selector) MetericsJson_Like(val string) *__MetricLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson LIKE ? "
+	w.condition = " MetericsJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1920,7 +1981,7 @@ func (d *__MetricLog_Selector) MetericsJson_Eq(val string) *__MetricLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = ? "
+	w.condition = " MetericsJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1931,7 +1992,7 @@ func (d *__MetricLog_Selector) MetericsJson_NotEq(val string) *__MetricLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != ? "
+	w.condition = " MetericsJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1944,17 +2005,23 @@ func (d *__MetricLog_Selector) MetericsJson_NotEq(val string) *__MetricLog_Selec
 //ints
 
 func (u *__MetricLog_Updater) Id(newVal int) *__MetricLog_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__MetricLog_Updater) Id_Increment(count int) *__MetricLog_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1965,17 +2032,23 @@ func (u *__MetricLog_Updater) Id_Increment(count int) *__MetricLog_Updater {
 //ints
 
 func (u *__MetricLog_Updater) InstanceId(newVal int) *__MetricLog_Updater {
-	u.updates[" InstanceId = ? "] = newVal
+	up := updateCol{" InstanceId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" InstanceId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__MetricLog_Updater) InstanceId_Increment(count int) *__MetricLog_Updater {
 	if count > 0 {
-		u.updates[" InstanceId = InstanceId+? "] = count
+		up := updateCol{" InstanceId = InstanceId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" InstanceId = InstanceId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" InstanceId = InstanceId-? "] = -(count) //make it positive
+		up := updateCol{" InstanceId = InstanceId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" InstanceId = InstanceId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1987,7 +2060,9 @@ func (u *__MetricLog_Updater) InstanceId_Increment(count int) *__MetricLog_Updat
 
 //string
 func (u *__MetricLog_Updater) StartFrom(newVal string) *__MetricLog_Updater {
-	u.updates[" StartFrom = ? "] = newVal
+	up := updateCol{"StartFrom = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" StartFrom = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -1995,24 +2070,32 @@ func (u *__MetricLog_Updater) StartFrom(newVal string) *__MetricLog_Updater {
 
 //string
 func (u *__MetricLog_Updater) EndTo(newVal string) *__MetricLog_Updater {
-	u.updates[" EndTo = ? "] = newVal
+	up := updateCol{"EndTo = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" EndTo = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__MetricLog_Updater) StartTime(newVal int) *__MetricLog_Updater {
-	u.updates[" StartTime = ? "] = newVal
+	up := updateCol{" StartTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" StartTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__MetricLog_Updater) StartTime_Increment(count int) *__MetricLog_Updater {
 	if count > 0 {
-		u.updates[" StartTime = StartTime+? "] = count
+		up := updateCol{" StartTime = StartTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" StartTime = StartTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" StartTime = StartTime-? "] = -(count) //make it positive
+		up := updateCol{" StartTime = StartTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" StartTime = StartTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2024,7 +2107,9 @@ func (u *__MetricLog_Updater) StartTime_Increment(count int) *__MetricLog_Update
 
 //string
 func (u *__MetricLog_Updater) Duration(newVal string) *__MetricLog_Updater {
-	u.updates[" Duration = ? "] = newVal
+	up := updateCol{"Duration = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Duration = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2032,7 +2117,9 @@ func (u *__MetricLog_Updater) Duration(newVal string) *__MetricLog_Updater {
 
 //string
 func (u *__MetricLog_Updater) MetericsJson(newVal string) *__MetricLog_Updater {
-	u.updates[" MetericsJson = ? "] = newVal
+	up := updateCol{"MetericsJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" MetericsJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2372,9 +2459,13 @@ func (u *__MetricLog_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2459,7 +2550,6 @@ func MassInsert_MetricLog(rows []MetricLog, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

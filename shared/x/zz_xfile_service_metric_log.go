@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// XfileServiceMetricLog represents a row from 'sun_log.xfile_service_metric_log'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// XfileServiceMetricLog represents a row from 'sun_log.xfile_service_metric_log'.
 
 // Manualy copy this to project
 type XfileServiceMetricLog__ struct {
@@ -180,23 +182,30 @@ func (xsml *XfileServiceMetricLog) Delete(db XODB) error {
 
 // orma types
 type __XfileServiceMetricLog_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __XfileServiceMetricLog_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __XfileServiceMetricLog_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewXfileServiceMetricLog_Deleter() *__XfileServiceMetricLog_Deleter {
@@ -206,7 +215,7 @@ func NewXfileServiceMetricLog_Deleter() *__XfileServiceMetricLog_Deleter {
 
 func NewXfileServiceMetricLog_Updater() *__XfileServiceMetricLog_Updater {
 	u := __XfileServiceMetricLog_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -215,8 +224,35 @@ func NewXfileServiceMetricLog_Selector() *__XfileServiceMetricLog_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceMetricLog_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__XfileServiceMetricLog_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceMetricLog_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceMetricLog_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__XfileServiceMetricLog_Deleter) Or() *__XfileServiceMetricLog_Deleter {
@@ -231,7 +267,7 @@ func (u *__XfileServiceMetricLog_Deleter) Id_In(ins []int) *__XfileServiceMetric
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -244,7 +280,7 @@ func (u *__XfileServiceMetricLog_Deleter) Id_Ins(ins ...int) *__XfileServiceMetr
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -257,7 +293,7 @@ func (u *__XfileServiceMetricLog_Deleter) Id_NotIn(ins []int) *__XfileServiceMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -268,7 +304,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_Eq(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -279,7 +315,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_NotEq(val int) *__XfileServiceMetri
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -290,7 +326,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_LT(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -301,7 +337,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_LE(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -312,7 +348,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_GT(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -323,7 +359,7 @@ func (d *__XfileServiceMetricLog_Deleter) Id_GE(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -336,7 +372,7 @@ func (u *__XfileServiceMetricLog_Deleter) InstanceId_In(ins []int) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -349,7 +385,7 @@ func (u *__XfileServiceMetricLog_Deleter) InstanceId_Ins(ins ...int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -362,7 +398,7 @@ func (u *__XfileServiceMetricLog_Deleter) InstanceId_NotIn(ins []int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -373,7 +409,7 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_Eq(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -384,7 +420,7 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_NotEq(val int) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -395,7 +431,7 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_LT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -406,7 +442,7 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_LE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -417,7 +453,7 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_GT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -428,10 +464,23 @@ func (d *__XfileServiceMetricLog_Deleter) InstanceId_GE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceMetricLog_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceMetricLog_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -447,7 +496,7 @@ func (u *__XfileServiceMetricLog_Updater) Id_In(ins []int) *__XfileServiceMetric
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -460,7 +509,7 @@ func (u *__XfileServiceMetricLog_Updater) Id_Ins(ins ...int) *__XfileServiceMetr
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -473,7 +522,7 @@ func (u *__XfileServiceMetricLog_Updater) Id_NotIn(ins []int) *__XfileServiceMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +533,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_Eq(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -495,7 +544,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_NotEq(val int) *__XfileServiceMetri
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -506,7 +555,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_LT(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +566,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_LE(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +577,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_GT(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +588,7 @@ func (d *__XfileServiceMetricLog_Updater) Id_GE(val int) *__XfileServiceMetricLo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -552,7 +601,7 @@ func (u *__XfileServiceMetricLog_Updater) InstanceId_In(ins []int) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -565,7 +614,7 @@ func (u *__XfileServiceMetricLog_Updater) InstanceId_Ins(ins ...int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -578,7 +627,7 @@ func (u *__XfileServiceMetricLog_Updater) InstanceId_NotIn(ins []int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +638,7 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_Eq(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -600,7 +649,7 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_NotEq(val int) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -611,7 +660,7 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_LT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +671,7 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_LE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +682,7 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_GT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,10 +693,23 @@ func (d *__XfileServiceMetricLog_Updater) InstanceId_GE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceMetricLog_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceMetricLog_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -663,7 +725,7 @@ func (u *__XfileServiceMetricLog_Selector) Id_In(ins []int) *__XfileServiceMetri
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -676,7 +738,7 @@ func (u *__XfileServiceMetricLog_Selector) Id_Ins(ins ...int) *__XfileServiceMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -689,7 +751,7 @@ func (u *__XfileServiceMetricLog_Selector) Id_NotIn(ins []int) *__XfileServiceMe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -700,7 +762,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_Eq(val int) *__XfileServiceMetricL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -711,7 +773,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_NotEq(val int) *__XfileServiceMetr
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -722,7 +784,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_LT(val int) *__XfileServiceMetricL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -733,7 +795,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_LE(val int) *__XfileServiceMetricL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -744,7 +806,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_GT(val int) *__XfileServiceMetricL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -755,7 +817,7 @@ func (d *__XfileServiceMetricLog_Selector) Id_GE(val int) *__XfileServiceMetricL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -768,7 +830,7 @@ func (u *__XfileServiceMetricLog_Selector) InstanceId_In(ins []int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -781,7 +843,7 @@ func (u *__XfileServiceMetricLog_Selector) InstanceId_Ins(ins ...int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -794,7 +856,7 @@ func (u *__XfileServiceMetricLog_Selector) InstanceId_NotIn(ins []int) *__XfileS
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -805,7 +867,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_Eq(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -816,7 +878,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_NotEq(val int) *__XfileSer
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -827,7 +889,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_LT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -838,7 +900,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_LE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -849,7 +911,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_GT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -860,7 +922,7 @@ func (d *__XfileServiceMetricLog_Selector) InstanceId_GE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -877,7 +939,7 @@ func (u *__XfileServiceMetricLog_Deleter) MetricJson_In(ins []string) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -890,7 +952,7 @@ func (u *__XfileServiceMetricLog_Deleter) MetricJson_NotIn(ins []string) *__Xfil
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -902,7 +964,7 @@ func (u *__XfileServiceMetricLog_Deleter) MetricJson_Like(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson LIKE ? "
+	w.condition = " MetricJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -913,7 +975,7 @@ func (d *__XfileServiceMetricLog_Deleter) MetricJson_Eq(val string) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = ? "
+	w.condition = " MetricJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -924,7 +986,7 @@ func (d *__XfileServiceMetricLog_Deleter) MetricJson_NotEq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != ? "
+	w.condition = " MetricJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -939,7 +1001,7 @@ func (u *__XfileServiceMetricLog_Updater) MetricJson_In(ins []string) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -952,7 +1014,7 @@ func (u *__XfileServiceMetricLog_Updater) MetricJson_NotIn(ins []string) *__Xfil
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -964,7 +1026,7 @@ func (u *__XfileServiceMetricLog_Updater) MetricJson_Like(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson LIKE ? "
+	w.condition = " MetricJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -975,7 +1037,7 @@ func (d *__XfileServiceMetricLog_Updater) MetricJson_Eq(val string) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = ? "
+	w.condition = " MetricJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -986,7 +1048,7 @@ func (d *__XfileServiceMetricLog_Updater) MetricJson_NotEq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != ? "
+	w.condition = " MetricJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1001,7 +1063,7 @@ func (u *__XfileServiceMetricLog_Selector) MetricJson_In(ins []string) *__XfileS
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1014,7 +1076,7 @@ func (u *__XfileServiceMetricLog_Selector) MetricJson_NotIn(ins []string) *__Xfi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MetricJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MetricJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1026,7 +1088,7 @@ func (u *__XfileServiceMetricLog_Selector) MetricJson_Like(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson LIKE ? "
+	w.condition = " MetricJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1037,7 +1099,7 @@ func (d *__XfileServiceMetricLog_Selector) MetricJson_Eq(val string) *__XfileSer
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = ? "
+	w.condition = " MetricJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1048,7 +1110,7 @@ func (d *__XfileServiceMetricLog_Selector) MetricJson_NotEq(val string) *__Xfile
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != ? "
+	w.condition = " MetricJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1061,17 +1123,23 @@ func (d *__XfileServiceMetricLog_Selector) MetricJson_NotEq(val string) *__Xfile
 //ints
 
 func (u *__XfileServiceMetricLog_Updater) Id(newVal int) *__XfileServiceMetricLog_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceMetricLog_Updater) Id_Increment(count int) *__XfileServiceMetricLog_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1082,17 +1150,23 @@ func (u *__XfileServiceMetricLog_Updater) Id_Increment(count int) *__XfileServic
 //ints
 
 func (u *__XfileServiceMetricLog_Updater) InstanceId(newVal int) *__XfileServiceMetricLog_Updater {
-	u.updates[" InstanceId = ? "] = newVal
+	up := updateCol{" InstanceId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" InstanceId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceMetricLog_Updater) InstanceId_Increment(count int) *__XfileServiceMetricLog_Updater {
 	if count > 0 {
-		u.updates[" InstanceId = InstanceId+? "] = count
+		up := updateCol{" InstanceId = InstanceId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" InstanceId = InstanceId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" InstanceId = InstanceId-? "] = -(count) //make it positive
+		up := updateCol{" InstanceId = InstanceId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" InstanceId = InstanceId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1104,7 +1178,9 @@ func (u *__XfileServiceMetricLog_Updater) InstanceId_Increment(count int) *__Xfi
 
 //string
 func (u *__XfileServiceMetricLog_Updater) MetricJson(newVal string) *__XfileServiceMetricLog_Updater {
-	u.updates[" MetricJson = ? "] = newVal
+	up := updateCol{"MetricJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" MetricJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -1384,9 +1460,13 @@ func (u *__XfileServiceMetricLog_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1471,10 +1551,10 @@ func MassInsert_XfileServiceMetricLog(rows []XfileServiceMetricLog, db XODB) err
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(3, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_log.xfile_service_metric_log (" +
 		"Id, InstanceId, MetricJson" +
@@ -1511,10 +1591,9 @@ func MassReplace_XfileServiceMetricLog(rows []XfileServiceMetricLog, db XODB) er
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(3, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_log.xfile_service_metric_log (" +
 		"Id, InstanceId, MetricJson" +

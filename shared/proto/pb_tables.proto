@@ -419,17 +419,17 @@ message PB_SuggestedUser {
     int32 CreatedTime = 5;
 }
 message PB_ChatSync2 {
-    int64 SyncId = 1;
-    int32 ToUserId = 2;
-    int32 ChatSyncTypeId = 3;
-    string RoomKey = 4;
-    string ChatKey = 5;
-    int64 FromHighMessageId = 6;
-    int64 ToLowMessageId = 7;
-    int64 MessageId = 8;
-    bytes MessagePb = 9;
-    string MessageJson = 10;
-    int32 CreatedTime = 11;
+    int64 sync_id = 1;
+    int32 to_user_id = 2;
+    int32 chat_sync_type_id = 3;
+    string room_key = 4;
+    string chat_key = 5;
+    int64 from_high_message_id = 6;
+    int64 to_low_message_id = 7;
+    int64 message_id = 8;
+    bytes message_pb = 9;
+    string message_json = 10;
+    int32 created_time = 11;
 }
 message PB_LowerTable {
     int32 id = 1;
@@ -454,17 +454,17 @@ message PB_PushChat {
     int32 CreatedTime = 14;
 }
 message PB_PushChat2 {
-    int64 SyncId = 1;
-    int32 ToUserId = 2;
-    int32 ChatSyncTypeId = 3;
-    string RoomKey = 4;
-    string ChatKey = 5;
-    int64 FromHighMessageId = 6;
-    int64 ToLowMessageId = 7;
-    int64 MessageId = 8;
-    bytes MessagePb = 9;
-    string MessageJson = 10;
-    int32 CreatedTime = 11;
+    int64 sync_id = 1;
+    int32 to_user_id = 2;
+    int32 chat_sync_type_id = 3;
+    string room_key = 4;
+    string chat_key = 5;
+    int64 from_high_message_id = 6;
+    int64 to_low_message_id = 7;
+    int64 message_id = 8;
+    bytes message_pb = 9;
+    string message_json = 10;
+    int32 created_time = 11;
 }
 message PB_HTTPRPCLog {
     int32 Id = 1;
@@ -508,4 +508,8 @@ message PB_XfileServiceRequestLog {
     string Url = 4;
     int32 HttpCode = 5;
     string CreatedTime = 6;
+}
+message PB_Account {
+     id = 1;
+     balance = 2;
 }

@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// NotifyRemoved represents a row from 'sun.notify_removed'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// NotifyRemoved represents a row from 'sun.notify_removed'.
 
 // Manualy copy this to project
 type NotifyRemoved__ struct {
@@ -204,23 +205,30 @@ func (nr *NotifyRemoved) Delete(db XODB) error {
 
 // orma types
 type __NotifyRemoved_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __NotifyRemoved_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __NotifyRemoved_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewNotifyRemoved_Deleter() *__NotifyRemoved_Deleter {
@@ -230,7 +238,7 @@ func NewNotifyRemoved_Deleter() *__NotifyRemoved_Deleter {
 
 func NewNotifyRemoved_Updater() *__NotifyRemoved_Updater {
 	u := __NotifyRemoved_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -239,8 +247,35 @@ func NewNotifyRemoved_Selector() *__NotifyRemoved_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__NotifyRemoved_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__NotifyRemoved_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__NotifyRemoved_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__NotifyRemoved_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__NotifyRemoved_Deleter) Or() *__NotifyRemoved_Deleter {
@@ -255,7 +290,7 @@ func (u *__NotifyRemoved_Deleter) Murmur64Hash_In(ins []int) *__NotifyRemoved_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -268,7 +303,7 @@ func (u *__NotifyRemoved_Deleter) Murmur64Hash_Ins(ins ...int) *__NotifyRemoved_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -281,7 +316,7 @@ func (u *__NotifyRemoved_Deleter) Murmur64Hash_NotIn(ins []int) *__NotifyRemoved
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -292,7 +327,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_Eq(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -303,7 +338,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_NotEq(val int) *__NotifyRemoved_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -314,7 +349,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_LT(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -325,7 +360,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_LE(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -336,7 +371,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_GT(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -347,7 +382,7 @@ func (d *__NotifyRemoved_Deleter) Murmur64Hash_GE(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -360,7 +395,7 @@ func (u *__NotifyRemoved_Deleter) ForUserId_In(ins []int) *__NotifyRemoved_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -373,7 +408,7 @@ func (u *__NotifyRemoved_Deleter) ForUserId_Ins(ins ...int) *__NotifyRemoved_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -386,7 +421,7 @@ func (u *__NotifyRemoved_Deleter) ForUserId_NotIn(ins []int) *__NotifyRemoved_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -397,7 +432,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_Eq(val int) *__NotifyRemoved_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -408,7 +443,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_NotEq(val int) *__NotifyRemoved_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -419,7 +454,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_LT(val int) *__NotifyRemoved_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -430,7 +465,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_LE(val int) *__NotifyRemoved_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -441,7 +476,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_GT(val int) *__NotifyRemoved_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -452,7 +487,7 @@ func (d *__NotifyRemoved_Deleter) ForUserId_GE(val int) *__NotifyRemoved_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -465,7 +500,7 @@ func (u *__NotifyRemoved_Deleter) Id_In(ins []int) *__NotifyRemoved_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -478,7 +513,7 @@ func (u *__NotifyRemoved_Deleter) Id_Ins(ins ...int) *__NotifyRemoved_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -491,7 +526,7 @@ func (u *__NotifyRemoved_Deleter) Id_NotIn(ins []int) *__NotifyRemoved_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -502,7 +537,7 @@ func (d *__NotifyRemoved_Deleter) Id_Eq(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -513,7 +548,7 @@ func (d *__NotifyRemoved_Deleter) Id_NotEq(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -524,7 +559,7 @@ func (d *__NotifyRemoved_Deleter) Id_LT(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -535,7 +570,7 @@ func (d *__NotifyRemoved_Deleter) Id_LE(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -546,7 +581,7 @@ func (d *__NotifyRemoved_Deleter) Id_GT(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -557,10 +592,23 @@ func (d *__NotifyRemoved_Deleter) Id_GE(val int) *__NotifyRemoved_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__NotifyRemoved_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__NotifyRemoved_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -576,7 +624,7 @@ func (u *__NotifyRemoved_Updater) Murmur64Hash_In(ins []int) *__NotifyRemoved_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +637,7 @@ func (u *__NotifyRemoved_Updater) Murmur64Hash_Ins(ins ...int) *__NotifyRemoved_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -602,7 +650,7 @@ func (u *__NotifyRemoved_Updater) Murmur64Hash_NotIn(ins []int) *__NotifyRemoved
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -613,7 +661,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_Eq(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +672,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_NotEq(val int) *__NotifyRemoved_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +683,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_LT(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +694,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_LE(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -657,7 +705,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_GT(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,7 +716,7 @@ func (d *__NotifyRemoved_Updater) Murmur64Hash_GE(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -681,7 +729,7 @@ func (u *__NotifyRemoved_Updater) ForUserId_In(ins []int) *__NotifyRemoved_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -694,7 +742,7 @@ func (u *__NotifyRemoved_Updater) ForUserId_Ins(ins ...int) *__NotifyRemoved_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -707,7 +755,7 @@ func (u *__NotifyRemoved_Updater) ForUserId_NotIn(ins []int) *__NotifyRemoved_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -718,7 +766,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_Eq(val int) *__NotifyRemoved_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -729,7 +777,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_NotEq(val int) *__NotifyRemoved_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -740,7 +788,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_LT(val int) *__NotifyRemoved_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -751,7 +799,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_LE(val int) *__NotifyRemoved_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -762,7 +810,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_GT(val int) *__NotifyRemoved_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -773,7 +821,7 @@ func (d *__NotifyRemoved_Updater) ForUserId_GE(val int) *__NotifyRemoved_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -786,7 +834,7 @@ func (u *__NotifyRemoved_Updater) Id_In(ins []int) *__NotifyRemoved_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -799,7 +847,7 @@ func (u *__NotifyRemoved_Updater) Id_Ins(ins ...int) *__NotifyRemoved_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -812,7 +860,7 @@ func (u *__NotifyRemoved_Updater) Id_NotIn(ins []int) *__NotifyRemoved_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -823,7 +871,7 @@ func (d *__NotifyRemoved_Updater) Id_Eq(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -834,7 +882,7 @@ func (d *__NotifyRemoved_Updater) Id_NotEq(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -845,7 +893,7 @@ func (d *__NotifyRemoved_Updater) Id_LT(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -856,7 +904,7 @@ func (d *__NotifyRemoved_Updater) Id_LE(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -867,7 +915,7 @@ func (d *__NotifyRemoved_Updater) Id_GT(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -878,10 +926,23 @@ func (d *__NotifyRemoved_Updater) Id_GE(val int) *__NotifyRemoved_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__NotifyRemoved_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__NotifyRemoved_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -897,7 +958,7 @@ func (u *__NotifyRemoved_Selector) Murmur64Hash_In(ins []int) *__NotifyRemoved_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -910,7 +971,7 @@ func (u *__NotifyRemoved_Selector) Murmur64Hash_Ins(ins ...int) *__NotifyRemoved
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -923,7 +984,7 @@ func (u *__NotifyRemoved_Selector) Murmur64Hash_NotIn(ins []int) *__NotifyRemove
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -934,7 +995,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_Eq(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -945,7 +1006,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_NotEq(val int) *__NotifyRemoved_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -956,7 +1017,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_LT(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -967,7 +1028,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_LE(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -978,7 +1039,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_GT(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -989,7 +1050,7 @@ func (d *__NotifyRemoved_Selector) Murmur64Hash_GE(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1002,7 +1063,7 @@ func (u *__NotifyRemoved_Selector) ForUserId_In(ins []int) *__NotifyRemoved_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1015,7 +1076,7 @@ func (u *__NotifyRemoved_Selector) ForUserId_Ins(ins ...int) *__NotifyRemoved_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1028,7 +1089,7 @@ func (u *__NotifyRemoved_Selector) ForUserId_NotIn(ins []int) *__NotifyRemoved_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1039,7 +1100,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_Eq(val int) *__NotifyRemoved_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1050,7 +1111,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_NotEq(val int) *__NotifyRemoved_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1061,7 +1122,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_LT(val int) *__NotifyRemoved_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1072,7 +1133,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_LE(val int) *__NotifyRemoved_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1083,7 +1144,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_GT(val int) *__NotifyRemoved_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1094,7 +1155,7 @@ func (d *__NotifyRemoved_Selector) ForUserId_GE(val int) *__NotifyRemoved_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1107,7 +1168,7 @@ func (u *__NotifyRemoved_Selector) Id_In(ins []int) *__NotifyRemoved_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1120,7 +1181,7 @@ func (u *__NotifyRemoved_Selector) Id_Ins(ins ...int) *__NotifyRemoved_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1133,7 +1194,7 @@ func (u *__NotifyRemoved_Selector) Id_NotIn(ins []int) *__NotifyRemoved_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1144,7 +1205,7 @@ func (d *__NotifyRemoved_Selector) Id_Eq(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1155,7 +1216,7 @@ func (d *__NotifyRemoved_Selector) Id_NotEq(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1166,7 +1227,7 @@ func (d *__NotifyRemoved_Selector) Id_LT(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1177,7 +1238,7 @@ func (d *__NotifyRemoved_Selector) Id_LE(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1188,7 +1249,7 @@ func (d *__NotifyRemoved_Selector) Id_GT(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1199,7 +1260,7 @@ func (d *__NotifyRemoved_Selector) Id_GE(val int) *__NotifyRemoved_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1220,17 +1281,23 @@ func (d *__NotifyRemoved_Selector) Id_GE(val int) *__NotifyRemoved_Selector {
 //ints
 
 func (u *__NotifyRemoved_Updater) Murmur64Hash(newVal int) *__NotifyRemoved_Updater {
-	u.updates[" Murmur64Hash = ? "] = newVal
+	up := updateCol{" Murmur64Hash = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Murmur64Hash = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__NotifyRemoved_Updater) Murmur64Hash_Increment(count int) *__NotifyRemoved_Updater {
 	if count > 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash+? "] = count
+		up := updateCol{" Murmur64Hash = Murmur64Hash+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Murmur64Hash = Murmur64Hash+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash-? "] = -(count) //make it positive
+		up := updateCol{" Murmur64Hash = Murmur64Hash- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Murmur64Hash = Murmur64Hash- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1241,17 +1308,23 @@ func (u *__NotifyRemoved_Updater) Murmur64Hash_Increment(count int) *__NotifyRem
 //ints
 
 func (u *__NotifyRemoved_Updater) ForUserId(newVal int) *__NotifyRemoved_Updater {
-	u.updates[" ForUserId = ? "] = newVal
+	up := updateCol{" ForUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ForUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__NotifyRemoved_Updater) ForUserId_Increment(count int) *__NotifyRemoved_Updater {
 	if count > 0 {
-		u.updates[" ForUserId = ForUserId+? "] = count
+		up := updateCol{" ForUserId = ForUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ForUserId = ForUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ForUserId = ForUserId-? "] = -(count) //make it positive
+		up := updateCol{" ForUserId = ForUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ForUserId = ForUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1262,17 +1335,23 @@ func (u *__NotifyRemoved_Updater) ForUserId_Increment(count int) *__NotifyRemove
 //ints
 
 func (u *__NotifyRemoved_Updater) Id(newVal int) *__NotifyRemoved_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__NotifyRemoved_Updater) Id_Increment(count int) *__NotifyRemoved_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1556,9 +1635,13 @@ func (u *__NotifyRemoved_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1643,7 +1726,6 @@ func MassInsert_NotifyRemoved(rows []NotifyRemoved, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

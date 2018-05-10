@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SearchClicked represents a row from 'sun.search_clicked'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SearchClicked represents a row from 'sun.search_clicked'.
 
 // Manualy copy this to project
 type SearchClicked__ struct {
@@ -207,23 +208,30 @@ func (sc *SearchClicked) Delete(db XODB) error {
 
 // orma types
 type __SearchClicked_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SearchClicked_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SearchClicked_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewSearchClicked_Deleter() *__SearchClicked_Deleter {
@@ -233,7 +241,7 @@ func NewSearchClicked_Deleter() *__SearchClicked_Deleter {
 
 func NewSearchClicked_Updater() *__SearchClicked_Updater {
 	u := __SearchClicked_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -242,8 +250,35 @@ func NewSearchClicked_Selector() *__SearchClicked_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__SearchClicked_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__SearchClicked_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SearchClicked_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SearchClicked_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__SearchClicked_Deleter) Or() *__SearchClicked_Deleter {
@@ -258,7 +293,7 @@ func (u *__SearchClicked_Deleter) Id_In(ins []int) *__SearchClicked_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -271,7 +306,7 @@ func (u *__SearchClicked_Deleter) Id_Ins(ins ...int) *__SearchClicked_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -284,7 +319,7 @@ func (u *__SearchClicked_Deleter) Id_NotIn(ins []int) *__SearchClicked_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -295,7 +330,7 @@ func (d *__SearchClicked_Deleter) Id_Eq(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -306,7 +341,7 @@ func (d *__SearchClicked_Deleter) Id_NotEq(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -317,7 +352,7 @@ func (d *__SearchClicked_Deleter) Id_LT(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -328,7 +363,7 @@ func (d *__SearchClicked_Deleter) Id_LE(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -339,7 +374,7 @@ func (d *__SearchClicked_Deleter) Id_GT(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -350,7 +385,7 @@ func (d *__SearchClicked_Deleter) Id_GE(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -363,7 +398,7 @@ func (u *__SearchClicked_Deleter) ClickType_In(ins []int) *__SearchClicked_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -376,7 +411,7 @@ func (u *__SearchClicked_Deleter) ClickType_Ins(ins ...int) *__SearchClicked_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -389,7 +424,7 @@ func (u *__SearchClicked_Deleter) ClickType_NotIn(ins []int) *__SearchClicked_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -400,7 +435,7 @@ func (d *__SearchClicked_Deleter) ClickType_Eq(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType = ? "
+	w.condition = " ClickType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -411,7 +446,7 @@ func (d *__SearchClicked_Deleter) ClickType_NotEq(val int) *__SearchClicked_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType != ? "
+	w.condition = " ClickType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -422,7 +457,7 @@ func (d *__SearchClicked_Deleter) ClickType_LT(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType < ? "
+	w.condition = " ClickType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -433,7 +468,7 @@ func (d *__SearchClicked_Deleter) ClickType_LE(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType <= ? "
+	w.condition = " ClickType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -444,7 +479,7 @@ func (d *__SearchClicked_Deleter) ClickType_GT(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType > ? "
+	w.condition = " ClickType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -455,7 +490,7 @@ func (d *__SearchClicked_Deleter) ClickType_GE(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType >= ? "
+	w.condition = " ClickType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -468,7 +503,7 @@ func (u *__SearchClicked_Deleter) TargetId_In(ins []int) *__SearchClicked_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -481,7 +516,7 @@ func (u *__SearchClicked_Deleter) TargetId_Ins(ins ...int) *__SearchClicked_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -494,7 +529,7 @@ func (u *__SearchClicked_Deleter) TargetId_NotIn(ins []int) *__SearchClicked_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -505,7 +540,7 @@ func (d *__SearchClicked_Deleter) TargetId_Eq(val int) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -516,7 +551,7 @@ func (d *__SearchClicked_Deleter) TargetId_NotEq(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -527,7 +562,7 @@ func (d *__SearchClicked_Deleter) TargetId_LT(val int) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -538,7 +573,7 @@ func (d *__SearchClicked_Deleter) TargetId_LE(val int) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -549,7 +584,7 @@ func (d *__SearchClicked_Deleter) TargetId_GT(val int) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -560,7 +595,7 @@ func (d *__SearchClicked_Deleter) TargetId_GE(val int) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -573,7 +608,7 @@ func (u *__SearchClicked_Deleter) UserId_In(ins []int) *__SearchClicked_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -586,7 +621,7 @@ func (u *__SearchClicked_Deleter) UserId_Ins(ins ...int) *__SearchClicked_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -599,7 +634,7 @@ func (u *__SearchClicked_Deleter) UserId_NotIn(ins []int) *__SearchClicked_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -610,7 +645,7 @@ func (d *__SearchClicked_Deleter) UserId_Eq(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -621,7 +656,7 @@ func (d *__SearchClicked_Deleter) UserId_NotEq(val int) *__SearchClicked_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -632,7 +667,7 @@ func (d *__SearchClicked_Deleter) UserId_LT(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -643,7 +678,7 @@ func (d *__SearchClicked_Deleter) UserId_LE(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -654,7 +689,7 @@ func (d *__SearchClicked_Deleter) UserId_GT(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -665,7 +700,7 @@ func (d *__SearchClicked_Deleter) UserId_GE(val int) *__SearchClicked_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -678,7 +713,7 @@ func (u *__SearchClicked_Deleter) CreatedTime_In(ins []int) *__SearchClicked_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -691,7 +726,7 @@ func (u *__SearchClicked_Deleter) CreatedTime_Ins(ins ...int) *__SearchClicked_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -704,7 +739,7 @@ func (u *__SearchClicked_Deleter) CreatedTime_NotIn(ins []int) *__SearchClicked_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -715,7 +750,7 @@ func (d *__SearchClicked_Deleter) CreatedTime_Eq(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -726,7 +761,7 @@ func (d *__SearchClicked_Deleter) CreatedTime_NotEq(val int) *__SearchClicked_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -737,7 +772,7 @@ func (d *__SearchClicked_Deleter) CreatedTime_LT(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -748,7 +783,7 @@ func (d *__SearchClicked_Deleter) CreatedTime_LE(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -759,7 +794,7 @@ func (d *__SearchClicked_Deleter) CreatedTime_GT(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -770,10 +805,23 @@ func (d *__SearchClicked_Deleter) CreatedTime_GE(val int) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SearchClicked_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SearchClicked_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -789,7 +837,7 @@ func (u *__SearchClicked_Updater) Id_In(ins []int) *__SearchClicked_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -802,7 +850,7 @@ func (u *__SearchClicked_Updater) Id_Ins(ins ...int) *__SearchClicked_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -815,7 +863,7 @@ func (u *__SearchClicked_Updater) Id_NotIn(ins []int) *__SearchClicked_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -826,7 +874,7 @@ func (d *__SearchClicked_Updater) Id_Eq(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -837,7 +885,7 @@ func (d *__SearchClicked_Updater) Id_NotEq(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -848,7 +896,7 @@ func (d *__SearchClicked_Updater) Id_LT(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -859,7 +907,7 @@ func (d *__SearchClicked_Updater) Id_LE(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -870,7 +918,7 @@ func (d *__SearchClicked_Updater) Id_GT(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -881,7 +929,7 @@ func (d *__SearchClicked_Updater) Id_GE(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -894,7 +942,7 @@ func (u *__SearchClicked_Updater) ClickType_In(ins []int) *__SearchClicked_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -907,7 +955,7 @@ func (u *__SearchClicked_Updater) ClickType_Ins(ins ...int) *__SearchClicked_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -920,7 +968,7 @@ func (u *__SearchClicked_Updater) ClickType_NotIn(ins []int) *__SearchClicked_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -931,7 +979,7 @@ func (d *__SearchClicked_Updater) ClickType_Eq(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType = ? "
+	w.condition = " ClickType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -942,7 +990,7 @@ func (d *__SearchClicked_Updater) ClickType_NotEq(val int) *__SearchClicked_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType != ? "
+	w.condition = " ClickType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -953,7 +1001,7 @@ func (d *__SearchClicked_Updater) ClickType_LT(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType < ? "
+	w.condition = " ClickType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -964,7 +1012,7 @@ func (d *__SearchClicked_Updater) ClickType_LE(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType <= ? "
+	w.condition = " ClickType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -975,7 +1023,7 @@ func (d *__SearchClicked_Updater) ClickType_GT(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType > ? "
+	w.condition = " ClickType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -986,7 +1034,7 @@ func (d *__SearchClicked_Updater) ClickType_GE(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType >= ? "
+	w.condition = " ClickType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -999,7 +1047,7 @@ func (u *__SearchClicked_Updater) TargetId_In(ins []int) *__SearchClicked_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1012,7 +1060,7 @@ func (u *__SearchClicked_Updater) TargetId_Ins(ins ...int) *__SearchClicked_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1025,7 +1073,7 @@ func (u *__SearchClicked_Updater) TargetId_NotIn(ins []int) *__SearchClicked_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1036,7 +1084,7 @@ func (d *__SearchClicked_Updater) TargetId_Eq(val int) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1047,7 +1095,7 @@ func (d *__SearchClicked_Updater) TargetId_NotEq(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1058,7 +1106,7 @@ func (d *__SearchClicked_Updater) TargetId_LT(val int) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1069,7 +1117,7 @@ func (d *__SearchClicked_Updater) TargetId_LE(val int) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1080,7 +1128,7 @@ func (d *__SearchClicked_Updater) TargetId_GT(val int) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1091,7 +1139,7 @@ func (d *__SearchClicked_Updater) TargetId_GE(val int) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1104,7 +1152,7 @@ func (u *__SearchClicked_Updater) UserId_In(ins []int) *__SearchClicked_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1117,7 +1165,7 @@ func (u *__SearchClicked_Updater) UserId_Ins(ins ...int) *__SearchClicked_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1130,7 +1178,7 @@ func (u *__SearchClicked_Updater) UserId_NotIn(ins []int) *__SearchClicked_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1141,7 +1189,7 @@ func (d *__SearchClicked_Updater) UserId_Eq(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1152,7 +1200,7 @@ func (d *__SearchClicked_Updater) UserId_NotEq(val int) *__SearchClicked_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1163,7 +1211,7 @@ func (d *__SearchClicked_Updater) UserId_LT(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1174,7 +1222,7 @@ func (d *__SearchClicked_Updater) UserId_LE(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1185,7 +1233,7 @@ func (d *__SearchClicked_Updater) UserId_GT(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1196,7 +1244,7 @@ func (d *__SearchClicked_Updater) UserId_GE(val int) *__SearchClicked_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1209,7 +1257,7 @@ func (u *__SearchClicked_Updater) CreatedTime_In(ins []int) *__SearchClicked_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1222,7 +1270,7 @@ func (u *__SearchClicked_Updater) CreatedTime_Ins(ins ...int) *__SearchClicked_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1235,7 +1283,7 @@ func (u *__SearchClicked_Updater) CreatedTime_NotIn(ins []int) *__SearchClicked_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1246,7 +1294,7 @@ func (d *__SearchClicked_Updater) CreatedTime_Eq(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1257,7 +1305,7 @@ func (d *__SearchClicked_Updater) CreatedTime_NotEq(val int) *__SearchClicked_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1268,7 +1316,7 @@ func (d *__SearchClicked_Updater) CreatedTime_LT(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1279,7 +1327,7 @@ func (d *__SearchClicked_Updater) CreatedTime_LE(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1290,7 +1338,7 @@ func (d *__SearchClicked_Updater) CreatedTime_GT(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1301,10 +1349,23 @@ func (d *__SearchClicked_Updater) CreatedTime_GE(val int) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SearchClicked_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SearchClicked_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1320,7 +1381,7 @@ func (u *__SearchClicked_Selector) Id_In(ins []int) *__SearchClicked_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1333,7 +1394,7 @@ func (u *__SearchClicked_Selector) Id_Ins(ins ...int) *__SearchClicked_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1346,7 +1407,7 @@ func (u *__SearchClicked_Selector) Id_NotIn(ins []int) *__SearchClicked_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1357,7 +1418,7 @@ func (d *__SearchClicked_Selector) Id_Eq(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1368,7 +1429,7 @@ func (d *__SearchClicked_Selector) Id_NotEq(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1379,7 +1440,7 @@ func (d *__SearchClicked_Selector) Id_LT(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1390,7 +1451,7 @@ func (d *__SearchClicked_Selector) Id_LE(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1401,7 +1462,7 @@ func (d *__SearchClicked_Selector) Id_GT(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1412,7 +1473,7 @@ func (d *__SearchClicked_Selector) Id_GE(val int) *__SearchClicked_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1425,7 +1486,7 @@ func (u *__SearchClicked_Selector) ClickType_In(ins []int) *__SearchClicked_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1438,7 +1499,7 @@ func (u *__SearchClicked_Selector) ClickType_Ins(ins ...int) *__SearchClicked_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1451,7 +1512,7 @@ func (u *__SearchClicked_Selector) ClickType_NotIn(ins []int) *__SearchClicked_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ClickType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ClickType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1462,7 +1523,7 @@ func (d *__SearchClicked_Selector) ClickType_Eq(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType = ? "
+	w.condition = " ClickType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1473,7 +1534,7 @@ func (d *__SearchClicked_Selector) ClickType_NotEq(val int) *__SearchClicked_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType != ? "
+	w.condition = " ClickType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1484,7 +1545,7 @@ func (d *__SearchClicked_Selector) ClickType_LT(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType < ? "
+	w.condition = " ClickType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1495,7 +1556,7 @@ func (d *__SearchClicked_Selector) ClickType_LE(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType <= ? "
+	w.condition = " ClickType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1506,7 +1567,7 @@ func (d *__SearchClicked_Selector) ClickType_GT(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType > ? "
+	w.condition = " ClickType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1517,7 +1578,7 @@ func (d *__SearchClicked_Selector) ClickType_GE(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ClickType >= ? "
+	w.condition = " ClickType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1530,7 +1591,7 @@ func (u *__SearchClicked_Selector) TargetId_In(ins []int) *__SearchClicked_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1543,7 +1604,7 @@ func (u *__SearchClicked_Selector) TargetId_Ins(ins ...int) *__SearchClicked_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1556,7 +1617,7 @@ func (u *__SearchClicked_Selector) TargetId_NotIn(ins []int) *__SearchClicked_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1567,7 +1628,7 @@ func (d *__SearchClicked_Selector) TargetId_Eq(val int) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1578,7 +1639,7 @@ func (d *__SearchClicked_Selector) TargetId_NotEq(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1589,7 +1650,7 @@ func (d *__SearchClicked_Selector) TargetId_LT(val int) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1600,7 +1661,7 @@ func (d *__SearchClicked_Selector) TargetId_LE(val int) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1611,7 +1672,7 @@ func (d *__SearchClicked_Selector) TargetId_GT(val int) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1622,7 +1683,7 @@ func (d *__SearchClicked_Selector) TargetId_GE(val int) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1635,7 +1696,7 @@ func (u *__SearchClicked_Selector) UserId_In(ins []int) *__SearchClicked_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1648,7 +1709,7 @@ func (u *__SearchClicked_Selector) UserId_Ins(ins ...int) *__SearchClicked_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1661,7 +1722,7 @@ func (u *__SearchClicked_Selector) UserId_NotIn(ins []int) *__SearchClicked_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1672,7 +1733,7 @@ func (d *__SearchClicked_Selector) UserId_Eq(val int) *__SearchClicked_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1683,7 +1744,7 @@ func (d *__SearchClicked_Selector) UserId_NotEq(val int) *__SearchClicked_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,7 +1755,7 @@ func (d *__SearchClicked_Selector) UserId_LT(val int) *__SearchClicked_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1705,7 +1766,7 @@ func (d *__SearchClicked_Selector) UserId_LE(val int) *__SearchClicked_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1716,7 +1777,7 @@ func (d *__SearchClicked_Selector) UserId_GT(val int) *__SearchClicked_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1727,7 +1788,7 @@ func (d *__SearchClicked_Selector) UserId_GE(val int) *__SearchClicked_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1740,7 +1801,7 @@ func (u *__SearchClicked_Selector) CreatedTime_In(ins []int) *__SearchClicked_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1753,7 +1814,7 @@ func (u *__SearchClicked_Selector) CreatedTime_Ins(ins ...int) *__SearchClicked_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1766,7 +1827,7 @@ func (u *__SearchClicked_Selector) CreatedTime_NotIn(ins []int) *__SearchClicked
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1777,7 +1838,7 @@ func (d *__SearchClicked_Selector) CreatedTime_Eq(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1788,7 +1849,7 @@ func (d *__SearchClicked_Selector) CreatedTime_NotEq(val int) *__SearchClicked_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1799,7 +1860,7 @@ func (d *__SearchClicked_Selector) CreatedTime_LT(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1810,7 +1871,7 @@ func (d *__SearchClicked_Selector) CreatedTime_LE(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1821,7 +1882,7 @@ func (d *__SearchClicked_Selector) CreatedTime_GT(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1832,7 +1893,7 @@ func (d *__SearchClicked_Selector) CreatedTime_GE(val int) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1849,7 +1910,7 @@ func (u *__SearchClicked_Deleter) Query_In(ins []string) *__SearchClicked_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1862,7 +1923,7 @@ func (u *__SearchClicked_Deleter) Query_NotIn(ins []string) *__SearchClicked_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1874,7 +1935,7 @@ func (u *__SearchClicked_Deleter) Query_Like(val string) *__SearchClicked_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query LIKE ? "
+	w.condition = " Query LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1885,7 +1946,7 @@ func (d *__SearchClicked_Deleter) Query_Eq(val string) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = ? "
+	w.condition = " Query = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1896,7 +1957,7 @@ func (d *__SearchClicked_Deleter) Query_NotEq(val string) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != ? "
+	w.condition = " Query != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1911,7 +1972,7 @@ func (u *__SearchClicked_Updater) Query_In(ins []string) *__SearchClicked_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1924,7 +1985,7 @@ func (u *__SearchClicked_Updater) Query_NotIn(ins []string) *__SearchClicked_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1936,7 +1997,7 @@ func (u *__SearchClicked_Updater) Query_Like(val string) *__SearchClicked_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query LIKE ? "
+	w.condition = " Query LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1947,7 +2008,7 @@ func (d *__SearchClicked_Updater) Query_Eq(val string) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = ? "
+	w.condition = " Query = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1958,7 +2019,7 @@ func (d *__SearchClicked_Updater) Query_NotEq(val string) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != ? "
+	w.condition = " Query != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1973,7 +2034,7 @@ func (u *__SearchClicked_Selector) Query_In(ins []string) *__SearchClicked_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1986,7 +2047,7 @@ func (u *__SearchClicked_Selector) Query_NotIn(ins []string) *__SearchClicked_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Query NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Query NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1998,7 +2059,7 @@ func (u *__SearchClicked_Selector) Query_Like(val string) *__SearchClicked_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query LIKE ? "
+	w.condition = " Query LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2009,7 +2070,7 @@ func (d *__SearchClicked_Selector) Query_Eq(val string) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = ? "
+	w.condition = " Query = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2020,7 +2081,7 @@ func (d *__SearchClicked_Selector) Query_NotEq(val string) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != ? "
+	w.condition = " Query != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2033,17 +2094,23 @@ func (d *__SearchClicked_Selector) Query_NotEq(val string) *__SearchClicked_Sele
 //ints
 
 func (u *__SearchClicked_Updater) Id(newVal int) *__SearchClicked_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SearchClicked_Updater) Id_Increment(count int) *__SearchClicked_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2055,24 +2122,32 @@ func (u *__SearchClicked_Updater) Id_Increment(count int) *__SearchClicked_Updat
 
 //string
 func (u *__SearchClicked_Updater) Query(newVal string) *__SearchClicked_Updater {
-	u.updates[" Query = ? "] = newVal
+	up := updateCol{"Query = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Query = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__SearchClicked_Updater) ClickType(newVal int) *__SearchClicked_Updater {
-	u.updates[" ClickType = ? "] = newVal
+	up := updateCol{" ClickType = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ClickType = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SearchClicked_Updater) ClickType_Increment(count int) *__SearchClicked_Updater {
 	if count > 0 {
-		u.updates[" ClickType = ClickType+? "] = count
+		up := updateCol{" ClickType = ClickType+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ClickType = ClickType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ClickType = ClickType-? "] = -(count) //make it positive
+		up := updateCol{" ClickType = ClickType- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ClickType = ClickType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2083,17 +2158,23 @@ func (u *__SearchClicked_Updater) ClickType_Increment(count int) *__SearchClicke
 //ints
 
 func (u *__SearchClicked_Updater) TargetId(newVal int) *__SearchClicked_Updater {
-	u.updates[" TargetId = ? "] = newVal
+	up := updateCol{" TargetId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" TargetId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SearchClicked_Updater) TargetId_Increment(count int) *__SearchClicked_Updater {
 	if count > 0 {
-		u.updates[" TargetId = TargetId+? "] = count
+		up := updateCol{" TargetId = TargetId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" TargetId = TargetId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" TargetId = TargetId-? "] = -(count) //make it positive
+		up := updateCol{" TargetId = TargetId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" TargetId = TargetId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2104,17 +2185,23 @@ func (u *__SearchClicked_Updater) TargetId_Increment(count int) *__SearchClicked
 //ints
 
 func (u *__SearchClicked_Updater) UserId(newVal int) *__SearchClicked_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SearchClicked_Updater) UserId_Increment(count int) *__SearchClicked_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2125,17 +2212,23 @@ func (u *__SearchClicked_Updater) UserId_Increment(count int) *__SearchClicked_U
 //ints
 
 func (u *__SearchClicked_Updater) CreatedTime(newVal int) *__SearchClicked_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SearchClicked_Updater) CreatedTime_Increment(count int) *__SearchClicked_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2464,9 +2557,13 @@ func (u *__SearchClicked_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2551,7 +2648,6 @@ func MassInsert_SearchClicked(rows []SearchClicked, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

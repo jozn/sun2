@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TriggerLog represents a row from 'sun.trigger_log'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TriggerLog represents a row from 'sun.trigger_log'.
 
 // Manualy copy this to project
 type TriggerLog__ struct {
@@ -207,23 +208,30 @@ func (tl *TriggerLog) Delete(db XODB) error {
 
 // orma types
 type __TriggerLog_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __TriggerLog_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __TriggerLog_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewTriggerLog_Deleter() *__TriggerLog_Deleter {
@@ -233,7 +241,7 @@ func NewTriggerLog_Deleter() *__TriggerLog_Deleter {
 
 func NewTriggerLog_Updater() *__TriggerLog_Updater {
 	u := __TriggerLog_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -242,8 +250,35 @@ func NewTriggerLog_Selector() *__TriggerLog_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__TriggerLog_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__TriggerLog_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__TriggerLog_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__TriggerLog_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__TriggerLog_Deleter) Or() *__TriggerLog_Deleter {
@@ -258,7 +293,7 @@ func (u *__TriggerLog_Deleter) Id_In(ins []int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -271,7 +306,7 @@ func (u *__TriggerLog_Deleter) Id_Ins(ins ...int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -284,7 +319,7 @@ func (u *__TriggerLog_Deleter) Id_NotIn(ins []int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -295,7 +330,7 @@ func (d *__TriggerLog_Deleter) Id_Eq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -306,7 +341,7 @@ func (d *__TriggerLog_Deleter) Id_NotEq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -317,7 +352,7 @@ func (d *__TriggerLog_Deleter) Id_LT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -328,7 +363,7 @@ func (d *__TriggerLog_Deleter) Id_LE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -339,7 +374,7 @@ func (d *__TriggerLog_Deleter) Id_GT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -350,7 +385,7 @@ func (d *__TriggerLog_Deleter) Id_GE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -363,7 +398,7 @@ func (u *__TriggerLog_Deleter) TargetId_In(ins []int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -376,7 +411,7 @@ func (u *__TriggerLog_Deleter) TargetId_Ins(ins ...int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -389,7 +424,7 @@ func (u *__TriggerLog_Deleter) TargetId_NotIn(ins []int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -400,7 +435,7 @@ func (d *__TriggerLog_Deleter) TargetId_Eq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -411,7 +446,7 @@ func (d *__TriggerLog_Deleter) TargetId_NotEq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -422,7 +457,7 @@ func (d *__TriggerLog_Deleter) TargetId_LT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -433,7 +468,7 @@ func (d *__TriggerLog_Deleter) TargetId_LE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -444,7 +479,7 @@ func (d *__TriggerLog_Deleter) TargetId_GT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -455,7 +490,7 @@ func (d *__TriggerLog_Deleter) TargetId_GE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -468,7 +503,7 @@ func (u *__TriggerLog_Deleter) CreatedSe_In(ins []int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -481,7 +516,7 @@ func (u *__TriggerLog_Deleter) CreatedSe_Ins(ins ...int) *__TriggerLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -494,7 +529,7 @@ func (u *__TriggerLog_Deleter) CreatedSe_NotIn(ins []int) *__TriggerLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -505,7 +540,7 @@ func (d *__TriggerLog_Deleter) CreatedSe_Eq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = ? "
+	w.condition = " CreatedSe = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -516,7 +551,7 @@ func (d *__TriggerLog_Deleter) CreatedSe_NotEq(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != ? "
+	w.condition = " CreatedSe != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -527,7 +562,7 @@ func (d *__TriggerLog_Deleter) CreatedSe_LT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < ? "
+	w.condition = " CreatedSe < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -538,7 +573,7 @@ func (d *__TriggerLog_Deleter) CreatedSe_LE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= ? "
+	w.condition = " CreatedSe <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -549,7 +584,7 @@ func (d *__TriggerLog_Deleter) CreatedSe_GT(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > ? "
+	w.condition = " CreatedSe > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -560,10 +595,23 @@ func (d *__TriggerLog_Deleter) CreatedSe_GE(val int) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= ? "
+	w.condition = " CreatedSe >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__TriggerLog_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__TriggerLog_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -579,7 +627,7 @@ func (u *__TriggerLog_Updater) Id_In(ins []int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -592,7 +640,7 @@ func (u *__TriggerLog_Updater) Id_Ins(ins ...int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -605,7 +653,7 @@ func (u *__TriggerLog_Updater) Id_NotIn(ins []int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -616,7 +664,7 @@ func (d *__TriggerLog_Updater) Id_Eq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -627,7 +675,7 @@ func (d *__TriggerLog_Updater) Id_NotEq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -638,7 +686,7 @@ func (d *__TriggerLog_Updater) Id_LT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -649,7 +697,7 @@ func (d *__TriggerLog_Updater) Id_LE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -660,7 +708,7 @@ func (d *__TriggerLog_Updater) Id_GT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -671,7 +719,7 @@ func (d *__TriggerLog_Updater) Id_GE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -684,7 +732,7 @@ func (u *__TriggerLog_Updater) TargetId_In(ins []int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -697,7 +745,7 @@ func (u *__TriggerLog_Updater) TargetId_Ins(ins ...int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -710,7 +758,7 @@ func (u *__TriggerLog_Updater) TargetId_NotIn(ins []int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -721,7 +769,7 @@ func (d *__TriggerLog_Updater) TargetId_Eq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +780,7 @@ func (d *__TriggerLog_Updater) TargetId_NotEq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -743,7 +791,7 @@ func (d *__TriggerLog_Updater) TargetId_LT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -754,7 +802,7 @@ func (d *__TriggerLog_Updater) TargetId_LE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -765,7 +813,7 @@ func (d *__TriggerLog_Updater) TargetId_GT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -776,7 +824,7 @@ func (d *__TriggerLog_Updater) TargetId_GE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -789,7 +837,7 @@ func (u *__TriggerLog_Updater) CreatedSe_In(ins []int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -802,7 +850,7 @@ func (u *__TriggerLog_Updater) CreatedSe_Ins(ins ...int) *__TriggerLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -815,7 +863,7 @@ func (u *__TriggerLog_Updater) CreatedSe_NotIn(ins []int) *__TriggerLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -826,7 +874,7 @@ func (d *__TriggerLog_Updater) CreatedSe_Eq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = ? "
+	w.condition = " CreatedSe = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -837,7 +885,7 @@ func (d *__TriggerLog_Updater) CreatedSe_NotEq(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != ? "
+	w.condition = " CreatedSe != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -848,7 +896,7 @@ func (d *__TriggerLog_Updater) CreatedSe_LT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < ? "
+	w.condition = " CreatedSe < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -859,7 +907,7 @@ func (d *__TriggerLog_Updater) CreatedSe_LE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= ? "
+	w.condition = " CreatedSe <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -870,7 +918,7 @@ func (d *__TriggerLog_Updater) CreatedSe_GT(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > ? "
+	w.condition = " CreatedSe > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -881,10 +929,23 @@ func (d *__TriggerLog_Updater) CreatedSe_GE(val int) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= ? "
+	w.condition = " CreatedSe >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__TriggerLog_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__TriggerLog_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -900,7 +961,7 @@ func (u *__TriggerLog_Selector) Id_In(ins []int) *__TriggerLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -913,7 +974,7 @@ func (u *__TriggerLog_Selector) Id_Ins(ins ...int) *__TriggerLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -926,7 +987,7 @@ func (u *__TriggerLog_Selector) Id_NotIn(ins []int) *__TriggerLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -937,7 +998,7 @@ func (d *__TriggerLog_Selector) Id_Eq(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +1009,7 @@ func (d *__TriggerLog_Selector) Id_NotEq(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -959,7 +1020,7 @@ func (d *__TriggerLog_Selector) Id_LT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -970,7 +1031,7 @@ func (d *__TriggerLog_Selector) Id_LE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -981,7 +1042,7 @@ func (d *__TriggerLog_Selector) Id_GT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -992,7 +1053,7 @@ func (d *__TriggerLog_Selector) Id_GE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1005,7 +1066,7 @@ func (u *__TriggerLog_Selector) TargetId_In(ins []int) *__TriggerLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1018,7 +1079,7 @@ func (u *__TriggerLog_Selector) TargetId_Ins(ins ...int) *__TriggerLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1031,7 +1092,7 @@ func (u *__TriggerLog_Selector) TargetId_NotIn(ins []int) *__TriggerLog_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1042,7 +1103,7 @@ func (d *__TriggerLog_Selector) TargetId_Eq(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId = ? "
+	w.condition = " TargetId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1053,7 +1114,7 @@ func (d *__TriggerLog_Selector) TargetId_NotEq(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId != ? "
+	w.condition = " TargetId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1064,7 +1125,7 @@ func (d *__TriggerLog_Selector) TargetId_LT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId < ? "
+	w.condition = " TargetId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1075,7 +1136,7 @@ func (d *__TriggerLog_Selector) TargetId_LE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId <= ? "
+	w.condition = " TargetId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1086,7 +1147,7 @@ func (d *__TriggerLog_Selector) TargetId_GT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId > ? "
+	w.condition = " TargetId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1097,7 +1158,7 @@ func (d *__TriggerLog_Selector) TargetId_GE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetId >= ? "
+	w.condition = " TargetId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1110,7 +1171,7 @@ func (u *__TriggerLog_Selector) CreatedSe_In(ins []int) *__TriggerLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1123,7 +1184,7 @@ func (u *__TriggerLog_Selector) CreatedSe_Ins(ins ...int) *__TriggerLog_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1136,7 +1197,7 @@ func (u *__TriggerLog_Selector) CreatedSe_NotIn(ins []int) *__TriggerLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1147,7 +1208,7 @@ func (d *__TriggerLog_Selector) CreatedSe_Eq(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = ? "
+	w.condition = " CreatedSe = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1158,7 +1219,7 @@ func (d *__TriggerLog_Selector) CreatedSe_NotEq(val int) *__TriggerLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != ? "
+	w.condition = " CreatedSe != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1169,7 +1230,7 @@ func (d *__TriggerLog_Selector) CreatedSe_LT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < ? "
+	w.condition = " CreatedSe < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1180,7 +1241,7 @@ func (d *__TriggerLog_Selector) CreatedSe_LE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= ? "
+	w.condition = " CreatedSe <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1191,7 +1252,7 @@ func (d *__TriggerLog_Selector) CreatedSe_GT(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > ? "
+	w.condition = " CreatedSe > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1202,7 +1263,7 @@ func (d *__TriggerLog_Selector) CreatedSe_GE(val int) *__TriggerLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= ? "
+	w.condition = " CreatedSe >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1219,7 +1280,7 @@ func (u *__TriggerLog_Deleter) ModelName_In(ins []string) *__TriggerLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1232,7 +1293,7 @@ func (u *__TriggerLog_Deleter) ModelName_NotIn(ins []string) *__TriggerLog_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1244,7 +1305,7 @@ func (u *__TriggerLog_Deleter) ModelName_Like(val string) *__TriggerLog_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName LIKE ? "
+	w.condition = " ModelName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1255,7 +1316,7 @@ func (d *__TriggerLog_Deleter) ModelName_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = ? "
+	w.condition = " ModelName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1266,7 +1327,7 @@ func (d *__TriggerLog_Deleter) ModelName_NotEq(val string) *__TriggerLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != ? "
+	w.condition = " ModelName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1279,7 +1340,7 @@ func (u *__TriggerLog_Deleter) ChangeType_In(ins []string) *__TriggerLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1292,7 +1353,7 @@ func (u *__TriggerLog_Deleter) ChangeType_NotIn(ins []string) *__TriggerLog_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1304,7 +1365,7 @@ func (u *__TriggerLog_Deleter) ChangeType_Like(val string) *__TriggerLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType LIKE ? "
+	w.condition = " ChangeType LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1315,7 +1376,7 @@ func (d *__TriggerLog_Deleter) ChangeType_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = ? "
+	w.condition = " ChangeType = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1326,7 +1387,7 @@ func (d *__TriggerLog_Deleter) ChangeType_NotEq(val string) *__TriggerLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != ? "
+	w.condition = " ChangeType != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1339,7 +1400,7 @@ func (u *__TriggerLog_Deleter) TargetStr_In(ins []string) *__TriggerLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1352,7 +1413,7 @@ func (u *__TriggerLog_Deleter) TargetStr_NotIn(ins []string) *__TriggerLog_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1364,7 +1425,7 @@ func (u *__TriggerLog_Deleter) TargetStr_Like(val string) *__TriggerLog_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr LIKE ? "
+	w.condition = " TargetStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1375,7 +1436,7 @@ func (d *__TriggerLog_Deleter) TargetStr_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = ? "
+	w.condition = " TargetStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1386,7 +1447,7 @@ func (d *__TriggerLog_Deleter) TargetStr_NotEq(val string) *__TriggerLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != ? "
+	w.condition = " TargetStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1401,7 +1462,7 @@ func (u *__TriggerLog_Updater) ModelName_In(ins []string) *__TriggerLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1414,7 +1475,7 @@ func (u *__TriggerLog_Updater) ModelName_NotIn(ins []string) *__TriggerLog_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1426,7 +1487,7 @@ func (u *__TriggerLog_Updater) ModelName_Like(val string) *__TriggerLog_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName LIKE ? "
+	w.condition = " ModelName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1498,7 @@ func (d *__TriggerLog_Updater) ModelName_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = ? "
+	w.condition = " ModelName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1509,7 @@ func (d *__TriggerLog_Updater) ModelName_NotEq(val string) *__TriggerLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != ? "
+	w.condition = " ModelName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1461,7 +1522,7 @@ func (u *__TriggerLog_Updater) ChangeType_In(ins []string) *__TriggerLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1474,7 +1535,7 @@ func (u *__TriggerLog_Updater) ChangeType_NotIn(ins []string) *__TriggerLog_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1486,7 +1547,7 @@ func (u *__TriggerLog_Updater) ChangeType_Like(val string) *__TriggerLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType LIKE ? "
+	w.condition = " ChangeType LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1497,7 +1558,7 @@ func (d *__TriggerLog_Updater) ChangeType_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = ? "
+	w.condition = " ChangeType = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1508,7 +1569,7 @@ func (d *__TriggerLog_Updater) ChangeType_NotEq(val string) *__TriggerLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != ? "
+	w.condition = " ChangeType != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1521,7 +1582,7 @@ func (u *__TriggerLog_Updater) TargetStr_In(ins []string) *__TriggerLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1595,7 @@ func (u *__TriggerLog_Updater) TargetStr_NotIn(ins []string) *__TriggerLog_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1546,7 +1607,7 @@ func (u *__TriggerLog_Updater) TargetStr_Like(val string) *__TriggerLog_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr LIKE ? "
+	w.condition = " TargetStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1557,7 +1618,7 @@ func (d *__TriggerLog_Updater) TargetStr_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = ? "
+	w.condition = " TargetStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1568,7 +1629,7 @@ func (d *__TriggerLog_Updater) TargetStr_NotEq(val string) *__TriggerLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != ? "
+	w.condition = " TargetStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1583,7 +1644,7 @@ func (u *__TriggerLog_Selector) ModelName_In(ins []string) *__TriggerLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1596,7 +1657,7 @@ func (u *__TriggerLog_Selector) ModelName_NotIn(ins []string) *__TriggerLog_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ModelName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ModelName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1608,7 +1669,7 @@ func (u *__TriggerLog_Selector) ModelName_Like(val string) *__TriggerLog_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName LIKE ? "
+	w.condition = " ModelName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1619,7 +1680,7 @@ func (d *__TriggerLog_Selector) ModelName_Eq(val string) *__TriggerLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = ? "
+	w.condition = " ModelName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1630,7 +1691,7 @@ func (d *__TriggerLog_Selector) ModelName_NotEq(val string) *__TriggerLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != ? "
+	w.condition = " ModelName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1643,7 +1704,7 @@ func (u *__TriggerLog_Selector) ChangeType_In(ins []string) *__TriggerLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1656,7 +1717,7 @@ func (u *__TriggerLog_Selector) ChangeType_NotIn(ins []string) *__TriggerLog_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChangeType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChangeType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1668,7 +1729,7 @@ func (u *__TriggerLog_Selector) ChangeType_Like(val string) *__TriggerLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType LIKE ? "
+	w.condition = " ChangeType LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1679,7 +1740,7 @@ func (d *__TriggerLog_Selector) ChangeType_Eq(val string) *__TriggerLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = ? "
+	w.condition = " ChangeType = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1690,7 +1751,7 @@ func (d *__TriggerLog_Selector) ChangeType_NotEq(val string) *__TriggerLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != ? "
+	w.condition = " ChangeType != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1703,7 +1764,7 @@ func (u *__TriggerLog_Selector) TargetStr_In(ins []string) *__TriggerLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1716,7 +1777,7 @@ func (u *__TriggerLog_Selector) TargetStr_NotIn(ins []string) *__TriggerLog_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TargetStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TargetStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1728,7 +1789,7 @@ func (u *__TriggerLog_Selector) TargetStr_Like(val string) *__TriggerLog_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr LIKE ? "
+	w.condition = " TargetStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1739,7 +1800,7 @@ func (d *__TriggerLog_Selector) TargetStr_Eq(val string) *__TriggerLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = ? "
+	w.condition = " TargetStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1750,7 +1811,7 @@ func (d *__TriggerLog_Selector) TargetStr_NotEq(val string) *__TriggerLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != ? "
+	w.condition = " TargetStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1763,17 +1824,23 @@ func (d *__TriggerLog_Selector) TargetStr_NotEq(val string) *__TriggerLog_Select
 //ints
 
 func (u *__TriggerLog_Updater) Id(newVal int) *__TriggerLog_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__TriggerLog_Updater) Id_Increment(count int) *__TriggerLog_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1785,7 +1852,9 @@ func (u *__TriggerLog_Updater) Id_Increment(count int) *__TriggerLog_Updater {
 
 //string
 func (u *__TriggerLog_Updater) ModelName(newVal string) *__TriggerLog_Updater {
-	u.updates[" ModelName = ? "] = newVal
+	up := updateCol{"ModelName = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ModelName = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -1793,24 +1862,32 @@ func (u *__TriggerLog_Updater) ModelName(newVal string) *__TriggerLog_Updater {
 
 //string
 func (u *__TriggerLog_Updater) ChangeType(newVal string) *__TriggerLog_Updater {
-	u.updates[" ChangeType = ? "] = newVal
+	up := updateCol{"ChangeType = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChangeType = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__TriggerLog_Updater) TargetId(newVal int) *__TriggerLog_Updater {
-	u.updates[" TargetId = ? "] = newVal
+	up := updateCol{" TargetId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" TargetId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__TriggerLog_Updater) TargetId_Increment(count int) *__TriggerLog_Updater {
 	if count > 0 {
-		u.updates[" TargetId = TargetId+? "] = count
+		up := updateCol{" TargetId = TargetId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" TargetId = TargetId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" TargetId = TargetId-? "] = -(count) //make it positive
+		up := updateCol{" TargetId = TargetId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" TargetId = TargetId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1822,24 +1899,32 @@ func (u *__TriggerLog_Updater) TargetId_Increment(count int) *__TriggerLog_Updat
 
 //string
 func (u *__TriggerLog_Updater) TargetStr(newVal string) *__TriggerLog_Updater {
-	u.updates[" TargetStr = ? "] = newVal
+	up := updateCol{"TargetStr = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" TargetStr = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__TriggerLog_Updater) CreatedSe(newVal int) *__TriggerLog_Updater {
-	u.updates[" CreatedSe = ? "] = newVal
+	up := updateCol{" CreatedSe = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedSe = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__TriggerLog_Updater) CreatedSe_Increment(count int) *__TriggerLog_Updater {
 	if count > 0 {
-		u.updates[" CreatedSe = CreatedSe+? "] = count
+		up := updateCol{" CreatedSe = CreatedSe+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedSe = CreatedSe+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedSe = CreatedSe-? "] = -(count) //make it positive
+		up := updateCol{" CreatedSe = CreatedSe- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedSe = CreatedSe- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2168,9 +2253,13 @@ func (u *__TriggerLog_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2255,7 +2344,6 @@ func MassInsert_TriggerLog(rows []TriggerLog, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

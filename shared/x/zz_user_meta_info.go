@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserMetaInfo represents a row from 'sun.user_meta_info'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserMetaInfo represents a row from 'sun.user_meta_info'.
 
 // Manualy copy this to project
 type UserMetaInfo__ struct {
@@ -205,23 +206,30 @@ func (umi *UserMetaInfo) Delete(db XODB) error {
 
 // orma types
 type __UserMetaInfo_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __UserMetaInfo_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __UserMetaInfo_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewUserMetaInfo_Deleter() *__UserMetaInfo_Deleter {
@@ -231,7 +239,7 @@ func NewUserMetaInfo_Deleter() *__UserMetaInfo_Deleter {
 
 func NewUserMetaInfo_Updater() *__UserMetaInfo_Updater {
 	u := __UserMetaInfo_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -240,8 +248,35 @@ func NewUserMetaInfo_Selector() *__UserMetaInfo_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__UserMetaInfo_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__UserMetaInfo_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserMetaInfo_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserMetaInfo_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__UserMetaInfo_Deleter) Or() *__UserMetaInfo_Deleter {
@@ -256,7 +291,7 @@ func (u *__UserMetaInfo_Deleter) Id_In(ins []int) *__UserMetaInfo_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -269,7 +304,7 @@ func (u *__UserMetaInfo_Deleter) Id_Ins(ins ...int) *__UserMetaInfo_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -282,7 +317,7 @@ func (u *__UserMetaInfo_Deleter) Id_NotIn(ins []int) *__UserMetaInfo_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -293,7 +328,7 @@ func (d *__UserMetaInfo_Deleter) Id_Eq(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -304,7 +339,7 @@ func (d *__UserMetaInfo_Deleter) Id_NotEq(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -315,7 +350,7 @@ func (d *__UserMetaInfo_Deleter) Id_LT(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -326,7 +361,7 @@ func (d *__UserMetaInfo_Deleter) Id_LE(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -337,7 +372,7 @@ func (d *__UserMetaInfo_Deleter) Id_GT(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -348,7 +383,7 @@ func (d *__UserMetaInfo_Deleter) Id_GE(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -361,7 +396,7 @@ func (u *__UserMetaInfo_Deleter) UserId_In(ins []int) *__UserMetaInfo_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -374,7 +409,7 @@ func (u *__UserMetaInfo_Deleter) UserId_Ins(ins ...int) *__UserMetaInfo_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -387,7 +422,7 @@ func (u *__UserMetaInfo_Deleter) UserId_NotIn(ins []int) *__UserMetaInfo_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -398,7 +433,7 @@ func (d *__UserMetaInfo_Deleter) UserId_Eq(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -409,7 +444,7 @@ func (d *__UserMetaInfo_Deleter) UserId_NotEq(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -420,7 +455,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LT(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -431,7 +466,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LE(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -442,7 +477,7 @@ func (d *__UserMetaInfo_Deleter) UserId_GT(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -453,7 +488,7 @@ func (d *__UserMetaInfo_Deleter) UserId_GE(val int) *__UserMetaInfo_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -466,7 +501,7 @@ func (u *__UserMetaInfo_Deleter) IsNotificationDirty_In(ins []int) *__UserMetaIn
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -479,7 +514,7 @@ func (u *__UserMetaInfo_Deleter) IsNotificationDirty_Ins(ins ...int) *__UserMeta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -492,7 +527,7 @@ func (u *__UserMetaInfo_Deleter) IsNotificationDirty_NotIn(ins []int) *__UserMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -503,7 +538,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_Eq(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " IsNotificationDirty = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -514,7 +549,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_NotEq(val int) *__UserMetaI
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " IsNotificationDirty != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -525,7 +560,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LT(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " IsNotificationDirty < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -536,7 +571,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LE(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " IsNotificationDirty <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -547,7 +582,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GT(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " IsNotificationDirty > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -558,7 +593,7 @@ func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GE(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " IsNotificationDirty >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -571,7 +606,7 @@ func (u *__UserMetaInfo_Deleter) LastUserRecGen_In(ins []int) *__UserMetaInfo_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -584,7 +619,7 @@ func (u *__UserMetaInfo_Deleter) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -597,7 +632,7 @@ func (u *__UserMetaInfo_Deleter) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -608,7 +643,7 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_Eq(val int) *__UserMetaInfo_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " LastUserRecGen = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -619,7 +654,7 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_NotEq(val int) *__UserMetaInfo_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " LastUserRecGen != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -630,7 +665,7 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_LT(val int) *__UserMetaInfo_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " LastUserRecGen < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -641,7 +676,7 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_LE(val int) *__UserMetaInfo_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " LastUserRecGen <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -652,7 +687,7 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_GT(val int) *__UserMetaInfo_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " LastUserRecGen > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -663,10 +698,23 @@ func (d *__UserMetaInfo_Deleter) LastUserRecGen_GE(val int) *__UserMetaInfo_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " LastUserRecGen >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserMetaInfo_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserMetaInfo_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -682,7 +730,7 @@ func (u *__UserMetaInfo_Updater) Id_In(ins []int) *__UserMetaInfo_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -695,7 +743,7 @@ func (u *__UserMetaInfo_Updater) Id_Ins(ins ...int) *__UserMetaInfo_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -708,7 +756,7 @@ func (u *__UserMetaInfo_Updater) Id_NotIn(ins []int) *__UserMetaInfo_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -719,7 +767,7 @@ func (d *__UserMetaInfo_Updater) Id_Eq(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -730,7 +778,7 @@ func (d *__UserMetaInfo_Updater) Id_NotEq(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -741,7 +789,7 @@ func (d *__UserMetaInfo_Updater) Id_LT(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -752,7 +800,7 @@ func (d *__UserMetaInfo_Updater) Id_LE(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -763,7 +811,7 @@ func (d *__UserMetaInfo_Updater) Id_GT(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -774,7 +822,7 @@ func (d *__UserMetaInfo_Updater) Id_GE(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -787,7 +835,7 @@ func (u *__UserMetaInfo_Updater) UserId_In(ins []int) *__UserMetaInfo_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -800,7 +848,7 @@ func (u *__UserMetaInfo_Updater) UserId_Ins(ins ...int) *__UserMetaInfo_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -813,7 +861,7 @@ func (u *__UserMetaInfo_Updater) UserId_NotIn(ins []int) *__UserMetaInfo_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -824,7 +872,7 @@ func (d *__UserMetaInfo_Updater) UserId_Eq(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -835,7 +883,7 @@ func (d *__UserMetaInfo_Updater) UserId_NotEq(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -846,7 +894,7 @@ func (d *__UserMetaInfo_Updater) UserId_LT(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -857,7 +905,7 @@ func (d *__UserMetaInfo_Updater) UserId_LE(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -868,7 +916,7 @@ func (d *__UserMetaInfo_Updater) UserId_GT(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -879,7 +927,7 @@ func (d *__UserMetaInfo_Updater) UserId_GE(val int) *__UserMetaInfo_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -892,7 +940,7 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_In(ins []int) *__UserMetaIn
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -905,7 +953,7 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_Ins(ins ...int) *__UserMeta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -918,7 +966,7 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_NotIn(ins []int) *__UserMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -929,7 +977,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_Eq(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " IsNotificationDirty = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -940,7 +988,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_NotEq(val int) *__UserMetaI
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " IsNotificationDirty != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -951,7 +999,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_LT(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " IsNotificationDirty < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -962,7 +1010,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_LE(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " IsNotificationDirty <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -973,7 +1021,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_GT(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " IsNotificationDirty > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -984,7 +1032,7 @@ func (d *__UserMetaInfo_Updater) IsNotificationDirty_GE(val int) *__UserMetaInfo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " IsNotificationDirty >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -997,7 +1045,7 @@ func (u *__UserMetaInfo_Updater) LastUserRecGen_In(ins []int) *__UserMetaInfo_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1010,7 +1058,7 @@ func (u *__UserMetaInfo_Updater) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1023,7 +1071,7 @@ func (u *__UserMetaInfo_Updater) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1034,7 +1082,7 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_Eq(val int) *__UserMetaInfo_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " LastUserRecGen = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1045,7 +1093,7 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_NotEq(val int) *__UserMetaInfo_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " LastUserRecGen != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1056,7 +1104,7 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_LT(val int) *__UserMetaInfo_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " LastUserRecGen < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1067,7 +1115,7 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_LE(val int) *__UserMetaInfo_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " LastUserRecGen <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1078,7 +1126,7 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_GT(val int) *__UserMetaInfo_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " LastUserRecGen > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1089,10 +1137,23 @@ func (d *__UserMetaInfo_Updater) LastUserRecGen_GE(val int) *__UserMetaInfo_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " LastUserRecGen >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserMetaInfo_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserMetaInfo_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1108,7 +1169,7 @@ func (u *__UserMetaInfo_Selector) Id_In(ins []int) *__UserMetaInfo_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1121,7 +1182,7 @@ func (u *__UserMetaInfo_Selector) Id_Ins(ins ...int) *__UserMetaInfo_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1134,7 +1195,7 @@ func (u *__UserMetaInfo_Selector) Id_NotIn(ins []int) *__UserMetaInfo_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1145,7 +1206,7 @@ func (d *__UserMetaInfo_Selector) Id_Eq(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1156,7 +1217,7 @@ func (d *__UserMetaInfo_Selector) Id_NotEq(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1167,7 +1228,7 @@ func (d *__UserMetaInfo_Selector) Id_LT(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1178,7 +1239,7 @@ func (d *__UserMetaInfo_Selector) Id_LE(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1189,7 +1250,7 @@ func (d *__UserMetaInfo_Selector) Id_GT(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1200,7 +1261,7 @@ func (d *__UserMetaInfo_Selector) Id_GE(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1213,7 +1274,7 @@ func (u *__UserMetaInfo_Selector) UserId_In(ins []int) *__UserMetaInfo_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1226,7 +1287,7 @@ func (u *__UserMetaInfo_Selector) UserId_Ins(ins ...int) *__UserMetaInfo_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1239,7 +1300,7 @@ func (u *__UserMetaInfo_Selector) UserId_NotIn(ins []int) *__UserMetaInfo_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1250,7 +1311,7 @@ func (d *__UserMetaInfo_Selector) UserId_Eq(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1261,7 +1322,7 @@ func (d *__UserMetaInfo_Selector) UserId_NotEq(val int) *__UserMetaInfo_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1272,7 +1333,7 @@ func (d *__UserMetaInfo_Selector) UserId_LT(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1283,7 +1344,7 @@ func (d *__UserMetaInfo_Selector) UserId_LE(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1294,7 +1355,7 @@ func (d *__UserMetaInfo_Selector) UserId_GT(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1305,7 +1366,7 @@ func (d *__UserMetaInfo_Selector) UserId_GE(val int) *__UserMetaInfo_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1318,7 +1379,7 @@ func (u *__UserMetaInfo_Selector) IsNotificationDirty_In(ins []int) *__UserMetaI
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1331,7 +1392,7 @@ func (u *__UserMetaInfo_Selector) IsNotificationDirty_Ins(ins ...int) *__UserMet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1344,7 +1405,7 @@ func (u *__UserMetaInfo_Selector) IsNotificationDirty_NotIn(ins []int) *__UserMe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1355,7 +1416,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_Eq(val int) *__UserMetaInf
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = ? "
+	w.condition = " IsNotificationDirty = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1366,7 +1427,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_NotEq(val int) *__UserMeta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != ? "
+	w.condition = " IsNotificationDirty != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1377,7 +1438,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_LT(val int) *__UserMetaInf
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < ? "
+	w.condition = " IsNotificationDirty < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1388,7 +1449,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_LE(val int) *__UserMetaInf
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= ? "
+	w.condition = " IsNotificationDirty <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1399,7 +1460,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_GT(val int) *__UserMetaInf
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > ? "
+	w.condition = " IsNotificationDirty > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1410,7 +1471,7 @@ func (d *__UserMetaInfo_Selector) IsNotificationDirty_GE(val int) *__UserMetaInf
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= ? "
+	w.condition = " IsNotificationDirty >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1423,7 +1484,7 @@ func (u *__UserMetaInfo_Selector) LastUserRecGen_In(ins []int) *__UserMetaInfo_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1436,7 +1497,7 @@ func (u *__UserMetaInfo_Selector) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1449,7 +1510,7 @@ func (u *__UserMetaInfo_Selector) LastUserRecGen_NotIn(ins []int) *__UserMetaInf
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1460,7 +1521,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_Eq(val int) *__UserMetaInfo_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = ? "
+	w.condition = " LastUserRecGen = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1471,7 +1532,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_NotEq(val int) *__UserMetaInfo_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != ? "
+	w.condition = " LastUserRecGen != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1482,7 +1543,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_LT(val int) *__UserMetaInfo_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < ? "
+	w.condition = " LastUserRecGen < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1493,7 +1554,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_LE(val int) *__UserMetaInfo_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= ? "
+	w.condition = " LastUserRecGen <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1504,7 +1565,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_GT(val int) *__UserMetaInfo_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > ? "
+	w.condition = " LastUserRecGen > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1515,7 +1576,7 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= ? "
+	w.condition = " LastUserRecGen >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1536,17 +1597,23 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Sel
 //ints
 
 func (u *__UserMetaInfo_Updater) Id(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1557,17 +1624,23 @@ func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater
 //ints
 
 func (u *__UserMetaInfo_Updater) UserId(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1578,17 +1651,23 @@ func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Upd
 //ints
 
 func (u *__UserMetaInfo_Updater) IsNotificationDirty(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" IsNotificationDirty = ? "] = newVal
+	up := updateCol{" IsNotificationDirty = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsNotificationDirty = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__UserMetaInfo_Updater {
 	if count > 0 {
-		u.updates[" IsNotificationDirty = IsNotificationDirty+? "] = count
+		up := updateCol{" IsNotificationDirty = IsNotificationDirty+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsNotificationDirty = IsNotificationDirty+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" IsNotificationDirty = IsNotificationDirty-? "] = -(count) //make it positive
+		up := updateCol{" IsNotificationDirty = IsNotificationDirty- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsNotificationDirty = IsNotificationDirty- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1599,17 +1678,23 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__Use
 //ints
 
 func (u *__UserMetaInfo_Updater) LastUserRecGen(newVal int) *__UserMetaInfo_Updater {
-	u.updates[" LastUserRecGen = ? "] = newVal
+	up := updateCol{" LastUserRecGen = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LastUserRecGen = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserMetaInfo_Updater) LastUserRecGen_Increment(count int) *__UserMetaInfo_Updater {
 	if count > 0 {
-		u.updates[" LastUserRecGen = LastUserRecGen+? "] = count
+		up := updateCol{" LastUserRecGen = LastUserRecGen+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LastUserRecGen = LastUserRecGen+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" LastUserRecGen = LastUserRecGen-? "] = -(count) //make it positive
+		up := updateCol{" LastUserRecGen = LastUserRecGen- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LastUserRecGen = LastUserRecGen- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1908,9 +1993,13 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1995,7 +2084,6 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

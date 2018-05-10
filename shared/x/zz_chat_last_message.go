@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatLastMessage represents a row from 'sun_chat.chat_last_message'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatLastMessage represents a row from 'sun_chat.chat_last_message'.
 
 // Manualy copy this to project
 type ChatLastMessage__ struct {
@@ -181,23 +183,30 @@ func (clm *ChatLastMessage) Delete(db XODB) error {
 
 // orma types
 type __ChatLastMessage_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ChatLastMessage_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ChatLastMessage_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewChatLastMessage_Deleter() *__ChatLastMessage_Deleter {
@@ -207,7 +216,7 @@ func NewChatLastMessage_Deleter() *__ChatLastMessage_Deleter {
 
 func NewChatLastMessage_Updater() *__ChatLastMessage_Updater {
 	u := __ChatLastMessage_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -216,8 +225,35 @@ func NewChatLastMessage_Selector() *__ChatLastMessage_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__ChatLastMessage_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__ChatLastMessage_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatLastMessage_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatLastMessage_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__ChatLastMessage_Deleter) Or() *__ChatLastMessage_Deleter {
@@ -232,7 +268,7 @@ func (u *__ChatLastMessage_Deleter) ForUserId_In(ins []int) *__ChatLastMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -245,7 +281,7 @@ func (u *__ChatLastMessage_Deleter) ForUserId_Ins(ins ...int) *__ChatLastMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -258,7 +294,7 @@ func (u *__ChatLastMessage_Deleter) ForUserId_NotIn(ins []int) *__ChatLastMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -269,7 +305,7 @@ func (d *__ChatLastMessage_Deleter) ForUserId_Eq(val int) *__ChatLastMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -280,7 +316,7 @@ func (d *__ChatLastMessage_Deleter) ForUserId_NotEq(val int) *__ChatLastMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -291,7 +327,7 @@ func (d *__ChatLastMessage_Deleter) ForUserId_LT(val int) *__ChatLastMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -302,7 +338,7 @@ func (d *__ChatLastMessage_Deleter) ForUserId_LE(val int) *__ChatLastMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -313,7 +349,7 @@ func (d *__ChatLastMessage_Deleter) ForUserId_GT(val int) *__ChatLastMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -324,10 +360,23 @@ func (d *__ChatLastMessage_Deleter) ForUserId_GE(val int) *__ChatLastMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatLastMessage_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatLastMessage_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -343,7 +392,7 @@ func (u *__ChatLastMessage_Updater) ForUserId_In(ins []int) *__ChatLastMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -356,7 +405,7 @@ func (u *__ChatLastMessage_Updater) ForUserId_Ins(ins ...int) *__ChatLastMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -369,7 +418,7 @@ func (u *__ChatLastMessage_Updater) ForUserId_NotIn(ins []int) *__ChatLastMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -380,7 +429,7 @@ func (d *__ChatLastMessage_Updater) ForUserId_Eq(val int) *__ChatLastMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -391,7 +440,7 @@ func (d *__ChatLastMessage_Updater) ForUserId_NotEq(val int) *__ChatLastMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -402,7 +451,7 @@ func (d *__ChatLastMessage_Updater) ForUserId_LT(val int) *__ChatLastMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -413,7 +462,7 @@ func (d *__ChatLastMessage_Updater) ForUserId_LE(val int) *__ChatLastMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -424,7 +473,7 @@ func (d *__ChatLastMessage_Updater) ForUserId_GT(val int) *__ChatLastMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -435,10 +484,23 @@ func (d *__ChatLastMessage_Updater) ForUserId_GE(val int) *__ChatLastMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatLastMessage_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatLastMessage_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -454,7 +516,7 @@ func (u *__ChatLastMessage_Selector) ForUserId_In(ins []int) *__ChatLastMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -467,7 +529,7 @@ func (u *__ChatLastMessage_Selector) ForUserId_Ins(ins ...int) *__ChatLastMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -480,7 +542,7 @@ func (u *__ChatLastMessage_Selector) ForUserId_NotIn(ins []int) *__ChatLastMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -491,7 +553,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_Eq(val int) *__ChatLastMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -502,7 +564,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_NotEq(val int) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -513,7 +575,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_LT(val int) *__ChatLastMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -524,7 +586,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_LE(val int) *__ChatLastMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -535,7 +597,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_GT(val int) *__ChatLastMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -546,7 +608,7 @@ func (d *__ChatLastMessage_Selector) ForUserId_GE(val int) *__ChatLastMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +625,7 @@ func (u *__ChatLastMessage_Deleter) ChatKey_In(ins []string) *__ChatLastMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -576,7 +638,7 @@ func (u *__ChatLastMessage_Deleter) ChatKey_NotIn(ins []string) *__ChatLastMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -588,7 +650,7 @@ func (u *__ChatLastMessage_Deleter) ChatKey_Like(val string) *__ChatLastMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -599,7 +661,7 @@ func (d *__ChatLastMessage_Deleter) ChatKey_Eq(val string) *__ChatLastMessage_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -610,7 +672,7 @@ func (d *__ChatLastMessage_Deleter) ChatKey_NotEq(val string) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -623,7 +685,7 @@ func (u *__ChatLastMessage_Deleter) LastMsgJson_In(ins []string) *__ChatLastMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -636,7 +698,7 @@ func (u *__ChatLastMessage_Deleter) LastMsgJson_NotIn(ins []string) *__ChatLastM
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -648,7 +710,7 @@ func (u *__ChatLastMessage_Deleter) LastMsgJson_Like(val string) *__ChatLastMess
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson LIKE ? "
+	w.condition = " LastMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -659,7 +721,7 @@ func (d *__ChatLastMessage_Deleter) LastMsgJson_Eq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = ? "
+	w.condition = " LastMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -670,7 +732,7 @@ func (d *__ChatLastMessage_Deleter) LastMsgJson_NotEq(val string) *__ChatLastMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != ? "
+	w.condition = " LastMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -685,7 +747,7 @@ func (u *__ChatLastMessage_Updater) ChatKey_In(ins []string) *__ChatLastMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -698,7 +760,7 @@ func (u *__ChatLastMessage_Updater) ChatKey_NotIn(ins []string) *__ChatLastMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -710,7 +772,7 @@ func (u *__ChatLastMessage_Updater) ChatKey_Like(val string) *__ChatLastMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -721,7 +783,7 @@ func (d *__ChatLastMessage_Updater) ChatKey_Eq(val string) *__ChatLastMessage_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +794,7 @@ func (d *__ChatLastMessage_Updater) ChatKey_NotEq(val string) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -745,7 +807,7 @@ func (u *__ChatLastMessage_Updater) LastMsgJson_In(ins []string) *__ChatLastMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -758,7 +820,7 @@ func (u *__ChatLastMessage_Updater) LastMsgJson_NotIn(ins []string) *__ChatLastM
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -770,7 +832,7 @@ func (u *__ChatLastMessage_Updater) LastMsgJson_Like(val string) *__ChatLastMess
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson LIKE ? "
+	w.condition = " LastMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -781,7 +843,7 @@ func (d *__ChatLastMessage_Updater) LastMsgJson_Eq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = ? "
+	w.condition = " LastMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -792,7 +854,7 @@ func (d *__ChatLastMessage_Updater) LastMsgJson_NotEq(val string) *__ChatLastMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != ? "
+	w.condition = " LastMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -807,7 +869,7 @@ func (u *__ChatLastMessage_Selector) ChatKey_In(ins []string) *__ChatLastMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -820,7 +882,7 @@ func (u *__ChatLastMessage_Selector) ChatKey_NotIn(ins []string) *__ChatLastMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -832,7 +894,7 @@ func (u *__ChatLastMessage_Selector) ChatKey_Like(val string) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -843,7 +905,7 @@ func (d *__ChatLastMessage_Selector) ChatKey_Eq(val string) *__ChatLastMessage_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,7 +916,7 @@ func (d *__ChatLastMessage_Selector) ChatKey_NotEq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -867,7 +929,7 @@ func (u *__ChatLastMessage_Selector) LastMsgJson_In(ins []string) *__ChatLastMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -880,7 +942,7 @@ func (u *__ChatLastMessage_Selector) LastMsgJson_NotIn(ins []string) *__ChatLast
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -892,7 +954,7 @@ func (u *__ChatLastMessage_Selector) LastMsgJson_Like(val string) *__ChatLastMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson LIKE ? "
+	w.condition = " LastMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -903,7 +965,7 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_Eq(val string) *__ChatLastMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = ? "
+	w.condition = " LastMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -914,7 +976,7 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_NotEq(val string) *__ChatLastMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != ? "
+	w.condition = " LastMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -928,24 +990,32 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_NotEq(val string) *__ChatLastMe
 
 //string
 func (u *__ChatLastMessage_Updater) ChatKey(newVal string) *__ChatLastMessage_Updater {
-	u.updates[" ChatKey = ? "] = newVal
+	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__ChatLastMessage_Updater) ForUserId(newVal int) *__ChatLastMessage_Updater {
-	u.updates[" ForUserId = ? "] = newVal
+	up := updateCol{" ForUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ForUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatLastMessage_Updater) ForUserId_Increment(count int) *__ChatLastMessage_Updater {
 	if count > 0 {
-		u.updates[" ForUserId = ForUserId+? "] = count
+		up := updateCol{" ForUserId = ForUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ForUserId = ForUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ForUserId = ForUserId-? "] = -(count) //make it positive
+		up := updateCol{" ForUserId = ForUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ForUserId = ForUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -961,7 +1031,9 @@ func (u *__ChatLastMessage_Updater) ForUserId_Increment(count int) *__ChatLastMe
 
 //string
 func (u *__ChatLastMessage_Updater) LastMsgJson(newVal string) *__ChatLastMessage_Updater {
-	u.updates[" LastMsgJson = ? "] = newVal
+	up := updateCol{"LastMsgJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" LastMsgJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -1256,9 +1328,13 @@ func (u *__ChatLastMessage_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1343,10 +1419,10 @@ func MassInsert_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.chat_last_message (" +
 		"ChatKey, ForUserId, LastMsgPb, LastMsgJson" +
@@ -1384,10 +1460,9 @@ func MassReplace_ChatLastMessage(rows []ChatLastMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.chat_last_message (" +
 		"ChatKey, ForUserId, LastMsgPb, LastMsgJson" +

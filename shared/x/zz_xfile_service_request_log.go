@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// XfileServiceRequestLog represents a row from 'sun_log.xfile_service_request_log'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// XfileServiceRequestLog represents a row from 'sun_log.xfile_service_request_log'.
 
 // Manualy copy this to project
 type XfileServiceRequestLog__ struct {
@@ -183,23 +185,30 @@ func (xsrl *XfileServiceRequestLog) Delete(db XODB) error {
 
 // orma types
 type __XfileServiceRequestLog_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __XfileServiceRequestLog_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __XfileServiceRequestLog_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewXfileServiceRequestLog_Deleter() *__XfileServiceRequestLog_Deleter {
@@ -209,7 +218,7 @@ func NewXfileServiceRequestLog_Deleter() *__XfileServiceRequestLog_Deleter {
 
 func NewXfileServiceRequestLog_Updater() *__XfileServiceRequestLog_Updater {
 	u := __XfileServiceRequestLog_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -218,8 +227,35 @@ func NewXfileServiceRequestLog_Selector() *__XfileServiceRequestLog_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceRequestLog_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__XfileServiceRequestLog_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceRequestLog_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceRequestLog_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__XfileServiceRequestLog_Deleter) Or() *__XfileServiceRequestLog_Deleter {
@@ -234,7 +270,7 @@ func (u *__XfileServiceRequestLog_Deleter) Id_In(ins []int) *__XfileServiceReque
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -247,7 +283,7 @@ func (u *__XfileServiceRequestLog_Deleter) Id_Ins(ins ...int) *__XfileServiceReq
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -260,7 +296,7 @@ func (u *__XfileServiceRequestLog_Deleter) Id_NotIn(ins []int) *__XfileServiceRe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -271,7 +307,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_Eq(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -282,7 +318,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_NotEq(val int) *__XfileServiceRequ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -293,7 +329,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_LT(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -304,7 +340,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_LE(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -315,7 +351,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_GT(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -326,7 +362,7 @@ func (d *__XfileServiceRequestLog_Deleter) Id_GE(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -339,7 +375,7 @@ func (u *__XfileServiceRequestLog_Deleter) LocalSeq_In(ins []int) *__XfileServic
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -352,7 +388,7 @@ func (u *__XfileServiceRequestLog_Deleter) LocalSeq_Ins(ins ...int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -365,7 +401,7 @@ func (u *__XfileServiceRequestLog_Deleter) LocalSeq_NotIn(ins []int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -376,7 +412,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_Eq(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq = ? "
+	w.condition = " LocalSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -387,7 +423,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_NotEq(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq != ? "
+	w.condition = " LocalSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -398,7 +434,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_LT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq < ? "
+	w.condition = " LocalSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -409,7 +445,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_LE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq <= ? "
+	w.condition = " LocalSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -420,7 +456,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_GT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq > ? "
+	w.condition = " LocalSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -431,7 +467,7 @@ func (d *__XfileServiceRequestLog_Deleter) LocalSeq_GE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq >= ? "
+	w.condition = " LocalSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -444,7 +480,7 @@ func (u *__XfileServiceRequestLog_Deleter) InstanceId_In(ins []int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -457,7 +493,7 @@ func (u *__XfileServiceRequestLog_Deleter) InstanceId_Ins(ins ...int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -470,7 +506,7 @@ func (u *__XfileServiceRequestLog_Deleter) InstanceId_NotIn(ins []int) *__XfileS
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -481,7 +517,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_Eq(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -492,7 +528,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_NotEq(val int) *__XfileSer
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -503,7 +539,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_LT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -514,7 +550,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_LE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -525,7 +561,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_GT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -536,7 +572,7 @@ func (d *__XfileServiceRequestLog_Deleter) InstanceId_GE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -549,7 +585,7 @@ func (u *__XfileServiceRequestLog_Deleter) HttpCode_In(ins []int) *__XfileServic
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -562,7 +598,7 @@ func (u *__XfileServiceRequestLog_Deleter) HttpCode_Ins(ins ...int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -575,7 +611,7 @@ func (u *__XfileServiceRequestLog_Deleter) HttpCode_NotIn(ins []int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -586,7 +622,7 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_Eq(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode = ? "
+	w.condition = " HttpCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -597,7 +633,7 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_NotEq(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode != ? "
+	w.condition = " HttpCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -608,7 +644,7 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_LT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode < ? "
+	w.condition = " HttpCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -619,7 +655,7 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_LE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode <= ? "
+	w.condition = " HttpCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -630,7 +666,7 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_GT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode > ? "
+	w.condition = " HttpCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -641,10 +677,23 @@ func (d *__XfileServiceRequestLog_Deleter) HttpCode_GE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode >= ? "
+	w.condition = " HttpCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceRequestLog_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceRequestLog_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -660,7 +709,7 @@ func (u *__XfileServiceRequestLog_Updater) Id_In(ins []int) *__XfileServiceReque
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -673,7 +722,7 @@ func (u *__XfileServiceRequestLog_Updater) Id_Ins(ins ...int) *__XfileServiceReq
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -686,7 +735,7 @@ func (u *__XfileServiceRequestLog_Updater) Id_NotIn(ins []int) *__XfileServiceRe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -697,7 +746,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_Eq(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -708,7 +757,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_NotEq(val int) *__XfileServiceRequ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -719,7 +768,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_LT(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -730,7 +779,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_LE(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -741,7 +790,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_GT(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -752,7 +801,7 @@ func (d *__XfileServiceRequestLog_Updater) Id_GE(val int) *__XfileServiceRequest
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -765,7 +814,7 @@ func (u *__XfileServiceRequestLog_Updater) LocalSeq_In(ins []int) *__XfileServic
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -778,7 +827,7 @@ func (u *__XfileServiceRequestLog_Updater) LocalSeq_Ins(ins ...int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -791,7 +840,7 @@ func (u *__XfileServiceRequestLog_Updater) LocalSeq_NotIn(ins []int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -802,7 +851,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_Eq(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq = ? "
+	w.condition = " LocalSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -813,7 +862,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_NotEq(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq != ? "
+	w.condition = " LocalSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -824,7 +873,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_LT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq < ? "
+	w.condition = " LocalSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -835,7 +884,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_LE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq <= ? "
+	w.condition = " LocalSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -846,7 +895,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_GT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq > ? "
+	w.condition = " LocalSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -857,7 +906,7 @@ func (d *__XfileServiceRequestLog_Updater) LocalSeq_GE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq >= ? "
+	w.condition = " LocalSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -870,7 +919,7 @@ func (u *__XfileServiceRequestLog_Updater) InstanceId_In(ins []int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -883,7 +932,7 @@ func (u *__XfileServiceRequestLog_Updater) InstanceId_Ins(ins ...int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -896,7 +945,7 @@ func (u *__XfileServiceRequestLog_Updater) InstanceId_NotIn(ins []int) *__XfileS
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -907,7 +956,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_Eq(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -918,7 +967,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_NotEq(val int) *__XfileSer
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -929,7 +978,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_LT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -940,7 +989,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_LE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -951,7 +1000,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_GT(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -962,7 +1011,7 @@ func (d *__XfileServiceRequestLog_Updater) InstanceId_GE(val int) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -975,7 +1024,7 @@ func (u *__XfileServiceRequestLog_Updater) HttpCode_In(ins []int) *__XfileServic
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -988,7 +1037,7 @@ func (u *__XfileServiceRequestLog_Updater) HttpCode_Ins(ins ...int) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1001,7 +1050,7 @@ func (u *__XfileServiceRequestLog_Updater) HttpCode_NotIn(ins []int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1012,7 +1061,7 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_Eq(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode = ? "
+	w.condition = " HttpCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1023,7 +1072,7 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_NotEq(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode != ? "
+	w.condition = " HttpCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1034,7 +1083,7 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_LT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode < ? "
+	w.condition = " HttpCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1045,7 +1094,7 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_LE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode <= ? "
+	w.condition = " HttpCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1056,7 +1105,7 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_GT(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode > ? "
+	w.condition = " HttpCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1067,10 +1116,23 @@ func (d *__XfileServiceRequestLog_Updater) HttpCode_GE(val int) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode >= ? "
+	w.condition = " HttpCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__XfileServiceRequestLog_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__XfileServiceRequestLog_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1086,7 +1148,7 @@ func (u *__XfileServiceRequestLog_Selector) Id_In(ins []int) *__XfileServiceRequ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1099,7 +1161,7 @@ func (u *__XfileServiceRequestLog_Selector) Id_Ins(ins ...int) *__XfileServiceRe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1112,7 +1174,7 @@ func (u *__XfileServiceRequestLog_Selector) Id_NotIn(ins []int) *__XfileServiceR
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1123,7 +1185,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_Eq(val int) *__XfileServiceReques
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1134,7 +1196,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_NotEq(val int) *__XfileServiceReq
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1145,7 +1207,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_LT(val int) *__XfileServiceReques
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1156,7 +1218,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_LE(val int) *__XfileServiceReques
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1167,7 +1229,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_GT(val int) *__XfileServiceReques
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1178,7 +1240,7 @@ func (d *__XfileServiceRequestLog_Selector) Id_GE(val int) *__XfileServiceReques
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1191,7 +1253,7 @@ func (u *__XfileServiceRequestLog_Selector) LocalSeq_In(ins []int) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1204,7 +1266,7 @@ func (u *__XfileServiceRequestLog_Selector) LocalSeq_Ins(ins ...int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1217,7 +1279,7 @@ func (u *__XfileServiceRequestLog_Selector) LocalSeq_NotIn(ins []int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LocalSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LocalSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1228,7 +1290,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_Eq(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq = ? "
+	w.condition = " LocalSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1239,7 +1301,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_NotEq(val int) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq != ? "
+	w.condition = " LocalSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1250,7 +1312,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_LT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq < ? "
+	w.condition = " LocalSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1261,7 +1323,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_LE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq <= ? "
+	w.condition = " LocalSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1272,7 +1334,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_GT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq > ? "
+	w.condition = " LocalSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1283,7 +1345,7 @@ func (d *__XfileServiceRequestLog_Selector) LocalSeq_GE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LocalSeq >= ? "
+	w.condition = " LocalSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1296,7 +1358,7 @@ func (u *__XfileServiceRequestLog_Selector) InstanceId_In(ins []int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1309,7 +1371,7 @@ func (u *__XfileServiceRequestLog_Selector) InstanceId_Ins(ins ...int) *__XfileS
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1322,7 +1384,7 @@ func (u *__XfileServiceRequestLog_Selector) InstanceId_NotIn(ins []int) *__Xfile
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InstanceId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InstanceId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1333,7 +1395,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_Eq(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId = ? "
+	w.condition = " InstanceId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1344,7 +1406,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_NotEq(val int) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId != ? "
+	w.condition = " InstanceId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1355,7 +1417,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_LT(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId < ? "
+	w.condition = " InstanceId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1366,7 +1428,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_LE(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId <= ? "
+	w.condition = " InstanceId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1377,7 +1439,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_GT(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId > ? "
+	w.condition = " InstanceId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1388,7 +1450,7 @@ func (d *__XfileServiceRequestLog_Selector) InstanceId_GE(val int) *__XfileServi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InstanceId >= ? "
+	w.condition = " InstanceId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1401,7 +1463,7 @@ func (u *__XfileServiceRequestLog_Selector) HttpCode_In(ins []int) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1414,7 +1476,7 @@ func (u *__XfileServiceRequestLog_Selector) HttpCode_Ins(ins ...int) *__XfileSer
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1427,7 +1489,7 @@ func (u *__XfileServiceRequestLog_Selector) HttpCode_NotIn(ins []int) *__XfileSe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HttpCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HttpCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1438,7 +1500,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_Eq(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode = ? "
+	w.condition = " HttpCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1449,7 +1511,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_NotEq(val int) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode != ? "
+	w.condition = " HttpCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1460,7 +1522,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_LT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode < ? "
+	w.condition = " HttpCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1471,7 +1533,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_LE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode <= ? "
+	w.condition = " HttpCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1482,7 +1544,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_GT(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode > ? "
+	w.condition = " HttpCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1493,7 +1555,7 @@ func (d *__XfileServiceRequestLog_Selector) HttpCode_GE(val int) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HttpCode >= ? "
+	w.condition = " HttpCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1510,7 +1572,7 @@ func (u *__XfileServiceRequestLog_Deleter) Url_In(ins []string) *__XfileServiceR
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1523,7 +1585,7 @@ func (u *__XfileServiceRequestLog_Deleter) Url_NotIn(ins []string) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1535,7 +1597,7 @@ func (u *__XfileServiceRequestLog_Deleter) Url_Like(val string) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url LIKE ? "
+	w.condition = " Url LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1546,7 +1608,7 @@ func (d *__XfileServiceRequestLog_Deleter) Url_Eq(val string) *__XfileServiceReq
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = ? "
+	w.condition = " Url = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1557,7 +1619,7 @@ func (d *__XfileServiceRequestLog_Deleter) Url_NotEq(val string) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != ? "
+	w.condition = " Url != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1570,7 +1632,7 @@ func (u *__XfileServiceRequestLog_Deleter) CreatedTime_In(ins []string) *__Xfile
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1583,7 +1645,7 @@ func (u *__XfileServiceRequestLog_Deleter) CreatedTime_NotIn(ins []string) *__Xf
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1595,7 +1657,7 @@ func (u *__XfileServiceRequestLog_Deleter) CreatedTime_Like(val string) *__Xfile
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime LIKE ? "
+	w.condition = " CreatedTime LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1606,7 +1668,7 @@ func (d *__XfileServiceRequestLog_Deleter) CreatedTime_Eq(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1617,7 +1679,7 @@ func (d *__XfileServiceRequestLog_Deleter) CreatedTime_NotEq(val string) *__Xfil
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1632,7 +1694,7 @@ func (u *__XfileServiceRequestLog_Updater) Url_In(ins []string) *__XfileServiceR
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1645,7 +1707,7 @@ func (u *__XfileServiceRequestLog_Updater) Url_NotIn(ins []string) *__XfileServi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1657,7 +1719,7 @@ func (u *__XfileServiceRequestLog_Updater) Url_Like(val string) *__XfileServiceR
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url LIKE ? "
+	w.condition = " Url LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1668,7 +1730,7 @@ func (d *__XfileServiceRequestLog_Updater) Url_Eq(val string) *__XfileServiceReq
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = ? "
+	w.condition = " Url = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1679,7 +1741,7 @@ func (d *__XfileServiceRequestLog_Updater) Url_NotEq(val string) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != ? "
+	w.condition = " Url != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1692,7 +1754,7 @@ func (u *__XfileServiceRequestLog_Updater) CreatedTime_In(ins []string) *__Xfile
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1705,7 +1767,7 @@ func (u *__XfileServiceRequestLog_Updater) CreatedTime_NotIn(ins []string) *__Xf
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1717,7 +1779,7 @@ func (u *__XfileServiceRequestLog_Updater) CreatedTime_Like(val string) *__Xfile
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime LIKE ? "
+	w.condition = " CreatedTime LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1728,7 +1790,7 @@ func (d *__XfileServiceRequestLog_Updater) CreatedTime_Eq(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1739,7 +1801,7 @@ func (d *__XfileServiceRequestLog_Updater) CreatedTime_NotEq(val string) *__Xfil
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1754,7 +1816,7 @@ func (u *__XfileServiceRequestLog_Selector) Url_In(ins []string) *__XfileService
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1767,7 +1829,7 @@ func (u *__XfileServiceRequestLog_Selector) Url_NotIn(ins []string) *__XfileServ
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Url NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Url NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1779,7 +1841,7 @@ func (u *__XfileServiceRequestLog_Selector) Url_Like(val string) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url LIKE ? "
+	w.condition = " Url LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1790,7 +1852,7 @@ func (d *__XfileServiceRequestLog_Selector) Url_Eq(val string) *__XfileServiceRe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = ? "
+	w.condition = " Url = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1801,7 +1863,7 @@ func (d *__XfileServiceRequestLog_Selector) Url_NotEq(val string) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != ? "
+	w.condition = " Url != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1814,7 +1876,7 @@ func (u *__XfileServiceRequestLog_Selector) CreatedTime_In(ins []string) *__Xfil
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1827,7 +1889,7 @@ func (u *__XfileServiceRequestLog_Selector) CreatedTime_NotIn(ins []string) *__X
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1839,7 +1901,7 @@ func (u *__XfileServiceRequestLog_Selector) CreatedTime_Like(val string) *__Xfil
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime LIKE ? "
+	w.condition = " CreatedTime LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1850,7 +1912,7 @@ func (d *__XfileServiceRequestLog_Selector) CreatedTime_Eq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1861,7 +1923,7 @@ func (d *__XfileServiceRequestLog_Selector) CreatedTime_NotEq(val string) *__Xfi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1874,17 +1936,23 @@ func (d *__XfileServiceRequestLog_Selector) CreatedTime_NotEq(val string) *__Xfi
 //ints
 
 func (u *__XfileServiceRequestLog_Updater) Id(newVal int) *__XfileServiceRequestLog_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceRequestLog_Updater) Id_Increment(count int) *__XfileServiceRequestLog_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1895,17 +1963,23 @@ func (u *__XfileServiceRequestLog_Updater) Id_Increment(count int) *__XfileServi
 //ints
 
 func (u *__XfileServiceRequestLog_Updater) LocalSeq(newVal int) *__XfileServiceRequestLog_Updater {
-	u.updates[" LocalSeq = ? "] = newVal
+	up := updateCol{" LocalSeq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LocalSeq = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceRequestLog_Updater) LocalSeq_Increment(count int) *__XfileServiceRequestLog_Updater {
 	if count > 0 {
-		u.updates[" LocalSeq = LocalSeq+? "] = count
+		up := updateCol{" LocalSeq = LocalSeq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LocalSeq = LocalSeq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" LocalSeq = LocalSeq-? "] = -(count) //make it positive
+		up := updateCol{" LocalSeq = LocalSeq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LocalSeq = LocalSeq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1916,17 +1990,23 @@ func (u *__XfileServiceRequestLog_Updater) LocalSeq_Increment(count int) *__Xfil
 //ints
 
 func (u *__XfileServiceRequestLog_Updater) InstanceId(newVal int) *__XfileServiceRequestLog_Updater {
-	u.updates[" InstanceId = ? "] = newVal
+	up := updateCol{" InstanceId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" InstanceId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceRequestLog_Updater) InstanceId_Increment(count int) *__XfileServiceRequestLog_Updater {
 	if count > 0 {
-		u.updates[" InstanceId = InstanceId+? "] = count
+		up := updateCol{" InstanceId = InstanceId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" InstanceId = InstanceId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" InstanceId = InstanceId-? "] = -(count) //make it positive
+		up := updateCol{" InstanceId = InstanceId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" InstanceId = InstanceId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1938,24 +2018,32 @@ func (u *__XfileServiceRequestLog_Updater) InstanceId_Increment(count int) *__Xf
 
 //string
 func (u *__XfileServiceRequestLog_Updater) Url(newVal string) *__XfileServiceRequestLog_Updater {
-	u.updates[" Url = ? "] = newVal
+	up := updateCol{"Url = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Url = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__XfileServiceRequestLog_Updater) HttpCode(newVal int) *__XfileServiceRequestLog_Updater {
-	u.updates[" HttpCode = ? "] = newVal
+	up := updateCol{" HttpCode = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" HttpCode = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__XfileServiceRequestLog_Updater) HttpCode_Increment(count int) *__XfileServiceRequestLog_Updater {
 	if count > 0 {
-		u.updates[" HttpCode = HttpCode+? "] = count
+		up := updateCol{" HttpCode = HttpCode+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" HttpCode = HttpCode+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" HttpCode = HttpCode-? "] = -(count) //make it positive
+		up := updateCol{" HttpCode = HttpCode- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" HttpCode = HttpCode- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1967,7 +2055,9 @@ func (u *__XfileServiceRequestLog_Updater) HttpCode_Increment(count int) *__Xfil
 
 //string
 func (u *__XfileServiceRequestLog_Updater) CreatedTime(newVal string) *__XfileServiceRequestLog_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{"CreatedTime = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2292,9 +2382,13 @@ func (u *__XfileServiceRequestLog_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2379,10 +2473,10 @@ func MassInsert_XfileServiceRequestLog(rows []XfileServiceRequestLog, db XODB) e
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_log.xfile_service_request_log (" +
 		"Id, LocalSeq, InstanceId, Url, HttpCode, CreatedTime" +
@@ -2422,10 +2516,9 @@ func MassReplace_XfileServiceRequestLog(rows []XfileServiceRequestLog, db XODB) 
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_log.xfile_service_request_log (" +
 		"Id, LocalSeq, InstanceId, Url, HttpCode, CreatedTime" +

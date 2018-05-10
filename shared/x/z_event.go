@@ -1204,3 +1204,27 @@ func OnXfileServiceRequestLog_LoadMany(rows []*XfileServiceRequestLog) {
 		RowCache.Set("XfileServiceRequestLog:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
+
+//Account Events
+
+func OnAccount_AfterInsert(row *Account) {
+	RowCache.Set("Account:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnAccount_AfterUpdate(row *Account) {
+	RowCache.Set("Account:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnAccount_AfterDelete(row *Account) {
+	RowCache.Delete("Account:" + strconv.Itoa(row.Id))
+}
+
+func OnAccount_LoadOne(row *Account) {
+	RowCache.Set("Account:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnAccount_LoadMany(rows []*Account) {
+	for _, row := range rows {
+		RowCache.Set("Account:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}

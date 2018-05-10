@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostReshared represents a row from 'sun.post_reshared'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostReshared represents a row from 'sun.post_reshared'.
 
 // Manualy copy this to project
 type PostReshared__ struct {
@@ -184,23 +186,30 @@ func (pr *PostReshared) Delete(db XODB) error {
 
 // orma types
 type __PostReshared_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostReshared_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostReshared_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPostReshared_Deleter() *__PostReshared_Deleter {
@@ -210,7 +219,7 @@ func NewPostReshared_Deleter() *__PostReshared_Deleter {
 
 func NewPostReshared_Updater() *__PostReshared_Updater {
 	u := __PostReshared_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -219,8 +228,35 @@ func NewPostReshared_Selector() *__PostReshared_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PostReshared_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PostReshared_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostReshared_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostReshared_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PostReshared_Deleter) Or() *__PostReshared_Deleter {
@@ -235,7 +271,7 @@ func (u *__PostReshared_Deleter) ResharedId_In(ins []int) *__PostReshared_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -248,7 +284,7 @@ func (u *__PostReshared_Deleter) ResharedId_Ins(ins ...int) *__PostReshared_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -261,7 +297,7 @@ func (u *__PostReshared_Deleter) ResharedId_NotIn(ins []int) *__PostReshared_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -272,7 +308,7 @@ func (d *__PostReshared_Deleter) ResharedId_Eq(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId = ? "
+	w.condition = " ResharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -283,7 +319,7 @@ func (d *__PostReshared_Deleter) ResharedId_NotEq(val int) *__PostReshared_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId != ? "
+	w.condition = " ResharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -294,7 +330,7 @@ func (d *__PostReshared_Deleter) ResharedId_LT(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId < ? "
+	w.condition = " ResharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -305,7 +341,7 @@ func (d *__PostReshared_Deleter) ResharedId_LE(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId <= ? "
+	w.condition = " ResharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -316,7 +352,7 @@ func (d *__PostReshared_Deleter) ResharedId_GT(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId > ? "
+	w.condition = " ResharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -327,7 +363,7 @@ func (d *__PostReshared_Deleter) ResharedId_GE(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId >= ? "
+	w.condition = " ResharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +376,7 @@ func (u *__PostReshared_Deleter) ByUserId_In(ins []int) *__PostReshared_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -353,7 +389,7 @@ func (u *__PostReshared_Deleter) ByUserId_Ins(ins ...int) *__PostReshared_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -366,7 +402,7 @@ func (u *__PostReshared_Deleter) ByUserId_NotIn(ins []int) *__PostReshared_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -377,7 +413,7 @@ func (d *__PostReshared_Deleter) ByUserId_Eq(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -388,7 +424,7 @@ func (d *__PostReshared_Deleter) ByUserId_NotEq(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -399,7 +435,7 @@ func (d *__PostReshared_Deleter) ByUserId_LT(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -410,7 +446,7 @@ func (d *__PostReshared_Deleter) ByUserId_LE(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -421,7 +457,7 @@ func (d *__PostReshared_Deleter) ByUserId_GT(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -432,7 +468,7 @@ func (d *__PostReshared_Deleter) ByUserId_GE(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +481,7 @@ func (u *__PostReshared_Deleter) PostId_In(ins []int) *__PostReshared_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -458,7 +494,7 @@ func (u *__PostReshared_Deleter) PostId_Ins(ins ...int) *__PostReshared_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -471,7 +507,7 @@ func (u *__PostReshared_Deleter) PostId_NotIn(ins []int) *__PostReshared_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -482,7 +518,7 @@ func (d *__PostReshared_Deleter) PostId_Eq(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -493,7 +529,7 @@ func (d *__PostReshared_Deleter) PostId_NotEq(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -504,7 +540,7 @@ func (d *__PostReshared_Deleter) PostId_LT(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -515,7 +551,7 @@ func (d *__PostReshared_Deleter) PostId_LE(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -526,7 +562,7 @@ func (d *__PostReshared_Deleter) PostId_GT(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -537,7 +573,7 @@ func (d *__PostReshared_Deleter) PostId_GE(val int) *__PostReshared_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +586,7 @@ func (u *__PostReshared_Deleter) PostUserId_In(ins []int) *__PostReshared_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -563,7 +599,7 @@ func (u *__PostReshared_Deleter) PostUserId_Ins(ins ...int) *__PostReshared_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -576,7 +612,7 @@ func (u *__PostReshared_Deleter) PostUserId_NotIn(ins []int) *__PostReshared_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -587,7 +623,7 @@ func (d *__PostReshared_Deleter) PostUserId_Eq(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId = ? "
+	w.condition = " PostUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -598,7 +634,7 @@ func (d *__PostReshared_Deleter) PostUserId_NotEq(val int) *__PostReshared_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId != ? "
+	w.condition = " PostUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -609,7 +645,7 @@ func (d *__PostReshared_Deleter) PostUserId_LT(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId < ? "
+	w.condition = " PostUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -620,7 +656,7 @@ func (d *__PostReshared_Deleter) PostUserId_LE(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId <= ? "
+	w.condition = " PostUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -631,7 +667,7 @@ func (d *__PostReshared_Deleter) PostUserId_GT(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId > ? "
+	w.condition = " PostUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -642,7 +678,7 @@ func (d *__PostReshared_Deleter) PostUserId_GE(val int) *__PostReshared_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId >= ? "
+	w.condition = " PostUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -655,7 +691,7 @@ func (u *__PostReshared_Deleter) PostTypeEnum_In(ins []int) *__PostReshared_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -668,7 +704,7 @@ func (u *__PostReshared_Deleter) PostTypeEnum_Ins(ins ...int) *__PostReshared_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -681,7 +717,7 @@ func (u *__PostReshared_Deleter) PostTypeEnum_NotIn(ins []int) *__PostReshared_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -692,7 +728,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_Eq(val int) *__PostReshared_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -703,7 +739,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_NotEq(val int) *__PostReshared_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -714,7 +750,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_LT(val int) *__PostReshared_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -725,7 +761,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_LE(val int) *__PostReshared_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -736,7 +772,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_GT(val int) *__PostReshared_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -747,7 +783,7 @@ func (d *__PostReshared_Deleter) PostTypeEnum_GE(val int) *__PostReshared_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -760,7 +796,7 @@ func (u *__PostReshared_Deleter) PostCategoryEnum_In(ins []int) *__PostReshared_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -773,7 +809,7 @@ func (u *__PostReshared_Deleter) PostCategoryEnum_Ins(ins ...int) *__PostReshare
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -786,7 +822,7 @@ func (u *__PostReshared_Deleter) PostCategoryEnum_NotIn(ins []int) *__PostReshar
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -797,7 +833,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_Eq(val int) *__PostReshared_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -808,7 +844,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_NotEq(val int) *__PostReshared
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -819,7 +855,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_LT(val int) *__PostReshared_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -830,7 +866,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_LE(val int) *__PostReshared_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -841,7 +877,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_GT(val int) *__PostReshared_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -852,7 +888,7 @@ func (d *__PostReshared_Deleter) PostCategoryEnum_GE(val int) *__PostReshared_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -865,7 +901,7 @@ func (u *__PostReshared_Deleter) CreatedTime_In(ins []int) *__PostReshared_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -878,7 +914,7 @@ func (u *__PostReshared_Deleter) CreatedTime_Ins(ins ...int) *__PostReshared_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -891,7 +927,7 @@ func (u *__PostReshared_Deleter) CreatedTime_NotIn(ins []int) *__PostReshared_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -902,7 +938,7 @@ func (d *__PostReshared_Deleter) CreatedTime_Eq(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -913,7 +949,7 @@ func (d *__PostReshared_Deleter) CreatedTime_NotEq(val int) *__PostReshared_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -924,7 +960,7 @@ func (d *__PostReshared_Deleter) CreatedTime_LT(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -935,7 +971,7 @@ func (d *__PostReshared_Deleter) CreatedTime_LE(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -946,7 +982,7 @@ func (d *__PostReshared_Deleter) CreatedTime_GT(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -957,10 +993,23 @@ func (d *__PostReshared_Deleter) CreatedTime_GE(val int) *__PostReshared_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostReshared_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostReshared_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -976,7 +1025,7 @@ func (u *__PostReshared_Updater) ResharedId_In(ins []int) *__PostReshared_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -989,7 +1038,7 @@ func (u *__PostReshared_Updater) ResharedId_Ins(ins ...int) *__PostReshared_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1002,7 +1051,7 @@ func (u *__PostReshared_Updater) ResharedId_NotIn(ins []int) *__PostReshared_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1013,7 +1062,7 @@ func (d *__PostReshared_Updater) ResharedId_Eq(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId = ? "
+	w.condition = " ResharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1024,7 +1073,7 @@ func (d *__PostReshared_Updater) ResharedId_NotEq(val int) *__PostReshared_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId != ? "
+	w.condition = " ResharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1035,7 +1084,7 @@ func (d *__PostReshared_Updater) ResharedId_LT(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId < ? "
+	w.condition = " ResharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1046,7 +1095,7 @@ func (d *__PostReshared_Updater) ResharedId_LE(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId <= ? "
+	w.condition = " ResharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1057,7 +1106,7 @@ func (d *__PostReshared_Updater) ResharedId_GT(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId > ? "
+	w.condition = " ResharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1068,7 +1117,7 @@ func (d *__PostReshared_Updater) ResharedId_GE(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId >= ? "
+	w.condition = " ResharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1081,7 +1130,7 @@ func (u *__PostReshared_Updater) ByUserId_In(ins []int) *__PostReshared_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1094,7 +1143,7 @@ func (u *__PostReshared_Updater) ByUserId_Ins(ins ...int) *__PostReshared_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1107,7 +1156,7 @@ func (u *__PostReshared_Updater) ByUserId_NotIn(ins []int) *__PostReshared_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1118,7 +1167,7 @@ func (d *__PostReshared_Updater) ByUserId_Eq(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1129,7 +1178,7 @@ func (d *__PostReshared_Updater) ByUserId_NotEq(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1140,7 +1189,7 @@ func (d *__PostReshared_Updater) ByUserId_LT(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1151,7 +1200,7 @@ func (d *__PostReshared_Updater) ByUserId_LE(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1162,7 +1211,7 @@ func (d *__PostReshared_Updater) ByUserId_GT(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1173,7 +1222,7 @@ func (d *__PostReshared_Updater) ByUserId_GE(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1186,7 +1235,7 @@ func (u *__PostReshared_Updater) PostId_In(ins []int) *__PostReshared_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1199,7 +1248,7 @@ func (u *__PostReshared_Updater) PostId_Ins(ins ...int) *__PostReshared_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1212,7 +1261,7 @@ func (u *__PostReshared_Updater) PostId_NotIn(ins []int) *__PostReshared_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1223,7 +1272,7 @@ func (d *__PostReshared_Updater) PostId_Eq(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1234,7 +1283,7 @@ func (d *__PostReshared_Updater) PostId_NotEq(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1245,7 +1294,7 @@ func (d *__PostReshared_Updater) PostId_LT(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1256,7 +1305,7 @@ func (d *__PostReshared_Updater) PostId_LE(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1267,7 +1316,7 @@ func (d *__PostReshared_Updater) PostId_GT(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1278,7 +1327,7 @@ func (d *__PostReshared_Updater) PostId_GE(val int) *__PostReshared_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1291,7 +1340,7 @@ func (u *__PostReshared_Updater) PostUserId_In(ins []int) *__PostReshared_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1304,7 +1353,7 @@ func (u *__PostReshared_Updater) PostUserId_Ins(ins ...int) *__PostReshared_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1317,7 +1366,7 @@ func (u *__PostReshared_Updater) PostUserId_NotIn(ins []int) *__PostReshared_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1328,7 +1377,7 @@ func (d *__PostReshared_Updater) PostUserId_Eq(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId = ? "
+	w.condition = " PostUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1339,7 +1388,7 @@ func (d *__PostReshared_Updater) PostUserId_NotEq(val int) *__PostReshared_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId != ? "
+	w.condition = " PostUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1350,7 +1399,7 @@ func (d *__PostReshared_Updater) PostUserId_LT(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId < ? "
+	w.condition = " PostUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1361,7 +1410,7 @@ func (d *__PostReshared_Updater) PostUserId_LE(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId <= ? "
+	w.condition = " PostUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1372,7 +1421,7 @@ func (d *__PostReshared_Updater) PostUserId_GT(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId > ? "
+	w.condition = " PostUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1383,7 +1432,7 @@ func (d *__PostReshared_Updater) PostUserId_GE(val int) *__PostReshared_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId >= ? "
+	w.condition = " PostUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1396,7 +1445,7 @@ func (u *__PostReshared_Updater) PostTypeEnum_In(ins []int) *__PostReshared_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1409,7 +1458,7 @@ func (u *__PostReshared_Updater) PostTypeEnum_Ins(ins ...int) *__PostReshared_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1422,7 +1471,7 @@ func (u *__PostReshared_Updater) PostTypeEnum_NotIn(ins []int) *__PostReshared_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1433,7 +1482,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_Eq(val int) *__PostReshared_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1444,7 +1493,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_NotEq(val int) *__PostReshared_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1455,7 +1504,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_LT(val int) *__PostReshared_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1466,7 +1515,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_LE(val int) *__PostReshared_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1477,7 +1526,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_GT(val int) *__PostReshared_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1488,7 +1537,7 @@ func (d *__PostReshared_Updater) PostTypeEnum_GE(val int) *__PostReshared_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1501,7 +1550,7 @@ func (u *__PostReshared_Updater) PostCategoryEnum_In(ins []int) *__PostReshared_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1514,7 +1563,7 @@ func (u *__PostReshared_Updater) PostCategoryEnum_Ins(ins ...int) *__PostReshare
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1527,7 +1576,7 @@ func (u *__PostReshared_Updater) PostCategoryEnum_NotIn(ins []int) *__PostReshar
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1538,7 +1587,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_Eq(val int) *__PostReshared_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1549,7 +1598,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_NotEq(val int) *__PostReshared
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1560,7 +1609,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_LT(val int) *__PostReshared_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1571,7 +1620,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_LE(val int) *__PostReshared_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1582,7 +1631,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_GT(val int) *__PostReshared_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1593,7 +1642,7 @@ func (d *__PostReshared_Updater) PostCategoryEnum_GE(val int) *__PostReshared_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1606,7 +1655,7 @@ func (u *__PostReshared_Updater) CreatedTime_In(ins []int) *__PostReshared_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1619,7 +1668,7 @@ func (u *__PostReshared_Updater) CreatedTime_Ins(ins ...int) *__PostReshared_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1632,7 +1681,7 @@ func (u *__PostReshared_Updater) CreatedTime_NotIn(ins []int) *__PostReshared_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1643,7 +1692,7 @@ func (d *__PostReshared_Updater) CreatedTime_Eq(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1654,7 +1703,7 @@ func (d *__PostReshared_Updater) CreatedTime_NotEq(val int) *__PostReshared_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1665,7 +1714,7 @@ func (d *__PostReshared_Updater) CreatedTime_LT(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1676,7 +1725,7 @@ func (d *__PostReshared_Updater) CreatedTime_LE(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1687,7 +1736,7 @@ func (d *__PostReshared_Updater) CreatedTime_GT(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1698,10 +1747,23 @@ func (d *__PostReshared_Updater) CreatedTime_GE(val int) *__PostReshared_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostReshared_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostReshared_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1717,7 +1779,7 @@ func (u *__PostReshared_Selector) ResharedId_In(ins []int) *__PostReshared_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1730,7 +1792,7 @@ func (u *__PostReshared_Selector) ResharedId_Ins(ins ...int) *__PostReshared_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1743,7 +1805,7 @@ func (u *__PostReshared_Selector) ResharedId_NotIn(ins []int) *__PostReshared_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1754,7 +1816,7 @@ func (d *__PostReshared_Selector) ResharedId_Eq(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId = ? "
+	w.condition = " ResharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1765,7 +1827,7 @@ func (d *__PostReshared_Selector) ResharedId_NotEq(val int) *__PostReshared_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId != ? "
+	w.condition = " ResharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1776,7 +1838,7 @@ func (d *__PostReshared_Selector) ResharedId_LT(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId < ? "
+	w.condition = " ResharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1787,7 +1849,7 @@ func (d *__PostReshared_Selector) ResharedId_LE(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId <= ? "
+	w.condition = " ResharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1798,7 +1860,7 @@ func (d *__PostReshared_Selector) ResharedId_GT(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId > ? "
+	w.condition = " ResharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1809,7 +1871,7 @@ func (d *__PostReshared_Selector) ResharedId_GE(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResharedId >= ? "
+	w.condition = " ResharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1822,7 +1884,7 @@ func (u *__PostReshared_Selector) ByUserId_In(ins []int) *__PostReshared_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1835,7 +1897,7 @@ func (u *__PostReshared_Selector) ByUserId_Ins(ins ...int) *__PostReshared_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1848,7 +1910,7 @@ func (u *__PostReshared_Selector) ByUserId_NotIn(ins []int) *__PostReshared_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1859,7 +1921,7 @@ func (d *__PostReshared_Selector) ByUserId_Eq(val int) *__PostReshared_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1870,7 +1932,7 @@ func (d *__PostReshared_Selector) ByUserId_NotEq(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1881,7 +1943,7 @@ func (d *__PostReshared_Selector) ByUserId_LT(val int) *__PostReshared_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1892,7 +1954,7 @@ func (d *__PostReshared_Selector) ByUserId_LE(val int) *__PostReshared_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1903,7 +1965,7 @@ func (d *__PostReshared_Selector) ByUserId_GT(val int) *__PostReshared_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1914,7 +1976,7 @@ func (d *__PostReshared_Selector) ByUserId_GE(val int) *__PostReshared_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1927,7 +1989,7 @@ func (u *__PostReshared_Selector) PostId_In(ins []int) *__PostReshared_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1940,7 +2002,7 @@ func (u *__PostReshared_Selector) PostId_Ins(ins ...int) *__PostReshared_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1953,7 +2015,7 @@ func (u *__PostReshared_Selector) PostId_NotIn(ins []int) *__PostReshared_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1964,7 +2026,7 @@ func (d *__PostReshared_Selector) PostId_Eq(val int) *__PostReshared_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1975,7 +2037,7 @@ func (d *__PostReshared_Selector) PostId_NotEq(val int) *__PostReshared_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1986,7 +2048,7 @@ func (d *__PostReshared_Selector) PostId_LT(val int) *__PostReshared_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1997,7 +2059,7 @@ func (d *__PostReshared_Selector) PostId_LE(val int) *__PostReshared_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2008,7 +2070,7 @@ func (d *__PostReshared_Selector) PostId_GT(val int) *__PostReshared_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2019,7 +2081,7 @@ func (d *__PostReshared_Selector) PostId_GE(val int) *__PostReshared_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2032,7 +2094,7 @@ func (u *__PostReshared_Selector) PostUserId_In(ins []int) *__PostReshared_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2045,7 +2107,7 @@ func (u *__PostReshared_Selector) PostUserId_Ins(ins ...int) *__PostReshared_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2058,7 +2120,7 @@ func (u *__PostReshared_Selector) PostUserId_NotIn(ins []int) *__PostReshared_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2069,7 +2131,7 @@ func (d *__PostReshared_Selector) PostUserId_Eq(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId = ? "
+	w.condition = " PostUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2080,7 +2142,7 @@ func (d *__PostReshared_Selector) PostUserId_NotEq(val int) *__PostReshared_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId != ? "
+	w.condition = " PostUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2091,7 +2153,7 @@ func (d *__PostReshared_Selector) PostUserId_LT(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId < ? "
+	w.condition = " PostUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2102,7 +2164,7 @@ func (d *__PostReshared_Selector) PostUserId_LE(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId <= ? "
+	w.condition = " PostUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2113,7 +2175,7 @@ func (d *__PostReshared_Selector) PostUserId_GT(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId > ? "
+	w.condition = " PostUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2124,7 +2186,7 @@ func (d *__PostReshared_Selector) PostUserId_GE(val int) *__PostReshared_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostUserId >= ? "
+	w.condition = " PostUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2137,7 +2199,7 @@ func (u *__PostReshared_Selector) PostTypeEnum_In(ins []int) *__PostReshared_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2150,7 +2212,7 @@ func (u *__PostReshared_Selector) PostTypeEnum_Ins(ins ...int) *__PostReshared_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2163,7 +2225,7 @@ func (u *__PostReshared_Selector) PostTypeEnum_NotIn(ins []int) *__PostReshared_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2174,7 +2236,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_Eq(val int) *__PostReshared_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2185,7 +2247,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_NotEq(val int) *__PostReshared_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2196,7 +2258,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_LT(val int) *__PostReshared_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2207,7 +2269,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_LE(val int) *__PostReshared_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2218,7 +2280,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_GT(val int) *__PostReshared_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2229,7 +2291,7 @@ func (d *__PostReshared_Selector) PostTypeEnum_GE(val int) *__PostReshared_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2242,7 +2304,7 @@ func (u *__PostReshared_Selector) PostCategoryEnum_In(ins []int) *__PostReshared
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2255,7 +2317,7 @@ func (u *__PostReshared_Selector) PostCategoryEnum_Ins(ins ...int) *__PostReshar
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2268,7 +2330,7 @@ func (u *__PostReshared_Selector) PostCategoryEnum_NotIn(ins []int) *__PostResha
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2279,7 +2341,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_Eq(val int) *__PostReshared_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2290,7 +2352,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_NotEq(val int) *__PostReshare
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2301,7 +2363,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_LT(val int) *__PostReshared_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2312,7 +2374,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_LE(val int) *__PostReshared_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2323,7 +2385,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_GT(val int) *__PostReshared_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2334,7 +2396,7 @@ func (d *__PostReshared_Selector) PostCategoryEnum_GE(val int) *__PostReshared_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2347,7 +2409,7 @@ func (u *__PostReshared_Selector) CreatedTime_In(ins []int) *__PostReshared_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2360,7 +2422,7 @@ func (u *__PostReshared_Selector) CreatedTime_Ins(ins ...int) *__PostReshared_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2373,7 +2435,7 @@ func (u *__PostReshared_Selector) CreatedTime_NotIn(ins []int) *__PostReshared_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2384,7 +2446,7 @@ func (d *__PostReshared_Selector) CreatedTime_Eq(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2395,7 +2457,7 @@ func (d *__PostReshared_Selector) CreatedTime_NotEq(val int) *__PostReshared_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2406,7 +2468,7 @@ func (d *__PostReshared_Selector) CreatedTime_LT(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2417,7 +2479,7 @@ func (d *__PostReshared_Selector) CreatedTime_LE(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2428,7 +2490,7 @@ func (d *__PostReshared_Selector) CreatedTime_GT(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2439,7 +2501,7 @@ func (d *__PostReshared_Selector) CreatedTime_GE(val int) *__PostReshared_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2460,17 +2522,23 @@ func (d *__PostReshared_Selector) CreatedTime_GE(val int) *__PostReshared_Select
 //ints
 
 func (u *__PostReshared_Updater) ResharedId(newVal int) *__PostReshared_Updater {
-	u.updates[" ResharedId = ? "] = newVal
+	up := updateCol{" ResharedId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ResharedId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) ResharedId_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" ResharedId = ResharedId+? "] = count
+		up := updateCol{" ResharedId = ResharedId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ResharedId = ResharedId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ResharedId = ResharedId-? "] = -(count) //make it positive
+		up := updateCol{" ResharedId = ResharedId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ResharedId = ResharedId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2481,17 +2549,23 @@ func (u *__PostReshared_Updater) ResharedId_Increment(count int) *__PostReshared
 //ints
 
 func (u *__PostReshared_Updater) ByUserId(newVal int) *__PostReshared_Updater {
-	u.updates[" ByUserId = ? "] = newVal
+	up := updateCol{" ByUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ByUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) ByUserId_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" ByUserId = ByUserId+? "] = count
+		up := updateCol{" ByUserId = ByUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ByUserId = ByUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ByUserId = ByUserId-? "] = -(count) //make it positive
+		up := updateCol{" ByUserId = ByUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ByUserId = ByUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2502,17 +2576,23 @@ func (u *__PostReshared_Updater) ByUserId_Increment(count int) *__PostReshared_U
 //ints
 
 func (u *__PostReshared_Updater) PostId(newVal int) *__PostReshared_Updater {
-	u.updates[" PostId = ? "] = newVal
+	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) PostId_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" PostId = PostId+? "] = count
+		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostId = PostId-? "] = -(count) //make it positive
+		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2523,17 +2603,23 @@ func (u *__PostReshared_Updater) PostId_Increment(count int) *__PostReshared_Upd
 //ints
 
 func (u *__PostReshared_Updater) PostUserId(newVal int) *__PostReshared_Updater {
-	u.updates[" PostUserId = ? "] = newVal
+	up := updateCol{" PostUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) PostUserId_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" PostUserId = PostUserId+? "] = count
+		up := updateCol{" PostUserId = PostUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostUserId = PostUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostUserId = PostUserId-? "] = -(count) //make it positive
+		up := updateCol{" PostUserId = PostUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostUserId = PostUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2544,17 +2630,23 @@ func (u *__PostReshared_Updater) PostUserId_Increment(count int) *__PostReshared
 //ints
 
 func (u *__PostReshared_Updater) PostTypeEnum(newVal int) *__PostReshared_Updater {
-	u.updates[" PostTypeEnum = ? "] = newVal
+	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) PostTypeEnum_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" PostTypeEnum = PostTypeEnum+? "] = count
+		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostTypeEnum = PostTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2565,17 +2657,23 @@ func (u *__PostReshared_Updater) PostTypeEnum_Increment(count int) *__PostReshar
 //ints
 
 func (u *__PostReshared_Updater) PostCategoryEnum(newVal int) *__PostReshared_Updater {
-	u.updates[" PostCategoryEnum = ? "] = newVal
+	up := updateCol{" PostCategoryEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostCategoryEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) PostCategoryEnum_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" PostCategoryEnum = PostCategoryEnum+? "] = count
+		up := updateCol{" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostCategoryEnum = PostCategoryEnum-? "] = -(count) //make it positive
+		up := updateCol{" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2586,17 +2684,23 @@ func (u *__PostReshared_Updater) PostCategoryEnum_Increment(count int) *__PostRe
 //ints
 
 func (u *__PostReshared_Updater) CreatedTime(newVal int) *__PostReshared_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostReshared_Updater) CreatedTime_Increment(count int) *__PostReshared_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2940,9 +3044,13 @@ func (u *__PostReshared_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3027,10 +3135,10 @@ func MassInsert_PostReshared(rows []PostReshared, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_reshared (" +
 		"ResharedId, ByUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime" +
@@ -3071,10 +3179,9 @@ func MassReplace_PostReshared(rows []PostReshared, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_reshared (" +
 		"ResharedId, ByUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime" +

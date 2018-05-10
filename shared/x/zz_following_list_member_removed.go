@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMemberRemoved represents a row from 'sun.following_list_member_removed'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// FollowingListMemberRemoved represents a row from 'sun.following_list_member_removed'.
 
 // Manualy copy this to project
 type FollowingListMemberRemoved__ struct {
@@ -206,23 +207,30 @@ func (flmr *FollowingListMemberRemoved) Delete(db XODB) error {
 
 // orma types
 type __FollowingListMemberRemoved_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __FollowingListMemberRemoved_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __FollowingListMemberRemoved_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewFollowingListMemberRemoved_Deleter() *__FollowingListMemberRemoved_Deleter {
@@ -232,7 +240,7 @@ func NewFollowingListMemberRemoved_Deleter() *__FollowingListMemberRemoved_Delet
 
 func NewFollowingListMemberRemoved_Updater() *__FollowingListMemberRemoved_Updater {
 	u := __FollowingListMemberRemoved_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -241,8 +249,35 @@ func NewFollowingListMemberRemoved_Selector() *__FollowingListMemberRemoved_Sele
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__FollowingListMemberRemoved_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__FollowingListMemberRemoved_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FollowingListMemberRemoved_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FollowingListMemberRemoved_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__FollowingListMemberRemoved_Deleter) Or() *__FollowingListMemberRemoved_Deleter {
@@ -257,7 +292,7 @@ func (u *__FollowingListMemberRemoved_Deleter) Id_In(ins []int) *__FollowingList
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -270,7 +305,7 @@ func (u *__FollowingListMemberRemoved_Deleter) Id_Ins(ins ...int) *__FollowingLi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -283,7 +318,7 @@ func (u *__FollowingListMemberRemoved_Deleter) Id_NotIn(ins []int) *__FollowingL
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -294,7 +329,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_Eq(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -305,7 +340,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_NotEq(val int) *__FollowingLis
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -316,7 +351,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_LT(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -327,7 +362,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_LE(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -338,7 +373,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_GT(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -349,7 +384,7 @@ func (d *__FollowingListMemberRemoved_Deleter) Id_GE(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -362,7 +397,7 @@ func (u *__FollowingListMemberRemoved_Deleter) ListId_In(ins []int) *__Following
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -375,7 +410,7 @@ func (u *__FollowingListMemberRemoved_Deleter) ListId_Ins(ins ...int) *__Followi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -388,7 +423,7 @@ func (u *__FollowingListMemberRemoved_Deleter) ListId_NotIn(ins []int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -399,7 +434,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_Eq(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId = ? "
+	w.condition = " ListId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -410,7 +445,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_NotEq(val int) *__Followin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId != ? "
+	w.condition = " ListId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -421,7 +456,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_LT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId < ? "
+	w.condition = " ListId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -432,7 +467,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_LE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId <= ? "
+	w.condition = " ListId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -443,7 +478,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_GT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId > ? "
+	w.condition = " ListId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -454,7 +489,7 @@ func (d *__FollowingListMemberRemoved_Deleter) ListId_GE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId >= ? "
+	w.condition = " ListId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -467,7 +502,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UserId_In(ins []int) *__Following
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -480,7 +515,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UserId_Ins(ins ...int) *__Followi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -493,7 +528,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UserId_NotIn(ins []int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -504,7 +539,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_Eq(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -515,7 +550,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_NotEq(val int) *__Followin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -526,7 +561,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_LT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -537,7 +572,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_LE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -548,7 +583,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_GT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -559,7 +594,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UserId_GE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -572,7 +607,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_In(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -585,7 +620,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_Ins(ins ...int) 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -598,7 +633,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_NotIn(ins []int)
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -609,7 +644,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_Eq(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId = ? "
+	w.condition = " UnFollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -620,7 +655,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_NotEq(val int) *
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId != ? "
+	w.condition = " UnFollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -631,7 +666,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_LT(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId < ? "
+	w.condition = " UnFollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -642,7 +677,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_LE(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId <= ? "
+	w.condition = " UnFollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -653,7 +688,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_GT(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId > ? "
+	w.condition = " UnFollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -664,7 +699,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UnFollowedUserId_GE(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId >= ? "
+	w.condition = " UnFollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -677,7 +712,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UpdatedTime_In(ins []int) *__Foll
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -690,7 +725,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UpdatedTime_Ins(ins ...int) *__Fo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -703,7 +738,7 @@ func (u *__FollowingListMemberRemoved_Deleter) UpdatedTime_NotIn(ins []int) *__F
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -714,7 +749,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_Eq(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime = ? "
+	w.condition = " UpdatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -725,7 +760,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_NotEq(val int) *__Fol
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime != ? "
+	w.condition = " UpdatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -736,7 +771,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_LT(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime < ? "
+	w.condition = " UpdatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -747,7 +782,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_LE(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime <= ? "
+	w.condition = " UpdatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -758,7 +793,7 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_GT(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime > ? "
+	w.condition = " UpdatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -769,10 +804,23 @@ func (d *__FollowingListMemberRemoved_Deleter) UpdatedTime_GE(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime >= ? "
+	w.condition = " UpdatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FollowingListMemberRemoved_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FollowingListMemberRemoved_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -788,7 +836,7 @@ func (u *__FollowingListMemberRemoved_Updater) Id_In(ins []int) *__FollowingList
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -801,7 +849,7 @@ func (u *__FollowingListMemberRemoved_Updater) Id_Ins(ins ...int) *__FollowingLi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -814,7 +862,7 @@ func (u *__FollowingListMemberRemoved_Updater) Id_NotIn(ins []int) *__FollowingL
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -825,7 +873,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_Eq(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -836,7 +884,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_NotEq(val int) *__FollowingLis
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -847,7 +895,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_LT(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -858,7 +906,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_LE(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -869,7 +917,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_GT(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -880,7 +928,7 @@ func (d *__FollowingListMemberRemoved_Updater) Id_GE(val int) *__FollowingListMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -893,7 +941,7 @@ func (u *__FollowingListMemberRemoved_Updater) ListId_In(ins []int) *__Following
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -906,7 +954,7 @@ func (u *__FollowingListMemberRemoved_Updater) ListId_Ins(ins ...int) *__Followi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -919,7 +967,7 @@ func (u *__FollowingListMemberRemoved_Updater) ListId_NotIn(ins []int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -930,7 +978,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_Eq(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId = ? "
+	w.condition = " ListId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -941,7 +989,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_NotEq(val int) *__Followin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId != ? "
+	w.condition = " ListId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -952,7 +1000,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_LT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId < ? "
+	w.condition = " ListId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -963,7 +1011,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_LE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId <= ? "
+	w.condition = " ListId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -974,7 +1022,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_GT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId > ? "
+	w.condition = " ListId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -985,7 +1033,7 @@ func (d *__FollowingListMemberRemoved_Updater) ListId_GE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId >= ? "
+	w.condition = " ListId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -998,7 +1046,7 @@ func (u *__FollowingListMemberRemoved_Updater) UserId_In(ins []int) *__Following
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1011,7 +1059,7 @@ func (u *__FollowingListMemberRemoved_Updater) UserId_Ins(ins ...int) *__Followi
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1024,7 +1072,7 @@ func (u *__FollowingListMemberRemoved_Updater) UserId_NotIn(ins []int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1035,7 +1083,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_Eq(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1046,7 +1094,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_NotEq(val int) *__Followin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1057,7 +1105,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_LT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1068,7 +1116,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_LE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1079,7 +1127,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_GT(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1090,7 +1138,7 @@ func (d *__FollowingListMemberRemoved_Updater) UserId_GE(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1103,7 +1151,7 @@ func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId_In(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1116,7 +1164,7 @@ func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId_Ins(ins ...int) 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1129,7 +1177,7 @@ func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId_NotIn(ins []int)
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1140,7 +1188,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_Eq(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId = ? "
+	w.condition = " UnFollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1151,7 +1199,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_NotEq(val int) *
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId != ? "
+	w.condition = " UnFollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1162,7 +1210,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_LT(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId < ? "
+	w.condition = " UnFollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1173,7 +1221,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_LE(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId <= ? "
+	w.condition = " UnFollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1184,7 +1232,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_GT(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId > ? "
+	w.condition = " UnFollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1195,7 +1243,7 @@ func (d *__FollowingListMemberRemoved_Updater) UnFollowedUserId_GE(val int) *__F
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId >= ? "
+	w.condition = " UnFollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1208,7 +1256,7 @@ func (u *__FollowingListMemberRemoved_Updater) UpdatedTime_In(ins []int) *__Foll
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1221,7 +1269,7 @@ func (u *__FollowingListMemberRemoved_Updater) UpdatedTime_Ins(ins ...int) *__Fo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1234,7 +1282,7 @@ func (u *__FollowingListMemberRemoved_Updater) UpdatedTime_NotIn(ins []int) *__F
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1245,7 +1293,7 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_Eq(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime = ? "
+	w.condition = " UpdatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1256,7 +1304,7 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_NotEq(val int) *__Fol
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime != ? "
+	w.condition = " UpdatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1267,7 +1315,7 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_LT(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime < ? "
+	w.condition = " UpdatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1278,7 +1326,7 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_LE(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime <= ? "
+	w.condition = " UpdatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1289,7 +1337,7 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_GT(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime > ? "
+	w.condition = " UpdatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1300,10 +1348,23 @@ func (d *__FollowingListMemberRemoved_Updater) UpdatedTime_GE(val int) *__Follow
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime >= ? "
+	w.condition = " UpdatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__FollowingListMemberRemoved_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__FollowingListMemberRemoved_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1319,7 +1380,7 @@ func (u *__FollowingListMemberRemoved_Selector) Id_In(ins []int) *__FollowingLis
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1332,7 +1393,7 @@ func (u *__FollowingListMemberRemoved_Selector) Id_Ins(ins ...int) *__FollowingL
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1345,7 +1406,7 @@ func (u *__FollowingListMemberRemoved_Selector) Id_NotIn(ins []int) *__Following
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1356,7 +1417,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_Eq(val int) *__FollowingListM
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1367,7 +1428,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_NotEq(val int) *__FollowingLi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1378,7 +1439,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_LT(val int) *__FollowingListM
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1389,7 +1450,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_LE(val int) *__FollowingListM
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1461,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_GT(val int) *__FollowingListM
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1411,7 +1472,7 @@ func (d *__FollowingListMemberRemoved_Selector) Id_GE(val int) *__FollowingListM
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1424,7 +1485,7 @@ func (u *__FollowingListMemberRemoved_Selector) ListId_In(ins []int) *__Followin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1498,7 @@ func (u *__FollowingListMemberRemoved_Selector) ListId_Ins(ins ...int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1450,7 +1511,7 @@ func (u *__FollowingListMemberRemoved_Selector) ListId_NotIn(ins []int) *__Follo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ListId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ListId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1461,7 +1522,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_Eq(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId = ? "
+	w.condition = " ListId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1472,7 +1533,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_NotEq(val int) *__Followi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId != ? "
+	w.condition = " ListId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1483,7 +1544,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_LT(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId < ? "
+	w.condition = " ListId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1494,7 +1555,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_LE(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId <= ? "
+	w.condition = " ListId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1505,7 +1566,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_GT(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId > ? "
+	w.condition = " ListId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1516,7 +1577,7 @@ func (d *__FollowingListMemberRemoved_Selector) ListId_GE(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ListId >= ? "
+	w.condition = " ListId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1529,7 +1590,7 @@ func (u *__FollowingListMemberRemoved_Selector) UserId_In(ins []int) *__Followin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1542,7 +1603,7 @@ func (u *__FollowingListMemberRemoved_Selector) UserId_Ins(ins ...int) *__Follow
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1555,7 +1616,7 @@ func (u *__FollowingListMemberRemoved_Selector) UserId_NotIn(ins []int) *__Follo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1566,7 +1627,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_Eq(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1577,7 +1638,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_NotEq(val int) *__Followi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1588,7 +1649,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_LT(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1599,7 +1660,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_LE(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1610,7 +1671,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_GT(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1621,7 +1682,7 @@ func (d *__FollowingListMemberRemoved_Selector) UserId_GE(val int) *__FollowingL
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1634,7 +1695,7 @@ func (u *__FollowingListMemberRemoved_Selector) UnFollowedUserId_In(ins []int) *
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1647,7 +1708,7 @@ func (u *__FollowingListMemberRemoved_Selector) UnFollowedUserId_Ins(ins ...int)
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1660,7 +1721,7 @@ func (u *__FollowingListMemberRemoved_Selector) UnFollowedUserId_NotIn(ins []int
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UnFollowedUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UnFollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1671,7 +1732,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_Eq(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId = ? "
+	w.condition = " UnFollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1682,7 +1743,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_NotEq(val int) 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId != ? "
+	w.condition = " UnFollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1693,7 +1754,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_LT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId < ? "
+	w.condition = " UnFollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1704,7 +1765,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_LE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId <= ? "
+	w.condition = " UnFollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1715,7 +1776,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_GT(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId > ? "
+	w.condition = " UnFollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1726,7 +1787,7 @@ func (d *__FollowingListMemberRemoved_Selector) UnFollowedUserId_GE(val int) *__
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UnFollowedUserId >= ? "
+	w.condition = " UnFollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1739,7 +1800,7 @@ func (u *__FollowingListMemberRemoved_Selector) UpdatedTime_In(ins []int) *__Fol
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1752,7 +1813,7 @@ func (u *__FollowingListMemberRemoved_Selector) UpdatedTime_Ins(ins ...int) *__F
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1765,7 +1826,7 @@ func (u *__FollowingListMemberRemoved_Selector) UpdatedTime_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1776,7 +1837,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_Eq(val int) *__Follo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime = ? "
+	w.condition = " UpdatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1787,7 +1848,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_NotEq(val int) *__Fo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime != ? "
+	w.condition = " UpdatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1798,7 +1859,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_LT(val int) *__Follo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime < ? "
+	w.condition = " UpdatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1809,7 +1870,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_LE(val int) *__Follo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime <= ? "
+	w.condition = " UpdatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1820,7 +1881,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_GT(val int) *__Follo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime > ? "
+	w.condition = " UpdatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1831,7 +1892,7 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_GE(val int) *__Follo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedTime >= ? "
+	w.condition = " UpdatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1852,17 +1913,23 @@ func (d *__FollowingListMemberRemoved_Selector) UpdatedTime_GE(val int) *__Follo
 //ints
 
 func (u *__FollowingListMemberRemoved_Updater) Id(newVal int) *__FollowingListMemberRemoved_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FollowingListMemberRemoved_Updater) Id_Increment(count int) *__FollowingListMemberRemoved_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1873,17 +1940,23 @@ func (u *__FollowingListMemberRemoved_Updater) Id_Increment(count int) *__Follow
 //ints
 
 func (u *__FollowingListMemberRemoved_Updater) ListId(newVal int) *__FollowingListMemberRemoved_Updater {
-	u.updates[" ListId = ? "] = newVal
+	up := updateCol{" ListId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ListId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FollowingListMemberRemoved_Updater) ListId_Increment(count int) *__FollowingListMemberRemoved_Updater {
 	if count > 0 {
-		u.updates[" ListId = ListId+? "] = count
+		up := updateCol{" ListId = ListId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ListId = ListId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ListId = ListId-? "] = -(count) //make it positive
+		up := updateCol{" ListId = ListId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ListId = ListId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1894,17 +1967,23 @@ func (u *__FollowingListMemberRemoved_Updater) ListId_Increment(count int) *__Fo
 //ints
 
 func (u *__FollowingListMemberRemoved_Updater) UserId(newVal int) *__FollowingListMemberRemoved_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FollowingListMemberRemoved_Updater) UserId_Increment(count int) *__FollowingListMemberRemoved_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1915,17 +1994,23 @@ func (u *__FollowingListMemberRemoved_Updater) UserId_Increment(count int) *__Fo
 //ints
 
 func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId(newVal int) *__FollowingListMemberRemoved_Updater {
-	u.updates[" UnFollowedUserId = ? "] = newVal
+	up := updateCol{" UnFollowedUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UnFollowedUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId_Increment(count int) *__FollowingListMemberRemoved_Updater {
 	if count > 0 {
-		u.updates[" UnFollowedUserId = UnFollowedUserId+? "] = count
+		up := updateCol{" UnFollowedUserId = UnFollowedUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UnFollowedUserId = UnFollowedUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UnFollowedUserId = UnFollowedUserId-? "] = -(count) //make it positive
+		up := updateCol{" UnFollowedUserId = UnFollowedUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UnFollowedUserId = UnFollowedUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1936,17 +2021,23 @@ func (u *__FollowingListMemberRemoved_Updater) UnFollowedUserId_Increment(count 
 //ints
 
 func (u *__FollowingListMemberRemoved_Updater) UpdatedTime(newVal int) *__FollowingListMemberRemoved_Updater {
-	u.updates[" UpdatedTime = ? "] = newVal
+	up := updateCol{" UpdatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UpdatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__FollowingListMemberRemoved_Updater) UpdatedTime_Increment(count int) *__FollowingListMemberRemoved_Updater {
 	if count > 0 {
-		u.updates[" UpdatedTime = UpdatedTime+? "] = count
+		up := updateCol{" UpdatedTime = UpdatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UpdatedTime = UpdatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UpdatedTime = UpdatedTime-? "] = -(count) //make it positive
+		up := updateCol{" UpdatedTime = UpdatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UpdatedTime = UpdatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2260,9 +2351,13 @@ func (u *__FollowingListMemberRemoved_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2347,7 +2442,6 @@ func MassInsert_FollowingListMemberRemoved(rows []FollowingListMemberRemoved, db
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

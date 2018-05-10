@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Tag represents a row from 'sun.tag'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Tag represents a row from 'sun.tag'.
 
 // Manualy copy this to project
 type Tag__ struct {
@@ -182,23 +184,30 @@ func (t *Tag) Delete(db XODB) error {
 
 // orma types
 type __Tag_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Tag_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Tag_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewTag_Deleter() *__Tag_Deleter {
@@ -208,7 +217,7 @@ func NewTag_Deleter() *__Tag_Deleter {
 
 func NewTag_Updater() *__Tag_Updater {
 	u := __Tag_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -217,8 +226,35 @@ func NewTag_Selector() *__Tag_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__Tag_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__Tag_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Tag_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Tag_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__Tag_Deleter) Or() *__Tag_Deleter {
@@ -233,7 +269,7 @@ func (u *__Tag_Deleter) TagId_In(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -246,7 +282,7 @@ func (u *__Tag_Deleter) TagId_Ins(ins ...int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -259,7 +295,7 @@ func (u *__Tag_Deleter) TagId_NotIn(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -270,7 +306,7 @@ func (d *__Tag_Deleter) TagId_Eq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = ? "
+	w.condition = " TagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -281,7 +317,7 @@ func (d *__Tag_Deleter) TagId_NotEq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != ? "
+	w.condition = " TagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -292,7 +328,7 @@ func (d *__Tag_Deleter) TagId_LT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < ? "
+	w.condition = " TagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -303,7 +339,7 @@ func (d *__Tag_Deleter) TagId_LE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= ? "
+	w.condition = " TagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -314,7 +350,7 @@ func (d *__Tag_Deleter) TagId_GT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > ? "
+	w.condition = " TagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -325,7 +361,7 @@ func (d *__Tag_Deleter) TagId_GE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= ? "
+	w.condition = " TagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -338,7 +374,7 @@ func (u *__Tag_Deleter) Count_In(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -351,7 +387,7 @@ func (u *__Tag_Deleter) Count_Ins(ins ...int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -364,7 +400,7 @@ func (u *__Tag_Deleter) Count_NotIn(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -375,7 +411,7 @@ func (d *__Tag_Deleter) Count_Eq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count = ? "
+	w.condition = " Count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -386,7 +422,7 @@ func (d *__Tag_Deleter) Count_NotEq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count != ? "
+	w.condition = " Count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -397,7 +433,7 @@ func (d *__Tag_Deleter) Count_LT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count < ? "
+	w.condition = " Count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -408,7 +444,7 @@ func (d *__Tag_Deleter) Count_LE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count <= ? "
+	w.condition = " Count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -419,7 +455,7 @@ func (d *__Tag_Deleter) Count_GT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count > ? "
+	w.condition = " Count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -430,7 +466,7 @@ func (d *__Tag_Deleter) Count_GE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count >= ? "
+	w.condition = " Count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -443,7 +479,7 @@ func (u *__Tag_Deleter) TagStatusEnum_In(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -456,7 +492,7 @@ func (u *__Tag_Deleter) TagStatusEnum_Ins(ins ...int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -469,7 +505,7 @@ func (u *__Tag_Deleter) TagStatusEnum_NotIn(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -480,7 +516,7 @@ func (d *__Tag_Deleter) TagStatusEnum_Eq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum = ? "
+	w.condition = " TagStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -491,7 +527,7 @@ func (d *__Tag_Deleter) TagStatusEnum_NotEq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum != ? "
+	w.condition = " TagStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -502,7 +538,7 @@ func (d *__Tag_Deleter) TagStatusEnum_LT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum < ? "
+	w.condition = " TagStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -513,7 +549,7 @@ func (d *__Tag_Deleter) TagStatusEnum_LE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum <= ? "
+	w.condition = " TagStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -524,7 +560,7 @@ func (d *__Tag_Deleter) TagStatusEnum_GT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum > ? "
+	w.condition = " TagStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -535,7 +571,7 @@ func (d *__Tag_Deleter) TagStatusEnum_GE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum >= ? "
+	w.condition = " TagStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -548,7 +584,7 @@ func (u *__Tag_Deleter) CreatedTime_In(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -561,7 +597,7 @@ func (u *__Tag_Deleter) CreatedTime_Ins(ins ...int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -574,7 +610,7 @@ func (u *__Tag_Deleter) CreatedTime_NotIn(ins []int) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -585,7 +621,7 @@ func (d *__Tag_Deleter) CreatedTime_Eq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -596,7 +632,7 @@ func (d *__Tag_Deleter) CreatedTime_NotEq(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -607,7 +643,7 @@ func (d *__Tag_Deleter) CreatedTime_LT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -618,7 +654,7 @@ func (d *__Tag_Deleter) CreatedTime_LE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -629,7 +665,7 @@ func (d *__Tag_Deleter) CreatedTime_GT(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -640,10 +676,23 @@ func (d *__Tag_Deleter) CreatedTime_GE(val int) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Tag_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Tag_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -659,7 +708,7 @@ func (u *__Tag_Updater) TagId_In(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -672,7 +721,7 @@ func (u *__Tag_Updater) TagId_Ins(ins ...int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -685,7 +734,7 @@ func (u *__Tag_Updater) TagId_NotIn(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -696,7 +745,7 @@ func (d *__Tag_Updater) TagId_Eq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = ? "
+	w.condition = " TagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -707,7 +756,7 @@ func (d *__Tag_Updater) TagId_NotEq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != ? "
+	w.condition = " TagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -718,7 +767,7 @@ func (d *__Tag_Updater) TagId_LT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < ? "
+	w.condition = " TagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -729,7 +778,7 @@ func (d *__Tag_Updater) TagId_LE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= ? "
+	w.condition = " TagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -740,7 +789,7 @@ func (d *__Tag_Updater) TagId_GT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > ? "
+	w.condition = " TagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -751,7 +800,7 @@ func (d *__Tag_Updater) TagId_GE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= ? "
+	w.condition = " TagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -764,7 +813,7 @@ func (u *__Tag_Updater) Count_In(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -777,7 +826,7 @@ func (u *__Tag_Updater) Count_Ins(ins ...int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -790,7 +839,7 @@ func (u *__Tag_Updater) Count_NotIn(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -801,7 +850,7 @@ func (d *__Tag_Updater) Count_Eq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count = ? "
+	w.condition = " Count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -812,7 +861,7 @@ func (d *__Tag_Updater) Count_NotEq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count != ? "
+	w.condition = " Count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -823,7 +872,7 @@ func (d *__Tag_Updater) Count_LT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count < ? "
+	w.condition = " Count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -834,7 +883,7 @@ func (d *__Tag_Updater) Count_LE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count <= ? "
+	w.condition = " Count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -845,7 +894,7 @@ func (d *__Tag_Updater) Count_GT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count > ? "
+	w.condition = " Count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -856,7 +905,7 @@ func (d *__Tag_Updater) Count_GE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count >= ? "
+	w.condition = " Count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -869,7 +918,7 @@ func (u *__Tag_Updater) TagStatusEnum_In(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -882,7 +931,7 @@ func (u *__Tag_Updater) TagStatusEnum_Ins(ins ...int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -895,7 +944,7 @@ func (u *__Tag_Updater) TagStatusEnum_NotIn(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -906,7 +955,7 @@ func (d *__Tag_Updater) TagStatusEnum_Eq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum = ? "
+	w.condition = " TagStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -917,7 +966,7 @@ func (d *__Tag_Updater) TagStatusEnum_NotEq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum != ? "
+	w.condition = " TagStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -928,7 +977,7 @@ func (d *__Tag_Updater) TagStatusEnum_LT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum < ? "
+	w.condition = " TagStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -939,7 +988,7 @@ func (d *__Tag_Updater) TagStatusEnum_LE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum <= ? "
+	w.condition = " TagStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -950,7 +999,7 @@ func (d *__Tag_Updater) TagStatusEnum_GT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum > ? "
+	w.condition = " TagStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -961,7 +1010,7 @@ func (d *__Tag_Updater) TagStatusEnum_GE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum >= ? "
+	w.condition = " TagStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -974,7 +1023,7 @@ func (u *__Tag_Updater) CreatedTime_In(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -987,7 +1036,7 @@ func (u *__Tag_Updater) CreatedTime_Ins(ins ...int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1000,7 +1049,7 @@ func (u *__Tag_Updater) CreatedTime_NotIn(ins []int) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1011,7 +1060,7 @@ func (d *__Tag_Updater) CreatedTime_Eq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1022,7 +1071,7 @@ func (d *__Tag_Updater) CreatedTime_NotEq(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1033,7 +1082,7 @@ func (d *__Tag_Updater) CreatedTime_LT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1044,7 +1093,7 @@ func (d *__Tag_Updater) CreatedTime_LE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1055,7 +1104,7 @@ func (d *__Tag_Updater) CreatedTime_GT(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1066,10 +1115,23 @@ func (d *__Tag_Updater) CreatedTime_GE(val int) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Tag_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Tag_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1085,7 +1147,7 @@ func (u *__Tag_Selector) TagId_In(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1098,7 +1160,7 @@ func (u *__Tag_Selector) TagId_Ins(ins ...int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1111,7 +1173,7 @@ func (u *__Tag_Selector) TagId_NotIn(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1122,7 +1184,7 @@ func (d *__Tag_Selector) TagId_Eq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = ? "
+	w.condition = " TagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1133,7 +1195,7 @@ func (d *__Tag_Selector) TagId_NotEq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != ? "
+	w.condition = " TagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1144,7 +1206,7 @@ func (d *__Tag_Selector) TagId_LT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < ? "
+	w.condition = " TagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1155,7 +1217,7 @@ func (d *__Tag_Selector) TagId_LE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= ? "
+	w.condition = " TagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1166,7 +1228,7 @@ func (d *__Tag_Selector) TagId_GT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > ? "
+	w.condition = " TagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1177,7 +1239,7 @@ func (d *__Tag_Selector) TagId_GE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= ? "
+	w.condition = " TagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1190,7 +1252,7 @@ func (u *__Tag_Selector) Count_In(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1203,7 +1265,7 @@ func (u *__Tag_Selector) Count_Ins(ins ...int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1216,7 +1278,7 @@ func (u *__Tag_Selector) Count_NotIn(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Count NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1227,7 +1289,7 @@ func (d *__Tag_Selector) Count_Eq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count = ? "
+	w.condition = " Count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1238,7 +1300,7 @@ func (d *__Tag_Selector) Count_NotEq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count != ? "
+	w.condition = " Count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1249,7 +1311,7 @@ func (d *__Tag_Selector) Count_LT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count < ? "
+	w.condition = " Count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1260,7 +1322,7 @@ func (d *__Tag_Selector) Count_LE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count <= ? "
+	w.condition = " Count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1271,7 +1333,7 @@ func (d *__Tag_Selector) Count_GT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count > ? "
+	w.condition = " Count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1282,7 +1344,7 @@ func (d *__Tag_Selector) Count_GE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Count >= ? "
+	w.condition = " Count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1295,7 +1357,7 @@ func (u *__Tag_Selector) TagStatusEnum_In(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1308,7 +1370,7 @@ func (u *__Tag_Selector) TagStatusEnum_Ins(ins ...int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1321,7 +1383,7 @@ func (u *__Tag_Selector) TagStatusEnum_NotIn(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " TagStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1332,7 +1394,7 @@ func (d *__Tag_Selector) TagStatusEnum_Eq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum = ? "
+	w.condition = " TagStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1343,7 +1405,7 @@ func (d *__Tag_Selector) TagStatusEnum_NotEq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum != ? "
+	w.condition = " TagStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1354,7 +1416,7 @@ func (d *__Tag_Selector) TagStatusEnum_LT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum < ? "
+	w.condition = " TagStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1365,7 +1427,7 @@ func (d *__Tag_Selector) TagStatusEnum_LE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum <= ? "
+	w.condition = " TagStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1438,7 @@ func (d *__Tag_Selector) TagStatusEnum_GT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum > ? "
+	w.condition = " TagStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1449,7 @@ func (d *__Tag_Selector) TagStatusEnum_GE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagStatusEnum >= ? "
+	w.condition = " TagStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1462,7 @@ func (u *__Tag_Selector) CreatedTime_In(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1413,7 +1475,7 @@ func (u *__Tag_Selector) CreatedTime_Ins(ins ...int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1426,7 +1488,7 @@ func (u *__Tag_Selector) CreatedTime_NotIn(ins []int) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1499,7 @@ func (d *__Tag_Selector) CreatedTime_Eq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1510,7 @@ func (d *__Tag_Selector) CreatedTime_NotEq(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1459,7 +1521,7 @@ func (d *__Tag_Selector) CreatedTime_LT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1470,7 +1532,7 @@ func (d *__Tag_Selector) CreatedTime_LE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1481,7 +1543,7 @@ func (d *__Tag_Selector) CreatedTime_GT(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1492,7 +1554,7 @@ func (d *__Tag_Selector) CreatedTime_GE(val int) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1509,7 +1571,7 @@ func (u *__Tag_Deleter) Name_In(ins []string) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1522,7 +1584,7 @@ func (u *__Tag_Deleter) Name_NotIn(ins []string) *__Tag_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1596,7 @@ func (u *__Tag_Deleter) Name_Like(val string) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name LIKE ? "
+	w.condition = " Name LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1545,7 +1607,7 @@ func (d *__Tag_Deleter) Name_Eq(val string) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = ? "
+	w.condition = " Name = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1556,7 +1618,7 @@ func (d *__Tag_Deleter) Name_NotEq(val string) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != ? "
+	w.condition = " Name != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1571,7 +1633,7 @@ func (u *__Tag_Updater) Name_In(ins []string) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1584,7 +1646,7 @@ func (u *__Tag_Updater) Name_NotIn(ins []string) *__Tag_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1596,7 +1658,7 @@ func (u *__Tag_Updater) Name_Like(val string) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name LIKE ? "
+	w.condition = " Name LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1607,7 +1669,7 @@ func (d *__Tag_Updater) Name_Eq(val string) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = ? "
+	w.condition = " Name = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1618,7 +1680,7 @@ func (d *__Tag_Updater) Name_NotEq(val string) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != ? "
+	w.condition = " Name != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1633,7 +1695,7 @@ func (u *__Tag_Selector) Name_In(ins []string) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1646,7 +1708,7 @@ func (u *__Tag_Selector) Name_NotIn(ins []string) *__Tag_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Name NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Name NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1658,7 +1720,7 @@ func (u *__Tag_Selector) Name_Like(val string) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name LIKE ? "
+	w.condition = " Name LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1669,7 +1731,7 @@ func (d *__Tag_Selector) Name_Eq(val string) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = ? "
+	w.condition = " Name = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1742,7 @@ func (d *__Tag_Selector) Name_NotEq(val string) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != ? "
+	w.condition = " Name != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1693,17 +1755,23 @@ func (d *__Tag_Selector) Name_NotEq(val string) *__Tag_Selector {
 //ints
 
 func (u *__Tag_Updater) TagId(newVal int) *__Tag_Updater {
-	u.updates[" TagId = ? "] = newVal
+	up := updateCol{" TagId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" TagId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Tag_Updater) TagId_Increment(count int) *__Tag_Updater {
 	if count > 0 {
-		u.updates[" TagId = TagId+? "] = count
+		up := updateCol{" TagId = TagId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" TagId = TagId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" TagId = TagId-? "] = -(count) //make it positive
+		up := updateCol{" TagId = TagId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" TagId = TagId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1715,24 +1783,32 @@ func (u *__Tag_Updater) TagId_Increment(count int) *__Tag_Updater {
 
 //string
 func (u *__Tag_Updater) Name(newVal string) *__Tag_Updater {
-	u.updates[" Name = ? "] = newVal
+	up := updateCol{"Name = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Name = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Tag_Updater) Count(newVal int) *__Tag_Updater {
-	u.updates[" Count = ? "] = newVal
+	up := updateCol{" Count = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Count = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Tag_Updater) Count_Increment(count int) *__Tag_Updater {
 	if count > 0 {
-		u.updates[" Count = Count+? "] = count
+		up := updateCol{" Count = Count+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Count = Count+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Count = Count-? "] = -(count) //make it positive
+		up := updateCol{" Count = Count- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Count = Count- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1743,17 +1819,23 @@ func (u *__Tag_Updater) Count_Increment(count int) *__Tag_Updater {
 //ints
 
 func (u *__Tag_Updater) TagStatusEnum(newVal int) *__Tag_Updater {
-	u.updates[" TagStatusEnum = ? "] = newVal
+	up := updateCol{" TagStatusEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" TagStatusEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Tag_Updater) TagStatusEnum_Increment(count int) *__Tag_Updater {
 	if count > 0 {
-		u.updates[" TagStatusEnum = TagStatusEnum+? "] = count
+		up := updateCol{" TagStatusEnum = TagStatusEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" TagStatusEnum = TagStatusEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" TagStatusEnum = TagStatusEnum-? "] = -(count) //make it positive
+		up := updateCol{" TagStatusEnum = TagStatusEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" TagStatusEnum = TagStatusEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1764,17 +1846,23 @@ func (u *__Tag_Updater) TagStatusEnum_Increment(count int) *__Tag_Updater {
 //ints
 
 func (u *__Tag_Updater) CreatedTime(newVal int) *__Tag_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Tag_Updater) CreatedTime_Increment(count int) *__Tag_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2088,9 +2176,13 @@ func (u *__Tag_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2175,10 +2267,10 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(5, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.tag (" +
 		"TagId, Name, Count, TagStatusEnum, CreatedTime" +
@@ -2217,10 +2309,9 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(5, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.tag (" +
 		"TagId, Name, Count, TagStatusEnum, CreatedTime" +

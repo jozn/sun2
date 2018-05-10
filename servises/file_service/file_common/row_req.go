@@ -117,7 +117,7 @@ func (r *RowReq) createRowOutCacheDir() {
 }
 
 func removedDot(s string) string {
-    if true {
+    if false {
         return "all"
     }
 	return strings.Replace(s, ".", "", -1)

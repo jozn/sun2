@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Chat represents a row from 'sun_chat.chat'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Chat represents a row from 'sun_chat.chat'.
 
 // Manualy copy this to project
 type Chat__ struct {
@@ -187,23 +189,30 @@ func (c *Chat) Delete(db XODB) error {
 
 // orma types
 type __Chat_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Chat_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Chat_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewChat_Deleter() *__Chat_Deleter {
@@ -213,7 +222,7 @@ func NewChat_Deleter() *__Chat_Deleter {
 
 func NewChat_Updater() *__Chat_Updater {
 	u := __Chat_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -222,8 +231,35 @@ func NewChat_Selector() *__Chat_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__Chat_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__Chat_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Chat_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Chat_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__Chat_Deleter) Or() *__Chat_Deleter {
@@ -238,7 +274,7 @@ func (u *__Chat_Deleter) RoomTypeEnum_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -251,7 +287,7 @@ func (u *__Chat_Deleter) RoomTypeEnum_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -264,7 +300,7 @@ func (u *__Chat_Deleter) RoomTypeEnum_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -275,7 +311,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum = ? "
+	w.condition = " RoomTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -286,7 +322,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum != ? "
+	w.condition = " RoomTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -297,7 +333,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum < ? "
+	w.condition = " RoomTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -308,7 +344,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum <= ? "
+	w.condition = " RoomTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -319,7 +355,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum > ? "
+	w.condition = " RoomTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -330,7 +366,7 @@ func (d *__Chat_Deleter) RoomTypeEnum_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum >= ? "
+	w.condition = " RoomTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -343,7 +379,7 @@ func (u *__Chat_Deleter) UserId_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -356,7 +392,7 @@ func (u *__Chat_Deleter) UserId_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -369,7 +405,7 @@ func (u *__Chat_Deleter) UserId_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -380,7 +416,7 @@ func (d *__Chat_Deleter) UserId_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -391,7 +427,7 @@ func (d *__Chat_Deleter) UserId_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -402,7 +438,7 @@ func (d *__Chat_Deleter) UserId_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -413,7 +449,7 @@ func (d *__Chat_Deleter) UserId_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -424,7 +460,7 @@ func (d *__Chat_Deleter) UserId_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -435,7 +471,7 @@ func (d *__Chat_Deleter) UserId_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -448,7 +484,7 @@ func (u *__Chat_Deleter) PeerUserId_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -461,7 +497,7 @@ func (u *__Chat_Deleter) PeerUserId_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -474,7 +510,7 @@ func (u *__Chat_Deleter) PeerUserId_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -485,7 +521,7 @@ func (d *__Chat_Deleter) PeerUserId_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -496,7 +532,7 @@ func (d *__Chat_Deleter) PeerUserId_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -507,7 +543,7 @@ func (d *__Chat_Deleter) PeerUserId_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -518,7 +554,7 @@ func (d *__Chat_Deleter) PeerUserId_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -529,7 +565,7 @@ func (d *__Chat_Deleter) PeerUserId_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -540,7 +576,7 @@ func (d *__Chat_Deleter) PeerUserId_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -553,7 +589,7 @@ func (u *__Chat_Deleter) GroupId_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -566,7 +602,7 @@ func (u *__Chat_Deleter) GroupId_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -579,7 +615,7 @@ func (u *__Chat_Deleter) GroupId_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -590,7 +626,7 @@ func (d *__Chat_Deleter) GroupId_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId = ? "
+	w.condition = " GroupId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -601,7 +637,7 @@ func (d *__Chat_Deleter) GroupId_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId != ? "
+	w.condition = " GroupId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -612,7 +648,7 @@ func (d *__Chat_Deleter) GroupId_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId < ? "
+	w.condition = " GroupId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -623,7 +659,7 @@ func (d *__Chat_Deleter) GroupId_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId <= ? "
+	w.condition = " GroupId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -634,7 +670,7 @@ func (d *__Chat_Deleter) GroupId_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId > ? "
+	w.condition = " GroupId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -645,7 +681,7 @@ func (d *__Chat_Deleter) GroupId_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId >= ? "
+	w.condition = " GroupId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -658,7 +694,7 @@ func (u *__Chat_Deleter) CreatedTime_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -671,7 +707,7 @@ func (u *__Chat_Deleter) CreatedTime_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -684,7 +720,7 @@ func (u *__Chat_Deleter) CreatedTime_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -695,7 +731,7 @@ func (d *__Chat_Deleter) CreatedTime_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -706,7 +742,7 @@ func (d *__Chat_Deleter) CreatedTime_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -717,7 +753,7 @@ func (d *__Chat_Deleter) CreatedTime_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -728,7 +764,7 @@ func (d *__Chat_Deleter) CreatedTime_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -739,7 +775,7 @@ func (d *__Chat_Deleter) CreatedTime_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -750,7 +786,7 @@ func (d *__Chat_Deleter) CreatedTime_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -763,7 +799,7 @@ func (u *__Chat_Deleter) Seq_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -776,7 +812,7 @@ func (u *__Chat_Deleter) Seq_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -789,7 +825,7 @@ func (u *__Chat_Deleter) Seq_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -800,7 +836,7 @@ func (d *__Chat_Deleter) Seq_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -811,7 +847,7 @@ func (d *__Chat_Deleter) Seq_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -822,7 +858,7 @@ func (d *__Chat_Deleter) Seq_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -833,7 +869,7 @@ func (d *__Chat_Deleter) Seq_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -844,7 +880,7 @@ func (d *__Chat_Deleter) Seq_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -855,7 +891,7 @@ func (d *__Chat_Deleter) Seq_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -868,7 +904,7 @@ func (u *__Chat_Deleter) SeenSeq_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -881,7 +917,7 @@ func (u *__Chat_Deleter) SeenSeq_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -894,7 +930,7 @@ func (u *__Chat_Deleter) SeenSeq_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -905,7 +941,7 @@ func (d *__Chat_Deleter) SeenSeq_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = ? "
+	w.condition = " SeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -916,7 +952,7 @@ func (d *__Chat_Deleter) SeenSeq_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != ? "
+	w.condition = " SeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -927,7 +963,7 @@ func (d *__Chat_Deleter) SeenSeq_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < ? "
+	w.condition = " SeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -938,7 +974,7 @@ func (d *__Chat_Deleter) SeenSeq_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= ? "
+	w.condition = " SeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -949,7 +985,7 @@ func (d *__Chat_Deleter) SeenSeq_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > ? "
+	w.condition = " SeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -960,7 +996,7 @@ func (d *__Chat_Deleter) SeenSeq_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= ? "
+	w.condition = " SeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -973,7 +1009,7 @@ func (u *__Chat_Deleter) UpdatedMs_In(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -986,7 +1022,7 @@ func (u *__Chat_Deleter) UpdatedMs_Ins(ins ...int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -999,7 +1035,7 @@ func (u *__Chat_Deleter) UpdatedMs_NotIn(ins []int) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1010,7 +1046,7 @@ func (d *__Chat_Deleter) UpdatedMs_Eq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = ? "
+	w.condition = " UpdatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1021,7 +1057,7 @@ func (d *__Chat_Deleter) UpdatedMs_NotEq(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != ? "
+	w.condition = " UpdatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1032,7 +1068,7 @@ func (d *__Chat_Deleter) UpdatedMs_LT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < ? "
+	w.condition = " UpdatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1043,7 +1079,7 @@ func (d *__Chat_Deleter) UpdatedMs_LE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= ? "
+	w.condition = " UpdatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1054,7 +1090,7 @@ func (d *__Chat_Deleter) UpdatedMs_GT(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > ? "
+	w.condition = " UpdatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1065,10 +1101,23 @@ func (d *__Chat_Deleter) UpdatedMs_GE(val int) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= ? "
+	w.condition = " UpdatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Chat_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Chat_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1084,7 +1133,7 @@ func (u *__Chat_Updater) RoomTypeEnum_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1097,7 +1146,7 @@ func (u *__Chat_Updater) RoomTypeEnum_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1110,7 +1159,7 @@ func (u *__Chat_Updater) RoomTypeEnum_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1121,7 +1170,7 @@ func (d *__Chat_Updater) RoomTypeEnum_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum = ? "
+	w.condition = " RoomTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1132,7 +1181,7 @@ func (d *__Chat_Updater) RoomTypeEnum_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum != ? "
+	w.condition = " RoomTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1143,7 +1192,7 @@ func (d *__Chat_Updater) RoomTypeEnum_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum < ? "
+	w.condition = " RoomTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1154,7 +1203,7 @@ func (d *__Chat_Updater) RoomTypeEnum_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum <= ? "
+	w.condition = " RoomTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1165,7 +1214,7 @@ func (d *__Chat_Updater) RoomTypeEnum_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum > ? "
+	w.condition = " RoomTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1176,7 +1225,7 @@ func (d *__Chat_Updater) RoomTypeEnum_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum >= ? "
+	w.condition = " RoomTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1189,7 +1238,7 @@ func (u *__Chat_Updater) UserId_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1202,7 +1251,7 @@ func (u *__Chat_Updater) UserId_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1215,7 +1264,7 @@ func (u *__Chat_Updater) UserId_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1226,7 +1275,7 @@ func (d *__Chat_Updater) UserId_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1237,7 +1286,7 @@ func (d *__Chat_Updater) UserId_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1248,7 +1297,7 @@ func (d *__Chat_Updater) UserId_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1259,7 +1308,7 @@ func (d *__Chat_Updater) UserId_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1270,7 +1319,7 @@ func (d *__Chat_Updater) UserId_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1281,7 +1330,7 @@ func (d *__Chat_Updater) UserId_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1294,7 +1343,7 @@ func (u *__Chat_Updater) PeerUserId_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1307,7 +1356,7 @@ func (u *__Chat_Updater) PeerUserId_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1320,7 +1369,7 @@ func (u *__Chat_Updater) PeerUserId_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1331,7 +1380,7 @@ func (d *__Chat_Updater) PeerUserId_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1342,7 +1391,7 @@ func (d *__Chat_Updater) PeerUserId_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1353,7 +1402,7 @@ func (d *__Chat_Updater) PeerUserId_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1364,7 +1413,7 @@ func (d *__Chat_Updater) PeerUserId_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1375,7 +1424,7 @@ func (d *__Chat_Updater) PeerUserId_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1386,7 +1435,7 @@ func (d *__Chat_Updater) PeerUserId_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1399,7 +1448,7 @@ func (u *__Chat_Updater) GroupId_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1412,7 +1461,7 @@ func (u *__Chat_Updater) GroupId_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1425,7 +1474,7 @@ func (u *__Chat_Updater) GroupId_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1436,7 +1485,7 @@ func (d *__Chat_Updater) GroupId_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId = ? "
+	w.condition = " GroupId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1447,7 +1496,7 @@ func (d *__Chat_Updater) GroupId_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId != ? "
+	w.condition = " GroupId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1458,7 +1507,7 @@ func (d *__Chat_Updater) GroupId_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId < ? "
+	w.condition = " GroupId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1469,7 +1518,7 @@ func (d *__Chat_Updater) GroupId_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId <= ? "
+	w.condition = " GroupId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1480,7 +1529,7 @@ func (d *__Chat_Updater) GroupId_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId > ? "
+	w.condition = " GroupId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1491,7 +1540,7 @@ func (d *__Chat_Updater) GroupId_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId >= ? "
+	w.condition = " GroupId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1504,7 +1553,7 @@ func (u *__Chat_Updater) CreatedTime_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1517,7 +1566,7 @@ func (u *__Chat_Updater) CreatedTime_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1530,7 +1579,7 @@ func (u *__Chat_Updater) CreatedTime_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1541,7 +1590,7 @@ func (d *__Chat_Updater) CreatedTime_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1552,7 +1601,7 @@ func (d *__Chat_Updater) CreatedTime_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1563,7 +1612,7 @@ func (d *__Chat_Updater) CreatedTime_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1574,7 +1623,7 @@ func (d *__Chat_Updater) CreatedTime_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1585,7 +1634,7 @@ func (d *__Chat_Updater) CreatedTime_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1596,7 +1645,7 @@ func (d *__Chat_Updater) CreatedTime_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1609,7 +1658,7 @@ func (u *__Chat_Updater) Seq_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1622,7 +1671,7 @@ func (u *__Chat_Updater) Seq_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1635,7 +1684,7 @@ func (u *__Chat_Updater) Seq_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1646,7 +1695,7 @@ func (d *__Chat_Updater) Seq_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1657,7 +1706,7 @@ func (d *__Chat_Updater) Seq_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1668,7 +1717,7 @@ func (d *__Chat_Updater) Seq_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1679,7 +1728,7 @@ func (d *__Chat_Updater) Seq_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1690,7 +1739,7 @@ func (d *__Chat_Updater) Seq_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1701,7 +1750,7 @@ func (d *__Chat_Updater) Seq_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1714,7 +1763,7 @@ func (u *__Chat_Updater) SeenSeq_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1727,7 +1776,7 @@ func (u *__Chat_Updater) SeenSeq_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1740,7 +1789,7 @@ func (u *__Chat_Updater) SeenSeq_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1751,7 +1800,7 @@ func (d *__Chat_Updater) SeenSeq_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = ? "
+	w.condition = " SeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1762,7 +1811,7 @@ func (d *__Chat_Updater) SeenSeq_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != ? "
+	w.condition = " SeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1773,7 +1822,7 @@ func (d *__Chat_Updater) SeenSeq_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < ? "
+	w.condition = " SeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1784,7 +1833,7 @@ func (d *__Chat_Updater) SeenSeq_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= ? "
+	w.condition = " SeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1795,7 +1844,7 @@ func (d *__Chat_Updater) SeenSeq_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > ? "
+	w.condition = " SeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1806,7 +1855,7 @@ func (d *__Chat_Updater) SeenSeq_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= ? "
+	w.condition = " SeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1819,7 +1868,7 @@ func (u *__Chat_Updater) UpdatedMs_In(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1832,7 +1881,7 @@ func (u *__Chat_Updater) UpdatedMs_Ins(ins ...int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1845,7 +1894,7 @@ func (u *__Chat_Updater) UpdatedMs_NotIn(ins []int) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1856,7 +1905,7 @@ func (d *__Chat_Updater) UpdatedMs_Eq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = ? "
+	w.condition = " UpdatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1867,7 +1916,7 @@ func (d *__Chat_Updater) UpdatedMs_NotEq(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != ? "
+	w.condition = " UpdatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1878,7 +1927,7 @@ func (d *__Chat_Updater) UpdatedMs_LT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < ? "
+	w.condition = " UpdatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1889,7 +1938,7 @@ func (d *__Chat_Updater) UpdatedMs_LE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= ? "
+	w.condition = " UpdatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1900,7 +1949,7 @@ func (d *__Chat_Updater) UpdatedMs_GT(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > ? "
+	w.condition = " UpdatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1911,10 +1960,23 @@ func (d *__Chat_Updater) UpdatedMs_GE(val int) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= ? "
+	w.condition = " UpdatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Chat_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Chat_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1930,7 +1992,7 @@ func (u *__Chat_Selector) RoomTypeEnum_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1943,7 +2005,7 @@ func (u *__Chat_Selector) RoomTypeEnum_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1956,7 +2018,7 @@ func (u *__Chat_Selector) RoomTypeEnum_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1967,7 +2029,7 @@ func (d *__Chat_Selector) RoomTypeEnum_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum = ? "
+	w.condition = " RoomTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1978,7 +2040,7 @@ func (d *__Chat_Selector) RoomTypeEnum_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum != ? "
+	w.condition = " RoomTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1989,7 +2051,7 @@ func (d *__Chat_Selector) RoomTypeEnum_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum < ? "
+	w.condition = " RoomTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2000,7 +2062,7 @@ func (d *__Chat_Selector) RoomTypeEnum_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum <= ? "
+	w.condition = " RoomTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2011,7 +2073,7 @@ func (d *__Chat_Selector) RoomTypeEnum_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum > ? "
+	w.condition = " RoomTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2022,7 +2084,7 @@ func (d *__Chat_Selector) RoomTypeEnum_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomTypeEnum >= ? "
+	w.condition = " RoomTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2035,7 +2097,7 @@ func (u *__Chat_Selector) UserId_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2048,7 +2110,7 @@ func (u *__Chat_Selector) UserId_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2061,7 +2123,7 @@ func (u *__Chat_Selector) UserId_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2072,7 +2134,7 @@ func (d *__Chat_Selector) UserId_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2083,7 +2145,7 @@ func (d *__Chat_Selector) UserId_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2094,7 +2156,7 @@ func (d *__Chat_Selector) UserId_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2105,7 +2167,7 @@ func (d *__Chat_Selector) UserId_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2116,7 +2178,7 @@ func (d *__Chat_Selector) UserId_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2127,7 +2189,7 @@ func (d *__Chat_Selector) UserId_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2140,7 +2202,7 @@ func (u *__Chat_Selector) PeerUserId_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2153,7 +2215,7 @@ func (u *__Chat_Selector) PeerUserId_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2166,7 +2228,7 @@ func (u *__Chat_Selector) PeerUserId_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2177,7 +2239,7 @@ func (d *__Chat_Selector) PeerUserId_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2188,7 +2250,7 @@ func (d *__Chat_Selector) PeerUserId_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2199,7 +2261,7 @@ func (d *__Chat_Selector) PeerUserId_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2210,7 +2272,7 @@ func (d *__Chat_Selector) PeerUserId_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2221,7 +2283,7 @@ func (d *__Chat_Selector) PeerUserId_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2232,7 +2294,7 @@ func (d *__Chat_Selector) PeerUserId_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2245,7 +2307,7 @@ func (u *__Chat_Selector) GroupId_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2258,7 +2320,7 @@ func (u *__Chat_Selector) GroupId_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2271,7 +2333,7 @@ func (u *__Chat_Selector) GroupId_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2282,7 +2344,7 @@ func (d *__Chat_Selector) GroupId_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId = ? "
+	w.condition = " GroupId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2293,7 +2355,7 @@ func (d *__Chat_Selector) GroupId_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId != ? "
+	w.condition = " GroupId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2304,7 +2366,7 @@ func (d *__Chat_Selector) GroupId_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId < ? "
+	w.condition = " GroupId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2315,7 +2377,7 @@ func (d *__Chat_Selector) GroupId_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId <= ? "
+	w.condition = " GroupId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2326,7 +2388,7 @@ func (d *__Chat_Selector) GroupId_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId > ? "
+	w.condition = " GroupId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2337,7 +2399,7 @@ func (d *__Chat_Selector) GroupId_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupId >= ? "
+	w.condition = " GroupId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2350,7 +2412,7 @@ func (u *__Chat_Selector) CreatedTime_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2363,7 +2425,7 @@ func (u *__Chat_Selector) CreatedTime_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2376,7 +2438,7 @@ func (u *__Chat_Selector) CreatedTime_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2387,7 +2449,7 @@ func (d *__Chat_Selector) CreatedTime_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2398,7 +2460,7 @@ func (d *__Chat_Selector) CreatedTime_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2409,7 +2471,7 @@ func (d *__Chat_Selector) CreatedTime_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2420,7 +2482,7 @@ func (d *__Chat_Selector) CreatedTime_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2431,7 +2493,7 @@ func (d *__Chat_Selector) CreatedTime_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2442,7 +2504,7 @@ func (d *__Chat_Selector) CreatedTime_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2455,7 +2517,7 @@ func (u *__Chat_Selector) Seq_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2468,7 +2530,7 @@ func (u *__Chat_Selector) Seq_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2481,7 +2543,7 @@ func (u *__Chat_Selector) Seq_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2492,7 +2554,7 @@ func (d *__Chat_Selector) Seq_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2503,7 +2565,7 @@ func (d *__Chat_Selector) Seq_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2514,7 +2576,7 @@ func (d *__Chat_Selector) Seq_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2525,7 +2587,7 @@ func (d *__Chat_Selector) Seq_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2536,7 +2598,7 @@ func (d *__Chat_Selector) Seq_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2547,7 +2609,7 @@ func (d *__Chat_Selector) Seq_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2560,7 +2622,7 @@ func (u *__Chat_Selector) SeenSeq_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2573,7 +2635,7 @@ func (u *__Chat_Selector) SeenSeq_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2586,7 +2648,7 @@ func (u *__Chat_Selector) SeenSeq_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2597,7 +2659,7 @@ func (d *__Chat_Selector) SeenSeq_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = ? "
+	w.condition = " SeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2608,7 +2670,7 @@ func (d *__Chat_Selector) SeenSeq_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != ? "
+	w.condition = " SeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2619,7 +2681,7 @@ func (d *__Chat_Selector) SeenSeq_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < ? "
+	w.condition = " SeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2630,7 +2692,7 @@ func (d *__Chat_Selector) SeenSeq_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= ? "
+	w.condition = " SeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2641,7 +2703,7 @@ func (d *__Chat_Selector) SeenSeq_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > ? "
+	w.condition = " SeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2652,7 +2714,7 @@ func (d *__Chat_Selector) SeenSeq_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= ? "
+	w.condition = " SeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2665,7 +2727,7 @@ func (u *__Chat_Selector) UpdatedMs_In(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2678,7 +2740,7 @@ func (u *__Chat_Selector) UpdatedMs_Ins(ins ...int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2691,7 +2753,7 @@ func (u *__Chat_Selector) UpdatedMs_NotIn(ins []int) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2702,7 +2764,7 @@ func (d *__Chat_Selector) UpdatedMs_Eq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = ? "
+	w.condition = " UpdatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2713,7 +2775,7 @@ func (d *__Chat_Selector) UpdatedMs_NotEq(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != ? "
+	w.condition = " UpdatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2724,7 +2786,7 @@ func (d *__Chat_Selector) UpdatedMs_LT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < ? "
+	w.condition = " UpdatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2735,7 +2797,7 @@ func (d *__Chat_Selector) UpdatedMs_LE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= ? "
+	w.condition = " UpdatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2746,7 +2808,7 @@ func (d *__Chat_Selector) UpdatedMs_GT(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > ? "
+	w.condition = " UpdatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2757,7 +2819,7 @@ func (d *__Chat_Selector) UpdatedMs_GE(val int) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= ? "
+	w.condition = " UpdatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2774,7 +2836,7 @@ func (u *__Chat_Deleter) ChatKey_In(ins []string) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2849,7 @@ func (u *__Chat_Deleter) ChatKey_NotIn(ins []string) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2799,7 +2861,7 @@ func (u *__Chat_Deleter) ChatKey_Like(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2810,7 +2872,7 @@ func (d *__Chat_Deleter) ChatKey_Eq(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2821,7 +2883,7 @@ func (d *__Chat_Deleter) ChatKey_NotEq(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2834,7 +2896,7 @@ func (u *__Chat_Deleter) RoomKey_In(ins []string) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2847,7 +2909,7 @@ func (u *__Chat_Deleter) RoomKey_NotIn(ins []string) *__Chat_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2859,7 +2921,7 @@ func (u *__Chat_Deleter) RoomKey_Like(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2870,7 +2932,7 @@ func (d *__Chat_Deleter) RoomKey_Eq(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2881,7 +2943,7 @@ func (d *__Chat_Deleter) RoomKey_NotEq(val string) *__Chat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2896,7 +2958,7 @@ func (u *__Chat_Updater) ChatKey_In(ins []string) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2909,7 +2971,7 @@ func (u *__Chat_Updater) ChatKey_NotIn(ins []string) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2921,7 +2983,7 @@ func (u *__Chat_Updater) ChatKey_Like(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2932,7 +2994,7 @@ func (d *__Chat_Updater) ChatKey_Eq(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2943,7 +3005,7 @@ func (d *__Chat_Updater) ChatKey_NotEq(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2956,7 +3018,7 @@ func (u *__Chat_Updater) RoomKey_In(ins []string) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2969,7 +3031,7 @@ func (u *__Chat_Updater) RoomKey_NotIn(ins []string) *__Chat_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2981,7 +3043,7 @@ func (u *__Chat_Updater) RoomKey_Like(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2992,7 +3054,7 @@ func (d *__Chat_Updater) RoomKey_Eq(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3003,7 +3065,7 @@ func (d *__Chat_Updater) RoomKey_NotEq(val string) *__Chat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3018,7 +3080,7 @@ func (u *__Chat_Selector) ChatKey_In(ins []string) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3031,7 +3093,7 @@ func (u *__Chat_Selector) ChatKey_NotIn(ins []string) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3043,7 +3105,7 @@ func (u *__Chat_Selector) ChatKey_Like(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3054,7 +3116,7 @@ func (d *__Chat_Selector) ChatKey_Eq(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3065,7 +3127,7 @@ func (d *__Chat_Selector) ChatKey_NotEq(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3078,7 +3140,7 @@ func (u *__Chat_Selector) RoomKey_In(ins []string) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3091,7 +3153,7 @@ func (u *__Chat_Selector) RoomKey_NotIn(ins []string) *__Chat_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3103,7 +3165,7 @@ func (u *__Chat_Selector) RoomKey_Like(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3114,7 +3176,7 @@ func (d *__Chat_Selector) RoomKey_Eq(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3125,7 +3187,7 @@ func (d *__Chat_Selector) RoomKey_NotEq(val string) *__Chat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3139,7 +3201,9 @@ func (d *__Chat_Selector) RoomKey_NotEq(val string) *__Chat_Selector {
 
 //string
 func (u *__Chat_Updater) ChatKey(newVal string) *__Chat_Updater {
-	u.updates[" ChatKey = ? "] = newVal
+	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3147,24 +3211,32 @@ func (u *__Chat_Updater) ChatKey(newVal string) *__Chat_Updater {
 
 //string
 func (u *__Chat_Updater) RoomKey(newVal string) *__Chat_Updater {
-	u.updates[" RoomKey = ? "] = newVal
+	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Chat_Updater) RoomTypeEnum(newVal int) *__Chat_Updater {
-	u.updates[" RoomTypeEnum = ? "] = newVal
+	up := updateCol{" RoomTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" RoomTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) RoomTypeEnum_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" RoomTypeEnum = RoomTypeEnum+? "] = count
+		up := updateCol{" RoomTypeEnum = RoomTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" RoomTypeEnum = RoomTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" RoomTypeEnum = RoomTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" RoomTypeEnum = RoomTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" RoomTypeEnum = RoomTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3175,17 +3247,23 @@ func (u *__Chat_Updater) RoomTypeEnum_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) UserId(newVal int) *__Chat_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) UserId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3196,17 +3274,23 @@ func (u *__Chat_Updater) UserId_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) PeerUserId(newVal int) *__Chat_Updater {
-	u.updates[" PeerUserId = ? "] = newVal
+	up := updateCol{" PeerUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PeerUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) PeerUserId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" PeerUserId = PeerUserId+? "] = count
+		up := updateCol{" PeerUserId = PeerUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PeerUserId = PeerUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PeerUserId = PeerUserId-? "] = -(count) //make it positive
+		up := updateCol{" PeerUserId = PeerUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PeerUserId = PeerUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3217,17 +3301,23 @@ func (u *__Chat_Updater) PeerUserId_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) GroupId(newVal int) *__Chat_Updater {
-	u.updates[" GroupId = ? "] = newVal
+	up := updateCol{" GroupId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" GroupId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) GroupId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" GroupId = GroupId+? "] = count
+		up := updateCol{" GroupId = GroupId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" GroupId = GroupId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" GroupId = GroupId-? "] = -(count) //make it positive
+		up := updateCol{" GroupId = GroupId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" GroupId = GroupId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3238,17 +3328,23 @@ func (u *__Chat_Updater) GroupId_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) CreatedTime(newVal int) *__Chat_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) CreatedTime_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3259,17 +3355,23 @@ func (u *__Chat_Updater) CreatedTime_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) Seq(newVal int) *__Chat_Updater {
-	u.updates[" Seq = ? "] = newVal
+	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Seq = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) Seq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
+		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
+		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3280,17 +3382,23 @@ func (u *__Chat_Updater) Seq_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) SeenSeq(newVal int) *__Chat_Updater {
-	u.updates[" SeenSeq = ? "] = newVal
+	up := updateCol{" SeenSeq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SeenSeq = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) SeenSeq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" SeenSeq = SeenSeq+? "] = count
+		up := updateCol{" SeenSeq = SeenSeq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SeenSeq = SeenSeq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" SeenSeq = SeenSeq-? "] = -(count) //make it positive
+		up := updateCol{" SeenSeq = SeenSeq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SeenSeq = SeenSeq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3301,17 +3409,23 @@ func (u *__Chat_Updater) SeenSeq_Increment(count int) *__Chat_Updater {
 //ints
 
 func (u *__Chat_Updater) UpdatedMs(newVal int) *__Chat_Updater {
-	u.updates[" UpdatedMs = ? "] = newVal
+	up := updateCol{" UpdatedMs = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UpdatedMs = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Chat_Updater) UpdatedMs_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		u.updates[" UpdatedMs = UpdatedMs+? "] = count
+		up := updateCol{" UpdatedMs = UpdatedMs+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UpdatedMs = UpdatedMs+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UpdatedMs = UpdatedMs-? "] = -(count) //make it positive
+		up := updateCol{" UpdatedMs = UpdatedMs- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UpdatedMs = UpdatedMs- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3700,9 +3814,13 @@ func (u *__Chat_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3787,10 +3905,10 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(10, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.chat (" +
 		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs" +
@@ -3834,10 +3952,9 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(10, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.chat (" +
 		"ChatKey, RoomKey, RoomTypeEnum, UserId, PeerUserId, GroupId, CreatedTime, Seq, SeenSeq, UpdatedMs" +

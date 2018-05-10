@@ -1194,34 +1194,34 @@ func PBConvPB_SuggestedUser_To_SuggestedUser ( o *SuggestedUser) *PB_SuggestedUs
 /*
 func PBConvPB__ChatSync2_To_ChatSync2( o *PB_ChatSync2) *ChatSync2 {
      n := &ChatSync2{
-      SyncId: int ( o.SyncId ),
-      ToUserId: int ( o.ToUserId ),
-      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int ( o.FromHighMessageId ),
-      ToLowMessageId: int ( o.ToLowMessageId ),
-      MessageId: int ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int ( o.CreatedTime ),
+      sync_id: int ( o.sync_id ),
+      to_user_id: int ( o.to_user_id ),
+      chat_sync_type_id: int ( o.chat_sync_type_id ),
+      room_key: string ( o.room_key ),
+      chat_key: string ( o.chat_key ),
+      from_high_message_id: int ( o.from_high_message_id ),
+      to_low_message_id: int ( o.to_low_message_id ),
+      message_id: int ( o.message_id ),
+      message_pb: []byte ( o.message_pb ),
+      message_json: string ( o.message_json ),
+      created_time: int ( o.created_time ),
     }
     return n
 }
 
 func PBConvPB_ChatSync2_To_ChatSync2 ( o *ChatSync2) *PB_ChatSync2 {
      n := &PB_ChatSync2{
-      SyncId: int64 ( o.SyncId ),
-      ToUserId: int32 ( o.ToUserId ),
-      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int64 ( o.FromHighMessageId ),
-      ToLowMessageId: int64 ( o.ToLowMessageId ),
-      MessageId: int64 ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int32 ( o.CreatedTime ),
+      sync_id: int64 ( o.sync_id ),
+      to_user_id: int32 ( o.to_user_id ),
+      chat_sync_type_id: int32 ( o.chat_sync_type_id ),
+      room_key: string ( o.room_key ),
+      chat_key: string ( o.chat_key ),
+      from_high_message_id: int64 ( o.from_high_message_id ),
+      to_low_message_id: int64 ( o.to_low_message_id ),
+      message_id: int64 ( o.message_id ),
+      message_pb: []byte ( o.message_pb ),
+      message_json: string ( o.message_json ),
+      created_time: int32 ( o.created_time ),
     }
     return n
 }
@@ -1291,34 +1291,34 @@ func PBConvPB_PushChat_To_PushChat ( o *PushChat) *PB_PushChat {
 /*
 func PBConvPB__PushChat2_To_PushChat2( o *PB_PushChat2) *PushChat2 {
      n := &PushChat2{
-      SyncId: int ( o.SyncId ),
-      ToUserId: int ( o.ToUserId ),
-      ChatSyncTypeId: int ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int ( o.FromHighMessageId ),
-      ToLowMessageId: int ( o.ToLowMessageId ),
-      MessageId: int ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int ( o.CreatedTime ),
+      sync_id: int ( o.sync_id ),
+      to_user_id: int ( o.to_user_id ),
+      chat_sync_type_id: int ( o.chat_sync_type_id ),
+      room_key: string ( o.room_key ),
+      chat_key: string ( o.chat_key ),
+      from_high_message_id: int ( o.from_high_message_id ),
+      to_low_message_id: int ( o.to_low_message_id ),
+      message_id: int ( o.message_id ),
+      message_pb: []byte ( o.message_pb ),
+      message_json: string ( o.message_json ),
+      created_time: int ( o.created_time ),
     }
     return n
 }
 
 func PBConvPB_PushChat2_To_PushChat2 ( o *PushChat2) *PB_PushChat2 {
      n := &PB_PushChat2{
-      SyncId: int64 ( o.SyncId ),
-      ToUserId: int32 ( o.ToUserId ),
-      ChatSyncTypeId: int32 ( o.ChatSyncTypeId ),
-      RoomKey: string ( o.RoomKey ),
-      ChatKey: string ( o.ChatKey ),
-      FromHighMessageId: int64 ( o.FromHighMessageId ),
-      ToLowMessageId: int64 ( o.ToLowMessageId ),
-      MessageId: int64 ( o.MessageId ),
-      MessagePb: []byte ( o.MessagePb ),
-      MessageJson: string ( o.MessageJson ),
-      CreatedTime: int32 ( o.CreatedTime ),
+      sync_id: int64 ( o.sync_id ),
+      to_user_id: int32 ( o.to_user_id ),
+      chat_sync_type_id: int32 ( o.chat_sync_type_id ),
+      room_key: string ( o.room_key ),
+      chat_key: string ( o.chat_key ),
+      from_high_message_id: int64 ( o.from_high_message_id ),
+      to_low_message_id: int64 ( o.to_low_message_id ),
+      message_id: int64 ( o.message_id ),
+      message_pb: []byte ( o.message_pb ),
+      message_json: string ( o.message_json ),
+      created_time: int32 ( o.created_time ),
     }
     return n
 }
@@ -1450,6 +1450,23 @@ func PBConvPB_XfileServiceRequestLog_To_XfileServiceRequestLog ( o *XfileService
       Url: string ( o.Url ),
       HttpCode: int32 ( o.HttpCode ),
       CreatedTime: string ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__Account_To_Account( o *PB_Account) *Account {
+     n := &Account{
+      id:  ( o.id ),
+      balance:  ( o.balance ),
+    }
+    return n
+}
+
+func PBConvPB_Account_To_Account ( o *Account) *PB_Account {
+     n := &PB_Account{
+      id:  ( o.id ),
+      balance:  ( o.balance ),
     }
     return n
 }

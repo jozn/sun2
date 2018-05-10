@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Session represents a row from 'sun.session'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Session represents a row from 'sun.session'.
 
 // Manualy copy this to project
 type Session__ struct {
@@ -208,23 +209,30 @@ func (s *Session) Delete(db XODB) error {
 
 // orma types
 type __Session_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Session_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Session_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewSession_Deleter() *__Session_Deleter {
@@ -234,7 +242,7 @@ func NewSession_Deleter() *__Session_Deleter {
 
 func NewSession_Updater() *__Session_Updater {
 	u := __Session_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -243,8 +251,35 @@ func NewSession_Selector() *__Session_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__Session_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__Session_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Session_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Session_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__Session_Deleter) Or() *__Session_Deleter {
@@ -259,7 +294,7 @@ func (u *__Session_Deleter) Id_In(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -272,7 +307,7 @@ func (u *__Session_Deleter) Id_Ins(ins ...int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -285,7 +320,7 @@ func (u *__Session_Deleter) Id_NotIn(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -296,7 +331,7 @@ func (d *__Session_Deleter) Id_Eq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +342,7 @@ func (d *__Session_Deleter) Id_NotEq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +353,7 @@ func (d *__Session_Deleter) Id_LT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +364,7 @@ func (d *__Session_Deleter) Id_LE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +375,7 @@ func (d *__Session_Deleter) Id_GT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -351,7 +386,7 @@ func (d *__Session_Deleter) Id_GE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -364,7 +399,7 @@ func (u *__Session_Deleter) UserId_In(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -377,7 +412,7 @@ func (u *__Session_Deleter) UserId_Ins(ins ...int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -390,7 +425,7 @@ func (u *__Session_Deleter) UserId_NotIn(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -401,7 +436,7 @@ func (d *__Session_Deleter) UserId_Eq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +447,7 @@ func (d *__Session_Deleter) UserId_NotEq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +458,7 @@ func (d *__Session_Deleter) UserId_LT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +469,7 @@ func (d *__Session_Deleter) UserId_LE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +480,7 @@ func (d *__Session_Deleter) UserId_GT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -456,7 +491,7 @@ func (d *__Session_Deleter) UserId_GE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -469,7 +504,7 @@ func (u *__Session_Deleter) AppVersion_In(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -482,7 +517,7 @@ func (u *__Session_Deleter) AppVersion_Ins(ins ...int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -495,7 +530,7 @@ func (u *__Session_Deleter) AppVersion_NotIn(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -506,7 +541,7 @@ func (d *__Session_Deleter) AppVersion_Eq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion = ? "
+	w.condition = " AppVersion = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +552,7 @@ func (d *__Session_Deleter) AppVersion_NotEq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion != ? "
+	w.condition = " AppVersion != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +563,7 @@ func (d *__Session_Deleter) AppVersion_LT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion < ? "
+	w.condition = " AppVersion < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +574,7 @@ func (d *__Session_Deleter) AppVersion_LE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion <= ? "
+	w.condition = " AppVersion <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +585,7 @@ func (d *__Session_Deleter) AppVersion_GT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion > ? "
+	w.condition = " AppVersion > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -561,7 +596,7 @@ func (d *__Session_Deleter) AppVersion_GE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion >= ? "
+	w.condition = " AppVersion >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -574,7 +609,7 @@ func (u *__Session_Deleter) ActiveTime_In(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -587,7 +622,7 @@ func (u *__Session_Deleter) ActiveTime_Ins(ins ...int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -600,7 +635,7 @@ func (u *__Session_Deleter) ActiveTime_NotIn(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -611,7 +646,7 @@ func (d *__Session_Deleter) ActiveTime_Eq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime = ? "
+	w.condition = " ActiveTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +657,7 @@ func (d *__Session_Deleter) ActiveTime_NotEq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime != ? "
+	w.condition = " ActiveTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +668,7 @@ func (d *__Session_Deleter) ActiveTime_LT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime < ? "
+	w.condition = " ActiveTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,7 +679,7 @@ func (d *__Session_Deleter) ActiveTime_LE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime <= ? "
+	w.condition = " ActiveTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -655,7 +690,7 @@ func (d *__Session_Deleter) ActiveTime_GT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime > ? "
+	w.condition = " ActiveTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -666,7 +701,7 @@ func (d *__Session_Deleter) ActiveTime_GE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime >= ? "
+	w.condition = " ActiveTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -679,7 +714,7 @@ func (u *__Session_Deleter) CreatedTime_In(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -692,7 +727,7 @@ func (u *__Session_Deleter) CreatedTime_Ins(ins ...int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -705,7 +740,7 @@ func (u *__Session_Deleter) CreatedTime_NotIn(ins []int) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -716,7 +751,7 @@ func (d *__Session_Deleter) CreatedTime_Eq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -727,7 +762,7 @@ func (d *__Session_Deleter) CreatedTime_NotEq(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,7 +773,7 @@ func (d *__Session_Deleter) CreatedTime_LT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -749,7 +784,7 @@ func (d *__Session_Deleter) CreatedTime_LE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -760,7 +795,7 @@ func (d *__Session_Deleter) CreatedTime_GT(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -771,10 +806,23 @@ func (d *__Session_Deleter) CreatedTime_GE(val int) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Session_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Session_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -790,7 +838,7 @@ func (u *__Session_Updater) Id_In(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -803,7 +851,7 @@ func (u *__Session_Updater) Id_Ins(ins ...int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -816,7 +864,7 @@ func (u *__Session_Updater) Id_NotIn(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -827,7 +875,7 @@ func (d *__Session_Updater) Id_Eq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -838,7 +886,7 @@ func (d *__Session_Updater) Id_NotEq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -849,7 +897,7 @@ func (d *__Session_Updater) Id_LT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -860,7 +908,7 @@ func (d *__Session_Updater) Id_LE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -871,7 +919,7 @@ func (d *__Session_Updater) Id_GT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -882,7 +930,7 @@ func (d *__Session_Updater) Id_GE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -895,7 +943,7 @@ func (u *__Session_Updater) UserId_In(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -908,7 +956,7 @@ func (u *__Session_Updater) UserId_Ins(ins ...int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -921,7 +969,7 @@ func (u *__Session_Updater) UserId_NotIn(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -932,7 +980,7 @@ func (d *__Session_Updater) UserId_Eq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -943,7 +991,7 @@ func (d *__Session_Updater) UserId_NotEq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -954,7 +1002,7 @@ func (d *__Session_Updater) UserId_LT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -965,7 +1013,7 @@ func (d *__Session_Updater) UserId_LE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -976,7 +1024,7 @@ func (d *__Session_Updater) UserId_GT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -987,7 +1035,7 @@ func (d *__Session_Updater) UserId_GE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1000,7 +1048,7 @@ func (u *__Session_Updater) AppVersion_In(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1013,7 +1061,7 @@ func (u *__Session_Updater) AppVersion_Ins(ins ...int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1026,7 +1074,7 @@ func (u *__Session_Updater) AppVersion_NotIn(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1037,7 +1085,7 @@ func (d *__Session_Updater) AppVersion_Eq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion = ? "
+	w.condition = " AppVersion = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1048,7 +1096,7 @@ func (d *__Session_Updater) AppVersion_NotEq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion != ? "
+	w.condition = " AppVersion != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1059,7 +1107,7 @@ func (d *__Session_Updater) AppVersion_LT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion < ? "
+	w.condition = " AppVersion < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1070,7 +1118,7 @@ func (d *__Session_Updater) AppVersion_LE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion <= ? "
+	w.condition = " AppVersion <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1081,7 +1129,7 @@ func (d *__Session_Updater) AppVersion_GT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion > ? "
+	w.condition = " AppVersion > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1092,7 +1140,7 @@ func (d *__Session_Updater) AppVersion_GE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion >= ? "
+	w.condition = " AppVersion >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1105,7 +1153,7 @@ func (u *__Session_Updater) ActiveTime_In(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1118,7 +1166,7 @@ func (u *__Session_Updater) ActiveTime_Ins(ins ...int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1131,7 +1179,7 @@ func (u *__Session_Updater) ActiveTime_NotIn(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1142,7 +1190,7 @@ func (d *__Session_Updater) ActiveTime_Eq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime = ? "
+	w.condition = " ActiveTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1153,7 +1201,7 @@ func (d *__Session_Updater) ActiveTime_NotEq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime != ? "
+	w.condition = " ActiveTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1164,7 +1212,7 @@ func (d *__Session_Updater) ActiveTime_LT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime < ? "
+	w.condition = " ActiveTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1175,7 +1223,7 @@ func (d *__Session_Updater) ActiveTime_LE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime <= ? "
+	w.condition = " ActiveTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1186,7 +1234,7 @@ func (d *__Session_Updater) ActiveTime_GT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime > ? "
+	w.condition = " ActiveTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1197,7 +1245,7 @@ func (d *__Session_Updater) ActiveTime_GE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime >= ? "
+	w.condition = " ActiveTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1210,7 +1258,7 @@ func (u *__Session_Updater) CreatedTime_In(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1223,7 +1271,7 @@ func (u *__Session_Updater) CreatedTime_Ins(ins ...int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1236,7 +1284,7 @@ func (u *__Session_Updater) CreatedTime_NotIn(ins []int) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1247,7 +1295,7 @@ func (d *__Session_Updater) CreatedTime_Eq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1258,7 +1306,7 @@ func (d *__Session_Updater) CreatedTime_NotEq(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1269,7 +1317,7 @@ func (d *__Session_Updater) CreatedTime_LT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1280,7 +1328,7 @@ func (d *__Session_Updater) CreatedTime_LE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1291,7 +1339,7 @@ func (d *__Session_Updater) CreatedTime_GT(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1302,10 +1350,23 @@ func (d *__Session_Updater) CreatedTime_GE(val int) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Session_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Session_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1321,7 +1382,7 @@ func (u *__Session_Selector) Id_In(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1334,7 +1395,7 @@ func (u *__Session_Selector) Id_Ins(ins ...int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1347,7 +1408,7 @@ func (u *__Session_Selector) Id_NotIn(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1358,7 +1419,7 @@ func (d *__Session_Selector) Id_Eq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1369,7 +1430,7 @@ func (d *__Session_Selector) Id_NotEq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1380,7 +1441,7 @@ func (d *__Session_Selector) Id_LT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1391,7 +1452,7 @@ func (d *__Session_Selector) Id_LE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1402,7 +1463,7 @@ func (d *__Session_Selector) Id_GT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1413,7 +1474,7 @@ func (d *__Session_Selector) Id_GE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1426,7 +1487,7 @@ func (u *__Session_Selector) UserId_In(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1439,7 +1500,7 @@ func (u *__Session_Selector) UserId_Ins(ins ...int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1452,7 +1513,7 @@ func (u *__Session_Selector) UserId_NotIn(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1463,7 +1524,7 @@ func (d *__Session_Selector) UserId_Eq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1474,7 +1535,7 @@ func (d *__Session_Selector) UserId_NotEq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1485,7 +1546,7 @@ func (d *__Session_Selector) UserId_LT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1496,7 +1557,7 @@ func (d *__Session_Selector) UserId_LE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1507,7 +1568,7 @@ func (d *__Session_Selector) UserId_GT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1518,7 +1579,7 @@ func (d *__Session_Selector) UserId_GE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1531,7 +1592,7 @@ func (u *__Session_Selector) AppVersion_In(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1544,7 +1605,7 @@ func (u *__Session_Selector) AppVersion_Ins(ins ...int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1557,7 +1618,7 @@ func (u *__Session_Selector) AppVersion_NotIn(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AppVersion NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AppVersion NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1568,7 +1629,7 @@ func (d *__Session_Selector) AppVersion_Eq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion = ? "
+	w.condition = " AppVersion = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1579,7 +1640,7 @@ func (d *__Session_Selector) AppVersion_NotEq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion != ? "
+	w.condition = " AppVersion != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1590,7 +1651,7 @@ func (d *__Session_Selector) AppVersion_LT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion < ? "
+	w.condition = " AppVersion < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1601,7 +1662,7 @@ func (d *__Session_Selector) AppVersion_LE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion <= ? "
+	w.condition = " AppVersion <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1612,7 +1673,7 @@ func (d *__Session_Selector) AppVersion_GT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion > ? "
+	w.condition = " AppVersion > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1623,7 +1684,7 @@ func (d *__Session_Selector) AppVersion_GE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AppVersion >= ? "
+	w.condition = " AppVersion >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1636,7 +1697,7 @@ func (u *__Session_Selector) ActiveTime_In(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1649,7 +1710,7 @@ func (u *__Session_Selector) ActiveTime_Ins(ins ...int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1662,7 +1723,7 @@ func (u *__Session_Selector) ActiveTime_NotIn(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActiveTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActiveTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1673,7 +1734,7 @@ func (d *__Session_Selector) ActiveTime_Eq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime = ? "
+	w.condition = " ActiveTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1684,7 +1745,7 @@ func (d *__Session_Selector) ActiveTime_NotEq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime != ? "
+	w.condition = " ActiveTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1695,7 +1756,7 @@ func (d *__Session_Selector) ActiveTime_LT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime < ? "
+	w.condition = " ActiveTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1706,7 +1767,7 @@ func (d *__Session_Selector) ActiveTime_LE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime <= ? "
+	w.condition = " ActiveTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1717,7 +1778,7 @@ func (d *__Session_Selector) ActiveTime_GT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime > ? "
+	w.condition = " ActiveTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1728,7 +1789,7 @@ func (d *__Session_Selector) ActiveTime_GE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActiveTime >= ? "
+	w.condition = " ActiveTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1741,7 +1802,7 @@ func (u *__Session_Selector) CreatedTime_In(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1754,7 +1815,7 @@ func (u *__Session_Selector) CreatedTime_Ins(ins ...int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1767,7 +1828,7 @@ func (u *__Session_Selector) CreatedTime_NotIn(ins []int) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1778,7 +1839,7 @@ func (d *__Session_Selector) CreatedTime_Eq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1789,7 +1850,7 @@ func (d *__Session_Selector) CreatedTime_NotEq(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1800,7 +1861,7 @@ func (d *__Session_Selector) CreatedTime_LT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1811,7 +1872,7 @@ func (d *__Session_Selector) CreatedTime_LE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1822,7 +1883,7 @@ func (d *__Session_Selector) CreatedTime_GT(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1833,7 +1894,7 @@ func (d *__Session_Selector) CreatedTime_GE(val int) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1850,7 +1911,7 @@ func (u *__Session_Deleter) SessionUuid_In(ins []string) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1863,7 +1924,7 @@ func (u *__Session_Deleter) SessionUuid_NotIn(ins []string) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1875,7 +1936,7 @@ func (u *__Session_Deleter) SessionUuid_Like(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid LIKE ? "
+	w.condition = " SessionUuid LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1886,7 +1947,7 @@ func (d *__Session_Deleter) SessionUuid_Eq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = ? "
+	w.condition = " SessionUuid = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1897,7 +1958,7 @@ func (d *__Session_Deleter) SessionUuid_NotEq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != ? "
+	w.condition = " SessionUuid != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1910,7 +1971,7 @@ func (u *__Session_Deleter) LastIpAddress_In(ins []string) *__Session_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1923,7 +1984,7 @@ func (u *__Session_Deleter) LastIpAddress_NotIn(ins []string) *__Session_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1935,7 +1996,7 @@ func (u *__Session_Deleter) LastIpAddress_Like(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress LIKE ? "
+	w.condition = " LastIpAddress LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1946,7 +2007,7 @@ func (d *__Session_Deleter) LastIpAddress_Eq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = ? "
+	w.condition = " LastIpAddress = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1957,7 +2018,7 @@ func (d *__Session_Deleter) LastIpAddress_NotEq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != ? "
+	w.condition = " LastIpAddress != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1972,7 +2033,7 @@ func (u *__Session_Updater) SessionUuid_In(ins []string) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1985,7 +2046,7 @@ func (u *__Session_Updater) SessionUuid_NotIn(ins []string) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1997,7 +2058,7 @@ func (u *__Session_Updater) SessionUuid_Like(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid LIKE ? "
+	w.condition = " SessionUuid LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2008,7 +2069,7 @@ func (d *__Session_Updater) SessionUuid_Eq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = ? "
+	w.condition = " SessionUuid = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2019,7 +2080,7 @@ func (d *__Session_Updater) SessionUuid_NotEq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != ? "
+	w.condition = " SessionUuid != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2032,7 +2093,7 @@ func (u *__Session_Updater) LastIpAddress_In(ins []string) *__Session_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2045,7 +2106,7 @@ func (u *__Session_Updater) LastIpAddress_NotIn(ins []string) *__Session_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2057,7 +2118,7 @@ func (u *__Session_Updater) LastIpAddress_Like(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress LIKE ? "
+	w.condition = " LastIpAddress LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2068,7 +2129,7 @@ func (d *__Session_Updater) LastIpAddress_Eq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = ? "
+	w.condition = " LastIpAddress = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2079,7 +2140,7 @@ func (d *__Session_Updater) LastIpAddress_NotEq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != ? "
+	w.condition = " LastIpAddress != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2094,7 +2155,7 @@ func (u *__Session_Selector) SessionUuid_In(ins []string) *__Session_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2107,7 +2168,7 @@ func (u *__Session_Selector) SessionUuid_NotIn(ins []string) *__Session_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionUuid NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2119,7 +2180,7 @@ func (u *__Session_Selector) SessionUuid_Like(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid LIKE ? "
+	w.condition = " SessionUuid LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2130,7 +2191,7 @@ func (d *__Session_Selector) SessionUuid_Eq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = ? "
+	w.condition = " SessionUuid = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2141,7 +2202,7 @@ func (d *__Session_Selector) SessionUuid_NotEq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != ? "
+	w.condition = " SessionUuid != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2154,7 +2215,7 @@ func (u *__Session_Selector) LastIpAddress_In(ins []string) *__Session_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2167,7 +2228,7 @@ func (u *__Session_Selector) LastIpAddress_NotIn(ins []string) *__Session_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastIpAddress NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LastIpAddress NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2179,7 +2240,7 @@ func (u *__Session_Selector) LastIpAddress_Like(val string) *__Session_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress LIKE ? "
+	w.condition = " LastIpAddress LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2190,7 +2251,7 @@ func (d *__Session_Selector) LastIpAddress_Eq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = ? "
+	w.condition = " LastIpAddress = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2201,7 +2262,7 @@ func (d *__Session_Selector) LastIpAddress_NotEq(val string) *__Session_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != ? "
+	w.condition = " LastIpAddress != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2214,17 +2275,23 @@ func (d *__Session_Selector) LastIpAddress_NotEq(val string) *__Session_Selector
 //ints
 
 func (u *__Session_Updater) Id(newVal int) *__Session_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Session_Updater) Id_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2236,24 +2303,32 @@ func (u *__Session_Updater) Id_Increment(count int) *__Session_Updater {
 
 //string
 func (u *__Session_Updater) SessionUuid(newVal string) *__Session_Updater {
-	u.updates[" SessionUuid = ? "] = newVal
+	up := updateCol{"SessionUuid = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" SessionUuid = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Session_Updater) UserId(newVal int) *__Session_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Session_Updater) UserId_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2265,24 +2340,32 @@ func (u *__Session_Updater) UserId_Increment(count int) *__Session_Updater {
 
 //string
 func (u *__Session_Updater) LastIpAddress(newVal string) *__Session_Updater {
-	u.updates[" LastIpAddress = ? "] = newVal
+	up := updateCol{"LastIpAddress = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" LastIpAddress = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Session_Updater) AppVersion(newVal int) *__Session_Updater {
-	u.updates[" AppVersion = ? "] = newVal
+	up := updateCol{" AppVersion = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AppVersion = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Session_Updater) AppVersion_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" AppVersion = AppVersion+? "] = count
+		up := updateCol{" AppVersion = AppVersion+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AppVersion = AppVersion+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AppVersion = AppVersion-? "] = -(count) //make it positive
+		up := updateCol{" AppVersion = AppVersion- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AppVersion = AppVersion- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2293,17 +2376,23 @@ func (u *__Session_Updater) AppVersion_Increment(count int) *__Session_Updater {
 //ints
 
 func (u *__Session_Updater) ActiveTime(newVal int) *__Session_Updater {
-	u.updates[" ActiveTime = ? "] = newVal
+	up := updateCol{" ActiveTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ActiveTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Session_Updater) ActiveTime_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" ActiveTime = ActiveTime+? "] = count
+		up := updateCol{" ActiveTime = ActiveTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ActiveTime = ActiveTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ActiveTime = ActiveTime-? "] = -(count) //make it positive
+		up := updateCol{" ActiveTime = ActiveTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ActiveTime = ActiveTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2314,17 +2403,23 @@ func (u *__Session_Updater) ActiveTime_Increment(count int) *__Session_Updater {
 //ints
 
 func (u *__Session_Updater) CreatedTime(newVal int) *__Session_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Session_Updater) CreatedTime_Increment(count int) *__Session_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2668,9 +2763,13 @@ func (u *__Session_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -2755,7 +2854,6 @@ func MassInsert_Session(rows []Session, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

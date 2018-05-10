@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Event represents a row from 'sun.event'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Event represents a row from 'sun.event'.
 
 // Manualy copy this to project
 type Event__ struct {
@@ -188,23 +190,30 @@ func (e *Event) Delete(db XODB) error {
 
 // orma types
 type __Event_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Event_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Event_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewEvent_Deleter() *__Event_Deleter {
@@ -214,7 +223,7 @@ func NewEvent_Deleter() *__Event_Deleter {
 
 func NewEvent_Updater() *__Event_Updater {
 	u := __Event_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -223,8 +232,35 @@ func NewEvent_Selector() *__Event_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__Event_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__Event_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Event_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Event_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__Event_Deleter) Or() *__Event_Deleter {
@@ -239,7 +275,7 @@ func (u *__Event_Deleter) EventId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -252,7 +288,7 @@ func (u *__Event_Deleter) EventId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -265,7 +301,7 @@ func (u *__Event_Deleter) EventId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -276,7 +312,7 @@ func (d *__Event_Deleter) EventId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId = ? "
+	w.condition = " EventId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -287,7 +323,7 @@ func (d *__Event_Deleter) EventId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId != ? "
+	w.condition = " EventId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -298,7 +334,7 @@ func (d *__Event_Deleter) EventId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId < ? "
+	w.condition = " EventId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -309,7 +345,7 @@ func (d *__Event_Deleter) EventId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId <= ? "
+	w.condition = " EventId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -320,7 +356,7 @@ func (d *__Event_Deleter) EventId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId > ? "
+	w.condition = " EventId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -331,7 +367,7 @@ func (d *__Event_Deleter) EventId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId >= ? "
+	w.condition = " EventId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -344,7 +380,7 @@ func (u *__Event_Deleter) EventType_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -357,7 +393,7 @@ func (u *__Event_Deleter) EventType_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -370,7 +406,7 @@ func (u *__Event_Deleter) EventType_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -381,7 +417,7 @@ func (d *__Event_Deleter) EventType_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType = ? "
+	w.condition = " EventType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -392,7 +428,7 @@ func (d *__Event_Deleter) EventType_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType != ? "
+	w.condition = " EventType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -403,7 +439,7 @@ func (d *__Event_Deleter) EventType_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType < ? "
+	w.condition = " EventType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -414,7 +450,7 @@ func (d *__Event_Deleter) EventType_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType <= ? "
+	w.condition = " EventType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -425,7 +461,7 @@ func (d *__Event_Deleter) EventType_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType > ? "
+	w.condition = " EventType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -436,7 +472,7 @@ func (d *__Event_Deleter) EventType_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType >= ? "
+	w.condition = " EventType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -449,7 +485,7 @@ func (u *__Event_Deleter) ByUserId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -462,7 +498,7 @@ func (u *__Event_Deleter) ByUserId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -475,7 +511,7 @@ func (u *__Event_Deleter) ByUserId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -486,7 +522,7 @@ func (d *__Event_Deleter) ByUserId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -497,7 +533,7 @@ func (d *__Event_Deleter) ByUserId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -508,7 +544,7 @@ func (d *__Event_Deleter) ByUserId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -519,7 +555,7 @@ func (d *__Event_Deleter) ByUserId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -530,7 +566,7 @@ func (d *__Event_Deleter) ByUserId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -541,7 +577,7 @@ func (d *__Event_Deleter) ByUserId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -554,7 +590,7 @@ func (u *__Event_Deleter) PeerUserId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -567,7 +603,7 @@ func (u *__Event_Deleter) PeerUserId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -580,7 +616,7 @@ func (u *__Event_Deleter) PeerUserId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -591,7 +627,7 @@ func (d *__Event_Deleter) PeerUserId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -602,7 +638,7 @@ func (d *__Event_Deleter) PeerUserId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -613,7 +649,7 @@ func (d *__Event_Deleter) PeerUserId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +660,7 @@ func (d *__Event_Deleter) PeerUserId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +671,7 @@ func (d *__Event_Deleter) PeerUserId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +682,7 @@ func (d *__Event_Deleter) PeerUserId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -659,7 +695,7 @@ func (u *__Event_Deleter) PostId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -672,7 +708,7 @@ func (u *__Event_Deleter) PostId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -685,7 +721,7 @@ func (u *__Event_Deleter) PostId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -696,7 +732,7 @@ func (d *__Event_Deleter) PostId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -707,7 +743,7 @@ func (d *__Event_Deleter) PostId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -718,7 +754,7 @@ func (d *__Event_Deleter) PostId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -729,7 +765,7 @@ func (d *__Event_Deleter) PostId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -740,7 +776,7 @@ func (d *__Event_Deleter) PostId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -751,7 +787,7 @@ func (d *__Event_Deleter) PostId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -764,7 +800,7 @@ func (u *__Event_Deleter) CommentId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -777,7 +813,7 @@ func (u *__Event_Deleter) CommentId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -790,7 +826,7 @@ func (u *__Event_Deleter) CommentId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -801,7 +837,7 @@ func (d *__Event_Deleter) CommentId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -812,7 +848,7 @@ func (d *__Event_Deleter) CommentId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -823,7 +859,7 @@ func (d *__Event_Deleter) CommentId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -834,7 +870,7 @@ func (d *__Event_Deleter) CommentId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -845,7 +881,7 @@ func (d *__Event_Deleter) CommentId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -856,7 +892,7 @@ func (d *__Event_Deleter) CommentId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -869,7 +905,7 @@ func (u *__Event_Deleter) ActionId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -882,7 +918,7 @@ func (u *__Event_Deleter) ActionId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -895,7 +931,7 @@ func (u *__Event_Deleter) ActionId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -906,7 +942,7 @@ func (d *__Event_Deleter) ActionId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -917,7 +953,7 @@ func (d *__Event_Deleter) ActionId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -928,7 +964,7 @@ func (d *__Event_Deleter) ActionId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -939,7 +975,7 @@ func (d *__Event_Deleter) ActionId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -950,7 +986,7 @@ func (d *__Event_Deleter) ActionId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -961,7 +997,7 @@ func (d *__Event_Deleter) ActionId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -974,7 +1010,7 @@ func (u *__Event_Deleter) Murmur64Hash_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -987,7 +1023,7 @@ func (u *__Event_Deleter) Murmur64Hash_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1000,7 +1036,7 @@ func (u *__Event_Deleter) Murmur64Hash_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1011,7 +1047,7 @@ func (d *__Event_Deleter) Murmur64Hash_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1022,7 +1058,7 @@ func (d *__Event_Deleter) Murmur64Hash_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1033,7 +1069,7 @@ func (d *__Event_Deleter) Murmur64Hash_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1044,7 +1080,7 @@ func (d *__Event_Deleter) Murmur64Hash_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1055,7 +1091,7 @@ func (d *__Event_Deleter) Murmur64Hash_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1066,7 +1102,7 @@ func (d *__Event_Deleter) Murmur64Hash_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1079,7 +1115,7 @@ func (u *__Event_Deleter) MessageId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1092,7 +1128,7 @@ func (u *__Event_Deleter) MessageId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1105,7 +1141,7 @@ func (u *__Event_Deleter) MessageId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1116,7 +1152,7 @@ func (d *__Event_Deleter) MessageId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1127,7 +1163,7 @@ func (d *__Event_Deleter) MessageId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1138,7 +1174,7 @@ func (d *__Event_Deleter) MessageId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1149,7 +1185,7 @@ func (d *__Event_Deleter) MessageId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1160,7 +1196,7 @@ func (d *__Event_Deleter) MessageId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1171,7 +1207,7 @@ func (d *__Event_Deleter) MessageId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1184,7 +1220,7 @@ func (u *__Event_Deleter) ReSharedId_In(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1197,7 +1233,7 @@ func (u *__Event_Deleter) ReSharedId_Ins(ins ...int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1210,7 +1246,7 @@ func (u *__Event_Deleter) ReSharedId_NotIn(ins []int) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1221,7 +1257,7 @@ func (d *__Event_Deleter) ReSharedId_Eq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId = ? "
+	w.condition = " ReSharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1232,7 +1268,7 @@ func (d *__Event_Deleter) ReSharedId_NotEq(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId != ? "
+	w.condition = " ReSharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1243,7 +1279,7 @@ func (d *__Event_Deleter) ReSharedId_LT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId < ? "
+	w.condition = " ReSharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1254,7 +1290,7 @@ func (d *__Event_Deleter) ReSharedId_LE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId <= ? "
+	w.condition = " ReSharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1265,7 +1301,7 @@ func (d *__Event_Deleter) ReSharedId_GT(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId > ? "
+	w.condition = " ReSharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1276,10 +1312,23 @@ func (d *__Event_Deleter) ReSharedId_GE(val int) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId >= ? "
+	w.condition = " ReSharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Event_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Event_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1295,7 +1344,7 @@ func (u *__Event_Updater) EventId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1308,7 +1357,7 @@ func (u *__Event_Updater) EventId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1321,7 +1370,7 @@ func (u *__Event_Updater) EventId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1332,7 +1381,7 @@ func (d *__Event_Updater) EventId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId = ? "
+	w.condition = " EventId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1343,7 +1392,7 @@ func (d *__Event_Updater) EventId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId != ? "
+	w.condition = " EventId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1354,7 +1403,7 @@ func (d *__Event_Updater) EventId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId < ? "
+	w.condition = " EventId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1365,7 +1414,7 @@ func (d *__Event_Updater) EventId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId <= ? "
+	w.condition = " EventId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1425,7 @@ func (d *__Event_Updater) EventId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId > ? "
+	w.condition = " EventId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1436,7 @@ func (d *__Event_Updater) EventId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId >= ? "
+	w.condition = " EventId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1449,7 @@ func (u *__Event_Updater) EventType_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1413,7 +1462,7 @@ func (u *__Event_Updater) EventType_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1426,7 +1475,7 @@ func (u *__Event_Updater) EventType_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1486,7 @@ func (d *__Event_Updater) EventType_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType = ? "
+	w.condition = " EventType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1497,7 @@ func (d *__Event_Updater) EventType_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType != ? "
+	w.condition = " EventType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1459,7 +1508,7 @@ func (d *__Event_Updater) EventType_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType < ? "
+	w.condition = " EventType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1470,7 +1519,7 @@ func (d *__Event_Updater) EventType_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType <= ? "
+	w.condition = " EventType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1481,7 +1530,7 @@ func (d *__Event_Updater) EventType_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType > ? "
+	w.condition = " EventType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1492,7 +1541,7 @@ func (d *__Event_Updater) EventType_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType >= ? "
+	w.condition = " EventType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1505,7 +1554,7 @@ func (u *__Event_Updater) ByUserId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1518,7 +1567,7 @@ func (u *__Event_Updater) ByUserId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1531,7 +1580,7 @@ func (u *__Event_Updater) ByUserId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1542,7 +1591,7 @@ func (d *__Event_Updater) ByUserId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1553,7 +1602,7 @@ func (d *__Event_Updater) ByUserId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1564,7 +1613,7 @@ func (d *__Event_Updater) ByUserId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1575,7 +1624,7 @@ func (d *__Event_Updater) ByUserId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1586,7 +1635,7 @@ func (d *__Event_Updater) ByUserId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1597,7 +1646,7 @@ func (d *__Event_Updater) ByUserId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1610,7 +1659,7 @@ func (u *__Event_Updater) PeerUserId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1623,7 +1672,7 @@ func (u *__Event_Updater) PeerUserId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1636,7 +1685,7 @@ func (u *__Event_Updater) PeerUserId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1647,7 +1696,7 @@ func (d *__Event_Updater) PeerUserId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1658,7 +1707,7 @@ func (d *__Event_Updater) PeerUserId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1669,7 +1718,7 @@ func (d *__Event_Updater) PeerUserId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1729,7 @@ func (d *__Event_Updater) PeerUserId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1691,7 +1740,7 @@ func (d *__Event_Updater) PeerUserId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1702,7 +1751,7 @@ func (d *__Event_Updater) PeerUserId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1715,7 +1764,7 @@ func (u *__Event_Updater) PostId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1728,7 +1777,7 @@ func (u *__Event_Updater) PostId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1741,7 +1790,7 @@ func (u *__Event_Updater) PostId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1752,7 +1801,7 @@ func (d *__Event_Updater) PostId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1763,7 +1812,7 @@ func (d *__Event_Updater) PostId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1774,7 +1823,7 @@ func (d *__Event_Updater) PostId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1785,7 +1834,7 @@ func (d *__Event_Updater) PostId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1796,7 +1845,7 @@ func (d *__Event_Updater) PostId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1807,7 +1856,7 @@ func (d *__Event_Updater) PostId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1820,7 +1869,7 @@ func (u *__Event_Updater) CommentId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1833,7 +1882,7 @@ func (u *__Event_Updater) CommentId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1846,7 +1895,7 @@ func (u *__Event_Updater) CommentId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1857,7 +1906,7 @@ func (d *__Event_Updater) CommentId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1868,7 +1917,7 @@ func (d *__Event_Updater) CommentId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1879,7 +1928,7 @@ func (d *__Event_Updater) CommentId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1890,7 +1939,7 @@ func (d *__Event_Updater) CommentId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1901,7 +1950,7 @@ func (d *__Event_Updater) CommentId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1912,7 +1961,7 @@ func (d *__Event_Updater) CommentId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1925,7 +1974,7 @@ func (u *__Event_Updater) ActionId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1938,7 +1987,7 @@ func (u *__Event_Updater) ActionId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1951,7 +2000,7 @@ func (u *__Event_Updater) ActionId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1962,7 +2011,7 @@ func (d *__Event_Updater) ActionId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1973,7 +2022,7 @@ func (d *__Event_Updater) ActionId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1984,7 +2033,7 @@ func (d *__Event_Updater) ActionId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1995,7 +2044,7 @@ func (d *__Event_Updater) ActionId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2006,7 +2055,7 @@ func (d *__Event_Updater) ActionId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2017,7 +2066,7 @@ func (d *__Event_Updater) ActionId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2030,7 +2079,7 @@ func (u *__Event_Updater) Murmur64Hash_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2043,7 +2092,7 @@ func (u *__Event_Updater) Murmur64Hash_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2056,7 +2105,7 @@ func (u *__Event_Updater) Murmur64Hash_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2067,7 +2116,7 @@ func (d *__Event_Updater) Murmur64Hash_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2078,7 +2127,7 @@ func (d *__Event_Updater) Murmur64Hash_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2089,7 +2138,7 @@ func (d *__Event_Updater) Murmur64Hash_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2100,7 +2149,7 @@ func (d *__Event_Updater) Murmur64Hash_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2111,7 +2160,7 @@ func (d *__Event_Updater) Murmur64Hash_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2122,7 +2171,7 @@ func (d *__Event_Updater) Murmur64Hash_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2135,7 +2184,7 @@ func (u *__Event_Updater) MessageId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2148,7 +2197,7 @@ func (u *__Event_Updater) MessageId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2161,7 +2210,7 @@ func (u *__Event_Updater) MessageId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2172,7 +2221,7 @@ func (d *__Event_Updater) MessageId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2183,7 +2232,7 @@ func (d *__Event_Updater) MessageId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2194,7 +2243,7 @@ func (d *__Event_Updater) MessageId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2205,7 +2254,7 @@ func (d *__Event_Updater) MessageId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2216,7 +2265,7 @@ func (d *__Event_Updater) MessageId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2227,7 +2276,7 @@ func (d *__Event_Updater) MessageId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2240,7 +2289,7 @@ func (u *__Event_Updater) ReSharedId_In(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2253,7 +2302,7 @@ func (u *__Event_Updater) ReSharedId_Ins(ins ...int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2266,7 +2315,7 @@ func (u *__Event_Updater) ReSharedId_NotIn(ins []int) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2277,7 +2326,7 @@ func (d *__Event_Updater) ReSharedId_Eq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId = ? "
+	w.condition = " ReSharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2288,7 +2337,7 @@ func (d *__Event_Updater) ReSharedId_NotEq(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId != ? "
+	w.condition = " ReSharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2299,7 +2348,7 @@ func (d *__Event_Updater) ReSharedId_LT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId < ? "
+	w.condition = " ReSharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2310,7 +2359,7 @@ func (d *__Event_Updater) ReSharedId_LE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId <= ? "
+	w.condition = " ReSharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2321,7 +2370,7 @@ func (d *__Event_Updater) ReSharedId_GT(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId > ? "
+	w.condition = " ReSharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2332,10 +2381,23 @@ func (d *__Event_Updater) ReSharedId_GE(val int) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId >= ? "
+	w.condition = " ReSharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Event_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Event_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -2351,7 +2413,7 @@ func (u *__Event_Selector) EventId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2364,7 +2426,7 @@ func (u *__Event_Selector) EventId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2377,7 +2439,7 @@ func (u *__Event_Selector) EventId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2388,7 +2450,7 @@ func (d *__Event_Selector) EventId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId = ? "
+	w.condition = " EventId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2399,7 +2461,7 @@ func (d *__Event_Selector) EventId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId != ? "
+	w.condition = " EventId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2410,7 +2472,7 @@ func (d *__Event_Selector) EventId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId < ? "
+	w.condition = " EventId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2421,7 +2483,7 @@ func (d *__Event_Selector) EventId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId <= ? "
+	w.condition = " EventId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2432,7 +2494,7 @@ func (d *__Event_Selector) EventId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId > ? "
+	w.condition = " EventId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2443,7 +2505,7 @@ func (d *__Event_Selector) EventId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventId >= ? "
+	w.condition = " EventId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2456,7 +2518,7 @@ func (u *__Event_Selector) EventType_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2469,7 +2531,7 @@ func (u *__Event_Selector) EventType_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2482,7 +2544,7 @@ func (u *__Event_Selector) EventType_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EventType NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EventType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2493,7 +2555,7 @@ func (d *__Event_Selector) EventType_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType = ? "
+	w.condition = " EventType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2504,7 +2566,7 @@ func (d *__Event_Selector) EventType_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType != ? "
+	w.condition = " EventType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2515,7 +2577,7 @@ func (d *__Event_Selector) EventType_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType < ? "
+	w.condition = " EventType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2526,7 +2588,7 @@ func (d *__Event_Selector) EventType_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType <= ? "
+	w.condition = " EventType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2537,7 +2599,7 @@ func (d *__Event_Selector) EventType_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType > ? "
+	w.condition = " EventType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2548,7 +2610,7 @@ func (d *__Event_Selector) EventType_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EventType >= ? "
+	w.condition = " EventType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2561,7 +2623,7 @@ func (u *__Event_Selector) ByUserId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2574,7 +2636,7 @@ func (u *__Event_Selector) ByUserId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2587,7 +2649,7 @@ func (u *__Event_Selector) ByUserId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ByUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ByUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2598,7 +2660,7 @@ func (d *__Event_Selector) ByUserId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId = ? "
+	w.condition = " ByUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2609,7 +2671,7 @@ func (d *__Event_Selector) ByUserId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId != ? "
+	w.condition = " ByUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2620,7 +2682,7 @@ func (d *__Event_Selector) ByUserId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId < ? "
+	w.condition = " ByUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2631,7 +2693,7 @@ func (d *__Event_Selector) ByUserId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId <= ? "
+	w.condition = " ByUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2642,7 +2704,7 @@ func (d *__Event_Selector) ByUserId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId > ? "
+	w.condition = " ByUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2653,7 +2715,7 @@ func (d *__Event_Selector) ByUserId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ByUserId >= ? "
+	w.condition = " ByUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2666,7 +2728,7 @@ func (u *__Event_Selector) PeerUserId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2679,7 +2741,7 @@ func (u *__Event_Selector) PeerUserId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2692,7 +2754,7 @@ func (u *__Event_Selector) PeerUserId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PeerUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PeerUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2703,7 +2765,7 @@ func (d *__Event_Selector) PeerUserId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId = ? "
+	w.condition = " PeerUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2714,7 +2776,7 @@ func (d *__Event_Selector) PeerUserId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId != ? "
+	w.condition = " PeerUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2725,7 +2787,7 @@ func (d *__Event_Selector) PeerUserId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId < ? "
+	w.condition = " PeerUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2736,7 +2798,7 @@ func (d *__Event_Selector) PeerUserId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId <= ? "
+	w.condition = " PeerUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2747,7 +2809,7 @@ func (d *__Event_Selector) PeerUserId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId > ? "
+	w.condition = " PeerUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2758,7 +2820,7 @@ func (d *__Event_Selector) PeerUserId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PeerUserId >= ? "
+	w.condition = " PeerUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2771,7 +2833,7 @@ func (u *__Event_Selector) PostId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2784,7 +2846,7 @@ func (u *__Event_Selector) PostId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2797,7 +2859,7 @@ func (u *__Event_Selector) PostId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2808,7 +2870,7 @@ func (d *__Event_Selector) PostId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2819,7 +2881,7 @@ func (d *__Event_Selector) PostId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2830,7 +2892,7 @@ func (d *__Event_Selector) PostId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2841,7 +2903,7 @@ func (d *__Event_Selector) PostId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2852,7 +2914,7 @@ func (d *__Event_Selector) PostId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2863,7 +2925,7 @@ func (d *__Event_Selector) PostId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2876,7 +2938,7 @@ func (u *__Event_Selector) CommentId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2889,7 +2951,7 @@ func (u *__Event_Selector) CommentId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2902,7 +2964,7 @@ func (u *__Event_Selector) CommentId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2913,7 +2975,7 @@ func (d *__Event_Selector) CommentId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2924,7 +2986,7 @@ func (d *__Event_Selector) CommentId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2935,7 +2997,7 @@ func (d *__Event_Selector) CommentId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2946,7 +3008,7 @@ func (d *__Event_Selector) CommentId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2957,7 +3019,7 @@ func (d *__Event_Selector) CommentId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2968,7 +3030,7 @@ func (d *__Event_Selector) CommentId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2981,7 +3043,7 @@ func (u *__Event_Selector) ActionId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2994,7 +3056,7 @@ func (u *__Event_Selector) ActionId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3007,7 +3069,7 @@ func (u *__Event_Selector) ActionId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3018,7 +3080,7 @@ func (d *__Event_Selector) ActionId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3029,7 +3091,7 @@ func (d *__Event_Selector) ActionId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3040,7 +3102,7 @@ func (d *__Event_Selector) ActionId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3051,7 +3113,7 @@ func (d *__Event_Selector) ActionId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3062,7 +3124,7 @@ func (d *__Event_Selector) ActionId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3073,7 +3135,7 @@ func (d *__Event_Selector) ActionId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3086,7 +3148,7 @@ func (u *__Event_Selector) Murmur64Hash_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3099,7 +3161,7 @@ func (u *__Event_Selector) Murmur64Hash_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3112,7 +3174,7 @@ func (u *__Event_Selector) Murmur64Hash_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3123,7 +3185,7 @@ func (d *__Event_Selector) Murmur64Hash_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = ? "
+	w.condition = " Murmur64Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3134,7 +3196,7 @@ func (d *__Event_Selector) Murmur64Hash_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != ? "
+	w.condition = " Murmur64Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3145,7 +3207,7 @@ func (d *__Event_Selector) Murmur64Hash_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < ? "
+	w.condition = " Murmur64Hash < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3156,7 +3218,7 @@ func (d *__Event_Selector) Murmur64Hash_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= ? "
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3167,7 +3229,7 @@ func (d *__Event_Selector) Murmur64Hash_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > ? "
+	w.condition = " Murmur64Hash > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3178,7 +3240,7 @@ func (d *__Event_Selector) Murmur64Hash_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= ? "
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3191,7 +3253,7 @@ func (u *__Event_Selector) MessageId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3204,7 +3266,7 @@ func (u *__Event_Selector) MessageId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3217,7 +3279,7 @@ func (u *__Event_Selector) MessageId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3228,7 +3290,7 @@ func (d *__Event_Selector) MessageId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3239,7 +3301,7 @@ func (d *__Event_Selector) MessageId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3250,7 +3312,7 @@ func (d *__Event_Selector) MessageId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3261,7 +3323,7 @@ func (d *__Event_Selector) MessageId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3272,7 +3334,7 @@ func (d *__Event_Selector) MessageId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3283,7 +3345,7 @@ func (d *__Event_Selector) MessageId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3296,7 +3358,7 @@ func (u *__Event_Selector) ReSharedId_In(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3309,7 +3371,7 @@ func (u *__Event_Selector) ReSharedId_Ins(ins ...int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3322,7 +3384,7 @@ func (u *__Event_Selector) ReSharedId_NotIn(ins []int) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3333,7 +3395,7 @@ func (d *__Event_Selector) ReSharedId_Eq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId = ? "
+	w.condition = " ReSharedId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3344,7 +3406,7 @@ func (d *__Event_Selector) ReSharedId_NotEq(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId != ? "
+	w.condition = " ReSharedId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3355,7 +3417,7 @@ func (d *__Event_Selector) ReSharedId_LT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId < ? "
+	w.condition = " ReSharedId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3366,7 +3428,7 @@ func (d *__Event_Selector) ReSharedId_LE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId <= ? "
+	w.condition = " ReSharedId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3377,7 +3439,7 @@ func (d *__Event_Selector) ReSharedId_GT(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId > ? "
+	w.condition = " ReSharedId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3388,7 +3450,7 @@ func (d *__Event_Selector) ReSharedId_GE(val int) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedId >= ? "
+	w.condition = " ReSharedId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3405,7 +3467,7 @@ func (u *__Event_Deleter) ChatKey_In(ins []string) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3418,7 +3480,7 @@ func (u *__Event_Deleter) ChatKey_NotIn(ins []string) *__Event_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3430,7 +3492,7 @@ func (u *__Event_Deleter) ChatKey_Like(val string) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3441,7 +3503,7 @@ func (d *__Event_Deleter) ChatKey_Eq(val string) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3452,7 +3514,7 @@ func (d *__Event_Deleter) ChatKey_NotEq(val string) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3467,7 +3529,7 @@ func (u *__Event_Updater) ChatKey_In(ins []string) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3480,7 +3542,7 @@ func (u *__Event_Updater) ChatKey_NotIn(ins []string) *__Event_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3492,7 +3554,7 @@ func (u *__Event_Updater) ChatKey_Like(val string) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3503,7 +3565,7 @@ func (d *__Event_Updater) ChatKey_Eq(val string) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3514,7 +3576,7 @@ func (d *__Event_Updater) ChatKey_NotEq(val string) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3529,7 +3591,7 @@ func (u *__Event_Selector) ChatKey_In(ins []string) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3542,7 +3604,7 @@ func (u *__Event_Selector) ChatKey_NotIn(ins []string) *__Event_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ChatKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3554,7 +3616,7 @@ func (u *__Event_Selector) ChatKey_Like(val string) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " ChatKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3565,7 +3627,7 @@ func (d *__Event_Selector) ChatKey_Eq(val string) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " ChatKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3576,7 +3638,7 @@ func (d *__Event_Selector) ChatKey_NotEq(val string) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " ChatKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3589,17 +3651,23 @@ func (d *__Event_Selector) ChatKey_NotEq(val string) *__Event_Selector {
 //ints
 
 func (u *__Event_Updater) EventId(newVal int) *__Event_Updater {
-	u.updates[" EventId = ? "] = newVal
+	up := updateCol{" EventId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" EventId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) EventId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" EventId = EventId+? "] = count
+		up := updateCol{" EventId = EventId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" EventId = EventId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" EventId = EventId-? "] = -(count) //make it positive
+		up := updateCol{" EventId = EventId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" EventId = EventId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3610,17 +3678,23 @@ func (u *__Event_Updater) EventId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) EventType(newVal int) *__Event_Updater {
-	u.updates[" EventType = ? "] = newVal
+	up := updateCol{" EventType = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" EventType = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) EventType_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" EventType = EventType+? "] = count
+		up := updateCol{" EventType = EventType+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" EventType = EventType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" EventType = EventType-? "] = -(count) //make it positive
+		up := updateCol{" EventType = EventType- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" EventType = EventType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3631,17 +3705,23 @@ func (u *__Event_Updater) EventType_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) ByUserId(newVal int) *__Event_Updater {
-	u.updates[" ByUserId = ? "] = newVal
+	up := updateCol{" ByUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ByUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) ByUserId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" ByUserId = ByUserId+? "] = count
+		up := updateCol{" ByUserId = ByUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ByUserId = ByUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ByUserId = ByUserId-? "] = -(count) //make it positive
+		up := updateCol{" ByUserId = ByUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ByUserId = ByUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3652,17 +3732,23 @@ func (u *__Event_Updater) ByUserId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) PeerUserId(newVal int) *__Event_Updater {
-	u.updates[" PeerUserId = ? "] = newVal
+	up := updateCol{" PeerUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PeerUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) PeerUserId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" PeerUserId = PeerUserId+? "] = count
+		up := updateCol{" PeerUserId = PeerUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PeerUserId = PeerUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PeerUserId = PeerUserId-? "] = -(count) //make it positive
+		up := updateCol{" PeerUserId = PeerUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PeerUserId = PeerUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3673,17 +3759,23 @@ func (u *__Event_Updater) PeerUserId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) PostId(newVal int) *__Event_Updater {
-	u.updates[" PostId = ? "] = newVal
+	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) PostId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" PostId = PostId+? "] = count
+		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostId = PostId-? "] = -(count) //make it positive
+		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3694,17 +3786,23 @@ func (u *__Event_Updater) PostId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) CommentId(newVal int) *__Event_Updater {
-	u.updates[" CommentId = ? "] = newVal
+	up := updateCol{" CommentId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CommentId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) CommentId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" CommentId = CommentId+? "] = count
+		up := updateCol{" CommentId = CommentId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CommentId = CommentId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CommentId = CommentId-? "] = -(count) //make it positive
+		up := updateCol{" CommentId = CommentId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CommentId = CommentId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3715,17 +3813,23 @@ func (u *__Event_Updater) CommentId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) ActionId(newVal int) *__Event_Updater {
-	u.updates[" ActionId = ? "] = newVal
+	up := updateCol{" ActionId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ActionId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) ActionId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" ActionId = ActionId+? "] = count
+		up := updateCol{" ActionId = ActionId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ActionId = ActionId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ActionId = ActionId-? "] = -(count) //make it positive
+		up := updateCol{" ActionId = ActionId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ActionId = ActionId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3736,17 +3840,23 @@ func (u *__Event_Updater) ActionId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) Murmur64Hash(newVal int) *__Event_Updater {
-	u.updates[" Murmur64Hash = ? "] = newVal
+	up := updateCol{" Murmur64Hash = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Murmur64Hash = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash+? "] = count
+		up := updateCol{" Murmur64Hash = Murmur64Hash+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Murmur64Hash = Murmur64Hash+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Murmur64Hash = Murmur64Hash-? "] = -(count) //make it positive
+		up := updateCol{" Murmur64Hash = Murmur64Hash- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Murmur64Hash = Murmur64Hash- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3758,24 +3868,32 @@ func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
 
 //string
 func (u *__Event_Updater) ChatKey(newVal string) *__Event_Updater {
-	u.updates[" ChatKey = ? "] = newVal
+	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Event_Updater) MessageId(newVal int) *__Event_Updater {
-	u.updates[" MessageId = ? "] = newVal
+	up := updateCol{" MessageId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) MessageId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" MessageId = MessageId+? "] = count
+		up := updateCol{" MessageId = MessageId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageId = MessageId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageId = MessageId-? "] = -(count) //make it positive
+		up := updateCol{" MessageId = MessageId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageId = MessageId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3786,17 +3904,23 @@ func (u *__Event_Updater) MessageId_Increment(count int) *__Event_Updater {
 //ints
 
 func (u *__Event_Updater) ReSharedId(newVal int) *__Event_Updater {
-	u.updates[" ReSharedId = ? "] = newVal
+	up := updateCol{" ReSharedId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReSharedId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Event_Updater) ReSharedId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		u.updates[" ReSharedId = ReSharedId+? "] = count
+		up := updateCol{" ReSharedId = ReSharedId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ReSharedId = ReSharedId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ReSharedId = ReSharedId-? "] = -(count) //make it positive
+		up := updateCol{" ReSharedId = ReSharedId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ReSharedId = ReSharedId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4200,9 +4324,13 @@ func (u *__Event_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -4287,10 +4415,10 @@ func MassInsert_Event(rows []Event, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.event (" +
 		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +
@@ -4335,10 +4463,9 @@ func MassReplace_Event(rows []Event, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.event (" +
 		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +

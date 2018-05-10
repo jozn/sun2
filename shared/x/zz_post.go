@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Post represents a row from 'sun.post'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Post represents a row from 'sun.post'.
 
 // Manualy copy this to project
 type Post__ struct {
@@ -197,23 +199,30 @@ func (p *Post) Delete(db XODB) error {
 
 // orma types
 type __Post_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Post_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __Post_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPost_Deleter() *__Post_Deleter {
@@ -223,7 +232,7 @@ func NewPost_Deleter() *__Post_Deleter {
 
 func NewPost_Updater() *__Post_Updater {
 	u := __Post_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -232,8 +241,35 @@ func NewPost_Selector() *__Post_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__Post_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__Post_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Post_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Post_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__Post_Deleter) Or() *__Post_Deleter {
@@ -248,7 +284,7 @@ func (u *__Post_Deleter) PostId_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -261,7 +297,7 @@ func (u *__Post_Deleter) PostId_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -274,7 +310,7 @@ func (u *__Post_Deleter) PostId_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -285,7 +321,7 @@ func (d *__Post_Deleter) PostId_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -296,7 +332,7 @@ func (d *__Post_Deleter) PostId_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +343,7 @@ func (d *__Post_Deleter) PostId_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +354,7 @@ func (d *__Post_Deleter) PostId_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +365,7 @@ func (d *__Post_Deleter) PostId_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +376,7 @@ func (d *__Post_Deleter) PostId_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -353,7 +389,7 @@ func (u *__Post_Deleter) UserId_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -366,7 +402,7 @@ func (u *__Post_Deleter) UserId_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -379,7 +415,7 @@ func (u *__Post_Deleter) UserId_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -390,7 +426,7 @@ func (d *__Post_Deleter) UserId_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -401,7 +437,7 @@ func (d *__Post_Deleter) UserId_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +448,7 @@ func (d *__Post_Deleter) UserId_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +459,7 @@ func (d *__Post_Deleter) UserId_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +470,7 @@ func (d *__Post_Deleter) UserId_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +481,7 @@ func (d *__Post_Deleter) UserId_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -458,7 +494,7 @@ func (u *__Post_Deleter) PostTypeEnum_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -471,7 +507,7 @@ func (u *__Post_Deleter) PostTypeEnum_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +520,7 @@ func (u *__Post_Deleter) PostTypeEnum_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -495,7 +531,7 @@ func (d *__Post_Deleter) PostTypeEnum_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -506,7 +542,7 @@ func (d *__Post_Deleter) PostTypeEnum_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +553,7 @@ func (d *__Post_Deleter) PostTypeEnum_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +564,7 @@ func (d *__Post_Deleter) PostTypeEnum_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +575,7 @@ func (d *__Post_Deleter) PostTypeEnum_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +586,7 @@ func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +599,7 @@ func (u *__Post_Deleter) PostCategoryEnum_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -576,7 +612,7 @@ func (u *__Post_Deleter) PostCategoryEnum_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +625,7 @@ func (u *__Post_Deleter) PostCategoryEnum_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -600,7 +636,7 @@ func (d *__Post_Deleter) PostCategoryEnum_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -611,7 +647,7 @@ func (d *__Post_Deleter) PostCategoryEnum_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +658,7 @@ func (d *__Post_Deleter) PostCategoryEnum_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +669,7 @@ func (d *__Post_Deleter) PostCategoryEnum_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,7 +680,7 @@ func (d *__Post_Deleter) PostCategoryEnum_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -655,7 +691,7 @@ func (d *__Post_Deleter) PostCategoryEnum_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,7 +704,7 @@ func (u *__Post_Deleter) MediaId_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -681,7 +717,7 @@ func (u *__Post_Deleter) MediaId_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -694,7 +730,7 @@ func (u *__Post_Deleter) MediaId_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -705,7 +741,7 @@ func (d *__Post_Deleter) MediaId_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -716,7 +752,7 @@ func (d *__Post_Deleter) MediaId_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -727,7 +763,7 @@ func (d *__Post_Deleter) MediaId_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,7 +774,7 @@ func (d *__Post_Deleter) MediaId_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -749,7 +785,7 @@ func (d *__Post_Deleter) MediaId_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -760,7 +796,7 @@ func (d *__Post_Deleter) MediaId_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -773,7 +809,7 @@ func (u *__Post_Deleter) MediaCount_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -786,7 +822,7 @@ func (u *__Post_Deleter) MediaCount_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -799,7 +835,7 @@ func (u *__Post_Deleter) MediaCount_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -810,7 +846,7 @@ func (d *__Post_Deleter) MediaCount_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = ? "
+	w.condition = " MediaCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -821,7 +857,7 @@ func (d *__Post_Deleter) MediaCount_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != ? "
+	w.condition = " MediaCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -832,7 +868,7 @@ func (d *__Post_Deleter) MediaCount_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < ? "
+	w.condition = " MediaCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -843,7 +879,7 @@ func (d *__Post_Deleter) MediaCount_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= ? "
+	w.condition = " MediaCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,7 +890,7 @@ func (d *__Post_Deleter) MediaCount_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > ? "
+	w.condition = " MediaCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -865,7 +901,7 @@ func (d *__Post_Deleter) MediaCount_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= ? "
+	w.condition = " MediaCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -878,7 +914,7 @@ func (u *__Post_Deleter) SharedTo_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -891,7 +927,7 @@ func (u *__Post_Deleter) SharedTo_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -904,7 +940,7 @@ func (u *__Post_Deleter) SharedTo_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -915,7 +951,7 @@ func (d *__Post_Deleter) SharedTo_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = ? "
+	w.condition = " SharedTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -926,7 +962,7 @@ func (d *__Post_Deleter) SharedTo_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != ? "
+	w.condition = " SharedTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -937,7 +973,7 @@ func (d *__Post_Deleter) SharedTo_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < ? "
+	w.condition = " SharedTo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +984,7 @@ func (d *__Post_Deleter) SharedTo_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= ? "
+	w.condition = " SharedTo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -959,7 +995,7 @@ func (d *__Post_Deleter) SharedTo_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > ? "
+	w.condition = " SharedTo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -970,7 +1006,7 @@ func (d *__Post_Deleter) SharedTo_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= ? "
+	w.condition = " SharedTo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -983,7 +1019,7 @@ func (u *__Post_Deleter) DisableComment_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -996,7 +1032,7 @@ func (u *__Post_Deleter) DisableComment_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1009,7 +1045,7 @@ func (u *__Post_Deleter) DisableComment_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1020,7 +1056,7 @@ func (d *__Post_Deleter) DisableComment_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = ? "
+	w.condition = " DisableComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1031,7 +1067,7 @@ func (d *__Post_Deleter) DisableComment_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != ? "
+	w.condition = " DisableComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1042,7 +1078,7 @@ func (d *__Post_Deleter) DisableComment_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < ? "
+	w.condition = " DisableComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1053,7 +1089,7 @@ func (d *__Post_Deleter) DisableComment_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= ? "
+	w.condition = " DisableComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1064,7 +1100,7 @@ func (d *__Post_Deleter) DisableComment_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > ? "
+	w.condition = " DisableComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1075,7 +1111,7 @@ func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= ? "
+	w.condition = " DisableComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1088,7 +1124,7 @@ func (u *__Post_Deleter) Source_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1101,7 +1137,7 @@ func (u *__Post_Deleter) Source_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1114,7 +1150,7 @@ func (u *__Post_Deleter) Source_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1125,7 +1161,7 @@ func (d *__Post_Deleter) Source_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = ? "
+	w.condition = " Source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1136,7 +1172,7 @@ func (d *__Post_Deleter) Source_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != ? "
+	w.condition = " Source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1147,7 +1183,7 @@ func (d *__Post_Deleter) Source_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < ? "
+	w.condition = " Source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1158,7 +1194,7 @@ func (d *__Post_Deleter) Source_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= ? "
+	w.condition = " Source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1169,7 +1205,7 @@ func (d *__Post_Deleter) Source_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > ? "
+	w.condition = " Source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1180,7 +1216,7 @@ func (d *__Post_Deleter) Source_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= ? "
+	w.condition = " Source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1193,7 +1229,7 @@ func (u *__Post_Deleter) HasTag_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1206,7 +1242,7 @@ func (u *__Post_Deleter) HasTag_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1219,7 +1255,7 @@ func (u *__Post_Deleter) HasTag_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1230,7 +1266,7 @@ func (d *__Post_Deleter) HasTag_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = ? "
+	w.condition = " HasTag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1241,7 +1277,7 @@ func (d *__Post_Deleter) HasTag_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != ? "
+	w.condition = " HasTag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1252,7 +1288,7 @@ func (d *__Post_Deleter) HasTag_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < ? "
+	w.condition = " HasTag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1263,7 +1299,7 @@ func (d *__Post_Deleter) HasTag_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= ? "
+	w.condition = " HasTag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1274,7 +1310,7 @@ func (d *__Post_Deleter) HasTag_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > ? "
+	w.condition = " HasTag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1285,7 +1321,7 @@ func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= ? "
+	w.condition = " HasTag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1298,7 +1334,7 @@ func (u *__Post_Deleter) Seq_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1311,7 +1347,7 @@ func (u *__Post_Deleter) Seq_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1324,7 +1360,7 @@ func (u *__Post_Deleter) Seq_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1335,7 +1371,7 @@ func (d *__Post_Deleter) Seq_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1346,7 +1382,7 @@ func (d *__Post_Deleter) Seq_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1357,7 +1393,7 @@ func (d *__Post_Deleter) Seq_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1368,7 +1404,7 @@ func (d *__Post_Deleter) Seq_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1379,7 +1415,7 @@ func (d *__Post_Deleter) Seq_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1390,7 +1426,7 @@ func (d *__Post_Deleter) Seq_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1403,7 +1439,7 @@ func (u *__Post_Deleter) CommentsCount_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1416,7 +1452,7 @@ func (u *__Post_Deleter) CommentsCount_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1429,7 +1465,7 @@ func (u *__Post_Deleter) CommentsCount_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1440,7 +1476,7 @@ func (d *__Post_Deleter) CommentsCount_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = ? "
+	w.condition = " CommentsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1451,7 +1487,7 @@ func (d *__Post_Deleter) CommentsCount_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != ? "
+	w.condition = " CommentsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1462,7 +1498,7 @@ func (d *__Post_Deleter) CommentsCount_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < ? "
+	w.condition = " CommentsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1473,7 +1509,7 @@ func (d *__Post_Deleter) CommentsCount_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= ? "
+	w.condition = " CommentsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1484,7 +1520,7 @@ func (d *__Post_Deleter) CommentsCount_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > ? "
+	w.condition = " CommentsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1495,7 +1531,7 @@ func (d *__Post_Deleter) CommentsCount_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= ? "
+	w.condition = " CommentsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1508,7 +1544,7 @@ func (u *__Post_Deleter) LikesCount_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1521,7 +1557,7 @@ func (u *__Post_Deleter) LikesCount_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1570,7 @@ func (u *__Post_Deleter) LikesCount_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1545,7 +1581,7 @@ func (d *__Post_Deleter) LikesCount_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = ? "
+	w.condition = " LikesCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1556,7 +1592,7 @@ func (d *__Post_Deleter) LikesCount_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != ? "
+	w.condition = " LikesCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1567,7 +1603,7 @@ func (d *__Post_Deleter) LikesCount_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < ? "
+	w.condition = " LikesCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1578,7 +1614,7 @@ func (d *__Post_Deleter) LikesCount_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= ? "
+	w.condition = " LikesCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1589,7 +1625,7 @@ func (d *__Post_Deleter) LikesCount_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > ? "
+	w.condition = " LikesCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1600,7 +1636,7 @@ func (d *__Post_Deleter) LikesCount_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= ? "
+	w.condition = " LikesCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1613,7 +1649,7 @@ func (u *__Post_Deleter) ViewsCount_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1626,7 +1662,7 @@ func (u *__Post_Deleter) ViewsCount_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1639,7 +1675,7 @@ func (u *__Post_Deleter) ViewsCount_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1650,7 +1686,7 @@ func (d *__Post_Deleter) ViewsCount_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1661,7 +1697,7 @@ func (d *__Post_Deleter) ViewsCount_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1672,7 +1708,7 @@ func (d *__Post_Deleter) ViewsCount_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1683,7 +1719,7 @@ func (d *__Post_Deleter) ViewsCount_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,7 +1730,7 @@ func (d *__Post_Deleter) ViewsCount_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1705,7 +1741,7 @@ func (d *__Post_Deleter) ViewsCount_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1718,7 +1754,7 @@ func (u *__Post_Deleter) EditedTime_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1731,7 +1767,7 @@ func (u *__Post_Deleter) EditedTime_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1744,7 +1780,7 @@ func (u *__Post_Deleter) EditedTime_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1755,7 +1791,7 @@ func (d *__Post_Deleter) EditedTime_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = ? "
+	w.condition = " EditedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1766,7 +1802,7 @@ func (d *__Post_Deleter) EditedTime_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != ? "
+	w.condition = " EditedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1777,7 +1813,7 @@ func (d *__Post_Deleter) EditedTime_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < ? "
+	w.condition = " EditedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1788,7 +1824,7 @@ func (d *__Post_Deleter) EditedTime_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= ? "
+	w.condition = " EditedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1799,7 +1835,7 @@ func (d *__Post_Deleter) EditedTime_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > ? "
+	w.condition = " EditedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1810,7 +1846,7 @@ func (d *__Post_Deleter) EditedTime_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= ? "
+	w.condition = " EditedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1823,7 +1859,7 @@ func (u *__Post_Deleter) CreatedTime_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1836,7 +1872,7 @@ func (u *__Post_Deleter) CreatedTime_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1849,7 +1885,7 @@ func (u *__Post_Deleter) CreatedTime_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1860,7 +1896,7 @@ func (d *__Post_Deleter) CreatedTime_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1871,7 +1907,7 @@ func (d *__Post_Deleter) CreatedTime_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1882,7 +1918,7 @@ func (d *__Post_Deleter) CreatedTime_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1893,7 +1929,7 @@ func (d *__Post_Deleter) CreatedTime_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1904,7 +1940,7 @@ func (d *__Post_Deleter) CreatedTime_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1915,7 +1951,7 @@ func (d *__Post_Deleter) CreatedTime_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1928,7 +1964,7 @@ func (u *__Post_Deleter) ReSharedPostId_In(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1941,7 +1977,7 @@ func (u *__Post_Deleter) ReSharedPostId_Ins(ins ...int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1954,7 +1990,7 @@ func (u *__Post_Deleter) ReSharedPostId_NotIn(ins []int) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1965,7 +2001,7 @@ func (d *__Post_Deleter) ReSharedPostId_Eq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = ? "
+	w.condition = " ReSharedPostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1976,7 +2012,7 @@ func (d *__Post_Deleter) ReSharedPostId_NotEq(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != ? "
+	w.condition = " ReSharedPostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1987,7 +2023,7 @@ func (d *__Post_Deleter) ReSharedPostId_LT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < ? "
+	w.condition = " ReSharedPostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1998,7 +2034,7 @@ func (d *__Post_Deleter) ReSharedPostId_LE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= ? "
+	w.condition = " ReSharedPostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2009,7 +2045,7 @@ func (d *__Post_Deleter) ReSharedPostId_GT(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > ? "
+	w.condition = " ReSharedPostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2020,10 +2056,23 @@ func (d *__Post_Deleter) ReSharedPostId_GE(val int) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= ? "
+	w.condition = " ReSharedPostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Post_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Post_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -2039,7 +2088,7 @@ func (u *__Post_Updater) PostId_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2052,7 +2101,7 @@ func (u *__Post_Updater) PostId_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2065,7 +2114,7 @@ func (u *__Post_Updater) PostId_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2076,7 +2125,7 @@ func (d *__Post_Updater) PostId_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2087,7 +2136,7 @@ func (d *__Post_Updater) PostId_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2098,7 +2147,7 @@ func (d *__Post_Updater) PostId_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2109,7 +2158,7 @@ func (d *__Post_Updater) PostId_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2120,7 +2169,7 @@ func (d *__Post_Updater) PostId_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2131,7 +2180,7 @@ func (d *__Post_Updater) PostId_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2144,7 +2193,7 @@ func (u *__Post_Updater) UserId_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2157,7 +2206,7 @@ func (u *__Post_Updater) UserId_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2170,7 +2219,7 @@ func (u *__Post_Updater) UserId_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2181,7 +2230,7 @@ func (d *__Post_Updater) UserId_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2192,7 +2241,7 @@ func (d *__Post_Updater) UserId_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2203,7 +2252,7 @@ func (d *__Post_Updater) UserId_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2214,7 +2263,7 @@ func (d *__Post_Updater) UserId_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2225,7 +2274,7 @@ func (d *__Post_Updater) UserId_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2236,7 +2285,7 @@ func (d *__Post_Updater) UserId_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2249,7 +2298,7 @@ func (u *__Post_Updater) PostTypeEnum_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2262,7 +2311,7 @@ func (u *__Post_Updater) PostTypeEnum_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2275,7 +2324,7 @@ func (u *__Post_Updater) PostTypeEnum_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2286,7 +2335,7 @@ func (d *__Post_Updater) PostTypeEnum_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2297,7 +2346,7 @@ func (d *__Post_Updater) PostTypeEnum_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2308,7 +2357,7 @@ func (d *__Post_Updater) PostTypeEnum_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2319,7 +2368,7 @@ func (d *__Post_Updater) PostTypeEnum_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2330,7 +2379,7 @@ func (d *__Post_Updater) PostTypeEnum_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2341,7 +2390,7 @@ func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2354,7 +2403,7 @@ func (u *__Post_Updater) PostCategoryEnum_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2367,7 +2416,7 @@ func (u *__Post_Updater) PostCategoryEnum_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2380,7 +2429,7 @@ func (u *__Post_Updater) PostCategoryEnum_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2391,7 +2440,7 @@ func (d *__Post_Updater) PostCategoryEnum_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2402,7 +2451,7 @@ func (d *__Post_Updater) PostCategoryEnum_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2413,7 +2462,7 @@ func (d *__Post_Updater) PostCategoryEnum_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2424,7 +2473,7 @@ func (d *__Post_Updater) PostCategoryEnum_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2435,7 +2484,7 @@ func (d *__Post_Updater) PostCategoryEnum_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2446,7 +2495,7 @@ func (d *__Post_Updater) PostCategoryEnum_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2459,7 +2508,7 @@ func (u *__Post_Updater) MediaId_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2472,7 +2521,7 @@ func (u *__Post_Updater) MediaId_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2485,7 +2534,7 @@ func (u *__Post_Updater) MediaId_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2496,7 +2545,7 @@ func (d *__Post_Updater) MediaId_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2556,7 @@ func (d *__Post_Updater) MediaId_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2518,7 +2567,7 @@ func (d *__Post_Updater) MediaId_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2529,7 +2578,7 @@ func (d *__Post_Updater) MediaId_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2540,7 +2589,7 @@ func (d *__Post_Updater) MediaId_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2551,7 +2600,7 @@ func (d *__Post_Updater) MediaId_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2564,7 +2613,7 @@ func (u *__Post_Updater) MediaCount_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2577,7 +2626,7 @@ func (u *__Post_Updater) MediaCount_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2590,7 +2639,7 @@ func (u *__Post_Updater) MediaCount_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2601,7 +2650,7 @@ func (d *__Post_Updater) MediaCount_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = ? "
+	w.condition = " MediaCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2612,7 +2661,7 @@ func (d *__Post_Updater) MediaCount_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != ? "
+	w.condition = " MediaCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2623,7 +2672,7 @@ func (d *__Post_Updater) MediaCount_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < ? "
+	w.condition = " MediaCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2634,7 +2683,7 @@ func (d *__Post_Updater) MediaCount_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= ? "
+	w.condition = " MediaCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2645,7 +2694,7 @@ func (d *__Post_Updater) MediaCount_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > ? "
+	w.condition = " MediaCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2656,7 +2705,7 @@ func (d *__Post_Updater) MediaCount_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= ? "
+	w.condition = " MediaCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2669,7 +2718,7 @@ func (u *__Post_Updater) SharedTo_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2682,7 +2731,7 @@ func (u *__Post_Updater) SharedTo_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2695,7 +2744,7 @@ func (u *__Post_Updater) SharedTo_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2706,7 +2755,7 @@ func (d *__Post_Updater) SharedTo_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = ? "
+	w.condition = " SharedTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2717,7 +2766,7 @@ func (d *__Post_Updater) SharedTo_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != ? "
+	w.condition = " SharedTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2728,7 +2777,7 @@ func (d *__Post_Updater) SharedTo_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < ? "
+	w.condition = " SharedTo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2739,7 +2788,7 @@ func (d *__Post_Updater) SharedTo_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= ? "
+	w.condition = " SharedTo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2750,7 +2799,7 @@ func (d *__Post_Updater) SharedTo_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > ? "
+	w.condition = " SharedTo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2761,7 +2810,7 @@ func (d *__Post_Updater) SharedTo_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= ? "
+	w.condition = " SharedTo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2774,7 +2823,7 @@ func (u *__Post_Updater) DisableComment_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2836,7 @@ func (u *__Post_Updater) DisableComment_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2800,7 +2849,7 @@ func (u *__Post_Updater) DisableComment_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2811,7 +2860,7 @@ func (d *__Post_Updater) DisableComment_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = ? "
+	w.condition = " DisableComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2822,7 +2871,7 @@ func (d *__Post_Updater) DisableComment_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != ? "
+	w.condition = " DisableComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2833,7 +2882,7 @@ func (d *__Post_Updater) DisableComment_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < ? "
+	w.condition = " DisableComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2844,7 +2893,7 @@ func (d *__Post_Updater) DisableComment_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= ? "
+	w.condition = " DisableComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2855,7 +2904,7 @@ func (d *__Post_Updater) DisableComment_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > ? "
+	w.condition = " DisableComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2866,7 +2915,7 @@ func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= ? "
+	w.condition = " DisableComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2879,7 +2928,7 @@ func (u *__Post_Updater) Source_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2892,7 +2941,7 @@ func (u *__Post_Updater) Source_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2905,7 +2954,7 @@ func (u *__Post_Updater) Source_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2916,7 +2965,7 @@ func (d *__Post_Updater) Source_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = ? "
+	w.condition = " Source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2927,7 +2976,7 @@ func (d *__Post_Updater) Source_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != ? "
+	w.condition = " Source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2938,7 +2987,7 @@ func (d *__Post_Updater) Source_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < ? "
+	w.condition = " Source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2949,7 +2998,7 @@ func (d *__Post_Updater) Source_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= ? "
+	w.condition = " Source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2960,7 +3009,7 @@ func (d *__Post_Updater) Source_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > ? "
+	w.condition = " Source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2971,7 +3020,7 @@ func (d *__Post_Updater) Source_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= ? "
+	w.condition = " Source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2984,7 +3033,7 @@ func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2997,7 +3046,7 @@ func (u *__Post_Updater) HasTag_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3010,7 +3059,7 @@ func (u *__Post_Updater) HasTag_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3021,7 +3070,7 @@ func (d *__Post_Updater) HasTag_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = ? "
+	w.condition = " HasTag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3032,7 +3081,7 @@ func (d *__Post_Updater) HasTag_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != ? "
+	w.condition = " HasTag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3043,7 +3092,7 @@ func (d *__Post_Updater) HasTag_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < ? "
+	w.condition = " HasTag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3054,7 +3103,7 @@ func (d *__Post_Updater) HasTag_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= ? "
+	w.condition = " HasTag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3065,7 +3114,7 @@ func (d *__Post_Updater) HasTag_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > ? "
+	w.condition = " HasTag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3076,7 +3125,7 @@ func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= ? "
+	w.condition = " HasTag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3089,7 +3138,7 @@ func (u *__Post_Updater) Seq_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3102,7 +3151,7 @@ func (u *__Post_Updater) Seq_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3115,7 +3164,7 @@ func (u *__Post_Updater) Seq_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3126,7 +3175,7 @@ func (d *__Post_Updater) Seq_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3137,7 +3186,7 @@ func (d *__Post_Updater) Seq_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3148,7 +3197,7 @@ func (d *__Post_Updater) Seq_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3159,7 +3208,7 @@ func (d *__Post_Updater) Seq_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3170,7 +3219,7 @@ func (d *__Post_Updater) Seq_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3181,7 +3230,7 @@ func (d *__Post_Updater) Seq_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3194,7 +3243,7 @@ func (u *__Post_Updater) CommentsCount_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3207,7 +3256,7 @@ func (u *__Post_Updater) CommentsCount_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3220,7 +3269,7 @@ func (u *__Post_Updater) CommentsCount_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3231,7 +3280,7 @@ func (d *__Post_Updater) CommentsCount_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = ? "
+	w.condition = " CommentsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3242,7 +3291,7 @@ func (d *__Post_Updater) CommentsCount_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != ? "
+	w.condition = " CommentsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3253,7 +3302,7 @@ func (d *__Post_Updater) CommentsCount_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < ? "
+	w.condition = " CommentsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3264,7 +3313,7 @@ func (d *__Post_Updater) CommentsCount_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= ? "
+	w.condition = " CommentsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3275,7 +3324,7 @@ func (d *__Post_Updater) CommentsCount_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > ? "
+	w.condition = " CommentsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3286,7 +3335,7 @@ func (d *__Post_Updater) CommentsCount_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= ? "
+	w.condition = " CommentsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3299,7 +3348,7 @@ func (u *__Post_Updater) LikesCount_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3312,7 +3361,7 @@ func (u *__Post_Updater) LikesCount_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3325,7 +3374,7 @@ func (u *__Post_Updater) LikesCount_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3336,7 +3385,7 @@ func (d *__Post_Updater) LikesCount_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = ? "
+	w.condition = " LikesCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3347,7 +3396,7 @@ func (d *__Post_Updater) LikesCount_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != ? "
+	w.condition = " LikesCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3358,7 +3407,7 @@ func (d *__Post_Updater) LikesCount_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < ? "
+	w.condition = " LikesCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3369,7 +3418,7 @@ func (d *__Post_Updater) LikesCount_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= ? "
+	w.condition = " LikesCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3380,7 +3429,7 @@ func (d *__Post_Updater) LikesCount_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > ? "
+	w.condition = " LikesCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3391,7 +3440,7 @@ func (d *__Post_Updater) LikesCount_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= ? "
+	w.condition = " LikesCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3404,7 +3453,7 @@ func (u *__Post_Updater) ViewsCount_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3417,7 +3466,7 @@ func (u *__Post_Updater) ViewsCount_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3430,7 +3479,7 @@ func (u *__Post_Updater) ViewsCount_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3441,7 +3490,7 @@ func (d *__Post_Updater) ViewsCount_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3452,7 +3501,7 @@ func (d *__Post_Updater) ViewsCount_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3463,7 +3512,7 @@ func (d *__Post_Updater) ViewsCount_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3474,7 +3523,7 @@ func (d *__Post_Updater) ViewsCount_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3485,7 +3534,7 @@ func (d *__Post_Updater) ViewsCount_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3496,7 +3545,7 @@ func (d *__Post_Updater) ViewsCount_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3509,7 +3558,7 @@ func (u *__Post_Updater) EditedTime_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3522,7 +3571,7 @@ func (u *__Post_Updater) EditedTime_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3535,7 +3584,7 @@ func (u *__Post_Updater) EditedTime_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3546,7 +3595,7 @@ func (d *__Post_Updater) EditedTime_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = ? "
+	w.condition = " EditedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3557,7 +3606,7 @@ func (d *__Post_Updater) EditedTime_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != ? "
+	w.condition = " EditedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3568,7 +3617,7 @@ func (d *__Post_Updater) EditedTime_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < ? "
+	w.condition = " EditedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3579,7 +3628,7 @@ func (d *__Post_Updater) EditedTime_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= ? "
+	w.condition = " EditedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3590,7 +3639,7 @@ func (d *__Post_Updater) EditedTime_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > ? "
+	w.condition = " EditedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3601,7 +3650,7 @@ func (d *__Post_Updater) EditedTime_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= ? "
+	w.condition = " EditedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3614,7 +3663,7 @@ func (u *__Post_Updater) CreatedTime_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3627,7 +3676,7 @@ func (u *__Post_Updater) CreatedTime_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3640,7 +3689,7 @@ func (u *__Post_Updater) CreatedTime_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3651,7 +3700,7 @@ func (d *__Post_Updater) CreatedTime_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3662,7 +3711,7 @@ func (d *__Post_Updater) CreatedTime_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3673,7 +3722,7 @@ func (d *__Post_Updater) CreatedTime_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3684,7 +3733,7 @@ func (d *__Post_Updater) CreatedTime_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3695,7 +3744,7 @@ func (d *__Post_Updater) CreatedTime_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3706,7 +3755,7 @@ func (d *__Post_Updater) CreatedTime_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3719,7 +3768,7 @@ func (u *__Post_Updater) ReSharedPostId_In(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3732,7 +3781,7 @@ func (u *__Post_Updater) ReSharedPostId_Ins(ins ...int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3745,7 +3794,7 @@ func (u *__Post_Updater) ReSharedPostId_NotIn(ins []int) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3756,7 +3805,7 @@ func (d *__Post_Updater) ReSharedPostId_Eq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = ? "
+	w.condition = " ReSharedPostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3767,7 +3816,7 @@ func (d *__Post_Updater) ReSharedPostId_NotEq(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != ? "
+	w.condition = " ReSharedPostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3778,7 +3827,7 @@ func (d *__Post_Updater) ReSharedPostId_LT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < ? "
+	w.condition = " ReSharedPostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3789,7 +3838,7 @@ func (d *__Post_Updater) ReSharedPostId_LE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= ? "
+	w.condition = " ReSharedPostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3800,7 +3849,7 @@ func (d *__Post_Updater) ReSharedPostId_GT(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > ? "
+	w.condition = " ReSharedPostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3811,10 +3860,23 @@ func (d *__Post_Updater) ReSharedPostId_GE(val int) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= ? "
+	w.condition = " ReSharedPostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__Post_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__Post_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -3830,7 +3892,7 @@ func (u *__Post_Selector) PostId_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3843,7 +3905,7 @@ func (u *__Post_Selector) PostId_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3856,7 +3918,7 @@ func (u *__Post_Selector) PostId_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3867,7 +3929,7 @@ func (d *__Post_Selector) PostId_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3878,7 +3940,7 @@ func (d *__Post_Selector) PostId_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3889,7 +3951,7 @@ func (d *__Post_Selector) PostId_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3900,7 +3962,7 @@ func (d *__Post_Selector) PostId_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3911,7 +3973,7 @@ func (d *__Post_Selector) PostId_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3922,7 +3984,7 @@ func (d *__Post_Selector) PostId_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3935,7 +3997,7 @@ func (u *__Post_Selector) UserId_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3948,7 +4010,7 @@ func (u *__Post_Selector) UserId_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3961,7 +4023,7 @@ func (u *__Post_Selector) UserId_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3972,7 +4034,7 @@ func (d *__Post_Selector) UserId_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3983,7 +4045,7 @@ func (d *__Post_Selector) UserId_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3994,7 +4056,7 @@ func (d *__Post_Selector) UserId_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4005,7 +4067,7 @@ func (d *__Post_Selector) UserId_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4016,7 +4078,7 @@ func (d *__Post_Selector) UserId_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4027,7 +4089,7 @@ func (d *__Post_Selector) UserId_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4040,7 +4102,7 @@ func (u *__Post_Selector) PostTypeEnum_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4053,7 +4115,7 @@ func (u *__Post_Selector) PostTypeEnum_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4066,7 +4128,7 @@ func (u *__Post_Selector) PostTypeEnum_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4077,7 +4139,7 @@ func (d *__Post_Selector) PostTypeEnum_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = ? "
+	w.condition = " PostTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4088,7 +4150,7 @@ func (d *__Post_Selector) PostTypeEnum_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != ? "
+	w.condition = " PostTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4099,7 +4161,7 @@ func (d *__Post_Selector) PostTypeEnum_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < ? "
+	w.condition = " PostTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4110,7 +4172,7 @@ func (d *__Post_Selector) PostTypeEnum_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= ? "
+	w.condition = " PostTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4121,7 +4183,7 @@ func (d *__Post_Selector) PostTypeEnum_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > ? "
+	w.condition = " PostTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4132,7 +4194,7 @@ func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= ? "
+	w.condition = " PostTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4145,7 +4207,7 @@ func (u *__Post_Selector) PostCategoryEnum_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4158,7 +4220,7 @@ func (u *__Post_Selector) PostCategoryEnum_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4171,7 +4233,7 @@ func (u *__Post_Selector) PostCategoryEnum_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4182,7 +4244,7 @@ func (d *__Post_Selector) PostCategoryEnum_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = ? "
+	w.condition = " PostCategoryEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4193,7 +4255,7 @@ func (d *__Post_Selector) PostCategoryEnum_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != ? "
+	w.condition = " PostCategoryEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4204,7 +4266,7 @@ func (d *__Post_Selector) PostCategoryEnum_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < ? "
+	w.condition = " PostCategoryEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4215,7 +4277,7 @@ func (d *__Post_Selector) PostCategoryEnum_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= ? "
+	w.condition = " PostCategoryEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4226,7 +4288,7 @@ func (d *__Post_Selector) PostCategoryEnum_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > ? "
+	w.condition = " PostCategoryEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4237,7 +4299,7 @@ func (d *__Post_Selector) PostCategoryEnum_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= ? "
+	w.condition = " PostCategoryEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4250,7 +4312,7 @@ func (u *__Post_Selector) MediaId_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4263,7 +4325,7 @@ func (u *__Post_Selector) MediaId_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4276,7 +4338,7 @@ func (u *__Post_Selector) MediaId_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4287,7 +4349,7 @@ func (d *__Post_Selector) MediaId_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4298,7 +4360,7 @@ func (d *__Post_Selector) MediaId_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4309,7 +4371,7 @@ func (d *__Post_Selector) MediaId_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4320,7 +4382,7 @@ func (d *__Post_Selector) MediaId_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4331,7 +4393,7 @@ func (d *__Post_Selector) MediaId_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4342,7 +4404,7 @@ func (d *__Post_Selector) MediaId_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4355,7 +4417,7 @@ func (u *__Post_Selector) MediaCount_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4368,7 +4430,7 @@ func (u *__Post_Selector) MediaCount_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4381,7 +4443,7 @@ func (u *__Post_Selector) MediaCount_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4392,7 +4454,7 @@ func (d *__Post_Selector) MediaCount_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = ? "
+	w.condition = " MediaCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4403,7 +4465,7 @@ func (d *__Post_Selector) MediaCount_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != ? "
+	w.condition = " MediaCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4414,7 +4476,7 @@ func (d *__Post_Selector) MediaCount_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < ? "
+	w.condition = " MediaCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4425,7 +4487,7 @@ func (d *__Post_Selector) MediaCount_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= ? "
+	w.condition = " MediaCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4436,7 +4498,7 @@ func (d *__Post_Selector) MediaCount_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > ? "
+	w.condition = " MediaCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4447,7 +4509,7 @@ func (d *__Post_Selector) MediaCount_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= ? "
+	w.condition = " MediaCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4460,7 +4522,7 @@ func (u *__Post_Selector) SharedTo_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4473,7 +4535,7 @@ func (u *__Post_Selector) SharedTo_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4486,7 +4548,7 @@ func (u *__Post_Selector) SharedTo_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4497,7 +4559,7 @@ func (d *__Post_Selector) SharedTo_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = ? "
+	w.condition = " SharedTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4508,7 +4570,7 @@ func (d *__Post_Selector) SharedTo_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != ? "
+	w.condition = " SharedTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4519,7 +4581,7 @@ func (d *__Post_Selector) SharedTo_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < ? "
+	w.condition = " SharedTo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4530,7 +4592,7 @@ func (d *__Post_Selector) SharedTo_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= ? "
+	w.condition = " SharedTo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4541,7 +4603,7 @@ func (d *__Post_Selector) SharedTo_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > ? "
+	w.condition = " SharedTo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4552,7 +4614,7 @@ func (d *__Post_Selector) SharedTo_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= ? "
+	w.condition = " SharedTo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4565,7 +4627,7 @@ func (u *__Post_Selector) DisableComment_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4578,7 +4640,7 @@ func (u *__Post_Selector) DisableComment_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4591,7 +4653,7 @@ func (u *__Post_Selector) DisableComment_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4602,7 +4664,7 @@ func (d *__Post_Selector) DisableComment_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = ? "
+	w.condition = " DisableComment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4613,7 +4675,7 @@ func (d *__Post_Selector) DisableComment_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != ? "
+	w.condition = " DisableComment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4624,7 +4686,7 @@ func (d *__Post_Selector) DisableComment_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < ? "
+	w.condition = " DisableComment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4635,7 +4697,7 @@ func (d *__Post_Selector) DisableComment_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= ? "
+	w.condition = " DisableComment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4646,7 +4708,7 @@ func (d *__Post_Selector) DisableComment_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > ? "
+	w.condition = " DisableComment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4657,7 +4719,7 @@ func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= ? "
+	w.condition = " DisableComment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4670,7 +4732,7 @@ func (u *__Post_Selector) Source_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4683,7 +4745,7 @@ func (u *__Post_Selector) Source_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4696,7 +4758,7 @@ func (u *__Post_Selector) Source_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4707,7 +4769,7 @@ func (d *__Post_Selector) Source_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = ? "
+	w.condition = " Source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4718,7 +4780,7 @@ func (d *__Post_Selector) Source_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != ? "
+	w.condition = " Source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4729,7 +4791,7 @@ func (d *__Post_Selector) Source_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < ? "
+	w.condition = " Source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4740,7 +4802,7 @@ func (d *__Post_Selector) Source_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= ? "
+	w.condition = " Source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4751,7 +4813,7 @@ func (d *__Post_Selector) Source_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > ? "
+	w.condition = " Source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4762,7 +4824,7 @@ func (d *__Post_Selector) Source_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= ? "
+	w.condition = " Source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4775,7 +4837,7 @@ func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4788,7 +4850,7 @@ func (u *__Post_Selector) HasTag_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4801,7 +4863,7 @@ func (u *__Post_Selector) HasTag_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4812,7 +4874,7 @@ func (d *__Post_Selector) HasTag_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = ? "
+	w.condition = " HasTag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4823,7 +4885,7 @@ func (d *__Post_Selector) HasTag_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != ? "
+	w.condition = " HasTag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4834,7 +4896,7 @@ func (d *__Post_Selector) HasTag_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < ? "
+	w.condition = " HasTag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4845,7 +4907,7 @@ func (d *__Post_Selector) HasTag_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= ? "
+	w.condition = " HasTag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4856,7 +4918,7 @@ func (d *__Post_Selector) HasTag_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > ? "
+	w.condition = " HasTag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4867,7 +4929,7 @@ func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= ? "
+	w.condition = " HasTag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4880,7 +4942,7 @@ func (u *__Post_Selector) Seq_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4893,7 +4955,7 @@ func (u *__Post_Selector) Seq_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4906,7 +4968,7 @@ func (u *__Post_Selector) Seq_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4917,7 +4979,7 @@ func (d *__Post_Selector) Seq_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = ? "
+	w.condition = " Seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4928,7 +4990,7 @@ func (d *__Post_Selector) Seq_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != ? "
+	w.condition = " Seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4939,7 +5001,7 @@ func (d *__Post_Selector) Seq_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < ? "
+	w.condition = " Seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4950,7 +5012,7 @@ func (d *__Post_Selector) Seq_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= ? "
+	w.condition = " Seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4961,7 +5023,7 @@ func (d *__Post_Selector) Seq_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > ? "
+	w.condition = " Seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4972,7 +5034,7 @@ func (d *__Post_Selector) Seq_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= ? "
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4985,7 +5047,7 @@ func (u *__Post_Selector) CommentsCount_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4998,7 +5060,7 @@ func (u *__Post_Selector) CommentsCount_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5011,7 +5073,7 @@ func (u *__Post_Selector) CommentsCount_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5022,7 +5084,7 @@ func (d *__Post_Selector) CommentsCount_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = ? "
+	w.condition = " CommentsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5033,7 +5095,7 @@ func (d *__Post_Selector) CommentsCount_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != ? "
+	w.condition = " CommentsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5044,7 +5106,7 @@ func (d *__Post_Selector) CommentsCount_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < ? "
+	w.condition = " CommentsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5055,7 +5117,7 @@ func (d *__Post_Selector) CommentsCount_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= ? "
+	w.condition = " CommentsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5066,7 +5128,7 @@ func (d *__Post_Selector) CommentsCount_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > ? "
+	w.condition = " CommentsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5077,7 +5139,7 @@ func (d *__Post_Selector) CommentsCount_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= ? "
+	w.condition = " CommentsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5090,7 +5152,7 @@ func (u *__Post_Selector) LikesCount_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5103,7 +5165,7 @@ func (u *__Post_Selector) LikesCount_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5116,7 +5178,7 @@ func (u *__Post_Selector) LikesCount_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5127,7 +5189,7 @@ func (d *__Post_Selector) LikesCount_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = ? "
+	w.condition = " LikesCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5138,7 +5200,7 @@ func (d *__Post_Selector) LikesCount_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != ? "
+	w.condition = " LikesCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5149,7 +5211,7 @@ func (d *__Post_Selector) LikesCount_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < ? "
+	w.condition = " LikesCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5160,7 +5222,7 @@ func (d *__Post_Selector) LikesCount_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= ? "
+	w.condition = " LikesCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5171,7 +5233,7 @@ func (d *__Post_Selector) LikesCount_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > ? "
+	w.condition = " LikesCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5182,7 +5244,7 @@ func (d *__Post_Selector) LikesCount_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= ? "
+	w.condition = " LikesCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5195,7 +5257,7 @@ func (u *__Post_Selector) ViewsCount_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5208,7 +5270,7 @@ func (u *__Post_Selector) ViewsCount_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5221,7 +5283,7 @@ func (u *__Post_Selector) ViewsCount_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5232,7 +5294,7 @@ func (d *__Post_Selector) ViewsCount_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5243,7 +5305,7 @@ func (d *__Post_Selector) ViewsCount_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5254,7 +5316,7 @@ func (d *__Post_Selector) ViewsCount_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5265,7 +5327,7 @@ func (d *__Post_Selector) ViewsCount_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5276,7 +5338,7 @@ func (d *__Post_Selector) ViewsCount_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5287,7 +5349,7 @@ func (d *__Post_Selector) ViewsCount_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5300,7 +5362,7 @@ func (u *__Post_Selector) EditedTime_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5313,7 +5375,7 @@ func (u *__Post_Selector) EditedTime_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5326,7 +5388,7 @@ func (u *__Post_Selector) EditedTime_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5337,7 +5399,7 @@ func (d *__Post_Selector) EditedTime_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = ? "
+	w.condition = " EditedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5348,7 +5410,7 @@ func (d *__Post_Selector) EditedTime_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != ? "
+	w.condition = " EditedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5359,7 +5421,7 @@ func (d *__Post_Selector) EditedTime_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < ? "
+	w.condition = " EditedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5370,7 +5432,7 @@ func (d *__Post_Selector) EditedTime_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= ? "
+	w.condition = " EditedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5381,7 +5443,7 @@ func (d *__Post_Selector) EditedTime_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > ? "
+	w.condition = " EditedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5392,7 +5454,7 @@ func (d *__Post_Selector) EditedTime_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= ? "
+	w.condition = " EditedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5405,7 +5467,7 @@ func (u *__Post_Selector) CreatedTime_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5418,7 +5480,7 @@ func (u *__Post_Selector) CreatedTime_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5431,7 +5493,7 @@ func (u *__Post_Selector) CreatedTime_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5442,7 +5504,7 @@ func (d *__Post_Selector) CreatedTime_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5453,7 +5515,7 @@ func (d *__Post_Selector) CreatedTime_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5464,7 +5526,7 @@ func (d *__Post_Selector) CreatedTime_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5475,7 +5537,7 @@ func (d *__Post_Selector) CreatedTime_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5486,7 +5548,7 @@ func (d *__Post_Selector) CreatedTime_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5497,7 +5559,7 @@ func (d *__Post_Selector) CreatedTime_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5510,7 +5572,7 @@ func (u *__Post_Selector) ReSharedPostId_In(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5523,7 +5585,7 @@ func (u *__Post_Selector) ReSharedPostId_Ins(ins ...int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5536,7 +5598,7 @@ func (u *__Post_Selector) ReSharedPostId_NotIn(ins []int) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5547,7 +5609,7 @@ func (d *__Post_Selector) ReSharedPostId_Eq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = ? "
+	w.condition = " ReSharedPostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5558,7 +5620,7 @@ func (d *__Post_Selector) ReSharedPostId_NotEq(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != ? "
+	w.condition = " ReSharedPostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5569,7 +5631,7 @@ func (d *__Post_Selector) ReSharedPostId_LT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < ? "
+	w.condition = " ReSharedPostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5580,7 +5642,7 @@ func (d *__Post_Selector) ReSharedPostId_LE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= ? "
+	w.condition = " ReSharedPostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5591,7 +5653,7 @@ func (d *__Post_Selector) ReSharedPostId_GT(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > ? "
+	w.condition = " ReSharedPostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5602,7 +5664,7 @@ func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= ? "
+	w.condition = " ReSharedPostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5619,7 +5681,7 @@ func (u *__Post_Deleter) PostKey_In(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5632,7 +5694,7 @@ func (u *__Post_Deleter) PostKey_NotIn(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5644,7 +5706,7 @@ func (u *__Post_Deleter) PostKey_Like(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE ? "
+	w.condition = " PostKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5655,7 +5717,7 @@ func (d *__Post_Deleter) PostKey_Eq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = ? "
+	w.condition = " PostKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5666,7 +5728,7 @@ func (d *__Post_Deleter) PostKey_NotEq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != ? "
+	w.condition = " PostKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5679,7 +5741,7 @@ func (u *__Post_Deleter) Text_In(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5692,7 +5754,7 @@ func (u *__Post_Deleter) Text_NotIn(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5704,7 +5766,7 @@ func (u *__Post_Deleter) Text_Like(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5715,7 +5777,7 @@ func (d *__Post_Deleter) Text_Eq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5726,7 +5788,7 @@ func (d *__Post_Deleter) Text_NotEq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5739,7 +5801,7 @@ func (u *__Post_Deleter) RichText_In(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5752,7 +5814,7 @@ func (u *__Post_Deleter) RichText_NotIn(ins []string) *__Post_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5764,7 +5826,7 @@ func (u *__Post_Deleter) RichText_Like(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE ? "
+	w.condition = " RichText LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5775,7 +5837,7 @@ func (d *__Post_Deleter) RichText_Eq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = ? "
+	w.condition = " RichText = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5786,7 +5848,7 @@ func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != ? "
+	w.condition = " RichText != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5801,7 +5863,7 @@ func (u *__Post_Updater) PostKey_In(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5814,7 +5876,7 @@ func (u *__Post_Updater) PostKey_NotIn(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5826,7 +5888,7 @@ func (u *__Post_Updater) PostKey_Like(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE ? "
+	w.condition = " PostKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5837,7 +5899,7 @@ func (d *__Post_Updater) PostKey_Eq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = ? "
+	w.condition = " PostKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5848,7 +5910,7 @@ func (d *__Post_Updater) PostKey_NotEq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != ? "
+	w.condition = " PostKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5861,7 +5923,7 @@ func (u *__Post_Updater) Text_In(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5874,7 +5936,7 @@ func (u *__Post_Updater) Text_NotIn(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5886,7 +5948,7 @@ func (u *__Post_Updater) Text_Like(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5897,7 +5959,7 @@ func (d *__Post_Updater) Text_Eq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5908,7 +5970,7 @@ func (d *__Post_Updater) Text_NotEq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5921,7 +5983,7 @@ func (u *__Post_Updater) RichText_In(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5934,7 +5996,7 @@ func (u *__Post_Updater) RichText_NotIn(ins []string) *__Post_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5946,7 +6008,7 @@ func (u *__Post_Updater) RichText_Like(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE ? "
+	w.condition = " RichText LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5957,7 +6019,7 @@ func (d *__Post_Updater) RichText_Eq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = ? "
+	w.condition = " RichText = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5968,7 +6030,7 @@ func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != ? "
+	w.condition = " RichText != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5983,7 +6045,7 @@ func (u *__Post_Selector) PostKey_In(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5996,7 +6058,7 @@ func (u *__Post_Selector) PostKey_NotIn(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6008,7 +6070,7 @@ func (u *__Post_Selector) PostKey_Like(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE ? "
+	w.condition = " PostKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6019,7 +6081,7 @@ func (d *__Post_Selector) PostKey_Eq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = ? "
+	w.condition = " PostKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6030,7 +6092,7 @@ func (d *__Post_Selector) PostKey_NotEq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != ? "
+	w.condition = " PostKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6043,7 +6105,7 @@ func (u *__Post_Selector) Text_In(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6056,7 +6118,7 @@ func (u *__Post_Selector) Text_NotIn(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6068,7 +6130,7 @@ func (u *__Post_Selector) Text_Like(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6079,7 +6141,7 @@ func (d *__Post_Selector) Text_Eq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6090,7 +6152,7 @@ func (d *__Post_Selector) Text_NotEq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6103,7 +6165,7 @@ func (u *__Post_Selector) RichText_In(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6116,7 +6178,7 @@ func (u *__Post_Selector) RichText_NotIn(ins []string) *__Post_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6128,7 +6190,7 @@ func (u *__Post_Selector) RichText_Like(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE ? "
+	w.condition = " RichText LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6139,7 +6201,7 @@ func (d *__Post_Selector) RichText_Eq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = ? "
+	w.condition = " RichText = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6150,7 +6212,7 @@ func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != ? "
+	w.condition = " RichText != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6163,17 +6225,23 @@ func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
 //ints
 
 func (u *__Post_Updater) PostId(newVal int) *__Post_Updater {
-	u.updates[" PostId = ? "] = newVal
+	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" PostId = PostId+? "] = count
+		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostId = PostId-? "] = -(count) //make it positive
+		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6184,17 +6252,23 @@ func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) UserId(newVal int) *__Post_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6205,17 +6279,23 @@ func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) PostTypeEnum(newVal int) *__Post_Updater {
-	u.updates[" PostTypeEnum = ? "] = newVal
+	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" PostTypeEnum = PostTypeEnum+? "] = count
+		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostTypeEnum = PostTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6226,17 +6306,23 @@ func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) PostCategoryEnum(newVal int) *__Post_Updater {
-	u.updates[" PostCategoryEnum = ? "] = newVal
+	up := updateCol{" PostCategoryEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostCategoryEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" PostCategoryEnum = PostCategoryEnum+? "] = count
+		up := updateCol{" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostCategoryEnum = PostCategoryEnum-? "] = -(count) //make it positive
+		up := updateCol{" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6247,17 +6333,23 @@ func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) MediaId(newVal int) *__Post_Updater {
-	u.updates[" MediaId = ? "] = newVal
+	up := updateCol{" MediaId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MediaId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" MediaId = MediaId+? "] = count
+		up := updateCol{" MediaId = MediaId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MediaId = MediaId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MediaId = MediaId-? "] = -(count) //make it positive
+		up := updateCol{" MediaId = MediaId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MediaId = MediaId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6269,7 +6361,9 @@ func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 
 //string
 func (u *__Post_Updater) PostKey(newVal string) *__Post_Updater {
-	u.updates[" PostKey = ? "] = newVal
+	up := updateCol{"PostKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -6277,7 +6371,9 @@ func (u *__Post_Updater) PostKey(newVal string) *__Post_Updater {
 
 //string
 func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
-	u.updates[" Text = ? "] = newVal
+	up := updateCol{"Text = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -6285,24 +6381,32 @@ func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
 
 //string
 func (u *__Post_Updater) RichText(newVal string) *__Post_Updater {
-	u.updates[" RichText = ? "] = newVal
+	up := updateCol{"RichText = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" RichText = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__Post_Updater) MediaCount(newVal int) *__Post_Updater {
-	u.updates[" MediaCount = ? "] = newVal
+	up := updateCol{" MediaCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MediaCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" MediaCount = MediaCount+? "] = count
+		up := updateCol{" MediaCount = MediaCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MediaCount = MediaCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MediaCount = MediaCount-? "] = -(count) //make it positive
+		up := updateCol{" MediaCount = MediaCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MediaCount = MediaCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6313,17 +6417,23 @@ func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) SharedTo(newVal int) *__Post_Updater {
-	u.updates[" SharedTo = ? "] = newVal
+	up := updateCol{" SharedTo = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SharedTo = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" SharedTo = SharedTo+? "] = count
+		up := updateCol{" SharedTo = SharedTo+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SharedTo = SharedTo+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" SharedTo = SharedTo-? "] = -(count) //make it positive
+		up := updateCol{" SharedTo = SharedTo- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SharedTo = SharedTo- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6334,17 +6444,23 @@ func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) DisableComment(newVal int) *__Post_Updater {
-	u.updates[" DisableComment = ? "] = newVal
+	up := updateCol{" DisableComment = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DisableComment = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" DisableComment = DisableComment+? "] = count
+		up := updateCol{" DisableComment = DisableComment+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DisableComment = DisableComment+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DisableComment = DisableComment-? "] = -(count) //make it positive
+		up := updateCol{" DisableComment = DisableComment- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DisableComment = DisableComment- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6355,17 +6471,23 @@ func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) Source(newVal int) *__Post_Updater {
-	u.updates[" Source = ? "] = newVal
+	up := updateCol{" Source = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Source = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" Source = Source+? "] = count
+		up := updateCol{" Source = Source+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Source = Source+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Source = Source-? "] = -(count) //make it positive
+		up := updateCol{" Source = Source- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Source = Source- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6376,17 +6498,23 @@ func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) HasTag(newVal int) *__Post_Updater {
-	u.updates[" HasTag = ? "] = newVal
+	up := updateCol{" HasTag = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" HasTag = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" HasTag = HasTag+? "] = count
+		up := updateCol{" HasTag = HasTag+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" HasTag = HasTag+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" HasTag = HasTag-? "] = -(count) //make it positive
+		up := updateCol{" HasTag = HasTag- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" HasTag = HasTag- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6397,17 +6525,23 @@ func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) Seq(newVal int) *__Post_Updater {
-	u.updates[" Seq = ? "] = newVal
+	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Seq = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) Seq_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" Seq = Seq+? "] = count
+		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Seq = Seq-? "] = -(count) //make it positive
+		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6418,17 +6552,23 @@ func (u *__Post_Updater) Seq_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) CommentsCount(newVal int) *__Post_Updater {
-	u.updates[" CommentsCount = ? "] = newVal
+	up := updateCol{" CommentsCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CommentsCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" CommentsCount = CommentsCount+? "] = count
+		up := updateCol{" CommentsCount = CommentsCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CommentsCount = CommentsCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CommentsCount = CommentsCount-? "] = -(count) //make it positive
+		up := updateCol{" CommentsCount = CommentsCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CommentsCount = CommentsCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6439,17 +6579,23 @@ func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) LikesCount(newVal int) *__Post_Updater {
-	u.updates[" LikesCount = ? "] = newVal
+	up := updateCol{" LikesCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LikesCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" LikesCount = LikesCount+? "] = count
+		up := updateCol{" LikesCount = LikesCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LikesCount = LikesCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" LikesCount = LikesCount-? "] = -(count) //make it positive
+		up := updateCol{" LikesCount = LikesCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LikesCount = LikesCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6460,17 +6606,23 @@ func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) ViewsCount(newVal int) *__Post_Updater {
-	u.updates[" ViewsCount = ? "] = newVal
+	up := updateCol{" ViewsCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ViewsCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" ViewsCount = ViewsCount+? "] = count
+		up := updateCol{" ViewsCount = ViewsCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ViewsCount = ViewsCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ViewsCount = ViewsCount-? "] = -(count) //make it positive
+		up := updateCol{" ViewsCount = ViewsCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ViewsCount = ViewsCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6481,17 +6633,23 @@ func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) EditedTime(newVal int) *__Post_Updater {
-	u.updates[" EditedTime = ? "] = newVal
+	up := updateCol{" EditedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" EditedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" EditedTime = EditedTime+? "] = count
+		up := updateCol{" EditedTime = EditedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" EditedTime = EditedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" EditedTime = EditedTime-? "] = -(count) //make it positive
+		up := updateCol{" EditedTime = EditedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" EditedTime = EditedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6502,17 +6660,23 @@ func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) CreatedTime(newVal int) *__Post_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6523,17 +6687,23 @@ func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
 //ints
 
 func (u *__Post_Updater) ReSharedPostId(newVal int) *__Post_Updater {
-	u.updates[" ReSharedPostId = ? "] = newVal
+	up := updateCol{" ReSharedPostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReSharedPostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		u.updates[" ReSharedPostId = ReSharedPostId+? "] = count
+		up := updateCol{" ReSharedPostId = ReSharedPostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ReSharedPostId = ReSharedPostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ReSharedPostId = ReSharedPostId-? "] = -(count) //make it positive
+		up := updateCol{" ReSharedPostId = ReSharedPostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ReSharedPostId = ReSharedPostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -7072,9 +7242,13 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -7159,10 +7333,10 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post (" +
 		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
@@ -7216,10 +7390,9 @@ func MassReplace_Post(rows []Post, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post (" +
 		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +

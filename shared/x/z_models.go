@@ -1029,17 +1029,17 @@ type SuggestedUser struct {
 */
 // chat_sync2 'ChatSync2'.
 type ChatSync2 struct {
-	SyncId            int    `db:"SyncId"`
-	ToUserId          int    `db:"ToUserId"`
-	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
-	RoomKey           string `db:"RoomKey"`
-	ChatKey           string `db:"ChatKey"`
-	FromHighMessageId int    `db:"FromHighMessageId"`
-	ToLowMessageId    int    `db:"ToLowMessageId"`
-	MessageId         int    `db:"MessageId"`
-	MessagePb         []byte `db:"MessagePb"`
-	MessageJson       string `db:"MessageJson"`
-	CreatedTime       int    `db:"CreatedTime"`
+	SyncId            int    `db:"sync_id"`
+	ToUserId          int    `db:"to_user_id"`
+	ChatSyncTypeId    int    `db:"chat_sync_type_id"`
+	RoomKey           string `db:"room_key"`
+	ChatKey           string `db:"chat_key"`
+	FromHighMessageId int    `db:"from_high_message_id"`
+	ToLowMessageId    int    `db:"to_low_message_id"`
+	MessageId         int    `db:"message_id"`
+	MessagePb         []byte `db:"message_pb"`
+	MessageJson       string `db:"message_json"`
+	CreatedTime       int    `db:"created_time"`
 
 	_exists, _deleted bool
 }
@@ -1114,17 +1114,17 @@ type PushChat struct {
 */
 // push_chat2 'PushChat2'.
 type PushChat2 struct {
-	SyncId            int    `db:"SyncId"`
-	ToUserId          int    `db:"ToUserId"`
-	ChatSyncTypeId    int    `db:"ChatSyncTypeId"`
-	RoomKey           string `db:"RoomKey"`
-	ChatKey           string `db:"ChatKey"`
-	FromHighMessageId int    `db:"FromHighMessageId"`
-	ToLowMessageId    int    `db:"ToLowMessageId"`
-	MessageId         int    `db:"MessageId"`
-	MessagePb         []byte `db:"MessagePb"`
-	MessageJson       string `db:"MessageJson"`
-	CreatedTime       int    `db:"CreatedTime"`
+	SyncId            int    `db:"sync_id"`
+	ToUserId          int    `db:"to_user_id"`
+	ChatSyncTypeId    int    `db:"chat_sync_type_id"`
+	RoomKey           string `db:"room_key"`
+	ChatKey           string `db:"chat_key"`
+	FromHighMessageId int    `db:"from_high_message_id"`
+	ToLowMessageId    int    `db:"to_low_message_id"`
+	MessageId         int    `db:"message_id"`
+	MessagePb         []byte `db:"message_pb"`
+	MessageJson       string `db:"message_json"`
+	CreatedTime       int    `db:"created_time"`
 
 	_exists, _deleted bool
 }
@@ -1254,6 +1254,19 @@ type XfileServiceRequestLog struct {
 	HttpCode: 0,
 	CreatedTime: "",
 */
+// accounts 'Account'.
+type Account struct {
+	Id      int     `db:"id"`
+	Balance float64 `db:"balance"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Account {
+	Id: 0,
+	Balance: float64(0),
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -1307,6 +1320,7 @@ type LogTableSql struct {
 	XfileServiceInfoLog        bool
 	XfileServiceMetricLog      bool
 	XfileServiceRequestLog     bool
+	Account                    bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1361,4 +1375,5 @@ var LogTableSqlReq = LogTableSql{
 	XfileServiceInfoLog:    true,
 	XfileServiceMetricLog:  true,
 	XfileServiceRequestLog: true,
+	Account:                true,
 }

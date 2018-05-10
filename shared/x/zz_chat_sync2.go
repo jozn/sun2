@@ -9,21 +9,23 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatSync2 represents a row from 'sun_push.chat_sync2'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatSync2 represents a row from 'sun_push.chat_sync2'.
 
 // Manualy copy this to project
 type ChatSync2__ struct {
-	SyncId            int    `json:"SyncId"`            // SyncId -
-	ToUserId          int    `json:"ToUserId"`          // ToUserId -
-	ChatSyncTypeId    int    `json:"ChatSyncTypeId"`    // ChatSyncTypeId -
-	RoomKey           string `json:"RoomKey"`           // RoomKey -
-	ChatKey           string `json:"ChatKey"`           // ChatKey -
-	FromHighMessageId int    `json:"FromHighMessageId"` // FromHighMessageId -
-	ToLowMessageId    int    `json:"ToLowMessageId"`    // ToLowMessageId -
-	MessageId         int    `json:"MessageId"`         // MessageId -
-	MessagePb         []byte `json:"MessagePb"`         // MessagePb -
-	MessageJson       string `json:"MessageJson"`       // MessageJson -
-	CreatedTime       int    `json:"CreatedTime"`       // CreatedTime -
+	SyncId            int    `json:"sync_id"`              // sync_id -
+	ToUserId          int    `json:"to_user_id"`           // to_user_id -
+	ChatSyncTypeId    int    `json:"chat_sync_type_id"`    // chat_sync_type_id -
+	RoomKey           string `json:"room_key"`             // room_key -
+	ChatKey           string `json:"chat_key"`             // chat_key -
+	FromHighMessageId int    `json:"from_high_message_id"` // from_high_message_id -
+	ToLowMessageId    int    `json:"to_low_message_id"`    // to_low_message_id -
+	MessageId         int    `json:"message_id"`           // message_id -
+	MessagePb         []byte `json:"message_pb"`           // message_pb -
+	MessageJson       string `json:"message_json"`         // message_json -
+	CreatedTime       int    `json:"created_time"`         // created_time -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -49,7 +51,7 @@ func (cs *ChatSync2) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_push.chat_sync2 (` +
-		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
+		`sync_id, to_user_id, chat_sync_type_id, room_key, chat_key, from_high_message_id, to_low_message_id, message_id, message_pb, message_json, created_time` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
@@ -78,7 +80,7 @@ func (cs *ChatSync2) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_push.chat_sync2 (` +
-		`SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime` +
+		`sync_id, to_user_id, chat_sync_type_id, room_key, chat_key, from_high_message_id, to_low_message_id, message_id, message_pb, message_json, created_time` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
@@ -118,8 +120,8 @@ func (cs *ChatSync2) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_push.chat_sync2 SET ` +
-		`ToUserId = ?, ChatSyncTypeId = ?, RoomKey = ?, ChatKey = ?, FromHighMessageId = ?, ToLowMessageId = ?, MessageId = ?, MessagePb = ?, MessageJson = ?, CreatedTime = ?` +
-		` WHERE SyncId = ?`
+		`to_user_id = ?, chat_sync_type_id = ?, room_key = ?, chat_key = ?, from_high_message_id = ?, to_low_message_id = ?, message_id = ?, message_pb = ?, message_json = ?, created_time = ?` +
+		` WHERE sync_id = ?`
 
 	// run query
 	if LogTableSqlReq.ChatSync2 {
@@ -159,7 +161,7 @@ func (cs *ChatSync2) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_push.chat_sync2 WHERE SyncId = ?`
+	const sqlstr = `DELETE FROM sun_push.chat_sync2 WHERE sync_id = ?`
 
 	// run query
 	if LogTableSqlReq.ChatSync2 {
@@ -188,23 +190,30 @@ func (cs *ChatSync2) Delete(db XODB) error {
 
 // orma types
 type __ChatSync2_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ChatSync2_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ChatSync2_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewChatSync2_Deleter() *__ChatSync2_Deleter {
@@ -214,7 +223,7 @@ func NewChatSync2_Deleter() *__ChatSync2_Deleter {
 
 func NewChatSync2_Updater() *__ChatSync2_Updater {
 	u := __ChatSync2_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -223,8 +232,35 @@ func NewChatSync2_Selector() *__ChatSync2_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__ChatSync2_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__ChatSync2_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatSync2_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatSync2_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__ChatSync2_Deleter) Or() *__ChatSync2_Deleter {
@@ -239,7 +275,7 @@ func (u *__ChatSync2_Deleter) SyncId_In(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -252,7 +288,7 @@ func (u *__ChatSync2_Deleter) SyncId_Ins(ins ...int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -265,7 +301,7 @@ func (u *__ChatSync2_Deleter) SyncId_NotIn(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -276,7 +312,7 @@ func (d *__ChatSync2_Deleter) SyncId_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId = ? "
+	w.condition = " sync_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -287,7 +323,7 @@ func (d *__ChatSync2_Deleter) SyncId_NotEq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId != ? "
+	w.condition = " sync_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -298,7 +334,7 @@ func (d *__ChatSync2_Deleter) SyncId_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId < ? "
+	w.condition = " sync_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -309,7 +345,7 @@ func (d *__ChatSync2_Deleter) SyncId_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId <= ? "
+	w.condition = " sync_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -320,7 +356,7 @@ func (d *__ChatSync2_Deleter) SyncId_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId > ? "
+	w.condition = " sync_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -331,7 +367,7 @@ func (d *__ChatSync2_Deleter) SyncId_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId >= ? "
+	w.condition = " sync_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -344,7 +380,7 @@ func (u *__ChatSync2_Deleter) ToUserId_In(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -357,7 +393,7 @@ func (u *__ChatSync2_Deleter) ToUserId_Ins(ins ...int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -370,7 +406,7 @@ func (u *__ChatSync2_Deleter) ToUserId_NotIn(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -381,7 +417,7 @@ func (d *__ChatSync2_Deleter) ToUserId_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId = ? "
+	w.condition = " to_user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -392,7 +428,7 @@ func (d *__ChatSync2_Deleter) ToUserId_NotEq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId != ? "
+	w.condition = " to_user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -403,7 +439,7 @@ func (d *__ChatSync2_Deleter) ToUserId_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId < ? "
+	w.condition = " to_user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -414,7 +450,7 @@ func (d *__ChatSync2_Deleter) ToUserId_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId <= ? "
+	w.condition = " to_user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -425,7 +461,7 @@ func (d *__ChatSync2_Deleter) ToUserId_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId > ? "
+	w.condition = " to_user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -436,7 +472,7 @@ func (d *__ChatSync2_Deleter) ToUserId_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId >= ? "
+	w.condition = " to_user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -449,7 +485,7 @@ func (u *__ChatSync2_Deleter) ChatSyncTypeId_In(ins []int) *__ChatSync2_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -462,7 +498,7 @@ func (u *__ChatSync2_Deleter) ChatSyncTypeId_Ins(ins ...int) *__ChatSync2_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -475,7 +511,7 @@ func (u *__ChatSync2_Deleter) ChatSyncTypeId_NotIn(ins []int) *__ChatSync2_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -486,7 +522,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId = ? "
+	w.condition = " chat_sync_type_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -497,7 +533,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_NotEq(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId != ? "
+	w.condition = " chat_sync_type_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -508,7 +544,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId < ? "
+	w.condition = " chat_sync_type_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -519,7 +555,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId <= ? "
+	w.condition = " chat_sync_type_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -530,7 +566,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId > ? "
+	w.condition = " chat_sync_type_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -541,7 +577,7 @@ func (d *__ChatSync2_Deleter) ChatSyncTypeId_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId >= ? "
+	w.condition = " chat_sync_type_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -554,7 +590,7 @@ func (u *__ChatSync2_Deleter) FromHighMessageId_In(ins []int) *__ChatSync2_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -567,7 +603,7 @@ func (u *__ChatSync2_Deleter) FromHighMessageId_Ins(ins ...int) *__ChatSync2_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -580,7 +616,7 @@ func (u *__ChatSync2_Deleter) FromHighMessageId_NotIn(ins []int) *__ChatSync2_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -591,7 +627,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_Eq(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId = ? "
+	w.condition = " from_high_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -602,7 +638,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_NotEq(val int) *__ChatSync2_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId != ? "
+	w.condition = " from_high_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -613,7 +649,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_LT(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId < ? "
+	w.condition = " from_high_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +660,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_LE(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId <= ? "
+	w.condition = " from_high_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +671,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_GT(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId > ? "
+	w.condition = " from_high_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +682,7 @@ func (d *__ChatSync2_Deleter) FromHighMessageId_GE(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId >= ? "
+	w.condition = " from_high_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -659,7 +695,7 @@ func (u *__ChatSync2_Deleter) ToLowMessageId_In(ins []int) *__ChatSync2_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -672,7 +708,7 @@ func (u *__ChatSync2_Deleter) ToLowMessageId_Ins(ins ...int) *__ChatSync2_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -685,7 +721,7 @@ func (u *__ChatSync2_Deleter) ToLowMessageId_NotIn(ins []int) *__ChatSync2_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -696,7 +732,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId = ? "
+	w.condition = " to_low_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -707,7 +743,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_NotEq(val int) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId != ? "
+	w.condition = " to_low_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -718,7 +754,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId < ? "
+	w.condition = " to_low_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -729,7 +765,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId <= ? "
+	w.condition = " to_low_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -740,7 +776,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId > ? "
+	w.condition = " to_low_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -751,7 +787,7 @@ func (d *__ChatSync2_Deleter) ToLowMessageId_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId >= ? "
+	w.condition = " to_low_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -764,7 +800,7 @@ func (u *__ChatSync2_Deleter) MessageId_In(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -777,7 +813,7 @@ func (u *__ChatSync2_Deleter) MessageId_Ins(ins ...int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -790,7 +826,7 @@ func (u *__ChatSync2_Deleter) MessageId_NotIn(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -801,7 +837,7 @@ func (d *__ChatSync2_Deleter) MessageId_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -812,7 +848,7 @@ func (d *__ChatSync2_Deleter) MessageId_NotEq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -823,7 +859,7 @@ func (d *__ChatSync2_Deleter) MessageId_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -834,7 +870,7 @@ func (d *__ChatSync2_Deleter) MessageId_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -845,7 +881,7 @@ func (d *__ChatSync2_Deleter) MessageId_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -856,7 +892,7 @@ func (d *__ChatSync2_Deleter) MessageId_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -869,7 +905,7 @@ func (u *__ChatSync2_Deleter) CreatedTime_In(ins []int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -882,7 +918,7 @@ func (u *__ChatSync2_Deleter) CreatedTime_Ins(ins ...int) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -895,7 +931,7 @@ func (u *__ChatSync2_Deleter) CreatedTime_NotIn(ins []int) *__ChatSync2_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -906,7 +942,7 @@ func (d *__ChatSync2_Deleter) CreatedTime_Eq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -917,7 +953,7 @@ func (d *__ChatSync2_Deleter) CreatedTime_NotEq(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -928,7 +964,7 @@ func (d *__ChatSync2_Deleter) CreatedTime_LT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -939,7 +975,7 @@ func (d *__ChatSync2_Deleter) CreatedTime_LE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -950,7 +986,7 @@ func (d *__ChatSync2_Deleter) CreatedTime_GT(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -961,10 +997,23 @@ func (d *__ChatSync2_Deleter) CreatedTime_GE(val int) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatSync2_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatSync2_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -980,7 +1029,7 @@ func (u *__ChatSync2_Updater) SyncId_In(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -993,7 +1042,7 @@ func (u *__ChatSync2_Updater) SyncId_Ins(ins ...int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1006,7 +1055,7 @@ func (u *__ChatSync2_Updater) SyncId_NotIn(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1017,7 +1066,7 @@ func (d *__ChatSync2_Updater) SyncId_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId = ? "
+	w.condition = " sync_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1028,7 +1077,7 @@ func (d *__ChatSync2_Updater) SyncId_NotEq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId != ? "
+	w.condition = " sync_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1039,7 +1088,7 @@ func (d *__ChatSync2_Updater) SyncId_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId < ? "
+	w.condition = " sync_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1050,7 +1099,7 @@ func (d *__ChatSync2_Updater) SyncId_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId <= ? "
+	w.condition = " sync_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1061,7 +1110,7 @@ func (d *__ChatSync2_Updater) SyncId_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId > ? "
+	w.condition = " sync_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1072,7 +1121,7 @@ func (d *__ChatSync2_Updater) SyncId_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId >= ? "
+	w.condition = " sync_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1085,7 +1134,7 @@ func (u *__ChatSync2_Updater) ToUserId_In(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1098,7 +1147,7 @@ func (u *__ChatSync2_Updater) ToUserId_Ins(ins ...int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1111,7 +1160,7 @@ func (u *__ChatSync2_Updater) ToUserId_NotIn(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1122,7 +1171,7 @@ func (d *__ChatSync2_Updater) ToUserId_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId = ? "
+	w.condition = " to_user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1133,7 +1182,7 @@ func (d *__ChatSync2_Updater) ToUserId_NotEq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId != ? "
+	w.condition = " to_user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1144,7 +1193,7 @@ func (d *__ChatSync2_Updater) ToUserId_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId < ? "
+	w.condition = " to_user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1155,7 +1204,7 @@ func (d *__ChatSync2_Updater) ToUserId_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId <= ? "
+	w.condition = " to_user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1166,7 +1215,7 @@ func (d *__ChatSync2_Updater) ToUserId_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId > ? "
+	w.condition = " to_user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1177,7 +1226,7 @@ func (d *__ChatSync2_Updater) ToUserId_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId >= ? "
+	w.condition = " to_user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1190,7 +1239,7 @@ func (u *__ChatSync2_Updater) ChatSyncTypeId_In(ins []int) *__ChatSync2_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1203,7 +1252,7 @@ func (u *__ChatSync2_Updater) ChatSyncTypeId_Ins(ins ...int) *__ChatSync2_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1216,7 +1265,7 @@ func (u *__ChatSync2_Updater) ChatSyncTypeId_NotIn(ins []int) *__ChatSync2_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1227,7 +1276,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId = ? "
+	w.condition = " chat_sync_type_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1238,7 +1287,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_NotEq(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId != ? "
+	w.condition = " chat_sync_type_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1249,7 +1298,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId < ? "
+	w.condition = " chat_sync_type_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1260,7 +1309,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId <= ? "
+	w.condition = " chat_sync_type_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1271,7 +1320,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId > ? "
+	w.condition = " chat_sync_type_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1282,7 +1331,7 @@ func (d *__ChatSync2_Updater) ChatSyncTypeId_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId >= ? "
+	w.condition = " chat_sync_type_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1295,7 +1344,7 @@ func (u *__ChatSync2_Updater) FromHighMessageId_In(ins []int) *__ChatSync2_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1308,7 +1357,7 @@ func (u *__ChatSync2_Updater) FromHighMessageId_Ins(ins ...int) *__ChatSync2_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1321,7 +1370,7 @@ func (u *__ChatSync2_Updater) FromHighMessageId_NotIn(ins []int) *__ChatSync2_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1332,7 +1381,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_Eq(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId = ? "
+	w.condition = " from_high_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1343,7 +1392,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_NotEq(val int) *__ChatSync2_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId != ? "
+	w.condition = " from_high_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1354,7 +1403,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_LT(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId < ? "
+	w.condition = " from_high_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1365,7 +1414,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_LE(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId <= ? "
+	w.condition = " from_high_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1425,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_GT(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId > ? "
+	w.condition = " from_high_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1436,7 @@ func (d *__ChatSync2_Updater) FromHighMessageId_GE(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId >= ? "
+	w.condition = " from_high_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1400,7 +1449,7 @@ func (u *__ChatSync2_Updater) ToLowMessageId_In(ins []int) *__ChatSync2_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1413,7 +1462,7 @@ func (u *__ChatSync2_Updater) ToLowMessageId_Ins(ins ...int) *__ChatSync2_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1426,7 +1475,7 @@ func (u *__ChatSync2_Updater) ToLowMessageId_NotIn(ins []int) *__ChatSync2_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1437,7 +1486,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId = ? "
+	w.condition = " to_low_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1497,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_NotEq(val int) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId != ? "
+	w.condition = " to_low_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1459,7 +1508,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId < ? "
+	w.condition = " to_low_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1470,7 +1519,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId <= ? "
+	w.condition = " to_low_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1481,7 +1530,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId > ? "
+	w.condition = " to_low_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1492,7 +1541,7 @@ func (d *__ChatSync2_Updater) ToLowMessageId_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId >= ? "
+	w.condition = " to_low_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1505,7 +1554,7 @@ func (u *__ChatSync2_Updater) MessageId_In(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1518,7 +1567,7 @@ func (u *__ChatSync2_Updater) MessageId_Ins(ins ...int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1531,7 +1580,7 @@ func (u *__ChatSync2_Updater) MessageId_NotIn(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1542,7 +1591,7 @@ func (d *__ChatSync2_Updater) MessageId_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1553,7 +1602,7 @@ func (d *__ChatSync2_Updater) MessageId_NotEq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1564,7 +1613,7 @@ func (d *__ChatSync2_Updater) MessageId_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1575,7 +1624,7 @@ func (d *__ChatSync2_Updater) MessageId_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1586,7 +1635,7 @@ func (d *__ChatSync2_Updater) MessageId_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1597,7 +1646,7 @@ func (d *__ChatSync2_Updater) MessageId_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1610,7 +1659,7 @@ func (u *__ChatSync2_Updater) CreatedTime_In(ins []int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1623,7 +1672,7 @@ func (u *__ChatSync2_Updater) CreatedTime_Ins(ins ...int) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1636,7 +1685,7 @@ func (u *__ChatSync2_Updater) CreatedTime_NotIn(ins []int) *__ChatSync2_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1647,7 +1696,7 @@ func (d *__ChatSync2_Updater) CreatedTime_Eq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1658,7 +1707,7 @@ func (d *__ChatSync2_Updater) CreatedTime_NotEq(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1669,7 +1718,7 @@ func (d *__ChatSync2_Updater) CreatedTime_LT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1729,7 @@ func (d *__ChatSync2_Updater) CreatedTime_LE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1691,7 +1740,7 @@ func (d *__ChatSync2_Updater) CreatedTime_GT(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1702,10 +1751,23 @@ func (d *__ChatSync2_Updater) CreatedTime_GE(val int) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ChatSync2_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ChatSync2_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1721,7 +1783,7 @@ func (u *__ChatSync2_Selector) SyncId_In(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1734,7 +1796,7 @@ func (u *__ChatSync2_Selector) SyncId_Ins(ins ...int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1747,7 +1809,7 @@ func (u *__ChatSync2_Selector) SyncId_NotIn(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SyncId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " sync_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1758,7 +1820,7 @@ func (d *__ChatSync2_Selector) SyncId_Eq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId = ? "
+	w.condition = " sync_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1769,7 +1831,7 @@ func (d *__ChatSync2_Selector) SyncId_NotEq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId != ? "
+	w.condition = " sync_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1780,7 +1842,7 @@ func (d *__ChatSync2_Selector) SyncId_LT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId < ? "
+	w.condition = " sync_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1791,7 +1853,7 @@ func (d *__ChatSync2_Selector) SyncId_LE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId <= ? "
+	w.condition = " sync_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1802,7 +1864,7 @@ func (d *__ChatSync2_Selector) SyncId_GT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId > ? "
+	w.condition = " sync_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1813,7 +1875,7 @@ func (d *__ChatSync2_Selector) SyncId_GE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SyncId >= ? "
+	w.condition = " sync_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1826,7 +1888,7 @@ func (u *__ChatSync2_Selector) ToUserId_In(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1839,7 +1901,7 @@ func (u *__ChatSync2_Selector) ToUserId_Ins(ins ...int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1852,7 +1914,7 @@ func (u *__ChatSync2_Selector) ToUserId_NotIn(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1863,7 +1925,7 @@ func (d *__ChatSync2_Selector) ToUserId_Eq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId = ? "
+	w.condition = " to_user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1874,7 +1936,7 @@ func (d *__ChatSync2_Selector) ToUserId_NotEq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId != ? "
+	w.condition = " to_user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1885,7 +1947,7 @@ func (d *__ChatSync2_Selector) ToUserId_LT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId < ? "
+	w.condition = " to_user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1896,7 +1958,7 @@ func (d *__ChatSync2_Selector) ToUserId_LE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId <= ? "
+	w.condition = " to_user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1907,7 +1969,7 @@ func (d *__ChatSync2_Selector) ToUserId_GT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId > ? "
+	w.condition = " to_user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1918,7 +1980,7 @@ func (d *__ChatSync2_Selector) ToUserId_GE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToUserId >= ? "
+	w.condition = " to_user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1931,7 +1993,7 @@ func (u *__ChatSync2_Selector) ChatSyncTypeId_In(ins []int) *__ChatSync2_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1944,7 +2006,7 @@ func (u *__ChatSync2_Selector) ChatSyncTypeId_Ins(ins ...int) *__ChatSync2_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1957,7 +2019,7 @@ func (u *__ChatSync2_Selector) ChatSyncTypeId_NotIn(ins []int) *__ChatSync2_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_sync_type_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1968,7 +2030,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_Eq(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId = ? "
+	w.condition = " chat_sync_type_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1979,7 +2041,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_NotEq(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId != ? "
+	w.condition = " chat_sync_type_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1990,7 +2052,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_LT(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId < ? "
+	w.condition = " chat_sync_type_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2001,7 +2063,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_LE(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId <= ? "
+	w.condition = " chat_sync_type_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2012,7 +2074,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_GT(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId > ? "
+	w.condition = " chat_sync_type_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2023,7 +2085,7 @@ func (d *__ChatSync2_Selector) ChatSyncTypeId_GE(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatSyncTypeId >= ? "
+	w.condition = " chat_sync_type_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2036,7 +2098,7 @@ func (u *__ChatSync2_Selector) FromHighMessageId_In(ins []int) *__ChatSync2_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2049,7 +2111,7 @@ func (u *__ChatSync2_Selector) FromHighMessageId_Ins(ins ...int) *__ChatSync2_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2062,7 +2124,7 @@ func (u *__ChatSync2_Selector) FromHighMessageId_NotIn(ins []int) *__ChatSync2_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " FromHighMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " from_high_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2073,7 +2135,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_Eq(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId = ? "
+	w.condition = " from_high_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2084,7 +2146,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_NotEq(val int) *__ChatSync2_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId != ? "
+	w.condition = " from_high_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2095,7 +2157,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_LT(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId < ? "
+	w.condition = " from_high_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2106,7 +2168,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_LE(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId <= ? "
+	w.condition = " from_high_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2117,7 +2179,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_GT(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId > ? "
+	w.condition = " from_high_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2128,7 +2190,7 @@ func (d *__ChatSync2_Selector) FromHighMessageId_GE(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FromHighMessageId >= ? "
+	w.condition = " from_high_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2141,7 +2203,7 @@ func (u *__ChatSync2_Selector) ToLowMessageId_In(ins []int) *__ChatSync2_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2154,7 +2216,7 @@ func (u *__ChatSync2_Selector) ToLowMessageId_Ins(ins ...int) *__ChatSync2_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2167,7 +2229,7 @@ func (u *__ChatSync2_Selector) ToLowMessageId_NotIn(ins []int) *__ChatSync2_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ToLowMessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " to_low_message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2178,7 +2240,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_Eq(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId = ? "
+	w.condition = " to_low_message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2189,7 +2251,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_NotEq(val int) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId != ? "
+	w.condition = " to_low_message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2200,7 +2262,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_LT(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId < ? "
+	w.condition = " to_low_message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2211,7 +2273,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_LE(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId <= ? "
+	w.condition = " to_low_message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2222,7 +2284,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_GT(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId > ? "
+	w.condition = " to_low_message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2233,7 +2295,7 @@ func (d *__ChatSync2_Selector) ToLowMessageId_GE(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ToLowMessageId >= ? "
+	w.condition = " to_low_message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2246,7 +2308,7 @@ func (u *__ChatSync2_Selector) MessageId_In(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2259,7 +2321,7 @@ func (u *__ChatSync2_Selector) MessageId_Ins(ins ...int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2272,7 +2334,7 @@ func (u *__ChatSync2_Selector) MessageId_NotIn(ins []int) *__ChatSync2_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2283,7 +2345,7 @@ func (d *__ChatSync2_Selector) MessageId_Eq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " message_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2294,7 +2356,7 @@ func (d *__ChatSync2_Selector) MessageId_NotEq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " message_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2305,7 +2367,7 @@ func (d *__ChatSync2_Selector) MessageId_LT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " message_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2316,7 +2378,7 @@ func (d *__ChatSync2_Selector) MessageId_LE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " message_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2327,7 +2389,7 @@ func (d *__ChatSync2_Selector) MessageId_GT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " message_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2338,7 +2400,7 @@ func (d *__ChatSync2_Selector) MessageId_GE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " message_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2351,7 +2413,7 @@ func (u *__ChatSync2_Selector) CreatedTime_In(ins []int) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2364,7 +2426,7 @@ func (u *__ChatSync2_Selector) CreatedTime_Ins(ins ...int) *__ChatSync2_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2377,7 +2439,7 @@ func (u *__ChatSync2_Selector) CreatedTime_NotIn(ins []int) *__ChatSync2_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2388,7 +2450,7 @@ func (d *__ChatSync2_Selector) CreatedTime_Eq(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2399,7 +2461,7 @@ func (d *__ChatSync2_Selector) CreatedTime_NotEq(val int) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2410,7 +2472,7 @@ func (d *__ChatSync2_Selector) CreatedTime_LT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2421,7 +2483,7 @@ func (d *__ChatSync2_Selector) CreatedTime_LE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2432,7 +2494,7 @@ func (d *__ChatSync2_Selector) CreatedTime_GT(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2443,7 +2505,7 @@ func (d *__ChatSync2_Selector) CreatedTime_GE(val int) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2460,7 +2522,7 @@ func (u *__ChatSync2_Deleter) RoomKey_In(ins []string) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2473,7 +2535,7 @@ func (u *__ChatSync2_Deleter) RoomKey_NotIn(ins []string) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2485,7 +2547,7 @@ func (u *__ChatSync2_Deleter) RoomKey_Like(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " room_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2496,7 +2558,7 @@ func (d *__ChatSync2_Deleter) RoomKey_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " room_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2569,7 @@ func (d *__ChatSync2_Deleter) RoomKey_NotEq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " room_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2520,7 +2582,7 @@ func (u *__ChatSync2_Deleter) ChatKey_In(ins []string) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2533,7 +2595,7 @@ func (u *__ChatSync2_Deleter) ChatKey_NotIn(ins []string) *__ChatSync2_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2545,7 +2607,7 @@ func (u *__ChatSync2_Deleter) ChatKey_Like(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " chat_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2556,7 +2618,7 @@ func (d *__ChatSync2_Deleter) ChatKey_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " chat_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2567,7 +2629,7 @@ func (d *__ChatSync2_Deleter) ChatKey_NotEq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " chat_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2580,7 +2642,7 @@ func (u *__ChatSync2_Deleter) MessageJson_In(ins []string) *__ChatSync2_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2593,7 +2655,7 @@ func (u *__ChatSync2_Deleter) MessageJson_NotIn(ins []string) *__ChatSync2_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2605,7 +2667,7 @@ func (u *__ChatSync2_Deleter) MessageJson_Like(val string) *__ChatSync2_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson LIKE ? "
+	w.condition = " message_json LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2616,7 +2678,7 @@ func (d *__ChatSync2_Deleter) MessageJson_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = ? "
+	w.condition = " message_json = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2627,7 +2689,7 @@ func (d *__ChatSync2_Deleter) MessageJson_NotEq(val string) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != ? "
+	w.condition = " message_json != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2642,7 +2704,7 @@ func (u *__ChatSync2_Updater) RoomKey_In(ins []string) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2655,7 +2717,7 @@ func (u *__ChatSync2_Updater) RoomKey_NotIn(ins []string) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2667,7 +2729,7 @@ func (u *__ChatSync2_Updater) RoomKey_Like(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " room_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2678,7 +2740,7 @@ func (d *__ChatSync2_Updater) RoomKey_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " room_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2689,7 +2751,7 @@ func (d *__ChatSync2_Updater) RoomKey_NotEq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " room_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2702,7 +2764,7 @@ func (u *__ChatSync2_Updater) ChatKey_In(ins []string) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2715,7 +2777,7 @@ func (u *__ChatSync2_Updater) ChatKey_NotIn(ins []string) *__ChatSync2_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2727,7 +2789,7 @@ func (u *__ChatSync2_Updater) ChatKey_Like(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " chat_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2738,7 +2800,7 @@ func (d *__ChatSync2_Updater) ChatKey_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " chat_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2749,7 +2811,7 @@ func (d *__ChatSync2_Updater) ChatKey_NotEq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " chat_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2762,7 +2824,7 @@ func (u *__ChatSync2_Updater) MessageJson_In(ins []string) *__ChatSync2_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2775,7 +2837,7 @@ func (u *__ChatSync2_Updater) MessageJson_NotIn(ins []string) *__ChatSync2_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2849,7 @@ func (u *__ChatSync2_Updater) MessageJson_Like(val string) *__ChatSync2_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson LIKE ? "
+	w.condition = " message_json LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2798,7 +2860,7 @@ func (d *__ChatSync2_Updater) MessageJson_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = ? "
+	w.condition = " message_json = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2809,7 +2871,7 @@ func (d *__ChatSync2_Updater) MessageJson_NotEq(val string) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != ? "
+	w.condition = " message_json != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2824,7 +2886,7 @@ func (u *__ChatSync2_Selector) RoomKey_In(ins []string) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2837,7 +2899,7 @@ func (u *__ChatSync2_Selector) RoomKey_NotIn(ins []string) *__ChatSync2_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " room_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2849,7 +2911,7 @@ func (u *__ChatSync2_Selector) RoomKey_Like(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " room_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2860,7 +2922,7 @@ func (d *__ChatSync2_Selector) RoomKey_Eq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " room_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2871,7 +2933,7 @@ func (d *__ChatSync2_Selector) RoomKey_NotEq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " room_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2884,7 +2946,7 @@ func (u *__ChatSync2_Selector) ChatKey_In(ins []string) *__ChatSync2_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2897,7 +2959,7 @@ func (u *__ChatSync2_Selector) ChatKey_NotIn(ins []string) *__ChatSync2_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " chat_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2909,7 +2971,7 @@ func (u *__ChatSync2_Selector) ChatKey_Like(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey LIKE ? "
+	w.condition = " chat_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2920,7 +2982,7 @@ func (d *__ChatSync2_Selector) ChatKey_Eq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = ? "
+	w.condition = " chat_key = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2931,7 +2993,7 @@ func (d *__ChatSync2_Selector) ChatKey_NotEq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != ? "
+	w.condition = " chat_key != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2944,7 +3006,7 @@ func (u *__ChatSync2_Selector) MessageJson_In(ins []string) *__ChatSync2_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2957,7 +3019,7 @@ func (u *__ChatSync2_Selector) MessageJson_NotIn(ins []string) *__ChatSync2_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " message_json NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2969,7 +3031,7 @@ func (u *__ChatSync2_Selector) MessageJson_Like(val string) *__ChatSync2_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson LIKE ? "
+	w.condition = " message_json LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2980,7 +3042,7 @@ func (d *__ChatSync2_Selector) MessageJson_Eq(val string) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = ? "
+	w.condition = " message_json = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2991,7 +3053,7 @@ func (d *__ChatSync2_Selector) MessageJson_NotEq(val string) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != ? "
+	w.condition = " message_json != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3004,17 +3066,23 @@ func (d *__ChatSync2_Selector) MessageJson_NotEq(val string) *__ChatSync2_Select
 //ints
 
 func (u *__ChatSync2_Updater) SyncId(newVal int) *__ChatSync2_Updater {
-	u.updates[" SyncId = ? "] = newVal
+	up := updateCol{" sync_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" sync_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) SyncId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" SyncId = SyncId+? "] = count
+		up := updateCol{" sync_id = sync_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" sync_id = sync_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" SyncId = SyncId-? "] = -(count) //make it positive
+		up := updateCol{" sync_id = sync_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" sync_id = sync_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3025,17 +3093,23 @@ func (u *__ChatSync2_Updater) SyncId_Increment(count int) *__ChatSync2_Updater {
 //ints
 
 func (u *__ChatSync2_Updater) ToUserId(newVal int) *__ChatSync2_Updater {
-	u.updates[" ToUserId = ? "] = newVal
+	up := updateCol{" to_user_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" to_user_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) ToUserId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" ToUserId = ToUserId+? "] = count
+		up := updateCol{" to_user_id = to_user_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" to_user_id = to_user_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ToUserId = ToUserId-? "] = -(count) //make it positive
+		up := updateCol{" to_user_id = to_user_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" to_user_id = to_user_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3046,17 +3120,23 @@ func (u *__ChatSync2_Updater) ToUserId_Increment(count int) *__ChatSync2_Updater
 //ints
 
 func (u *__ChatSync2_Updater) ChatSyncTypeId(newVal int) *__ChatSync2_Updater {
-	u.updates[" ChatSyncTypeId = ? "] = newVal
+	up := updateCol{" chat_sync_type_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" chat_sync_type_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) ChatSyncTypeId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" ChatSyncTypeId = ChatSyncTypeId+? "] = count
+		up := updateCol{" chat_sync_type_id = chat_sync_type_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" chat_sync_type_id = chat_sync_type_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ChatSyncTypeId = ChatSyncTypeId-? "] = -(count) //make it positive
+		up := updateCol{" chat_sync_type_id = chat_sync_type_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" chat_sync_type_id = chat_sync_type_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3068,7 +3148,9 @@ func (u *__ChatSync2_Updater) ChatSyncTypeId_Increment(count int) *__ChatSync2_U
 
 //string
 func (u *__ChatSync2_Updater) RoomKey(newVal string) *__ChatSync2_Updater {
-	u.updates[" RoomKey = ? "] = newVal
+	up := updateCol{"room_key = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" room_key = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3076,24 +3158,32 @@ func (u *__ChatSync2_Updater) RoomKey(newVal string) *__ChatSync2_Updater {
 
 //string
 func (u *__ChatSync2_Updater) ChatKey(newVal string) *__ChatSync2_Updater {
-	u.updates[" ChatKey = ? "] = newVal
+	up := updateCol{"chat_key = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" chat_key = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__ChatSync2_Updater) FromHighMessageId(newVal int) *__ChatSync2_Updater {
-	u.updates[" FromHighMessageId = ? "] = newVal
+	up := updateCol{" from_high_message_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" from_high_message_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) FromHighMessageId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" FromHighMessageId = FromHighMessageId+? "] = count
+		up := updateCol{" from_high_message_id = from_high_message_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" from_high_message_id = from_high_message_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" FromHighMessageId = FromHighMessageId-? "] = -(count) //make it positive
+		up := updateCol{" from_high_message_id = from_high_message_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" from_high_message_id = from_high_message_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3104,17 +3194,23 @@ func (u *__ChatSync2_Updater) FromHighMessageId_Increment(count int) *__ChatSync
 //ints
 
 func (u *__ChatSync2_Updater) ToLowMessageId(newVal int) *__ChatSync2_Updater {
-	u.updates[" ToLowMessageId = ? "] = newVal
+	up := updateCol{" to_low_message_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" to_low_message_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) ToLowMessageId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" ToLowMessageId = ToLowMessageId+? "] = count
+		up := updateCol{" to_low_message_id = to_low_message_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" to_low_message_id = to_low_message_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ToLowMessageId = ToLowMessageId-? "] = -(count) //make it positive
+		up := updateCol{" to_low_message_id = to_low_message_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" to_low_message_id = to_low_message_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3125,17 +3221,23 @@ func (u *__ChatSync2_Updater) ToLowMessageId_Increment(count int) *__ChatSync2_U
 //ints
 
 func (u *__ChatSync2_Updater) MessageId(newVal int) *__ChatSync2_Updater {
-	u.updates[" MessageId = ? "] = newVal
+	up := updateCol{" message_id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" message_id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) MessageId_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" MessageId = MessageId+? "] = count
+		up := updateCol{" message_id = message_id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" message_id = message_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageId = MessageId-? "] = -(count) //make it positive
+		up := updateCol{" message_id = message_id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" message_id = message_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3151,24 +3253,32 @@ func (u *__ChatSync2_Updater) MessageId_Increment(count int) *__ChatSync2_Update
 
 //string
 func (u *__ChatSync2_Updater) MessageJson(newVal string) *__ChatSync2_Updater {
-	u.updates[" MessageJson = ? "] = newVal
+	up := updateCol{"message_json = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" message_json = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__ChatSync2_Updater) CreatedTime(newVal int) *__ChatSync2_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" created_time = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" created_time = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ChatSync2_Updater) CreatedTime_Increment(count int) *__ChatSync2_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" created_time = created_time+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" created_time = created_time+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" created_time = created_time- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" created_time = created_time- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3182,167 +3292,167 @@ func (u *__ChatSync2_Updater) CreatedTime_Increment(count int) *__ChatSync2_Upda
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
 func (u *__ChatSync2_Selector) OrderBy_SyncId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY SyncId DESC "
+	u.orderBy = " ORDER BY sync_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_SyncId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY SyncId ASC "
+	u.orderBy = " ORDER BY sync_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_SyncId() *__ChatSync2_Selector {
-	u.selectCol = "SyncId"
+	u.selectCol = "sync_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ToUserId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ToUserId DESC "
+	u.orderBy = " ORDER BY to_user_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ToUserId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ToUserId ASC "
+	u.orderBy = " ORDER BY to_user_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_ToUserId() *__ChatSync2_Selector {
-	u.selectCol = "ToUserId"
+	u.selectCol = "to_user_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ChatSyncTypeId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ChatSyncTypeId DESC "
+	u.orderBy = " ORDER BY chat_sync_type_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ChatSyncTypeId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ChatSyncTypeId ASC "
+	u.orderBy = " ORDER BY chat_sync_type_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_ChatSyncTypeId() *__ChatSync2_Selector {
-	u.selectCol = "ChatSyncTypeId"
+	u.selectCol = "chat_sync_type_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_RoomKey_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY RoomKey DESC "
+	u.orderBy = " ORDER BY room_key DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_RoomKey_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY RoomKey ASC "
+	u.orderBy = " ORDER BY room_key ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_RoomKey() *__ChatSync2_Selector {
-	u.selectCol = "RoomKey"
+	u.selectCol = "room_key"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ChatKey_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ChatKey DESC "
+	u.orderBy = " ORDER BY chat_key DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ChatKey_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ChatKey ASC "
+	u.orderBy = " ORDER BY chat_key ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_ChatKey() *__ChatSync2_Selector {
-	u.selectCol = "ChatKey"
+	u.selectCol = "chat_key"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_FromHighMessageId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY FromHighMessageId DESC "
+	u.orderBy = " ORDER BY from_high_message_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_FromHighMessageId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY FromHighMessageId ASC "
+	u.orderBy = " ORDER BY from_high_message_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_FromHighMessageId() *__ChatSync2_Selector {
-	u.selectCol = "FromHighMessageId"
+	u.selectCol = "from_high_message_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ToLowMessageId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ToLowMessageId DESC "
+	u.orderBy = " ORDER BY to_low_message_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_ToLowMessageId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY ToLowMessageId ASC "
+	u.orderBy = " ORDER BY to_low_message_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_ToLowMessageId() *__ChatSync2_Selector {
-	u.selectCol = "ToLowMessageId"
+	u.selectCol = "to_low_message_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessageId_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessageId DESC "
+	u.orderBy = " ORDER BY message_id DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessageId_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessageId ASC "
+	u.orderBy = " ORDER BY message_id ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_MessageId() *__ChatSync2_Selector {
-	u.selectCol = "MessageId"
+	u.selectCol = "message_id"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessagePb_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessagePb DESC "
+	u.orderBy = " ORDER BY message_pb DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessagePb_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessagePb ASC "
+	u.orderBy = " ORDER BY message_pb ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_MessagePb() *__ChatSync2_Selector {
-	u.selectCol = "MessagePb"
+	u.selectCol = "message_pb"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessageJson_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessageJson DESC "
+	u.orderBy = " ORDER BY message_json DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_MessageJson_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY MessageJson ASC "
+	u.orderBy = " ORDER BY message_json ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_MessageJson() *__ChatSync2_Selector {
-	u.selectCol = "MessageJson"
+	u.selectCol = "message_json"
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_CreatedTime_Desc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY CreatedTime DESC "
+	u.orderBy = " ORDER BY created_time DESC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) OrderBy_CreatedTime_Asc() *__ChatSync2_Selector {
-	u.orderBy = " ORDER BY CreatedTime ASC "
+	u.orderBy = " ORDER BY created_time ASC "
 	return u
 }
 
 func (u *__ChatSync2_Selector) Select_CreatedTime() *__ChatSync2_Selector {
-	u.selectCol = "CreatedTime"
+	u.selectCol = "created_time"
 	return u
 }
 
@@ -3572,9 +3682,13 @@ func (u *__ChatSync2_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3659,13 +3773,13 @@ func MassInsert_ChatSync2(rows []ChatSync2, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_push.chat_sync2 (" +
-		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
+		"sync_id, to_user_id, chat_sync_type_id, room_key, chat_key, from_high_message_id, to_low_message_id, message_id, message_pb, message_json, created_time" +
 		") VALUES " + insVals
 
 	// run query
@@ -3707,13 +3821,12 @@ func MassReplace_ChatSync2(rows []ChatSync2, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(11, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_push.chat_sync2 (" +
-		"SyncId, ToUserId, ChatSyncTypeId, RoomKey, ChatKey, FromHighMessageId, ToLowMessageId, MessageId, MessagePb, MessageJson, CreatedTime" +
+		"sync_id, to_user_id, chat_sync_type_id, room_key, chat_key, from_high_message_id, to_low_message_id, message_id, message_pb, message_json, created_time" +
 		") VALUES " + insVals
 
 	// run query

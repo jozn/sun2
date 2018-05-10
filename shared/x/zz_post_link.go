@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostLink represents a row from 'sun.post_link'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostLink represents a row from 'sun.post_link'.
 
 // Manualy copy this to project
 type PostLink__ struct {
@@ -179,23 +181,30 @@ func (pl *PostLink) Delete(db XODB) error {
 
 // orma types
 type __PostLink_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostLink_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostLink_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPostLink_Deleter() *__PostLink_Deleter {
@@ -205,7 +214,7 @@ func NewPostLink_Deleter() *__PostLink_Deleter {
 
 func NewPostLink_Updater() *__PostLink_Updater {
 	u := __PostLink_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -214,8 +223,35 @@ func NewPostLink_Selector() *__PostLink_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PostLink_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PostLink_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostLink_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostLink_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PostLink_Deleter) Or() *__PostLink_Deleter {
@@ -230,7 +266,7 @@ func (u *__PostLink_Deleter) LinkId_In(ins []int) *__PostLink_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -243,7 +279,7 @@ func (u *__PostLink_Deleter) LinkId_Ins(ins ...int) *__PostLink_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -256,7 +292,7 @@ func (u *__PostLink_Deleter) LinkId_NotIn(ins []int) *__PostLink_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -267,7 +303,7 @@ func (d *__PostLink_Deleter) LinkId_Eq(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId = ? "
+	w.condition = " LinkId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -278,7 +314,7 @@ func (d *__PostLink_Deleter) LinkId_NotEq(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId != ? "
+	w.condition = " LinkId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -289,7 +325,7 @@ func (d *__PostLink_Deleter) LinkId_LT(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId < ? "
+	w.condition = " LinkId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -300,7 +336,7 @@ func (d *__PostLink_Deleter) LinkId_LE(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId <= ? "
+	w.condition = " LinkId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -311,7 +347,7 @@ func (d *__PostLink_Deleter) LinkId_GT(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId > ? "
+	w.condition = " LinkId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -322,10 +358,23 @@ func (d *__PostLink_Deleter) LinkId_GE(val int) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId >= ? "
+	w.condition = " LinkId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostLink_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostLink_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -341,7 +390,7 @@ func (u *__PostLink_Updater) LinkId_In(ins []int) *__PostLink_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -354,7 +403,7 @@ func (u *__PostLink_Updater) LinkId_Ins(ins ...int) *__PostLink_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -367,7 +416,7 @@ func (u *__PostLink_Updater) LinkId_NotIn(ins []int) *__PostLink_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -378,7 +427,7 @@ func (d *__PostLink_Updater) LinkId_Eq(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId = ? "
+	w.condition = " LinkId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -389,7 +438,7 @@ func (d *__PostLink_Updater) LinkId_NotEq(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId != ? "
+	w.condition = " LinkId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -400,7 +449,7 @@ func (d *__PostLink_Updater) LinkId_LT(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId < ? "
+	w.condition = " LinkId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -411,7 +460,7 @@ func (d *__PostLink_Updater) LinkId_LE(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId <= ? "
+	w.condition = " LinkId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -422,7 +471,7 @@ func (d *__PostLink_Updater) LinkId_GT(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId > ? "
+	w.condition = " LinkId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -433,10 +482,23 @@ func (d *__PostLink_Updater) LinkId_GE(val int) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId >= ? "
+	w.condition = " LinkId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostLink_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostLink_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -452,7 +514,7 @@ func (u *__PostLink_Selector) LinkId_In(ins []int) *__PostLink_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -465,7 +527,7 @@ func (u *__PostLink_Selector) LinkId_Ins(ins ...int) *__PostLink_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -478,7 +540,7 @@ func (u *__PostLink_Selector) LinkId_NotIn(ins []int) *__PostLink_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -489,7 +551,7 @@ func (d *__PostLink_Selector) LinkId_Eq(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId = ? "
+	w.condition = " LinkId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -500,7 +562,7 @@ func (d *__PostLink_Selector) LinkId_NotEq(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId != ? "
+	w.condition = " LinkId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -511,7 +573,7 @@ func (d *__PostLink_Selector) LinkId_LT(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId < ? "
+	w.condition = " LinkId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -522,7 +584,7 @@ func (d *__PostLink_Selector) LinkId_LE(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId <= ? "
+	w.condition = " LinkId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -533,7 +595,7 @@ func (d *__PostLink_Selector) LinkId_GT(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId > ? "
+	w.condition = " LinkId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -544,7 +606,7 @@ func (d *__PostLink_Selector) LinkId_GE(val int) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkId >= ? "
+	w.condition = " LinkId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -561,7 +623,7 @@ func (u *__PostLink_Deleter) LinkUrl_In(ins []string) *__PostLink_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -574,7 +636,7 @@ func (u *__PostLink_Deleter) LinkUrl_NotIn(ins []string) *__PostLink_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -586,7 +648,7 @@ func (u *__PostLink_Deleter) LinkUrl_Like(val string) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl LIKE ? "
+	w.condition = " LinkUrl LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -597,7 +659,7 @@ func (d *__PostLink_Deleter) LinkUrl_Eq(val string) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = ? "
+	w.condition = " LinkUrl = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -608,7 +670,7 @@ func (d *__PostLink_Deleter) LinkUrl_NotEq(val string) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != ? "
+	w.condition = " LinkUrl != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -623,7 +685,7 @@ func (u *__PostLink_Updater) LinkUrl_In(ins []string) *__PostLink_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -636,7 +698,7 @@ func (u *__PostLink_Updater) LinkUrl_NotIn(ins []string) *__PostLink_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -648,7 +710,7 @@ func (u *__PostLink_Updater) LinkUrl_Like(val string) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl LIKE ? "
+	w.condition = " LinkUrl LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -659,7 +721,7 @@ func (d *__PostLink_Updater) LinkUrl_Eq(val string) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = ? "
+	w.condition = " LinkUrl = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -670,7 +732,7 @@ func (d *__PostLink_Updater) LinkUrl_NotEq(val string) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != ? "
+	w.condition = " LinkUrl != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -685,7 +747,7 @@ func (u *__PostLink_Selector) LinkUrl_In(ins []string) *__PostLink_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -698,7 +760,7 @@ func (u *__PostLink_Selector) LinkUrl_NotIn(ins []string) *__PostLink_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LinkUrl NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " LinkUrl NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -710,7 +772,7 @@ func (u *__PostLink_Selector) LinkUrl_Like(val string) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl LIKE ? "
+	w.condition = " LinkUrl LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -721,7 +783,7 @@ func (d *__PostLink_Selector) LinkUrl_Eq(val string) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = ? "
+	w.condition = " LinkUrl = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +794,7 @@ func (d *__PostLink_Selector) LinkUrl_NotEq(val string) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != ? "
+	w.condition = " LinkUrl != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -745,17 +807,23 @@ func (d *__PostLink_Selector) LinkUrl_NotEq(val string) *__PostLink_Selector {
 //ints
 
 func (u *__PostLink_Updater) LinkId(newVal int) *__PostLink_Updater {
-	u.updates[" LinkId = ? "] = newVal
+	up := updateCol{" LinkId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LinkId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostLink_Updater) LinkId_Increment(count int) *__PostLink_Updater {
 	if count > 0 {
-		u.updates[" LinkId = LinkId+? "] = count
+		up := updateCol{" LinkId = LinkId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LinkId = LinkId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" LinkId = LinkId-? "] = -(count) //make it positive
+		up := updateCol{" LinkId = LinkId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LinkId = LinkId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -767,7 +835,9 @@ func (u *__PostLink_Updater) LinkId_Increment(count int) *__PostLink_Updater {
 
 //string
 func (u *__PostLink_Updater) LinkUrl(newVal string) *__PostLink_Updater {
-	u.updates[" LinkUrl = ? "] = newVal
+	up := updateCol{"LinkUrl = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" LinkUrl = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -1032,9 +1102,13 @@ func (u *__PostLink_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1119,10 +1193,10 @@ func MassInsert_PostLink(rows []PostLink, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_link (" +
 		"LinkId, LinkUrl" +
@@ -1158,10 +1232,9 @@ func MassReplace_PostLink(rows []PostLink, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_link (" +
 		"LinkId, LinkUrl" +

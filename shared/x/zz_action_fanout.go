@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ActionFanout represents a row from 'sun_meta.action_fanout'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ActionFanout represents a row from 'sun_meta.action_fanout'.
 
 // Manualy copy this to project
 type ActionFanout__ struct {
@@ -181,23 +183,30 @@ func (af *ActionFanout) Delete(db XODB) error {
 
 // orma types
 type __ActionFanout_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ActionFanout_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __ActionFanout_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewActionFanout_Deleter() *__ActionFanout_Deleter {
@@ -207,7 +216,7 @@ func NewActionFanout_Deleter() *__ActionFanout_Deleter {
 
 func NewActionFanout_Updater() *__ActionFanout_Updater {
 	u := __ActionFanout_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -216,8 +225,35 @@ func NewActionFanout_Selector() *__ActionFanout_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__ActionFanout_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__ActionFanout_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ActionFanout_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ActionFanout_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__ActionFanout_Deleter) Or() *__ActionFanout_Deleter {
@@ -232,7 +268,7 @@ func (u *__ActionFanout_Deleter) OrderId_In(ins []int) *__ActionFanout_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -245,7 +281,7 @@ func (u *__ActionFanout_Deleter) OrderId_Ins(ins ...int) *__ActionFanout_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -258,7 +294,7 @@ func (u *__ActionFanout_Deleter) OrderId_NotIn(ins []int) *__ActionFanout_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -269,7 +305,7 @@ func (d *__ActionFanout_Deleter) OrderId_Eq(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId = ? "
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -280,7 +316,7 @@ func (d *__ActionFanout_Deleter) OrderId_NotEq(val int) *__ActionFanout_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId != ? "
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -291,7 +327,7 @@ func (d *__ActionFanout_Deleter) OrderId_LT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId < ? "
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -302,7 +338,7 @@ func (d *__ActionFanout_Deleter) OrderId_LE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId <= ? "
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -313,7 +349,7 @@ func (d *__ActionFanout_Deleter) OrderId_GT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId > ? "
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -324,7 +360,7 @@ func (d *__ActionFanout_Deleter) OrderId_GE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId >= ? "
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -337,7 +373,7 @@ func (u *__ActionFanout_Deleter) ForUserId_In(ins []int) *__ActionFanout_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -350,7 +386,7 @@ func (u *__ActionFanout_Deleter) ForUserId_Ins(ins ...int) *__ActionFanout_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -363,7 +399,7 @@ func (u *__ActionFanout_Deleter) ForUserId_NotIn(ins []int) *__ActionFanout_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -374,7 +410,7 @@ func (d *__ActionFanout_Deleter) ForUserId_Eq(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -385,7 +421,7 @@ func (d *__ActionFanout_Deleter) ForUserId_NotEq(val int) *__ActionFanout_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -396,7 +432,7 @@ func (d *__ActionFanout_Deleter) ForUserId_LT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -407,7 +443,7 @@ func (d *__ActionFanout_Deleter) ForUserId_LE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -418,7 +454,7 @@ func (d *__ActionFanout_Deleter) ForUserId_GT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -429,7 +465,7 @@ func (d *__ActionFanout_Deleter) ForUserId_GE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -442,7 +478,7 @@ func (u *__ActionFanout_Deleter) ActionId_In(ins []int) *__ActionFanout_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -455,7 +491,7 @@ func (u *__ActionFanout_Deleter) ActionId_Ins(ins ...int) *__ActionFanout_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -468,7 +504,7 @@ func (u *__ActionFanout_Deleter) ActionId_NotIn(ins []int) *__ActionFanout_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -479,7 +515,7 @@ func (d *__ActionFanout_Deleter) ActionId_Eq(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -490,7 +526,7 @@ func (d *__ActionFanout_Deleter) ActionId_NotEq(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -501,7 +537,7 @@ func (d *__ActionFanout_Deleter) ActionId_LT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -512,7 +548,7 @@ func (d *__ActionFanout_Deleter) ActionId_LE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -523,7 +559,7 @@ func (d *__ActionFanout_Deleter) ActionId_GT(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -534,7 +570,7 @@ func (d *__ActionFanout_Deleter) ActionId_GE(val int) *__ActionFanout_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -547,7 +583,7 @@ func (u *__ActionFanout_Deleter) ActorUserId_In(ins []int) *__ActionFanout_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -560,7 +596,7 @@ func (u *__ActionFanout_Deleter) ActorUserId_Ins(ins ...int) *__ActionFanout_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -573,7 +609,7 @@ func (u *__ActionFanout_Deleter) ActorUserId_NotIn(ins []int) *__ActionFanout_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -584,7 +620,7 @@ func (d *__ActionFanout_Deleter) ActorUserId_Eq(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId = ? "
+	w.condition = " ActorUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -595,7 +631,7 @@ func (d *__ActionFanout_Deleter) ActorUserId_NotEq(val int) *__ActionFanout_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId != ? "
+	w.condition = " ActorUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -606,7 +642,7 @@ func (d *__ActionFanout_Deleter) ActorUserId_LT(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId < ? "
+	w.condition = " ActorUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -617,7 +653,7 @@ func (d *__ActionFanout_Deleter) ActorUserId_LE(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId <= ? "
+	w.condition = " ActorUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -628,7 +664,7 @@ func (d *__ActionFanout_Deleter) ActorUserId_GT(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId > ? "
+	w.condition = " ActorUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -639,10 +675,23 @@ func (d *__ActionFanout_Deleter) ActorUserId_GE(val int) *__ActionFanout_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId >= ? "
+	w.condition = " ActorUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ActionFanout_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ActionFanout_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -658,7 +707,7 @@ func (u *__ActionFanout_Updater) OrderId_In(ins []int) *__ActionFanout_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -671,7 +720,7 @@ func (u *__ActionFanout_Updater) OrderId_Ins(ins ...int) *__ActionFanout_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -684,7 +733,7 @@ func (u *__ActionFanout_Updater) OrderId_NotIn(ins []int) *__ActionFanout_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -695,7 +744,7 @@ func (d *__ActionFanout_Updater) OrderId_Eq(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId = ? "
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -706,7 +755,7 @@ func (d *__ActionFanout_Updater) OrderId_NotEq(val int) *__ActionFanout_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId != ? "
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -717,7 +766,7 @@ func (d *__ActionFanout_Updater) OrderId_LT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId < ? "
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -728,7 +777,7 @@ func (d *__ActionFanout_Updater) OrderId_LE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId <= ? "
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -739,7 +788,7 @@ func (d *__ActionFanout_Updater) OrderId_GT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId > ? "
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -750,7 +799,7 @@ func (d *__ActionFanout_Updater) OrderId_GE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId >= ? "
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -763,7 +812,7 @@ func (u *__ActionFanout_Updater) ForUserId_In(ins []int) *__ActionFanout_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -776,7 +825,7 @@ func (u *__ActionFanout_Updater) ForUserId_Ins(ins ...int) *__ActionFanout_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -789,7 +838,7 @@ func (u *__ActionFanout_Updater) ForUserId_NotIn(ins []int) *__ActionFanout_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -800,7 +849,7 @@ func (d *__ActionFanout_Updater) ForUserId_Eq(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -811,7 +860,7 @@ func (d *__ActionFanout_Updater) ForUserId_NotEq(val int) *__ActionFanout_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -822,7 +871,7 @@ func (d *__ActionFanout_Updater) ForUserId_LT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -833,7 +882,7 @@ func (d *__ActionFanout_Updater) ForUserId_LE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -844,7 +893,7 @@ func (d *__ActionFanout_Updater) ForUserId_GT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -855,7 +904,7 @@ func (d *__ActionFanout_Updater) ForUserId_GE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -868,7 +917,7 @@ func (u *__ActionFanout_Updater) ActionId_In(ins []int) *__ActionFanout_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -881,7 +930,7 @@ func (u *__ActionFanout_Updater) ActionId_Ins(ins ...int) *__ActionFanout_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -894,7 +943,7 @@ func (u *__ActionFanout_Updater) ActionId_NotIn(ins []int) *__ActionFanout_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -905,7 +954,7 @@ func (d *__ActionFanout_Updater) ActionId_Eq(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -916,7 +965,7 @@ func (d *__ActionFanout_Updater) ActionId_NotEq(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -927,7 +976,7 @@ func (d *__ActionFanout_Updater) ActionId_LT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -938,7 +987,7 @@ func (d *__ActionFanout_Updater) ActionId_LE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -949,7 +998,7 @@ func (d *__ActionFanout_Updater) ActionId_GT(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -960,7 +1009,7 @@ func (d *__ActionFanout_Updater) ActionId_GE(val int) *__ActionFanout_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -973,7 +1022,7 @@ func (u *__ActionFanout_Updater) ActorUserId_In(ins []int) *__ActionFanout_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -986,7 +1035,7 @@ func (u *__ActionFanout_Updater) ActorUserId_Ins(ins ...int) *__ActionFanout_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -999,7 +1048,7 @@ func (u *__ActionFanout_Updater) ActorUserId_NotIn(ins []int) *__ActionFanout_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1010,7 +1059,7 @@ func (d *__ActionFanout_Updater) ActorUserId_Eq(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId = ? "
+	w.condition = " ActorUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1021,7 +1070,7 @@ func (d *__ActionFanout_Updater) ActorUserId_NotEq(val int) *__ActionFanout_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId != ? "
+	w.condition = " ActorUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1032,7 +1081,7 @@ func (d *__ActionFanout_Updater) ActorUserId_LT(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId < ? "
+	w.condition = " ActorUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1043,7 +1092,7 @@ func (d *__ActionFanout_Updater) ActorUserId_LE(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId <= ? "
+	w.condition = " ActorUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1054,7 +1103,7 @@ func (d *__ActionFanout_Updater) ActorUserId_GT(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId > ? "
+	w.condition = " ActorUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1065,10 +1114,23 @@ func (d *__ActionFanout_Updater) ActorUserId_GE(val int) *__ActionFanout_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId >= ? "
+	w.condition = " ActorUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__ActionFanout_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__ActionFanout_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1084,7 +1146,7 @@ func (u *__ActionFanout_Selector) OrderId_In(ins []int) *__ActionFanout_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1097,7 +1159,7 @@ func (u *__ActionFanout_Selector) OrderId_Ins(ins ...int) *__ActionFanout_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1110,7 +1172,7 @@ func (u *__ActionFanout_Selector) OrderId_NotIn(ins []int) *__ActionFanout_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1121,7 +1183,7 @@ func (d *__ActionFanout_Selector) OrderId_Eq(val int) *__ActionFanout_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId = ? "
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1132,7 +1194,7 @@ func (d *__ActionFanout_Selector) OrderId_NotEq(val int) *__ActionFanout_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId != ? "
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1143,7 +1205,7 @@ func (d *__ActionFanout_Selector) OrderId_LT(val int) *__ActionFanout_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId < ? "
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1154,7 +1216,7 @@ func (d *__ActionFanout_Selector) OrderId_LE(val int) *__ActionFanout_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId <= ? "
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1165,7 +1227,7 @@ func (d *__ActionFanout_Selector) OrderId_GT(val int) *__ActionFanout_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId > ? "
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1176,7 +1238,7 @@ func (d *__ActionFanout_Selector) OrderId_GE(val int) *__ActionFanout_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderId >= ? "
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1189,7 +1251,7 @@ func (u *__ActionFanout_Selector) ForUserId_In(ins []int) *__ActionFanout_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1202,7 +1264,7 @@ func (u *__ActionFanout_Selector) ForUserId_Ins(ins ...int) *__ActionFanout_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1215,7 +1277,7 @@ func (u *__ActionFanout_Selector) ForUserId_NotIn(ins []int) *__ActionFanout_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ForUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1226,7 +1288,7 @@ func (d *__ActionFanout_Selector) ForUserId_Eq(val int) *__ActionFanout_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId = ? "
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1237,7 +1299,7 @@ func (d *__ActionFanout_Selector) ForUserId_NotEq(val int) *__ActionFanout_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId != ? "
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1248,7 +1310,7 @@ func (d *__ActionFanout_Selector) ForUserId_LT(val int) *__ActionFanout_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId < ? "
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1259,7 +1321,7 @@ func (d *__ActionFanout_Selector) ForUserId_LE(val int) *__ActionFanout_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId <= ? "
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1270,7 +1332,7 @@ func (d *__ActionFanout_Selector) ForUserId_GT(val int) *__ActionFanout_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId > ? "
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1281,7 +1343,7 @@ func (d *__ActionFanout_Selector) ForUserId_GE(val int) *__ActionFanout_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ForUserId >= ? "
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1294,7 +1356,7 @@ func (u *__ActionFanout_Selector) ActionId_In(ins []int) *__ActionFanout_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1307,7 +1369,7 @@ func (u *__ActionFanout_Selector) ActionId_Ins(ins ...int) *__ActionFanout_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1320,7 +1382,7 @@ func (u *__ActionFanout_Selector) ActionId_NotIn(ins []int) *__ActionFanout_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1331,7 +1393,7 @@ func (d *__ActionFanout_Selector) ActionId_Eq(val int) *__ActionFanout_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId = ? "
+	w.condition = " ActionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1342,7 +1404,7 @@ func (d *__ActionFanout_Selector) ActionId_NotEq(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId != ? "
+	w.condition = " ActionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1353,7 +1415,7 @@ func (d *__ActionFanout_Selector) ActionId_LT(val int) *__ActionFanout_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId < ? "
+	w.condition = " ActionId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1364,7 +1426,7 @@ func (d *__ActionFanout_Selector) ActionId_LE(val int) *__ActionFanout_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId <= ? "
+	w.condition = " ActionId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1375,7 +1437,7 @@ func (d *__ActionFanout_Selector) ActionId_GT(val int) *__ActionFanout_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId > ? "
+	w.condition = " ActionId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1386,7 +1448,7 @@ func (d *__ActionFanout_Selector) ActionId_GE(val int) *__ActionFanout_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionId >= ? "
+	w.condition = " ActionId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1399,7 +1461,7 @@ func (u *__ActionFanout_Selector) ActorUserId_In(ins []int) *__ActionFanout_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1412,7 +1474,7 @@ func (u *__ActionFanout_Selector) ActorUserId_Ins(ins ...int) *__ActionFanout_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1425,7 +1487,7 @@ func (u *__ActionFanout_Selector) ActorUserId_NotIn(ins []int) *__ActionFanout_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActorUserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ActorUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1436,7 +1498,7 @@ func (d *__ActionFanout_Selector) ActorUserId_Eq(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId = ? "
+	w.condition = " ActorUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1447,7 +1509,7 @@ func (d *__ActionFanout_Selector) ActorUserId_NotEq(val int) *__ActionFanout_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId != ? "
+	w.condition = " ActorUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1458,7 +1520,7 @@ func (d *__ActionFanout_Selector) ActorUserId_LT(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId < ? "
+	w.condition = " ActorUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1469,7 +1531,7 @@ func (d *__ActionFanout_Selector) ActorUserId_LE(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId <= ? "
+	w.condition = " ActorUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1480,7 +1542,7 @@ func (d *__ActionFanout_Selector) ActorUserId_GT(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId > ? "
+	w.condition = " ActorUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1491,7 +1553,7 @@ func (d *__ActionFanout_Selector) ActorUserId_GE(val int) *__ActionFanout_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActorUserId >= ? "
+	w.condition = " ActorUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1512,17 +1574,23 @@ func (d *__ActionFanout_Selector) ActorUserId_GE(val int) *__ActionFanout_Select
 //ints
 
 func (u *__ActionFanout_Updater) OrderId(newVal int) *__ActionFanout_Updater {
-	u.updates[" OrderId = ? "] = newVal
+	up := updateCol{" OrderId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" OrderId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ActionFanout_Updater) OrderId_Increment(count int) *__ActionFanout_Updater {
 	if count > 0 {
-		u.updates[" OrderId = OrderId+? "] = count
+		up := updateCol{" OrderId = OrderId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" OrderId = OrderId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" OrderId = OrderId-? "] = -(count) //make it positive
+		up := updateCol{" OrderId = OrderId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" OrderId = OrderId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1533,17 +1601,23 @@ func (u *__ActionFanout_Updater) OrderId_Increment(count int) *__ActionFanout_Up
 //ints
 
 func (u *__ActionFanout_Updater) ForUserId(newVal int) *__ActionFanout_Updater {
-	u.updates[" ForUserId = ? "] = newVal
+	up := updateCol{" ForUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ForUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ActionFanout_Updater) ForUserId_Increment(count int) *__ActionFanout_Updater {
 	if count > 0 {
-		u.updates[" ForUserId = ForUserId+? "] = count
+		up := updateCol{" ForUserId = ForUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ForUserId = ForUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ForUserId = ForUserId-? "] = -(count) //make it positive
+		up := updateCol{" ForUserId = ForUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ForUserId = ForUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1554,17 +1628,23 @@ func (u *__ActionFanout_Updater) ForUserId_Increment(count int) *__ActionFanout_
 //ints
 
 func (u *__ActionFanout_Updater) ActionId(newVal int) *__ActionFanout_Updater {
-	u.updates[" ActionId = ? "] = newVal
+	up := updateCol{" ActionId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ActionId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ActionFanout_Updater) ActionId_Increment(count int) *__ActionFanout_Updater {
 	if count > 0 {
-		u.updates[" ActionId = ActionId+? "] = count
+		up := updateCol{" ActionId = ActionId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ActionId = ActionId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ActionId = ActionId-? "] = -(count) //make it positive
+		up := updateCol{" ActionId = ActionId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ActionId = ActionId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1575,17 +1655,23 @@ func (u *__ActionFanout_Updater) ActionId_Increment(count int) *__ActionFanout_U
 //ints
 
 func (u *__ActionFanout_Updater) ActorUserId(newVal int) *__ActionFanout_Updater {
-	u.updates[" ActorUserId = ? "] = newVal
+	up := updateCol{" ActorUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ActorUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__ActionFanout_Updater) ActorUserId_Increment(count int) *__ActionFanout_Updater {
 	if count > 0 {
-		u.updates[" ActorUserId = ActorUserId+? "] = count
+		up := updateCol{" ActorUserId = ActorUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ActorUserId = ActorUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ActorUserId = ActorUserId-? "] = -(count) //make it positive
+		up := updateCol{" ActorUserId = ActorUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ActorUserId = ActorUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1884,9 +1970,13 @@ func (u *__ActionFanout_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1971,10 +2061,10 @@ func MassInsert_ActionFanout(rows []ActionFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_meta.action_fanout (" +
 		"OrderId, ForUserId, ActionId, ActorUserId" +
@@ -2012,10 +2102,9 @@ func MassReplace_ActionFanout(rows []ActionFanout, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_meta.action_fanout (" +
 		"OrderId, ForUserId, ActionId, ActorUserId" +

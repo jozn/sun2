@@ -2,7 +2,9 @@ package helper
 
 import (
 	"bytes"
+	"fmt"
 	"io"
+	"strings"
 )
 
 //THIS files funtions has been borrowed from
@@ -61,4 +63,32 @@ func MySqlEscape(txt string) string {
 	//	return escapeQuotes(txt)
 	//}
 	return escapeString(txt)
+}
+
+func SqlManyDollars(colSize, repeat int, isMysql bool) string {
+	if isMysql {
+		s := strings.Repeat("?,", colSize)
+		s = "(" + s[0:len(s)-1] + "),"
+		insVals_ := strings.Repeat(s, repeat)
+
+		return insVals_[0 : len(insVals_)-1]
+	}
+
+	buff := bytes.NewBufferString("")
+	cnt := 1
+	for i := 0; i < repeat; i++ {
+		buff.WriteString("(")
+		for j := 0; j < colSize; j++ {
+			buff.WriteString(fmt.Sprintf("$%d", cnt))
+			if j+1 != colSize {
+				buff.WriteString(",")
+			}
+			cnt++
+		}
+		buff.WriteString(")")
+		if i+1 != repeat {
+			buff.WriteString(",")
+		}
+	}
+	return buff.String()
 }

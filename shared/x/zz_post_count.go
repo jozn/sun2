@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostCount represents a row from 'sun.post_count'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostCount represents a row from 'sun.post_count'.
 
 // Manualy copy this to project
 type PostCount__ struct {
@@ -179,23 +181,30 @@ func (pc *PostCount) Delete(db XODB) error {
 
 // orma types
 type __PostCount_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostCount_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostCount_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPostCount_Deleter() *__PostCount_Deleter {
@@ -205,7 +214,7 @@ func NewPostCount_Deleter() *__PostCount_Deleter {
 
 func NewPostCount_Updater() *__PostCount_Updater {
 	u := __PostCount_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -214,8 +223,35 @@ func NewPostCount_Selector() *__PostCount_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PostCount_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PostCount_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostCount_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostCount_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PostCount_Deleter) Or() *__PostCount_Deleter {
@@ -230,7 +266,7 @@ func (u *__PostCount_Deleter) PostId_In(ins []int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -243,7 +279,7 @@ func (u *__PostCount_Deleter) PostId_Ins(ins ...int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -256,7 +292,7 @@ func (u *__PostCount_Deleter) PostId_NotIn(ins []int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -267,7 +303,7 @@ func (d *__PostCount_Deleter) PostId_Eq(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -278,7 +314,7 @@ func (d *__PostCount_Deleter) PostId_NotEq(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -289,7 +325,7 @@ func (d *__PostCount_Deleter) PostId_LT(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -300,7 +336,7 @@ func (d *__PostCount_Deleter) PostId_LE(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -311,7 +347,7 @@ func (d *__PostCount_Deleter) PostId_GT(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -322,7 +358,7 @@ func (d *__PostCount_Deleter) PostId_GE(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -335,7 +371,7 @@ func (u *__PostCount_Deleter) ViewsCount_In(ins []int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -348,7 +384,7 @@ func (u *__PostCount_Deleter) ViewsCount_Ins(ins ...int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -361,7 +397,7 @@ func (u *__PostCount_Deleter) ViewsCount_NotIn(ins []int) *__PostCount_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -372,7 +408,7 @@ func (d *__PostCount_Deleter) ViewsCount_Eq(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -383,7 +419,7 @@ func (d *__PostCount_Deleter) ViewsCount_NotEq(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -394,7 +430,7 @@ func (d *__PostCount_Deleter) ViewsCount_LT(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -405,7 +441,7 @@ func (d *__PostCount_Deleter) ViewsCount_LE(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -416,7 +452,7 @@ func (d *__PostCount_Deleter) ViewsCount_GT(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -427,10 +463,23 @@ func (d *__PostCount_Deleter) ViewsCount_GE(val int) *__PostCount_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostCount_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostCount_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -446,7 +495,7 @@ func (u *__PostCount_Updater) PostId_In(ins []int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -459,7 +508,7 @@ func (u *__PostCount_Updater) PostId_Ins(ins ...int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -472,7 +521,7 @@ func (u *__PostCount_Updater) PostId_NotIn(ins []int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -483,7 +532,7 @@ func (d *__PostCount_Updater) PostId_Eq(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -494,7 +543,7 @@ func (d *__PostCount_Updater) PostId_NotEq(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -505,7 +554,7 @@ func (d *__PostCount_Updater) PostId_LT(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -516,7 +565,7 @@ func (d *__PostCount_Updater) PostId_LE(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -527,7 +576,7 @@ func (d *__PostCount_Updater) PostId_GT(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -538,7 +587,7 @@ func (d *__PostCount_Updater) PostId_GE(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -551,7 +600,7 @@ func (u *__PostCount_Updater) ViewsCount_In(ins []int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -564,7 +613,7 @@ func (u *__PostCount_Updater) ViewsCount_Ins(ins ...int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -577,7 +626,7 @@ func (u *__PostCount_Updater) ViewsCount_NotIn(ins []int) *__PostCount_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -588,7 +637,7 @@ func (d *__PostCount_Updater) ViewsCount_Eq(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -599,7 +648,7 @@ func (d *__PostCount_Updater) ViewsCount_NotEq(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -610,7 +659,7 @@ func (d *__PostCount_Updater) ViewsCount_LT(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -621,7 +670,7 @@ func (d *__PostCount_Updater) ViewsCount_LE(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -632,7 +681,7 @@ func (d *__PostCount_Updater) ViewsCount_GT(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -643,10 +692,23 @@ func (d *__PostCount_Updater) ViewsCount_GE(val int) *__PostCount_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostCount_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostCount_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -662,7 +724,7 @@ func (u *__PostCount_Selector) PostId_In(ins []int) *__PostCount_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -675,7 +737,7 @@ func (u *__PostCount_Selector) PostId_Ins(ins ...int) *__PostCount_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -688,7 +750,7 @@ func (u *__PostCount_Selector) PostId_NotIn(ins []int) *__PostCount_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -699,7 +761,7 @@ func (d *__PostCount_Selector) PostId_Eq(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -710,7 +772,7 @@ func (d *__PostCount_Selector) PostId_NotEq(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -721,7 +783,7 @@ func (d *__PostCount_Selector) PostId_LT(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +794,7 @@ func (d *__PostCount_Selector) PostId_LE(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -743,7 +805,7 @@ func (d *__PostCount_Selector) PostId_GT(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -754,7 +816,7 @@ func (d *__PostCount_Selector) PostId_GE(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -767,7 +829,7 @@ func (u *__PostCount_Selector) ViewsCount_In(ins []int) *__PostCount_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -780,7 +842,7 @@ func (u *__PostCount_Selector) ViewsCount_Ins(ins ...int) *__PostCount_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -793,7 +855,7 @@ func (u *__PostCount_Selector) ViewsCount_NotIn(ins []int) *__PostCount_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -804,7 +866,7 @@ func (d *__PostCount_Selector) ViewsCount_Eq(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = ? "
+	w.condition = " ViewsCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -815,7 +877,7 @@ func (d *__PostCount_Selector) ViewsCount_NotEq(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != ? "
+	w.condition = " ViewsCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -826,7 +888,7 @@ func (d *__PostCount_Selector) ViewsCount_LT(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < ? "
+	w.condition = " ViewsCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -837,7 +899,7 @@ func (d *__PostCount_Selector) ViewsCount_LE(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= ? "
+	w.condition = " ViewsCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -848,7 +910,7 @@ func (d *__PostCount_Selector) ViewsCount_GT(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > ? "
+	w.condition = " ViewsCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -859,7 +921,7 @@ func (d *__PostCount_Selector) ViewsCount_GE(val int) *__PostCount_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= ? "
+	w.condition = " ViewsCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -880,17 +942,23 @@ func (d *__PostCount_Selector) ViewsCount_GE(val int) *__PostCount_Selector {
 //ints
 
 func (u *__PostCount_Updater) PostId(newVal int) *__PostCount_Updater {
-	u.updates[" PostId = ? "] = newVal
+	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostCount_Updater) PostId_Increment(count int) *__PostCount_Updater {
 	if count > 0 {
-		u.updates[" PostId = PostId+? "] = count
+		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostId = PostId-? "] = -(count) //make it positive
+		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -901,17 +969,23 @@ func (u *__PostCount_Updater) PostId_Increment(count int) *__PostCount_Updater {
 //ints
 
 func (u *__PostCount_Updater) ViewsCount(newVal int) *__PostCount_Updater {
-	u.updates[" ViewsCount = ? "] = newVal
+	up := updateCol{" ViewsCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ViewsCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostCount_Updater) ViewsCount_Increment(count int) *__PostCount_Updater {
 	if count > 0 {
-		u.updates[" ViewsCount = ViewsCount+? "] = count
+		up := updateCol{" ViewsCount = ViewsCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ViewsCount = ViewsCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ViewsCount = ViewsCount-? "] = -(count) //make it positive
+		up := updateCol{" ViewsCount = ViewsCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ViewsCount = ViewsCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1180,9 +1254,13 @@ func (u *__PostCount_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1267,10 +1345,10 @@ func MassInsert_PostCount(rows []PostCount, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_count (" +
 		"PostId, ViewsCount" +
@@ -1306,10 +1384,9 @@ func MassReplace_PostCount(rows []PostCount, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_count (" +
 		"PostId, ViewsCount" +

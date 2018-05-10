@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserPassword represents a row from 'sun.user_password'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserPassword represents a row from 'sun.user_password'.
 
 // Manualy copy this to project
 type UserPassword__ struct {
@@ -204,23 +205,30 @@ func (up *UserPassword) Delete(db XODB) error {
 
 // orma types
 type __UserPassword_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __UserPassword_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __UserPassword_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewUserPassword_Deleter() *__UserPassword_Deleter {
@@ -230,7 +238,7 @@ func NewUserPassword_Deleter() *__UserPassword_Deleter {
 
 func NewUserPassword_Updater() *__UserPassword_Updater {
 	u := __UserPassword_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -239,8 +247,35 @@ func NewUserPassword_Selector() *__UserPassword_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__UserPassword_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__UserPassword_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserPassword_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserPassword_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__UserPassword_Deleter) Or() *__UserPassword_Deleter {
@@ -255,7 +290,7 @@ func (u *__UserPassword_Deleter) UserId_In(ins []int) *__UserPassword_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -268,7 +303,7 @@ func (u *__UserPassword_Deleter) UserId_Ins(ins ...int) *__UserPassword_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -281,7 +316,7 @@ func (u *__UserPassword_Deleter) UserId_NotIn(ins []int) *__UserPassword_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -292,7 +327,7 @@ func (d *__UserPassword_Deleter) UserId_Eq(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -303,7 +338,7 @@ func (d *__UserPassword_Deleter) UserId_NotEq(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -314,7 +349,7 @@ func (d *__UserPassword_Deleter) UserId_LT(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -325,7 +360,7 @@ func (d *__UserPassword_Deleter) UserId_LE(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -336,7 +371,7 @@ func (d *__UserPassword_Deleter) UserId_GT(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -347,7 +382,7 @@ func (d *__UserPassword_Deleter) UserId_GE(val int) *__UserPassword_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -360,7 +395,7 @@ func (u *__UserPassword_Deleter) CreatedTime_In(ins []int) *__UserPassword_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -373,7 +408,7 @@ func (u *__UserPassword_Deleter) CreatedTime_Ins(ins ...int) *__UserPassword_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -386,7 +421,7 @@ func (u *__UserPassword_Deleter) CreatedTime_NotIn(ins []int) *__UserPassword_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -397,7 +432,7 @@ func (d *__UserPassword_Deleter) CreatedTime_Eq(val int) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -408,7 +443,7 @@ func (d *__UserPassword_Deleter) CreatedTime_NotEq(val int) *__UserPassword_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -419,7 +454,7 @@ func (d *__UserPassword_Deleter) CreatedTime_LT(val int) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -430,7 +465,7 @@ func (d *__UserPassword_Deleter) CreatedTime_LE(val int) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -441,7 +476,7 @@ func (d *__UserPassword_Deleter) CreatedTime_GT(val int) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -452,10 +487,23 @@ func (d *__UserPassword_Deleter) CreatedTime_GE(val int) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserPassword_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserPassword_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -471,7 +519,7 @@ func (u *__UserPassword_Updater) UserId_In(ins []int) *__UserPassword_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +532,7 @@ func (u *__UserPassword_Updater) UserId_Ins(ins ...int) *__UserPassword_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -497,7 +545,7 @@ func (u *__UserPassword_Updater) UserId_NotIn(ins []int) *__UserPassword_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -508,7 +556,7 @@ func (d *__UserPassword_Updater) UserId_Eq(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -519,7 +567,7 @@ func (d *__UserPassword_Updater) UserId_NotEq(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -530,7 +578,7 @@ func (d *__UserPassword_Updater) UserId_LT(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -541,7 +589,7 @@ func (d *__UserPassword_Updater) UserId_LE(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -552,7 +600,7 @@ func (d *__UserPassword_Updater) UserId_GT(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +611,7 @@ func (d *__UserPassword_Updater) UserId_GE(val int) *__UserPassword_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -576,7 +624,7 @@ func (u *__UserPassword_Updater) CreatedTime_In(ins []int) *__UserPassword_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +637,7 @@ func (u *__UserPassword_Updater) CreatedTime_Ins(ins ...int) *__UserPassword_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -602,7 +650,7 @@ func (u *__UserPassword_Updater) CreatedTime_NotIn(ins []int) *__UserPassword_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -613,7 +661,7 @@ func (d *__UserPassword_Updater) CreatedTime_Eq(val int) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +672,7 @@ func (d *__UserPassword_Updater) CreatedTime_NotEq(val int) *__UserPassword_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +683,7 @@ func (d *__UserPassword_Updater) CreatedTime_LT(val int) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +694,7 @@ func (d *__UserPassword_Updater) CreatedTime_LE(val int) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -657,7 +705,7 @@ func (d *__UserPassword_Updater) CreatedTime_GT(val int) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,10 +716,23 @@ func (d *__UserPassword_Updater) CreatedTime_GE(val int) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__UserPassword_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__UserPassword_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -687,7 +748,7 @@ func (u *__UserPassword_Selector) UserId_In(ins []int) *__UserPassword_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -700,7 +761,7 @@ func (u *__UserPassword_Selector) UserId_Ins(ins ...int) *__UserPassword_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -713,7 +774,7 @@ func (u *__UserPassword_Selector) UserId_NotIn(ins []int) *__UserPassword_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -724,7 +785,7 @@ func (d *__UserPassword_Selector) UserId_Eq(val int) *__UserPassword_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -735,7 +796,7 @@ func (d *__UserPassword_Selector) UserId_NotEq(val int) *__UserPassword_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -746,7 +807,7 @@ func (d *__UserPassword_Selector) UserId_LT(val int) *__UserPassword_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -757,7 +818,7 @@ func (d *__UserPassword_Selector) UserId_LE(val int) *__UserPassword_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -768,7 +829,7 @@ func (d *__UserPassword_Selector) UserId_GT(val int) *__UserPassword_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -779,7 +840,7 @@ func (d *__UserPassword_Selector) UserId_GE(val int) *__UserPassword_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -792,7 +853,7 @@ func (u *__UserPassword_Selector) CreatedTime_In(ins []int) *__UserPassword_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -805,7 +866,7 @@ func (u *__UserPassword_Selector) CreatedTime_Ins(ins ...int) *__UserPassword_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -818,7 +879,7 @@ func (u *__UserPassword_Selector) CreatedTime_NotIn(ins []int) *__UserPassword_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -829,7 +890,7 @@ func (d *__UserPassword_Selector) CreatedTime_Eq(val int) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -840,7 +901,7 @@ func (d *__UserPassword_Selector) CreatedTime_NotEq(val int) *__UserPassword_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -851,7 +912,7 @@ func (d *__UserPassword_Selector) CreatedTime_LT(val int) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -862,7 +923,7 @@ func (d *__UserPassword_Selector) CreatedTime_LE(val int) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -873,7 +934,7 @@ func (d *__UserPassword_Selector) CreatedTime_GT(val int) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -884,7 +945,7 @@ func (d *__UserPassword_Selector) CreatedTime_GE(val int) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -901,7 +962,7 @@ func (u *__UserPassword_Deleter) Password_In(ins []string) *__UserPassword_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -914,7 +975,7 @@ func (u *__UserPassword_Deleter) Password_NotIn(ins []string) *__UserPassword_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -926,7 +987,7 @@ func (u *__UserPassword_Deleter) Password_Like(val string) *__UserPassword_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password LIKE ? "
+	w.condition = " Password LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -937,7 +998,7 @@ func (d *__UserPassword_Deleter) Password_Eq(val string) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = ? "
+	w.condition = " Password = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +1009,7 @@ func (d *__UserPassword_Deleter) Password_NotEq(val string) *__UserPassword_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != ? "
+	w.condition = " Password != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -963,7 +1024,7 @@ func (u *__UserPassword_Updater) Password_In(ins []string) *__UserPassword_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -976,7 +1037,7 @@ func (u *__UserPassword_Updater) Password_NotIn(ins []string) *__UserPassword_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -988,7 +1049,7 @@ func (u *__UserPassword_Updater) Password_Like(val string) *__UserPassword_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password LIKE ? "
+	w.condition = " Password LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -999,7 +1060,7 @@ func (d *__UserPassword_Updater) Password_Eq(val string) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = ? "
+	w.condition = " Password = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1010,7 +1071,7 @@ func (d *__UserPassword_Updater) Password_NotEq(val string) *__UserPassword_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != ? "
+	w.condition = " Password != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1025,7 +1086,7 @@ func (u *__UserPassword_Selector) Password_In(ins []string) *__UserPassword_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1038,7 +1099,7 @@ func (u *__UserPassword_Selector) Password_NotIn(ins []string) *__UserPassword_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Password NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Password NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1050,7 +1111,7 @@ func (u *__UserPassword_Selector) Password_Like(val string) *__UserPassword_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password LIKE ? "
+	w.condition = " Password LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1061,7 +1122,7 @@ func (d *__UserPassword_Selector) Password_Eq(val string) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = ? "
+	w.condition = " Password = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1072,7 +1133,7 @@ func (d *__UserPassword_Selector) Password_NotEq(val string) *__UserPassword_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != ? "
+	w.condition = " Password != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1085,17 +1146,23 @@ func (d *__UserPassword_Selector) Password_NotEq(val string) *__UserPassword_Sel
 //ints
 
 func (u *__UserPassword_Updater) UserId(newVal int) *__UserPassword_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserPassword_Updater) UserId_Increment(count int) *__UserPassword_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1107,24 +1174,32 @@ func (u *__UserPassword_Updater) UserId_Increment(count int) *__UserPassword_Upd
 
 //string
 func (u *__UserPassword_Updater) Password(newVal string) *__UserPassword_Updater {
-	u.updates[" Password = ? "] = newVal
+	up := updateCol{"Password = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Password = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__UserPassword_Updater) CreatedTime(newVal int) *__UserPassword_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__UserPassword_Updater) CreatedTime_Increment(count int) *__UserPassword_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1408,9 +1483,13 @@ func (u *__UserPassword_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1495,7 +1574,6 @@ func MassInsert_UserPassword(rows []UserPassword, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

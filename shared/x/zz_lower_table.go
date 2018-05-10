@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// LowerTable represents a row from 'sun_push.lower_table'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// LowerTable represents a row from 'sun_push.lower_table'.
 
 // Manualy copy this to project
 type LowerTable__ struct {
@@ -205,23 +206,30 @@ func (lt *LowerTable) Delete(db XODB) error {
 
 // orma types
 type __LowerTable_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __LowerTable_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __LowerTable_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewLowerTable_Deleter() *__LowerTable_Deleter {
@@ -231,7 +239,7 @@ func NewLowerTable_Deleter() *__LowerTable_Deleter {
 
 func NewLowerTable_Updater() *__LowerTable_Updater {
 	u := __LowerTable_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -240,8 +248,35 @@ func NewLowerTable_Selector() *__LowerTable_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__LowerTable_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__LowerTable_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__LowerTable_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__LowerTable_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__LowerTable_Deleter) Or() *__LowerTable_Deleter {
@@ -256,7 +291,7 @@ func (u *__LowerTable_Deleter) Id_In(ins []int) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -269,7 +304,7 @@ func (u *__LowerTable_Deleter) Id_Ins(ins ...int) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -282,7 +317,7 @@ func (u *__LowerTable_Deleter) Id_NotIn(ins []int) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -293,7 +328,7 @@ func (d *__LowerTable_Deleter) Id_Eq(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = ? "
+	w.condition = " id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -304,7 +339,7 @@ func (d *__LowerTable_Deleter) Id_NotEq(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != ? "
+	w.condition = " id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -315,7 +350,7 @@ func (d *__LowerTable_Deleter) Id_LT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < ? "
+	w.condition = " id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -326,7 +361,7 @@ func (d *__LowerTable_Deleter) Id_LE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= ? "
+	w.condition = " id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -337,7 +372,7 @@ func (d *__LowerTable_Deleter) Id_GT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > ? "
+	w.condition = " id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -348,7 +383,7 @@ func (d *__LowerTable_Deleter) Id_GE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= ? "
+	w.condition = " id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -361,7 +396,7 @@ func (u *__LowerTable_Deleter) TimeStamp_In(ins []int) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -374,7 +409,7 @@ func (u *__LowerTable_Deleter) TimeStamp_Ins(ins ...int) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -387,7 +422,7 @@ func (u *__LowerTable_Deleter) TimeStamp_NotIn(ins []int) *__LowerTable_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -398,7 +433,7 @@ func (d *__LowerTable_Deleter) TimeStamp_Eq(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp = ? "
+	w.condition = " time_stamp = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -409,7 +444,7 @@ func (d *__LowerTable_Deleter) TimeStamp_NotEq(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp != ? "
+	w.condition = " time_stamp != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -420,7 +455,7 @@ func (d *__LowerTable_Deleter) TimeStamp_LT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp < ? "
+	w.condition = " time_stamp < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -431,7 +466,7 @@ func (d *__LowerTable_Deleter) TimeStamp_LE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp <= ? "
+	w.condition = " time_stamp <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -442,7 +477,7 @@ func (d *__LowerTable_Deleter) TimeStamp_GT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp > ? "
+	w.condition = " time_stamp > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -453,7 +488,7 @@ func (d *__LowerTable_Deleter) TimeStamp_GE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp >= ? "
+	w.condition = " time_stamp >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -466,7 +501,7 @@ func (u *__LowerTable_Deleter) AnyThingMore_In(ins []int) *__LowerTable_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -479,7 +514,7 @@ func (u *__LowerTable_Deleter) AnyThingMore_Ins(ins ...int) *__LowerTable_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -492,7 +527,7 @@ func (u *__LowerTable_Deleter) AnyThingMore_NotIn(ins []int) *__LowerTable_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -503,7 +538,7 @@ func (d *__LowerTable_Deleter) AnyThingMore_Eq(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ = ? "
+	w.condition = " any_thing_more_ = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -514,7 +549,7 @@ func (d *__LowerTable_Deleter) AnyThingMore_NotEq(val int) *__LowerTable_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ != ? "
+	w.condition = " any_thing_more_ != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -525,7 +560,7 @@ func (d *__LowerTable_Deleter) AnyThingMore_LT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ < ? "
+	w.condition = " any_thing_more_ < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -536,7 +571,7 @@ func (d *__LowerTable_Deleter) AnyThingMore_LE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ <= ? "
+	w.condition = " any_thing_more_ <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -547,7 +582,7 @@ func (d *__LowerTable_Deleter) AnyThingMore_GT(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ > ? "
+	w.condition = " any_thing_more_ > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -558,10 +593,23 @@ func (d *__LowerTable_Deleter) AnyThingMore_GE(val int) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ >= ? "
+	w.condition = " any_thing_more_ >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__LowerTable_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__LowerTable_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -577,7 +625,7 @@ func (u *__LowerTable_Updater) Id_In(ins []int) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -590,7 +638,7 @@ func (u *__LowerTable_Updater) Id_Ins(ins ...int) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -603,7 +651,7 @@ func (u *__LowerTable_Updater) Id_NotIn(ins []int) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -614,7 +662,7 @@ func (d *__LowerTable_Updater) Id_Eq(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = ? "
+	w.condition = " id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -625,7 +673,7 @@ func (d *__LowerTable_Updater) Id_NotEq(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != ? "
+	w.condition = " id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -636,7 +684,7 @@ func (d *__LowerTable_Updater) Id_LT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < ? "
+	w.condition = " id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -647,7 +695,7 @@ func (d *__LowerTable_Updater) Id_LE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= ? "
+	w.condition = " id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -658,7 +706,7 @@ func (d *__LowerTable_Updater) Id_GT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > ? "
+	w.condition = " id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -669,7 +717,7 @@ func (d *__LowerTable_Updater) Id_GE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= ? "
+	w.condition = " id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -682,7 +730,7 @@ func (u *__LowerTable_Updater) TimeStamp_In(ins []int) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -695,7 +743,7 @@ func (u *__LowerTable_Updater) TimeStamp_Ins(ins ...int) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -708,7 +756,7 @@ func (u *__LowerTable_Updater) TimeStamp_NotIn(ins []int) *__LowerTable_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -719,7 +767,7 @@ func (d *__LowerTable_Updater) TimeStamp_Eq(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp = ? "
+	w.condition = " time_stamp = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -730,7 +778,7 @@ func (d *__LowerTable_Updater) TimeStamp_NotEq(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp != ? "
+	w.condition = " time_stamp != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -741,7 +789,7 @@ func (d *__LowerTable_Updater) TimeStamp_LT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp < ? "
+	w.condition = " time_stamp < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -752,7 +800,7 @@ func (d *__LowerTable_Updater) TimeStamp_LE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp <= ? "
+	w.condition = " time_stamp <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -763,7 +811,7 @@ func (d *__LowerTable_Updater) TimeStamp_GT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp > ? "
+	w.condition = " time_stamp > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -774,7 +822,7 @@ func (d *__LowerTable_Updater) TimeStamp_GE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp >= ? "
+	w.condition = " time_stamp >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -787,7 +835,7 @@ func (u *__LowerTable_Updater) AnyThingMore_In(ins []int) *__LowerTable_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -800,7 +848,7 @@ func (u *__LowerTable_Updater) AnyThingMore_Ins(ins ...int) *__LowerTable_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -813,7 +861,7 @@ func (u *__LowerTable_Updater) AnyThingMore_NotIn(ins []int) *__LowerTable_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -824,7 +872,7 @@ func (d *__LowerTable_Updater) AnyThingMore_Eq(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ = ? "
+	w.condition = " any_thing_more_ = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -835,7 +883,7 @@ func (d *__LowerTable_Updater) AnyThingMore_NotEq(val int) *__LowerTable_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ != ? "
+	w.condition = " any_thing_more_ != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -846,7 +894,7 @@ func (d *__LowerTable_Updater) AnyThingMore_LT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ < ? "
+	w.condition = " any_thing_more_ < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -857,7 +905,7 @@ func (d *__LowerTable_Updater) AnyThingMore_LE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ <= ? "
+	w.condition = " any_thing_more_ <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -868,7 +916,7 @@ func (d *__LowerTable_Updater) AnyThingMore_GT(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ > ? "
+	w.condition = " any_thing_more_ > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -879,10 +927,23 @@ func (d *__LowerTable_Updater) AnyThingMore_GE(val int) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ >= ? "
+	w.condition = " any_thing_more_ >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__LowerTable_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__LowerTable_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -898,7 +959,7 @@ func (u *__LowerTable_Selector) Id_In(ins []int) *__LowerTable_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -911,7 +972,7 @@ func (u *__LowerTable_Selector) Id_Ins(ins ...int) *__LowerTable_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -924,7 +985,7 @@ func (u *__LowerTable_Selector) Id_NotIn(ins []int) *__LowerTable_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -935,7 +996,7 @@ func (d *__LowerTable_Selector) Id_Eq(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = ? "
+	w.condition = " id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -946,7 +1007,7 @@ func (d *__LowerTable_Selector) Id_NotEq(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != ? "
+	w.condition = " id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -957,7 +1018,7 @@ func (d *__LowerTable_Selector) Id_LT(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < ? "
+	w.condition = " id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -968,7 +1029,7 @@ func (d *__LowerTable_Selector) Id_LE(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= ? "
+	w.condition = " id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -979,7 +1040,7 @@ func (d *__LowerTable_Selector) Id_GT(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > ? "
+	w.condition = " id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -990,7 +1051,7 @@ func (d *__LowerTable_Selector) Id_GE(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= ? "
+	w.condition = " id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1003,7 +1064,7 @@ func (u *__LowerTable_Selector) TimeStamp_In(ins []int) *__LowerTable_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1016,7 +1077,7 @@ func (u *__LowerTable_Selector) TimeStamp_Ins(ins ...int) *__LowerTable_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1029,7 +1090,7 @@ func (u *__LowerTable_Selector) TimeStamp_NotIn(ins []int) *__LowerTable_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " time_stamp NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " time_stamp NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1040,7 +1101,7 @@ func (d *__LowerTable_Selector) TimeStamp_Eq(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp = ? "
+	w.condition = " time_stamp = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1051,7 +1112,7 @@ func (d *__LowerTable_Selector) TimeStamp_NotEq(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp != ? "
+	w.condition = " time_stamp != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1062,7 +1123,7 @@ func (d *__LowerTable_Selector) TimeStamp_LT(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp < ? "
+	w.condition = " time_stamp < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1073,7 +1134,7 @@ func (d *__LowerTable_Selector) TimeStamp_LE(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp <= ? "
+	w.condition = " time_stamp <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1084,7 +1145,7 @@ func (d *__LowerTable_Selector) TimeStamp_GT(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp > ? "
+	w.condition = " time_stamp > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1095,7 +1156,7 @@ func (d *__LowerTable_Selector) TimeStamp_GE(val int) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " time_stamp >= ? "
+	w.condition = " time_stamp >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1108,7 +1169,7 @@ func (u *__LowerTable_Selector) AnyThingMore_In(ins []int) *__LowerTable_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1121,7 +1182,7 @@ func (u *__LowerTable_Selector) AnyThingMore_Ins(ins ...int) *__LowerTable_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1134,7 +1195,7 @@ func (u *__LowerTable_Selector) AnyThingMore_NotIn(ins []int) *__LowerTable_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " any_thing_more_ NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " any_thing_more_ NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1145,7 +1206,7 @@ func (d *__LowerTable_Selector) AnyThingMore_Eq(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ = ? "
+	w.condition = " any_thing_more_ = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1156,7 +1217,7 @@ func (d *__LowerTable_Selector) AnyThingMore_NotEq(val int) *__LowerTable_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ != ? "
+	w.condition = " any_thing_more_ != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1167,7 +1228,7 @@ func (d *__LowerTable_Selector) AnyThingMore_LT(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ < ? "
+	w.condition = " any_thing_more_ < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1178,7 +1239,7 @@ func (d *__LowerTable_Selector) AnyThingMore_LE(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ <= ? "
+	w.condition = " any_thing_more_ <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1189,7 +1250,7 @@ func (d *__LowerTable_Selector) AnyThingMore_GT(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ > ? "
+	w.condition = " any_thing_more_ > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1200,7 +1261,7 @@ func (d *__LowerTable_Selector) AnyThingMore_GE(val int) *__LowerTable_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " any_thing_more_ >= ? "
+	w.condition = " any_thing_more_ >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1217,7 +1278,7 @@ func (u *__LowerTable_Deleter) Text_In(ins []string) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1230,7 +1291,7 @@ func (u *__LowerTable_Deleter) Text_NotIn(ins []string) *__LowerTable_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1242,7 +1303,7 @@ func (u *__LowerTable_Deleter) Text_Like(val string) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text LIKE ? "
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1253,7 +1314,7 @@ func (d *__LowerTable_Deleter) Text_Eq(val string) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = ? "
+	w.condition = " text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1264,7 +1325,7 @@ func (d *__LowerTable_Deleter) Text_NotEq(val string) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != ? "
+	w.condition = " text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1279,7 +1340,7 @@ func (u *__LowerTable_Updater) Text_In(ins []string) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1292,7 +1353,7 @@ func (u *__LowerTable_Updater) Text_NotIn(ins []string) *__LowerTable_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1304,7 +1365,7 @@ func (u *__LowerTable_Updater) Text_Like(val string) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text LIKE ? "
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1315,7 +1376,7 @@ func (d *__LowerTable_Updater) Text_Eq(val string) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = ? "
+	w.condition = " text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1326,7 +1387,7 @@ func (d *__LowerTable_Updater) Text_NotEq(val string) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != ? "
+	w.condition = " text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1341,7 +1402,7 @@ func (u *__LowerTable_Selector) Text_In(ins []string) *__LowerTable_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1354,7 +1415,7 @@ func (u *__LowerTable_Selector) Text_NotIn(ins []string) *__LowerTable_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1366,7 +1427,7 @@ func (u *__LowerTable_Selector) Text_Like(val string) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text LIKE ? "
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1377,7 +1438,7 @@ func (d *__LowerTable_Selector) Text_Eq(val string) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = ? "
+	w.condition = " text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1388,7 +1449,7 @@ func (d *__LowerTable_Selector) Text_NotEq(val string) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != ? "
+	w.condition = " text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1401,17 +1462,23 @@ func (d *__LowerTable_Selector) Text_NotEq(val string) *__LowerTable_Selector {
 //ints
 
 func (u *__LowerTable_Updater) Id(newVal int) *__LowerTable_Updater {
-	u.updates[" id = ? "] = newVal
+	up := updateCol{" id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__LowerTable_Updater) Id_Increment(count int) *__LowerTable_Updater {
 	if count > 0 {
-		u.updates[" id = id+? "] = count
+		up := updateCol{" id = id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" id = id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" id = id-? "] = -(count) //make it positive
+		up := updateCol{" id = id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" id = id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1423,24 +1490,32 @@ func (u *__LowerTable_Updater) Id_Increment(count int) *__LowerTable_Updater {
 
 //string
 func (u *__LowerTable_Updater) Text(newVal string) *__LowerTable_Updater {
-	u.updates[" text = ? "] = newVal
+	up := updateCol{"text = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" text = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__LowerTable_Updater) TimeStamp(newVal int) *__LowerTable_Updater {
-	u.updates[" time_stamp = ? "] = newVal
+	up := updateCol{" time_stamp = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" time_stamp = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__LowerTable_Updater) TimeStamp_Increment(count int) *__LowerTable_Updater {
 	if count > 0 {
-		u.updates[" time_stamp = time_stamp+? "] = count
+		up := updateCol{" time_stamp = time_stamp+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" time_stamp = time_stamp+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" time_stamp = time_stamp-? "] = -(count) //make it positive
+		up := updateCol{" time_stamp = time_stamp- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" time_stamp = time_stamp- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1451,17 +1526,23 @@ func (u *__LowerTable_Updater) TimeStamp_Increment(count int) *__LowerTable_Upda
 //ints
 
 func (u *__LowerTable_Updater) AnyThingMore(newVal int) *__LowerTable_Updater {
-	u.updates[" any_thing_more_ = ? "] = newVal
+	up := updateCol{" any_thing_more_ = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" any_thing_more_ = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__LowerTable_Updater) AnyThingMore_Increment(count int) *__LowerTable_Updater {
 	if count > 0 {
-		u.updates[" any_thing_more_ = any_thing_more_+? "] = count
+		up := updateCol{" any_thing_more_ = any_thing_more_+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" any_thing_more_ = any_thing_more_+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" any_thing_more_ = any_thing_more_-? "] = -(count) //make it positive
+		up := updateCol{" any_thing_more_ = any_thing_more_- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" any_thing_more_ = any_thing_more_- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1760,9 +1841,13 @@ func (u *__LowerTable_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1847,7 +1932,6 @@ func MassInsert_LowerTable(rows []LowerTable, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

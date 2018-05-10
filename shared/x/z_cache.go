@@ -2405,3 +2405,51 @@ func (c _StoreImpl) PreLoadXfileServiceRequestLogByIds(ids []int) {
 }
 
 // yes 222 int
+
+func (c _StoreImpl) GetAccountById(Id int) (*Account, bool) {
+	o, ok := RowCache.Get("Account:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Account); ok {
+			return obj, true
+		}
+	}
+	obj2, err := AccountById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.Account {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetAccountById_JustCache(Id int) (*Account, bool) {
+	o, ok := RowCache.Get("Account:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Account); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Account {
+		XOLogErr(errors.New("_JustCache is empty for Account: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadAccountByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Account:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewAccount_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int

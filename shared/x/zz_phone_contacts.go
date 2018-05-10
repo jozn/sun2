@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContact represents a row from 'sun.phone_contacts'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PhoneContact represents a row from 'sun.phone_contacts'.
 
 // Manualy copy this to project
 type PhoneContact__ struct {
@@ -211,23 +212,30 @@ func (pc *PhoneContact) Delete(db XODB) error {
 
 // orma types
 type __PhoneContact_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PhoneContact_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PhoneContact_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPhoneContact_Deleter() *__PhoneContact_Deleter {
@@ -237,7 +245,7 @@ func NewPhoneContact_Deleter() *__PhoneContact_Deleter {
 
 func NewPhoneContact_Updater() *__PhoneContact_Updater {
 	u := __PhoneContact_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -246,8 +254,35 @@ func NewPhoneContact_Selector() *__PhoneContact_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PhoneContact_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PhoneContact_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PhoneContact_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PhoneContact_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PhoneContact_Deleter) Or() *__PhoneContact_Deleter {
@@ -262,7 +297,7 @@ func (u *__PhoneContact_Deleter) Id_In(ins []int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -275,7 +310,7 @@ func (u *__PhoneContact_Deleter) Id_Ins(ins ...int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -288,7 +323,7 @@ func (u *__PhoneContact_Deleter) Id_NotIn(ins []int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -299,7 +334,7 @@ func (d *__PhoneContact_Deleter) Id_Eq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -310,7 +345,7 @@ func (d *__PhoneContact_Deleter) Id_NotEq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -321,7 +356,7 @@ func (d *__PhoneContact_Deleter) Id_LT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -332,7 +367,7 @@ func (d *__PhoneContact_Deleter) Id_LE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -343,7 +378,7 @@ func (d *__PhoneContact_Deleter) Id_GT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -354,7 +389,7 @@ func (d *__PhoneContact_Deleter) Id_GE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -367,7 +402,7 @@ func (u *__PhoneContact_Deleter) UserId_In(ins []int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -380,7 +415,7 @@ func (u *__PhoneContact_Deleter) UserId_Ins(ins ...int) *__PhoneContact_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -393,7 +428,7 @@ func (u *__PhoneContact_Deleter) UserId_NotIn(ins []int) *__PhoneContact_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -404,7 +439,7 @@ func (d *__PhoneContact_Deleter) UserId_Eq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -415,7 +450,7 @@ func (d *__PhoneContact_Deleter) UserId_NotEq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -426,7 +461,7 @@ func (d *__PhoneContact_Deleter) UserId_LT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -437,7 +472,7 @@ func (d *__PhoneContact_Deleter) UserId_LE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -448,7 +483,7 @@ func (d *__PhoneContact_Deleter) UserId_GT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -459,7 +494,7 @@ func (d *__PhoneContact_Deleter) UserId_GE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -472,7 +507,7 @@ func (u *__PhoneContact_Deleter) Phone_In(ins []int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -485,7 +520,7 @@ func (u *__PhoneContact_Deleter) Phone_Ins(ins ...int) *__PhoneContact_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -498,7 +533,7 @@ func (u *__PhoneContact_Deleter) Phone_NotIn(ins []int) *__PhoneContact_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -509,7 +544,7 @@ func (d *__PhoneContact_Deleter) Phone_Eq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone = ? "
+	w.condition = " Phone = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -520,7 +555,7 @@ func (d *__PhoneContact_Deleter) Phone_NotEq(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone != ? "
+	w.condition = " Phone != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -531,7 +566,7 @@ func (d *__PhoneContact_Deleter) Phone_LT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone < ? "
+	w.condition = " Phone < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -542,7 +577,7 @@ func (d *__PhoneContact_Deleter) Phone_LE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone <= ? "
+	w.condition = " Phone <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -553,7 +588,7 @@ func (d *__PhoneContact_Deleter) Phone_GT(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone > ? "
+	w.condition = " Phone > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -564,7 +599,7 @@ func (d *__PhoneContact_Deleter) Phone_GE(val int) *__PhoneContact_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone >= ? "
+	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -577,7 +612,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_In(ins []int) *__PhoneContact
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -590,7 +625,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_Ins(ins ...int) *__PhoneConta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -603,7 +638,7 @@ func (u *__PhoneContact_Deleter) PhoneContactRowId_NotIn(ins []int) *__PhoneCont
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -614,7 +649,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_Eq(val int) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId = ? "
+	w.condition = " PhoneContactRowId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -625,7 +660,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_NotEq(val int) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId != ? "
+	w.condition = " PhoneContactRowId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -636,7 +671,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_LT(val int) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId < ? "
+	w.condition = " PhoneContactRowId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -647,7 +682,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_LE(val int) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId <= ? "
+	w.condition = " PhoneContactRowId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -658,7 +693,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_GT(val int) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId > ? "
+	w.condition = " PhoneContactRowId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -669,7 +704,7 @@ func (d *__PhoneContact_Deleter) PhoneContactRowId_GE(val int) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId >= ? "
+	w.condition = " PhoneContactRowId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -682,7 +717,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_In(ins []int) *__PhoneContact_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -695,7 +730,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_Ins(ins ...int) *__PhoneContact_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -708,7 +743,7 @@ func (u *__PhoneContact_Deleter) DeviceUuidId_NotIn(ins []int) *__PhoneContact_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -719,7 +754,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_Eq(val int) *__PhoneContact_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId = ? "
+	w.condition = " DeviceUuidId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -730,7 +765,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_NotEq(val int) *__PhoneContact_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId != ? "
+	w.condition = " DeviceUuidId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -741,7 +776,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_LT(val int) *__PhoneContact_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId < ? "
+	w.condition = " DeviceUuidId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -752,7 +787,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_LE(val int) *__PhoneContact_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId <= ? "
+	w.condition = " DeviceUuidId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -763,7 +798,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_GT(val int) *__PhoneContact_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId > ? "
+	w.condition = " DeviceUuidId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -774,7 +809,7 @@ func (d *__PhoneContact_Deleter) DeviceUuidId_GE(val int) *__PhoneContact_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId >= ? "
+	w.condition = " DeviceUuidId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -787,7 +822,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_In(ins []int) *__PhoneContact_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -800,7 +835,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_Ins(ins ...int) *__PhoneContact_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -813,7 +848,7 @@ func (u *__PhoneContact_Deleter) CreatedTime_NotIn(ins []int) *__PhoneContact_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -824,7 +859,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_Eq(val int) *__PhoneContact_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -835,7 +870,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_NotEq(val int) *__PhoneContact_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -846,7 +881,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_LT(val int) *__PhoneContact_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -857,7 +892,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_LE(val int) *__PhoneContact_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -868,7 +903,7 @@ func (d *__PhoneContact_Deleter) CreatedTime_GT(val int) *__PhoneContact_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -879,10 +914,23 @@ func (d *__PhoneContact_Deleter) CreatedTime_GE(val int) *__PhoneContact_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PhoneContact_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PhoneContact_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -898,7 +946,7 @@ func (u *__PhoneContact_Updater) Id_In(ins []int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -911,7 +959,7 @@ func (u *__PhoneContact_Updater) Id_Ins(ins ...int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -924,7 +972,7 @@ func (u *__PhoneContact_Updater) Id_NotIn(ins []int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -935,7 +983,7 @@ func (d *__PhoneContact_Updater) Id_Eq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -946,7 +994,7 @@ func (d *__PhoneContact_Updater) Id_NotEq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -957,7 +1005,7 @@ func (d *__PhoneContact_Updater) Id_LT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -968,7 +1016,7 @@ func (d *__PhoneContact_Updater) Id_LE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -979,7 +1027,7 @@ func (d *__PhoneContact_Updater) Id_GT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -990,7 +1038,7 @@ func (d *__PhoneContact_Updater) Id_GE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1003,7 +1051,7 @@ func (u *__PhoneContact_Updater) UserId_In(ins []int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1016,7 +1064,7 @@ func (u *__PhoneContact_Updater) UserId_Ins(ins ...int) *__PhoneContact_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1029,7 +1077,7 @@ func (u *__PhoneContact_Updater) UserId_NotIn(ins []int) *__PhoneContact_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1040,7 +1088,7 @@ func (d *__PhoneContact_Updater) UserId_Eq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1051,7 +1099,7 @@ func (d *__PhoneContact_Updater) UserId_NotEq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1062,7 +1110,7 @@ func (d *__PhoneContact_Updater) UserId_LT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1073,7 +1121,7 @@ func (d *__PhoneContact_Updater) UserId_LE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1084,7 +1132,7 @@ func (d *__PhoneContact_Updater) UserId_GT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1095,7 +1143,7 @@ func (d *__PhoneContact_Updater) UserId_GE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1108,7 +1156,7 @@ func (u *__PhoneContact_Updater) Phone_In(ins []int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1121,7 +1169,7 @@ func (u *__PhoneContact_Updater) Phone_Ins(ins ...int) *__PhoneContact_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1134,7 +1182,7 @@ func (u *__PhoneContact_Updater) Phone_NotIn(ins []int) *__PhoneContact_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1145,7 +1193,7 @@ func (d *__PhoneContact_Updater) Phone_Eq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone = ? "
+	w.condition = " Phone = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1156,7 +1204,7 @@ func (d *__PhoneContact_Updater) Phone_NotEq(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone != ? "
+	w.condition = " Phone != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1167,7 +1215,7 @@ func (d *__PhoneContact_Updater) Phone_LT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone < ? "
+	w.condition = " Phone < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1178,7 +1226,7 @@ func (d *__PhoneContact_Updater) Phone_LE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone <= ? "
+	w.condition = " Phone <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1189,7 +1237,7 @@ func (d *__PhoneContact_Updater) Phone_GT(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone > ? "
+	w.condition = " Phone > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1200,7 +1248,7 @@ func (d *__PhoneContact_Updater) Phone_GE(val int) *__PhoneContact_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone >= ? "
+	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1213,7 +1261,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_In(ins []int) *__PhoneContact
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1226,7 +1274,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_Ins(ins ...int) *__PhoneConta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1239,7 +1287,7 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_NotIn(ins []int) *__PhoneCont
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1250,7 +1298,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_Eq(val int) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId = ? "
+	w.condition = " PhoneContactRowId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1261,7 +1309,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_NotEq(val int) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId != ? "
+	w.condition = " PhoneContactRowId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1272,7 +1320,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_LT(val int) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId < ? "
+	w.condition = " PhoneContactRowId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1283,7 +1331,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_LE(val int) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId <= ? "
+	w.condition = " PhoneContactRowId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1294,7 +1342,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_GT(val int) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId > ? "
+	w.condition = " PhoneContactRowId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1305,7 +1353,7 @@ func (d *__PhoneContact_Updater) PhoneContactRowId_GE(val int) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId >= ? "
+	w.condition = " PhoneContactRowId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1318,7 +1366,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_In(ins []int) *__PhoneContact_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1331,7 +1379,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_Ins(ins ...int) *__PhoneContact_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1344,7 +1392,7 @@ func (u *__PhoneContact_Updater) DeviceUuidId_NotIn(ins []int) *__PhoneContact_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1355,7 +1403,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_Eq(val int) *__PhoneContact_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId = ? "
+	w.condition = " DeviceUuidId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1366,7 +1414,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_NotEq(val int) *__PhoneContact_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId != ? "
+	w.condition = " DeviceUuidId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1377,7 +1425,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_LT(val int) *__PhoneContact_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId < ? "
+	w.condition = " DeviceUuidId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1388,7 +1436,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_LE(val int) *__PhoneContact_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId <= ? "
+	w.condition = " DeviceUuidId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1399,7 +1447,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_GT(val int) *__PhoneContact_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId > ? "
+	w.condition = " DeviceUuidId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1410,7 +1458,7 @@ func (d *__PhoneContact_Updater) DeviceUuidId_GE(val int) *__PhoneContact_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId >= ? "
+	w.condition = " DeviceUuidId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1423,7 +1471,7 @@ func (u *__PhoneContact_Updater) CreatedTime_In(ins []int) *__PhoneContact_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1436,7 +1484,7 @@ func (u *__PhoneContact_Updater) CreatedTime_Ins(ins ...int) *__PhoneContact_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1449,7 +1497,7 @@ func (u *__PhoneContact_Updater) CreatedTime_NotIn(ins []int) *__PhoneContact_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1460,7 +1508,7 @@ func (d *__PhoneContact_Updater) CreatedTime_Eq(val int) *__PhoneContact_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1471,7 +1519,7 @@ func (d *__PhoneContact_Updater) CreatedTime_NotEq(val int) *__PhoneContact_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1482,7 +1530,7 @@ func (d *__PhoneContact_Updater) CreatedTime_LT(val int) *__PhoneContact_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1493,7 +1541,7 @@ func (d *__PhoneContact_Updater) CreatedTime_LE(val int) *__PhoneContact_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1504,7 +1552,7 @@ func (d *__PhoneContact_Updater) CreatedTime_GT(val int) *__PhoneContact_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1515,10 +1563,23 @@ func (d *__PhoneContact_Updater) CreatedTime_GE(val int) *__PhoneContact_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PhoneContact_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PhoneContact_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1534,7 +1595,7 @@ func (u *__PhoneContact_Selector) Id_In(ins []int) *__PhoneContact_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1547,7 +1608,7 @@ func (u *__PhoneContact_Selector) Id_Ins(ins ...int) *__PhoneContact_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1560,7 +1621,7 @@ func (u *__PhoneContact_Selector) Id_NotIn(ins []int) *__PhoneContact_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1571,7 +1632,7 @@ func (d *__PhoneContact_Selector) Id_Eq(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1582,7 +1643,7 @@ func (d *__PhoneContact_Selector) Id_NotEq(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1593,7 +1654,7 @@ func (d *__PhoneContact_Selector) Id_LT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1604,7 +1665,7 @@ func (d *__PhoneContact_Selector) Id_LE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1615,7 +1676,7 @@ func (d *__PhoneContact_Selector) Id_GT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1626,7 +1687,7 @@ func (d *__PhoneContact_Selector) Id_GE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1639,7 +1700,7 @@ func (u *__PhoneContact_Selector) UserId_In(ins []int) *__PhoneContact_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1652,7 +1713,7 @@ func (u *__PhoneContact_Selector) UserId_Ins(ins ...int) *__PhoneContact_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1665,7 +1726,7 @@ func (u *__PhoneContact_Selector) UserId_NotIn(ins []int) *__PhoneContact_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1676,7 +1737,7 @@ func (d *__PhoneContact_Selector) UserId_Eq(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1687,7 +1748,7 @@ func (d *__PhoneContact_Selector) UserId_NotEq(val int) *__PhoneContact_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1698,7 +1759,7 @@ func (d *__PhoneContact_Selector) UserId_LT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1709,7 +1770,7 @@ func (d *__PhoneContact_Selector) UserId_LE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1720,7 +1781,7 @@ func (d *__PhoneContact_Selector) UserId_GT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1731,7 +1792,7 @@ func (d *__PhoneContact_Selector) UserId_GE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1744,7 +1805,7 @@ func (u *__PhoneContact_Selector) Phone_In(ins []int) *__PhoneContact_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1757,7 +1818,7 @@ func (u *__PhoneContact_Selector) Phone_Ins(ins ...int) *__PhoneContact_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1770,7 +1831,7 @@ func (u *__PhoneContact_Selector) Phone_NotIn(ins []int) *__PhoneContact_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Phone NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1781,7 +1842,7 @@ func (d *__PhoneContact_Selector) Phone_Eq(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone = ? "
+	w.condition = " Phone = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1792,7 +1853,7 @@ func (d *__PhoneContact_Selector) Phone_NotEq(val int) *__PhoneContact_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone != ? "
+	w.condition = " Phone != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1803,7 +1864,7 @@ func (d *__PhoneContact_Selector) Phone_LT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone < ? "
+	w.condition = " Phone < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1814,7 +1875,7 @@ func (d *__PhoneContact_Selector) Phone_LE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone <= ? "
+	w.condition = " Phone <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1825,7 +1886,7 @@ func (d *__PhoneContact_Selector) Phone_GT(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone > ? "
+	w.condition = " Phone > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1836,7 +1897,7 @@ func (d *__PhoneContact_Selector) Phone_GE(val int) *__PhoneContact_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone >= ? "
+	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1849,7 +1910,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_In(ins []int) *__PhoneContac
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1862,7 +1923,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_Ins(ins ...int) *__PhoneCont
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1875,7 +1936,7 @@ func (u *__PhoneContact_Selector) PhoneContactRowId_NotIn(ins []int) *__PhoneCon
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneContactRowId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneContactRowId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1886,7 +1947,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_Eq(val int) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId = ? "
+	w.condition = " PhoneContactRowId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1897,7 +1958,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_NotEq(val int) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId != ? "
+	w.condition = " PhoneContactRowId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1908,7 +1969,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_LT(val int) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId < ? "
+	w.condition = " PhoneContactRowId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1919,7 +1980,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_LE(val int) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId <= ? "
+	w.condition = " PhoneContactRowId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1930,7 +1991,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_GT(val int) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId > ? "
+	w.condition = " PhoneContactRowId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1941,7 +2002,7 @@ func (d *__PhoneContact_Selector) PhoneContactRowId_GE(val int) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneContactRowId >= ? "
+	w.condition = " PhoneContactRowId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1954,7 +2015,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_In(ins []int) *__PhoneContact_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1967,7 +2028,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_Ins(ins ...int) *__PhoneContact_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1980,7 +2041,7 @@ func (u *__PhoneContact_Selector) DeviceUuidId_NotIn(ins []int) *__PhoneContact_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeviceUuidId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeviceUuidId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1991,7 +2052,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_Eq(val int) *__PhoneContact_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId = ? "
+	w.condition = " DeviceUuidId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2002,7 +2063,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_NotEq(val int) *__PhoneContact_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId != ? "
+	w.condition = " DeviceUuidId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2013,7 +2074,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_LT(val int) *__PhoneContact_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId < ? "
+	w.condition = " DeviceUuidId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2024,7 +2085,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_LE(val int) *__PhoneContact_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId <= ? "
+	w.condition = " DeviceUuidId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2035,7 +2096,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_GT(val int) *__PhoneContact_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId > ? "
+	w.condition = " DeviceUuidId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2046,7 +2107,7 @@ func (d *__PhoneContact_Selector) DeviceUuidId_GE(val int) *__PhoneContact_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeviceUuidId >= ? "
+	w.condition = " DeviceUuidId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2059,7 +2120,7 @@ func (u *__PhoneContact_Selector) CreatedTime_In(ins []int) *__PhoneContact_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2072,7 +2133,7 @@ func (u *__PhoneContact_Selector) CreatedTime_Ins(ins ...int) *__PhoneContact_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2085,7 +2146,7 @@ func (u *__PhoneContact_Selector) CreatedTime_NotIn(ins []int) *__PhoneContact_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2096,7 +2157,7 @@ func (d *__PhoneContact_Selector) CreatedTime_Eq(val int) *__PhoneContact_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2107,7 +2168,7 @@ func (d *__PhoneContact_Selector) CreatedTime_NotEq(val int) *__PhoneContact_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2118,7 +2179,7 @@ func (d *__PhoneContact_Selector) CreatedTime_LT(val int) *__PhoneContact_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2129,7 +2190,7 @@ func (d *__PhoneContact_Selector) CreatedTime_LE(val int) *__PhoneContact_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2140,7 +2201,7 @@ func (d *__PhoneContact_Selector) CreatedTime_GT(val int) *__PhoneContact_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2151,7 +2212,7 @@ func (d *__PhoneContact_Selector) CreatedTime_GE(val int) *__PhoneContact_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2168,7 +2229,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_In(ins []string) *__PhoneConta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2181,7 +2242,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_NotIn(ins []string) *__PhoneCo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2193,7 +2254,7 @@ func (u *__PhoneContact_Deleter) PhoneDisplayName_Like(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName LIKE ? "
+	w.condition = " PhoneDisplayName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2204,7 +2265,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = ? "
+	w.condition = " PhoneDisplayName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2215,7 +2276,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != ? "
+	w.condition = " PhoneDisplayName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2228,7 +2289,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_In(ins []string) *__PhoneContac
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2241,7 +2302,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_NotIn(ins []string) *__PhoneCon
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2253,7 +2314,7 @@ func (u *__PhoneContact_Deleter) PhoneFamilyName_Like(val string) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName LIKE ? "
+	w.condition = " PhoneFamilyName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2264,7 +2325,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = ? "
+	w.condition = " PhoneFamilyName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2275,7 +2336,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != ? "
+	w.condition = " PhoneFamilyName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2288,7 +2349,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_In(ins []string) *__PhoneContact_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2301,7 +2362,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_NotIn(ins []string) *__PhoneContact
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2313,7 +2374,7 @@ func (u *__PhoneContact_Deleter) PhoneNumber_Like(val string) *__PhoneContact_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber LIKE ? "
+	w.condition = " PhoneNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2324,7 +2385,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_Eq(val string) *__PhoneContact_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = ? "
+	w.condition = " PhoneNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2335,7 +2396,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_NotEq(val string) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != ? "
+	w.condition = " PhoneNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2348,7 +2409,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_In(ins []string) *__Phone
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2361,7 +2422,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_NotIn(ins []string) *__Ph
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2373,7 +2434,7 @@ func (u *__PhoneContact_Deleter) PhoneNormalizedNumber_Like(val string) *__Phone
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber LIKE ? "
+	w.condition = " PhoneNormalizedNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2384,7 +2445,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = ? "
+	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2395,7 +2456,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_NotEq(val string) *__Phon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != ? "
+	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2410,7 +2471,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_In(ins []string) *__PhoneConta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2423,7 +2484,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_NotIn(ins []string) *__PhoneCo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2435,7 +2496,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName_Like(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName LIKE ? "
+	w.condition = " PhoneDisplayName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2446,7 +2507,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = ? "
+	w.condition = " PhoneDisplayName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2457,7 +2518,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != ? "
+	w.condition = " PhoneDisplayName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2470,7 +2531,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_In(ins []string) *__PhoneContac
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2483,7 +2544,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_NotIn(ins []string) *__PhoneCon
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2495,7 +2556,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName_Like(val string) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName LIKE ? "
+	w.condition = " PhoneFamilyName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2506,7 +2567,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = ? "
+	w.condition = " PhoneFamilyName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2517,7 +2578,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != ? "
+	w.condition = " PhoneFamilyName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2530,7 +2591,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_In(ins []string) *__PhoneContact_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2543,7 +2604,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_NotIn(ins []string) *__PhoneContact
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2555,7 +2616,7 @@ func (u *__PhoneContact_Updater) PhoneNumber_Like(val string) *__PhoneContact_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber LIKE ? "
+	w.condition = " PhoneNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2566,7 +2627,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_Eq(val string) *__PhoneContact_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = ? "
+	w.condition = " PhoneNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2577,7 +2638,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_NotEq(val string) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != ? "
+	w.condition = " PhoneNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2590,7 +2651,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_In(ins []string) *__Phone
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2603,7 +2664,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_NotIn(ins []string) *__Ph
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2615,7 +2676,7 @@ func (u *__PhoneContact_Updater) PhoneNormalizedNumber_Like(val string) *__Phone
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber LIKE ? "
+	w.condition = " PhoneNormalizedNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2626,7 +2687,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = ? "
+	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2637,7 +2698,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_NotEq(val string) *__Phon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != ? "
+	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2652,7 +2713,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_In(ins []string) *__PhoneCont
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2665,7 +2726,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_NotIn(ins []string) *__PhoneC
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneDisplayName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneDisplayName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2677,7 +2738,7 @@ func (u *__PhoneContact_Selector) PhoneDisplayName_Like(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName LIKE ? "
+	w.condition = " PhoneDisplayName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2688,7 +2749,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_Eq(val string) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = ? "
+	w.condition = " PhoneDisplayName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2699,7 +2760,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_NotEq(val string) *__PhoneCon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != ? "
+	w.condition = " PhoneDisplayName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2712,7 +2773,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_In(ins []string) *__PhoneConta
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2725,7 +2786,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_NotIn(ins []string) *__PhoneCo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneFamilyName NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneFamilyName NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2737,7 +2798,7 @@ func (u *__PhoneContact_Selector) PhoneFamilyName_Like(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName LIKE ? "
+	w.condition = " PhoneFamilyName LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2748,7 +2809,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = ? "
+	w.condition = " PhoneFamilyName = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2759,7 +2820,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != ? "
+	w.condition = " PhoneFamilyName != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2772,7 +2833,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_In(ins []string) *__PhoneContact_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2785,7 +2846,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_NotIn(ins []string) *__PhoneContac
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2797,7 +2858,7 @@ func (u *__PhoneContact_Selector) PhoneNumber_Like(val string) *__PhoneContact_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber LIKE ? "
+	w.condition = " PhoneNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2808,7 +2869,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_Eq(val string) *__PhoneContact_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = ? "
+	w.condition = " PhoneNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2819,7 +2880,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_NotEq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != ? "
+	w.condition = " PhoneNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2832,7 +2893,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_In(ins []string) *__Phon
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2845,7 +2906,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_NotIn(ins []string) *__P
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PhoneNormalizedNumber NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2857,7 +2918,7 @@ func (u *__PhoneContact_Selector) PhoneNormalizedNumber_Like(val string) *__Phon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber LIKE ? "
+	w.condition = " PhoneNormalizedNumber LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2868,7 +2929,7 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_Eq(val string) *__PhoneC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = ? "
+	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2879,7 +2940,7 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_NotEq(val string) *__Pho
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != ? "
+	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2892,17 +2953,23 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_NotEq(val string) *__Pho
 //ints
 
 func (u *__PhoneContact_Updater) Id(newVal int) *__PhoneContact_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) Id_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2913,17 +2980,23 @@ func (u *__PhoneContact_Updater) Id_Increment(count int) *__PhoneContact_Updater
 //ints
 
 func (u *__PhoneContact_Updater) UserId(newVal int) *__PhoneContact_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) UserId_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2934,17 +3007,23 @@ func (u *__PhoneContact_Updater) UserId_Increment(count int) *__PhoneContact_Upd
 //ints
 
 func (u *__PhoneContact_Updater) Phone(newVal int) *__PhoneContact_Updater {
-	u.updates[" Phone = ? "] = newVal
+	up := updateCol{" Phone = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Phone = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) Phone_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" Phone = Phone+? "] = count
+		up := updateCol{" Phone = Phone+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Phone = Phone+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Phone = Phone-? "] = -(count) //make it positive
+		up := updateCol{" Phone = Phone- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Phone = Phone- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2956,7 +3035,9 @@ func (u *__PhoneContact_Updater) Phone_Increment(count int) *__PhoneContact_Upda
 
 //string
 func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact_Updater {
-	u.updates[" PhoneDisplayName = ? "] = newVal
+	up := updateCol{"PhoneDisplayName = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PhoneDisplayName = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2964,7 +3045,9 @@ func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact
 
 //string
 func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_Updater {
-	u.updates[" PhoneFamilyName = ? "] = newVal
+	up := updateCol{"PhoneFamilyName = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PhoneFamilyName = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2972,7 +3055,9 @@ func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_
 
 //string
 func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Updater {
-	u.updates[" PhoneNumber = ? "] = newVal
+	up := updateCol{"PhoneNumber = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PhoneNumber = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -2980,24 +3065,32 @@ func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Upda
 
 //string
 func (u *__PhoneContact_Updater) PhoneNormalizedNumber(newVal string) *__PhoneContact_Updater {
-	u.updates[" PhoneNormalizedNumber = ? "] = newVal
+	up := updateCol{"PhoneNormalizedNumber = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PhoneNormalizedNumber = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__PhoneContact_Updater) PhoneContactRowId(newVal int) *__PhoneContact_Updater {
-	u.updates[" PhoneContactRowId = ? "] = newVal
+	up := updateCol{" PhoneContactRowId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PhoneContactRowId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) PhoneContactRowId_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" PhoneContactRowId = PhoneContactRowId+? "] = count
+		up := updateCol{" PhoneContactRowId = PhoneContactRowId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PhoneContactRowId = PhoneContactRowId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PhoneContactRowId = PhoneContactRowId-? "] = -(count) //make it positive
+		up := updateCol{" PhoneContactRowId = PhoneContactRowId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PhoneContactRowId = PhoneContactRowId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3008,17 +3101,23 @@ func (u *__PhoneContact_Updater) PhoneContactRowId_Increment(count int) *__Phone
 //ints
 
 func (u *__PhoneContact_Updater) DeviceUuidId(newVal int) *__PhoneContact_Updater {
-	u.updates[" DeviceUuidId = ? "] = newVal
+	up := updateCol{" DeviceUuidId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DeviceUuidId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) DeviceUuidId_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" DeviceUuidId = DeviceUuidId+? "] = count
+		up := updateCol{" DeviceUuidId = DeviceUuidId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DeviceUuidId = DeviceUuidId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DeviceUuidId = DeviceUuidId-? "] = -(count) //make it positive
+		up := updateCol{" DeviceUuidId = DeviceUuidId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DeviceUuidId = DeviceUuidId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3029,17 +3128,23 @@ func (u *__PhoneContact_Updater) DeviceUuidId_Increment(count int) *__PhoneConta
 //ints
 
 func (u *__PhoneContact_Updater) CreatedTime(newVal int) *__PhoneContact_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PhoneContact_Updater) CreatedTime_Increment(count int) *__PhoneContact_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3428,9 +3533,13 @@ func (u *__PhoneContact_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3515,7 +3624,6 @@ func MassInsert_PhoneContact(rows []PhoneContact, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

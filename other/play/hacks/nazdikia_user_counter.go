@@ -23,7 +23,8 @@ func main() {
 	}
 
 	for i := 0; i < NUM; i++ {
-		cnt := 1550000
+		//cnt := 1550000
+		cnt := 17000000
 		go func(i int) {
 			defer func() {
 				if r := recover(); r != nil {
@@ -35,7 +36,7 @@ func main() {
 
 			<-buff
 
-			url := fmt.Sprintf("http://nazdika.com/app/user/%d", i+cnt)
+			url := fmt.Sprintf("http://nazdika.com/app/user/%d", (i*10000+cnt))
 			res, err := http.Get(url)
 			if err != nil {
 				fmt.Println(err)

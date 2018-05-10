@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostKey represents a row from 'sun.post_keys'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostKey represents a row from 'sun.post_keys'.
 
 // Manualy copy this to project
 type PostKey__ struct {
@@ -204,23 +205,30 @@ func (pk *PostKey) Delete(db XODB) error {
 
 // orma types
 type __PostKey_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostKey_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostKey_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPostKey_Deleter() *__PostKey_Deleter {
@@ -230,7 +238,7 @@ func NewPostKey_Deleter() *__PostKey_Deleter {
 
 func NewPostKey_Updater() *__PostKey_Updater {
 	u := __PostKey_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -239,8 +247,35 @@ func NewPostKey_Selector() *__PostKey_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PostKey_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PostKey_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostKey_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostKey_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PostKey_Deleter) Or() *__PostKey_Deleter {
@@ -255,7 +290,7 @@ func (u *__PostKey_Deleter) Id_In(ins []int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -268,7 +303,7 @@ func (u *__PostKey_Deleter) Id_Ins(ins ...int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -281,7 +316,7 @@ func (u *__PostKey_Deleter) Id_NotIn(ins []int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -292,7 +327,7 @@ func (d *__PostKey_Deleter) Id_Eq(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -303,7 +338,7 @@ func (d *__PostKey_Deleter) Id_NotEq(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -314,7 +349,7 @@ func (d *__PostKey_Deleter) Id_LT(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -325,7 +360,7 @@ func (d *__PostKey_Deleter) Id_LE(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -336,7 +371,7 @@ func (d *__PostKey_Deleter) Id_GT(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -347,7 +382,7 @@ func (d *__PostKey_Deleter) Id_GE(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -360,7 +395,7 @@ func (u *__PostKey_Deleter) Used_In(ins []int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -373,7 +408,7 @@ func (u *__PostKey_Deleter) Used_Ins(ins ...int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -386,7 +421,7 @@ func (u *__PostKey_Deleter) Used_NotIn(ins []int) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -397,7 +432,7 @@ func (d *__PostKey_Deleter) Used_Eq(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used = ? "
+	w.condition = " Used = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -408,7 +443,7 @@ func (d *__PostKey_Deleter) Used_NotEq(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used != ? "
+	w.condition = " Used != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -419,7 +454,7 @@ func (d *__PostKey_Deleter) Used_LT(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used < ? "
+	w.condition = " Used < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -430,7 +465,7 @@ func (d *__PostKey_Deleter) Used_LE(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used <= ? "
+	w.condition = " Used <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -441,7 +476,7 @@ func (d *__PostKey_Deleter) Used_GT(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used > ? "
+	w.condition = " Used > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -452,10 +487,23 @@ func (d *__PostKey_Deleter) Used_GE(val int) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used >= ? "
+	w.condition = " Used >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostKey_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostKey_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -471,7 +519,7 @@ func (u *__PostKey_Updater) Id_In(ins []int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +532,7 @@ func (u *__PostKey_Updater) Id_Ins(ins ...int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -497,7 +545,7 @@ func (u *__PostKey_Updater) Id_NotIn(ins []int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -508,7 +556,7 @@ func (d *__PostKey_Updater) Id_Eq(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -519,7 +567,7 @@ func (d *__PostKey_Updater) Id_NotEq(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -530,7 +578,7 @@ func (d *__PostKey_Updater) Id_LT(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -541,7 +589,7 @@ func (d *__PostKey_Updater) Id_LE(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -552,7 +600,7 @@ func (d *__PostKey_Updater) Id_GT(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +611,7 @@ func (d *__PostKey_Updater) Id_GE(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -576,7 +624,7 @@ func (u *__PostKey_Updater) Used_In(ins []int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +637,7 @@ func (u *__PostKey_Updater) Used_Ins(ins ...int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -602,7 +650,7 @@ func (u *__PostKey_Updater) Used_NotIn(ins []int) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -613,7 +661,7 @@ func (d *__PostKey_Updater) Used_Eq(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used = ? "
+	w.condition = " Used = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -624,7 +672,7 @@ func (d *__PostKey_Updater) Used_NotEq(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used != ? "
+	w.condition = " Used != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -635,7 +683,7 @@ func (d *__PostKey_Updater) Used_LT(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used < ? "
+	w.condition = " Used < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -646,7 +694,7 @@ func (d *__PostKey_Updater) Used_LE(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used <= ? "
+	w.condition = " Used <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -657,7 +705,7 @@ func (d *__PostKey_Updater) Used_GT(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used > ? "
+	w.condition = " Used > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,10 +716,23 @@ func (d *__PostKey_Updater) Used_GE(val int) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used >= ? "
+	w.condition = " Used >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostKey_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostKey_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -687,7 +748,7 @@ func (u *__PostKey_Selector) Id_In(ins []int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -700,7 +761,7 @@ func (u *__PostKey_Selector) Id_Ins(ins ...int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -713,7 +774,7 @@ func (u *__PostKey_Selector) Id_NotIn(ins []int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -724,7 +785,7 @@ func (d *__PostKey_Selector) Id_Eq(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -735,7 +796,7 @@ func (d *__PostKey_Selector) Id_NotEq(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -746,7 +807,7 @@ func (d *__PostKey_Selector) Id_LT(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -757,7 +818,7 @@ func (d *__PostKey_Selector) Id_LE(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -768,7 +829,7 @@ func (d *__PostKey_Selector) Id_GT(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -779,7 +840,7 @@ func (d *__PostKey_Selector) Id_GE(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -792,7 +853,7 @@ func (u *__PostKey_Selector) Used_In(ins []int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -805,7 +866,7 @@ func (u *__PostKey_Selector) Used_Ins(ins ...int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -818,7 +879,7 @@ func (u *__PostKey_Selector) Used_NotIn(ins []int) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Used NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Used NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -829,7 +890,7 @@ func (d *__PostKey_Selector) Used_Eq(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used = ? "
+	w.condition = " Used = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -840,7 +901,7 @@ func (d *__PostKey_Selector) Used_NotEq(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used != ? "
+	w.condition = " Used != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -851,7 +912,7 @@ func (d *__PostKey_Selector) Used_LT(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used < ? "
+	w.condition = " Used < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -862,7 +923,7 @@ func (d *__PostKey_Selector) Used_LE(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used <= ? "
+	w.condition = " Used <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -873,7 +934,7 @@ func (d *__PostKey_Selector) Used_GT(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used > ? "
+	w.condition = " Used > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -884,7 +945,7 @@ func (d *__PostKey_Selector) Used_GE(val int) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Used >= ? "
+	w.condition = " Used >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -901,7 +962,7 @@ func (u *__PostKey_Deleter) PostKeyStr_In(ins []string) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -914,7 +975,7 @@ func (u *__PostKey_Deleter) PostKeyStr_NotIn(ins []string) *__PostKey_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -926,7 +987,7 @@ func (u *__PostKey_Deleter) PostKeyStr_Like(val string) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr LIKE ? "
+	w.condition = " PostKeyStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -937,7 +998,7 @@ func (d *__PostKey_Deleter) PostKeyStr_Eq(val string) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = ? "
+	w.condition = " PostKeyStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +1009,7 @@ func (d *__PostKey_Deleter) PostKeyStr_NotEq(val string) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != ? "
+	w.condition = " PostKeyStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -963,7 +1024,7 @@ func (u *__PostKey_Updater) PostKeyStr_In(ins []string) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -976,7 +1037,7 @@ func (u *__PostKey_Updater) PostKeyStr_NotIn(ins []string) *__PostKey_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -988,7 +1049,7 @@ func (u *__PostKey_Updater) PostKeyStr_Like(val string) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr LIKE ? "
+	w.condition = " PostKeyStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -999,7 +1060,7 @@ func (d *__PostKey_Updater) PostKeyStr_Eq(val string) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = ? "
+	w.condition = " PostKeyStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1010,7 +1071,7 @@ func (d *__PostKey_Updater) PostKeyStr_NotEq(val string) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != ? "
+	w.condition = " PostKeyStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1025,7 +1086,7 @@ func (u *__PostKey_Selector) PostKeyStr_In(ins []string) *__PostKey_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1038,7 +1099,7 @@ func (u *__PostKey_Selector) PostKeyStr_NotIn(ins []string) *__PostKey_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKeyStr NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostKeyStr NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1050,7 +1111,7 @@ func (u *__PostKey_Selector) PostKeyStr_Like(val string) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr LIKE ? "
+	w.condition = " PostKeyStr LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1061,7 +1122,7 @@ func (d *__PostKey_Selector) PostKeyStr_Eq(val string) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = ? "
+	w.condition = " PostKeyStr = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1072,7 +1133,7 @@ func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != ? "
+	w.condition = " PostKeyStr != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1085,17 +1146,23 @@ func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
 //ints
 
 func (u *__PostKey_Updater) Id(newVal int) *__PostKey_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1107,24 +1174,32 @@ func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
 
 //string
 func (u *__PostKey_Updater) PostKeyStr(newVal string) *__PostKey_Updater {
-	u.updates[" PostKeyStr = ? "] = newVal
+	up := updateCol{"PostKeyStr = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostKeyStr = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__PostKey_Updater) Used(newVal int) *__PostKey_Updater {
-	u.updates[" Used = ? "] = newVal
+	up := updateCol{" Used = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Used = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostKey_Updater) Used_Increment(count int) *__PostKey_Updater {
 	if count > 0 {
-		u.updates[" Used = Used+? "] = count
+		up := updateCol{" Used = Used+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Used = Used+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Used = Used-? "] = -(count) //make it positive
+		up := updateCol{" Used = Used- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Used = Used- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1408,9 +1483,13 @@ func (u *__PostKey_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1495,7 +1574,6 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

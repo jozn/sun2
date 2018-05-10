@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// CommentDeleted represents a row from 'sun.comment_deleted'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// CommentDeleted represents a row from 'sun.comment_deleted'.
 
 // Manualy copy this to project
 type CommentDeleted__ struct {
@@ -179,23 +181,30 @@ func (cd *CommentDeleted) Delete(db XODB) error {
 
 // orma types
 type __CommentDeleted_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __CommentDeleted_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __CommentDeleted_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewCommentDeleted_Deleter() *__CommentDeleted_Deleter {
@@ -205,7 +214,7 @@ func NewCommentDeleted_Deleter() *__CommentDeleted_Deleter {
 
 func NewCommentDeleted_Updater() *__CommentDeleted_Updater {
 	u := __CommentDeleted_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -214,8 +223,35 @@ func NewCommentDeleted_Selector() *__CommentDeleted_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__CommentDeleted_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__CommentDeleted_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__CommentDeleted_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__CommentDeleted_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__CommentDeleted_Deleter) Or() *__CommentDeleted_Deleter {
@@ -230,7 +266,7 @@ func (u *__CommentDeleted_Deleter) CommentId_In(ins []int) *__CommentDeleted_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -243,7 +279,7 @@ func (u *__CommentDeleted_Deleter) CommentId_Ins(ins ...int) *__CommentDeleted_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -256,7 +292,7 @@ func (u *__CommentDeleted_Deleter) CommentId_NotIn(ins []int) *__CommentDeleted_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -267,7 +303,7 @@ func (d *__CommentDeleted_Deleter) CommentId_Eq(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -278,7 +314,7 @@ func (d *__CommentDeleted_Deleter) CommentId_NotEq(val int) *__CommentDeleted_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -289,7 +325,7 @@ func (d *__CommentDeleted_Deleter) CommentId_LT(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -300,7 +336,7 @@ func (d *__CommentDeleted_Deleter) CommentId_LE(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -311,7 +347,7 @@ func (d *__CommentDeleted_Deleter) CommentId_GT(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -322,7 +358,7 @@ func (d *__CommentDeleted_Deleter) CommentId_GE(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -335,7 +371,7 @@ func (u *__CommentDeleted_Deleter) UserId_In(ins []int) *__CommentDeleted_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -348,7 +384,7 @@ func (u *__CommentDeleted_Deleter) UserId_Ins(ins ...int) *__CommentDeleted_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -361,7 +397,7 @@ func (u *__CommentDeleted_Deleter) UserId_NotIn(ins []int) *__CommentDeleted_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -372,7 +408,7 @@ func (d *__CommentDeleted_Deleter) UserId_Eq(val int) *__CommentDeleted_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -383,7 +419,7 @@ func (d *__CommentDeleted_Deleter) UserId_NotEq(val int) *__CommentDeleted_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -394,7 +430,7 @@ func (d *__CommentDeleted_Deleter) UserId_LT(val int) *__CommentDeleted_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -405,7 +441,7 @@ func (d *__CommentDeleted_Deleter) UserId_LE(val int) *__CommentDeleted_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -416,7 +452,7 @@ func (d *__CommentDeleted_Deleter) UserId_GT(val int) *__CommentDeleted_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -427,10 +463,23 @@ func (d *__CommentDeleted_Deleter) UserId_GE(val int) *__CommentDeleted_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__CommentDeleted_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__CommentDeleted_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -446,7 +495,7 @@ func (u *__CommentDeleted_Updater) CommentId_In(ins []int) *__CommentDeleted_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -459,7 +508,7 @@ func (u *__CommentDeleted_Updater) CommentId_Ins(ins ...int) *__CommentDeleted_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -472,7 +521,7 @@ func (u *__CommentDeleted_Updater) CommentId_NotIn(ins []int) *__CommentDeleted_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -483,7 +532,7 @@ func (d *__CommentDeleted_Updater) CommentId_Eq(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -494,7 +543,7 @@ func (d *__CommentDeleted_Updater) CommentId_NotEq(val int) *__CommentDeleted_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -505,7 +554,7 @@ func (d *__CommentDeleted_Updater) CommentId_LT(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -516,7 +565,7 @@ func (d *__CommentDeleted_Updater) CommentId_LE(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -527,7 +576,7 @@ func (d *__CommentDeleted_Updater) CommentId_GT(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -538,7 +587,7 @@ func (d *__CommentDeleted_Updater) CommentId_GE(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -551,7 +600,7 @@ func (u *__CommentDeleted_Updater) UserId_In(ins []int) *__CommentDeleted_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -564,7 +613,7 @@ func (u *__CommentDeleted_Updater) UserId_Ins(ins ...int) *__CommentDeleted_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -577,7 +626,7 @@ func (u *__CommentDeleted_Updater) UserId_NotIn(ins []int) *__CommentDeleted_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -588,7 +637,7 @@ func (d *__CommentDeleted_Updater) UserId_Eq(val int) *__CommentDeleted_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -599,7 +648,7 @@ func (d *__CommentDeleted_Updater) UserId_NotEq(val int) *__CommentDeleted_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -610,7 +659,7 @@ func (d *__CommentDeleted_Updater) UserId_LT(val int) *__CommentDeleted_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -621,7 +670,7 @@ func (d *__CommentDeleted_Updater) UserId_LE(val int) *__CommentDeleted_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -632,7 +681,7 @@ func (d *__CommentDeleted_Updater) UserId_GT(val int) *__CommentDeleted_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -643,10 +692,23 @@ func (d *__CommentDeleted_Updater) UserId_GE(val int) *__CommentDeleted_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__CommentDeleted_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__CommentDeleted_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -662,7 +724,7 @@ func (u *__CommentDeleted_Selector) CommentId_In(ins []int) *__CommentDeleted_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -675,7 +737,7 @@ func (u *__CommentDeleted_Selector) CommentId_Ins(ins ...int) *__CommentDeleted_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -688,7 +750,7 @@ func (u *__CommentDeleted_Selector) CommentId_NotIn(ins []int) *__CommentDeleted
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CommentId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -699,7 +761,7 @@ func (d *__CommentDeleted_Selector) CommentId_Eq(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId = ? "
+	w.condition = " CommentId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -710,7 +772,7 @@ func (d *__CommentDeleted_Selector) CommentId_NotEq(val int) *__CommentDeleted_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId != ? "
+	w.condition = " CommentId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -721,7 +783,7 @@ func (d *__CommentDeleted_Selector) CommentId_LT(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId < ? "
+	w.condition = " CommentId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +794,7 @@ func (d *__CommentDeleted_Selector) CommentId_LE(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId <= ? "
+	w.condition = " CommentId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -743,7 +805,7 @@ func (d *__CommentDeleted_Selector) CommentId_GT(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId > ? "
+	w.condition = " CommentId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -754,7 +816,7 @@ func (d *__CommentDeleted_Selector) CommentId_GE(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentId >= ? "
+	w.condition = " CommentId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -767,7 +829,7 @@ func (u *__CommentDeleted_Selector) UserId_In(ins []int) *__CommentDeleted_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -780,7 +842,7 @@ func (u *__CommentDeleted_Selector) UserId_Ins(ins ...int) *__CommentDeleted_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -793,7 +855,7 @@ func (u *__CommentDeleted_Selector) UserId_NotIn(ins []int) *__CommentDeleted_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -804,7 +866,7 @@ func (d *__CommentDeleted_Selector) UserId_Eq(val int) *__CommentDeleted_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -815,7 +877,7 @@ func (d *__CommentDeleted_Selector) UserId_NotEq(val int) *__CommentDeleted_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -826,7 +888,7 @@ func (d *__CommentDeleted_Selector) UserId_LT(val int) *__CommentDeleted_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -837,7 +899,7 @@ func (d *__CommentDeleted_Selector) UserId_LE(val int) *__CommentDeleted_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -848,7 +910,7 @@ func (d *__CommentDeleted_Selector) UserId_GT(val int) *__CommentDeleted_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -859,7 +921,7 @@ func (d *__CommentDeleted_Selector) UserId_GE(val int) *__CommentDeleted_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -880,17 +942,23 @@ func (d *__CommentDeleted_Selector) UserId_GE(val int) *__CommentDeleted_Selecto
 //ints
 
 func (u *__CommentDeleted_Updater) CommentId(newVal int) *__CommentDeleted_Updater {
-	u.updates[" CommentId = ? "] = newVal
+	up := updateCol{" CommentId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CommentId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__CommentDeleted_Updater) CommentId_Increment(count int) *__CommentDeleted_Updater {
 	if count > 0 {
-		u.updates[" CommentId = CommentId+? "] = count
+		up := updateCol{" CommentId = CommentId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CommentId = CommentId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CommentId = CommentId-? "] = -(count) //make it positive
+		up := updateCol{" CommentId = CommentId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CommentId = CommentId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -901,17 +969,23 @@ func (u *__CommentDeleted_Updater) CommentId_Increment(count int) *__CommentDele
 //ints
 
 func (u *__CommentDeleted_Updater) UserId(newVal int) *__CommentDeleted_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__CommentDeleted_Updater) UserId_Increment(count int) *__CommentDeleted_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1180,9 +1254,13 @@ func (u *__CommentDeleted_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -1267,10 +1345,10 @@ func MassInsert_CommentDeleted(rows []CommentDeleted, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.comment_deleted (" +
 		"CommentId, UserId" +
@@ -1306,10 +1384,9 @@ func MassReplace_CommentDeleted(rows []CommentDeleted, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.comment_deleted (" +
 		"CommentId, UserId" +

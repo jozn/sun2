@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostMedia represents a row from 'sun.post_media'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostMedia represents a row from 'sun.post_media'.
 
 // Manualy copy this to project
 type PostMedia__ struct {
@@ -192,23 +194,30 @@ func (pm *PostMedia) Delete(db XODB) error {
 
 // orma types
 type __PostMedia_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostMedia_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __PostMedia_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewPostMedia_Deleter() *__PostMedia_Deleter {
@@ -218,7 +227,7 @@ func NewPostMedia_Deleter() *__PostMedia_Deleter {
 
 func NewPostMedia_Updater() *__PostMedia_Updater {
 	u := __PostMedia_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -227,8 +236,35 @@ func NewPostMedia_Selector() *__PostMedia_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__PostMedia_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__PostMedia_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostMedia_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostMedia_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__PostMedia_Deleter) Or() *__PostMedia_Deleter {
@@ -243,7 +279,7 @@ func (u *__PostMedia_Deleter) MediaId_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -256,7 +292,7 @@ func (u *__PostMedia_Deleter) MediaId_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -269,7 +305,7 @@ func (u *__PostMedia_Deleter) MediaId_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -280,7 +316,7 @@ func (d *__PostMedia_Deleter) MediaId_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -291,7 +327,7 @@ func (d *__PostMedia_Deleter) MediaId_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -302,7 +338,7 @@ func (d *__PostMedia_Deleter) MediaId_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -313,7 +349,7 @@ func (d *__PostMedia_Deleter) MediaId_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -324,7 +360,7 @@ func (d *__PostMedia_Deleter) MediaId_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -335,7 +371,7 @@ func (d *__PostMedia_Deleter) MediaId_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -348,7 +384,7 @@ func (u *__PostMedia_Deleter) UserId_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -361,7 +397,7 @@ func (u *__PostMedia_Deleter) UserId_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -374,7 +410,7 @@ func (u *__PostMedia_Deleter) UserId_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -385,7 +421,7 @@ func (d *__PostMedia_Deleter) UserId_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -396,7 +432,7 @@ func (d *__PostMedia_Deleter) UserId_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -407,7 +443,7 @@ func (d *__PostMedia_Deleter) UserId_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -418,7 +454,7 @@ func (d *__PostMedia_Deleter) UserId_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -429,7 +465,7 @@ func (d *__PostMedia_Deleter) UserId_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -440,7 +476,7 @@ func (d *__PostMedia_Deleter) UserId_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -453,7 +489,7 @@ func (u *__PostMedia_Deleter) PostId_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -466,7 +502,7 @@ func (u *__PostMedia_Deleter) PostId_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -479,7 +515,7 @@ func (u *__PostMedia_Deleter) PostId_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -490,7 +526,7 @@ func (d *__PostMedia_Deleter) PostId_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -501,7 +537,7 @@ func (d *__PostMedia_Deleter) PostId_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -512,7 +548,7 @@ func (d *__PostMedia_Deleter) PostId_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -523,7 +559,7 @@ func (d *__PostMedia_Deleter) PostId_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -534,7 +570,7 @@ func (d *__PostMedia_Deleter) PostId_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -545,7 +581,7 @@ func (d *__PostMedia_Deleter) PostId_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -558,7 +594,7 @@ func (u *__PostMedia_Deleter) AlbumId_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -571,7 +607,7 @@ func (u *__PostMedia_Deleter) AlbumId_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -584,7 +620,7 @@ func (u *__PostMedia_Deleter) AlbumId_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -595,7 +631,7 @@ func (d *__PostMedia_Deleter) AlbumId_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId = ? "
+	w.condition = " AlbumId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -606,7 +642,7 @@ func (d *__PostMedia_Deleter) AlbumId_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId != ? "
+	w.condition = " AlbumId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -617,7 +653,7 @@ func (d *__PostMedia_Deleter) AlbumId_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId < ? "
+	w.condition = " AlbumId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -628,7 +664,7 @@ func (d *__PostMedia_Deleter) AlbumId_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId <= ? "
+	w.condition = " AlbumId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -639,7 +675,7 @@ func (d *__PostMedia_Deleter) AlbumId_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId > ? "
+	w.condition = " AlbumId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -650,7 +686,7 @@ func (d *__PostMedia_Deleter) AlbumId_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId >= ? "
+	w.condition = " AlbumId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -663,7 +699,7 @@ func (u *__PostMedia_Deleter) MediaTypeEnum_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -676,7 +712,7 @@ func (u *__PostMedia_Deleter) MediaTypeEnum_Ins(ins ...int) *__PostMedia_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -689,7 +725,7 @@ func (u *__PostMedia_Deleter) MediaTypeEnum_NotIn(ins []int) *__PostMedia_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -700,7 +736,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum = ? "
+	w.condition = " MediaTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -711,7 +747,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_NotEq(val int) *__PostMedia_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum != ? "
+	w.condition = " MediaTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -722,7 +758,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum < ? "
+	w.condition = " MediaTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -733,7 +769,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum <= ? "
+	w.condition = " MediaTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -744,7 +780,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum > ? "
+	w.condition = " MediaTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -755,7 +791,7 @@ func (d *__PostMedia_Deleter) MediaTypeEnum_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum >= ? "
+	w.condition = " MediaTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -768,7 +804,7 @@ func (u *__PostMedia_Deleter) Width_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -781,7 +817,7 @@ func (u *__PostMedia_Deleter) Width_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -794,7 +830,7 @@ func (u *__PostMedia_Deleter) Width_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -805,7 +841,7 @@ func (d *__PostMedia_Deleter) Width_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -816,7 +852,7 @@ func (d *__PostMedia_Deleter) Width_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -827,7 +863,7 @@ func (d *__PostMedia_Deleter) Width_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -838,7 +874,7 @@ func (d *__PostMedia_Deleter) Width_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -849,7 +885,7 @@ func (d *__PostMedia_Deleter) Width_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -860,7 +896,7 @@ func (d *__PostMedia_Deleter) Width_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -873,7 +909,7 @@ func (u *__PostMedia_Deleter) Height_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -886,7 +922,7 @@ func (u *__PostMedia_Deleter) Height_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -899,7 +935,7 @@ func (u *__PostMedia_Deleter) Height_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -910,7 +946,7 @@ func (d *__PostMedia_Deleter) Height_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -921,7 +957,7 @@ func (d *__PostMedia_Deleter) Height_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -932,7 +968,7 @@ func (d *__PostMedia_Deleter) Height_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -943,7 +979,7 @@ func (d *__PostMedia_Deleter) Height_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -954,7 +990,7 @@ func (d *__PostMedia_Deleter) Height_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -965,7 +1001,7 @@ func (d *__PostMedia_Deleter) Height_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -978,7 +1014,7 @@ func (u *__PostMedia_Deleter) Size_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -991,7 +1027,7 @@ func (u *__PostMedia_Deleter) Size_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1004,7 +1040,7 @@ func (u *__PostMedia_Deleter) Size_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1015,7 +1051,7 @@ func (d *__PostMedia_Deleter) Size_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size = ? "
+	w.condition = " Size = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1026,7 +1062,7 @@ func (d *__PostMedia_Deleter) Size_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size != ? "
+	w.condition = " Size != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1037,7 +1073,7 @@ func (d *__PostMedia_Deleter) Size_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size < ? "
+	w.condition = " Size < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1048,7 +1084,7 @@ func (d *__PostMedia_Deleter) Size_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size <= ? "
+	w.condition = " Size <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1059,7 +1095,7 @@ func (d *__PostMedia_Deleter) Size_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size > ? "
+	w.condition = " Size > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1070,7 +1106,7 @@ func (d *__PostMedia_Deleter) Size_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size >= ? "
+	w.condition = " Size >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1083,7 +1119,7 @@ func (u *__PostMedia_Deleter) Duration_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1096,7 +1132,7 @@ func (u *__PostMedia_Deleter) Duration_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1109,7 +1145,7 @@ func (u *__PostMedia_Deleter) Duration_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1120,7 +1156,7 @@ func (d *__PostMedia_Deleter) Duration_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1131,7 +1167,7 @@ func (d *__PostMedia_Deleter) Duration_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1142,7 +1178,7 @@ func (d *__PostMedia_Deleter) Duration_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration < ? "
+	w.condition = " Duration < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1153,7 +1189,7 @@ func (d *__PostMedia_Deleter) Duration_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration <= ? "
+	w.condition = " Duration <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1164,7 +1200,7 @@ func (d *__PostMedia_Deleter) Duration_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration > ? "
+	w.condition = " Duration > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1175,7 +1211,7 @@ func (d *__PostMedia_Deleter) Duration_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration >= ? "
+	w.condition = " Duration >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1188,7 +1224,7 @@ func (u *__PostMedia_Deleter) CreatedTime_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1201,7 +1237,7 @@ func (u *__PostMedia_Deleter) CreatedTime_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1214,7 +1250,7 @@ func (u *__PostMedia_Deleter) CreatedTime_NotIn(ins []int) *__PostMedia_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1225,7 +1261,7 @@ func (d *__PostMedia_Deleter) CreatedTime_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1236,7 +1272,7 @@ func (d *__PostMedia_Deleter) CreatedTime_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1247,7 +1283,7 @@ func (d *__PostMedia_Deleter) CreatedTime_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1258,7 +1294,7 @@ func (d *__PostMedia_Deleter) CreatedTime_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1269,7 +1305,7 @@ func (d *__PostMedia_Deleter) CreatedTime_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1280,7 +1316,7 @@ func (d *__PostMedia_Deleter) CreatedTime_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1293,7 +1329,7 @@ func (u *__PostMedia_Deleter) ViewCount_In(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1306,7 +1342,7 @@ func (u *__PostMedia_Deleter) ViewCount_Ins(ins ...int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1319,7 +1355,7 @@ func (u *__PostMedia_Deleter) ViewCount_NotIn(ins []int) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1330,7 +1366,7 @@ func (d *__PostMedia_Deleter) ViewCount_Eq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount = ? "
+	w.condition = " ViewCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1341,7 +1377,7 @@ func (d *__PostMedia_Deleter) ViewCount_NotEq(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount != ? "
+	w.condition = " ViewCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1352,7 +1388,7 @@ func (d *__PostMedia_Deleter) ViewCount_LT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount < ? "
+	w.condition = " ViewCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1363,7 +1399,7 @@ func (d *__PostMedia_Deleter) ViewCount_LE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount <= ? "
+	w.condition = " ViewCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1374,7 +1410,7 @@ func (d *__PostMedia_Deleter) ViewCount_GT(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount > ? "
+	w.condition = " ViewCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1385,10 +1421,23 @@ func (d *__PostMedia_Deleter) ViewCount_GE(val int) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount >= ? "
+	w.condition = " ViewCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostMedia_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostMedia_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1404,7 +1453,7 @@ func (u *__PostMedia_Updater) MediaId_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1417,7 +1466,7 @@ func (u *__PostMedia_Updater) MediaId_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1430,7 +1479,7 @@ func (u *__PostMedia_Updater) MediaId_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1441,7 +1490,7 @@ func (d *__PostMedia_Updater) MediaId_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1452,7 +1501,7 @@ func (d *__PostMedia_Updater) MediaId_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1463,7 +1512,7 @@ func (d *__PostMedia_Updater) MediaId_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1474,7 +1523,7 @@ func (d *__PostMedia_Updater) MediaId_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1485,7 +1534,7 @@ func (d *__PostMedia_Updater) MediaId_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1496,7 +1545,7 @@ func (d *__PostMedia_Updater) MediaId_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1509,7 +1558,7 @@ func (u *__PostMedia_Updater) UserId_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1522,7 +1571,7 @@ func (u *__PostMedia_Updater) UserId_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1535,7 +1584,7 @@ func (u *__PostMedia_Updater) UserId_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1546,7 +1595,7 @@ func (d *__PostMedia_Updater) UserId_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1557,7 +1606,7 @@ func (d *__PostMedia_Updater) UserId_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1568,7 +1617,7 @@ func (d *__PostMedia_Updater) UserId_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1579,7 +1628,7 @@ func (d *__PostMedia_Updater) UserId_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1590,7 +1639,7 @@ func (d *__PostMedia_Updater) UserId_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1601,7 +1650,7 @@ func (d *__PostMedia_Updater) UserId_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1614,7 +1663,7 @@ func (u *__PostMedia_Updater) PostId_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1627,7 +1676,7 @@ func (u *__PostMedia_Updater) PostId_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1640,7 +1689,7 @@ func (u *__PostMedia_Updater) PostId_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1651,7 +1700,7 @@ func (d *__PostMedia_Updater) PostId_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1662,7 +1711,7 @@ func (d *__PostMedia_Updater) PostId_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1673,7 +1722,7 @@ func (d *__PostMedia_Updater) PostId_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1684,7 +1733,7 @@ func (d *__PostMedia_Updater) PostId_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1695,7 +1744,7 @@ func (d *__PostMedia_Updater) PostId_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1706,7 +1755,7 @@ func (d *__PostMedia_Updater) PostId_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1719,7 +1768,7 @@ func (u *__PostMedia_Updater) AlbumId_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1732,7 +1781,7 @@ func (u *__PostMedia_Updater) AlbumId_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1745,7 +1794,7 @@ func (u *__PostMedia_Updater) AlbumId_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1756,7 +1805,7 @@ func (d *__PostMedia_Updater) AlbumId_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId = ? "
+	w.condition = " AlbumId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1767,7 +1816,7 @@ func (d *__PostMedia_Updater) AlbumId_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId != ? "
+	w.condition = " AlbumId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1778,7 +1827,7 @@ func (d *__PostMedia_Updater) AlbumId_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId < ? "
+	w.condition = " AlbumId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1789,7 +1838,7 @@ func (d *__PostMedia_Updater) AlbumId_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId <= ? "
+	w.condition = " AlbumId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1800,7 +1849,7 @@ func (d *__PostMedia_Updater) AlbumId_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId > ? "
+	w.condition = " AlbumId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1811,7 +1860,7 @@ func (d *__PostMedia_Updater) AlbumId_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId >= ? "
+	w.condition = " AlbumId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1824,7 +1873,7 @@ func (u *__PostMedia_Updater) MediaTypeEnum_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1837,7 +1886,7 @@ func (u *__PostMedia_Updater) MediaTypeEnum_Ins(ins ...int) *__PostMedia_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1850,7 +1899,7 @@ func (u *__PostMedia_Updater) MediaTypeEnum_NotIn(ins []int) *__PostMedia_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1861,7 +1910,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum = ? "
+	w.condition = " MediaTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1872,7 +1921,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_NotEq(val int) *__PostMedia_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum != ? "
+	w.condition = " MediaTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1883,7 +1932,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum < ? "
+	w.condition = " MediaTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1894,7 +1943,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum <= ? "
+	w.condition = " MediaTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1905,7 +1954,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum > ? "
+	w.condition = " MediaTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1916,7 +1965,7 @@ func (d *__PostMedia_Updater) MediaTypeEnum_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum >= ? "
+	w.condition = " MediaTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1929,7 +1978,7 @@ func (u *__PostMedia_Updater) Width_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1942,7 +1991,7 @@ func (u *__PostMedia_Updater) Width_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1955,7 +2004,7 @@ func (u *__PostMedia_Updater) Width_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1966,7 +2015,7 @@ func (d *__PostMedia_Updater) Width_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1977,7 +2026,7 @@ func (d *__PostMedia_Updater) Width_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1988,7 +2037,7 @@ func (d *__PostMedia_Updater) Width_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1999,7 +2048,7 @@ func (d *__PostMedia_Updater) Width_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2010,7 +2059,7 @@ func (d *__PostMedia_Updater) Width_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2021,7 +2070,7 @@ func (d *__PostMedia_Updater) Width_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2034,7 +2083,7 @@ func (u *__PostMedia_Updater) Height_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2047,7 +2096,7 @@ func (u *__PostMedia_Updater) Height_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2060,7 +2109,7 @@ func (u *__PostMedia_Updater) Height_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2071,7 +2120,7 @@ func (d *__PostMedia_Updater) Height_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2082,7 +2131,7 @@ func (d *__PostMedia_Updater) Height_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2093,7 +2142,7 @@ func (d *__PostMedia_Updater) Height_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2104,7 +2153,7 @@ func (d *__PostMedia_Updater) Height_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2115,7 +2164,7 @@ func (d *__PostMedia_Updater) Height_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2126,7 +2175,7 @@ func (d *__PostMedia_Updater) Height_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2139,7 +2188,7 @@ func (u *__PostMedia_Updater) Size_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2152,7 +2201,7 @@ func (u *__PostMedia_Updater) Size_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2165,7 +2214,7 @@ func (u *__PostMedia_Updater) Size_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2176,7 +2225,7 @@ func (d *__PostMedia_Updater) Size_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size = ? "
+	w.condition = " Size = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2187,7 +2236,7 @@ func (d *__PostMedia_Updater) Size_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size != ? "
+	w.condition = " Size != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2198,7 +2247,7 @@ func (d *__PostMedia_Updater) Size_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size < ? "
+	w.condition = " Size < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2209,7 +2258,7 @@ func (d *__PostMedia_Updater) Size_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size <= ? "
+	w.condition = " Size <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2220,7 +2269,7 @@ func (d *__PostMedia_Updater) Size_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size > ? "
+	w.condition = " Size > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2231,7 +2280,7 @@ func (d *__PostMedia_Updater) Size_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size >= ? "
+	w.condition = " Size >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2244,7 +2293,7 @@ func (u *__PostMedia_Updater) Duration_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2257,7 +2306,7 @@ func (u *__PostMedia_Updater) Duration_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2270,7 +2319,7 @@ func (u *__PostMedia_Updater) Duration_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2281,7 +2330,7 @@ func (d *__PostMedia_Updater) Duration_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2292,7 +2341,7 @@ func (d *__PostMedia_Updater) Duration_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2303,7 +2352,7 @@ func (d *__PostMedia_Updater) Duration_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration < ? "
+	w.condition = " Duration < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2314,7 +2363,7 @@ func (d *__PostMedia_Updater) Duration_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration <= ? "
+	w.condition = " Duration <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2325,7 +2374,7 @@ func (d *__PostMedia_Updater) Duration_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration > ? "
+	w.condition = " Duration > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2336,7 +2385,7 @@ func (d *__PostMedia_Updater) Duration_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration >= ? "
+	w.condition = " Duration >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2349,7 +2398,7 @@ func (u *__PostMedia_Updater) CreatedTime_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2362,7 +2411,7 @@ func (u *__PostMedia_Updater) CreatedTime_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2375,7 +2424,7 @@ func (u *__PostMedia_Updater) CreatedTime_NotIn(ins []int) *__PostMedia_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2386,7 +2435,7 @@ func (d *__PostMedia_Updater) CreatedTime_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2397,7 +2446,7 @@ func (d *__PostMedia_Updater) CreatedTime_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2408,7 +2457,7 @@ func (d *__PostMedia_Updater) CreatedTime_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2419,7 +2468,7 @@ func (d *__PostMedia_Updater) CreatedTime_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2430,7 +2479,7 @@ func (d *__PostMedia_Updater) CreatedTime_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2441,7 +2490,7 @@ func (d *__PostMedia_Updater) CreatedTime_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2454,7 +2503,7 @@ func (u *__PostMedia_Updater) ViewCount_In(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2467,7 +2516,7 @@ func (u *__PostMedia_Updater) ViewCount_Ins(ins ...int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2480,7 +2529,7 @@ func (u *__PostMedia_Updater) ViewCount_NotIn(ins []int) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2491,7 +2540,7 @@ func (d *__PostMedia_Updater) ViewCount_Eq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount = ? "
+	w.condition = " ViewCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2502,7 +2551,7 @@ func (d *__PostMedia_Updater) ViewCount_NotEq(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount != ? "
+	w.condition = " ViewCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2513,7 +2562,7 @@ func (d *__PostMedia_Updater) ViewCount_LT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount < ? "
+	w.condition = " ViewCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2524,7 +2573,7 @@ func (d *__PostMedia_Updater) ViewCount_LE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount <= ? "
+	w.condition = " ViewCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2535,7 +2584,7 @@ func (d *__PostMedia_Updater) ViewCount_GT(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount > ? "
+	w.condition = " ViewCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2546,10 +2595,23 @@ func (d *__PostMedia_Updater) ViewCount_GE(val int) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount >= ? "
+	w.condition = " ViewCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__PostMedia_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__PostMedia_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -2565,7 +2627,7 @@ func (u *__PostMedia_Selector) MediaId_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2578,7 +2640,7 @@ func (u *__PostMedia_Selector) MediaId_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2591,7 +2653,7 @@ func (u *__PostMedia_Selector) MediaId_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2602,7 +2664,7 @@ func (d *__PostMedia_Selector) MediaId_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = ? "
+	w.condition = " MediaId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2613,7 +2675,7 @@ func (d *__PostMedia_Selector) MediaId_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != ? "
+	w.condition = " MediaId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2624,7 +2686,7 @@ func (d *__PostMedia_Selector) MediaId_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < ? "
+	w.condition = " MediaId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2635,7 +2697,7 @@ func (d *__PostMedia_Selector) MediaId_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= ? "
+	w.condition = " MediaId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2646,7 +2708,7 @@ func (d *__PostMedia_Selector) MediaId_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > ? "
+	w.condition = " MediaId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2657,7 +2719,7 @@ func (d *__PostMedia_Selector) MediaId_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= ? "
+	w.condition = " MediaId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2670,7 +2732,7 @@ func (u *__PostMedia_Selector) UserId_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2683,7 +2745,7 @@ func (u *__PostMedia_Selector) UserId_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2696,7 +2758,7 @@ func (u *__PostMedia_Selector) UserId_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2707,7 +2769,7 @@ func (d *__PostMedia_Selector) UserId_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2718,7 +2780,7 @@ func (d *__PostMedia_Selector) UserId_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2729,7 +2791,7 @@ func (d *__PostMedia_Selector) UserId_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2740,7 +2802,7 @@ func (d *__PostMedia_Selector) UserId_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2751,7 +2813,7 @@ func (d *__PostMedia_Selector) UserId_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2762,7 +2824,7 @@ func (d *__PostMedia_Selector) UserId_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2775,7 +2837,7 @@ func (u *__PostMedia_Selector) PostId_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2788,7 +2850,7 @@ func (u *__PostMedia_Selector) PostId_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2801,7 +2863,7 @@ func (u *__PostMedia_Selector) PostId_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2812,7 +2874,7 @@ func (d *__PostMedia_Selector) PostId_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = ? "
+	w.condition = " PostId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2823,7 +2885,7 @@ func (d *__PostMedia_Selector) PostId_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != ? "
+	w.condition = " PostId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2834,7 +2896,7 @@ func (d *__PostMedia_Selector) PostId_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < ? "
+	w.condition = " PostId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2845,7 +2907,7 @@ func (d *__PostMedia_Selector) PostId_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= ? "
+	w.condition = " PostId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2856,7 +2918,7 @@ func (d *__PostMedia_Selector) PostId_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > ? "
+	w.condition = " PostId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2867,7 +2929,7 @@ func (d *__PostMedia_Selector) PostId_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= ? "
+	w.condition = " PostId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2880,7 +2942,7 @@ func (u *__PostMedia_Selector) AlbumId_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2893,7 +2955,7 @@ func (u *__PostMedia_Selector) AlbumId_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2906,7 +2968,7 @@ func (u *__PostMedia_Selector) AlbumId_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AlbumId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AlbumId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2917,7 +2979,7 @@ func (d *__PostMedia_Selector) AlbumId_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId = ? "
+	w.condition = " AlbumId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2928,7 +2990,7 @@ func (d *__PostMedia_Selector) AlbumId_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId != ? "
+	w.condition = " AlbumId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2939,7 +3001,7 @@ func (d *__PostMedia_Selector) AlbumId_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId < ? "
+	w.condition = " AlbumId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2950,7 +3012,7 @@ func (d *__PostMedia_Selector) AlbumId_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId <= ? "
+	w.condition = " AlbumId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2961,7 +3023,7 @@ func (d *__PostMedia_Selector) AlbumId_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId > ? "
+	w.condition = " AlbumId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2972,7 +3034,7 @@ func (d *__PostMedia_Selector) AlbumId_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AlbumId >= ? "
+	w.condition = " AlbumId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2985,7 +3047,7 @@ func (u *__PostMedia_Selector) MediaTypeEnum_In(ins []int) *__PostMedia_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2998,7 +3060,7 @@ func (u *__PostMedia_Selector) MediaTypeEnum_Ins(ins ...int) *__PostMedia_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3011,7 +3073,7 @@ func (u *__PostMedia_Selector) MediaTypeEnum_NotIn(ins []int) *__PostMedia_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MediaTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3022,7 +3084,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum = ? "
+	w.condition = " MediaTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3033,7 +3095,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_NotEq(val int) *__PostMedia_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum != ? "
+	w.condition = " MediaTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3044,7 +3106,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum < ? "
+	w.condition = " MediaTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3055,7 +3117,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum <= ? "
+	w.condition = " MediaTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3066,7 +3128,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum > ? "
+	w.condition = " MediaTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3077,7 +3139,7 @@ func (d *__PostMedia_Selector) MediaTypeEnum_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaTypeEnum >= ? "
+	w.condition = " MediaTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3090,7 +3152,7 @@ func (u *__PostMedia_Selector) Width_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3103,7 +3165,7 @@ func (u *__PostMedia_Selector) Width_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3116,7 +3178,7 @@ func (u *__PostMedia_Selector) Width_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Width NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Width NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3127,7 +3189,7 @@ func (d *__PostMedia_Selector) Width_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width = ? "
+	w.condition = " Width = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3138,7 +3200,7 @@ func (d *__PostMedia_Selector) Width_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width != ? "
+	w.condition = " Width != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3149,7 +3211,7 @@ func (d *__PostMedia_Selector) Width_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width < ? "
+	w.condition = " Width < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3160,7 +3222,7 @@ func (d *__PostMedia_Selector) Width_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width <= ? "
+	w.condition = " Width <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3171,7 +3233,7 @@ func (d *__PostMedia_Selector) Width_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width > ? "
+	w.condition = " Width > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3182,7 +3244,7 @@ func (d *__PostMedia_Selector) Width_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Width >= ? "
+	w.condition = " Width >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3195,7 +3257,7 @@ func (u *__PostMedia_Selector) Height_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3208,7 +3270,7 @@ func (u *__PostMedia_Selector) Height_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3221,7 +3283,7 @@ func (u *__PostMedia_Selector) Height_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Height NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Height NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3232,7 +3294,7 @@ func (d *__PostMedia_Selector) Height_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height = ? "
+	w.condition = " Height = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3243,7 +3305,7 @@ func (d *__PostMedia_Selector) Height_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height != ? "
+	w.condition = " Height != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3254,7 +3316,7 @@ func (d *__PostMedia_Selector) Height_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height < ? "
+	w.condition = " Height < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3265,7 +3327,7 @@ func (d *__PostMedia_Selector) Height_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height <= ? "
+	w.condition = " Height <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3276,7 +3338,7 @@ func (d *__PostMedia_Selector) Height_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height > ? "
+	w.condition = " Height > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3287,7 +3349,7 @@ func (d *__PostMedia_Selector) Height_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Height >= ? "
+	w.condition = " Height >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3300,7 +3362,7 @@ func (u *__PostMedia_Selector) Size_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3313,7 +3375,7 @@ func (u *__PostMedia_Selector) Size_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3326,7 +3388,7 @@ func (u *__PostMedia_Selector) Size_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Size NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Size NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3337,7 +3399,7 @@ func (d *__PostMedia_Selector) Size_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size = ? "
+	w.condition = " Size = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3348,7 +3410,7 @@ func (d *__PostMedia_Selector) Size_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size != ? "
+	w.condition = " Size != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3359,7 +3421,7 @@ func (d *__PostMedia_Selector) Size_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size < ? "
+	w.condition = " Size < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3370,7 +3432,7 @@ func (d *__PostMedia_Selector) Size_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size <= ? "
+	w.condition = " Size <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3381,7 +3443,7 @@ func (d *__PostMedia_Selector) Size_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size > ? "
+	w.condition = " Size > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3392,7 +3454,7 @@ func (d *__PostMedia_Selector) Size_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Size >= ? "
+	w.condition = " Size >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3405,7 +3467,7 @@ func (u *__PostMedia_Selector) Duration_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3418,7 +3480,7 @@ func (u *__PostMedia_Selector) Duration_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3431,7 +3493,7 @@ func (u *__PostMedia_Selector) Duration_NotIn(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Duration NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Duration NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3442,7 +3504,7 @@ func (d *__PostMedia_Selector) Duration_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = ? "
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3453,7 +3515,7 @@ func (d *__PostMedia_Selector) Duration_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != ? "
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3464,7 +3526,7 @@ func (d *__PostMedia_Selector) Duration_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration < ? "
+	w.condition = " Duration < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3475,7 +3537,7 @@ func (d *__PostMedia_Selector) Duration_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration <= ? "
+	w.condition = " Duration <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3486,7 +3548,7 @@ func (d *__PostMedia_Selector) Duration_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration > ? "
+	w.condition = " Duration > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3497,7 +3559,7 @@ func (d *__PostMedia_Selector) Duration_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration >= ? "
+	w.condition = " Duration >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3510,7 +3572,7 @@ func (u *__PostMedia_Selector) CreatedTime_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3523,7 +3585,7 @@ func (u *__PostMedia_Selector) CreatedTime_Ins(ins ...int) *__PostMedia_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3536,7 +3598,7 @@ func (u *__PostMedia_Selector) CreatedTime_NotIn(ins []int) *__PostMedia_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3547,7 +3609,7 @@ func (d *__PostMedia_Selector) CreatedTime_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = ? "
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3558,7 +3620,7 @@ func (d *__PostMedia_Selector) CreatedTime_NotEq(val int) *__PostMedia_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != ? "
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3569,7 +3631,7 @@ func (d *__PostMedia_Selector) CreatedTime_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < ? "
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3580,7 +3642,7 @@ func (d *__PostMedia_Selector) CreatedTime_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= ? "
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3591,7 +3653,7 @@ func (d *__PostMedia_Selector) CreatedTime_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > ? "
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3602,7 +3664,7 @@ func (d *__PostMedia_Selector) CreatedTime_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= ? "
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3615,7 +3677,7 @@ func (u *__PostMedia_Selector) ViewCount_In(ins []int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3628,7 +3690,7 @@ func (u *__PostMedia_Selector) ViewCount_Ins(ins ...int) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3641,7 +3703,7 @@ func (u *__PostMedia_Selector) ViewCount_NotIn(ins []int) *__PostMedia_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewCount NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ViewCount NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3652,7 +3714,7 @@ func (d *__PostMedia_Selector) ViewCount_Eq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount = ? "
+	w.condition = " ViewCount = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3663,7 +3725,7 @@ func (d *__PostMedia_Selector) ViewCount_NotEq(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount != ? "
+	w.condition = " ViewCount != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3674,7 +3736,7 @@ func (d *__PostMedia_Selector) ViewCount_LT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount < ? "
+	w.condition = " ViewCount < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3685,7 +3747,7 @@ func (d *__PostMedia_Selector) ViewCount_LE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount <= ? "
+	w.condition = " ViewCount <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3696,7 +3758,7 @@ func (d *__PostMedia_Selector) ViewCount_GT(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount > ? "
+	w.condition = " ViewCount > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3707,7 +3769,7 @@ func (d *__PostMedia_Selector) ViewCount_GE(val int) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewCount >= ? "
+	w.condition = " ViewCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3724,7 +3786,7 @@ func (u *__PostMedia_Deleter) Extension_In(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3737,7 +3799,7 @@ func (u *__PostMedia_Deleter) Extension_NotIn(ins []string) *__PostMedia_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3749,7 +3811,7 @@ func (u *__PostMedia_Deleter) Extension_Like(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3760,7 +3822,7 @@ func (d *__PostMedia_Deleter) Extension_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3771,7 +3833,7 @@ func (d *__PostMedia_Deleter) Extension_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3784,7 +3846,7 @@ func (u *__PostMedia_Deleter) Md5Hash_In(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3797,7 +3859,7 @@ func (u *__PostMedia_Deleter) Md5Hash_NotIn(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3809,7 +3871,7 @@ func (u *__PostMedia_Deleter) Md5Hash_Like(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash LIKE ? "
+	w.condition = " Md5Hash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3820,7 +3882,7 @@ func (d *__PostMedia_Deleter) Md5Hash_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = ? "
+	w.condition = " Md5Hash = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3831,7 +3893,7 @@ func (d *__PostMedia_Deleter) Md5Hash_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != ? "
+	w.condition = " Md5Hash != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3844,7 +3906,7 @@ func (u *__PostMedia_Deleter) Color_In(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3857,7 +3919,7 @@ func (u *__PostMedia_Deleter) Color_NotIn(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3869,7 +3931,7 @@ func (u *__PostMedia_Deleter) Color_Like(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color LIKE ? "
+	w.condition = " Color LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3880,7 +3942,7 @@ func (d *__PostMedia_Deleter) Color_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = ? "
+	w.condition = " Color = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3891,7 +3953,7 @@ func (d *__PostMedia_Deleter) Color_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != ? "
+	w.condition = " Color != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3904,7 +3966,7 @@ func (u *__PostMedia_Deleter) Extra_In(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3917,7 +3979,7 @@ func (u *__PostMedia_Deleter) Extra_NotIn(ins []string) *__PostMedia_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3929,7 +3991,7 @@ func (u *__PostMedia_Deleter) Extra_Like(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra LIKE ? "
+	w.condition = " Extra LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3940,7 +4002,7 @@ func (d *__PostMedia_Deleter) Extra_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = ? "
+	w.condition = " Extra = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3951,7 +4013,7 @@ func (d *__PostMedia_Deleter) Extra_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != ? "
+	w.condition = " Extra != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3966,7 +4028,7 @@ func (u *__PostMedia_Updater) Extension_In(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3979,7 +4041,7 @@ func (u *__PostMedia_Updater) Extension_NotIn(ins []string) *__PostMedia_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3991,7 +4053,7 @@ func (u *__PostMedia_Updater) Extension_Like(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4002,7 +4064,7 @@ func (d *__PostMedia_Updater) Extension_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4013,7 +4075,7 @@ func (d *__PostMedia_Updater) Extension_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4026,7 +4088,7 @@ func (u *__PostMedia_Updater) Md5Hash_In(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4039,7 +4101,7 @@ func (u *__PostMedia_Updater) Md5Hash_NotIn(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4051,7 +4113,7 @@ func (u *__PostMedia_Updater) Md5Hash_Like(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash LIKE ? "
+	w.condition = " Md5Hash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4062,7 +4124,7 @@ func (d *__PostMedia_Updater) Md5Hash_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = ? "
+	w.condition = " Md5Hash = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4073,7 +4135,7 @@ func (d *__PostMedia_Updater) Md5Hash_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != ? "
+	w.condition = " Md5Hash != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4086,7 +4148,7 @@ func (u *__PostMedia_Updater) Color_In(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4099,7 +4161,7 @@ func (u *__PostMedia_Updater) Color_NotIn(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4111,7 +4173,7 @@ func (u *__PostMedia_Updater) Color_Like(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color LIKE ? "
+	w.condition = " Color LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4122,7 +4184,7 @@ func (d *__PostMedia_Updater) Color_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = ? "
+	w.condition = " Color = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4133,7 +4195,7 @@ func (d *__PostMedia_Updater) Color_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != ? "
+	w.condition = " Color != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4146,7 +4208,7 @@ func (u *__PostMedia_Updater) Extra_In(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4159,7 +4221,7 @@ func (u *__PostMedia_Updater) Extra_NotIn(ins []string) *__PostMedia_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4171,7 +4233,7 @@ func (u *__PostMedia_Updater) Extra_Like(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra LIKE ? "
+	w.condition = " Extra LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4182,7 +4244,7 @@ func (d *__PostMedia_Updater) Extra_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = ? "
+	w.condition = " Extra = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4193,7 +4255,7 @@ func (d *__PostMedia_Updater) Extra_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != ? "
+	w.condition = " Extra != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4208,7 +4270,7 @@ func (u *__PostMedia_Selector) Extension_In(ins []string) *__PostMedia_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4221,7 +4283,7 @@ func (u *__PostMedia_Selector) Extension_NotIn(ins []string) *__PostMedia_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extension NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extension NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4233,7 +4295,7 @@ func (u *__PostMedia_Selector) Extension_Like(val string) *__PostMedia_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension LIKE ? "
+	w.condition = " Extension LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4244,7 +4306,7 @@ func (d *__PostMedia_Selector) Extension_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = ? "
+	w.condition = " Extension = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4255,7 +4317,7 @@ func (d *__PostMedia_Selector) Extension_NotEq(val string) *__PostMedia_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != ? "
+	w.condition = " Extension != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4268,7 +4330,7 @@ func (u *__PostMedia_Selector) Md5Hash_In(ins []string) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4281,7 +4343,7 @@ func (u *__PostMedia_Selector) Md5Hash_NotIn(ins []string) *__PostMedia_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Md5Hash NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Md5Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4293,7 +4355,7 @@ func (u *__PostMedia_Selector) Md5Hash_Like(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash LIKE ? "
+	w.condition = " Md5Hash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4304,7 +4366,7 @@ func (d *__PostMedia_Selector) Md5Hash_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = ? "
+	w.condition = " Md5Hash = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4315,7 +4377,7 @@ func (d *__PostMedia_Selector) Md5Hash_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != ? "
+	w.condition = " Md5Hash != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4328,7 +4390,7 @@ func (u *__PostMedia_Selector) Color_In(ins []string) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4341,7 +4403,7 @@ func (u *__PostMedia_Selector) Color_NotIn(ins []string) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Color NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Color NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4353,7 +4415,7 @@ func (u *__PostMedia_Selector) Color_Like(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color LIKE ? "
+	w.condition = " Color LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4364,7 +4426,7 @@ func (d *__PostMedia_Selector) Color_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = ? "
+	w.condition = " Color = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4375,7 +4437,7 @@ func (d *__PostMedia_Selector) Color_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != ? "
+	w.condition = " Color != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4388,7 +4450,7 @@ func (u *__PostMedia_Selector) Extra_In(ins []string) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4401,7 +4463,7 @@ func (u *__PostMedia_Selector) Extra_NotIn(ins []string) *__PostMedia_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Extra NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Extra NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4413,7 +4475,7 @@ func (u *__PostMedia_Selector) Extra_Like(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra LIKE ? "
+	w.condition = " Extra LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4424,7 +4486,7 @@ func (d *__PostMedia_Selector) Extra_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = ? "
+	w.condition = " Extra = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4435,7 +4497,7 @@ func (d *__PostMedia_Selector) Extra_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != ? "
+	w.condition = " Extra != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4448,17 +4510,23 @@ func (d *__PostMedia_Selector) Extra_NotEq(val string) *__PostMedia_Selector {
 //ints
 
 func (u *__PostMedia_Updater) MediaId(newVal int) *__PostMedia_Updater {
-	u.updates[" MediaId = ? "] = newVal
+	up := updateCol{" MediaId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MediaId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) MediaId_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" MediaId = MediaId+? "] = count
+		up := updateCol{" MediaId = MediaId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MediaId = MediaId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MediaId = MediaId-? "] = -(count) //make it positive
+		up := updateCol{" MediaId = MediaId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MediaId = MediaId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4469,17 +4537,23 @@ func (u *__PostMedia_Updater) MediaId_Increment(count int) *__PostMedia_Updater 
 //ints
 
 func (u *__PostMedia_Updater) UserId(newVal int) *__PostMedia_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) UserId_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4490,17 +4564,23 @@ func (u *__PostMedia_Updater) UserId_Increment(count int) *__PostMedia_Updater {
 //ints
 
 func (u *__PostMedia_Updater) PostId(newVal int) *__PostMedia_Updater {
-	u.updates[" PostId = ? "] = newVal
+	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) PostId_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" PostId = PostId+? "] = count
+		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" PostId = PostId-? "] = -(count) //make it positive
+		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4511,17 +4591,23 @@ func (u *__PostMedia_Updater) PostId_Increment(count int) *__PostMedia_Updater {
 //ints
 
 func (u *__PostMedia_Updater) AlbumId(newVal int) *__PostMedia_Updater {
-	u.updates[" AlbumId = ? "] = newVal
+	up := updateCol{" AlbumId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AlbumId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) AlbumId_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" AlbumId = AlbumId+? "] = count
+		up := updateCol{" AlbumId = AlbumId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AlbumId = AlbumId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AlbumId = AlbumId-? "] = -(count) //make it positive
+		up := updateCol{" AlbumId = AlbumId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AlbumId = AlbumId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4532,17 +4618,23 @@ func (u *__PostMedia_Updater) AlbumId_Increment(count int) *__PostMedia_Updater 
 //ints
 
 func (u *__PostMedia_Updater) MediaTypeEnum(newVal int) *__PostMedia_Updater {
-	u.updates[" MediaTypeEnum = ? "] = newVal
+	up := updateCol{" MediaTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MediaTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) MediaTypeEnum_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" MediaTypeEnum = MediaTypeEnum+? "] = count
+		up := updateCol{" MediaTypeEnum = MediaTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MediaTypeEnum = MediaTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MediaTypeEnum = MediaTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" MediaTypeEnum = MediaTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MediaTypeEnum = MediaTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4553,17 +4645,23 @@ func (u *__PostMedia_Updater) MediaTypeEnum_Increment(count int) *__PostMedia_Up
 //ints
 
 func (u *__PostMedia_Updater) Width(newVal int) *__PostMedia_Updater {
-	u.updates[" Width = ? "] = newVal
+	up := updateCol{" Width = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Width = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) Width_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" Width = Width+? "] = count
+		up := updateCol{" Width = Width+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Width = Width+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Width = Width-? "] = -(count) //make it positive
+		up := updateCol{" Width = Width- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Width = Width- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4574,17 +4672,23 @@ func (u *__PostMedia_Updater) Width_Increment(count int) *__PostMedia_Updater {
 //ints
 
 func (u *__PostMedia_Updater) Height(newVal int) *__PostMedia_Updater {
-	u.updates[" Height = ? "] = newVal
+	up := updateCol{" Height = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Height = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) Height_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" Height = Height+? "] = count
+		up := updateCol{" Height = Height+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Height = Height+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Height = Height-? "] = -(count) //make it positive
+		up := updateCol{" Height = Height- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Height = Height- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4595,17 +4699,23 @@ func (u *__PostMedia_Updater) Height_Increment(count int) *__PostMedia_Updater {
 //ints
 
 func (u *__PostMedia_Updater) Size(newVal int) *__PostMedia_Updater {
-	u.updates[" Size = ? "] = newVal
+	up := updateCol{" Size = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Size = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) Size_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" Size = Size+? "] = count
+		up := updateCol{" Size = Size+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Size = Size+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Size = Size-? "] = -(count) //make it positive
+		up := updateCol{" Size = Size- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Size = Size- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4616,17 +4726,23 @@ func (u *__PostMedia_Updater) Size_Increment(count int) *__PostMedia_Updater {
 //ints
 
 func (u *__PostMedia_Updater) Duration(newVal int) *__PostMedia_Updater {
-	u.updates[" Duration = ? "] = newVal
+	up := updateCol{" Duration = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Duration = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) Duration_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" Duration = Duration+? "] = count
+		up := updateCol{" Duration = Duration+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Duration = Duration+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Duration = Duration-? "] = -(count) //make it positive
+		up := updateCol{" Duration = Duration- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Duration = Duration- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4638,7 +4754,9 @@ func (u *__PostMedia_Updater) Duration_Increment(count int) *__PostMedia_Updater
 
 //string
 func (u *__PostMedia_Updater) Extension(newVal string) *__PostMedia_Updater {
-	u.updates[" Extension = ? "] = newVal
+	up := updateCol{"Extension = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Extension = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -4646,7 +4764,9 @@ func (u *__PostMedia_Updater) Extension(newVal string) *__PostMedia_Updater {
 
 //string
 func (u *__PostMedia_Updater) Md5Hash(newVal string) *__PostMedia_Updater {
-	u.updates[" Md5Hash = ? "] = newVal
+	up := updateCol{"Md5Hash = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Md5Hash = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -4654,24 +4774,32 @@ func (u *__PostMedia_Updater) Md5Hash(newVal string) *__PostMedia_Updater {
 
 //string
 func (u *__PostMedia_Updater) Color(newVal string) *__PostMedia_Updater {
-	u.updates[" Color = ? "] = newVal
+	up := updateCol{"Color = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Color = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__PostMedia_Updater) CreatedTime(newVal int) *__PostMedia_Updater {
-	u.updates[" CreatedTime = ? "] = newVal
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) CreatedTime_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" CreatedTime = CreatedTime+? "] = count
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedTime = CreatedTime-? "] = -(count) //make it positive
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4682,17 +4810,23 @@ func (u *__PostMedia_Updater) CreatedTime_Increment(count int) *__PostMedia_Upda
 //ints
 
 func (u *__PostMedia_Updater) ViewCount(newVal int) *__PostMedia_Updater {
-	u.updates[" ViewCount = ? "] = newVal
+	up := updateCol{" ViewCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ViewCount = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__PostMedia_Updater) ViewCount_Increment(count int) *__PostMedia_Updater {
 	if count > 0 {
-		u.updates[" ViewCount = ViewCount+? "] = count
+		up := updateCol{" ViewCount = ViewCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ViewCount = ViewCount+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" ViewCount = ViewCount-? "] = -(count) //make it positive
+		up := updateCol{" ViewCount = ViewCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ViewCount = ViewCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4704,7 +4838,9 @@ func (u *__PostMedia_Updater) ViewCount_Increment(count int) *__PostMedia_Update
 
 //string
 func (u *__PostMedia_Updater) Extra(newVal string) *__PostMedia_Updater {
-	u.updates[" Extra = ? "] = newVal
+	up := updateCol{"Extra = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Extra = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -5164,9 +5300,13 @@ func (u *__PostMedia_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -5251,10 +5391,10 @@ func MassInsert_PostMedia(rows []PostMedia, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(15, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_media (" +
 		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra" +
@@ -5303,10 +5443,9 @@ func MassReplace_PostMedia(rows []PostMedia, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(15, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_media (" +
 		"MediaId, UserId, PostId, AlbumId, MediaTypeEnum, Width, Height, Size, Duration, Extension, Md5Hash, Color, CreatedTime, ViewCount, Extra" +

@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingClient represents a row from 'sun.setting_client'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingClient represents a row from 'sun.setting_client'.
 
 // Manualy copy this to project
 type SettingClient__ struct {
@@ -197,23 +199,30 @@ func (sc *SettingClient) Delete(db XODB) error {
 
 // orma types
 type __SettingClient_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SettingClient_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __SettingClient_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewSettingClient_Deleter() *__SettingClient_Deleter {
@@ -223,7 +232,7 @@ func NewSettingClient_Deleter() *__SettingClient_Deleter {
 
 func NewSettingClient_Updater() *__SettingClient_Updater {
 	u := __SettingClient_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -232,8 +241,35 @@ func NewSettingClient_Selector() *__SettingClient_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__SettingClient_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__SettingClient_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingClient_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingClient_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__SettingClient_Deleter) Or() *__SettingClient_Deleter {
@@ -248,7 +284,7 @@ func (u *__SettingClient_Deleter) UserId_In(ins []int) *__SettingClient_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -261,7 +297,7 @@ func (u *__SettingClient_Deleter) UserId_Ins(ins ...int) *__SettingClient_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -274,7 +310,7 @@ func (u *__SettingClient_Deleter) UserId_NotIn(ins []int) *__SettingClient_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -285,7 +321,7 @@ func (d *__SettingClient_Deleter) UserId_Eq(val int) *__SettingClient_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -296,7 +332,7 @@ func (d *__SettingClient_Deleter) UserId_NotEq(val int) *__SettingClient_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -307,7 +343,7 @@ func (d *__SettingClient_Deleter) UserId_LT(val int) *__SettingClient_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -318,7 +354,7 @@ func (d *__SettingClient_Deleter) UserId_LE(val int) *__SettingClient_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -329,7 +365,7 @@ func (d *__SettingClient_Deleter) UserId_GT(val int) *__SettingClient_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -340,7 +376,7 @@ func (d *__SettingClient_Deleter) UserId_GE(val int) *__SettingClient_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -353,7 +389,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVoice_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -366,7 +402,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVoice_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -379,7 +415,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVoice_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -390,7 +426,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice = ? "
+	w.condition = " AutoDownloadWifiVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -401,7 +437,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice != ? "
+	w.condition = " AutoDownloadWifiVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -412,7 +448,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice < ? "
+	w.condition = " AutoDownloadWifiVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -423,7 +459,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice <= ? "
+	w.condition = " AutoDownloadWifiVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -434,7 +470,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice > ? "
+	w.condition = " AutoDownloadWifiVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -445,7 +481,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVoice_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice >= ? "
+	w.condition = " AutoDownloadWifiVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -458,7 +494,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiImage_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -471,7 +507,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiImage_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -484,7 +520,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiImage_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -495,7 +531,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage = ? "
+	w.condition = " AutoDownloadWifiImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -506,7 +542,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage != ? "
+	w.condition = " AutoDownloadWifiImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -517,7 +553,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage < ? "
+	w.condition = " AutoDownloadWifiImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -528,7 +564,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage <= ? "
+	w.condition = " AutoDownloadWifiImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -539,7 +575,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage > ? "
+	w.condition = " AutoDownloadWifiImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -550,7 +586,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiImage_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage >= ? "
+	w.condition = " AutoDownloadWifiImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -563,7 +599,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVideo_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -576,7 +612,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVideo_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -589,7 +625,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiVideo_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -600,7 +636,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo = ? "
+	w.condition = " AutoDownloadWifiVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -611,7 +647,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo != ? "
+	w.condition = " AutoDownloadWifiVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -622,7 +658,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo < ? "
+	w.condition = " AutoDownloadWifiVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -633,7 +669,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo <= ? "
+	w.condition = " AutoDownloadWifiVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -644,7 +680,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo > ? "
+	w.condition = " AutoDownloadWifiVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -655,7 +691,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiVideo_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo >= ? "
+	w.condition = " AutoDownloadWifiVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -668,7 +704,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiFile_In(ins []int) *__SettingC
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -681,7 +717,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiFile_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -694,7 +730,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiFile_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -705,7 +741,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_Eq(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile = ? "
+	w.condition = " AutoDownloadWifiFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -716,7 +752,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile != ? "
+	w.condition = " AutoDownloadWifiFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -727,7 +763,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_LT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile < ? "
+	w.condition = " AutoDownloadWifiFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,7 +774,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_LE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile <= ? "
+	w.condition = " AutoDownloadWifiFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -749,7 +785,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_GT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile > ? "
+	w.condition = " AutoDownloadWifiFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -760,7 +796,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiFile_GE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile >= ? "
+	w.condition = " AutoDownloadWifiFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -773,7 +809,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiMusic_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -786,7 +822,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiMusic_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -799,7 +835,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiMusic_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -810,7 +846,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic = ? "
+	w.condition = " AutoDownloadWifiMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -821,7 +857,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic != ? "
+	w.condition = " AutoDownloadWifiMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -832,7 +868,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic < ? "
+	w.condition = " AutoDownloadWifiMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -843,7 +879,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic <= ? "
+	w.condition = " AutoDownloadWifiMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,7 +890,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic > ? "
+	w.condition = " AutoDownloadWifiMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -865,7 +901,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiMusic_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic >= ? "
+	w.condition = " AutoDownloadWifiMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -878,7 +914,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiGif_In(ins []int) *__SettingCl
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -891,7 +927,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiGif_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -904,7 +940,7 @@ func (u *__SettingClient_Deleter) AutoDownloadWifiGif_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -915,7 +951,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_Eq(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif = ? "
+	w.condition = " AutoDownloadWifiGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -926,7 +962,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_NotEq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif != ? "
+	w.condition = " AutoDownloadWifiGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -937,7 +973,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_LT(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif < ? "
+	w.condition = " AutoDownloadWifiGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -948,7 +984,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_LE(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif <= ? "
+	w.condition = " AutoDownloadWifiGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -959,7 +995,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_GT(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif > ? "
+	w.condition = " AutoDownloadWifiGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -970,7 +1006,7 @@ func (d *__SettingClient_Deleter) AutoDownloadWifiGif_GE(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif >= ? "
+	w.condition = " AutoDownloadWifiGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -983,7 +1019,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVoice_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -996,7 +1032,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVoice_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1009,7 +1045,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVoice_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1020,7 +1056,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice = ? "
+	w.condition = " AutoDownloadCellularVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1031,7 +1067,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice != ? "
+	w.condition = " AutoDownloadCellularVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1042,7 +1078,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice < ? "
+	w.condition = " AutoDownloadCellularVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1053,7 +1089,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice <= ? "
+	w.condition = " AutoDownloadCellularVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1064,7 +1100,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice > ? "
+	w.condition = " AutoDownloadCellularVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1075,7 +1111,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVoice_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice >= ? "
+	w.condition = " AutoDownloadCellularVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1088,7 +1124,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularImage_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1101,7 +1137,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularImage_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1114,7 +1150,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularImage_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1125,7 +1161,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage = ? "
+	w.condition = " AutoDownloadCellularImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1136,7 +1172,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage != ? "
+	w.condition = " AutoDownloadCellularImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1147,7 +1183,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage < ? "
+	w.condition = " AutoDownloadCellularImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1158,7 +1194,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage <= ? "
+	w.condition = " AutoDownloadCellularImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1169,7 +1205,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage > ? "
+	w.condition = " AutoDownloadCellularImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1180,7 +1216,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularImage_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage >= ? "
+	w.condition = " AutoDownloadCellularImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1193,7 +1229,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVideo_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1206,7 +1242,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVideo_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1219,7 +1255,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularVideo_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1230,7 +1266,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo = ? "
+	w.condition = " AutoDownloadCellularVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1241,7 +1277,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo != ? "
+	w.condition = " AutoDownloadCellularVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1252,7 +1288,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo < ? "
+	w.condition = " AutoDownloadCellularVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1263,7 +1299,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo <= ? "
+	w.condition = " AutoDownloadCellularVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1274,7 +1310,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo > ? "
+	w.condition = " AutoDownloadCellularVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1285,7 +1321,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularVideo_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo >= ? "
+	w.condition = " AutoDownloadCellularVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1298,7 +1334,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularFile_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1311,7 +1347,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularFile_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1324,7 +1360,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularFile_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1335,7 +1371,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile = ? "
+	w.condition = " AutoDownloadCellularFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1346,7 +1382,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile != ? "
+	w.condition = " AutoDownloadCellularFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1357,7 +1393,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile < ? "
+	w.condition = " AutoDownloadCellularFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1368,7 +1404,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile <= ? "
+	w.condition = " AutoDownloadCellularFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1379,7 +1415,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile > ? "
+	w.condition = " AutoDownloadCellularFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1390,7 +1426,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularFile_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile >= ? "
+	w.condition = " AutoDownloadCellularFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1403,7 +1439,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularMusic_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1416,7 +1452,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularMusic_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1429,7 +1465,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularMusic_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1440,7 +1476,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic = ? "
+	w.condition = " AutoDownloadCellularMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1451,7 +1487,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic != ? "
+	w.condition = " AutoDownloadCellularMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1462,7 +1498,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic < ? "
+	w.condition = " AutoDownloadCellularMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1473,7 +1509,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic <= ? "
+	w.condition = " AutoDownloadCellularMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1484,7 +1520,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic > ? "
+	w.condition = " AutoDownloadCellularMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1495,7 +1531,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularMusic_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic >= ? "
+	w.condition = " AutoDownloadCellularMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1508,7 +1544,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularGif_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1521,7 +1557,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularGif_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1570,7 @@ func (u *__SettingClient_Deleter) AutoDownloadCellularGif_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1545,7 +1581,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif = ? "
+	w.condition = " AutoDownloadCellularGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1556,7 +1592,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif != ? "
+	w.condition = " AutoDownloadCellularGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1567,7 +1603,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif < ? "
+	w.condition = " AutoDownloadCellularGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1578,7 +1614,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif <= ? "
+	w.condition = " AutoDownloadCellularGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1589,7 +1625,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif > ? "
+	w.condition = " AutoDownloadCellularGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1600,7 +1636,7 @@ func (d *__SettingClient_Deleter) AutoDownloadCellularGif_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif >= ? "
+	w.condition = " AutoDownloadCellularGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1613,7 +1649,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVoice_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1626,7 +1662,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVoice_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1639,7 +1675,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVoice_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1650,7 +1686,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice = ? "
+	w.condition = " AutoDownloadRoamingVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1661,7 +1697,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice != ? "
+	w.condition = " AutoDownloadRoamingVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1672,7 +1708,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice < ? "
+	w.condition = " AutoDownloadRoamingVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1683,7 +1719,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice <= ? "
+	w.condition = " AutoDownloadRoamingVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,7 +1730,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice > ? "
+	w.condition = " AutoDownloadRoamingVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1705,7 +1741,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVoice_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice >= ? "
+	w.condition = " AutoDownloadRoamingVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1718,7 +1754,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingImage_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1731,7 +1767,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingImage_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1744,7 +1780,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingImage_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1755,7 +1791,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage = ? "
+	w.condition = " AutoDownloadRoamingImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1766,7 +1802,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage != ? "
+	w.condition = " AutoDownloadRoamingImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1777,7 +1813,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage < ? "
+	w.condition = " AutoDownloadRoamingImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1788,7 +1824,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage <= ? "
+	w.condition = " AutoDownloadRoamingImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1799,7 +1835,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage > ? "
+	w.condition = " AutoDownloadRoamingImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1810,7 +1846,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingImage_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage >= ? "
+	w.condition = " AutoDownloadRoamingImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1823,7 +1859,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVideo_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1836,7 +1872,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVideo_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1849,7 +1885,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingVideo_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1860,7 +1896,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo = ? "
+	w.condition = " AutoDownloadRoamingVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1871,7 +1907,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo != ? "
+	w.condition = " AutoDownloadRoamingVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1882,7 +1918,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo < ? "
+	w.condition = " AutoDownloadRoamingVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1893,7 +1929,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo <= ? "
+	w.condition = " AutoDownloadRoamingVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1904,7 +1940,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo > ? "
+	w.condition = " AutoDownloadRoamingVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1915,7 +1951,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingVideo_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo >= ? "
+	w.condition = " AutoDownloadRoamingVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1928,7 +1964,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingFile_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1941,7 +1977,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingFile_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1954,7 +1990,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingFile_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1965,7 +2001,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile = ? "
+	w.condition = " AutoDownloadRoamingFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1976,7 +2012,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile != ? "
+	w.condition = " AutoDownloadRoamingFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1987,7 +2023,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile < ? "
+	w.condition = " AutoDownloadRoamingFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1998,7 +2034,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile <= ? "
+	w.condition = " AutoDownloadRoamingFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2009,7 +2045,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile > ? "
+	w.condition = " AutoDownloadRoamingFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2020,7 +2056,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingFile_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile >= ? "
+	w.condition = " AutoDownloadRoamingFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2033,7 +2069,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingMusic_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2046,7 +2082,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingMusic_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2059,7 +2095,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingMusic_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2070,7 +2106,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic = ? "
+	w.condition = " AutoDownloadRoamingMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2081,7 +2117,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic != ? "
+	w.condition = " AutoDownloadRoamingMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2092,7 +2128,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic < ? "
+	w.condition = " AutoDownloadRoamingMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2103,7 +2139,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic <= ? "
+	w.condition = " AutoDownloadRoamingMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2114,7 +2150,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic > ? "
+	w.condition = " AutoDownloadRoamingMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2125,7 +2161,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingMusic_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic >= ? "
+	w.condition = " AutoDownloadRoamingMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2138,7 +2174,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingGif_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2151,7 +2187,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingGif_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2164,7 +2200,7 @@ func (u *__SettingClient_Deleter) AutoDownloadRoamingGif_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2175,7 +2211,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif = ? "
+	w.condition = " AutoDownloadRoamingGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2186,7 +2222,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif != ? "
+	w.condition = " AutoDownloadRoamingGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2197,7 +2233,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif < ? "
+	w.condition = " AutoDownloadRoamingGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2208,7 +2244,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif <= ? "
+	w.condition = " AutoDownloadRoamingGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2219,7 +2255,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif > ? "
+	w.condition = " AutoDownloadRoamingGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2230,7 +2266,7 @@ func (d *__SettingClient_Deleter) AutoDownloadRoamingGif_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif >= ? "
+	w.condition = " AutoDownloadRoamingGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2243,7 +2279,7 @@ func (u *__SettingClient_Deleter) SaveToGallery_In(ins []int) *__SettingClient_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2256,7 +2292,7 @@ func (u *__SettingClient_Deleter) SaveToGallery_Ins(ins ...int) *__SettingClient
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2269,7 +2305,7 @@ func (u *__SettingClient_Deleter) SaveToGallery_NotIn(ins []int) *__SettingClien
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2280,7 +2316,7 @@ func (d *__SettingClient_Deleter) SaveToGallery_Eq(val int) *__SettingClient_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery = ? "
+	w.condition = " SaveToGallery = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2291,7 +2327,7 @@ func (d *__SettingClient_Deleter) SaveToGallery_NotEq(val int) *__SettingClient_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery != ? "
+	w.condition = " SaveToGallery != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2302,7 +2338,7 @@ func (d *__SettingClient_Deleter) SaveToGallery_LT(val int) *__SettingClient_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery < ? "
+	w.condition = " SaveToGallery < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2313,7 +2349,7 @@ func (d *__SettingClient_Deleter) SaveToGallery_LE(val int) *__SettingClient_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery <= ? "
+	w.condition = " SaveToGallery <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2324,7 +2360,7 @@ func (d *__SettingClient_Deleter) SaveToGallery_GT(val int) *__SettingClient_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery > ? "
+	w.condition = " SaveToGallery > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2335,10 +2371,23 @@ func (d *__SettingClient_Deleter) SaveToGallery_GE(val int) *__SettingClient_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery >= ? "
+	w.condition = " SaveToGallery >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingClient_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingClient_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -2354,7 +2403,7 @@ func (u *__SettingClient_Updater) UserId_In(ins []int) *__SettingClient_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2367,7 +2416,7 @@ func (u *__SettingClient_Updater) UserId_Ins(ins ...int) *__SettingClient_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2380,7 +2429,7 @@ func (u *__SettingClient_Updater) UserId_NotIn(ins []int) *__SettingClient_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2391,7 +2440,7 @@ func (d *__SettingClient_Updater) UserId_Eq(val int) *__SettingClient_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2402,7 +2451,7 @@ func (d *__SettingClient_Updater) UserId_NotEq(val int) *__SettingClient_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2413,7 +2462,7 @@ func (d *__SettingClient_Updater) UserId_LT(val int) *__SettingClient_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2424,7 +2473,7 @@ func (d *__SettingClient_Updater) UserId_LE(val int) *__SettingClient_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2435,7 +2484,7 @@ func (d *__SettingClient_Updater) UserId_GT(val int) *__SettingClient_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2446,7 +2495,7 @@ func (d *__SettingClient_Updater) UserId_GE(val int) *__SettingClient_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2459,7 +2508,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVoice_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2472,7 +2521,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVoice_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2485,7 +2534,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVoice_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2496,7 +2545,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice = ? "
+	w.condition = " AutoDownloadWifiVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2556,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice != ? "
+	w.condition = " AutoDownloadWifiVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2518,7 +2567,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice < ? "
+	w.condition = " AutoDownloadWifiVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2529,7 +2578,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice <= ? "
+	w.condition = " AutoDownloadWifiVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2540,7 +2589,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice > ? "
+	w.condition = " AutoDownloadWifiVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2551,7 +2600,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVoice_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice >= ? "
+	w.condition = " AutoDownloadWifiVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2564,7 +2613,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiImage_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2577,7 +2626,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiImage_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2590,7 +2639,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiImage_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2601,7 +2650,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage = ? "
+	w.condition = " AutoDownloadWifiImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2612,7 +2661,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage != ? "
+	w.condition = " AutoDownloadWifiImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2623,7 +2672,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage < ? "
+	w.condition = " AutoDownloadWifiImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2634,7 +2683,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage <= ? "
+	w.condition = " AutoDownloadWifiImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2645,7 +2694,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage > ? "
+	w.condition = " AutoDownloadWifiImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2656,7 +2705,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiImage_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage >= ? "
+	w.condition = " AutoDownloadWifiImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2669,7 +2718,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVideo_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2682,7 +2731,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVideo_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2695,7 +2744,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVideo_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2706,7 +2755,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo = ? "
+	w.condition = " AutoDownloadWifiVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2717,7 +2766,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo != ? "
+	w.condition = " AutoDownloadWifiVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2728,7 +2777,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo < ? "
+	w.condition = " AutoDownloadWifiVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2739,7 +2788,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo <= ? "
+	w.condition = " AutoDownloadWifiVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2750,7 +2799,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo > ? "
+	w.condition = " AutoDownloadWifiVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2761,7 +2810,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiVideo_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo >= ? "
+	w.condition = " AutoDownloadWifiVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2774,7 +2823,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiFile_In(ins []int) *__SettingC
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2787,7 +2836,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiFile_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2800,7 +2849,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiFile_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2811,7 +2860,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_Eq(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile = ? "
+	w.condition = " AutoDownloadWifiFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2822,7 +2871,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile != ? "
+	w.condition = " AutoDownloadWifiFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2833,7 +2882,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_LT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile < ? "
+	w.condition = " AutoDownloadWifiFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2844,7 +2893,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_LE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile <= ? "
+	w.condition = " AutoDownloadWifiFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2855,7 +2904,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_GT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile > ? "
+	w.condition = " AutoDownloadWifiFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2866,7 +2915,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiFile_GE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile >= ? "
+	w.condition = " AutoDownloadWifiFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2879,7 +2928,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiMusic_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2892,7 +2941,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiMusic_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2905,7 +2954,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiMusic_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2916,7 +2965,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic = ? "
+	w.condition = " AutoDownloadWifiMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2927,7 +2976,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic != ? "
+	w.condition = " AutoDownloadWifiMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2938,7 +2987,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic < ? "
+	w.condition = " AutoDownloadWifiMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2949,7 +2998,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic <= ? "
+	w.condition = " AutoDownloadWifiMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2960,7 +3009,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic > ? "
+	w.condition = " AutoDownloadWifiMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2971,7 +3020,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiMusic_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic >= ? "
+	w.condition = " AutoDownloadWifiMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2984,7 +3033,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiGif_In(ins []int) *__SettingCl
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2997,7 +3046,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiGif_Ins(ins ...int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3010,7 +3059,7 @@ func (u *__SettingClient_Updater) AutoDownloadWifiGif_NotIn(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3021,7 +3070,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_Eq(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif = ? "
+	w.condition = " AutoDownloadWifiGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3032,7 +3081,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_NotEq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif != ? "
+	w.condition = " AutoDownloadWifiGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3043,7 +3092,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_LT(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif < ? "
+	w.condition = " AutoDownloadWifiGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3054,7 +3103,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_LE(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif <= ? "
+	w.condition = " AutoDownloadWifiGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3065,7 +3114,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_GT(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif > ? "
+	w.condition = " AutoDownloadWifiGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3076,7 +3125,7 @@ func (d *__SettingClient_Updater) AutoDownloadWifiGif_GE(val int) *__SettingClie
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif >= ? "
+	w.condition = " AutoDownloadWifiGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3089,7 +3138,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVoice_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3102,7 +3151,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVoice_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3115,7 +3164,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVoice_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3126,7 +3175,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice = ? "
+	w.condition = " AutoDownloadCellularVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3137,7 +3186,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice != ? "
+	w.condition = " AutoDownloadCellularVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3148,7 +3197,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice < ? "
+	w.condition = " AutoDownloadCellularVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3159,7 +3208,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice <= ? "
+	w.condition = " AutoDownloadCellularVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3170,7 +3219,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice > ? "
+	w.condition = " AutoDownloadCellularVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3181,7 +3230,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVoice_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice >= ? "
+	w.condition = " AutoDownloadCellularVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3194,7 +3243,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularImage_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3207,7 +3256,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularImage_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3220,7 +3269,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularImage_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3231,7 +3280,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage = ? "
+	w.condition = " AutoDownloadCellularImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3242,7 +3291,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage != ? "
+	w.condition = " AutoDownloadCellularImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3253,7 +3302,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage < ? "
+	w.condition = " AutoDownloadCellularImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3264,7 +3313,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage <= ? "
+	w.condition = " AutoDownloadCellularImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3275,7 +3324,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage > ? "
+	w.condition = " AutoDownloadCellularImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3286,7 +3335,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularImage_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage >= ? "
+	w.condition = " AutoDownloadCellularImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3299,7 +3348,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVideo_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3312,7 +3361,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVideo_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3325,7 +3374,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVideo_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3336,7 +3385,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo = ? "
+	w.condition = " AutoDownloadCellularVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3347,7 +3396,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo != ? "
+	w.condition = " AutoDownloadCellularVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3358,7 +3407,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo < ? "
+	w.condition = " AutoDownloadCellularVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3369,7 +3418,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo <= ? "
+	w.condition = " AutoDownloadCellularVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3380,7 +3429,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo > ? "
+	w.condition = " AutoDownloadCellularVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3391,7 +3440,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularVideo_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo >= ? "
+	w.condition = " AutoDownloadCellularVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3404,7 +3453,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularFile_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3417,7 +3466,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularFile_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3430,7 +3479,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularFile_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3441,7 +3490,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile = ? "
+	w.condition = " AutoDownloadCellularFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3452,7 +3501,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile != ? "
+	w.condition = " AutoDownloadCellularFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3463,7 +3512,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile < ? "
+	w.condition = " AutoDownloadCellularFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3474,7 +3523,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile <= ? "
+	w.condition = " AutoDownloadCellularFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3485,7 +3534,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile > ? "
+	w.condition = " AutoDownloadCellularFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3496,7 +3545,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularFile_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile >= ? "
+	w.condition = " AutoDownloadCellularFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3509,7 +3558,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularMusic_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3522,7 +3571,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularMusic_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3535,7 +3584,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularMusic_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3546,7 +3595,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic = ? "
+	w.condition = " AutoDownloadCellularMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3557,7 +3606,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic != ? "
+	w.condition = " AutoDownloadCellularMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3568,7 +3617,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic < ? "
+	w.condition = " AutoDownloadCellularMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3579,7 +3628,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic <= ? "
+	w.condition = " AutoDownloadCellularMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3590,7 +3639,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic > ? "
+	w.condition = " AutoDownloadCellularMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3601,7 +3650,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularMusic_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic >= ? "
+	w.condition = " AutoDownloadCellularMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3614,7 +3663,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularGif_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3627,7 +3676,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularGif_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3640,7 +3689,7 @@ func (u *__SettingClient_Updater) AutoDownloadCellularGif_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3651,7 +3700,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif = ? "
+	w.condition = " AutoDownloadCellularGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3662,7 +3711,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif != ? "
+	w.condition = " AutoDownloadCellularGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3673,7 +3722,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif < ? "
+	w.condition = " AutoDownloadCellularGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3684,7 +3733,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif <= ? "
+	w.condition = " AutoDownloadCellularGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3695,7 +3744,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif > ? "
+	w.condition = " AutoDownloadCellularGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3706,7 +3755,7 @@ func (d *__SettingClient_Updater) AutoDownloadCellularGif_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif >= ? "
+	w.condition = " AutoDownloadCellularGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3719,7 +3768,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVoice_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3732,7 +3781,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVoice_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3745,7 +3794,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVoice_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3756,7 +3805,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice = ? "
+	w.condition = " AutoDownloadRoamingVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3767,7 +3816,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice != ? "
+	w.condition = " AutoDownloadRoamingVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3778,7 +3827,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice < ? "
+	w.condition = " AutoDownloadRoamingVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3789,7 +3838,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice <= ? "
+	w.condition = " AutoDownloadRoamingVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3800,7 +3849,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice > ? "
+	w.condition = " AutoDownloadRoamingVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3811,7 +3860,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVoice_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice >= ? "
+	w.condition = " AutoDownloadRoamingVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3824,7 +3873,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingImage_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3837,7 +3886,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingImage_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3850,7 +3899,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingImage_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3861,7 +3910,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage = ? "
+	w.condition = " AutoDownloadRoamingImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3872,7 +3921,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage != ? "
+	w.condition = " AutoDownloadRoamingImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3883,7 +3932,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage < ? "
+	w.condition = " AutoDownloadRoamingImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3894,7 +3943,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage <= ? "
+	w.condition = " AutoDownloadRoamingImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3905,7 +3954,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage > ? "
+	w.condition = " AutoDownloadRoamingImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3916,7 +3965,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingImage_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage >= ? "
+	w.condition = " AutoDownloadRoamingImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3929,7 +3978,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVideo_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3942,7 +3991,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVideo_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3955,7 +4004,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVideo_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3966,7 +4015,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo = ? "
+	w.condition = " AutoDownloadRoamingVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3977,7 +4026,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo != ? "
+	w.condition = " AutoDownloadRoamingVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3988,7 +4037,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo < ? "
+	w.condition = " AutoDownloadRoamingVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3999,7 +4048,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo <= ? "
+	w.condition = " AutoDownloadRoamingVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4010,7 +4059,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo > ? "
+	w.condition = " AutoDownloadRoamingVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4021,7 +4070,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingVideo_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo >= ? "
+	w.condition = " AutoDownloadRoamingVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4034,7 +4083,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingFile_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4047,7 +4096,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingFile_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4060,7 +4109,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingFile_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4071,7 +4120,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile = ? "
+	w.condition = " AutoDownloadRoamingFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4082,7 +4131,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile != ? "
+	w.condition = " AutoDownloadRoamingFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4093,7 +4142,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile < ? "
+	w.condition = " AutoDownloadRoamingFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4104,7 +4153,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile <= ? "
+	w.condition = " AutoDownloadRoamingFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4115,7 +4164,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile > ? "
+	w.condition = " AutoDownloadRoamingFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4126,7 +4175,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingFile_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile >= ? "
+	w.condition = " AutoDownloadRoamingFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4139,7 +4188,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingMusic_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4152,7 +4201,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingMusic_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4165,7 +4214,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingMusic_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4176,7 +4225,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic = ? "
+	w.condition = " AutoDownloadRoamingMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4187,7 +4236,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic != ? "
+	w.condition = " AutoDownloadRoamingMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4198,7 +4247,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic < ? "
+	w.condition = " AutoDownloadRoamingMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4209,7 +4258,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic <= ? "
+	w.condition = " AutoDownloadRoamingMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4220,7 +4269,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic > ? "
+	w.condition = " AutoDownloadRoamingMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4231,7 +4280,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingMusic_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic >= ? "
+	w.condition = " AutoDownloadRoamingMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4244,7 +4293,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingGif_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4257,7 +4306,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingGif_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4270,7 +4319,7 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingGif_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4281,7 +4330,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif = ? "
+	w.condition = " AutoDownloadRoamingGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4292,7 +4341,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif != ? "
+	w.condition = " AutoDownloadRoamingGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4303,7 +4352,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif < ? "
+	w.condition = " AutoDownloadRoamingGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4314,7 +4363,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif <= ? "
+	w.condition = " AutoDownloadRoamingGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4325,7 +4374,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif > ? "
+	w.condition = " AutoDownloadRoamingGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4336,7 +4385,7 @@ func (d *__SettingClient_Updater) AutoDownloadRoamingGif_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif >= ? "
+	w.condition = " AutoDownloadRoamingGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4349,7 +4398,7 @@ func (u *__SettingClient_Updater) SaveToGallery_In(ins []int) *__SettingClient_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4362,7 +4411,7 @@ func (u *__SettingClient_Updater) SaveToGallery_Ins(ins ...int) *__SettingClient
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4375,7 +4424,7 @@ func (u *__SettingClient_Updater) SaveToGallery_NotIn(ins []int) *__SettingClien
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4386,7 +4435,7 @@ func (d *__SettingClient_Updater) SaveToGallery_Eq(val int) *__SettingClient_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery = ? "
+	w.condition = " SaveToGallery = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4397,7 +4446,7 @@ func (d *__SettingClient_Updater) SaveToGallery_NotEq(val int) *__SettingClient_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery != ? "
+	w.condition = " SaveToGallery != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4408,7 +4457,7 @@ func (d *__SettingClient_Updater) SaveToGallery_LT(val int) *__SettingClient_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery < ? "
+	w.condition = " SaveToGallery < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4419,7 +4468,7 @@ func (d *__SettingClient_Updater) SaveToGallery_LE(val int) *__SettingClient_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery <= ? "
+	w.condition = " SaveToGallery <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4430,7 +4479,7 @@ func (d *__SettingClient_Updater) SaveToGallery_GT(val int) *__SettingClient_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery > ? "
+	w.condition = " SaveToGallery > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4441,10 +4490,23 @@ func (d *__SettingClient_Updater) SaveToGallery_GE(val int) *__SettingClient_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery >= ? "
+	w.condition = " SaveToGallery >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__SettingClient_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__SettingClient_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -4460,7 +4522,7 @@ func (u *__SettingClient_Selector) UserId_In(ins []int) *__SettingClient_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4473,7 +4535,7 @@ func (u *__SettingClient_Selector) UserId_Ins(ins ...int) *__SettingClient_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4486,7 +4548,7 @@ func (u *__SettingClient_Selector) UserId_NotIn(ins []int) *__SettingClient_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4497,7 +4559,7 @@ func (d *__SettingClient_Selector) UserId_Eq(val int) *__SettingClient_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4508,7 +4570,7 @@ func (d *__SettingClient_Selector) UserId_NotEq(val int) *__SettingClient_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4519,7 +4581,7 @@ func (d *__SettingClient_Selector) UserId_LT(val int) *__SettingClient_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4530,7 +4592,7 @@ func (d *__SettingClient_Selector) UserId_LE(val int) *__SettingClient_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4541,7 +4603,7 @@ func (d *__SettingClient_Selector) UserId_GT(val int) *__SettingClient_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4552,7 +4614,7 @@ func (d *__SettingClient_Selector) UserId_GE(val int) *__SettingClient_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4565,7 +4627,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVoice_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4578,7 +4640,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVoice_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4591,7 +4653,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVoice_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4602,7 +4664,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice = ? "
+	w.condition = " AutoDownloadWifiVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4613,7 +4675,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice != ? "
+	w.condition = " AutoDownloadWifiVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4624,7 +4686,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice < ? "
+	w.condition = " AutoDownloadWifiVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4635,7 +4697,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice <= ? "
+	w.condition = " AutoDownloadWifiVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4646,7 +4708,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice > ? "
+	w.condition = " AutoDownloadWifiVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4657,7 +4719,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVoice_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVoice >= ? "
+	w.condition = " AutoDownloadWifiVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4670,7 +4732,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiImage_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4683,7 +4745,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiImage_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4696,7 +4758,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiImage_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4707,7 +4769,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage = ? "
+	w.condition = " AutoDownloadWifiImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4718,7 +4780,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage != ? "
+	w.condition = " AutoDownloadWifiImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4729,7 +4791,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage < ? "
+	w.condition = " AutoDownloadWifiImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4740,7 +4802,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage <= ? "
+	w.condition = " AutoDownloadWifiImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4751,7 +4813,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage > ? "
+	w.condition = " AutoDownloadWifiImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4762,7 +4824,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiImage_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiImage >= ? "
+	w.condition = " AutoDownloadWifiImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4775,7 +4837,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVideo_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4788,7 +4850,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVideo_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4801,7 +4863,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiVideo_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4812,7 +4874,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo = ? "
+	w.condition = " AutoDownloadWifiVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4823,7 +4885,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo != ? "
+	w.condition = " AutoDownloadWifiVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4834,7 +4896,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo < ? "
+	w.condition = " AutoDownloadWifiVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4845,7 +4907,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo <= ? "
+	w.condition = " AutoDownloadWifiVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4856,7 +4918,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo > ? "
+	w.condition = " AutoDownloadWifiVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4867,7 +4929,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiVideo_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiVideo >= ? "
+	w.condition = " AutoDownloadWifiVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4880,7 +4942,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiFile_In(ins []int) *__Setting
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4893,7 +4955,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiFile_Ins(ins ...int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4906,7 +4968,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiFile_NotIn(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4917,7 +4979,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_Eq(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile = ? "
+	w.condition = " AutoDownloadWifiFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4928,7 +4990,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_NotEq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile != ? "
+	w.condition = " AutoDownloadWifiFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4939,7 +5001,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_LT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile < ? "
+	w.condition = " AutoDownloadWifiFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4950,7 +5012,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_LE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile <= ? "
+	w.condition = " AutoDownloadWifiFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4961,7 +5023,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_GT(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile > ? "
+	w.condition = " AutoDownloadWifiFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4972,7 +5034,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiFile_GE(val int) *__SettingCl
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiFile >= ? "
+	w.condition = " AutoDownloadWifiFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4985,7 +5047,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiMusic_In(ins []int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -4998,7 +5060,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiMusic_Ins(ins ...int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5011,7 +5073,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiMusic_NotIn(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5022,7 +5084,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_Eq(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic = ? "
+	w.condition = " AutoDownloadWifiMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5033,7 +5095,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_NotEq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic != ? "
+	w.condition = " AutoDownloadWifiMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5044,7 +5106,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_LT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic < ? "
+	w.condition = " AutoDownloadWifiMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5055,7 +5117,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_LE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic <= ? "
+	w.condition = " AutoDownloadWifiMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5066,7 +5128,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_GT(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic > ? "
+	w.condition = " AutoDownloadWifiMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5077,7 +5139,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiMusic_GE(val int) *__SettingC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiMusic >= ? "
+	w.condition = " AutoDownloadWifiMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5090,7 +5152,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiGif_In(ins []int) *__SettingC
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5103,7 +5165,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiGif_Ins(ins ...int) *__Settin
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5116,7 +5178,7 @@ func (u *__SettingClient_Selector) AutoDownloadWifiGif_NotIn(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadWifiGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5127,7 +5189,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_Eq(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif = ? "
+	w.condition = " AutoDownloadWifiGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5138,7 +5200,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_NotEq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif != ? "
+	w.condition = " AutoDownloadWifiGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5149,7 +5211,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_LT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif < ? "
+	w.condition = " AutoDownloadWifiGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5160,7 +5222,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_LE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif <= ? "
+	w.condition = " AutoDownloadWifiGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5171,7 +5233,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_GT(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif > ? "
+	w.condition = " AutoDownloadWifiGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5182,7 +5244,7 @@ func (d *__SettingClient_Selector) AutoDownloadWifiGif_GE(val int) *__SettingCli
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadWifiGif >= ? "
+	w.condition = " AutoDownloadWifiGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5195,7 +5257,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVoice_In(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5208,7 +5270,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVoice_Ins(ins ...int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5221,7 +5283,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVoice_NotIn(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5232,7 +5294,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_Eq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice = ? "
+	w.condition = " AutoDownloadCellularVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5243,7 +5305,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_NotEq(val int) *__S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice != ? "
+	w.condition = " AutoDownloadCellularVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5254,7 +5316,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_LT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice < ? "
+	w.condition = " AutoDownloadCellularVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5265,7 +5327,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_LE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice <= ? "
+	w.condition = " AutoDownloadCellularVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5276,7 +5338,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_GT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice > ? "
+	w.condition = " AutoDownloadCellularVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5287,7 +5349,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVoice_GE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVoice >= ? "
+	w.condition = " AutoDownloadCellularVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5300,7 +5362,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularImage_In(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5313,7 +5375,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularImage_Ins(ins ...int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5326,7 +5388,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularImage_NotIn(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5337,7 +5399,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_Eq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage = ? "
+	w.condition = " AutoDownloadCellularImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5348,7 +5410,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_NotEq(val int) *__S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage != ? "
+	w.condition = " AutoDownloadCellularImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5359,7 +5421,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_LT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage < ? "
+	w.condition = " AutoDownloadCellularImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5370,7 +5432,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_LE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage <= ? "
+	w.condition = " AutoDownloadCellularImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5381,7 +5443,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_GT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage > ? "
+	w.condition = " AutoDownloadCellularImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5392,7 +5454,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularImage_GE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularImage >= ? "
+	w.condition = " AutoDownloadCellularImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5405,7 +5467,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVideo_In(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5418,7 +5480,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVideo_Ins(ins ...int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5431,7 +5493,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularVideo_NotIn(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5442,7 +5504,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_Eq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo = ? "
+	w.condition = " AutoDownloadCellularVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5453,7 +5515,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_NotEq(val int) *__S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo != ? "
+	w.condition = " AutoDownloadCellularVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5464,7 +5526,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_LT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo < ? "
+	w.condition = " AutoDownloadCellularVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5475,7 +5537,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_LE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo <= ? "
+	w.condition = " AutoDownloadCellularVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5486,7 +5548,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_GT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo > ? "
+	w.condition = " AutoDownloadCellularVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5497,7 +5559,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularVideo_GE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularVideo >= ? "
+	w.condition = " AutoDownloadCellularVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5510,7 +5572,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularFile_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5523,7 +5585,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularFile_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5536,7 +5598,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularFile_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5547,7 +5609,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile = ? "
+	w.condition = " AutoDownloadCellularFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5558,7 +5620,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile != ? "
+	w.condition = " AutoDownloadCellularFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5569,7 +5631,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile < ? "
+	w.condition = " AutoDownloadCellularFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5580,7 +5642,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile <= ? "
+	w.condition = " AutoDownloadCellularFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5591,7 +5653,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile > ? "
+	w.condition = " AutoDownloadCellularFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5602,7 +5664,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularFile_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularFile >= ? "
+	w.condition = " AutoDownloadCellularFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5615,7 +5677,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularMusic_In(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5628,7 +5690,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularMusic_Ins(ins ...int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5641,7 +5703,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularMusic_NotIn(ins []int) *_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5652,7 +5714,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_Eq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic = ? "
+	w.condition = " AutoDownloadCellularMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5663,7 +5725,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_NotEq(val int) *__S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic != ? "
+	w.condition = " AutoDownloadCellularMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5674,7 +5736,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_LT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic < ? "
+	w.condition = " AutoDownloadCellularMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5685,7 +5747,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_LE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic <= ? "
+	w.condition = " AutoDownloadCellularMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5696,7 +5758,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_GT(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic > ? "
+	w.condition = " AutoDownloadCellularMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5707,7 +5769,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularMusic_GE(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularMusic >= ? "
+	w.condition = " AutoDownloadCellularMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5720,7 +5782,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularGif_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5733,7 +5795,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularGif_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5746,7 +5808,7 @@ func (u *__SettingClient_Selector) AutoDownloadCellularGif_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadCellularGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5757,7 +5819,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif = ? "
+	w.condition = " AutoDownloadCellularGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5768,7 +5830,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif != ? "
+	w.condition = " AutoDownloadCellularGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5779,7 +5841,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif < ? "
+	w.condition = " AutoDownloadCellularGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5790,7 +5852,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif <= ? "
+	w.condition = " AutoDownloadCellularGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5801,7 +5863,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif > ? "
+	w.condition = " AutoDownloadCellularGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5812,7 +5874,7 @@ func (d *__SettingClient_Selector) AutoDownloadCellularGif_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadCellularGif >= ? "
+	w.condition = " AutoDownloadCellularGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5825,7 +5887,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVoice_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5838,7 +5900,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVoice_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5851,7 +5913,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVoice_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVoice NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5862,7 +5924,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice = ? "
+	w.condition = " AutoDownloadRoamingVoice = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5873,7 +5935,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice != ? "
+	w.condition = " AutoDownloadRoamingVoice != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5884,7 +5946,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice < ? "
+	w.condition = " AutoDownloadRoamingVoice < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5895,7 +5957,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice <= ? "
+	w.condition = " AutoDownloadRoamingVoice <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5906,7 +5968,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice > ? "
+	w.condition = " AutoDownloadRoamingVoice > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5917,7 +5979,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVoice_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVoice >= ? "
+	w.condition = " AutoDownloadRoamingVoice >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5930,7 +5992,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingImage_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5943,7 +6005,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingImage_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5956,7 +6018,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingImage_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingImage NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -5967,7 +6029,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage = ? "
+	w.condition = " AutoDownloadRoamingImage = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5978,7 +6040,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage != ? "
+	w.condition = " AutoDownloadRoamingImage != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5989,7 +6051,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage < ? "
+	w.condition = " AutoDownloadRoamingImage < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6000,7 +6062,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage <= ? "
+	w.condition = " AutoDownloadRoamingImage <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6011,7 +6073,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage > ? "
+	w.condition = " AutoDownloadRoamingImage > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6022,7 +6084,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingImage_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingImage >= ? "
+	w.condition = " AutoDownloadRoamingImage >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6035,7 +6097,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVideo_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6048,7 +6110,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVideo_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6061,7 +6123,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingVideo_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingVideo NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6072,7 +6134,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo = ? "
+	w.condition = " AutoDownloadRoamingVideo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6083,7 +6145,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo != ? "
+	w.condition = " AutoDownloadRoamingVideo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6094,7 +6156,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo < ? "
+	w.condition = " AutoDownloadRoamingVideo < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6105,7 +6167,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo <= ? "
+	w.condition = " AutoDownloadRoamingVideo <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6116,7 +6178,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo > ? "
+	w.condition = " AutoDownloadRoamingVideo > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6127,7 +6189,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingVideo_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingVideo >= ? "
+	w.condition = " AutoDownloadRoamingVideo >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6140,7 +6202,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingFile_In(ins []int) *__Sett
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6153,7 +6215,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingFile_Ins(ins ...int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6166,7 +6228,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingFile_NotIn(ins []int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingFile NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6177,7 +6239,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_Eq(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile = ? "
+	w.condition = " AutoDownloadRoamingFile = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6188,7 +6250,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_NotEq(val int) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile != ? "
+	w.condition = " AutoDownloadRoamingFile != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6199,7 +6261,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_LT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile < ? "
+	w.condition = " AutoDownloadRoamingFile < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6210,7 +6272,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_LE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile <= ? "
+	w.condition = " AutoDownloadRoamingFile <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6221,7 +6283,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_GT(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile > ? "
+	w.condition = " AutoDownloadRoamingFile > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6232,7 +6294,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingFile_GE(val int) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingFile >= ? "
+	w.condition = " AutoDownloadRoamingFile >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6245,7 +6307,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingMusic_In(ins []int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6258,7 +6320,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingMusic_Ins(ins ...int) *__S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6271,7 +6333,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingMusic_NotIn(ins []int) *__
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingMusic NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6282,7 +6344,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_Eq(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic = ? "
+	w.condition = " AutoDownloadRoamingMusic = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6293,7 +6355,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_NotEq(val int) *__Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic != ? "
+	w.condition = " AutoDownloadRoamingMusic != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6304,7 +6366,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_LT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic < ? "
+	w.condition = " AutoDownloadRoamingMusic < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6315,7 +6377,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_LE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic <= ? "
+	w.condition = " AutoDownloadRoamingMusic <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6326,7 +6388,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_GT(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic > ? "
+	w.condition = " AutoDownloadRoamingMusic > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6337,7 +6399,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingMusic_GE(val int) *__Setti
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingMusic >= ? "
+	w.condition = " AutoDownloadRoamingMusic >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6350,7 +6412,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingGif_In(ins []int) *__Setti
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6363,7 +6425,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingGif_Ins(ins ...int) *__Set
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6376,7 +6438,7 @@ func (u *__SettingClient_Selector) AutoDownloadRoamingGif_NotIn(ins []int) *__Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " AutoDownloadRoamingGif NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6387,7 +6449,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_Eq(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif = ? "
+	w.condition = " AutoDownloadRoamingGif = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6398,7 +6460,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_NotEq(val int) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif != ? "
+	w.condition = " AutoDownloadRoamingGif != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6409,7 +6471,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_LT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif < ? "
+	w.condition = " AutoDownloadRoamingGif < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6420,7 +6482,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_LE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif <= ? "
+	w.condition = " AutoDownloadRoamingGif <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6431,7 +6493,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_GT(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif > ? "
+	w.condition = " AutoDownloadRoamingGif > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6442,7 +6504,7 @@ func (d *__SettingClient_Selector) AutoDownloadRoamingGif_GE(val int) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " AutoDownloadRoamingGif >= ? "
+	w.condition = " AutoDownloadRoamingGif >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6455,7 +6517,7 @@ func (u *__SettingClient_Selector) SaveToGallery_In(ins []int) *__SettingClient_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6468,7 +6530,7 @@ func (u *__SettingClient_Selector) SaveToGallery_Ins(ins ...int) *__SettingClien
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6481,7 +6543,7 @@ func (u *__SettingClient_Selector) SaveToGallery_NotIn(ins []int) *__SettingClie
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SaveToGallery NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SaveToGallery NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -6492,7 +6554,7 @@ func (d *__SettingClient_Selector) SaveToGallery_Eq(val int) *__SettingClient_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery = ? "
+	w.condition = " SaveToGallery = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6503,7 +6565,7 @@ func (d *__SettingClient_Selector) SaveToGallery_NotEq(val int) *__SettingClient
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery != ? "
+	w.condition = " SaveToGallery != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6514,7 +6576,7 @@ func (d *__SettingClient_Selector) SaveToGallery_LT(val int) *__SettingClient_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery < ? "
+	w.condition = " SaveToGallery < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6525,7 +6587,7 @@ func (d *__SettingClient_Selector) SaveToGallery_LE(val int) *__SettingClient_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery <= ? "
+	w.condition = " SaveToGallery <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6536,7 +6598,7 @@ func (d *__SettingClient_Selector) SaveToGallery_GT(val int) *__SettingClient_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery > ? "
+	w.condition = " SaveToGallery > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6547,7 +6609,7 @@ func (d *__SettingClient_Selector) SaveToGallery_GE(val int) *__SettingClient_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SaveToGallery >= ? "
+	w.condition = " SaveToGallery >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6568,17 +6630,23 @@ func (d *__SettingClient_Selector) SaveToGallery_GE(val int) *__SettingClient_Se
 //ints
 
 func (u *__SettingClient_Updater) UserId(newVal int) *__SettingClient_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) UserId_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6589,17 +6657,23 @@ func (u *__SettingClient_Updater) UserId_Increment(count int) *__SettingClient_U
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiVoice(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiVoice = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiVoice = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiVoice = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiVoice_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiVoice = AutoDownloadWifiVoice+? "] = count
+		up := updateCol{" AutoDownloadWifiVoice = AutoDownloadWifiVoice+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiVoice = AutoDownloadWifiVoice+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiVoice = AutoDownloadWifiVoice-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiVoice = AutoDownloadWifiVoice- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiVoice = AutoDownloadWifiVoice- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6610,17 +6684,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVoice_Increment(count int) *__
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiImage(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiImage = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiImage = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiImage = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiImage_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiImage = AutoDownloadWifiImage+? "] = count
+		up := updateCol{" AutoDownloadWifiImage = AutoDownloadWifiImage+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiImage = AutoDownloadWifiImage+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiImage = AutoDownloadWifiImage-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiImage = AutoDownloadWifiImage- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiImage = AutoDownloadWifiImage- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6631,17 +6711,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiImage_Increment(count int) *__
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiVideo(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiVideo = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiVideo = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiVideo = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiVideo_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiVideo = AutoDownloadWifiVideo+? "] = count
+		up := updateCol{" AutoDownloadWifiVideo = AutoDownloadWifiVideo+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiVideo = AutoDownloadWifiVideo+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiVideo = AutoDownloadWifiVideo-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiVideo = AutoDownloadWifiVideo- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiVideo = AutoDownloadWifiVideo- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6652,17 +6738,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiVideo_Increment(count int) *__
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiFile(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiFile = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiFile = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiFile = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiFile_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiFile = AutoDownloadWifiFile+? "] = count
+		up := updateCol{" AutoDownloadWifiFile = AutoDownloadWifiFile+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiFile = AutoDownloadWifiFile+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiFile = AutoDownloadWifiFile-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiFile = AutoDownloadWifiFile- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiFile = AutoDownloadWifiFile- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6673,17 +6765,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiFile_Increment(count int) *__S
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiMusic(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiMusic = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiMusic = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiMusic = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiMusic_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiMusic = AutoDownloadWifiMusic+? "] = count
+		up := updateCol{" AutoDownloadWifiMusic = AutoDownloadWifiMusic+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiMusic = AutoDownloadWifiMusic+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiMusic = AutoDownloadWifiMusic-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiMusic = AutoDownloadWifiMusic- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiMusic = AutoDownloadWifiMusic- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6694,17 +6792,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiMusic_Increment(count int) *__
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadWifiGif(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadWifiGif = ? "] = newVal
+	up := updateCol{" AutoDownloadWifiGif = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadWifiGif = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadWifiGif_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadWifiGif = AutoDownloadWifiGif+? "] = count
+		up := updateCol{" AutoDownloadWifiGif = AutoDownloadWifiGif+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadWifiGif = AutoDownloadWifiGif+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadWifiGif = AutoDownloadWifiGif-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadWifiGif = AutoDownloadWifiGif- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadWifiGif = AutoDownloadWifiGif- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6715,17 +6819,23 @@ func (u *__SettingClient_Updater) AutoDownloadWifiGif_Increment(count int) *__Se
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularVoice(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularVoice = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularVoice = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularVoice = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularVoice_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularVoice = AutoDownloadCellularVoice+? "] = count
+		up := updateCol{" AutoDownloadCellularVoice = AutoDownloadCellularVoice+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularVoice = AutoDownloadCellularVoice+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularVoice = AutoDownloadCellularVoice-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularVoice = AutoDownloadCellularVoice- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularVoice = AutoDownloadCellularVoice- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6736,17 +6846,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVoice_Increment(count int)
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularImage(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularImage = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularImage = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularImage = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularImage_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularImage = AutoDownloadCellularImage+? "] = count
+		up := updateCol{" AutoDownloadCellularImage = AutoDownloadCellularImage+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularImage = AutoDownloadCellularImage+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularImage = AutoDownloadCellularImage-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularImage = AutoDownloadCellularImage- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularImage = AutoDownloadCellularImage- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6757,17 +6873,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularImage_Increment(count int)
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularVideo(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularVideo = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularVideo = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularVideo = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularVideo_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularVideo = AutoDownloadCellularVideo+? "] = count
+		up := updateCol{" AutoDownloadCellularVideo = AutoDownloadCellularVideo+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularVideo = AutoDownloadCellularVideo+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularVideo = AutoDownloadCellularVideo-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularVideo = AutoDownloadCellularVideo- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularVideo = AutoDownloadCellularVideo- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6778,17 +6900,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularVideo_Increment(count int)
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularFile(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularFile = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularFile = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularFile = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularFile_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularFile = AutoDownloadCellularFile+? "] = count
+		up := updateCol{" AutoDownloadCellularFile = AutoDownloadCellularFile+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularFile = AutoDownloadCellularFile+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularFile = AutoDownloadCellularFile-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularFile = AutoDownloadCellularFile- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularFile = AutoDownloadCellularFile- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6799,17 +6927,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularFile_Increment(count int) 
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularMusic(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularMusic = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularMusic = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularMusic = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularMusic_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularMusic = AutoDownloadCellularMusic+? "] = count
+		up := updateCol{" AutoDownloadCellularMusic = AutoDownloadCellularMusic+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularMusic = AutoDownloadCellularMusic+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularMusic = AutoDownloadCellularMusic-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularMusic = AutoDownloadCellularMusic- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularMusic = AutoDownloadCellularMusic- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6820,17 +6954,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularMusic_Increment(count int)
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadCellularGif(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadCellularGif = ? "] = newVal
+	up := updateCol{" AutoDownloadCellularGif = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadCellularGif = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadCellularGif_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadCellularGif = AutoDownloadCellularGif+? "] = count
+		up := updateCol{" AutoDownloadCellularGif = AutoDownloadCellularGif+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadCellularGif = AutoDownloadCellularGif+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadCellularGif = AutoDownloadCellularGif-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadCellularGif = AutoDownloadCellularGif- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadCellularGif = AutoDownloadCellularGif- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6841,17 +6981,23 @@ func (u *__SettingClient_Updater) AutoDownloadCellularGif_Increment(count int) *
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingVoice(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingVoice = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingVoice = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingVoice = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingVoice_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice+? "] = count
+		up := updateCol{" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingVoice = AutoDownloadRoamingVoice- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6862,17 +7008,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVoice_Increment(count int) 
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingImage(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingImage = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingImage = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingImage = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingImage_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingImage = AutoDownloadRoamingImage+? "] = count
+		up := updateCol{" AutoDownloadRoamingImage = AutoDownloadRoamingImage+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingImage = AutoDownloadRoamingImage+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingImage = AutoDownloadRoamingImage-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingImage = AutoDownloadRoamingImage- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingImage = AutoDownloadRoamingImage- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6883,17 +7035,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingImage_Increment(count int) 
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingVideo(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingVideo = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingVideo = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingVideo = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingVideo_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo+? "] = count
+		up := updateCol{" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingVideo = AutoDownloadRoamingVideo- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6904,17 +7062,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingVideo_Increment(count int) 
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingFile(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingFile = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingFile = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingFile = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingFile_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingFile = AutoDownloadRoamingFile+? "] = count
+		up := updateCol{" AutoDownloadRoamingFile = AutoDownloadRoamingFile+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingFile = AutoDownloadRoamingFile+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingFile = AutoDownloadRoamingFile-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingFile = AutoDownloadRoamingFile- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingFile = AutoDownloadRoamingFile- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6925,17 +7089,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingFile_Increment(count int) *
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingMusic(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingMusic = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingMusic = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingMusic = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingMusic_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic+? "] = count
+		up := updateCol{" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingMusic = AutoDownloadRoamingMusic- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6946,17 +7116,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingMusic_Increment(count int) 
 //ints
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingGif(newVal int) *__SettingClient_Updater {
-	u.updates[" AutoDownloadRoamingGif = ? "] = newVal
+	up := updateCol{" AutoDownloadRoamingGif = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AutoDownloadRoamingGif = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) AutoDownloadRoamingGif_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" AutoDownloadRoamingGif = AutoDownloadRoamingGif+? "] = count
+		up := updateCol{" AutoDownloadRoamingGif = AutoDownloadRoamingGif+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AutoDownloadRoamingGif = AutoDownloadRoamingGif+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" AutoDownloadRoamingGif = AutoDownloadRoamingGif-? "] = -(count) //make it positive
+		up := updateCol{" AutoDownloadRoamingGif = AutoDownloadRoamingGif- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AutoDownloadRoamingGif = AutoDownloadRoamingGif- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6967,17 +7143,23 @@ func (u *__SettingClient_Updater) AutoDownloadRoamingGif_Increment(count int) *_
 //ints
 
 func (u *__SettingClient_Updater) SaveToGallery(newVal int) *__SettingClient_Updater {
-	u.updates[" SaveToGallery = ? "] = newVal
+	up := updateCol{" SaveToGallery = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SaveToGallery = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__SettingClient_Updater) SaveToGallery_Increment(count int) *__SettingClient_Updater {
 	if count > 0 {
-		u.updates[" SaveToGallery = SaveToGallery+? "] = count
+		up := updateCol{" SaveToGallery = SaveToGallery+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SaveToGallery = SaveToGallery+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" SaveToGallery = SaveToGallery-? "] = -(count) //make it positive
+		up := updateCol{" SaveToGallery = SaveToGallery- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SaveToGallery = SaveToGallery- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -7516,9 +7698,13 @@ func (u *__SettingClient_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -7603,10 +7789,10 @@ func MassInsert_SettingClient(rows []SettingClient, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.setting_client (" +
 		"UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery" +
@@ -7660,10 +7846,9 @@ func MassReplace_SettingClient(rows []SettingClient, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.setting_client (" +
 		"UserId, AutoDownloadWifiVoice, AutoDownloadWifiImage, AutoDownloadWifiVideo, AutoDownloadWifiFile, AutoDownloadWifiMusic, AutoDownloadWifiGif, AutoDownloadCellularVoice, AutoDownloadCellularImage, AutoDownloadCellularVideo, AutoDownloadCellularFile, AutoDownloadCellularMusic, AutoDownloadCellularGif, AutoDownloadRoamingVoice, AutoDownloadRoamingImage, AutoDownloadRoamingVideo, AutoDownloadRoamingFile, AutoDownloadRoamingMusic, AutoDownloadRoamingGif, SaveToGallery" +

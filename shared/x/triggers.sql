@@ -1195,7 +1195,7 @@ DROP TRIGGER IF EXISTS chat_sync2_OnCreateLogger $$
 CREATE TRIGGER chat_sync2_OnCreateLogger AFTER INSERT ON chat_sync2
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","INSERT",NEW.SyncId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","INSERT",NEW.sync_id, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -1203,7 +1203,7 @@ DROP TRIGGER IF EXISTS chat_sync2_OnUpdateLogger $$
 CREATE TRIGGER chat_sync2_OnUpdateLogger AFTER UPDATE ON chat_sync2
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","UPDATE",NEW.SyncId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","UPDATE",NEW.sync_id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1211,7 +1211,7 @@ DROP TRIGGER IF EXISTS chat_sync2_OnDeleteLogger $$
 CREATE TRIGGER chat_sync2_OnDeleteLogger AFTER DELETE ON chat_sync2
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","DELETE",OLD.SyncId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","DELETE",OLD.sync_id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1282,7 +1282,7 @@ DROP TRIGGER IF EXISTS push_chat2_OnCreateLogger $$
 CREATE TRIGGER push_chat2_OnCreateLogger AFTER INSERT ON push_chat2
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","INSERT",NEW.SyncId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","INSERT",NEW.sync_id, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -1290,7 +1290,7 @@ DROP TRIGGER IF EXISTS push_chat2_OnUpdateLogger $$
 CREATE TRIGGER push_chat2_OnUpdateLogger AFTER UPDATE ON push_chat2
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","UPDATE",NEW.SyncId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","UPDATE",NEW.sync_id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1298,7 +1298,7 @@ DROP TRIGGER IF EXISTS push_chat2_OnDeleteLogger $$
 CREATE TRIGGER push_chat2_OnDeleteLogger AFTER DELETE ON push_chat2
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","DELETE",OLD.SyncId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","DELETE",OLD.sync_id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1444,6 +1444,35 @@ CREATE TRIGGER xfile_service_request_log_OnDeleteLogger AFTER DELETE ON xfile_se
   FOR EACH ROW
   BEGIN
    	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("XfileServiceRequestLog","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ Account ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS accounts_OnCreateLogger $$
+CREATE TRIGGER accounts_OnCreateLogger AFTER INSERT ON accounts
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","INSERT",NEW.id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS accounts_OnUpdateLogger $$
+CREATE TRIGGER accounts_OnUpdateLogger AFTER UPDATE ON accounts
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","UPDATE",NEW.id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS accounts_OnDeleteLogger $$
+CREATE TRIGGER accounts_OnDeleteLogger AFTER DELETE ON accounts
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","DELETE",OLD.id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1654,4 +1683,8 @@ DROP TRIGGER IF EXISTS xfile_service_metric_log_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnCreateLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnDeleteLogger ;
+### Account ##
+DROP TRIGGER IF EXISTS accounts_OnCreateLogger ;
+DROP TRIGGER IF EXISTS accounts_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS accounts_OnDeleteLogger ;
 */

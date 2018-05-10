@@ -5,11 +5,12 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// HTTPRPCLog represents a row from 'sun_log.http_rpc_log'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// HTTPRPCLog represents a row from 'sun_log.http_rpc_log'.
 
 // Manualy copy this to project
 type HTTPRPCLog__ struct {
@@ -214,23 +215,30 @@ func (hrl *HTTPRPCLog) Delete(db XODB) error {
 
 // orma types
 type __HTTPRPCLog_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __HTTPRPCLog_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __HTTPRPCLog_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewHTTPRPCLog_Deleter() *__HTTPRPCLog_Deleter {
@@ -240,7 +248,7 @@ func NewHTTPRPCLog_Deleter() *__HTTPRPCLog_Deleter {
 
 func NewHTTPRPCLog_Updater() *__HTTPRPCLog_Updater {
 	u := __HTTPRPCLog_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -249,8 +257,35 @@ func NewHTTPRPCLog_Selector() *__HTTPRPCLog_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__HTTPRPCLog_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__HTTPRPCLog_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__HTTPRPCLog_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__HTTPRPCLog_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__HTTPRPCLog_Deleter) Or() *__HTTPRPCLog_Deleter {
@@ -265,7 +300,7 @@ func (u *__HTTPRPCLog_Deleter) Id_In(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -278,7 +313,7 @@ func (u *__HTTPRPCLog_Deleter) Id_Ins(ins ...int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -291,7 +326,7 @@ func (u *__HTTPRPCLog_Deleter) Id_NotIn(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -302,7 +337,7 @@ func (d *__HTTPRPCLog_Deleter) Id_Eq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -313,7 +348,7 @@ func (d *__HTTPRPCLog_Deleter) Id_NotEq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -324,7 +359,7 @@ func (d *__HTTPRPCLog_Deleter) Id_LT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -335,7 +370,7 @@ func (d *__HTTPRPCLog_Deleter) Id_LE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -346,7 +381,7 @@ func (d *__HTTPRPCLog_Deleter) Id_GT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -357,7 +392,7 @@ func (d *__HTTPRPCLog_Deleter) Id_GE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -370,7 +405,7 @@ func (u *__HTTPRPCLog_Deleter) UserId_In(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -383,7 +418,7 @@ func (u *__HTTPRPCLog_Deleter) UserId_Ins(ins ...int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -396,7 +431,7 @@ func (u *__HTTPRPCLog_Deleter) UserId_NotIn(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -407,7 +442,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_Eq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -418,7 +453,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_NotEq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -429,7 +464,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_LT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -440,7 +475,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_LE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -451,7 +486,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_GT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -462,7 +497,7 @@ func (d *__HTTPRPCLog_Deleter) UserId_GE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -475,7 +510,7 @@ func (u *__HTTPRPCLog_Deleter) StatusCode_In(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -488,7 +523,7 @@ func (u *__HTTPRPCLog_Deleter) StatusCode_Ins(ins ...int) *__HTTPRPCLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -501,7 +536,7 @@ func (u *__HTTPRPCLog_Deleter) StatusCode_NotIn(ins []int) *__HTTPRPCLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -512,7 +547,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_Eq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode = ? "
+	w.condition = " StatusCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -523,7 +558,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_NotEq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode != ? "
+	w.condition = " StatusCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -534,7 +569,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_LT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode < ? "
+	w.condition = " StatusCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -545,7 +580,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_LE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode <= ? "
+	w.condition = " StatusCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -556,7 +591,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_GT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode > ? "
+	w.condition = " StatusCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -567,7 +602,7 @@ func (d *__HTTPRPCLog_Deleter) StatusCode_GE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode >= ? "
+	w.condition = " StatusCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -580,7 +615,7 @@ func (u *__HTTPRPCLog_Deleter) InputSize_In(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -593,7 +628,7 @@ func (u *__HTTPRPCLog_Deleter) InputSize_Ins(ins ...int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -606,7 +641,7 @@ func (u *__HTTPRPCLog_Deleter) InputSize_NotIn(ins []int) *__HTTPRPCLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -617,7 +652,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_Eq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize = ? "
+	w.condition = " InputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -628,7 +663,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_NotEq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize != ? "
+	w.condition = " InputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -639,7 +674,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_LT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize < ? "
+	w.condition = " InputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -650,7 +685,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_LE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize <= ? "
+	w.condition = " InputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -661,7 +696,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_GT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize > ? "
+	w.condition = " InputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -672,7 +707,7 @@ func (d *__HTTPRPCLog_Deleter) InputSize_GE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize >= ? "
+	w.condition = " InputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -685,7 +720,7 @@ func (u *__HTTPRPCLog_Deleter) OutputSize_In(ins []int) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -698,7 +733,7 @@ func (u *__HTTPRPCLog_Deleter) OutputSize_Ins(ins ...int) *__HTTPRPCLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -711,7 +746,7 @@ func (u *__HTTPRPCLog_Deleter) OutputSize_NotIn(ins []int) *__HTTPRPCLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -722,7 +757,7 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_Eq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize = ? "
+	w.condition = " OutputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -733,7 +768,7 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_NotEq(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize != ? "
+	w.condition = " OutputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -744,7 +779,7 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_LT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize < ? "
+	w.condition = " OutputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -755,7 +790,7 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_LE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize <= ? "
+	w.condition = " OutputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -766,7 +801,7 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_GT(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize > ? "
+	w.condition = " OutputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -777,10 +812,23 @@ func (d *__HTTPRPCLog_Deleter) OutputSize_GE(val int) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize >= ? "
+	w.condition = " OutputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__HTTPRPCLog_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__HTTPRPCLog_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -796,7 +844,7 @@ func (u *__HTTPRPCLog_Updater) Id_In(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -809,7 +857,7 @@ func (u *__HTTPRPCLog_Updater) Id_Ins(ins ...int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -822,7 +870,7 @@ func (u *__HTTPRPCLog_Updater) Id_NotIn(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -833,7 +881,7 @@ func (d *__HTTPRPCLog_Updater) Id_Eq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -844,7 +892,7 @@ func (d *__HTTPRPCLog_Updater) Id_NotEq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -855,7 +903,7 @@ func (d *__HTTPRPCLog_Updater) Id_LT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -866,7 +914,7 @@ func (d *__HTTPRPCLog_Updater) Id_LE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -877,7 +925,7 @@ func (d *__HTTPRPCLog_Updater) Id_GT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -888,7 +936,7 @@ func (d *__HTTPRPCLog_Updater) Id_GE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -901,7 +949,7 @@ func (u *__HTTPRPCLog_Updater) UserId_In(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -914,7 +962,7 @@ func (u *__HTTPRPCLog_Updater) UserId_Ins(ins ...int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -927,7 +975,7 @@ func (u *__HTTPRPCLog_Updater) UserId_NotIn(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -938,7 +986,7 @@ func (d *__HTTPRPCLog_Updater) UserId_Eq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -949,7 +997,7 @@ func (d *__HTTPRPCLog_Updater) UserId_NotEq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -960,7 +1008,7 @@ func (d *__HTTPRPCLog_Updater) UserId_LT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -971,7 +1019,7 @@ func (d *__HTTPRPCLog_Updater) UserId_LE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -982,7 +1030,7 @@ func (d *__HTTPRPCLog_Updater) UserId_GT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -993,7 +1041,7 @@ func (d *__HTTPRPCLog_Updater) UserId_GE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1006,7 +1054,7 @@ func (u *__HTTPRPCLog_Updater) StatusCode_In(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1019,7 +1067,7 @@ func (u *__HTTPRPCLog_Updater) StatusCode_Ins(ins ...int) *__HTTPRPCLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1032,7 +1080,7 @@ func (u *__HTTPRPCLog_Updater) StatusCode_NotIn(ins []int) *__HTTPRPCLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1043,7 +1091,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_Eq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode = ? "
+	w.condition = " StatusCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1054,7 +1102,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_NotEq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode != ? "
+	w.condition = " StatusCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1065,7 +1113,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_LT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode < ? "
+	w.condition = " StatusCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1076,7 +1124,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_LE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode <= ? "
+	w.condition = " StatusCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1087,7 +1135,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_GT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode > ? "
+	w.condition = " StatusCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1098,7 +1146,7 @@ func (d *__HTTPRPCLog_Updater) StatusCode_GE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode >= ? "
+	w.condition = " StatusCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1111,7 +1159,7 @@ func (u *__HTTPRPCLog_Updater) InputSize_In(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1124,7 +1172,7 @@ func (u *__HTTPRPCLog_Updater) InputSize_Ins(ins ...int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1137,7 +1185,7 @@ func (u *__HTTPRPCLog_Updater) InputSize_NotIn(ins []int) *__HTTPRPCLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1148,7 +1196,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_Eq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize = ? "
+	w.condition = " InputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1159,7 +1207,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_NotEq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize != ? "
+	w.condition = " InputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1170,7 +1218,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_LT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize < ? "
+	w.condition = " InputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1181,7 +1229,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_LE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize <= ? "
+	w.condition = " InputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1192,7 +1240,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_GT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize > ? "
+	w.condition = " InputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1203,7 +1251,7 @@ func (d *__HTTPRPCLog_Updater) InputSize_GE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize >= ? "
+	w.condition = " InputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1216,7 +1264,7 @@ func (u *__HTTPRPCLog_Updater) OutputSize_In(ins []int) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1229,7 +1277,7 @@ func (u *__HTTPRPCLog_Updater) OutputSize_Ins(ins ...int) *__HTTPRPCLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1242,7 +1290,7 @@ func (u *__HTTPRPCLog_Updater) OutputSize_NotIn(ins []int) *__HTTPRPCLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1253,7 +1301,7 @@ func (d *__HTTPRPCLog_Updater) OutputSize_Eq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize = ? "
+	w.condition = " OutputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1264,7 +1312,7 @@ func (d *__HTTPRPCLog_Updater) OutputSize_NotEq(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize != ? "
+	w.condition = " OutputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1275,7 +1323,7 @@ func (d *__HTTPRPCLog_Updater) OutputSize_LT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize < ? "
+	w.condition = " OutputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1286,7 +1334,7 @@ func (d *__HTTPRPCLog_Updater) OutputSize_LE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize <= ? "
+	w.condition = " OutputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1297,7 +1345,7 @@ func (d *__HTTPRPCLog_Updater) OutputSize_GT(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize > ? "
+	w.condition = " OutputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1308,10 +1356,23 @@ func (d *__HTTPRPCLog_Updater) OutputSize_GE(val int) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize >= ? "
+	w.condition = " OutputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__HTTPRPCLog_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__HTTPRPCLog_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1327,7 +1388,7 @@ func (u *__HTTPRPCLog_Selector) Id_In(ins []int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1340,7 +1401,7 @@ func (u *__HTTPRPCLog_Selector) Id_Ins(ins ...int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1353,7 +1414,7 @@ func (u *__HTTPRPCLog_Selector) Id_NotIn(ins []int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1364,7 +1425,7 @@ func (d *__HTTPRPCLog_Selector) Id_Eq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = ? "
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1375,7 +1436,7 @@ func (d *__HTTPRPCLog_Selector) Id_NotEq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != ? "
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1386,7 +1447,7 @@ func (d *__HTTPRPCLog_Selector) Id_LT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < ? "
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1397,7 +1458,7 @@ func (d *__HTTPRPCLog_Selector) Id_LE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= ? "
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1408,7 +1469,7 @@ func (d *__HTTPRPCLog_Selector) Id_GT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > ? "
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1419,7 +1480,7 @@ func (d *__HTTPRPCLog_Selector) Id_GE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= ? "
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1432,7 +1493,7 @@ func (u *__HTTPRPCLog_Selector) UserId_In(ins []int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1445,7 +1506,7 @@ func (u *__HTTPRPCLog_Selector) UserId_Ins(ins ...int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1458,7 +1519,7 @@ func (u *__HTTPRPCLog_Selector) UserId_NotIn(ins []int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1469,7 +1530,7 @@ func (d *__HTTPRPCLog_Selector) UserId_Eq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1480,7 +1541,7 @@ func (d *__HTTPRPCLog_Selector) UserId_NotEq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1491,7 +1552,7 @@ func (d *__HTTPRPCLog_Selector) UserId_LT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1502,7 +1563,7 @@ func (d *__HTTPRPCLog_Selector) UserId_LE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1513,7 +1574,7 @@ func (d *__HTTPRPCLog_Selector) UserId_GT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1524,7 +1585,7 @@ func (d *__HTTPRPCLog_Selector) UserId_GE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1537,7 +1598,7 @@ func (u *__HTTPRPCLog_Selector) StatusCode_In(ins []int) *__HTTPRPCLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1550,7 +1611,7 @@ func (u *__HTTPRPCLog_Selector) StatusCode_Ins(ins ...int) *__HTTPRPCLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1563,7 +1624,7 @@ func (u *__HTTPRPCLog_Selector) StatusCode_NotIn(ins []int) *__HTTPRPCLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StatusCode NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " StatusCode NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1574,7 +1635,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_Eq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode = ? "
+	w.condition = " StatusCode = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1585,7 +1646,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_NotEq(val int) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode != ? "
+	w.condition = " StatusCode != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1596,7 +1657,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_LT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode < ? "
+	w.condition = " StatusCode < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1607,7 +1668,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_LE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode <= ? "
+	w.condition = " StatusCode <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1618,7 +1679,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_GT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode > ? "
+	w.condition = " StatusCode > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1629,7 +1690,7 @@ func (d *__HTTPRPCLog_Selector) StatusCode_GE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StatusCode >= ? "
+	w.condition = " StatusCode >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1642,7 +1703,7 @@ func (u *__HTTPRPCLog_Selector) InputSize_In(ins []int) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1655,7 +1716,7 @@ func (u *__HTTPRPCLog_Selector) InputSize_Ins(ins ...int) *__HTTPRPCLog_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1668,7 +1729,7 @@ func (u *__HTTPRPCLog_Selector) InputSize_NotIn(ins []int) *__HTTPRPCLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " InputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1679,7 +1740,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_Eq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize = ? "
+	w.condition = " InputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1690,7 +1751,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_NotEq(val int) *__HTTPRPCLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize != ? "
+	w.condition = " InputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1701,7 +1762,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_LT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize < ? "
+	w.condition = " InputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1712,7 +1773,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_LE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize <= ? "
+	w.condition = " InputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1723,7 +1784,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_GT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize > ? "
+	w.condition = " InputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1734,7 +1795,7 @@ func (d *__HTTPRPCLog_Selector) InputSize_GE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InputSize >= ? "
+	w.condition = " InputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1747,7 +1808,7 @@ func (u *__HTTPRPCLog_Selector) OutputSize_In(ins []int) *__HTTPRPCLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1760,7 +1821,7 @@ func (u *__HTTPRPCLog_Selector) OutputSize_Ins(ins ...int) *__HTTPRPCLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1773,7 +1834,7 @@ func (u *__HTTPRPCLog_Selector) OutputSize_NotIn(ins []int) *__HTTPRPCLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OutputSize NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " OutputSize NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1784,7 +1845,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_Eq(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize = ? "
+	w.condition = " OutputSize = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1795,7 +1856,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_NotEq(val int) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize != ? "
+	w.condition = " OutputSize != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1806,7 +1867,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_LT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize < ? "
+	w.condition = " OutputSize < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1817,7 +1878,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_LE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize <= ? "
+	w.condition = " OutputSize <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1828,7 +1889,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_GT(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize > ? "
+	w.condition = " OutputSize > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1839,7 +1900,7 @@ func (d *__HTTPRPCLog_Selector) OutputSize_GE(val int) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OutputSize >= ? "
+	w.condition = " OutputSize >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1856,7 +1917,7 @@ func (u *__HTTPRPCLog_Deleter) Time_In(ins []string) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1869,7 +1930,7 @@ func (u *__HTTPRPCLog_Deleter) Time_NotIn(ins []string) *__HTTPRPCLog_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1881,7 +1942,7 @@ func (u *__HTTPRPCLog_Deleter) Time_Like(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time LIKE ? "
+	w.condition = " Time LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1892,7 +1953,7 @@ func (d *__HTTPRPCLog_Deleter) Time_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = ? "
+	w.condition = " Time = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1903,7 +1964,7 @@ func (d *__HTTPRPCLog_Deleter) Time_NotEq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != ? "
+	w.condition = " Time != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1916,7 +1977,7 @@ func (u *__HTTPRPCLog_Deleter) MethodFull_In(ins []string) *__HTTPRPCLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1929,7 +1990,7 @@ func (u *__HTTPRPCLog_Deleter) MethodFull_NotIn(ins []string) *__HTTPRPCLog_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1941,7 +2002,7 @@ func (u *__HTTPRPCLog_Deleter) MethodFull_Like(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull LIKE ? "
+	w.condition = " MethodFull LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1952,7 +2013,7 @@ func (d *__HTTPRPCLog_Deleter) MethodFull_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = ? "
+	w.condition = " MethodFull = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1963,7 +2024,7 @@ func (d *__HTTPRPCLog_Deleter) MethodFull_NotEq(val string) *__HTTPRPCLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != ? "
+	w.condition = " MethodFull != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1976,7 +2037,7 @@ func (u *__HTTPRPCLog_Deleter) MethodParent_In(ins []string) *__HTTPRPCLog_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1989,7 +2050,7 @@ func (u *__HTTPRPCLog_Deleter) MethodParent_NotIn(ins []string) *__HTTPRPCLog_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2001,7 +2062,7 @@ func (u *__HTTPRPCLog_Deleter) MethodParent_Like(val string) *__HTTPRPCLog_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent LIKE ? "
+	w.condition = " MethodParent LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2012,7 +2073,7 @@ func (d *__HTTPRPCLog_Deleter) MethodParent_Eq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = ? "
+	w.condition = " MethodParent = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2023,7 +2084,7 @@ func (d *__HTTPRPCLog_Deleter) MethodParent_NotEq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != ? "
+	w.condition = " MethodParent != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2036,7 +2097,7 @@ func (u *__HTTPRPCLog_Deleter) SessionId_In(ins []string) *__HTTPRPCLog_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2049,7 +2110,7 @@ func (u *__HTTPRPCLog_Deleter) SessionId_NotIn(ins []string) *__HTTPRPCLog_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2061,7 +2122,7 @@ func (u *__HTTPRPCLog_Deleter) SessionId_Like(val string) *__HTTPRPCLog_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId LIKE ? "
+	w.condition = " SessionId LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2072,7 +2133,7 @@ func (d *__HTTPRPCLog_Deleter) SessionId_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = ? "
+	w.condition = " SessionId = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2083,7 +2144,7 @@ func (d *__HTTPRPCLog_Deleter) SessionId_NotEq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != ? "
+	w.condition = " SessionId != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2096,7 +2157,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestJson_In(ins []string) *__HTTPRPCLog_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2109,7 +2170,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestJson_NotIn(ins []string) *__HTTPRPCLog_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2121,7 +2182,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestJson_Like(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson LIKE ? "
+	w.condition = " ReqestJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2132,7 +2193,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestJson_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = ? "
+	w.condition = " ReqestJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2143,7 +2204,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestJson_NotEq(val string) *__HTTPRPCLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != ? "
+	w.condition = " ReqestJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2156,7 +2217,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseJson_In(ins []string) *__HTTPRPCLog_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2169,7 +2230,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseJson_NotIn(ins []string) *__HTTPRPCLog_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2181,7 +2242,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseJson_Like(val string) *__HTTPRPCLog_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson LIKE ? "
+	w.condition = " ResponseJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2192,7 +2253,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseJson_Eq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = ? "
+	w.condition = " ResponseJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2203,7 +2264,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseJson_NotEq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != ? "
+	w.condition = " ResponseJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2216,7 +2277,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestParamJson_In(ins []string) *__HTTPRPCLog_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2229,7 +2290,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLog
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2241,7 +2302,7 @@ func (u *__HTTPRPCLog_Deleter) ReqestParamJson_Like(val string) *__HTTPRPCLog_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson LIKE ? "
+	w.condition = " ReqestParamJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2252,7 +2313,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = ? "
+	w.condition = " ReqestParamJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2263,7 +2324,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != ? "
+	w.condition = " ReqestParamJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2276,7 +2337,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_De
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2289,7 +2350,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLog
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2301,7 +2362,7 @@ func (u *__HTTPRPCLog_Deleter) ResponseMsgJson_Like(val string) *__HTTPRPCLog_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson LIKE ? "
+	w.condition = " ResponseMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2312,7 +2373,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = ? "
+	w.condition = " ResponseMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2323,7 +2384,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != ? "
+	w.condition = " ResponseMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2338,7 +2399,7 @@ func (u *__HTTPRPCLog_Updater) Time_In(ins []string) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2351,7 +2412,7 @@ func (u *__HTTPRPCLog_Updater) Time_NotIn(ins []string) *__HTTPRPCLog_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2363,7 +2424,7 @@ func (u *__HTTPRPCLog_Updater) Time_Like(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time LIKE ? "
+	w.condition = " Time LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2374,7 +2435,7 @@ func (d *__HTTPRPCLog_Updater) Time_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = ? "
+	w.condition = " Time = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2385,7 +2446,7 @@ func (d *__HTTPRPCLog_Updater) Time_NotEq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != ? "
+	w.condition = " Time != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2398,7 +2459,7 @@ func (u *__HTTPRPCLog_Updater) MethodFull_In(ins []string) *__HTTPRPCLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2411,7 +2472,7 @@ func (u *__HTTPRPCLog_Updater) MethodFull_NotIn(ins []string) *__HTTPRPCLog_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2423,7 +2484,7 @@ func (u *__HTTPRPCLog_Updater) MethodFull_Like(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull LIKE ? "
+	w.condition = " MethodFull LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2434,7 +2495,7 @@ func (d *__HTTPRPCLog_Updater) MethodFull_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = ? "
+	w.condition = " MethodFull = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2445,7 +2506,7 @@ func (d *__HTTPRPCLog_Updater) MethodFull_NotEq(val string) *__HTTPRPCLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != ? "
+	w.condition = " MethodFull != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2458,7 +2519,7 @@ func (u *__HTTPRPCLog_Updater) MethodParent_In(ins []string) *__HTTPRPCLog_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2471,7 +2532,7 @@ func (u *__HTTPRPCLog_Updater) MethodParent_NotIn(ins []string) *__HTTPRPCLog_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2483,7 +2544,7 @@ func (u *__HTTPRPCLog_Updater) MethodParent_Like(val string) *__HTTPRPCLog_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent LIKE ? "
+	w.condition = " MethodParent LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2494,7 +2555,7 @@ func (d *__HTTPRPCLog_Updater) MethodParent_Eq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = ? "
+	w.condition = " MethodParent = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2505,7 +2566,7 @@ func (d *__HTTPRPCLog_Updater) MethodParent_NotEq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != ? "
+	w.condition = " MethodParent != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2518,7 +2579,7 @@ func (u *__HTTPRPCLog_Updater) SessionId_In(ins []string) *__HTTPRPCLog_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2531,7 +2592,7 @@ func (u *__HTTPRPCLog_Updater) SessionId_NotIn(ins []string) *__HTTPRPCLog_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2543,7 +2604,7 @@ func (u *__HTTPRPCLog_Updater) SessionId_Like(val string) *__HTTPRPCLog_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId LIKE ? "
+	w.condition = " SessionId LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2554,7 +2615,7 @@ func (d *__HTTPRPCLog_Updater) SessionId_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = ? "
+	w.condition = " SessionId = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2565,7 +2626,7 @@ func (d *__HTTPRPCLog_Updater) SessionId_NotEq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != ? "
+	w.condition = " SessionId != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2578,7 +2639,7 @@ func (u *__HTTPRPCLog_Updater) ReqestJson_In(ins []string) *__HTTPRPCLog_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2591,7 +2652,7 @@ func (u *__HTTPRPCLog_Updater) ReqestJson_NotIn(ins []string) *__HTTPRPCLog_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2603,7 +2664,7 @@ func (u *__HTTPRPCLog_Updater) ReqestJson_Like(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson LIKE ? "
+	w.condition = " ReqestJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2614,7 +2675,7 @@ func (d *__HTTPRPCLog_Updater) ReqestJson_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = ? "
+	w.condition = " ReqestJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2625,7 +2686,7 @@ func (d *__HTTPRPCLog_Updater) ReqestJson_NotEq(val string) *__HTTPRPCLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != ? "
+	w.condition = " ReqestJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2638,7 +2699,7 @@ func (u *__HTTPRPCLog_Updater) ResponseJson_In(ins []string) *__HTTPRPCLog_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2651,7 +2712,7 @@ func (u *__HTTPRPCLog_Updater) ResponseJson_NotIn(ins []string) *__HTTPRPCLog_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2663,7 +2724,7 @@ func (u *__HTTPRPCLog_Updater) ResponseJson_Like(val string) *__HTTPRPCLog_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson LIKE ? "
+	w.condition = " ResponseJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2674,7 +2735,7 @@ func (d *__HTTPRPCLog_Updater) ResponseJson_Eq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = ? "
+	w.condition = " ResponseJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2685,7 +2746,7 @@ func (d *__HTTPRPCLog_Updater) ResponseJson_NotEq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != ? "
+	w.condition = " ResponseJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2698,7 +2759,7 @@ func (u *__HTTPRPCLog_Updater) ReqestParamJson_In(ins []string) *__HTTPRPCLog_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2711,7 +2772,7 @@ func (u *__HTTPRPCLog_Updater) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLog
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2723,7 +2784,7 @@ func (u *__HTTPRPCLog_Updater) ReqestParamJson_Like(val string) *__HTTPRPCLog_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson LIKE ? "
+	w.condition = " ReqestParamJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2734,7 +2795,7 @@ func (d *__HTTPRPCLog_Updater) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = ? "
+	w.condition = " ReqestParamJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2745,7 +2806,7 @@ func (d *__HTTPRPCLog_Updater) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != ? "
+	w.condition = " ReqestParamJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2758,7 +2819,7 @@ func (u *__HTTPRPCLog_Updater) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_Up
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2771,7 +2832,7 @@ func (u *__HTTPRPCLog_Updater) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLog
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2783,7 +2844,7 @@ func (u *__HTTPRPCLog_Updater) ResponseMsgJson_Like(val string) *__HTTPRPCLog_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson LIKE ? "
+	w.condition = " ResponseMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2794,7 +2855,7 @@ func (d *__HTTPRPCLog_Updater) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = ? "
+	w.condition = " ResponseMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2805,7 +2866,7 @@ func (d *__HTTPRPCLog_Updater) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != ? "
+	w.condition = " ResponseMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2820,7 +2881,7 @@ func (u *__HTTPRPCLog_Selector) Time_In(ins []string) *__HTTPRPCLog_Selector {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2833,7 +2894,7 @@ func (u *__HTTPRPCLog_Selector) Time_NotIn(ins []string) *__HTTPRPCLog_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Time NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2845,7 +2906,7 @@ func (u *__HTTPRPCLog_Selector) Time_Like(val string) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time LIKE ? "
+	w.condition = " Time LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2856,7 +2917,7 @@ func (d *__HTTPRPCLog_Selector) Time_Eq(val string) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = ? "
+	w.condition = " Time = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2867,7 +2928,7 @@ func (d *__HTTPRPCLog_Selector) Time_NotEq(val string) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != ? "
+	w.condition = " Time != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2880,7 +2941,7 @@ func (u *__HTTPRPCLog_Selector) MethodFull_In(ins []string) *__HTTPRPCLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2893,7 +2954,7 @@ func (u *__HTTPRPCLog_Selector) MethodFull_NotIn(ins []string) *__HTTPRPCLog_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodFull NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodFull NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2905,7 +2966,7 @@ func (u *__HTTPRPCLog_Selector) MethodFull_Like(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull LIKE ? "
+	w.condition = " MethodFull LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2916,7 +2977,7 @@ func (d *__HTTPRPCLog_Selector) MethodFull_Eq(val string) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = ? "
+	w.condition = " MethodFull = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2927,7 +2988,7 @@ func (d *__HTTPRPCLog_Selector) MethodFull_NotEq(val string) *__HTTPRPCLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != ? "
+	w.condition = " MethodFull != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2940,7 +3001,7 @@ func (u *__HTTPRPCLog_Selector) MethodParent_In(ins []string) *__HTTPRPCLog_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2953,7 +3014,7 @@ func (u *__HTTPRPCLog_Selector) MethodParent_NotIn(ins []string) *__HTTPRPCLog_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MethodParent NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MethodParent NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2965,7 +3026,7 @@ func (u *__HTTPRPCLog_Selector) MethodParent_Like(val string) *__HTTPRPCLog_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent LIKE ? "
+	w.condition = " MethodParent LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2976,7 +3037,7 @@ func (d *__HTTPRPCLog_Selector) MethodParent_Eq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = ? "
+	w.condition = " MethodParent = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2987,7 +3048,7 @@ func (d *__HTTPRPCLog_Selector) MethodParent_NotEq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != ? "
+	w.condition = " MethodParent != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3000,7 +3061,7 @@ func (u *__HTTPRPCLog_Selector) SessionId_In(ins []string) *__HTTPRPCLog_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3013,7 +3074,7 @@ func (u *__HTTPRPCLog_Selector) SessionId_NotIn(ins []string) *__HTTPRPCLog_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SessionId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " SessionId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3025,7 +3086,7 @@ func (u *__HTTPRPCLog_Selector) SessionId_Like(val string) *__HTTPRPCLog_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId LIKE ? "
+	w.condition = " SessionId LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3036,7 +3097,7 @@ func (d *__HTTPRPCLog_Selector) SessionId_Eq(val string) *__HTTPRPCLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = ? "
+	w.condition = " SessionId = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3047,7 +3108,7 @@ func (d *__HTTPRPCLog_Selector) SessionId_NotEq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != ? "
+	w.condition = " SessionId != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3060,7 +3121,7 @@ func (u *__HTTPRPCLog_Selector) ReqestJson_In(ins []string) *__HTTPRPCLog_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3073,7 +3134,7 @@ func (u *__HTTPRPCLog_Selector) ReqestJson_NotIn(ins []string) *__HTTPRPCLog_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3085,7 +3146,7 @@ func (u *__HTTPRPCLog_Selector) ReqestJson_Like(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson LIKE ? "
+	w.condition = " ReqestJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3096,7 +3157,7 @@ func (d *__HTTPRPCLog_Selector) ReqestJson_Eq(val string) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = ? "
+	w.condition = " ReqestJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3107,7 +3168,7 @@ func (d *__HTTPRPCLog_Selector) ReqestJson_NotEq(val string) *__HTTPRPCLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != ? "
+	w.condition = " ReqestJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3120,7 +3181,7 @@ func (u *__HTTPRPCLog_Selector) ResponseJson_In(ins []string) *__HTTPRPCLog_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3133,7 +3194,7 @@ func (u *__HTTPRPCLog_Selector) ResponseJson_NotIn(ins []string) *__HTTPRPCLog_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3145,7 +3206,7 @@ func (u *__HTTPRPCLog_Selector) ResponseJson_Like(val string) *__HTTPRPCLog_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson LIKE ? "
+	w.condition = " ResponseJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3156,7 +3217,7 @@ func (d *__HTTPRPCLog_Selector) ResponseJson_Eq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = ? "
+	w.condition = " ResponseJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3167,7 +3228,7 @@ func (d *__HTTPRPCLog_Selector) ResponseJson_NotEq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != ? "
+	w.condition = " ResponseJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3180,7 +3241,7 @@ func (u *__HTTPRPCLog_Selector) ReqestParamJson_In(ins []string) *__HTTPRPCLog_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3193,7 +3254,7 @@ func (u *__HTTPRPCLog_Selector) ReqestParamJson_NotIn(ins []string) *__HTTPRPCLo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReqestParamJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ReqestParamJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3205,7 +3266,7 @@ func (u *__HTTPRPCLog_Selector) ReqestParamJson_Like(val string) *__HTTPRPCLog_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson LIKE ? "
+	w.condition = " ReqestParamJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3216,7 +3277,7 @@ func (d *__HTTPRPCLog_Selector) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = ? "
+	w.condition = " ReqestParamJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3227,7 +3288,7 @@ func (d *__HTTPRPCLog_Selector) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != ? "
+	w.condition = " ReqestParamJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3240,7 +3301,7 @@ func (u *__HTTPRPCLog_Selector) ResponseMsgJson_In(ins []string) *__HTTPRPCLog_S
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3253,7 +3314,7 @@ func (u *__HTTPRPCLog_Selector) ResponseMsgJson_NotIn(ins []string) *__HTTPRPCLo
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ResponseMsgJson NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " ResponseMsgJson NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3265,7 +3326,7 @@ func (u *__HTTPRPCLog_Selector) ResponseMsgJson_Like(val string) *__HTTPRPCLog_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson LIKE ? "
+	w.condition = " ResponseMsgJson LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -3276,7 +3337,7 @@ func (d *__HTTPRPCLog_Selector) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = ? "
+	w.condition = " ResponseMsgJson = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3287,7 +3348,7 @@ func (d *__HTTPRPCLog_Selector) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != ? "
+	w.condition = " ResponseMsgJson != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3300,17 +3361,23 @@ func (d *__HTTPRPCLog_Selector) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_
 //ints
 
 func (u *__HTTPRPCLog_Updater) Id(newVal int) *__HTTPRPCLog_Updater {
-	u.updates[" Id = ? "] = newVal
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__HTTPRPCLog_Updater) Id_Increment(count int) *__HTTPRPCLog_Updater {
 	if count > 0 {
-		u.updates[" Id = Id+? "] = count
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" Id = Id-? "] = -(count) //make it positive
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3322,7 +3389,9 @@ func (u *__HTTPRPCLog_Updater) Id_Increment(count int) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) Time(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" Time = ? "] = newVal
+	up := updateCol{"Time = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Time = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3330,7 +3399,9 @@ func (u *__HTTPRPCLog_Updater) Time(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) MethodFull(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" MethodFull = ? "] = newVal
+	up := updateCol{"MethodFull = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" MethodFull = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3338,24 +3409,32 @@ func (u *__HTTPRPCLog_Updater) MethodFull(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) MethodParent(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" MethodParent = ? "] = newVal
+	up := updateCol{"MethodParent = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" MethodParent = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__HTTPRPCLog_Updater) UserId(newVal int) *__HTTPRPCLog_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__HTTPRPCLog_Updater) UserId_Increment(count int) *__HTTPRPCLog_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3367,24 +3446,32 @@ func (u *__HTTPRPCLog_Updater) UserId_Increment(count int) *__HTTPRPCLog_Updater
 
 //string
 func (u *__HTTPRPCLog_Updater) SessionId(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" SessionId = ? "] = newVal
+	up := updateCol{"SessionId = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" SessionId = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__HTTPRPCLog_Updater) StatusCode(newVal int) *__HTTPRPCLog_Updater {
-	u.updates[" StatusCode = ? "] = newVal
+	up := updateCol{" StatusCode = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" StatusCode = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__HTTPRPCLog_Updater) StatusCode_Increment(count int) *__HTTPRPCLog_Updater {
 	if count > 0 {
-		u.updates[" StatusCode = StatusCode+? "] = count
+		up := updateCol{" StatusCode = StatusCode+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" StatusCode = StatusCode+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" StatusCode = StatusCode-? "] = -(count) //make it positive
+		up := updateCol{" StatusCode = StatusCode- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" StatusCode = StatusCode- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3395,17 +3482,23 @@ func (u *__HTTPRPCLog_Updater) StatusCode_Increment(count int) *__HTTPRPCLog_Upd
 //ints
 
 func (u *__HTTPRPCLog_Updater) InputSize(newVal int) *__HTTPRPCLog_Updater {
-	u.updates[" InputSize = ? "] = newVal
+	up := updateCol{" InputSize = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" InputSize = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__HTTPRPCLog_Updater) InputSize_Increment(count int) *__HTTPRPCLog_Updater {
 	if count > 0 {
-		u.updates[" InputSize = InputSize+? "] = count
+		up := updateCol{" InputSize = InputSize+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" InputSize = InputSize+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" InputSize = InputSize-? "] = -(count) //make it positive
+		up := updateCol{" InputSize = InputSize- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" InputSize = InputSize- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3416,17 +3509,23 @@ func (u *__HTTPRPCLog_Updater) InputSize_Increment(count int) *__HTTPRPCLog_Upda
 //ints
 
 func (u *__HTTPRPCLog_Updater) OutputSize(newVal int) *__HTTPRPCLog_Updater {
-	u.updates[" OutputSize = ? "] = newVal
+	up := updateCol{" OutputSize = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" OutputSize = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__HTTPRPCLog_Updater) OutputSize_Increment(count int) *__HTTPRPCLog_Updater {
 	if count > 0 {
-		u.updates[" OutputSize = OutputSize+? "] = count
+		up := updateCol{" OutputSize = OutputSize+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" OutputSize = OutputSize+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" OutputSize = OutputSize-? "] = -(count) //make it positive
+		up := updateCol{" OutputSize = OutputSize- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" OutputSize = OutputSize- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3438,7 +3537,9 @@ func (u *__HTTPRPCLog_Updater) OutputSize_Increment(count int) *__HTTPRPCLog_Upd
 
 //string
 func (u *__HTTPRPCLog_Updater) ReqestJson(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" ReqestJson = ? "] = newVal
+	up := updateCol{"ReqestJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReqestJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3446,7 +3547,9 @@ func (u *__HTTPRPCLog_Updater) ReqestJson(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) ResponseJson(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" ResponseJson = ? "] = newVal
+	up := updateCol{"ResponseJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ResponseJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3454,7 +3557,9 @@ func (u *__HTTPRPCLog_Updater) ResponseJson(newVal string) *__HTTPRPCLog_Updater
 
 //string
 func (u *__HTTPRPCLog_Updater) ReqestParamJson(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" ReqestParamJson = ? "] = newVal
+	up := updateCol{"ReqestParamJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReqestParamJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3462,7 +3567,9 @@ func (u *__HTTPRPCLog_Updater) ReqestParamJson(newVal string) *__HTTPRPCLog_Upda
 
 //string
 func (u *__HTTPRPCLog_Updater) ResponseMsgJson(newVal string) *__HTTPRPCLog_Updater {
-	u.updates[" ResponseMsgJson = ? "] = newVal
+	up := updateCol{"ResponseMsgJson = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" ResponseMsgJson = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -3892,9 +3999,13 @@ func (u *__HTTPRPCLog_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3979,7 +4090,6 @@ func MassInsert_HTTPRPCLog(rows []HTTPRPCLog, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "( ms_question_mark .Columns .PrimaryKey.ColumnName }})," //`(?, ?, ?, ?),`
 	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]

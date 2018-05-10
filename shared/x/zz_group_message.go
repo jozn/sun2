@@ -9,7 +9,9 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-) // (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GroupMessage represents a row from 'sun_chat.group_message'.
+)
+
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GroupMessage represents a row from 'sun_chat.group_message'.
 
 // Manualy copy this to project
 type GroupMessage__ struct {
@@ -185,23 +187,30 @@ func (gm *GroupMessage) Delete(db XODB) error {
 
 // orma types
 type __GroupMessage_Deleter struct {
-	wheres   []whereClause
-	whereSep string
+	wheres      []whereClause
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __GroupMessage_Updater struct {
-	wheres   []whereClause
-	updates  map[string]interface{}
-	whereSep string
+	wheres []whereClause
+	// updates   map[string]interface{}
+	updates     []updateCol
+	whereSep    string
+	dollarIndex int
+	isMysql     bool
 }
 
 type __GroupMessage_Selector struct {
-	wheres    []whereClause
-	selectCol string
-	whereSep  string
-	orderBy   string //" order by id desc //for ints
-	limit     int
-	offset    int
+	wheres      []whereClause
+	selectCol   string
+	whereSep    string
+	orderBy     string //" order by id desc //for ints
+	limit       int
+	offset      int
+	dollarIndex int
+	isMysql     bool
 }
 
 func NewGroupMessage_Deleter() *__GroupMessage_Deleter {
@@ -211,7 +220,7 @@ func NewGroupMessage_Deleter() *__GroupMessage_Deleter {
 
 func NewGroupMessage_Updater() *__GroupMessage_Updater {
 	u := __GroupMessage_Updater{whereSep: " AND "}
-	u.updates = make(map[string]interface{}, 10)
+	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
@@ -220,8 +229,35 @@ func NewGroupMessage_Selector() *__GroupMessage_Selector {
 	return &u
 }
 
+/*/// mysql or cockroach ? or $1 handlers
+func (m *__GroupMessage_Selector)nextDollars(size int) string  {
+    r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
+    m.dollarIndex += size
+    return r
+}
+
+func (m *__GroupMessage_Selector)nextDollar() string  {
+    r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
+    m.dollarIndex += 1
+    return r
+}
+
+*/
 /////////////////////////////// Where for all /////////////////////////////
 //// for ints all selector updater, deleter
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__GroupMessage_Deleter) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__GroupMessage_Deleter) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
+}
 
 ////////ints
 func (u *__GroupMessage_Deleter) Or() *__GroupMessage_Deleter {
@@ -236,7 +272,7 @@ func (u *__GroupMessage_Deleter) MessageId_In(ins []int) *__GroupMessage_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -249,7 +285,7 @@ func (u *__GroupMessage_Deleter) MessageId_Ins(ins ...int) *__GroupMessage_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -262,7 +298,7 @@ func (u *__GroupMessage_Deleter) MessageId_NotIn(ins []int) *__GroupMessage_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -273,7 +309,7 @@ func (d *__GroupMessage_Deleter) MessageId_Eq(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -284,7 +320,7 @@ func (d *__GroupMessage_Deleter) MessageId_NotEq(val int) *__GroupMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -295,7 +331,7 @@ func (d *__GroupMessage_Deleter) MessageId_LT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -306,7 +342,7 @@ func (d *__GroupMessage_Deleter) MessageId_LE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -317,7 +353,7 @@ func (d *__GroupMessage_Deleter) MessageId_GT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -328,7 +364,7 @@ func (d *__GroupMessage_Deleter) MessageId_GE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -341,7 +377,7 @@ func (u *__GroupMessage_Deleter) UserId_In(ins []int) *__GroupMessage_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -354,7 +390,7 @@ func (u *__GroupMessage_Deleter) UserId_Ins(ins ...int) *__GroupMessage_Deleter 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -367,7 +403,7 @@ func (u *__GroupMessage_Deleter) UserId_NotIn(ins []int) *__GroupMessage_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -378,7 +414,7 @@ func (d *__GroupMessage_Deleter) UserId_Eq(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -389,7 +425,7 @@ func (d *__GroupMessage_Deleter) UserId_NotEq(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -400,7 +436,7 @@ func (d *__GroupMessage_Deleter) UserId_LT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -411,7 +447,7 @@ func (d *__GroupMessage_Deleter) UserId_LE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -422,7 +458,7 @@ func (d *__GroupMessage_Deleter) UserId_GT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -433,7 +469,7 @@ func (d *__GroupMessage_Deleter) UserId_GE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -446,7 +482,7 @@ func (u *__GroupMessage_Deleter) MessageFileId_In(ins []int) *__GroupMessage_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -459,7 +495,7 @@ func (u *__GroupMessage_Deleter) MessageFileId_Ins(ins ...int) *__GroupMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -472,7 +508,7 @@ func (u *__GroupMessage_Deleter) MessageFileId_NotIn(ins []int) *__GroupMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -483,7 +519,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_Eq(val int) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -494,7 +530,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_NotEq(val int) *__GroupMessage_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -505,7 +541,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_LT(val int) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -516,7 +552,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_LE(val int) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -527,7 +563,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_GT(val int) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -538,7 +574,7 @@ func (d *__GroupMessage_Deleter) MessageFileId_GE(val int) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -551,7 +587,7 @@ func (u *__GroupMessage_Deleter) MessageTypeEnum_In(ins []int) *__GroupMessage_D
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -564,7 +600,7 @@ func (u *__GroupMessage_Deleter) MessageTypeEnum_Ins(ins ...int) *__GroupMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -577,7 +613,7 @@ func (u *__GroupMessage_Deleter) MessageTypeEnum_NotIn(ins []int) *__GroupMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -588,7 +624,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_Eq(val int) *__GroupMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -599,7 +635,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_NotEq(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -610,7 +646,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_LT(val int) *__GroupMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -621,7 +657,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_LE(val int) *__GroupMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -632,7 +668,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_GT(val int) *__GroupMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -643,7 +679,7 @@ func (d *__GroupMessage_Deleter) MessageTypeEnum_GE(val int) *__GroupMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -656,7 +692,7 @@ func (u *__GroupMessage_Deleter) CreatedMs_In(ins []int) *__GroupMessage_Deleter
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -669,7 +705,7 @@ func (u *__GroupMessage_Deleter) CreatedMs_Ins(ins ...int) *__GroupMessage_Delet
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -682,7 +718,7 @@ func (u *__GroupMessage_Deleter) CreatedMs_NotIn(ins []int) *__GroupMessage_Dele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -693,7 +729,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_Eq(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs = ? "
+	w.condition = " CreatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -704,7 +740,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_NotEq(val int) *__GroupMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs != ? "
+	w.condition = " CreatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -715,7 +751,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_LT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs < ? "
+	w.condition = " CreatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -726,7 +762,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_LE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs <= ? "
+	w.condition = " CreatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -737,7 +773,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_GT(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs > ? "
+	w.condition = " CreatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -748,7 +784,7 @@ func (d *__GroupMessage_Deleter) CreatedMs_GE(val int) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs >= ? "
+	w.condition = " CreatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -761,7 +797,7 @@ func (u *__GroupMessage_Deleter) DeliveryStatusEnum_In(ins []int) *__GroupMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -774,7 +810,7 @@ func (u *__GroupMessage_Deleter) DeliveryStatusEnum_Ins(ins ...int) *__GroupMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -787,7 +823,7 @@ func (u *__GroupMessage_Deleter) DeliveryStatusEnum_NotIn(ins []int) *__GroupMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -798,7 +834,7 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_Eq(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum = ? "
+	w.condition = " DeliveryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -809,7 +845,7 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_NotEq(val int) *__GroupMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum != ? "
+	w.condition = " DeliveryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -820,7 +856,7 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_LT(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum < ? "
+	w.condition = " DeliveryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -831,7 +867,7 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_LE(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum <= ? "
+	w.condition = " DeliveryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -842,7 +878,7 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_GT(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum > ? "
+	w.condition = " DeliveryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -853,10 +889,23 @@ func (d *__GroupMessage_Deleter) DeliveryStatusEnum_GE(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum >= ? "
+	w.condition = " DeliveryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__GroupMessage_Updater) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__GroupMessage_Updater) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -872,7 +921,7 @@ func (u *__GroupMessage_Updater) MessageId_In(ins []int) *__GroupMessage_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -885,7 +934,7 @@ func (u *__GroupMessage_Updater) MessageId_Ins(ins ...int) *__GroupMessage_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -898,7 +947,7 @@ func (u *__GroupMessage_Updater) MessageId_NotIn(ins []int) *__GroupMessage_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -909,7 +958,7 @@ func (d *__GroupMessage_Updater) MessageId_Eq(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -920,7 +969,7 @@ func (d *__GroupMessage_Updater) MessageId_NotEq(val int) *__GroupMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -931,7 +980,7 @@ func (d *__GroupMessage_Updater) MessageId_LT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -942,7 +991,7 @@ func (d *__GroupMessage_Updater) MessageId_LE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -953,7 +1002,7 @@ func (d *__GroupMessage_Updater) MessageId_GT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -964,7 +1013,7 @@ func (d *__GroupMessage_Updater) MessageId_GE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -977,7 +1026,7 @@ func (u *__GroupMessage_Updater) UserId_In(ins []int) *__GroupMessage_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -990,7 +1039,7 @@ func (u *__GroupMessage_Updater) UserId_Ins(ins ...int) *__GroupMessage_Updater 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1003,7 +1052,7 @@ func (u *__GroupMessage_Updater) UserId_NotIn(ins []int) *__GroupMessage_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1014,7 +1063,7 @@ func (d *__GroupMessage_Updater) UserId_Eq(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1025,7 +1074,7 @@ func (d *__GroupMessage_Updater) UserId_NotEq(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1036,7 +1085,7 @@ func (d *__GroupMessage_Updater) UserId_LT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1047,7 +1096,7 @@ func (d *__GroupMessage_Updater) UserId_LE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1058,7 +1107,7 @@ func (d *__GroupMessage_Updater) UserId_GT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1069,7 +1118,7 @@ func (d *__GroupMessage_Updater) UserId_GE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1082,7 +1131,7 @@ func (u *__GroupMessage_Updater) MessageFileId_In(ins []int) *__GroupMessage_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1095,7 +1144,7 @@ func (u *__GroupMessage_Updater) MessageFileId_Ins(ins ...int) *__GroupMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1108,7 +1157,7 @@ func (u *__GroupMessage_Updater) MessageFileId_NotIn(ins []int) *__GroupMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1119,7 +1168,7 @@ func (d *__GroupMessage_Updater) MessageFileId_Eq(val int) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1130,7 +1179,7 @@ func (d *__GroupMessage_Updater) MessageFileId_NotEq(val int) *__GroupMessage_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1141,7 +1190,7 @@ func (d *__GroupMessage_Updater) MessageFileId_LT(val int) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1152,7 +1201,7 @@ func (d *__GroupMessage_Updater) MessageFileId_LE(val int) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1163,7 +1212,7 @@ func (d *__GroupMessage_Updater) MessageFileId_GT(val int) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1174,7 +1223,7 @@ func (d *__GroupMessage_Updater) MessageFileId_GE(val int) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1187,7 +1236,7 @@ func (u *__GroupMessage_Updater) MessageTypeEnum_In(ins []int) *__GroupMessage_U
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1200,7 +1249,7 @@ func (u *__GroupMessage_Updater) MessageTypeEnum_Ins(ins ...int) *__GroupMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1213,7 +1262,7 @@ func (u *__GroupMessage_Updater) MessageTypeEnum_NotIn(ins []int) *__GroupMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1224,7 +1273,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_Eq(val int) *__GroupMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1235,7 +1284,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_NotEq(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1246,7 +1295,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_LT(val int) *__GroupMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1257,7 +1306,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_LE(val int) *__GroupMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1268,7 +1317,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_GT(val int) *__GroupMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1279,7 +1328,7 @@ func (d *__GroupMessage_Updater) MessageTypeEnum_GE(val int) *__GroupMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1292,7 +1341,7 @@ func (u *__GroupMessage_Updater) CreatedMs_In(ins []int) *__GroupMessage_Updater
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1305,7 +1354,7 @@ func (u *__GroupMessage_Updater) CreatedMs_Ins(ins ...int) *__GroupMessage_Updat
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1318,7 +1367,7 @@ func (u *__GroupMessage_Updater) CreatedMs_NotIn(ins []int) *__GroupMessage_Upda
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1329,7 +1378,7 @@ func (d *__GroupMessage_Updater) CreatedMs_Eq(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs = ? "
+	w.condition = " CreatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1340,7 +1389,7 @@ func (d *__GroupMessage_Updater) CreatedMs_NotEq(val int) *__GroupMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs != ? "
+	w.condition = " CreatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1351,7 +1400,7 @@ func (d *__GroupMessage_Updater) CreatedMs_LT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs < ? "
+	w.condition = " CreatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1362,7 +1411,7 @@ func (d *__GroupMessage_Updater) CreatedMs_LE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs <= ? "
+	w.condition = " CreatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1373,7 +1422,7 @@ func (d *__GroupMessage_Updater) CreatedMs_GT(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs > ? "
+	w.condition = " CreatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1384,7 +1433,7 @@ func (d *__GroupMessage_Updater) CreatedMs_GE(val int) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs >= ? "
+	w.condition = " CreatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1397,7 +1446,7 @@ func (u *__GroupMessage_Updater) DeliveryStatusEnum_In(ins []int) *__GroupMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1410,7 +1459,7 @@ func (u *__GroupMessage_Updater) DeliveryStatusEnum_Ins(ins ...int) *__GroupMess
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1423,7 +1472,7 @@ func (u *__GroupMessage_Updater) DeliveryStatusEnum_NotIn(ins []int) *__GroupMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1434,7 +1483,7 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_Eq(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum = ? "
+	w.condition = " DeliveryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1445,7 +1494,7 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_NotEq(val int) *__GroupMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum != ? "
+	w.condition = " DeliveryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1456,7 +1505,7 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_LT(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum < ? "
+	w.condition = " DeliveryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1467,7 +1516,7 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_LE(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum <= ? "
+	w.condition = " DeliveryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1478,7 +1527,7 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_GT(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum > ? "
+	w.condition = " DeliveryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1489,10 +1538,23 @@ func (d *__GroupMessage_Updater) DeliveryStatusEnum_GE(val int) *__GroupMessage_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum >= ? "
+	w.condition = " DeliveryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
+}
+
+/// mysql or cockroach ? or $1 handlers
+func (m *__GroupMessage_Selector) nextDollars(size int) string {
+	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
+	m.dollarIndex += size
+	return r
+}
+
+func (m *__GroupMessage_Selector) nextDollar() string {
+	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
+	m.dollarIndex += 1
+	return r
 }
 
 ////////ints
@@ -1508,7 +1570,7 @@ func (u *__GroupMessage_Selector) MessageId_In(ins []int) *__GroupMessage_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1521,7 +1583,7 @@ func (u *__GroupMessage_Selector) MessageId_Ins(ins ...int) *__GroupMessage_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1534,7 +1596,7 @@ func (u *__GroupMessage_Selector) MessageId_NotIn(ins []int) *__GroupMessage_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1545,7 +1607,7 @@ func (d *__GroupMessage_Selector) MessageId_Eq(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId = ? "
+	w.condition = " MessageId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1556,7 +1618,7 @@ func (d *__GroupMessage_Selector) MessageId_NotEq(val int) *__GroupMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId != ? "
+	w.condition = " MessageId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1567,7 +1629,7 @@ func (d *__GroupMessage_Selector) MessageId_LT(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId < ? "
+	w.condition = " MessageId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1578,7 +1640,7 @@ func (d *__GroupMessage_Selector) MessageId_LE(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId <= ? "
+	w.condition = " MessageId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1589,7 +1651,7 @@ func (d *__GroupMessage_Selector) MessageId_GT(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId > ? "
+	w.condition = " MessageId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1600,7 +1662,7 @@ func (d *__GroupMessage_Selector) MessageId_GE(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageId >= ? "
+	w.condition = " MessageId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1613,7 +1675,7 @@ func (u *__GroupMessage_Selector) UserId_In(ins []int) *__GroupMessage_Selector 
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1626,7 +1688,7 @@ func (u *__GroupMessage_Selector) UserId_Ins(ins ...int) *__GroupMessage_Selecto
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1639,7 +1701,7 @@ func (u *__GroupMessage_Selector) UserId_NotIn(ins []int) *__GroupMessage_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1650,7 +1712,7 @@ func (d *__GroupMessage_Selector) UserId_Eq(val int) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = ? "
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1661,7 +1723,7 @@ func (d *__GroupMessage_Selector) UserId_NotEq(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != ? "
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1672,7 +1734,7 @@ func (d *__GroupMessage_Selector) UserId_LT(val int) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < ? "
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1683,7 +1745,7 @@ func (d *__GroupMessage_Selector) UserId_LE(val int) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= ? "
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1694,7 +1756,7 @@ func (d *__GroupMessage_Selector) UserId_GT(val int) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > ? "
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1705,7 +1767,7 @@ func (d *__GroupMessage_Selector) UserId_GE(val int) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= ? "
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1718,7 +1780,7 @@ func (u *__GroupMessage_Selector) MessageFileId_In(ins []int) *__GroupMessage_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1731,7 +1793,7 @@ func (u *__GroupMessage_Selector) MessageFileId_Ins(ins ...int) *__GroupMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1744,7 +1806,7 @@ func (u *__GroupMessage_Selector) MessageFileId_NotIn(ins []int) *__GroupMessage
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageFileId NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageFileId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1755,7 +1817,7 @@ func (d *__GroupMessage_Selector) MessageFileId_Eq(val int) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId = ? "
+	w.condition = " MessageFileId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1766,7 +1828,7 @@ func (d *__GroupMessage_Selector) MessageFileId_NotEq(val int) *__GroupMessage_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId != ? "
+	w.condition = " MessageFileId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1777,7 +1839,7 @@ func (d *__GroupMessage_Selector) MessageFileId_LT(val int) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId < ? "
+	w.condition = " MessageFileId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1788,7 +1850,7 @@ func (d *__GroupMessage_Selector) MessageFileId_LE(val int) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId <= ? "
+	w.condition = " MessageFileId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1799,7 +1861,7 @@ func (d *__GroupMessage_Selector) MessageFileId_GT(val int) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId > ? "
+	w.condition = " MessageFileId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1810,7 +1872,7 @@ func (d *__GroupMessage_Selector) MessageFileId_GE(val int) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageFileId >= ? "
+	w.condition = " MessageFileId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1823,7 +1885,7 @@ func (u *__GroupMessage_Selector) MessageTypeEnum_In(ins []int) *__GroupMessage_
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1836,7 +1898,7 @@ func (u *__GroupMessage_Selector) MessageTypeEnum_Ins(ins ...int) *__GroupMessag
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1849,7 +1911,7 @@ func (u *__GroupMessage_Selector) MessageTypeEnum_NotIn(ins []int) *__GroupMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MessageTypeEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " MessageTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1860,7 +1922,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_Eq(val int) *__GroupMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum = ? "
+	w.condition = " MessageTypeEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1871,7 +1933,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_NotEq(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum != ? "
+	w.condition = " MessageTypeEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1882,7 +1944,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_LT(val int) *__GroupMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum < ? "
+	w.condition = " MessageTypeEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1893,7 +1955,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_LE(val int) *__GroupMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum <= ? "
+	w.condition = " MessageTypeEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1904,7 +1966,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_GT(val int) *__GroupMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum > ? "
+	w.condition = " MessageTypeEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1915,7 +1977,7 @@ func (d *__GroupMessage_Selector) MessageTypeEnum_GE(val int) *__GroupMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageTypeEnum >= ? "
+	w.condition = " MessageTypeEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1928,7 +1990,7 @@ func (u *__GroupMessage_Selector) CreatedMs_In(ins []int) *__GroupMessage_Select
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1941,7 +2003,7 @@ func (u *__GroupMessage_Selector) CreatedMs_Ins(ins ...int) *__GroupMessage_Sele
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1954,7 +2016,7 @@ func (u *__GroupMessage_Selector) CreatedMs_NotIn(ins []int) *__GroupMessage_Sel
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedMs NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " CreatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -1965,7 +2027,7 @@ func (d *__GroupMessage_Selector) CreatedMs_Eq(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs = ? "
+	w.condition = " CreatedMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1976,7 +2038,7 @@ func (d *__GroupMessage_Selector) CreatedMs_NotEq(val int) *__GroupMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs != ? "
+	w.condition = " CreatedMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1987,7 +2049,7 @@ func (d *__GroupMessage_Selector) CreatedMs_LT(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs < ? "
+	w.condition = " CreatedMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1998,7 +2060,7 @@ func (d *__GroupMessage_Selector) CreatedMs_LE(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs <= ? "
+	w.condition = " CreatedMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2009,7 +2071,7 @@ func (d *__GroupMessage_Selector) CreatedMs_GT(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs > ? "
+	w.condition = " CreatedMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2020,7 +2082,7 @@ func (d *__GroupMessage_Selector) CreatedMs_GE(val int) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedMs >= ? "
+	w.condition = " CreatedMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2033,7 +2095,7 @@ func (u *__GroupMessage_Selector) DeliveryStatusEnum_In(ins []int) *__GroupMessa
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2046,7 +2108,7 @@ func (u *__GroupMessage_Selector) DeliveryStatusEnum_Ins(ins ...int) *__GroupMes
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2059,7 +2121,7 @@ func (u *__GroupMessage_Selector) DeliveryStatusEnum_NotIn(ins []int) *__GroupMe
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " DeliveryStatusEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2070,7 +2132,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_Eq(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum = ? "
+	w.condition = " DeliveryStatusEnum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2081,7 +2143,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_NotEq(val int) *__GroupMess
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum != ? "
+	w.condition = " DeliveryStatusEnum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2092,7 +2154,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_LT(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum < ? "
+	w.condition = " DeliveryStatusEnum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2103,7 +2165,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_LE(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum <= ? "
+	w.condition = " DeliveryStatusEnum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2114,7 +2176,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_GT(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum > ? "
+	w.condition = " DeliveryStatusEnum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2125,7 +2187,7 @@ func (d *__GroupMessage_Selector) DeliveryStatusEnum_GE(val int) *__GroupMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DeliveryStatusEnum >= ? "
+	w.condition = " DeliveryStatusEnum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2142,7 +2204,7 @@ func (u *__GroupMessage_Deleter) RoomKey_In(ins []string) *__GroupMessage_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2155,7 +2217,7 @@ func (u *__GroupMessage_Deleter) RoomKey_NotIn(ins []string) *__GroupMessage_Del
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2167,7 +2229,7 @@ func (u *__GroupMessage_Deleter) RoomKey_Like(val string) *__GroupMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2178,7 +2240,7 @@ func (d *__GroupMessage_Deleter) RoomKey_Eq(val string) *__GroupMessage_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2189,7 +2251,7 @@ func (d *__GroupMessage_Deleter) RoomKey_NotEq(val string) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2202,7 +2264,7 @@ func (u *__GroupMessage_Deleter) Text_In(ins []string) *__GroupMessage_Deleter {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2215,7 +2277,7 @@ func (u *__GroupMessage_Deleter) Text_NotIn(ins []string) *__GroupMessage_Delete
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2227,7 +2289,7 @@ func (u *__GroupMessage_Deleter) Text_Like(val string) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2238,7 +2300,7 @@ func (d *__GroupMessage_Deleter) Text_Eq(val string) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2249,7 +2311,7 @@ func (d *__GroupMessage_Deleter) Text_NotEq(val string) *__GroupMessage_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2264,7 +2326,7 @@ func (u *__GroupMessage_Updater) RoomKey_In(ins []string) *__GroupMessage_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2277,7 +2339,7 @@ func (u *__GroupMessage_Updater) RoomKey_NotIn(ins []string) *__GroupMessage_Upd
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2289,7 +2351,7 @@ func (u *__GroupMessage_Updater) RoomKey_Like(val string) *__GroupMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2300,7 +2362,7 @@ func (d *__GroupMessage_Updater) RoomKey_Eq(val string) *__GroupMessage_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2311,7 +2373,7 @@ func (d *__GroupMessage_Updater) RoomKey_NotEq(val string) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2324,7 +2386,7 @@ func (u *__GroupMessage_Updater) Text_In(ins []string) *__GroupMessage_Updater {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2337,7 +2399,7 @@ func (u *__GroupMessage_Updater) Text_NotIn(ins []string) *__GroupMessage_Update
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2349,7 +2411,7 @@ func (u *__GroupMessage_Updater) Text_Like(val string) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2360,7 +2422,7 @@ func (d *__GroupMessage_Updater) Text_Eq(val string) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2371,7 +2433,7 @@ func (d *__GroupMessage_Updater) Text_NotEq(val string) *__GroupMessage_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2386,7 +2448,7 @@ func (u *__GroupMessage_Selector) RoomKey_In(ins []string) *__GroupMessage_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2399,7 +2461,7 @@ func (u *__GroupMessage_Selector) RoomKey_NotIn(ins []string) *__GroupMessage_Se
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RoomKey NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " RoomKey NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2411,7 +2473,7 @@ func (u *__GroupMessage_Selector) RoomKey_Like(val string) *__GroupMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey LIKE ? "
+	w.condition = " RoomKey LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2422,7 +2484,7 @@ func (d *__GroupMessage_Selector) RoomKey_Eq(val string) *__GroupMessage_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = ? "
+	w.condition = " RoomKey = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2433,7 +2495,7 @@ func (d *__GroupMessage_Selector) RoomKey_NotEq(val string) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != ? "
+	w.condition = " RoomKey != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2446,7 +2508,7 @@ func (u *__GroupMessage_Selector) Text_In(ins []string) *__GroupMessage_Selector
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2459,7 +2521,7 @@ func (u *__GroupMessage_Selector) Text_NotIn(ins []string) *__GroupMessage_Selec
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + helper.DbQuestionForSqlIn(len(ins)) + ") "
+	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2471,7 +2533,7 @@ func (u *__GroupMessage_Selector) Text_Like(val string) *__GroupMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE ? "
+	w.condition = " Text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
@@ -2482,7 +2544,7 @@ func (d *__GroupMessage_Selector) Text_Eq(val string) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = ? "
+	w.condition = " Text = " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2493,7 +2555,7 @@ func (d *__GroupMessage_Selector) Text_NotEq(val string) *__GroupMessage_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != ? "
+	w.condition = " Text != " + u.nextDollars
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2506,17 +2568,23 @@ func (d *__GroupMessage_Selector) Text_NotEq(val string) *__GroupMessage_Selecto
 //ints
 
 func (u *__GroupMessage_Updater) MessageId(newVal int) *__GroupMessage_Updater {
-	u.updates[" MessageId = ? "] = newVal
+	up := updateCol{" MessageId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) MessageId_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageId = MessageId+? "] = count
+		up := updateCol{" MessageId = MessageId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageId = MessageId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageId = MessageId-? "] = -(count) //make it positive
+		up := updateCol{" MessageId = MessageId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageId = MessageId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2528,24 +2596,32 @@ func (u *__GroupMessage_Updater) MessageId_Increment(count int) *__GroupMessage_
 
 //string
 func (u *__GroupMessage_Updater) RoomKey(newVal string) *__GroupMessage_Updater {
-	u.updates[" RoomKey = ? "] = newVal
+	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__GroupMessage_Updater) UserId(newVal int) *__GroupMessage_Updater {
-	u.updates[" UserId = ? "] = newVal
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) UserId_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" UserId = UserId+? "] = count
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" UserId = UserId-? "] = -(count) //make it positive
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2556,17 +2632,23 @@ func (u *__GroupMessage_Updater) UserId_Increment(count int) *__GroupMessage_Upd
 //ints
 
 func (u *__GroupMessage_Updater) MessageFileId(newVal int) *__GroupMessage_Updater {
-	u.updates[" MessageFileId = ? "] = newVal
+	up := updateCol{" MessageFileId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageFileId = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) MessageFileId_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageFileId = MessageFileId+? "] = count
+		up := updateCol{" MessageFileId = MessageFileId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageFileId = MessageFileId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageFileId = MessageFileId-? "] = -(count) //make it positive
+		up := updateCol{" MessageFileId = MessageFileId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageFileId = MessageFileId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2577,17 +2659,23 @@ func (u *__GroupMessage_Updater) MessageFileId_Increment(count int) *__GroupMess
 //ints
 
 func (u *__GroupMessage_Updater) MessageTypeEnum(newVal int) *__GroupMessage_Updater {
-	u.updates[" MessageTypeEnum = ? "] = newVal
+	up := updateCol{" MessageTypeEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MessageTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) MessageTypeEnum_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum+? "] = count
+		up := updateCol{" MessageTypeEnum = MessageTypeEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MessageTypeEnum = MessageTypeEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" MessageTypeEnum = MessageTypeEnum-? "] = -(count) //make it positive
+		up := updateCol{" MessageTypeEnum = MessageTypeEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MessageTypeEnum = MessageTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2599,24 +2687,32 @@ func (u *__GroupMessage_Updater) MessageTypeEnum_Increment(count int) *__GroupMe
 
 //string
 func (u *__GroupMessage_Updater) Text(newVal string) *__GroupMessage_Updater {
-	u.updates[" Text = ? "] = newVal
+	up := updateCol{"Text = " + u.nextDollar(), count}
+	u.updates = append(u.updates, up)
+	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 func (u *__GroupMessage_Updater) CreatedMs(newVal int) *__GroupMessage_Updater {
-	u.updates[" CreatedMs = ? "] = newVal
+	up := updateCol{" CreatedMs = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CreatedMs = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) CreatedMs_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" CreatedMs = CreatedMs+? "] = count
+		up := updateCol{" CreatedMs = CreatedMs+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CreatedMs = CreatedMs+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" CreatedMs = CreatedMs-? "] = -(count) //make it positive
+		up := updateCol{" CreatedMs = CreatedMs- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CreatedMs = CreatedMs- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2627,17 +2723,23 @@ func (u *__GroupMessage_Updater) CreatedMs_Increment(count int) *__GroupMessage_
 //ints
 
 func (u *__GroupMessage_Updater) DeliveryStatusEnum(newVal int) *__GroupMessage_Updater {
-	u.updates[" DeliveryStatusEnum = ? "] = newVal
+	up := updateCol{" DeliveryStatusEnum = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DeliveryStatusEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
 func (u *__GroupMessage_Updater) DeliveryStatusEnum_Increment(count int) *__GroupMessage_Updater {
 	if count > 0 {
-		u.updates[" DeliveryStatusEnum = DeliveryStatusEnum+? "] = count
+		up := updateCol{" DeliveryStatusEnum = DeliveryStatusEnum+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" DeliveryStatusEnum = DeliveryStatusEnum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		u.updates[" DeliveryStatusEnum = DeliveryStatusEnum-? "] = -(count) //make it positive
+		up := updateCol{" DeliveryStatusEnum = DeliveryStatusEnum- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" DeliveryStatusEnum = DeliveryStatusEnum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2996,9 +3098,13 @@ func (u *__GroupMessage_Updater) Update(db XODB) (int, error) {
 
 	var updateArgs []interface{}
 	var sqlUpdateArr []string
-	for up, newVal := range u.updates {
-		sqlUpdateArr = append(sqlUpdateArr, up)
-		updateArgs = append(updateArgs, newVal)
+	/*for up, newVal := range u.updates {
+	    sqlUpdateArr = append(sqlUpdateArr, up)
+	    updateArgs = append(updateArgs, newVal)
+	}*/
+	for _, up := range u.updates {
+		sqlUpdateArr = append(sqlUpdateArr, up.col)
+		updateArgs = append(updateArgs, up.val)
 	}
 	sqlUpdate := strings.Join(sqlUpdateArr, ",")
 
@@ -3083,10 +3189,10 @@ func MassInsert_GroupMessage(rows []GroupMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(8, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.group_message (" +
 		"MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum" +
@@ -3128,10 +3234,9 @@ func MassReplace_GroupMessage(rows []GroupMessage, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	//s:= "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	s := "(?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(8, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.group_message (" +
 		"MessageId, RoomKey, UserId, MessageFileId, MessageTypeEnum, Text, CreatedMs, DeliveryStatusEnum" +
