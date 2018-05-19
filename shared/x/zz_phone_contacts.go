@@ -2265,7 +2265,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = " + u.nextDollars
+	w.condition = " PhoneDisplayName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2276,7 +2276,7 @@ func (d *__PhoneContact_Deleter) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != " + u.nextDollars
+	w.condition = " PhoneDisplayName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2325,7 +2325,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = " + u.nextDollars
+	w.condition = " PhoneFamilyName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2336,7 +2336,7 @@ func (d *__PhoneContact_Deleter) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != " + u.nextDollars
+	w.condition = " PhoneFamilyName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2385,7 +2385,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_Eq(val string) *__PhoneContact_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = " + u.nextDollars
+	w.condition = " PhoneNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2396,7 +2396,7 @@ func (d *__PhoneContact_Deleter) PhoneNumber_NotEq(val string) *__PhoneContact_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != " + u.nextDollars
+	w.condition = " PhoneNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2445,7 +2445,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2456,7 +2456,7 @@ func (d *__PhoneContact_Deleter) PhoneNormalizedNumber_NotEq(val string) *__Phon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2507,7 +2507,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = " + u.nextDollars
+	w.condition = " PhoneDisplayName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2518,7 +2518,7 @@ func (d *__PhoneContact_Updater) PhoneDisplayName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != " + u.nextDollars
+	w.condition = " PhoneDisplayName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2567,7 +2567,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_Eq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = " + u.nextDollars
+	w.condition = " PhoneFamilyName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2578,7 +2578,7 @@ func (d *__PhoneContact_Updater) PhoneFamilyName_NotEq(val string) *__PhoneConta
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != " + u.nextDollars
+	w.condition = " PhoneFamilyName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2627,7 +2627,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_Eq(val string) *__PhoneContact_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = " + u.nextDollars
+	w.condition = " PhoneNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2638,7 +2638,7 @@ func (d *__PhoneContact_Updater) PhoneNumber_NotEq(val string) *__PhoneContact_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != " + u.nextDollars
+	w.condition = " PhoneNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2687,7 +2687,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_Eq(val string) *__PhoneCo
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2698,7 +2698,7 @@ func (d *__PhoneContact_Updater) PhoneNormalizedNumber_NotEq(val string) *__Phon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2749,7 +2749,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_Eq(val string) *__PhoneContac
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName = " + u.nextDollars
+	w.condition = " PhoneDisplayName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2760,7 +2760,7 @@ func (d *__PhoneContact_Selector) PhoneDisplayName_NotEq(val string) *__PhoneCon
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneDisplayName != " + u.nextDollars
+	w.condition = " PhoneDisplayName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2809,7 +2809,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_Eq(val string) *__PhoneContact
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName = " + u.nextDollars
+	w.condition = " PhoneFamilyName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2820,7 +2820,7 @@ func (d *__PhoneContact_Selector) PhoneFamilyName_NotEq(val string) *__PhoneCont
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneFamilyName != " + u.nextDollars
+	w.condition = " PhoneFamilyName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2869,7 +2869,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_Eq(val string) *__PhoneContact_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber = " + u.nextDollars
+	w.condition = " PhoneNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2880,7 +2880,7 @@ func (d *__PhoneContact_Selector) PhoneNumber_NotEq(val string) *__PhoneContact_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNumber != " + u.nextDollars
+	w.condition = " PhoneNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2929,7 +2929,7 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_Eq(val string) *__PhoneC
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber = " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2940,7 +2940,7 @@ func (d *__PhoneContact_Selector) PhoneNormalizedNumber_NotEq(val string) *__Pho
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PhoneNormalizedNumber != " + u.nextDollars
+	w.condition = " PhoneNormalizedNumber != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3035,7 +3035,7 @@ func (u *__PhoneContact_Updater) Phone_Increment(count int) *__PhoneContact_Upda
 
 //string
 func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact_Updater {
-	up := updateCol{"PhoneDisplayName = " + u.nextDollar(), count}
+	up := updateCol{"PhoneDisplayName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PhoneDisplayName = "+ u.nextDollar()] = newVal
 	return u
@@ -3045,7 +3045,7 @@ func (u *__PhoneContact_Updater) PhoneDisplayName(newVal string) *__PhoneContact
 
 //string
 func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_Updater {
-	up := updateCol{"PhoneFamilyName = " + u.nextDollar(), count}
+	up := updateCol{"PhoneFamilyName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PhoneFamilyName = "+ u.nextDollar()] = newVal
 	return u
@@ -3055,7 +3055,7 @@ func (u *__PhoneContact_Updater) PhoneFamilyName(newVal string) *__PhoneContact_
 
 //string
 func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Updater {
-	up := updateCol{"PhoneNumber = " + u.nextDollar(), count}
+	up := updateCol{"PhoneNumber = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PhoneNumber = "+ u.nextDollar()] = newVal
 	return u
@@ -3065,7 +3065,7 @@ func (u *__PhoneContact_Updater) PhoneNumber(newVal string) *__PhoneContact_Upda
 
 //string
 func (u *__PhoneContact_Updater) PhoneNormalizedNumber(newVal string) *__PhoneContact_Updater {
-	up := updateCol{"PhoneNormalizedNumber = " + u.nextDollar(), count}
+	up := updateCol{"PhoneNormalizedNumber = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PhoneNormalizedNumber = "+ u.nextDollar()] = newVal
 	return u

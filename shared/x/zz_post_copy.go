@@ -11,183 +11,183 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Post represents a row from 'sun.post'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostCopy represents a row from 'sun.post_copy'.
 
 // Manualy copy this to project
-type Post__ struct {
-	PostId           int    `json:"PostId"`           // PostId -
-	UserId           int    `json:"UserId"`           // UserId -
-	PostTypeEnum     int    `json:"PostTypeEnum"`     // PostTypeEnum -
-	PostCategoryEnum int    `json:"PostCategoryEnum"` // PostCategoryEnum -
-	MediaId          int    `json:"MediaId"`          // MediaId -
-	PostKey          string `json:"PostKey"`          // PostKey -
-	Text             string `json:"Text"`             // Text -
-	RichText         string `json:"RichText"`         // RichText -
-	MediaCount       int    `json:"MediaCount"`       // MediaCount -
-	SharedTo         int    `json:"SharedTo"`         // SharedTo -
-	DisableComment   int    `json:"DisableComment"`   // DisableComment -
-	Source           int    `json:"Source"`           // Source -
-	HasTag           int    `json:"HasTag"`           // HasTag -
-	Seq              int    `json:"Seq"`              // Seq -
-	CommentsCount    int    `json:"CommentsCount"`    // CommentsCount -
-	LikesCount       int    `json:"LikesCount"`       // LikesCount -
-	ViewsCount       int    `json:"ViewsCount"`       // ViewsCount -
-	EditedTime       int    `json:"EditedTime"`       // EditedTime -
-	CreatedTime      int    `json:"CreatedTime"`      // CreatedTime -
-	ReSharedPostId   int    `json:"ReSharedPostId"`   // ReSharedPostId -
+type PostCopy__ struct {
+	PostId           int    `json:"post_id"`            // post_id -
+	UserId           int    `json:"user_id"`            // user_id -
+	PostTypeEnum     int    `json:"post_type_enum"`     // post_type_enum -
+	PostCategoryEnum int    `json:"post_category_enum"` // post_category_enum -
+	MediaId          int    `json:"media_id"`           // media_id -
+	PostKey          string `json:"post_key"`           // post_key -
+	Text             string `json:"text"`               // text -
+	RichText         string `json:"rich_text"`          // rich_text -
+	MediaCount       int    `json:"media_count"`        // media_count -
+	SharedTo         int    `json:"shared_to"`          // shared_to -
+	DisableComment   int    `json:"disable_comment"`    // disable_comment -
+	Source           int    `json:"source"`             // source -
+	HasTag           int    `json:"has_tag"`            // has_tag -
+	Seq              int    `json:"seq"`                // seq -
+	CommentsCount    int    `json:"comments_count"`     // comments_count -
+	LikesCount       int    `json:"likes_count"`        // likes_count -
+	ViewsCount       int    `json:"views_count"`        // views_count -
+	EditedTime       int    `json:"edited_time"`        // edited_time -
+	CreatedTime      int    `json:"created_time"`       // created_time -
+	ReSharedPostId   int    `json:"re_shared_post_id"`  // re_shared_post_id -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the Post exists in the database.
-func (p *Post) Exists() bool {
-	return p._exists
+// Exists determines if the PostCopy exists in the database.
+func (pc *PostCopy) Exists() bool {
+	return pc._exists
 }
 
-// Deleted provides information if the Post has been deleted from the database.
-func (p *Post) Deleted() bool {
-	return p._deleted
+// Deleted provides information if the PostCopy has been deleted from the database.
+func (pc *PostCopy) Deleted() bool {
+	return pc._deleted
 }
 
-// Insert inserts the Post to the database.
-func (p *Post) Insert(db XODB) error {
+// Insert inserts the PostCopy to the database.
+func (pc *PostCopy) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if p._exists {
+	if pc._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+	const sqlstr = `INSERT INTO sun.post_copy (` +
+		`post_id, user_id, post_type_enum, post_category_enum, media_id, post_key, text, rich_text, media_count, shared_to, disable_comment, source, has_tag, seq, comments_count, likes_count, views_count, edited_time, created_time, re_shared_post_id` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	if LogTableSqlReq.PostCopy {
+		XOLog(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	if err != nil {
 		return err
 	}
 
 	// set existence
-	p._exists = true
+	pc._exists = true
 
-	OnPost_AfterInsert(p)
+	OnPostCopy_AfterInsert(pc)
 
 	return nil
 }
 
-// Insert inserts the Post to the database.
-func (p *Post) Replace(db XODB) error {
+// Insert inserts the PostCopy to the database.
+func (pc *PostCopy) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+	const sqlstr = `REPLACE INTO sun.post_copy (` +
+		`post_id, user_id, post_type_enum, post_category_enum, media_id, post_key, text, rich_text, media_count, shared_to, disable_comment, source, has_tag, seq, comments_count, likes_count, views_count, edited_time, created_time, re_shared_post_id` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	if LogTableSqlReq.PostCopy {
+		XOLog(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	p._exists = true
+	pc._exists = true
 
-	OnPost_AfterInsert(p)
+	OnPostCopy_AfterInsert(pc)
 
 	return nil
 }
 
-// Update updates the Post in the database.
-func (p *Post) Update(db XODB) error {
+// Update updates the PostCopy in the database.
+func (pc *PostCopy) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !p._exists {
+	if !pc._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if p._deleted {
+	if pc._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.post SET ` +
-		`UserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Source = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
-		` WHERE PostId = ?`
+	const sqlstr = `UPDATE sun.post_copy SET ` +
+		`user_id = ?, post_type_enum = ?, post_category_enum = ?, media_id = ?, post_key = ?, text = ?, rich_text = ?, media_count = ?, shared_to = ?, disable_comment = ?, source = ?, has_tag = ?, seq = ?, comments_count = ?, likes_count = ?, views_count = ?, edited_time = ?, created_time = ?, re_shared_post_id = ?` +
+		` WHERE post_id = ?`
 
 	// run query
-	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	if LogTableSqlReq.PostCopy {
+		XOLog(sqlstr, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId, pc.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	_, err = db.Exec(sqlstr, pc.UserId, pc.PostTypeEnum, pc.PostCategoryEnum, pc.MediaId, pc.PostKey, pc.Text, pc.RichText, pc.MediaCount, pc.SharedTo, pc.DisableComment, pc.Source, pc.HasTag, pc.Seq, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.EditedTime, pc.CreatedTime, pc.ReSharedPostId, pc.PostId)
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLogErr(err)
 	}
-	OnPost_AfterUpdate(p)
+	OnPostCopy_AfterUpdate(pc)
 
 	return err
 }
 
-// Save saves the Post to the database.
-func (p *Post) Save(db XODB) error {
-	if p.Exists() {
-		return p.Update(db)
+// Save saves the PostCopy to the database.
+func (pc *PostCopy) Save(db XODB) error {
+	if pc.Exists() {
+		return pc.Update(db)
 	}
 
-	return p.Replace(db)
+	return pc.Replace(db)
 }
 
-// Delete deletes the Post from the database.
-func (p *Post) Delete(db XODB) error {
+// Delete deletes the PostCopy from the database.
+func (pc *PostCopy) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !p._exists {
+	if !pc._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if p._deleted {
+	if pc._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.post WHERE PostId = ?`
+	const sqlstr = `DELETE FROM sun.post_copy WHERE post_id = ?`
 
 	// run query
-	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId)
+	if LogTableSqlReq.PostCopy {
+		XOLog(sqlstr, pc.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.PostId)
+	_, err = db.Exec(sqlstr, pc.PostId)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	p._deleted = true
+	pc._deleted = true
 
-	OnPost_AfterDelete(p)
+	OnPostCopy_AfterDelete(pc)
 
 	return nil
 }
@@ -198,14 +198,14 @@ func (p *Post) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Post_Deleter struct {
+type __PostCopy_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __Post_Updater struct {
+type __PostCopy_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -214,7 +214,7 @@ type __Post_Updater struct {
 	isMysql     bool
 }
 
-type __Post_Selector struct {
+type __PostCopy_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -225,30 +225,30 @@ type __Post_Selector struct {
 	isMysql     bool
 }
 
-func NewPost_Deleter() *__Post_Deleter {
-	d := __Post_Deleter{whereSep: " AND "}
+func NewPostCopy_Deleter() *__PostCopy_Deleter {
+	d := __PostCopy_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewPost_Updater() *__Post_Updater {
-	u := __Post_Updater{whereSep: " AND "}
+func NewPostCopy_Updater() *__PostCopy_Updater {
+	u := __PostCopy_Updater{whereSep: " AND "}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewPost_Selector() *__Post_Selector {
-	u := __Post_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPostCopy_Selector() *__PostCopy_Selector {
+	u := __PostCopy_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__Post_Selector)nextDollars(size int) string  {
+func (m *__PostCopy_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__Post_Selector)nextDollar() string  {
+func (m *__PostCopy_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -259,5412 +259,5412 @@ func (m *__Post_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Post_Deleter) nextDollars(size int) string {
+func (m *__PostCopy_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Post_Deleter) nextDollar() string {
+func (m *__PostCopy_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Post_Deleter) Or() *__Post_Deleter {
+func (u *__PostCopy_Deleter) Or() *__PostCopy_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Deleter) PostId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) PostId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = " + d.nextDollar()
+	w.condition = " post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != " + d.nextDollar()
+	w.condition = " post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < " + d.nextDollar()
+	w.condition = " post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= " + d.nextDollar()
+	w.condition = " post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > " + d.nextDollar()
+	w.condition = " post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= " + d.nextDollar()
+	w.condition = " post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) UserId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) UserId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) UserId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) UserId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) UserId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = " + d.nextDollar()
+	w.condition = " user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) UserId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != " + d.nextDollar()
+	w.condition = " user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) UserId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < " + d.nextDollar()
+	w.condition = " user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) UserId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= " + d.nextDollar()
+	w.condition = " user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) UserId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > " + d.nextDollar()
+	w.condition = " user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) UserId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) UserId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= " + d.nextDollar()
+	w.condition = " user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) PostTypeEnum_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostTypeEnum_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) PostTypeEnum_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " post_type_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " post_type_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " post_type_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " post_type_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " post_type_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostTypeEnum_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
+	w.condition = " post_type_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) PostCategoryEnum_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostCategoryEnum_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostCategoryEnum_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostCategoryEnum_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostCategoryEnum_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostCategoryEnum_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
+	w.condition = " post_category_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
+	w.condition = " post_category_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
+	w.condition = " post_category_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
+	w.condition = " post_category_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
+	w.condition = " post_category_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostCategoryEnum_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostCategoryEnum_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " post_category_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) MediaId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) MediaId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) MediaId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) MediaId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = " + d.nextDollar()
+	w.condition = " media_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != " + d.nextDollar()
+	w.condition = " media_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < " + d.nextDollar()
+	w.condition = " media_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= " + d.nextDollar()
+	w.condition = " media_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > " + d.nextDollar()
+	w.condition = " media_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= " + d.nextDollar()
+	w.condition = " media_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) MediaCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) MediaCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) MediaCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) MediaCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) MediaCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = " + d.nextDollar()
+	w.condition = " media_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != " + d.nextDollar()
+	w.condition = " media_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < " + d.nextDollar()
+	w.condition = " media_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= " + d.nextDollar()
+	w.condition = " media_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > " + d.nextDollar()
+	w.condition = " media_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) MediaCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) MediaCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= " + d.nextDollar()
+	w.condition = " media_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) SharedTo_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) SharedTo_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) SharedTo_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) SharedTo_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) SharedTo_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = " + d.nextDollar()
+	w.condition = " shared_to = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != " + d.nextDollar()
+	w.condition = " shared_to != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < " + d.nextDollar()
+	w.condition = " shared_to < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= " + d.nextDollar()
+	w.condition = " shared_to <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > " + d.nextDollar()
+	w.condition = " shared_to > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) SharedTo_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) SharedTo_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= " + d.nextDollar()
+	w.condition = " shared_to >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) DisableComment_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) DisableComment_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) DisableComment_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) DisableComment_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) DisableComment_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = " + d.nextDollar()
+	w.condition = " disable_comment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != " + d.nextDollar()
+	w.condition = " disable_comment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < " + d.nextDollar()
+	w.condition = " disable_comment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= " + d.nextDollar()
+	w.condition = " disable_comment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > " + d.nextDollar()
+	w.condition = " disable_comment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) DisableComment_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= " + d.nextDollar()
+	w.condition = " disable_comment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) Source_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Source_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Source_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Source_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Source_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Source_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) Source_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Source_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
+	w.condition = " source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) HasTag_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) HasTag_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) HasTag_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) HasTag_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) HasTag_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
+	w.condition = " has_tag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
+	w.condition = " has_tag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
+	w.condition = " has_tag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
+	w.condition = " has_tag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
+	w.condition = " has_tag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) HasTag_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " has_tag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) Seq_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Seq_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Seq_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Seq_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Seq_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Seq_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) Seq_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
+	w.condition = " seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Seq_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
+	w.condition = " seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Seq_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
+	w.condition = " seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Seq_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
+	w.condition = " seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Seq_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
+	w.condition = " seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Seq_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Seq_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
+	w.condition = " seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) CommentsCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) CommentsCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) CommentsCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CommentsCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) CommentsCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = " + d.nextDollar()
+	w.condition = " comments_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != " + d.nextDollar()
+	w.condition = " comments_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < " + d.nextDollar()
+	w.condition = " comments_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= " + d.nextDollar()
+	w.condition = " comments_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > " + d.nextDollar()
+	w.condition = " comments_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CommentsCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CommentsCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= " + d.nextDollar()
+	w.condition = " comments_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) LikesCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) LikesCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) LikesCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) LikesCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) LikesCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = " + d.nextDollar()
+	w.condition = " likes_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != " + d.nextDollar()
+	w.condition = " likes_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < " + d.nextDollar()
+	w.condition = " likes_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= " + d.nextDollar()
+	w.condition = " likes_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > " + d.nextDollar()
+	w.condition = " likes_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) LikesCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) LikesCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= " + d.nextDollar()
+	w.condition = " likes_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) ViewsCount_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) ViewsCount_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) ViewsCount_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ViewsCount_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) ViewsCount_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = " + d.nextDollar()
+	w.condition = " views_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != " + d.nextDollar()
+	w.condition = " views_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < " + d.nextDollar()
+	w.condition = " views_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= " + d.nextDollar()
+	w.condition = " views_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > " + d.nextDollar()
+	w.condition = " views_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ViewsCount_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ViewsCount_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= " + d.nextDollar()
+	w.condition = " views_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) EditedTime_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) EditedTime_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) EditedTime_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) EditedTime_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) EditedTime_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = " + d.nextDollar()
+	w.condition = " edited_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != " + d.nextDollar()
+	w.condition = " edited_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < " + d.nextDollar()
+	w.condition = " edited_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= " + d.nextDollar()
+	w.condition = " edited_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > " + d.nextDollar()
+	w.condition = " edited_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) EditedTime_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) EditedTime_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= " + d.nextDollar()
+	w.condition = " edited_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) CreatedTime_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) CreatedTime_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) CreatedTime_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) CreatedTime_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) CreatedTime_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) CreatedTime_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) CreatedTime_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) ReSharedPostId_In(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_In(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) ReSharedPostId_Ins(ins ...int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_Ins(ins ...int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) ReSharedPostId_NotIn(ins []int) *__Post_Deleter {
+func (u *__PostCopy_Deleter) ReSharedPostId_NotIn(ins []int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) ReSharedPostId_Eq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_Eq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
+	w.condition = " re_shared_post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_NotEq(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_NotEq(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
+	w.condition = " re_shared_post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_LT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_LT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
+	w.condition = " re_shared_post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_LE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_LE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
+	w.condition = " re_shared_post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_GT(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_GT(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
+	w.condition = " re_shared_post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) ReSharedPostId_GE(val int) *__Post_Deleter {
+func (d *__PostCopy_Deleter) ReSharedPostId_GE(val int) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
+	w.condition = " re_shared_post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Post_Updater) nextDollars(size int) string {
+func (m *__PostCopy_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Post_Updater) nextDollar() string {
+func (m *__PostCopy_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Post_Updater) Or() *__Post_Updater {
+func (u *__PostCopy_Updater) Or() *__PostCopy_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Updater) PostId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) PostId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = " + d.nextDollar()
+	w.condition = " post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != " + d.nextDollar()
+	w.condition = " post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < " + d.nextDollar()
+	w.condition = " post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= " + d.nextDollar()
+	w.condition = " post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > " + d.nextDollar()
+	w.condition = " post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= " + d.nextDollar()
+	w.condition = " post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) UserId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) UserId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) UserId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) UserId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = " + d.nextDollar()
+	w.condition = " user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) UserId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != " + d.nextDollar()
+	w.condition = " user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) UserId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < " + d.nextDollar()
+	w.condition = " user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) UserId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= " + d.nextDollar()
+	w.condition = " user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) UserId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > " + d.nextDollar()
+	w.condition = " user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) UserId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) UserId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= " + d.nextDollar()
+	w.condition = " user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) PostTypeEnum_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) PostTypeEnum_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " post_type_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " post_type_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " post_type_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " post_type_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " post_type_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostTypeEnum_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
+	w.condition = " post_type_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) PostCategoryEnum_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostCategoryEnum_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostCategoryEnum_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostCategoryEnum_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostCategoryEnum_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostCategoryEnum_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) PostCategoryEnum_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
+	w.condition = " post_category_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostCategoryEnum_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
+	w.condition = " post_category_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostCategoryEnum_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
+	w.condition = " post_category_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostCategoryEnum_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
+	w.condition = " post_category_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostCategoryEnum_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
+	w.condition = " post_category_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostCategoryEnum_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) PostCategoryEnum_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " post_category_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) MediaId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) MediaId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) MediaId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) MediaId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = " + d.nextDollar()
+	w.condition = " media_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != " + d.nextDollar()
+	w.condition = " media_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < " + d.nextDollar()
+	w.condition = " media_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= " + d.nextDollar()
+	w.condition = " media_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > " + d.nextDollar()
+	w.condition = " media_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= " + d.nextDollar()
+	w.condition = " media_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) MediaCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) MediaCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = " + d.nextDollar()
+	w.condition = " media_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != " + d.nextDollar()
+	w.condition = " media_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < " + d.nextDollar()
+	w.condition = " media_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= " + d.nextDollar()
+	w.condition = " media_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > " + d.nextDollar()
+	w.condition = " media_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) MediaCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) MediaCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= " + d.nextDollar()
+	w.condition = " media_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) SharedTo_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) SharedTo_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = " + d.nextDollar()
+	w.condition = " shared_to = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != " + d.nextDollar()
+	w.condition = " shared_to != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < " + d.nextDollar()
+	w.condition = " shared_to < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= " + d.nextDollar()
+	w.condition = " shared_to <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > " + d.nextDollar()
+	w.condition = " shared_to > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) SharedTo_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) SharedTo_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= " + d.nextDollar()
+	w.condition = " shared_to >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) DisableComment_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) DisableComment_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = " + d.nextDollar()
+	w.condition = " disable_comment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != " + d.nextDollar()
+	w.condition = " disable_comment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < " + d.nextDollar()
+	w.condition = " disable_comment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= " + d.nextDollar()
+	w.condition = " disable_comment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > " + d.nextDollar()
+	w.condition = " disable_comment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) DisableComment_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= " + d.nextDollar()
+	w.condition = " disable_comment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) Source_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) Source_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Source_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) Source_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Source_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) Source_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) Source_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Source_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
+	w.condition = " source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) HasTag_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) HasTag_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) HasTag_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
+	w.condition = " has_tag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) HasTag_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
+	w.condition = " has_tag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) HasTag_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
+	w.condition = " has_tag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) HasTag_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
+	w.condition = " has_tag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) HasTag_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
+	w.condition = " has_tag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) HasTag_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " has_tag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) Seq_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) Seq_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Seq_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) Seq_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Seq_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) Seq_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) Seq_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
+	w.condition = " seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Seq_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
+	w.condition = " seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Seq_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
+	w.condition = " seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Seq_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
+	w.condition = " seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Seq_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
+	w.condition = " seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Seq_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) Seq_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
+	w.condition = " seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) CommentsCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) CommentsCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = " + d.nextDollar()
+	w.condition = " comments_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != " + d.nextDollar()
+	w.condition = " comments_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < " + d.nextDollar()
+	w.condition = " comments_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= " + d.nextDollar()
+	w.condition = " comments_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > " + d.nextDollar()
+	w.condition = " comments_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CommentsCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CommentsCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= " + d.nextDollar()
+	w.condition = " comments_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) LikesCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) LikesCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = " + d.nextDollar()
+	w.condition = " likes_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != " + d.nextDollar()
+	w.condition = " likes_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < " + d.nextDollar()
+	w.condition = " likes_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= " + d.nextDollar()
+	w.condition = " likes_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > " + d.nextDollar()
+	w.condition = " likes_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) LikesCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) LikesCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= " + d.nextDollar()
+	w.condition = " likes_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) ViewsCount_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) ViewsCount_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = " + d.nextDollar()
+	w.condition = " views_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != " + d.nextDollar()
+	w.condition = " views_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < " + d.nextDollar()
+	w.condition = " views_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= " + d.nextDollar()
+	w.condition = " views_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > " + d.nextDollar()
+	w.condition = " views_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ViewsCount_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ViewsCount_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= " + d.nextDollar()
+	w.condition = " views_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) EditedTime_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) EditedTime_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = " + d.nextDollar()
+	w.condition = " edited_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != " + d.nextDollar()
+	w.condition = " edited_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < " + d.nextDollar()
+	w.condition = " edited_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= " + d.nextDollar()
+	w.condition = " edited_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > " + d.nextDollar()
+	w.condition = " edited_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) EditedTime_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) EditedTime_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= " + d.nextDollar()
+	w.condition = " edited_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) CreatedTime_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) CreatedTime_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) CreatedTime_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) CreatedTime_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) ReSharedPostId_In(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_In(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_Ins(ins ...int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_Ins(ins ...int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_NotIn(ins []int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_NotIn(ins []int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) ReSharedPostId_Eq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_Eq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
+	w.condition = " re_shared_post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_NotEq(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_NotEq(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
+	w.condition = " re_shared_post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_LT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_LT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
+	w.condition = " re_shared_post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_LE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_LE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
+	w.condition = " re_shared_post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_GT(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_GT(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
+	w.condition = " re_shared_post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) ReSharedPostId_GE(val int) *__Post_Updater {
+func (d *__PostCopy_Updater) ReSharedPostId_GE(val int) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
+	w.condition = " re_shared_post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Post_Selector) nextDollars(size int) string {
+func (m *__PostCopy_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Post_Selector) nextDollar() string {
+func (m *__PostCopy_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Post_Selector) Or() *__Post_Selector {
+func (u *__PostCopy_Selector) Or() *__PostCopy_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Post_Selector) PostId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) PostId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId = " + d.nextDollar()
+	w.condition = " post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId != " + d.nextDollar()
+	w.condition = " post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId < " + d.nextDollar()
+	w.condition = " post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId <= " + d.nextDollar()
+	w.condition = " post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId > " + d.nextDollar()
+	w.condition = " post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostId >= " + d.nextDollar()
+	w.condition = " post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) UserId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) UserId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) UserId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) UserId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " user_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) UserId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId = " + d.nextDollar()
+	w.condition = " user_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) UserId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId != " + d.nextDollar()
+	w.condition = " user_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) UserId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId < " + d.nextDollar()
+	w.condition = " user_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) UserId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId <= " + d.nextDollar()
+	w.condition = " user_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) UserId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId > " + d.nextDollar()
+	w.condition = " user_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) UserId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) UserId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserId >= " + d.nextDollar()
+	w.condition = " user_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) PostTypeEnum_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostTypeEnum_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_type_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) PostTypeEnum_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " post_type_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " post_type_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " post_type_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " post_type_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " post_type_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostTypeEnum_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
+	w.condition = " post_type_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) PostCategoryEnum_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostCategoryEnum_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostCategoryEnum_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostCategoryEnum_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostCategoryEnum_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) PostCategoryEnum_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_category_enum NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) PostCategoryEnum_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
+	w.condition = " post_category_enum = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostCategoryEnum_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
+	w.condition = " post_category_enum != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostCategoryEnum_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
+	w.condition = " post_category_enum < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostCategoryEnum_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
+	w.condition = " post_category_enum <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostCategoryEnum_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
+	w.condition = " post_category_enum > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostCategoryEnum_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) PostCategoryEnum_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " post_category_enum >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) MediaId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) MediaId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) MediaId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) MediaId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId = " + d.nextDollar()
+	w.condition = " media_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId != " + d.nextDollar()
+	w.condition = " media_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId < " + d.nextDollar()
+	w.condition = " media_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId <= " + d.nextDollar()
+	w.condition = " media_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId > " + d.nextDollar()
+	w.condition = " media_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaId >= " + d.nextDollar()
+	w.condition = " media_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) MediaCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) MediaCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) MediaCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) MediaCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MediaCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " media_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) MediaCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount = " + d.nextDollar()
+	w.condition = " media_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount != " + d.nextDollar()
+	w.condition = " media_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount < " + d.nextDollar()
+	w.condition = " media_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount <= " + d.nextDollar()
+	w.condition = " media_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount > " + d.nextDollar()
+	w.condition = " media_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) MediaCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) MediaCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MediaCount >= " + d.nextDollar()
+	w.condition = " media_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) SharedTo_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) SharedTo_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) SharedTo_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) SharedTo_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SharedTo NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " shared_to NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) SharedTo_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo = " + d.nextDollar()
+	w.condition = " shared_to = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo != " + d.nextDollar()
+	w.condition = " shared_to != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo < " + d.nextDollar()
+	w.condition = " shared_to < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo <= " + d.nextDollar()
+	w.condition = " shared_to <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo > " + d.nextDollar()
+	w.condition = " shared_to > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) SharedTo_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) SharedTo_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SharedTo >= " + d.nextDollar()
+	w.condition = " shared_to >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) DisableComment_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) DisableComment_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) DisableComment_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) DisableComment_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " DisableComment NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " disable_comment NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) DisableComment_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment = " + d.nextDollar()
+	w.condition = " disable_comment = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment != " + d.nextDollar()
+	w.condition = " disable_comment != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment < " + d.nextDollar()
+	w.condition = " disable_comment < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment <= " + d.nextDollar()
+	w.condition = " disable_comment <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment > " + d.nextDollar()
+	w.condition = " disable_comment > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) DisableComment_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " DisableComment >= " + d.nextDollar()
+	w.condition = " disable_comment >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) Source_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) Source_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Source_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) Source_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Source_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) Source_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " source NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) Source_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " source = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " source != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " source < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " source <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " source > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Source_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
+	w.condition = " source >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) HasTag_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) HasTag_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) HasTag_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " has_tag NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) HasTag_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
+	w.condition = " has_tag = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) HasTag_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
+	w.condition = " has_tag != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) HasTag_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
+	w.condition = " has_tag < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) HasTag_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
+	w.condition = " has_tag <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) HasTag_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
+	w.condition = " has_tag > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) HasTag_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " has_tag >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) Seq_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) Seq_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Seq_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) Seq_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Seq_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) Seq_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " seq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) Seq_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
+	w.condition = " seq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Seq_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
+	w.condition = " seq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Seq_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
+	w.condition = " seq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Seq_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
+	w.condition = " seq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Seq_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
+	w.condition = " seq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Seq_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) Seq_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
+	w.condition = " seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) CommentsCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) CommentsCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) CommentsCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CommentsCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " comments_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) CommentsCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount = " + d.nextDollar()
+	w.condition = " comments_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount != " + d.nextDollar()
+	w.condition = " comments_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount < " + d.nextDollar()
+	w.condition = " comments_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount <= " + d.nextDollar()
+	w.condition = " comments_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount > " + d.nextDollar()
+	w.condition = " comments_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CommentsCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CommentsCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CommentsCount >= " + d.nextDollar()
+	w.condition = " comments_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) LikesCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) LikesCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) LikesCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) LikesCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " likes_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) LikesCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount = " + d.nextDollar()
+	w.condition = " likes_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount != " + d.nextDollar()
+	w.condition = " likes_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount < " + d.nextDollar()
+	w.condition = " likes_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount <= " + d.nextDollar()
+	w.condition = " likes_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount > " + d.nextDollar()
+	w.condition = " likes_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) LikesCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) LikesCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikesCount >= " + d.nextDollar()
+	w.condition = " likes_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) ViewsCount_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) ViewsCount_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) ViewsCount_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ViewsCount_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ViewsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " views_count NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) ViewsCount_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount = " + d.nextDollar()
+	w.condition = " views_count = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount != " + d.nextDollar()
+	w.condition = " views_count != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount < " + d.nextDollar()
+	w.condition = " views_count < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount <= " + d.nextDollar()
+	w.condition = " views_count <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount > " + d.nextDollar()
+	w.condition = " views_count > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ViewsCount_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ViewsCount_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ViewsCount >= " + d.nextDollar()
+	w.condition = " views_count >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) EditedTime_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) EditedTime_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) EditedTime_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) EditedTime_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " EditedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " edited_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) EditedTime_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime = " + d.nextDollar()
+	w.condition = " edited_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime != " + d.nextDollar()
+	w.condition = " edited_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime < " + d.nextDollar()
+	w.condition = " edited_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime <= " + d.nextDollar()
+	w.condition = " edited_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime > " + d.nextDollar()
+	w.condition = " edited_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) EditedTime_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) EditedTime_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EditedTime >= " + d.nextDollar()
+	w.condition = " edited_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) CreatedTime_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) CreatedTime_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) CreatedTime_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) CreatedTime_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " created_time NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) CreatedTime_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
+	w.condition = " created_time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
+	w.condition = " created_time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
+	w.condition = " created_time < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
+	w.condition = " created_time <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
+	w.condition = " created_time > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) CreatedTime_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) CreatedTime_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
+	w.condition = " created_time >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) ReSharedPostId_In(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_In(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) ReSharedPostId_Ins(ins ...int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_Ins(ins ...int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) ReSharedPostId_NotIn(ins []int) *__Post_Selector {
+func (u *__PostCopy_Selector) ReSharedPostId_NotIn(ins []int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " re_shared_post_id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) ReSharedPostId_Eq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_Eq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
+	w.condition = " re_shared_post_id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_NotEq(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_NotEq(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
+	w.condition = " re_shared_post_id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_LT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_LT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
+	w.condition = " re_shared_post_id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_LE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_LE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
+	w.condition = " re_shared_post_id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_GT(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_GT(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
+	w.condition = " re_shared_post_id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
+func (d *__PostCopy_Selector) ReSharedPostId_GE(val int) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
+	w.condition = " re_shared_post_id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5674,181 +5674,181 @@ func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
 
 ////////ints
 
-func (u *__Post_Deleter) PostKey_In(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostKey_In(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostKey_NotIn(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostKey_NotIn(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Deleter) PostKey_Like(val string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) PostKey_Like(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE " + u.nextDollar()
+	w.condition = " post_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) PostKey_Eq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostKey_Eq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = " + d.nextDollar()
+	w.condition = " post_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostKey_NotEq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) PostKey_NotEq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != " + d.nextDollar()
+	w.condition = " post_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) Text_In(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_In(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Text_NotIn(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_NotIn(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Deleter) Text_Like(val string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) Text_Like(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE " + u.nextDollar()
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) Text_Eq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Text_Eq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + d.nextDollar()
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Text_NotEq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) Text_NotEq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + d.nextDollar()
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Deleter) RichText_In(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_In(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) RichText_NotIn(ins []string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_NotIn(ins []string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Deleter) RichText_Like(val string) *__Post_Deleter {
+func (u *__PostCopy_Deleter) RichText_Like(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE " + u.nextDollar()
+	w.condition = " rich_text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) RichText_Eq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) RichText_Eq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = " + d.nextDollar()
+	w.condition = " rich_text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
+func (d *__PostCopy_Deleter) RichText_NotEq(val string) *__PostCopy_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != " + d.nextDollar()
+	w.condition = " rich_text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5856,181 +5856,181 @@ func (d *__Post_Deleter) RichText_NotEq(val string) *__Post_Deleter {
 
 ////////ints
 
-func (u *__Post_Updater) PostKey_In(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) PostKey_In(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostKey_NotIn(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) PostKey_NotIn(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Updater) PostKey_Like(val string) *__Post_Updater {
+func (u *__PostCopy_Updater) PostKey_Like(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE " + u.nextDollar()
+	w.condition = " post_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) PostKey_Eq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) PostKey_Eq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = " + d.nextDollar()
+	w.condition = " post_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostKey_NotEq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) PostKey_NotEq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != " + d.nextDollar()
+	w.condition = " post_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) Text_In(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_In(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Text_NotIn(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_NotIn(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Updater) Text_Like(val string) *__Post_Updater {
+func (u *__PostCopy_Updater) Text_Like(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE " + u.nextDollar()
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) Text_Eq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) Text_Eq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + d.nextDollar()
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Text_NotEq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) Text_NotEq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + d.nextDollar()
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Updater) RichText_In(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_In(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) RichText_NotIn(ins []string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_NotIn(ins []string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Updater) RichText_Like(val string) *__Post_Updater {
+func (u *__PostCopy_Updater) RichText_Like(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE " + u.nextDollar()
+	w.condition = " rich_text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) RichText_Eq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) RichText_Eq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = " + d.nextDollar()
+	w.condition = " rich_text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
+func (d *__PostCopy_Updater) RichText_NotEq(val string) *__PostCopy_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != " + d.nextDollar()
+	w.condition = " rich_text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6038,181 +6038,181 @@ func (d *__Post_Updater) RichText_NotEq(val string) *__Post_Updater {
 
 ////////ints
 
-func (u *__Post_Selector) PostKey_In(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) PostKey_In(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostKey_NotIn(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) PostKey_NotIn(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " post_key NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Selector) PostKey_Like(val string) *__Post_Selector {
+func (u *__PostCopy_Selector) PostKey_Like(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey LIKE " + u.nextDollar()
+	w.condition = " post_key LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) PostKey_Eq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) PostKey_Eq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey = " + d.nextDollar()
+	w.condition = " post_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostKey_NotEq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) PostKey_NotEq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKey != " + d.nextDollar()
+	w.condition = " post_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) Text_In(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_In(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Text_NotIn(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_NotIn(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Text NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Selector) Text_Like(val string) *__Post_Selector {
+func (u *__PostCopy_Selector) Text_Like(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text LIKE " + u.nextDollar()
+	w.condition = " text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) Text_Eq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) Text_Eq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + d.nextDollar()
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Text_NotEq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) Text_NotEq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + d.nextDollar()
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Post_Selector) RichText_In(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_In(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) RichText_NotIn(ins []string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_NotIn(ins []string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " RichText NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " rich_text NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Post_Selector) RichText_Like(val string) *__Post_Selector {
+func (u *__PostCopy_Selector) RichText_Like(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText LIKE " + u.nextDollar()
+	w.condition = " rich_text LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) RichText_Eq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) RichText_Eq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText = " + d.nextDollar()
+	w.condition = " rich_text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
+func (d *__PostCopy_Selector) RichText_NotEq(val string) *__PostCopy_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RichText != " + d.nextDollar()
+	w.condition = " rich_text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6224,24 +6224,24 @@ func (d *__Post_Selector) RichText_NotEq(val string) *__Post_Selector {
 
 //ints
 
-func (u *__Post_Updater) PostId(newVal int) *__Post_Updater {
-	up := updateCol{" PostId = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) PostId(newVal int) *__PostCopy_Updater {
+	up := updateCol{" post_id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostId = " + u.nextDollar()] = newVal
+	// u.updates[" post_id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
+		up := updateCol{" post_id = post_id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PostId = PostId+ " + u.nextDollar()] = count
+		//u.updates[" post_id = post_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PostId = PostId- " + u.nextDollar(), count}
+		up := updateCol{" post_id = post_id- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PostId = PostId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" post_id = post_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6251,24 +6251,24 @@ func (u *__Post_Updater) PostId_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) UserId(newVal int) *__Post_Updater {
-	up := updateCol{" UserId = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) UserId(newVal int) *__PostCopy_Updater {
+	up := updateCol{" user_id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" UserId = " + u.nextDollar()] = newVal
+	// u.updates[" user_id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) UserId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
+		up := updateCol{" user_id = user_id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
+		//u.updates[" user_id = user_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
+		up := updateCol{" user_id = user_id- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" user_id = user_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6278,24 +6278,24 @@ func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) PostTypeEnum(newVal int) *__Post_Updater {
-	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) PostTypeEnum(newVal int) *__PostCopy_Updater {
+	up := updateCol{" post_type_enum = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" post_type_enum = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostTypeEnum_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" post_type_enum = post_type_enum+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" post_type_enum = post_type_enum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" post_type_enum = post_type_enum- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" post_type_enum = post_type_enum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6305,24 +6305,24 @@ func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) PostCategoryEnum(newVal int) *__Post_Updater {
-	up := updateCol{" PostCategoryEnum = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) PostCategoryEnum(newVal int) *__PostCopy_Updater {
+	up := updateCol{" post_category_enum = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostCategoryEnum = " + u.nextDollar()] = newVal
+	// u.updates[" post_category_enum = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) PostCategoryEnum_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar(), count}
+		up := updateCol{" post_category_enum = post_category_enum+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar()] = count
+		//u.updates[" post_category_enum = post_category_enum+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar(), count}
+		up := updateCol{" post_category_enum = post_category_enum- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" post_category_enum = post_category_enum- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6332,24 +6332,24 @@ func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) MediaId(newVal int) *__Post_Updater {
-	up := updateCol{" MediaId = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) MediaId(newVal int) *__PostCopy_Updater {
+	up := updateCol{" media_id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" MediaId = " + u.nextDollar()] = newVal
+	// u.updates[" media_id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" MediaId = MediaId+ " + u.nextDollar(), count}
+		up := updateCol{" media_id = media_id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" MediaId = MediaId+ " + u.nextDollar()] = count
+		//u.updates[" media_id = media_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" MediaId = MediaId- " + u.nextDollar(), count}
+		up := updateCol{" media_id = media_id- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" MediaId = MediaId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" media_id = media_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6360,53 +6360,53 @@ func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 //ints
 
 //string
-func (u *__Post_Updater) PostKey(newVal string) *__Post_Updater {
-	up := updateCol{"PostKey = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) PostKey(newVal string) *__PostCopy_Updater {
+	up := updateCol{"post_key = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostKey = "+ u.nextDollar()] = newVal
+	// u.updates[" post_key = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 //string
-func (u *__Post_Updater) Text(newVal string) *__Post_Updater {
-	up := updateCol{"Text = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) Text(newVal string) *__PostCopy_Updater {
+	up := updateCol{"text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Text = "+ u.nextDollar()] = newVal
+	// u.updates[" text = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 //string
-func (u *__Post_Updater) RichText(newVal string) *__Post_Updater {
-	up := updateCol{"RichText = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) RichText(newVal string) *__PostCopy_Updater {
+	up := updateCol{"rich_text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" RichText = "+ u.nextDollar()] = newVal
+	// u.updates[" rich_text = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
-func (u *__Post_Updater) MediaCount(newVal int) *__Post_Updater {
-	up := updateCol{" MediaCount = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) MediaCount(newVal int) *__PostCopy_Updater {
+	up := updateCol{" media_count = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" MediaCount = " + u.nextDollar()] = newVal
+	// u.updates[" media_count = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) MediaCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" MediaCount = MediaCount+ " + u.nextDollar(), count}
+		up := updateCol{" media_count = media_count+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" MediaCount = MediaCount+ " + u.nextDollar()] = count
+		//u.updates[" media_count = media_count+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" MediaCount = MediaCount- " + u.nextDollar(), count}
+		up := updateCol{" media_count = media_count- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" MediaCount = MediaCount- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" media_count = media_count- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6416,24 +6416,24 @@ func (u *__Post_Updater) MediaCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) SharedTo(newVal int) *__Post_Updater {
-	up := updateCol{" SharedTo = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) SharedTo(newVal int) *__PostCopy_Updater {
+	up := updateCol{" shared_to = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" SharedTo = " + u.nextDollar()] = newVal
+	// u.updates[" shared_to = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) SharedTo_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" SharedTo = SharedTo+ " + u.nextDollar(), count}
+		up := updateCol{" shared_to = shared_to+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" SharedTo = SharedTo+ " + u.nextDollar()] = count
+		//u.updates[" shared_to = shared_to+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" SharedTo = SharedTo- " + u.nextDollar(), count}
+		up := updateCol{" shared_to = shared_to- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" SharedTo = SharedTo- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" shared_to = shared_to- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6443,24 +6443,24 @@ func (u *__Post_Updater) SharedTo_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) DisableComment(newVal int) *__Post_Updater {
-	up := updateCol{" DisableComment = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) DisableComment(newVal int) *__PostCopy_Updater {
+	up := updateCol{" disable_comment = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" DisableComment = " + u.nextDollar()] = newVal
+	// u.updates[" disable_comment = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) DisableComment_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" DisableComment = DisableComment+ " + u.nextDollar(), count}
+		up := updateCol{" disable_comment = disable_comment+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" DisableComment = DisableComment+ " + u.nextDollar()] = count
+		//u.updates[" disable_comment = disable_comment+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" DisableComment = DisableComment- " + u.nextDollar(), count}
+		up := updateCol{" disable_comment = disable_comment- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" DisableComment = DisableComment- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" disable_comment = disable_comment- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6470,24 +6470,24 @@ func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) Source(newVal int) *__Post_Updater {
-	up := updateCol{" Source = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) Source(newVal int) *__PostCopy_Updater {
+	up := updateCol{" source = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Source = " + u.nextDollar()] = newVal
+	// u.updates[" source = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) Source_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" Source = Source+ " + u.nextDollar(), count}
+		up := updateCol{" source = source+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Source = Source+ " + u.nextDollar()] = count
+		//u.updates[" source = source+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Source = Source- " + u.nextDollar(), count}
+		up := updateCol{" source = source- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Source = Source- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" source = source- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6497,24 +6497,24 @@ func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) HasTag(newVal int) *__Post_Updater {
-	up := updateCol{" HasTag = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) HasTag(newVal int) *__PostCopy_Updater {
+	up := updateCol{" has_tag = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" HasTag = " + u.nextDollar()] = newVal
+	// u.updates[" has_tag = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) HasTag_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" HasTag = HasTag+ " + u.nextDollar(), count}
+		up := updateCol{" has_tag = has_tag+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" HasTag = HasTag+ " + u.nextDollar()] = count
+		//u.updates[" has_tag = has_tag+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" HasTag = HasTag- " + u.nextDollar(), count}
+		up := updateCol{" has_tag = has_tag- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" HasTag = HasTag- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" has_tag = has_tag- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6524,24 +6524,24 @@ func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) Seq(newVal int) *__Post_Updater {
-	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) Seq(newVal int) *__PostCopy_Updater {
+	up := updateCol{" seq = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Seq = " + u.nextDollar()] = newVal
+	// u.updates[" seq = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) Seq_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) Seq_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		up := updateCol{" seq = seq+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
+		//u.updates[" seq = seq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		up := updateCol{" seq = seq- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" seq = seq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6551,24 +6551,24 @@ func (u *__Post_Updater) Seq_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) CommentsCount(newVal int) *__Post_Updater {
-	up := updateCol{" CommentsCount = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) CommentsCount(newVal int) *__PostCopy_Updater {
+	up := updateCol{" comments_count = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" CommentsCount = " + u.nextDollar()] = newVal
+	// u.updates[" comments_count = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) CommentsCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" CommentsCount = CommentsCount+ " + u.nextDollar(), count}
+		up := updateCol{" comments_count = comments_count+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" CommentsCount = CommentsCount+ " + u.nextDollar()] = count
+		//u.updates[" comments_count = comments_count+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" CommentsCount = CommentsCount- " + u.nextDollar(), count}
+		up := updateCol{" comments_count = comments_count- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" CommentsCount = CommentsCount- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" comments_count = comments_count- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6578,24 +6578,24 @@ func (u *__Post_Updater) CommentsCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) LikesCount(newVal int) *__Post_Updater {
-	up := updateCol{" LikesCount = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) LikesCount(newVal int) *__PostCopy_Updater {
+	up := updateCol{" likes_count = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" LikesCount = " + u.nextDollar()] = newVal
+	// u.updates[" likes_count = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) LikesCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" LikesCount = LikesCount+ " + u.nextDollar(), count}
+		up := updateCol{" likes_count = likes_count+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" LikesCount = LikesCount+ " + u.nextDollar()] = count
+		//u.updates[" likes_count = likes_count+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" LikesCount = LikesCount- " + u.nextDollar(), count}
+		up := updateCol{" likes_count = likes_count- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" LikesCount = LikesCount- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" likes_count = likes_count- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6605,24 +6605,24 @@ func (u *__Post_Updater) LikesCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) ViewsCount(newVal int) *__Post_Updater {
-	up := updateCol{" ViewsCount = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) ViewsCount(newVal int) *__PostCopy_Updater {
+	up := updateCol{" views_count = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" ViewsCount = " + u.nextDollar()] = newVal
+	// u.updates[" views_count = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) ViewsCount_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" ViewsCount = ViewsCount+ " + u.nextDollar(), count}
+		up := updateCol{" views_count = views_count+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" ViewsCount = ViewsCount+ " + u.nextDollar()] = count
+		//u.updates[" views_count = views_count+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" ViewsCount = ViewsCount- " + u.nextDollar(), count}
+		up := updateCol{" views_count = views_count- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" ViewsCount = ViewsCount- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" views_count = views_count- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6632,24 +6632,24 @@ func (u *__Post_Updater) ViewsCount_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) EditedTime(newVal int) *__Post_Updater {
-	up := updateCol{" EditedTime = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) EditedTime(newVal int) *__PostCopy_Updater {
+	up := updateCol{" edited_time = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" EditedTime = " + u.nextDollar()] = newVal
+	// u.updates[" edited_time = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) EditedTime_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" EditedTime = EditedTime+ " + u.nextDollar(), count}
+		up := updateCol{" edited_time = edited_time+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" EditedTime = EditedTime+ " + u.nextDollar()] = count
+		//u.updates[" edited_time = edited_time+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" EditedTime = EditedTime- " + u.nextDollar(), count}
+		up := updateCol{" edited_time = edited_time- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" EditedTime = EditedTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" edited_time = edited_time- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6659,24 +6659,24 @@ func (u *__Post_Updater) EditedTime_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) CreatedTime(newVal int) *__Post_Updater {
-	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) CreatedTime(newVal int) *__PostCopy_Updater {
+	up := updateCol{" created_time = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
+	// u.updates[" created_time = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) CreatedTime_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
+		up := updateCol{" created_time = created_time+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
+		//u.updates[" created_time = created_time+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
+		up := updateCol{" created_time = created_time- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" created_time = created_time- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6686,24 +6686,24 @@ func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) ReSharedPostId(newVal int) *__Post_Updater {
-	up := updateCol{" ReSharedPostId = " + u.nextDollar(), newVal}
+func (u *__PostCopy_Updater) ReSharedPostId(newVal int) *__PostCopy_Updater {
+	up := updateCol{" re_shared_post_id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" ReSharedPostId = " + u.nextDollar()] = newVal
+	// u.updates[" re_shared_post_id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
+func (u *__PostCopy_Updater) ReSharedPostId_Increment(count int) *__PostCopy_Updater {
 	if count > 0 {
-		up := updateCol{" ReSharedPostId = ReSharedPostId+ " + u.nextDollar(), count}
+		up := updateCol{" re_shared_post_id = re_shared_post_id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" ReSharedPostId = ReSharedPostId+ " + u.nextDollar()] = count
+		//u.updates[" re_shared_post_id = re_shared_post_id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" ReSharedPostId = ReSharedPostId- " + u.nextDollar(), count}
+		up := updateCol{" re_shared_post_id = re_shared_post_id- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" ReSharedPostId = ReSharedPostId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" re_shared_post_id = re_shared_post_id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6716,326 +6716,326 @@ func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Post_Selector) OrderBy_PostId_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostId DESC "
+func (u *__PostCopy_Selector) OrderBy_PostId_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_id DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostId_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostId ASC "
+func (u *__PostCopy_Selector) OrderBy_PostId_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_id ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostId() *__Post_Selector {
-	u.selectCol = "PostId"
+func (u *__PostCopy_Selector) Select_PostId() *__PostCopy_Selector {
+	u.selectCol = "post_id"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_UserId_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY UserId DESC "
+func (u *__PostCopy_Selector) OrderBy_UserId_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY user_id DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_UserId_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY UserId ASC "
+func (u *__PostCopy_Selector) OrderBy_UserId_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY user_id ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_UserId() *__Post_Selector {
-	u.selectCol = "UserId"
+func (u *__PostCopy_Selector) Select_UserId() *__PostCopy_Selector {
+	u.selectCol = "user_id"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum DESC "
+func (u *__PostCopy_Selector) OrderBy_PostTypeEnum_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_type_enum DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum ASC "
+func (u *__PostCopy_Selector) OrderBy_PostTypeEnum_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_type_enum ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostTypeEnum() *__Post_Selector {
-	u.selectCol = "PostTypeEnum"
+func (u *__PostCopy_Selector) Select_PostTypeEnum() *__PostCopy_Selector {
+	u.selectCol = "post_type_enum"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostCategoryEnum_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum DESC "
+func (u *__PostCopy_Selector) OrderBy_PostCategoryEnum_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_category_enum DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostCategoryEnum_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum ASC "
+func (u *__PostCopy_Selector) OrderBy_PostCategoryEnum_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_category_enum ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostCategoryEnum() *__Post_Selector {
-	u.selectCol = "PostCategoryEnum"
+func (u *__PostCopy_Selector) Select_PostCategoryEnum() *__PostCopy_Selector {
+	u.selectCol = "post_category_enum"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaId_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY MediaId DESC "
+func (u *__PostCopy_Selector) OrderBy_MediaId_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY media_id DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaId_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY MediaId ASC "
+func (u *__PostCopy_Selector) OrderBy_MediaId_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY media_id ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_MediaId() *__Post_Selector {
-	u.selectCol = "MediaId"
+func (u *__PostCopy_Selector) Select_MediaId() *__PostCopy_Selector {
+	u.selectCol = "media_id"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostKey_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostKey DESC "
+func (u *__PostCopy_Selector) OrderBy_PostKey_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_key DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostKey_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostKey ASC "
+func (u *__PostCopy_Selector) OrderBy_PostKey_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY post_key ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostKey() *__Post_Selector {
-	u.selectCol = "PostKey"
+func (u *__PostCopy_Selector) Select_PostKey() *__PostCopy_Selector {
+	u.selectCol = "post_key"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Text_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY Text DESC "
+func (u *__PostCopy_Selector) OrderBy_Text_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY text DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Text_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY Text ASC "
+func (u *__PostCopy_Selector) OrderBy_Text_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY text ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_Text() *__Post_Selector {
-	u.selectCol = "Text"
+func (u *__PostCopy_Selector) Select_Text() *__PostCopy_Selector {
+	u.selectCol = "text"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_RichText_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY RichText DESC "
+func (u *__PostCopy_Selector) OrderBy_RichText_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY rich_text DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_RichText_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY RichText ASC "
+func (u *__PostCopy_Selector) OrderBy_RichText_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY rich_text ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_RichText() *__Post_Selector {
-	u.selectCol = "RichText"
+func (u *__PostCopy_Selector) Select_RichText() *__PostCopy_Selector {
+	u.selectCol = "rich_text"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaCount_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY MediaCount DESC "
+func (u *__PostCopy_Selector) OrderBy_MediaCount_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY media_count DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_MediaCount_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY MediaCount ASC "
+func (u *__PostCopy_Selector) OrderBy_MediaCount_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY media_count ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_MediaCount() *__Post_Selector {
-	u.selectCol = "MediaCount"
+func (u *__PostCopy_Selector) Select_MediaCount() *__PostCopy_Selector {
+	u.selectCol = "media_count"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_SharedTo_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY SharedTo DESC "
+func (u *__PostCopy_Selector) OrderBy_SharedTo_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY shared_to DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_SharedTo_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY SharedTo ASC "
+func (u *__PostCopy_Selector) OrderBy_SharedTo_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY shared_to ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_SharedTo() *__Post_Selector {
-	u.selectCol = "SharedTo"
+func (u *__PostCopy_Selector) Select_SharedTo() *__PostCopy_Selector {
+	u.selectCol = "shared_to"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_DisableComment_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY DisableComment DESC "
+func (u *__PostCopy_Selector) OrderBy_DisableComment_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY disable_comment DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_DisableComment_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY DisableComment ASC "
+func (u *__PostCopy_Selector) OrderBy_DisableComment_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY disable_comment ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_DisableComment() *__Post_Selector {
-	u.selectCol = "DisableComment"
+func (u *__PostCopy_Selector) Select_DisableComment() *__PostCopy_Selector {
+	u.selectCol = "disable_comment"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Source_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY Source DESC "
+func (u *__PostCopy_Selector) OrderBy_Source_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY source DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Source_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY Source ASC "
+func (u *__PostCopy_Selector) OrderBy_Source_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY source ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_Source() *__Post_Selector {
-	u.selectCol = "Source"
+func (u *__PostCopy_Selector) Select_Source() *__PostCopy_Selector {
+	u.selectCol = "source"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_HasTag_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY HasTag DESC "
+func (u *__PostCopy_Selector) OrderBy_HasTag_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY has_tag DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_HasTag_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY HasTag ASC "
+func (u *__PostCopy_Selector) OrderBy_HasTag_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY has_tag ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_HasTag() *__Post_Selector {
-	u.selectCol = "HasTag"
+func (u *__PostCopy_Selector) Select_HasTag() *__PostCopy_Selector {
+	u.selectCol = "has_tag"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Seq_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
+func (u *__PostCopy_Selector) OrderBy_Seq_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY seq DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Seq_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
+func (u *__PostCopy_Selector) OrderBy_Seq_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY seq ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_Seq() *__Post_Selector {
-	u.selectCol = "Seq"
+func (u *__PostCopy_Selector) Select_Seq() *__PostCopy_Selector {
+	u.selectCol = "seq"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CommentsCount_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY CommentsCount DESC "
+func (u *__PostCopy_Selector) OrderBy_CommentsCount_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY comments_count DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CommentsCount_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY CommentsCount ASC "
+func (u *__PostCopy_Selector) OrderBy_CommentsCount_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY comments_count ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_CommentsCount() *__Post_Selector {
-	u.selectCol = "CommentsCount"
+func (u *__PostCopy_Selector) Select_CommentsCount() *__PostCopy_Selector {
+	u.selectCol = "comments_count"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_LikesCount_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY LikesCount DESC "
+func (u *__PostCopy_Selector) OrderBy_LikesCount_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY likes_count DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_LikesCount_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY LikesCount ASC "
+func (u *__PostCopy_Selector) OrderBy_LikesCount_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY likes_count ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_LikesCount() *__Post_Selector {
-	u.selectCol = "LikesCount"
+func (u *__PostCopy_Selector) Select_LikesCount() *__PostCopy_Selector {
+	u.selectCol = "likes_count"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ViewsCount_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY ViewsCount DESC "
+func (u *__PostCopy_Selector) OrderBy_ViewsCount_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY views_count DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ViewsCount_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY ViewsCount ASC "
+func (u *__PostCopy_Selector) OrderBy_ViewsCount_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY views_count ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_ViewsCount() *__Post_Selector {
-	u.selectCol = "ViewsCount"
+func (u *__PostCopy_Selector) Select_ViewsCount() *__PostCopy_Selector {
+	u.selectCol = "views_count"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_EditedTime_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY EditedTime DESC "
+func (u *__PostCopy_Selector) OrderBy_EditedTime_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY edited_time DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_EditedTime_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY EditedTime ASC "
+func (u *__PostCopy_Selector) OrderBy_EditedTime_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY edited_time ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_EditedTime() *__Post_Selector {
-	u.selectCol = "EditedTime"
+func (u *__PostCopy_Selector) Select_EditedTime() *__PostCopy_Selector {
+	u.selectCol = "edited_time"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CreatedTime_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY CreatedTime DESC "
+func (u *__PostCopy_Selector) OrderBy_CreatedTime_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY created_time DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_CreatedTime_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY CreatedTime ASC "
+func (u *__PostCopy_Selector) OrderBy_CreatedTime_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY created_time ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_CreatedTime() *__Post_Selector {
-	u.selectCol = "CreatedTime"
+func (u *__PostCopy_Selector) Select_CreatedTime() *__PostCopy_Selector {
+	u.selectCol = "created_time"
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY ReSharedPostId DESC "
+func (u *__PostCopy_Selector) OrderBy_ReSharedPostId_Desc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY re_shared_post_id DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY ReSharedPostId ASC "
+func (u *__PostCopy_Selector) OrderBy_ReSharedPostId_Asc() *__PostCopy_Selector {
+	u.orderBy = " ORDER BY re_shared_post_id ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_ReSharedPostId() *__Post_Selector {
-	u.selectCol = "ReSharedPostId"
+func (u *__PostCopy_Selector) Select_ReSharedPostId() *__PostCopy_Selector {
+	u.selectCol = "re_shared_post_id"
 	return u
 }
 
-func (u *__Post_Selector) Limit(num int) *__Post_Selector {
+func (u *__PostCopy_Selector) Limit(num int) *__PostCopy_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Post_Selector) Offset(num int) *__Post_Selector {
+func (u *__PostCopy_Selector) Offset(num int) *__PostCopy_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__Post_Selector) Order_Rand() *__Post_Selector {
+func (u *__PostCopy_Selector) Order_Rand() *__PostCopy_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Post_Selector) _stoSql() (string, []interface{}) {
+func (u *__PostCopy_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.post"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.post_copy"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -7055,20 +7055,20 @@ func (u *__Post_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Post_Selector) GetRow(db *sqlx.DB) (*Post, error) {
+func (u *__PostCopy_Selector) GetRow(db *sqlx.DB) (*PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &Post{}
+	row := &PostCopy{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7076,25 +7076,25 @@ func (u *__Post_Selector) GetRow(db *sqlx.DB) (*Post, error) {
 
 	row._exists = true
 
-	OnPost_LoadOne(row)
+	OnPostCopy_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Post_Selector) GetRows(db *sqlx.DB) ([]*Post, error) {
+func (u *__PostCopy_Selector) GetRows(db *sqlx.DB) ([]*PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*Post
+	var rows []*PostCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7108,25 +7108,25 @@ func (u *__Post_Selector) GetRows(db *sqlx.DB) ([]*Post, error) {
 		rows[i]._exists = true
 	}
 
-	OnPost_LoadMany(rows)
+	OnPostCopy_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
+func (u *__PostCopy_Selector) GetRows2(db *sqlx.DB) ([]PostCopy, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*Post
+	var rows []*PostCopy
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7140,9 +7140,9 @@ func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
 		rows[i]._exists = true
 	}
 
-	OnPost_LoadMany(rows)
+	OnPostCopy_LoadMany(rows)
 
-	rows2 := make([]Post, len(rows))
+	rows2 := make([]PostCopy, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -7151,12 +7151,12 @@ func (u *__Post_Selector) GetRows2(db *sqlx.DB) ([]Post, error) {
 	return rows2, nil
 }
 
-func (u *__Post_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PostCopy_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -7164,7 +7164,7 @@ func (u *__Post_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return "", err
@@ -7173,19 +7173,19 @@ func (u *__Post_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Post_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PostCopy_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7194,19 +7194,19 @@ func (u *__Post_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Post_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PostCopy_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7215,19 +7215,19 @@ func (u *__Post_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Post_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PostCopy_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7237,7 +7237,7 @@ func (u *__Post_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Post_Updater) Update(db XODB) (int, error) {
+func (u *__PostCopy_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -7258,18 +7258,18 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.post SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.post_copy SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7277,7 +7277,7 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7286,7 +7286,7 @@ func (u *__Post_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Post_Deleter) Delete(db XODB) (int, error) {
+func (d *__PostCopy_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -7299,15 +7299,15 @@ func (d *__Post_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.post WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.post_copy WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7316,7 +7316,7 @@ func (d *__Post_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7325,9 +7325,9 @@ func (d *__Post_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Post ////////////////
+///////////////////////// Mass insert - replace for  PostCopy ////////////////
 
-func MassInsert_Post(rows []Post, db XODB) error {
+func MassInsert_PostCopy(rows []PostCopy, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -7338,8 +7338,8 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	// insVals := insVals_[0:len(insVals_)-1]
 	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
-	sqlstr := "INSERT INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+	sqlstr := "INSERT INTO sun.post_copy (" +
+		"post_id, user_id, post_type_enum, post_category_enum, media_id, post_key, text, rich_text, media_count, shared_to, disable_comment, source, has_tag, seq, comments_count, likes_count, views_count, edited_time, created_time, re_shared_post_id" +
 		") VALUES " + insVals
 
 	// run query
@@ -7370,12 +7370,12 @@ func MassInsert_Post(rows []Post, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return err
@@ -7384,7 +7384,7 @@ func MassInsert_Post(rows []Post, db XODB) error {
 	return nil
 }
 
-func MassReplace_Post(rows []Post, db XODB) error {
+func MassReplace_PostCopy(rows []PostCopy, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -7394,8 +7394,8 @@ func MassReplace_Post(rows []Post, db XODB) error {
 	// insVals := insVals_[0:len(insVals_)-1]
 	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
-	sqlstr := "REPLACE INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+	sqlstr := "REPLACE INTO sun.post_copy (" +
+		"post_id, user_id, post_type_enum, post_category_enum, media_id, post_key, text, rich_text, media_count, shared_to, disable_comment, source, has_tag, seq, comments_count, likes_count, views_count, edited_time, created_time, re_shared_post_id" +
 		") VALUES " + insVals
 
 	// run query
@@ -7426,12 +7426,12 @@ func MassReplace_Post(rows []Post, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.Post {
+	if LogTableSqlReq.PostCopy {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Post {
+		if LogTableSqlReq.PostCopy {
 			XOLogErr(err)
 		}
 		return err

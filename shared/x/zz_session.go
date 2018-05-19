@@ -1947,7 +1947,7 @@ func (d *__Session_Deleter) SessionUuid_Eq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = " + u.nextDollars
+	w.condition = " SessionUuid = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1958,7 +1958,7 @@ func (d *__Session_Deleter) SessionUuid_NotEq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != " + u.nextDollars
+	w.condition = " SessionUuid != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2007,7 +2007,7 @@ func (d *__Session_Deleter) LastIpAddress_Eq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = " + u.nextDollars
+	w.condition = " LastIpAddress = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2018,7 +2018,7 @@ func (d *__Session_Deleter) LastIpAddress_NotEq(val string) *__Session_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != " + u.nextDollars
+	w.condition = " LastIpAddress != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2069,7 +2069,7 @@ func (d *__Session_Updater) SessionUuid_Eq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = " + u.nextDollars
+	w.condition = " SessionUuid = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2080,7 +2080,7 @@ func (d *__Session_Updater) SessionUuid_NotEq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != " + u.nextDollars
+	w.condition = " SessionUuid != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2129,7 +2129,7 @@ func (d *__Session_Updater) LastIpAddress_Eq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = " + u.nextDollars
+	w.condition = " LastIpAddress = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2140,7 +2140,7 @@ func (d *__Session_Updater) LastIpAddress_NotEq(val string) *__Session_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != " + u.nextDollars
+	w.condition = " LastIpAddress != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2191,7 +2191,7 @@ func (d *__Session_Selector) SessionUuid_Eq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid = " + u.nextDollars
+	w.condition = " SessionUuid = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2202,7 +2202,7 @@ func (d *__Session_Selector) SessionUuid_NotEq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionUuid != " + u.nextDollars
+	w.condition = " SessionUuid != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2251,7 +2251,7 @@ func (d *__Session_Selector) LastIpAddress_Eq(val string) *__Session_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress = " + u.nextDollars
+	w.condition = " LastIpAddress = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2262,7 +2262,7 @@ func (d *__Session_Selector) LastIpAddress_NotEq(val string) *__Session_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastIpAddress != " + u.nextDollars
+	w.condition = " LastIpAddress != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2303,7 +2303,7 @@ func (u *__Session_Updater) Id_Increment(count int) *__Session_Updater {
 
 //string
 func (u *__Session_Updater) SessionUuid(newVal string) *__Session_Updater {
-	up := updateCol{"SessionUuid = " + u.nextDollar(), count}
+	up := updateCol{"SessionUuid = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SessionUuid = "+ u.nextDollar()] = newVal
 	return u
@@ -2340,7 +2340,7 @@ func (u *__Session_Updater) UserId_Increment(count int) *__Session_Updater {
 
 //string
 func (u *__Session_Updater) LastIpAddress(newVal string) *__Session_Updater {
-	up := updateCol{"LastIpAddress = " + u.nextDollar(), count}
+	up := updateCol{"LastIpAddress = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" LastIpAddress = "+ u.nextDollar()] = newVal
 	return u

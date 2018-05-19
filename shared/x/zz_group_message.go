@@ -2240,7 +2240,7 @@ func (d *__GroupMessage_Deleter) RoomKey_Eq(val string) *__GroupMessage_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2251,7 +2251,7 @@ func (d *__GroupMessage_Deleter) RoomKey_NotEq(val string) *__GroupMessage_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2300,7 +2300,7 @@ func (d *__GroupMessage_Deleter) Text_Eq(val string) *__GroupMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2311,7 +2311,7 @@ func (d *__GroupMessage_Deleter) Text_NotEq(val string) *__GroupMessage_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2362,7 +2362,7 @@ func (d *__GroupMessage_Updater) RoomKey_Eq(val string) *__GroupMessage_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2373,7 +2373,7 @@ func (d *__GroupMessage_Updater) RoomKey_NotEq(val string) *__GroupMessage_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2422,7 +2422,7 @@ func (d *__GroupMessage_Updater) Text_Eq(val string) *__GroupMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2433,7 +2433,7 @@ func (d *__GroupMessage_Updater) Text_NotEq(val string) *__GroupMessage_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2484,7 +2484,7 @@ func (d *__GroupMessage_Selector) RoomKey_Eq(val string) *__GroupMessage_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2495,7 +2495,7 @@ func (d *__GroupMessage_Selector) RoomKey_NotEq(val string) *__GroupMessage_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2544,7 +2544,7 @@ func (d *__GroupMessage_Selector) Text_Eq(val string) *__GroupMessage_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2555,7 +2555,7 @@ func (d *__GroupMessage_Selector) Text_NotEq(val string) *__GroupMessage_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2596,7 +2596,7 @@ func (u *__GroupMessage_Updater) MessageId_Increment(count int) *__GroupMessage_
 
 //string
 func (u *__GroupMessage_Updater) RoomKey(newVal string) *__GroupMessage_Updater {
-	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	up := updateCol{"RoomKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
@@ -2687,7 +2687,7 @@ func (u *__GroupMessage_Updater) MessageTypeEnum_Increment(count int) *__GroupMe
 
 //string
 func (u *__GroupMessage_Updater) Text(newVal string) *__GroupMessage_Updater {
-	up := updateCol{"Text = " + u.nextDollar(), count}
+	up := updateCol{"Text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u

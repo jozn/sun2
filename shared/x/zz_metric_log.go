@@ -1317,7 +1317,7 @@ func (d *__MetricLog_Deleter) StartFrom_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = " + u.nextDollars
+	w.condition = " StartFrom = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1328,7 +1328,7 @@ func (d *__MetricLog_Deleter) StartFrom_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != " + u.nextDollars
+	w.condition = " StartFrom != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1377,7 +1377,7 @@ func (d *__MetricLog_Deleter) EndTo_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = " + u.nextDollars
+	w.condition = " EndTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1388,7 +1388,7 @@ func (d *__MetricLog_Deleter) EndTo_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != " + u.nextDollars
+	w.condition = " EndTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1437,7 +1437,7 @@ func (d *__MetricLog_Deleter) Duration_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = " + u.nextDollars
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1448,7 +1448,7 @@ func (d *__MetricLog_Deleter) Duration_NotEq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != " + u.nextDollars
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1497,7 +1497,7 @@ func (d *__MetricLog_Deleter) MetericsJson_Eq(val string) *__MetricLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = " + u.nextDollars
+	w.condition = " MetericsJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1508,7 +1508,7 @@ func (d *__MetricLog_Deleter) MetericsJson_NotEq(val string) *__MetricLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != " + u.nextDollars
+	w.condition = " MetericsJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1559,7 +1559,7 @@ func (d *__MetricLog_Updater) StartFrom_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = " + u.nextDollars
+	w.condition = " StartFrom = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1570,7 +1570,7 @@ func (d *__MetricLog_Updater) StartFrom_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != " + u.nextDollars
+	w.condition = " StartFrom != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1619,7 +1619,7 @@ func (d *__MetricLog_Updater) EndTo_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = " + u.nextDollars
+	w.condition = " EndTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1630,7 +1630,7 @@ func (d *__MetricLog_Updater) EndTo_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != " + u.nextDollars
+	w.condition = " EndTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1679,7 +1679,7 @@ func (d *__MetricLog_Updater) Duration_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = " + u.nextDollars
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1690,7 +1690,7 @@ func (d *__MetricLog_Updater) Duration_NotEq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != " + u.nextDollars
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1739,7 +1739,7 @@ func (d *__MetricLog_Updater) MetericsJson_Eq(val string) *__MetricLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = " + u.nextDollars
+	w.condition = " MetericsJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1750,7 +1750,7 @@ func (d *__MetricLog_Updater) MetericsJson_NotEq(val string) *__MetricLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != " + u.nextDollars
+	w.condition = " MetericsJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1801,7 +1801,7 @@ func (d *__MetricLog_Selector) StartFrom_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom = " + u.nextDollars
+	w.condition = " StartFrom = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1812,7 +1812,7 @@ func (d *__MetricLog_Selector) StartFrom_NotEq(val string) *__MetricLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartFrom != " + u.nextDollars
+	w.condition = " StartFrom != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1861,7 +1861,7 @@ func (d *__MetricLog_Selector) EndTo_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo = " + u.nextDollars
+	w.condition = " EndTo = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1872,7 +1872,7 @@ func (d *__MetricLog_Selector) EndTo_NotEq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " EndTo != " + u.nextDollars
+	w.condition = " EndTo != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1921,7 +1921,7 @@ func (d *__MetricLog_Selector) Duration_Eq(val string) *__MetricLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration = " + u.nextDollars
+	w.condition = " Duration = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1932,7 +1932,7 @@ func (d *__MetricLog_Selector) Duration_NotEq(val string) *__MetricLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Duration != " + u.nextDollars
+	w.condition = " Duration != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1981,7 +1981,7 @@ func (d *__MetricLog_Selector) MetericsJson_Eq(val string) *__MetricLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson = " + u.nextDollars
+	w.condition = " MetericsJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1992,7 +1992,7 @@ func (d *__MetricLog_Selector) MetericsJson_NotEq(val string) *__MetricLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetericsJson != " + u.nextDollars
+	w.condition = " MetericsJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2060,7 +2060,7 @@ func (u *__MetricLog_Updater) InstanceId_Increment(count int) *__MetricLog_Updat
 
 //string
 func (u *__MetricLog_Updater) StartFrom(newVal string) *__MetricLog_Updater {
-	up := updateCol{"StartFrom = " + u.nextDollar(), count}
+	up := updateCol{"StartFrom = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" StartFrom = "+ u.nextDollar()] = newVal
 	return u
@@ -2070,7 +2070,7 @@ func (u *__MetricLog_Updater) StartFrom(newVal string) *__MetricLog_Updater {
 
 //string
 func (u *__MetricLog_Updater) EndTo(newVal string) *__MetricLog_Updater {
-	up := updateCol{"EndTo = " + u.nextDollar(), count}
+	up := updateCol{"EndTo = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" EndTo = "+ u.nextDollar()] = newVal
 	return u
@@ -2107,7 +2107,7 @@ func (u *__MetricLog_Updater) StartTime_Increment(count int) *__MetricLog_Update
 
 //string
 func (u *__MetricLog_Updater) Duration(newVal string) *__MetricLog_Updater {
-	up := updateCol{"Duration = " + u.nextDollar(), count}
+	up := updateCol{"Duration = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Duration = "+ u.nextDollar()] = newVal
 	return u
@@ -2117,7 +2117,7 @@ func (u *__MetricLog_Updater) Duration(newVal string) *__MetricLog_Updater {
 
 //string
 func (u *__MetricLog_Updater) MetericsJson(newVal string) *__MetricLog_Updater {
-	up := updateCol{"MetericsJson = " + u.nextDollar(), count}
+	up := updateCol{"MetericsJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MetericsJson = "+ u.nextDollar()] = newVal
 	return u

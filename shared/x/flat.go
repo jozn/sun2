@@ -3199,6 +3199,107 @@ var PB_Post__FOlD = &PB_Post{
 	ReSharedPostId:   0,
 }
 
+type PB_PostCopy_Flat struct {
+	post_id            int
+	user_id            int
+	post_type_enum     int
+	post_category_enum int
+	media_id           int
+	post_key           string
+	text               string
+	rich_text          string
+	media_count        int
+	shared_to          int
+	disable_comment    int
+	source             int
+	has_tag            int
+	seq                int
+	comments_count     int
+	likes_count        int
+	views_count        int
+	edited_time        int
+	created_time       int
+	re_shared_post_id  int
+}
+
+//ToPB
+func (m *PB_PostCopy) ToFlat() *PB_PostCopy_Flat {
+	r := &PB_PostCopy_Flat{
+		post_id:            int(m.post_id),
+		user_id:            int(m.user_id),
+		post_type_enum:     int(m.post_type_enum),
+		post_category_enum: int(m.post_category_enum),
+		media_id:           int(m.media_id),
+		post_key:           m.post_key,
+		text:               m.text,
+		rich_text:          m.rich_text,
+		media_count:        int(m.media_count),
+		shared_to:          int(m.shared_to),
+		disable_comment:    int(m.disable_comment),
+		source:             int(m.source),
+		has_tag:            int(m.has_tag),
+		seq:                int(m.seq),
+		comments_count:     int(m.comments_count),
+		likes_count:        int(m.likes_count),
+		views_count:        int(m.views_count),
+		edited_time:        int(m.edited_time),
+		created_time:       int(m.created_time),
+		re_shared_post_id:  int(m.re_shared_post_id),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostCopy_Flat) ToPB() *PB_PostCopy {
+	r := &PB_PostCopy{
+		post_id:            int64(m.post_id),
+		user_id:            int32(m.user_id),
+		post_type_enum:     int32(m.post_type_enum),
+		post_category_enum: int32(m.post_category_enum),
+		media_id:           int64(m.media_id),
+		post_key:           m.post_key,
+		text:               m.text,
+		rich_text:          m.rich_text,
+		media_count:        int32(m.media_count),
+		shared_to:          int32(m.shared_to),
+		disable_comment:    int32(m.disable_comment),
+		source:             int32(m.source),
+		has_tag:            int32(m.has_tag),
+		seq:                int32(m.seq),
+		comments_count:     int32(m.comments_count),
+		likes_count:        int32(m.likes_count),
+		views_count:        int32(m.views_count),
+		edited_time:        int32(m.edited_time),
+		created_time:       int32(m.created_time),
+		re_shared_post_id:  int64(m.re_shared_post_id),
+	}
+	return r
+}
+
+//folding
+var PB_PostCopy__FOlD = &PB_PostCopy{
+	post_id:            0,
+	user_id:            0,
+	post_type_enum:     0,
+	post_category_enum: 0,
+	media_id:           0,
+	post_key:           "",
+	text:               "",
+	rich_text:          "",
+	media_count:        0,
+	shared_to:          0,
+	disable_comment:    0,
+	source:             0,
+	has_tag:            0,
+	seq:                0,
+	comments_count:     0,
+	likes_count:        0,
+	views_count:        0,
+	edited_time:        0,
+	created_time:       0,
+	re_shared_post_id:  0,
+}
+
 type PB_PostCount_Flat struct {
 	PostId     int
 	ViewsCount int
@@ -3544,35 +3645,25 @@ var PB_SearchClicked__FOlD = &PB_SearchClicked{
 }
 
 type PB_Session_Flat struct {
-	SessionUuid         string
-	UserId              int
-	ClientUuid          string
-	DeviceUuid          string
-	LastActivityTime    int
-	LastIpAddress       string
-	LastWifiMacAddress  string
-	LastNetworkType     string
-	LastNetworkTypeEnum int
-	AppVersion          int
-	UpdatedTime         int
-	CreatedTime         int
+	Id            int
+	SessionUuid   string
+	UserId        int
+	LastIpAddress string
+	AppVersion    int
+	ActiveTime    int
+	CreatedTime   int
 }
 
 //ToPB
 func (m *PB_Session) ToFlat() *PB_Session_Flat {
 	r := &PB_Session_Flat{
-		SessionUuid:         m.SessionUuid,
-		UserId:              int(m.UserId),
-		ClientUuid:          m.ClientUuid,
-		DeviceUuid:          m.DeviceUuid,
-		LastActivityTime:    int(m.LastActivityTime),
-		LastIpAddress:       m.LastIpAddress,
-		LastWifiMacAddress:  m.LastWifiMacAddress,
-		LastNetworkType:     m.LastNetworkType,
-		LastNetworkTypeEnum: int(m.LastNetworkTypeEnum),
-		AppVersion:          int(m.AppVersion),
-		UpdatedTime:         int(m.UpdatedTime),
-		CreatedTime:         int(m.CreatedTime),
+		Id:            int(m.Id),
+		SessionUuid:   m.SessionUuid,
+		UserId:        int(m.UserId),
+		LastIpAddress: m.LastIpAddress,
+		AppVersion:    int(m.AppVersion),
+		ActiveTime:    int(m.ActiveTime),
+		CreatedTime:   int(m.CreatedTime),
 	}
 	return r
 }
@@ -3580,36 +3671,26 @@ func (m *PB_Session) ToFlat() *PB_Session_Flat {
 //ToPB
 func (m *PB_Session_Flat) ToPB() *PB_Session {
 	r := &PB_Session{
-		SessionUuid:         m.SessionUuid,
-		UserId:              int32(m.UserId),
-		ClientUuid:          m.ClientUuid,
-		DeviceUuid:          m.DeviceUuid,
-		LastActivityTime:    int32(m.LastActivityTime),
-		LastIpAddress:       m.LastIpAddress,
-		LastWifiMacAddress:  m.LastWifiMacAddress,
-		LastNetworkType:     m.LastNetworkType,
-		LastNetworkTypeEnum: int32(m.LastNetworkTypeEnum),
-		AppVersion:          int32(m.AppVersion),
-		UpdatedTime:         int32(m.UpdatedTime),
-		CreatedTime:         int32(m.CreatedTime),
+		Id:            int64(m.Id),
+		SessionUuid:   m.SessionUuid,
+		UserId:        int32(m.UserId),
+		LastIpAddress: m.LastIpAddress,
+		AppVersion:    int32(m.AppVersion),
+		ActiveTime:    int32(m.ActiveTime),
+		CreatedTime:   int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_Session__FOlD = &PB_Session{
-	SessionUuid:         "",
-	UserId:              0,
-	ClientUuid:          "",
-	DeviceUuid:          "",
-	LastActivityTime:    0,
-	LastIpAddress:       "",
-	LastWifiMacAddress:  "",
-	LastNetworkType:     "",
-	LastNetworkTypeEnum: 0,
-	AppVersion:          0,
-	UpdatedTime:         0,
-	CreatedTime:         0,
+	Id:            0,
+	SessionUuid:   "",
+	UserId:        0,
+	LastIpAddress: "",
+	AppVersion:    0,
+	ActiveTime:    0,
+	CreatedTime:   0,
 }
 
 type PB_SettingClient_Flat struct {
@@ -4507,21 +4588,29 @@ var PB_GroupMessage__FOlD = &PB_GroupMessage{
 }
 
 type PB_FileMsg_Flat struct {
-	Id        int
-	FileType  int
-	Extension string
-	DataThumb []byte
-	Data      []byte
+	Id         int
+	AccessHash int
+	FileType   int
+	Width      int
+	Height     int
+	Extension  string
+	UserId     int
+	DataThumb  []byte
+	Data       []byte
 }
 
 //ToPB
 func (m *PB_FileMsg) ToFlat() *PB_FileMsg_Flat {
 	r := &PB_FileMsg_Flat{
-		Id:        int(m.Id),
-		FileType:  int(m.FileType),
-		Extension: m.Extension,
-		DataThumb: []byte(m.DataThumb),
-		Data:      []byte(m.Data),
+		Id:         int(m.Id),
+		AccessHash: int(m.AccessHash),
+		FileType:   int(m.FileType),
+		Width:      int(m.Width),
+		Height:     int(m.Height),
+		Extension:  m.Extension,
+		UserId:     int(m.UserId),
+		DataThumb:  []byte(m.DataThumb),
+		Data:       []byte(m.Data),
 	}
 	return r
 }
@@ -4529,40 +4618,56 @@ func (m *PB_FileMsg) ToFlat() *PB_FileMsg_Flat {
 //ToPB
 func (m *PB_FileMsg_Flat) ToPB() *PB_FileMsg {
 	r := &PB_FileMsg{
-		Id:        int64(m.Id),
-		FileType:  int32(m.FileType),
-		Extension: m.Extension,
-		DataThumb: m.DataThumb,
-		Data:      m.Data,
+		Id:         int64(m.Id),
+		AccessHash: int32(m.AccessHash),
+		FileType:   int32(m.FileType),
+		Width:      int32(m.Width),
+		Height:     int32(m.Height),
+		Extension:  m.Extension,
+		UserId:     int32(m.UserId),
+		DataThumb:  m.DataThumb,
+		Data:       m.Data,
 	}
 	return r
 }
 
 //folding
 var PB_FileMsg__FOlD = &PB_FileMsg{
-	Id:        0,
-	FileType:  0,
-	Extension: "",
-	DataThumb: []byte{},
-	Data:      []byte{},
+	Id:         0,
+	AccessHash: 0,
+	FileType:   0,
+	Width:      0,
+	Height:     0,
+	Extension:  "",
+	UserId:     0,
+	DataThumb:  []byte{},
+	Data:       []byte{},
 }
 
 type PB_FilePost_Flat struct {
-	Id        int
-	FileType  int
-	Extension string
-	DataThumb []byte
-	Data      []byte
+	Id         int
+	AccessHash int
+	FileType   int
+	Width      int
+	Height     int
+	Extension  string
+	UserId     int
+	DataThumb  []byte
+	Data       []byte
 }
 
 //ToPB
 func (m *PB_FilePost) ToFlat() *PB_FilePost_Flat {
 	r := &PB_FilePost_Flat{
-		Id:        int(m.Id),
-		FileType:  int(m.FileType),
-		Extension: m.Extension,
-		DataThumb: []byte(m.DataThumb),
-		Data:      []byte(m.Data),
+		Id:         int(m.Id),
+		AccessHash: int(m.AccessHash),
+		FileType:   int(m.FileType),
+		Width:      int(m.Width),
+		Height:     int(m.Height),
+		Extension:  m.Extension,
+		UserId:     int(m.UserId),
+		DataThumb:  []byte(m.DataThumb),
+		Data:       []byte(m.Data),
 	}
 	return r
 }
@@ -4570,22 +4675,30 @@ func (m *PB_FilePost) ToFlat() *PB_FilePost_Flat {
 //ToPB
 func (m *PB_FilePost_Flat) ToPB() *PB_FilePost {
 	r := &PB_FilePost{
-		Id:        int64(m.Id),
-		FileType:  int32(m.FileType),
-		Extension: m.Extension,
-		DataThumb: m.DataThumb,
-		Data:      m.Data,
+		Id:         int64(m.Id),
+		AccessHash: int32(m.AccessHash),
+		FileType:   int32(m.FileType),
+		Width:      int32(m.Width),
+		Height:     int32(m.Height),
+		Extension:  m.Extension,
+		UserId:     int32(m.UserId),
+		DataThumb:  m.DataThumb,
+		Data:       m.Data,
 	}
 	return r
 }
 
 //folding
 var PB_FilePost__FOlD = &PB_FilePost{
-	Id:        0,
-	FileType:  0,
-	Extension: "",
-	DataThumb: []byte{},
-	Data:      []byte{},
+	Id:         0,
+	AccessHash: 0,
+	FileType:   0,
+	Width:      0,
+	Height:     0,
+	Extension:  "",
+	UserId:     0,
+	DataThumb:  []byte{},
+	Data:       []byte{},
 }
 
 type PB_ActionFanout_Flat struct {
@@ -4737,33 +4850,33 @@ var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
 }
 
 type PB_ChatSync2_Flat struct {
-	SyncId            int
-	ToUserId          int
-	ChatSyncTypeId    int
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId int
-	ToLowMessageId    int
-	MessageId         int
-	MessagePb         []byte
-	MessageJson       string
-	CreatedTime       int
+	sync_id              int
+	to_user_id           int
+	chat_sync_type_id    int
+	room_key             string
+	chat_key             string
+	from_high_message_id int
+	to_low_message_id    int
+	message_id           int
+	message_pb           []byte
+	message_json         string
+	created_time         int
 }
 
 //ToPB
 func (m *PB_ChatSync2) ToFlat() *PB_ChatSync2_Flat {
 	r := &PB_ChatSync2_Flat{
-		SyncId:            int(m.SyncId),
-		ToUserId:          int(m.ToUserId),
-		ChatSyncTypeId:    int(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int(m.FromHighMessageId),
-		ToLowMessageId:    int(m.ToLowMessageId),
-		MessageId:         int(m.MessageId),
-		MessagePb:         []byte(m.MessagePb),
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int(m.CreatedTime),
+		sync_id:              int(m.sync_id),
+		to_user_id:           int(m.to_user_id),
+		chat_sync_type_id:    int(m.chat_sync_type_id),
+		room_key:             m.room_key,
+		chat_key:             m.chat_key,
+		from_high_message_id: int(m.from_high_message_id),
+		to_low_message_id:    int(m.to_low_message_id),
+		message_id:           int(m.message_id),
+		message_pb:           []byte(m.message_pb),
+		message_json:         m.message_json,
+		created_time:         int(m.created_time),
 	}
 	return r
 }
@@ -4771,34 +4884,71 @@ func (m *PB_ChatSync2) ToFlat() *PB_ChatSync2_Flat {
 //ToPB
 func (m *PB_ChatSync2_Flat) ToPB() *PB_ChatSync2 {
 	r := &PB_ChatSync2{
-		SyncId:            int64(m.SyncId),
-		ToUserId:          int32(m.ToUserId),
-		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int64(m.FromHighMessageId),
-		ToLowMessageId:    int64(m.ToLowMessageId),
-		MessageId:         int64(m.MessageId),
-		MessagePb:         m.MessagePb,
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int32(m.CreatedTime),
+		sync_id:              int64(m.sync_id),
+		to_user_id:           int32(m.to_user_id),
+		chat_sync_type_id:    int32(m.chat_sync_type_id),
+		room_key:             m.room_key,
+		chat_key:             m.chat_key,
+		from_high_message_id: int64(m.from_high_message_id),
+		to_low_message_id:    int64(m.to_low_message_id),
+		message_id:           int64(m.message_id),
+		message_pb:           m.message_pb,
+		message_json:         m.message_json,
+		created_time:         int32(m.created_time),
 	}
 	return r
 }
 
 //folding
 var PB_ChatSync2__FOlD = &PB_ChatSync2{
-	SyncId:            0,
-	ToUserId:          0,
-	ChatSyncTypeId:    0,
-	RoomKey:           "",
-	ChatKey:           "",
-	FromHighMessageId: 0,
-	ToLowMessageId:    0,
-	MessageId:         0,
-	MessagePb:         []byte{},
-	MessageJson:       "",
-	CreatedTime:       0,
+	sync_id:              0,
+	to_user_id:           0,
+	chat_sync_type_id:    0,
+	room_key:             "",
+	chat_key:             "",
+	from_high_message_id: 0,
+	to_low_message_id:    0,
+	message_id:           0,
+	message_pb:           []byte{},
+	message_json:         "",
+	created_time:         0,
+}
+
+type PB_LowerTable_Flat struct {
+	id              int
+	text            string
+	time_stamp      int
+	any_thing_more_ int
+}
+
+//ToPB
+func (m *PB_LowerTable) ToFlat() *PB_LowerTable_Flat {
+	r := &PB_LowerTable_Flat{
+		id:              int(m.id),
+		text:            m.text,
+		time_stamp:      int(m.time_stamp),
+		any_thing_more_: int(m.any_thing_more_),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_LowerTable_Flat) ToPB() *PB_LowerTable {
+	r := &PB_LowerTable{
+		id:              int32(m.id),
+		text:            m.text,
+		time_stamp:      int32(m.time_stamp),
+		any_thing_more_: int32(m.any_thing_more_),
+	}
+	return r
+}
+
+//folding
+var PB_LowerTable__FOlD = &PB_LowerTable{
+	id:              0,
+	text:            "",
+	time_stamp:      0,
+	any_thing_more_: 0,
 }
 
 type PB_PushChat_Flat struct {
@@ -4879,33 +5029,33 @@ var PB_PushChat__FOlD = &PB_PushChat{
 }
 
 type PB_PushChat2_Flat struct {
-	SyncId            int
-	ToUserId          int
-	ChatSyncTypeId    int
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId int
-	ToLowMessageId    int
-	MessageId         int
-	MessagePb         []byte
-	MessageJson       string
-	CreatedTime       int
+	sync_id              int
+	to_user_id           int
+	chat_sync_type_id    int
+	room_key             string
+	chat_key             string
+	from_high_message_id int
+	to_low_message_id    int
+	message_id           int
+	message_pb           []byte
+	message_json         string
+	created_time         int
 }
 
 //ToPB
 func (m *PB_PushChat2) ToFlat() *PB_PushChat2_Flat {
 	r := &PB_PushChat2_Flat{
-		SyncId:            int(m.SyncId),
-		ToUserId:          int(m.ToUserId),
-		ChatSyncTypeId:    int(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int(m.FromHighMessageId),
-		ToLowMessageId:    int(m.ToLowMessageId),
-		MessageId:         int(m.MessageId),
-		MessagePb:         []byte(m.MessagePb),
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int(m.CreatedTime),
+		sync_id:              int(m.sync_id),
+		to_user_id:           int(m.to_user_id),
+		chat_sync_type_id:    int(m.chat_sync_type_id),
+		room_key:             m.room_key,
+		chat_key:             m.chat_key,
+		from_high_message_id: int(m.from_high_message_id),
+		to_low_message_id:    int(m.to_low_message_id),
+		message_id:           int(m.message_id),
+		message_pb:           []byte(m.message_pb),
+		message_json:         m.message_json,
+		created_time:         int(m.created_time),
 	}
 	return r
 }
@@ -4913,34 +5063,401 @@ func (m *PB_PushChat2) ToFlat() *PB_PushChat2_Flat {
 //ToPB
 func (m *PB_PushChat2_Flat) ToPB() *PB_PushChat2 {
 	r := &PB_PushChat2{
-		SyncId:            int64(m.SyncId),
-		ToUserId:          int32(m.ToUserId),
-		ChatSyncTypeId:    int32(m.ChatSyncTypeId),
-		RoomKey:           m.RoomKey,
-		ChatKey:           m.ChatKey,
-		FromHighMessageId: int64(m.FromHighMessageId),
-		ToLowMessageId:    int64(m.ToLowMessageId),
-		MessageId:         int64(m.MessageId),
-		MessagePb:         m.MessagePb,
-		MessageJson:       m.MessageJson,
-		CreatedTime:       int32(m.CreatedTime),
+		sync_id:              int64(m.sync_id),
+		to_user_id:           int32(m.to_user_id),
+		chat_sync_type_id:    int32(m.chat_sync_type_id),
+		room_key:             m.room_key,
+		chat_key:             m.chat_key,
+		from_high_message_id: int64(m.from_high_message_id),
+		to_low_message_id:    int64(m.to_low_message_id),
+		message_id:           int64(m.message_id),
+		message_pb:           m.message_pb,
+		message_json:         m.message_json,
+		created_time:         int32(m.created_time),
 	}
 	return r
 }
 
 //folding
 var PB_PushChat2__FOlD = &PB_PushChat2{
-	SyncId:            0,
-	ToUserId:          0,
-	ChatSyncTypeId:    0,
-	RoomKey:           "",
-	ChatKey:           "",
-	FromHighMessageId: 0,
-	ToLowMessageId:    0,
-	MessageId:         0,
-	MessagePb:         []byte{},
-	MessageJson:       "",
-	CreatedTime:       0,
+	sync_id:              0,
+	to_user_id:           0,
+	chat_sync_type_id:    0,
+	room_key:             "",
+	chat_key:             "",
+	from_high_message_id: 0,
+	to_low_message_id:    0,
+	message_id:           0,
+	message_pb:           []byte{},
+	message_json:         "",
+	created_time:         0,
+}
+
+type PB_HTTPRPCLog_Flat struct {
+	Id              int
+	Time            string
+	MethodFull      string
+	MethodParent    string
+	UserId          int
+	SessionId       string
+	StatusCode      int
+	InputSize       int
+	OutputSize      int
+	ReqestJson      string
+	ResponseJson    string
+	ReqestParamJson string
+	ResponseMsgJson string
+}
+
+//ToPB
+func (m *PB_HTTPRPCLog) ToFlat() *PB_HTTPRPCLog_Flat {
+	r := &PB_HTTPRPCLog_Flat{
+		Id:              int(m.Id),
+		Time:            m.Time,
+		MethodFull:      m.MethodFull,
+		MethodParent:    m.MethodParent,
+		UserId:          int(m.UserId),
+		SessionId:       m.SessionId,
+		StatusCode:      int(m.StatusCode),
+		InputSize:       int(m.InputSize),
+		OutputSize:      int(m.OutputSize),
+		ReqestJson:      m.ReqestJson,
+		ResponseJson:    m.ResponseJson,
+		ReqestParamJson: m.ReqestParamJson,
+		ResponseMsgJson: m.ResponseMsgJson,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_HTTPRPCLog_Flat) ToPB() *PB_HTTPRPCLog {
+	r := &PB_HTTPRPCLog{
+		Id:              int32(m.Id),
+		Time:            m.Time,
+		MethodFull:      m.MethodFull,
+		MethodParent:    m.MethodParent,
+		UserId:          int32(m.UserId),
+		SessionId:       m.SessionId,
+		StatusCode:      int32(m.StatusCode),
+		InputSize:       int32(m.InputSize),
+		OutputSize:      int32(m.OutputSize),
+		ReqestJson:      m.ReqestJson,
+		ResponseJson:    m.ResponseJson,
+		ReqestParamJson: m.ReqestParamJson,
+		ResponseMsgJson: m.ResponseMsgJson,
+	}
+	return r
+}
+
+//folding
+var PB_HTTPRPCLog__FOlD = &PB_HTTPRPCLog{
+	Id:              0,
+	Time:            "",
+	MethodFull:      "",
+	MethodParent:    "",
+	UserId:          0,
+	SessionId:       "",
+	StatusCode:      0,
+	InputSize:       0,
+	OutputSize:      0,
+	ReqestJson:      "",
+	ResponseJson:    "",
+	ReqestParamJson: "",
+	ResponseMsgJson: "",
+}
+
+type PB_MetricLog_Flat struct {
+	Id           int
+	InstanceId   int
+	StartFrom    string
+	EndTo        string
+	StartTime    int
+	Duration     string
+	MetericsJson string
+}
+
+//ToPB
+func (m *PB_MetricLog) ToFlat() *PB_MetricLog_Flat {
+	r := &PB_MetricLog_Flat{
+		Id:           int(m.Id),
+		InstanceId:   int(m.InstanceId),
+		StartFrom:    m.StartFrom,
+		EndTo:        m.EndTo,
+		StartTime:    int(m.StartTime),
+		Duration:     m.Duration,
+		MetericsJson: m.MetericsJson,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_MetricLog_Flat) ToPB() *PB_MetricLog {
+	r := &PB_MetricLog{
+		Id:           int32(m.Id),
+		InstanceId:   int32(m.InstanceId),
+		StartFrom:    m.StartFrom,
+		EndTo:        m.EndTo,
+		StartTime:    int32(m.StartTime),
+		Duration:     m.Duration,
+		MetericsJson: m.MetericsJson,
+	}
+	return r
+}
+
+//folding
+var PB_MetricLog__FOlD = &PB_MetricLog{
+	Id:           0,
+	InstanceId:   0,
+	StartFrom:    "",
+	EndTo:        "",
+	StartTime:    0,
+	Duration:     "",
+	MetericsJson: "",
+}
+
+type PB_XfileServiceInfoLog_Flat struct {
+	Id          int
+	InstanceId  int
+	Url         string
+	CreatedTime string
+}
+
+//ToPB
+func (m *PB_XfileServiceInfoLog) ToFlat() *PB_XfileServiceInfoLog_Flat {
+	r := &PB_XfileServiceInfoLog_Flat{
+		Id:          int(m.Id),
+		InstanceId:  int(m.InstanceId),
+		Url:         m.Url,
+		CreatedTime: m.CreatedTime,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_XfileServiceInfoLog_Flat) ToPB() *PB_XfileServiceInfoLog {
+	r := &PB_XfileServiceInfoLog{
+		Id:          int64(m.Id),
+		InstanceId:  int32(m.InstanceId),
+		Url:         m.Url,
+		CreatedTime: m.CreatedTime,
+	}
+	return r
+}
+
+//folding
+var PB_XfileServiceInfoLog__FOlD = &PB_XfileServiceInfoLog{
+	Id:          0,
+	InstanceId:  0,
+	Url:         "",
+	CreatedTime: "",
+}
+
+type PB_XfileServiceMetricLog_Flat struct {
+	Id         int
+	InstanceId int
+	MetricJson string
+}
+
+//ToPB
+func (m *PB_XfileServiceMetricLog) ToFlat() *PB_XfileServiceMetricLog_Flat {
+	r := &PB_XfileServiceMetricLog_Flat{
+		Id:         int(m.Id),
+		InstanceId: int(m.InstanceId),
+		MetricJson: m.MetricJson,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_XfileServiceMetricLog_Flat) ToPB() *PB_XfileServiceMetricLog {
+	r := &PB_XfileServiceMetricLog{
+		Id:         int64(m.Id),
+		InstanceId: int32(m.InstanceId),
+		MetricJson: m.MetricJson,
+	}
+	return r
+}
+
+//folding
+var PB_XfileServiceMetricLog__FOlD = &PB_XfileServiceMetricLog{
+	Id:         0,
+	InstanceId: 0,
+	MetricJson: "",
+}
+
+type PB_XfileServiceRequestLog_Flat struct {
+	Id          int
+	LocalSeq    int
+	InstanceId  int
+	Url         string
+	HttpCode    int
+	CreatedTime string
+}
+
+//ToPB
+func (m *PB_XfileServiceRequestLog) ToFlat() *PB_XfileServiceRequestLog_Flat {
+	r := &PB_XfileServiceRequestLog_Flat{
+		Id:          int(m.Id),
+		LocalSeq:    int(m.LocalSeq),
+		InstanceId:  int(m.InstanceId),
+		Url:         m.Url,
+		HttpCode:    int(m.HttpCode),
+		CreatedTime: m.CreatedTime,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_XfileServiceRequestLog_Flat) ToPB() *PB_XfileServiceRequestLog {
+	r := &PB_XfileServiceRequestLog{
+		Id:          int64(m.Id),
+		LocalSeq:    int32(m.LocalSeq),
+		InstanceId:  int32(m.InstanceId),
+		Url:         m.Url,
+		HttpCode:    int32(m.HttpCode),
+		CreatedTime: m.CreatedTime,
+	}
+	return r
+}
+
+//folding
+var PB_XfileServiceRequestLog__FOlD = &PB_XfileServiceRequestLog{
+	Id:          0,
+	LocalSeq:    0,
+	InstanceId:  0,
+	Url:         "",
+	HttpCode:    0,
+	CreatedTime: "",
+}
+
+type PB_Account_Flat struct {
+	id      int
+	balance float64
+}
+
+//ToPB
+func (m *PB_Account) ToFlat() *PB_Account_Flat {
+	r := &PB_Account_Flat{
+		id:      int(m.id),
+		balance: float64(m.balance),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Account_Flat) ToPB() *PB_Account {
+	r := &PB_Account{
+		id:      int32(m.id),
+		balance: m.balance,
+	}
+	return r
+}
+
+//folding
+var PB_Account__FOlD = &PB_Account{
+	id:      0,
+	balance: 0.0,
+}
+
+type PB_PostCdb_Flat struct {
+	post_id            int
+	user_id            int
+	post_type_enum     int
+	post_category_enum int
+	media_id           int
+	post_key           string
+	text               string
+	rich_text          string
+	media_count        int
+	shared_to          int
+	disable_comment    int
+	source             int
+	has_tag            int
+	seq                int
+	comments_count     int
+	likes_count        int
+	views_count        int
+	edited_time        int
+	created_time       int
+	re_shared_post_id  int
+}
+
+//ToPB
+func (m *PB_PostCdb) ToFlat() *PB_PostCdb_Flat {
+	r := &PB_PostCdb_Flat{
+		post_id:            int(m.post_id),
+		user_id:            int(m.user_id),
+		post_type_enum:     int(m.post_type_enum),
+		post_category_enum: int(m.post_category_enum),
+		media_id:           int(m.media_id),
+		post_key:           m.post_key,
+		text:               m.text,
+		rich_text:          m.rich_text,
+		media_count:        int(m.media_count),
+		shared_to:          int(m.shared_to),
+		disable_comment:    int(m.disable_comment),
+		source:             int(m.source),
+		has_tag:            int(m.has_tag),
+		seq:                int(m.seq),
+		comments_count:     int(m.comments_count),
+		likes_count:        int(m.likes_count),
+		views_count:        int(m.views_count),
+		edited_time:        int(m.edited_time),
+		created_time:       int(m.created_time),
+		re_shared_post_id:  int(m.re_shared_post_id),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostCdb_Flat) ToPB() *PB_PostCdb {
+	r := &PB_PostCdb{
+		post_id:            int32(m.post_id),
+		user_id:            int32(m.user_id),
+		post_type_enum:     int32(m.post_type_enum),
+		post_category_enum: int32(m.post_category_enum),
+		media_id:           int32(m.media_id),
+		post_key:           m.post_key,
+		text:               m.text,
+		rich_text:          m.rich_text,
+		media_count:        int32(m.media_count),
+		shared_to:          int32(m.shared_to),
+		disable_comment:    int32(m.disable_comment),
+		source:             int32(m.source),
+		has_tag:            int32(m.has_tag),
+		seq:                int32(m.seq),
+		comments_count:     int32(m.comments_count),
+		likes_count:        int32(m.likes_count),
+		views_count:        int32(m.views_count),
+		edited_time:        int32(m.edited_time),
+		created_time:       int32(m.created_time),
+		re_shared_post_id:  int32(m.re_shared_post_id),
+	}
+	return r
+}
+
+//folding
+var PB_PostCdb__FOlD = &PB_PostCdb{
+	post_id:            0,
+	user_id:            0,
+	post_type_enum:     0,
+	post_category_enum: 0,
+	media_id:           0,
+	post_key:           "",
+	text:               "",
+	rich_text:          "",
+	media_count:        0,
+	shared_to:          0,
+	disable_comment:    0,
+	source:             0,
+	has_tag:            0,
+	seq:                0,
+	comments_count:     0,
+	likes_count:        0,
+	views_count:        0,
+	edited_time:        0,
+	created_time:       0,
+	re_shared_post_id:  0,
 }
 
 type PB_UpdateRoomActionDoing_Flat struct {
@@ -5711,6 +6228,7 @@ var PB_MessageView__FOlD = &PB_MessageView{
 
 type PB_MessageFileView_Flat struct {
 	MessageFileId int
+	AccessHash    int
 	FileTypeEnum  int
 	Size          int
 	Width         int
@@ -5723,6 +6241,7 @@ type PB_MessageFileView_Flat struct {
 func (m *PB_MessageFileView) ToFlat() *PB_MessageFileView_Flat {
 	r := &PB_MessageFileView_Flat{
 		MessageFileId: int(m.MessageFileId),
+		AccessHash:    int(m.AccessHash),
 		FileTypeEnum:  int(m.FileTypeEnum),
 		Size:          int(m.Size),
 		Width:         int(m.Width),
@@ -5737,6 +6256,7 @@ func (m *PB_MessageFileView) ToFlat() *PB_MessageFileView_Flat {
 func (m *PB_MessageFileView_Flat) ToPB() *PB_MessageFileView {
 	r := &PB_MessageFileView{
 		MessageFileId: int64(m.MessageFileId),
+		AccessHash:    int32(m.AccessHash),
 		FileTypeEnum:  int32(m.FileTypeEnum),
 		Size:          int32(m.Size),
 		Width:         int32(m.Width),
@@ -5750,6 +6270,7 @@ func (m *PB_MessageFileView_Flat) ToPB() *PB_MessageFileView {
 //folding
 var PB_MessageFileView__FOlD = &PB_MessageFileView{
 	MessageFileId: 0,
+	AccessHash:    0,
 	FileTypeEnum:  0,
 	Size:          0,
 	Width:         0,
@@ -6735,6 +7256,32 @@ r := &PB_Post_Flat{
 return r
 }
 
+func(m *PB_PostCopy)ToFlat() *PB_PostCopy_Flat {
+r := &PB_PostCopy_Flat{
+    post_id:  int(m.post_id) ,
+    user_id:  int(m.user_id) ,
+    post_type_enum:  int(m.post_type_enum) ,
+    post_category_enum:  int(m.post_category_enum) ,
+    media_id:  int(m.media_id) ,
+    post_key:  m.post_key ,
+    text:  m.text ,
+    rich_text:  m.rich_text ,
+    media_count:  int(m.media_count) ,
+    shared_to:  int(m.shared_to) ,
+    disable_comment:  int(m.disable_comment) ,
+    source:  int(m.source) ,
+    has_tag:  int(m.has_tag) ,
+    seq:  int(m.seq) ,
+    comments_count:  int(m.comments_count) ,
+    likes_count:  int(m.likes_count) ,
+    views_count:  int(m.views_count) ,
+    edited_time:  int(m.edited_time) ,
+    created_time:  int(m.created_time) ,
+    re_shared_post_id:  int(m.re_shared_post_id) ,
+}
+return r
+}
+
 func(m *PB_PostCount)ToFlat() *PB_PostCount_Flat {
 r := &PB_PostCount_Flat{
     PostId:  int(m.PostId) ,
@@ -6829,17 +7376,12 @@ return r
 
 func(m *PB_Session)ToFlat() *PB_Session_Flat {
 r := &PB_Session_Flat{
+    Id:  int(m.Id) ,
     SessionUuid:  m.SessionUuid ,
     UserId:  int(m.UserId) ,
-    ClientUuid:  m.ClientUuid ,
-    DeviceUuid:  m.DeviceUuid ,
-    LastActivityTime:  int(m.LastActivityTime) ,
     LastIpAddress:  m.LastIpAddress ,
-    LastWifiMacAddress:  m.LastWifiMacAddress ,
-    LastNetworkType:  m.LastNetworkType ,
-    LastNetworkTypeEnum:  int(m.LastNetworkTypeEnum) ,
     AppVersion:  int(m.AppVersion) ,
-    UpdatedTime:  int(m.UpdatedTime) ,
+    ActiveTime:  int(m.ActiveTime) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -7082,8 +7624,12 @@ return r
 func(m *PB_FileMsg)ToFlat() *PB_FileMsg_Flat {
 r := &PB_FileMsg_Flat{
     Id:  int(m.Id) ,
+    AccessHash:  int(m.AccessHash) ,
     FileType:  int(m.FileType) ,
+    Width:  int(m.Width) ,
+    Height:  int(m.Height) ,
     Extension:  m.Extension ,
+    UserId:  int(m.UserId) ,
     DataThumb:  []byte(m.DataThumb) ,
     Data:  []byte(m.Data) ,
 }
@@ -7093,8 +7639,12 @@ return r
 func(m *PB_FilePost)ToFlat() *PB_FilePost_Flat {
 r := &PB_FilePost_Flat{
     Id:  int(m.Id) ,
+    AccessHash:  int(m.AccessHash) ,
     FileType:  int(m.FileType) ,
+    Width:  int(m.Width) ,
+    Height:  int(m.Height) ,
     Extension:  m.Extension ,
+    UserId:  int(m.UserId) ,
     DataThumb:  []byte(m.DataThumb) ,
     Data:  []byte(m.Data) ,
 }
@@ -7143,17 +7693,27 @@ return r
 
 func(m *PB_ChatSync2)ToFlat() *PB_ChatSync2_Flat {
 r := &PB_ChatSync2_Flat{
-    SyncId:  int(m.SyncId) ,
-    ToUserId:  int(m.ToUserId) ,
-    ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int(m.FromHighMessageId) ,
-    ToLowMessageId:  int(m.ToLowMessageId) ,
-    MessageId:  int(m.MessageId) ,
-    MessagePb:  []byte(m.MessagePb) ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int(m.CreatedTime) ,
+    sync_id:  int(m.sync_id) ,
+    to_user_id:  int(m.to_user_id) ,
+    chat_sync_type_id:  int(m.chat_sync_type_id) ,
+    room_key:  m.room_key ,
+    chat_key:  m.chat_key ,
+    from_high_message_id:  int(m.from_high_message_id) ,
+    to_low_message_id:  int(m.to_low_message_id) ,
+    message_id:  int(m.message_id) ,
+    message_pb:  []byte(m.message_pb) ,
+    message_json:  m.message_json ,
+    created_time:  int(m.created_time) ,
+}
+return r
+}
+
+func(m *PB_LowerTable)ToFlat() *PB_LowerTable_Flat {
+r := &PB_LowerTable_Flat{
+    id:  int(m.id) ,
+    text:  m.text ,
+    time_stamp:  int(m.time_stamp) ,
+    any_thing_more_:  int(m.any_thing_more_) ,
 }
 return r
 }
@@ -7180,17 +7740,114 @@ return r
 
 func(m *PB_PushChat2)ToFlat() *PB_PushChat2_Flat {
 r := &PB_PushChat2_Flat{
-    SyncId:  int(m.SyncId) ,
-    ToUserId:  int(m.ToUserId) ,
-    ChatSyncTypeId:  int(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int(m.FromHighMessageId) ,
-    ToLowMessageId:  int(m.ToLowMessageId) ,
-    MessageId:  int(m.MessageId) ,
-    MessagePb:  []byte(m.MessagePb) ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int(m.CreatedTime) ,
+    sync_id:  int(m.sync_id) ,
+    to_user_id:  int(m.to_user_id) ,
+    chat_sync_type_id:  int(m.chat_sync_type_id) ,
+    room_key:  m.room_key ,
+    chat_key:  m.chat_key ,
+    from_high_message_id:  int(m.from_high_message_id) ,
+    to_low_message_id:  int(m.to_low_message_id) ,
+    message_id:  int(m.message_id) ,
+    message_pb:  []byte(m.message_pb) ,
+    message_json:  m.message_json ,
+    created_time:  int(m.created_time) ,
+}
+return r
+}
+
+func(m *PB_HTTPRPCLog)ToFlat() *PB_HTTPRPCLog_Flat {
+r := &PB_HTTPRPCLog_Flat{
+    Id:  int(m.Id) ,
+    Time:  m.Time ,
+    MethodFull:  m.MethodFull ,
+    MethodParent:  m.MethodParent ,
+    UserId:  int(m.UserId) ,
+    SessionId:  m.SessionId ,
+    StatusCode:  int(m.StatusCode) ,
+    InputSize:  int(m.InputSize) ,
+    OutputSize:  int(m.OutputSize) ,
+    ReqestJson:  m.ReqestJson ,
+    ResponseJson:  m.ResponseJson ,
+    ReqestParamJson:  m.ReqestParamJson ,
+    ResponseMsgJson:  m.ResponseMsgJson ,
+}
+return r
+}
+
+func(m *PB_MetricLog)ToFlat() *PB_MetricLog_Flat {
+r := &PB_MetricLog_Flat{
+    Id:  int(m.Id) ,
+    InstanceId:  int(m.InstanceId) ,
+    StartFrom:  m.StartFrom ,
+    EndTo:  m.EndTo ,
+    StartTime:  int(m.StartTime) ,
+    Duration:  m.Duration ,
+    MetericsJson:  m.MetericsJson ,
+}
+return r
+}
+
+func(m *PB_XfileServiceInfoLog)ToFlat() *PB_XfileServiceInfoLog_Flat {
+r := &PB_XfileServiceInfoLog_Flat{
+    Id:  int(m.Id) ,
+    InstanceId:  int(m.InstanceId) ,
+    Url:  m.Url ,
+    CreatedTime:  m.CreatedTime ,
+}
+return r
+}
+
+func(m *PB_XfileServiceMetricLog)ToFlat() *PB_XfileServiceMetricLog_Flat {
+r := &PB_XfileServiceMetricLog_Flat{
+    Id:  int(m.Id) ,
+    InstanceId:  int(m.InstanceId) ,
+    MetricJson:  m.MetricJson ,
+}
+return r
+}
+
+func(m *PB_XfileServiceRequestLog)ToFlat() *PB_XfileServiceRequestLog_Flat {
+r := &PB_XfileServiceRequestLog_Flat{
+    Id:  int(m.Id) ,
+    LocalSeq:  int(m.LocalSeq) ,
+    InstanceId:  int(m.InstanceId) ,
+    Url:  m.Url ,
+    HttpCode:  int(m.HttpCode) ,
+    CreatedTime:  m.CreatedTime ,
+}
+return r
+}
+
+func(m *PB_Account)ToFlat() *PB_Account_Flat {
+r := &PB_Account_Flat{
+    id:  int(m.id) ,
+    balance:  float64(m.balance) ,
+}
+return r
+}
+
+func(m *PB_PostCdb)ToFlat() *PB_PostCdb_Flat {
+r := &PB_PostCdb_Flat{
+    post_id:  int(m.post_id) ,
+    user_id:  int(m.user_id) ,
+    post_type_enum:  int(m.post_type_enum) ,
+    post_category_enum:  int(m.post_category_enum) ,
+    media_id:  int(m.media_id) ,
+    post_key:  m.post_key ,
+    text:  m.text ,
+    rich_text:  m.rich_text ,
+    media_count:  int(m.media_count) ,
+    shared_to:  int(m.shared_to) ,
+    disable_comment:  int(m.disable_comment) ,
+    source:  int(m.source) ,
+    has_tag:  int(m.has_tag) ,
+    seq:  int(m.seq) ,
+    comments_count:  int(m.comments_count) ,
+    likes_count:  int(m.likes_count) ,
+    views_count:  int(m.views_count) ,
+    edited_time:  int(m.edited_time) ,
+    created_time:  int(m.created_time) ,
+    re_shared_post_id:  int(m.re_shared_post_id) ,
 }
 return r
 }
@@ -7427,6 +8084,7 @@ return r
 func(m *PB_MessageFileView)ToFlat() *PB_MessageFileView_Flat {
 r := &PB_MessageFileView_Flat{
     MessageFileId:  int(m.MessageFileId) ,
+    AccessHash:  int(m.AccessHash) ,
     FileTypeEnum:  int(m.FileTypeEnum) ,
     Size:  int(m.Size) ,
     Width:  int(m.Width) ,
@@ -8403,6 +9061,32 @@ r := &PB_Post{
 return r
 }
 
+func(m *PB_PostCopy_Flat)ToPB() *PB_PostCopy {
+r := &PB_PostCopy{
+    post_id:  int64(m.post_id) ,
+    user_id:  int32(m.user_id) ,
+    post_type_enum:  int32(m.post_type_enum) ,
+    post_category_enum:  int32(m.post_category_enum) ,
+    media_id:  int64(m.media_id) ,
+    post_key:  m.post_key ,
+    text:  m.text ,
+    rich_text:  m.rich_text ,
+    media_count:  int32(m.media_count) ,
+    shared_to:  int32(m.shared_to) ,
+    disable_comment:  int32(m.disable_comment) ,
+    source:  int32(m.source) ,
+    has_tag:  int32(m.has_tag) ,
+    seq:  int32(m.seq) ,
+    comments_count:  int32(m.comments_count) ,
+    likes_count:  int32(m.likes_count) ,
+    views_count:  int32(m.views_count) ,
+    edited_time:  int32(m.edited_time) ,
+    created_time:  int32(m.created_time) ,
+    re_shared_post_id:  int64(m.re_shared_post_id) ,
+}
+return r
+}
+
 func(m *PB_PostCount_Flat)ToPB() *PB_PostCount {
 r := &PB_PostCount{
     PostId:  int64(m.PostId) ,
@@ -8497,17 +9181,12 @@ return r
 
 func(m *PB_Session_Flat)ToPB() *PB_Session {
 r := &PB_Session{
+    Id:  int64(m.Id) ,
     SessionUuid:  m.SessionUuid ,
     UserId:  int32(m.UserId) ,
-    ClientUuid:  m.ClientUuid ,
-    DeviceUuid:  m.DeviceUuid ,
-    LastActivityTime:  int32(m.LastActivityTime) ,
     LastIpAddress:  m.LastIpAddress ,
-    LastWifiMacAddress:  m.LastWifiMacAddress ,
-    LastNetworkType:  m.LastNetworkType ,
-    LastNetworkTypeEnum:  int32(m.LastNetworkTypeEnum) ,
     AppVersion:  int32(m.AppVersion) ,
-    UpdatedTime:  int32(m.UpdatedTime) ,
+    ActiveTime:  int32(m.ActiveTime) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -8750,8 +9429,12 @@ return r
 func(m *PB_FileMsg_Flat)ToPB() *PB_FileMsg {
 r := &PB_FileMsg{
     Id:  int64(m.Id) ,
+    AccessHash:  int32(m.AccessHash) ,
     FileType:  int32(m.FileType) ,
+    Width:  int32(m.Width) ,
+    Height:  int32(m.Height) ,
     Extension:  m.Extension ,
+    UserId:  int32(m.UserId) ,
     DataThumb:  m.DataThumb ,
     Data:  m.Data ,
 }
@@ -8761,8 +9444,12 @@ return r
 func(m *PB_FilePost_Flat)ToPB() *PB_FilePost {
 r := &PB_FilePost{
     Id:  int64(m.Id) ,
+    AccessHash:  int32(m.AccessHash) ,
     FileType:  int32(m.FileType) ,
+    Width:  int32(m.Width) ,
+    Height:  int32(m.Height) ,
     Extension:  m.Extension ,
+    UserId:  int32(m.UserId) ,
     DataThumb:  m.DataThumb ,
     Data:  m.Data ,
 }
@@ -8811,17 +9498,27 @@ return r
 
 func(m *PB_ChatSync2_Flat)ToPB() *PB_ChatSync2 {
 r := &PB_ChatSync2{
-    SyncId:  int64(m.SyncId) ,
-    ToUserId:  int32(m.ToUserId) ,
-    ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int64(m.FromHighMessageId) ,
-    ToLowMessageId:  int64(m.ToLowMessageId) ,
-    MessageId:  int64(m.MessageId) ,
-    MessagePb:  m.MessagePb ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int32(m.CreatedTime) ,
+    sync_id:  int64(m.sync_id) ,
+    to_user_id:  int32(m.to_user_id) ,
+    chat_sync_type_id:  int32(m.chat_sync_type_id) ,
+    room_key:  m.room_key ,
+    chat_key:  m.chat_key ,
+    from_high_message_id:  int64(m.from_high_message_id) ,
+    to_low_message_id:  int64(m.to_low_message_id) ,
+    message_id:  int64(m.message_id) ,
+    message_pb:  m.message_pb ,
+    message_json:  m.message_json ,
+    created_time:  int32(m.created_time) ,
+}
+return r
+}
+
+func(m *PB_LowerTable_Flat)ToPB() *PB_LowerTable {
+r := &PB_LowerTable{
+    id:  int32(m.id) ,
+    text:  m.text ,
+    time_stamp:  int32(m.time_stamp) ,
+    any_thing_more_:  int32(m.any_thing_more_) ,
 }
 return r
 }
@@ -8848,17 +9545,114 @@ return r
 
 func(m *PB_PushChat2_Flat)ToPB() *PB_PushChat2 {
 r := &PB_PushChat2{
-    SyncId:  int64(m.SyncId) ,
-    ToUserId:  int32(m.ToUserId) ,
-    ChatSyncTypeId:  int32(m.ChatSyncTypeId) ,
-    RoomKey:  m.RoomKey ,
-    ChatKey:  m.ChatKey ,
-    FromHighMessageId:  int64(m.FromHighMessageId) ,
-    ToLowMessageId:  int64(m.ToLowMessageId) ,
-    MessageId:  int64(m.MessageId) ,
-    MessagePb:  m.MessagePb ,
-    MessageJson:  m.MessageJson ,
-    CreatedTime:  int32(m.CreatedTime) ,
+    sync_id:  int64(m.sync_id) ,
+    to_user_id:  int32(m.to_user_id) ,
+    chat_sync_type_id:  int32(m.chat_sync_type_id) ,
+    room_key:  m.room_key ,
+    chat_key:  m.chat_key ,
+    from_high_message_id:  int64(m.from_high_message_id) ,
+    to_low_message_id:  int64(m.to_low_message_id) ,
+    message_id:  int64(m.message_id) ,
+    message_pb:  m.message_pb ,
+    message_json:  m.message_json ,
+    created_time:  int32(m.created_time) ,
+}
+return r
+}
+
+func(m *PB_HTTPRPCLog_Flat)ToPB() *PB_HTTPRPCLog {
+r := &PB_HTTPRPCLog{
+    Id:  int32(m.Id) ,
+    Time:  m.Time ,
+    MethodFull:  m.MethodFull ,
+    MethodParent:  m.MethodParent ,
+    UserId:  int32(m.UserId) ,
+    SessionId:  m.SessionId ,
+    StatusCode:  int32(m.StatusCode) ,
+    InputSize:  int32(m.InputSize) ,
+    OutputSize:  int32(m.OutputSize) ,
+    ReqestJson:  m.ReqestJson ,
+    ResponseJson:  m.ResponseJson ,
+    ReqestParamJson:  m.ReqestParamJson ,
+    ResponseMsgJson:  m.ResponseMsgJson ,
+}
+return r
+}
+
+func(m *PB_MetricLog_Flat)ToPB() *PB_MetricLog {
+r := &PB_MetricLog{
+    Id:  int32(m.Id) ,
+    InstanceId:  int32(m.InstanceId) ,
+    StartFrom:  m.StartFrom ,
+    EndTo:  m.EndTo ,
+    StartTime:  int32(m.StartTime) ,
+    Duration:  m.Duration ,
+    MetericsJson:  m.MetericsJson ,
+}
+return r
+}
+
+func(m *PB_XfileServiceInfoLog_Flat)ToPB() *PB_XfileServiceInfoLog {
+r := &PB_XfileServiceInfoLog{
+    Id:  int64(m.Id) ,
+    InstanceId:  int32(m.InstanceId) ,
+    Url:  m.Url ,
+    CreatedTime:  m.CreatedTime ,
+}
+return r
+}
+
+func(m *PB_XfileServiceMetricLog_Flat)ToPB() *PB_XfileServiceMetricLog {
+r := &PB_XfileServiceMetricLog{
+    Id:  int64(m.Id) ,
+    InstanceId:  int32(m.InstanceId) ,
+    MetricJson:  m.MetricJson ,
+}
+return r
+}
+
+func(m *PB_XfileServiceRequestLog_Flat)ToPB() *PB_XfileServiceRequestLog {
+r := &PB_XfileServiceRequestLog{
+    Id:  int64(m.Id) ,
+    LocalSeq:  int32(m.LocalSeq) ,
+    InstanceId:  int32(m.InstanceId) ,
+    Url:  m.Url ,
+    HttpCode:  int32(m.HttpCode) ,
+    CreatedTime:  m.CreatedTime ,
+}
+return r
+}
+
+func(m *PB_Account_Flat)ToPB() *PB_Account {
+r := &PB_Account{
+    id:  int32(m.id) ,
+    balance:  m.balance ,
+}
+return r
+}
+
+func(m *PB_PostCdb_Flat)ToPB() *PB_PostCdb {
+r := &PB_PostCdb{
+    post_id:  int32(m.post_id) ,
+    user_id:  int32(m.user_id) ,
+    post_type_enum:  int32(m.post_type_enum) ,
+    post_category_enum:  int32(m.post_category_enum) ,
+    media_id:  int32(m.media_id) ,
+    post_key:  m.post_key ,
+    text:  m.text ,
+    rich_text:  m.rich_text ,
+    media_count:  int32(m.media_count) ,
+    shared_to:  int32(m.shared_to) ,
+    disable_comment:  int32(m.disable_comment) ,
+    source:  int32(m.source) ,
+    has_tag:  int32(m.has_tag) ,
+    seq:  int32(m.seq) ,
+    comments_count:  int32(m.comments_count) ,
+    likes_count:  int32(m.likes_count) ,
+    views_count:  int32(m.views_count) ,
+    edited_time:  int32(m.edited_time) ,
+    created_time:  int32(m.created_time) ,
+    re_shared_post_id:  int32(m.re_shared_post_id) ,
 }
 return r
 }
@@ -9095,6 +9889,7 @@ return r
 func(m *PB_MessageFileView_Flat)ToPB() *PB_MessageFileView {
 r := &PB_MessageFileView{
     MessageFileId:  int64(m.MessageFileId) ,
+    AccessHash:  int32(m.AccessHash) ,
     FileTypeEnum:  int32(m.FileTypeEnum) ,
     Size:  int32(m.Size) ,
     Width:  int32(m.Width) ,
@@ -9843,6 +10638,30 @@ var PB_Post__FOlD = &PB_Post{
 }
 
 
+var PB_PostCopy__FOlD = &PB_PostCopy{
+        post_id:  0 ,
+        user_id:  0 ,
+        post_type_enum:  0 ,
+        post_category_enum:  0 ,
+        media_id:  0 ,
+        post_key:  "" ,
+        text:  "" ,
+        rich_text:  "" ,
+        media_count:  0 ,
+        shared_to:  0 ,
+        disable_comment:  0 ,
+        source:  0 ,
+        has_tag:  0 ,
+        seq:  0 ,
+        comments_count:  0 ,
+        likes_count:  0 ,
+        views_count:  0 ,
+        edited_time:  0 ,
+        created_time:  0 ,
+        re_shared_post_id:  0 ,
+}
+
+
 var PB_PostCount__FOlD = &PB_PostCount{
         PostId:  0 ,
         ViewsCount:  0 ,
@@ -9920,17 +10739,12 @@ var PB_SearchClicked__FOlD = &PB_SearchClicked{
 
 
 var PB_Session__FOlD = &PB_Session{
+        Id:  0 ,
         SessionUuid:  "" ,
         UserId:  0 ,
-        ClientUuid:  "" ,
-        DeviceUuid:  "" ,
-        LastActivityTime:  0 ,
         LastIpAddress:  "" ,
-        LastWifiMacAddress:  "" ,
-        LastNetworkType:  "" ,
-        LastNetworkTypeEnum:  0 ,
         AppVersion:  0 ,
-        UpdatedTime:  0 ,
+        ActiveTime:  0 ,
         CreatedTime:  0 ,
 }
 
@@ -10143,8 +10957,12 @@ var PB_GroupMessage__FOlD = &PB_GroupMessage{
 
 var PB_FileMsg__FOlD = &PB_FileMsg{
         Id:  0 ,
+        AccessHash:  0 ,
         FileType:  0 ,
+        Width:  0 ,
+        Height:  0 ,
         Extension:  "" ,
+        UserId:  0 ,
         DataThumb:  []byte{} ,
         Data:  []byte{} ,
 }
@@ -10152,8 +10970,12 @@ var PB_FileMsg__FOlD = &PB_FileMsg{
 
 var PB_FilePost__FOlD = &PB_FilePost{
         Id:  0 ,
+        AccessHash:  0 ,
         FileType:  0 ,
+        Width:  0 ,
+        Height:  0 ,
         Extension:  "" ,
+        UserId:  0 ,
         DataThumb:  []byte{} ,
         Data:  []byte{} ,
 }
@@ -10192,17 +11014,25 @@ var PB_SuggestedUser__FOlD = &PB_SuggestedUser{
 
 
 var PB_ChatSync2__FOlD = &PB_ChatSync2{
-        SyncId:  0 ,
-        ToUserId:  0 ,
-        ChatSyncTypeId:  0 ,
-        RoomKey:  "" ,
-        ChatKey:  "" ,
-        FromHighMessageId:  0 ,
-        ToLowMessageId:  0 ,
-        MessageId:  0 ,
-        MessagePb:  []byte{} ,
-        MessageJson:  "" ,
-        CreatedTime:  0 ,
+        sync_id:  0 ,
+        to_user_id:  0 ,
+        chat_sync_type_id:  0 ,
+        room_key:  "" ,
+        chat_key:  "" ,
+        from_high_message_id:  0 ,
+        to_low_message_id:  0 ,
+        message_id:  0 ,
+        message_pb:  []byte{} ,
+        message_json:  "" ,
+        created_time:  0 ,
+}
+
+
+var PB_LowerTable__FOlD = &PB_LowerTable{
+        id:  0 ,
+        text:  "" ,
+        time_stamp:  0 ,
+        any_thing_more_:  0 ,
 }
 
 
@@ -10225,17 +11055,100 @@ var PB_PushChat__FOlD = &PB_PushChat{
 
 
 var PB_PushChat2__FOlD = &PB_PushChat2{
-        SyncId:  0 ,
-        ToUserId:  0 ,
-        ChatSyncTypeId:  0 ,
-        RoomKey:  "" ,
-        ChatKey:  "" ,
-        FromHighMessageId:  0 ,
-        ToLowMessageId:  0 ,
-        MessageId:  0 ,
-        MessagePb:  []byte{} ,
-        MessageJson:  "" ,
-        CreatedTime:  0 ,
+        sync_id:  0 ,
+        to_user_id:  0 ,
+        chat_sync_type_id:  0 ,
+        room_key:  "" ,
+        chat_key:  "" ,
+        from_high_message_id:  0 ,
+        to_low_message_id:  0 ,
+        message_id:  0 ,
+        message_pb:  []byte{} ,
+        message_json:  "" ,
+        created_time:  0 ,
+}
+
+
+var PB_HTTPRPCLog__FOlD = &PB_HTTPRPCLog{
+        Id:  0 ,
+        Time:  "" ,
+        MethodFull:  "" ,
+        MethodParent:  "" ,
+        UserId:  0 ,
+        SessionId:  "" ,
+        StatusCode:  0 ,
+        InputSize:  0 ,
+        OutputSize:  0 ,
+        ReqestJson:  "" ,
+        ResponseJson:  "" ,
+        ReqestParamJson:  "" ,
+        ResponseMsgJson:  "" ,
+}
+
+
+var PB_MetricLog__FOlD = &PB_MetricLog{
+        Id:  0 ,
+        InstanceId:  0 ,
+        StartFrom:  "" ,
+        EndTo:  "" ,
+        StartTime:  0 ,
+        Duration:  "" ,
+        MetericsJson:  "" ,
+}
+
+
+var PB_XfileServiceInfoLog__FOlD = &PB_XfileServiceInfoLog{
+        Id:  0 ,
+        InstanceId:  0 ,
+        Url:  "" ,
+        CreatedTime:  "" ,
+}
+
+
+var PB_XfileServiceMetricLog__FOlD = &PB_XfileServiceMetricLog{
+        Id:  0 ,
+        InstanceId:  0 ,
+        MetricJson:  "" ,
+}
+
+
+var PB_XfileServiceRequestLog__FOlD = &PB_XfileServiceRequestLog{
+        Id:  0 ,
+        LocalSeq:  0 ,
+        InstanceId:  0 ,
+        Url:  "" ,
+        HttpCode:  0 ,
+        CreatedTime:  "" ,
+}
+
+
+var PB_Account__FOlD = &PB_Account{
+        id:  0 ,
+        balance:  0.0 ,
+}
+
+
+var PB_PostCdb__FOlD = &PB_PostCdb{
+        post_id:  0 ,
+        user_id:  0 ,
+        post_type_enum:  0 ,
+        post_category_enum:  0 ,
+        media_id:  0 ,
+        post_key:  "" ,
+        text:  "" ,
+        rich_text:  "" ,
+        media_count:  0 ,
+        shared_to:  0 ,
+        disable_comment:  0 ,
+        source:  0 ,
+        has_tag:  0 ,
+        seq:  0 ,
+        comments_count:  0 ,
+        likes_count:  0 ,
+        views_count:  0 ,
+        edited_time:  0 ,
+        created_time:  0 ,
+        re_shared_post_id:  0 ,
 }
 
 
@@ -10438,6 +11351,7 @@ var PB_MessageView__FOlD = &PB_MessageView{
 
 var PB_MessageFileView__FOlD = &PB_MessageFileView{
         MessageFileId:  0 ,
+        AccessHash:  0 ,
         FileTypeEnum:  0 ,
         Size:  0 ,
         Width:  0 ,

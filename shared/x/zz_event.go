@@ -3503,7 +3503,7 @@ func (d *__Event_Deleter) ChatKey_Eq(val string) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3514,7 +3514,7 @@ func (d *__Event_Deleter) ChatKey_NotEq(val string) *__Event_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3565,7 +3565,7 @@ func (d *__Event_Updater) ChatKey_Eq(val string) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3576,7 +3576,7 @@ func (d *__Event_Updater) ChatKey_NotEq(val string) *__Event_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3627,7 +3627,7 @@ func (d *__Event_Selector) ChatKey_Eq(val string) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3638,7 +3638,7 @@ func (d *__Event_Selector) ChatKey_NotEq(val string) *__Event_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3868,7 +3868,7 @@ func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
 
 //string
 func (u *__Event_Updater) ChatKey(newVal string) *__Event_Updater {
-	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	up := updateCol{"ChatKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u

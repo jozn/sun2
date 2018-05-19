@@ -66,6 +66,7 @@ func MySqlEscape(txt string) string {
 }
 
 func SqlManyDollars(colSize, repeat int, isMysql bool) string {
+    //isMysql = true
 	if isMysql {
 		s := strings.Repeat("?,", colSize)
 		s = "(" + s[0:len(s)-1] + "),"

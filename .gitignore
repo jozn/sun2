@@ -50,3 +50,5 @@ graphs/
 projectFilesBackup/
 /build/
 torch*
+
+scripts/loc_log_/

@@ -293,6 +293,30 @@ func OnPost_LoadMany(rows []*Post) {
 	}
 }
 
+//PostCopy Events
+
+func OnPostCopy_AfterInsert(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_AfterUpdate(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_AfterDelete(row *PostCopy) {
+	RowCache.Delete("PostCopy:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostCopy_LoadOne(row *PostCopy) {
+	RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCopy_LoadMany(rows []*PostCopy) {
+	for _, row := range rows {
+		RowCache.Set("PostCopy:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+	}
+}
+
 //PostCount Events
 
 func OnPostCount_AfterInsert(row *PostCount) {
@@ -1226,5 +1250,29 @@ func OnAccount_LoadOne(row *Account) {
 func OnAccount_LoadMany(rows []*Account) {
 	for _, row := range rows {
 		RowCache.Set("Account:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
+//PostCdb Events
+
+func OnPostCdb_AfterInsert(row *PostCdb) {
+	RowCache.Set("PostCdb:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCdb_AfterUpdate(row *PostCdb) {
+	RowCache.Set("PostCdb:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCdb_AfterDelete(row *PostCdb) {
+	RowCache.Delete("PostCdb:" + strconv.Itoa(row.PostId))
+}
+
+func OnPostCdb_LoadOne(row *PostCdb) {
+	RowCache.Set("PostCdb:"+strconv.Itoa(row.PostId), row, time.Hour*0)
+}
+
+func OnPostCdb_LoadMany(rows []*PostCdb) {
+	for _, row := range rows {
+		RowCache.Set("PostCdb:"+strconv.Itoa(row.PostId), row, time.Hour*0)
 	}
 }

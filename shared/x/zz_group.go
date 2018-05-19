@@ -2555,7 +2555,7 @@ func (d *__Group_Deleter) GroupName_Eq(val string) *__Group_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName = " + u.nextDollars
+	w.condition = " GroupName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2566,7 +2566,7 @@ func (d *__Group_Deleter) GroupName_NotEq(val string) *__Group_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName != " + u.nextDollars
+	w.condition = " GroupName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2617,7 +2617,7 @@ func (d *__Group_Updater) GroupName_Eq(val string) *__Group_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName = " + u.nextDollars
+	w.condition = " GroupName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2628,7 +2628,7 @@ func (d *__Group_Updater) GroupName_NotEq(val string) *__Group_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName != " + u.nextDollars
+	w.condition = " GroupName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2679,7 +2679,7 @@ func (d *__Group_Selector) GroupName_Eq(val string) *__Group_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName = " + u.nextDollars
+	w.condition = " GroupName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2690,7 +2690,7 @@ func (d *__Group_Selector) GroupName_NotEq(val string) *__Group_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupName != " + u.nextDollars
+	w.condition = " GroupName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2731,7 +2731,7 @@ func (u *__Group_Updater) GroupId_Increment(count int) *__Group_Updater {
 
 //string
 func (u *__Group_Updater) GroupName(newVal string) *__Group_Updater {
-	up := updateCol{"GroupName = " + u.nextDollar(), count}
+	up := updateCol{"GroupName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" GroupName = "+ u.nextDollar()] = newVal
 	return u

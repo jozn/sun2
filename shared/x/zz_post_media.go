@@ -3822,7 +3822,7 @@ func (d *__PostMedia_Deleter) Extension_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3833,7 +3833,7 @@ func (d *__PostMedia_Deleter) Extension_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3882,7 +3882,7 @@ func (d *__PostMedia_Deleter) Md5Hash_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = " + u.nextDollars
+	w.condition = " Md5Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3893,7 +3893,7 @@ func (d *__PostMedia_Deleter) Md5Hash_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != " + u.nextDollars
+	w.condition = " Md5Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3942,7 +3942,7 @@ func (d *__PostMedia_Deleter) Color_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = " + u.nextDollars
+	w.condition = " Color = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3953,7 +3953,7 @@ func (d *__PostMedia_Deleter) Color_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != " + u.nextDollars
+	w.condition = " Color != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4002,7 +4002,7 @@ func (d *__PostMedia_Deleter) Extra_Eq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = " + u.nextDollars
+	w.condition = " Extra = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4013,7 +4013,7 @@ func (d *__PostMedia_Deleter) Extra_NotEq(val string) *__PostMedia_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != " + u.nextDollars
+	w.condition = " Extra != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4064,7 +4064,7 @@ func (d *__PostMedia_Updater) Extension_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4075,7 +4075,7 @@ func (d *__PostMedia_Updater) Extension_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4124,7 +4124,7 @@ func (d *__PostMedia_Updater) Md5Hash_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = " + u.nextDollars
+	w.condition = " Md5Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4135,7 +4135,7 @@ func (d *__PostMedia_Updater) Md5Hash_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != " + u.nextDollars
+	w.condition = " Md5Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4184,7 +4184,7 @@ func (d *__PostMedia_Updater) Color_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = " + u.nextDollars
+	w.condition = " Color = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4195,7 +4195,7 @@ func (d *__PostMedia_Updater) Color_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != " + u.nextDollars
+	w.condition = " Color != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4244,7 +4244,7 @@ func (d *__PostMedia_Updater) Extra_Eq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = " + u.nextDollars
+	w.condition = " Extra = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4255,7 +4255,7 @@ func (d *__PostMedia_Updater) Extra_NotEq(val string) *__PostMedia_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != " + u.nextDollars
+	w.condition = " Extra != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4306,7 +4306,7 @@ func (d *__PostMedia_Selector) Extension_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4317,7 +4317,7 @@ func (d *__PostMedia_Selector) Extension_NotEq(val string) *__PostMedia_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4366,7 +4366,7 @@ func (d *__PostMedia_Selector) Md5Hash_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash = " + u.nextDollars
+	w.condition = " Md5Hash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4377,7 +4377,7 @@ func (d *__PostMedia_Selector) Md5Hash_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Md5Hash != " + u.nextDollars
+	w.condition = " Md5Hash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4426,7 +4426,7 @@ func (d *__PostMedia_Selector) Color_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color = " + u.nextDollars
+	w.condition = " Color = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4437,7 +4437,7 @@ func (d *__PostMedia_Selector) Color_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Color != " + u.nextDollars
+	w.condition = " Color != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4486,7 +4486,7 @@ func (d *__PostMedia_Selector) Extra_Eq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra = " + u.nextDollars
+	w.condition = " Extra = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4497,7 +4497,7 @@ func (d *__PostMedia_Selector) Extra_NotEq(val string) *__PostMedia_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extra != " + u.nextDollars
+	w.condition = " Extra != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4754,7 +4754,7 @@ func (u *__PostMedia_Updater) Duration_Increment(count int) *__PostMedia_Updater
 
 //string
 func (u *__PostMedia_Updater) Extension(newVal string) *__PostMedia_Updater {
-	up := updateCol{"Extension = " + u.nextDollar(), count}
+	up := updateCol{"Extension = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Extension = "+ u.nextDollar()] = newVal
 	return u
@@ -4764,7 +4764,7 @@ func (u *__PostMedia_Updater) Extension(newVal string) *__PostMedia_Updater {
 
 //string
 func (u *__PostMedia_Updater) Md5Hash(newVal string) *__PostMedia_Updater {
-	up := updateCol{"Md5Hash = " + u.nextDollar(), count}
+	up := updateCol{"Md5Hash = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Md5Hash = "+ u.nextDollar()] = newVal
 	return u
@@ -4774,7 +4774,7 @@ func (u *__PostMedia_Updater) Md5Hash(newVal string) *__PostMedia_Updater {
 
 //string
 func (u *__PostMedia_Updater) Color(newVal string) *__PostMedia_Updater {
-	up := updateCol{"Color = " + u.nextDollar(), count}
+	up := updateCol{"Color = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Color = "+ u.nextDollar()] = newVal
 	return u
@@ -4838,7 +4838,7 @@ func (u *__PostMedia_Updater) ViewCount_Increment(count int) *__PostMedia_Update
 
 //string
 func (u *__PostMedia_Updater) Extra(newVal string) *__PostMedia_Updater {
-	up := updateCol{"Extra = " + u.nextDollar(), count}
+	up := updateCol{"Extra = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Extra = "+ u.nextDollar()] = newVal
 	return u

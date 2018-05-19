@@ -347,6 +347,35 @@ $$
 
 
 delimiter ;
+################################ PostCopy ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS post_copy_OnCreateLogger $$
+CREATE TRIGGER post_copy_OnCreateLogger AFTER INSERT ON post_copy
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","INSERT",NEW.post_id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger $$
+CREATE TRIGGER post_copy_OnUpdateLogger AFTER UPDATE ON post_copy
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","UPDATE",NEW.post_id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger $$
+CREATE TRIGGER post_copy_OnDeleteLogger AFTER DELETE ON post_copy
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","DELETE",OLD.post_id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 ################################ PostCount ######################################
 
 /* #### delimiter $$
@@ -1478,6 +1507,35 @@ $$
 
 
  #### delimiter ;*/
+################################ PostCdb ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS post_cdb_OnCreateLogger $$
+CREATE TRIGGER post_cdb_OnCreateLogger AFTER INSERT ON post_cdb
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","INSERT",NEW.post_id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_cdb_OnUpdateLogger $$
+CREATE TRIGGER post_cdb_OnUpdateLogger AFTER UPDATE ON post_cdb
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","UPDATE",NEW.post_id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS post_cdb_OnDeleteLogger $$
+CREATE TRIGGER post_cdb_OnDeleteLogger AFTER DELETE ON post_cdb
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","DELETE",OLD.post_id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
 
 ###############################################################################################
 ################################## Delete of all triggers #####################################
@@ -1531,6 +1589,10 @@ DROP TRIGGER IF EXISTS phone_contacts_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS post_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_OnDeleteLogger ;
+### PostCopy ##
+DROP TRIGGER IF EXISTS post_copy_OnCreateLogger ;
+DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger ;
 ### PostCount ##
 DROP TRIGGER IF EXISTS post_count_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_count_OnUpdateLogger ;
@@ -1687,4 +1749,8 @@ DROP TRIGGER IF EXISTS xfile_service_request_log_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS accounts_OnCreateLogger ;
 DROP TRIGGER IF EXISTS accounts_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS accounts_OnDeleteLogger ;
+### PostCdb ##
+DROP TRIGGER IF EXISTS post_cdb_OnCreateLogger ;
+DROP TRIGGER IF EXISTS post_cdb_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS post_cdb_OnDeleteLogger ;
 */

@@ -296,6 +296,55 @@ type Post struct {
 	CreatedTime: 0,
 	ReSharedPostId: 0,
 */
+// post_copy 'PostCopy'.
+type PostCopy struct {
+	PostId           int    `db:"post_id"`
+	UserId           int    `db:"user_id"`
+	PostTypeEnum     int    `db:"post_type_enum"`
+	PostCategoryEnum int    `db:"post_category_enum"`
+	MediaId          int    `db:"media_id"`
+	PostKey          string `db:"post_key"`
+	Text             string `db:"text"`
+	RichText         string `db:"rich_text"`
+	MediaCount       int    `db:"media_count"`
+	SharedTo         int    `db:"shared_to"`
+	DisableComment   int    `db:"disable_comment"`
+	Source           int    `db:"source"`
+	HasTag           int    `db:"has_tag"`
+	Seq              int    `db:"seq"`
+	CommentsCount    int    `db:"comments_count"`
+	LikesCount       int    `db:"likes_count"`
+	ViewsCount       int    `db:"views_count"`
+	EditedTime       int    `db:"edited_time"`
+	CreatedTime      int    `db:"created_time"`
+	ReSharedPostId   int    `db:"re_shared_post_id"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostCopy {
+	PostId: 0,
+	UserId: 0,
+	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
+	MediaId: 0,
+	PostKey: "",
+	Text: "",
+	RichText: "",
+	MediaCount: 0,
+	SharedTo: 0,
+	DisableComment: 0,
+	Source: 0,
+	HasTag: 0,
+	Seq: 0,
+	CommentsCount: 0,
+	LikesCount: 0,
+	ViewsCount: 0,
+	EditedTime: 0,
+	CreatedTime: 0,
+	ReSharedPostId: 0,
+*/
 // post_count 'PostCount'.
 type PostCount struct {
 	PostId     int `db:"PostId"`
@@ -1267,6 +1316,55 @@ type Account struct {
 	Id: 0,
 	Balance: float64(0),
 */
+// post_cdb 'PostCdb'.
+type PostCdb struct {
+	PostId           int    `db:"post_id"`
+	UserId           int    `db:"user_id"`
+	PostTypeEnum     int    `db:"post_type_enum"`
+	PostCategoryEnum int    `db:"post_category_enum"`
+	MediaId          int    `db:"media_id"`
+	PostKey          string `db:"post_key"`
+	Text             string `db:"text"`
+	RichText         string `db:"rich_text"`
+	MediaCount       int    `db:"media_count"`
+	SharedTo         int    `db:"shared_to"`
+	DisableComment   int    `db:"disable_comment"`
+	Source           int    `db:"source"`
+	HasTag           int    `db:"has_tag"`
+	Seq              int    `db:"seq"`
+	CommentsCount    int    `db:"comments_count"`
+	LikesCount       int    `db:"likes_count"`
+	ViewsCount       int    `db:"views_count"`
+	EditedTime       int    `db:"edited_time"`
+	CreatedTime      int    `db:"created_time"`
+	ReSharedPostId   int    `db:"re_shared_post_id"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.PostCdb {
+	PostId: 0,
+	UserId: 0,
+	PostTypeEnum: 0,
+	PostCategoryEnum: 0,
+	MediaId: 0,
+	PostKey: "",
+	Text: "",
+	RichText: "",
+	MediaCount: 0,
+	SharedTo: 0,
+	DisableComment: 0,
+	Source: 0,
+	HasTag: 0,
+	Seq: 0,
+	CommentsCount: 0,
+	LikesCount: 0,
+	ViewsCount: 0,
+	EditedTime: 0,
+	CreatedTime: 0,
+	ReSharedPostId: 0,
+*/
 
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
@@ -1282,6 +1380,7 @@ type LogTableSql struct {
 	NotifyRemoved              bool
 	PhoneContact               bool
 	Post                       bool
+	PostCopy                   bool
 	PostCount                  bool
 	PostDeleted                bool
 	PostKey                    bool
@@ -1321,6 +1420,7 @@ type LogTableSql struct {
 	XfileServiceMetricLog      bool
 	XfileServiceRequestLog     bool
 	Account                    bool
+	PostCdb                    bool
 }
 
 var LogTableSqlReq = LogTableSql{
@@ -1337,6 +1437,7 @@ var LogTableSqlReq = LogTableSql{
 	NotifyRemoved:          true,
 	PhoneContact:           true,
 	Post:                   true,
+	PostCopy:               true,
 	PostCount:              true,
 	PostDeleted:            true,
 	PostKey:                true,
@@ -1376,4 +1477,5 @@ var LogTableSqlReq = LogTableSql{
 	XfileServiceMetricLog:  true,
 	XfileServiceRequestLog: true,
 	Account:                true,
+	PostCdb:                true,
 }

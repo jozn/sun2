@@ -661,7 +661,7 @@ func (d *__ChatLastMessage_Deleter) ChatKey_Eq(val string) *__ChatLastMessage_De
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -672,7 +672,7 @@ func (d *__ChatLastMessage_Deleter) ChatKey_NotEq(val string) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -721,7 +721,7 @@ func (d *__ChatLastMessage_Deleter) LastMsgJson_Eq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = " + u.nextDollars
+	w.condition = " LastMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +732,7 @@ func (d *__ChatLastMessage_Deleter) LastMsgJson_NotEq(val string) *__ChatLastMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != " + u.nextDollars
+	w.condition = " LastMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -783,7 +783,7 @@ func (d *__ChatLastMessage_Updater) ChatKey_Eq(val string) *__ChatLastMessage_Up
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -794,7 +794,7 @@ func (d *__ChatLastMessage_Updater) ChatKey_NotEq(val string) *__ChatLastMessage
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -843,7 +843,7 @@ func (d *__ChatLastMessage_Updater) LastMsgJson_Eq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = " + u.nextDollars
+	w.condition = " LastMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -854,7 +854,7 @@ func (d *__ChatLastMessage_Updater) LastMsgJson_NotEq(val string) *__ChatLastMes
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != " + u.nextDollars
+	w.condition = " LastMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -905,7 +905,7 @@ func (d *__ChatLastMessage_Selector) ChatKey_Eq(val string) *__ChatLastMessage_S
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -916,7 +916,7 @@ func (d *__ChatLastMessage_Selector) ChatKey_NotEq(val string) *__ChatLastMessag
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -965,7 +965,7 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_Eq(val string) *__ChatLastMessa
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson = " + u.nextDollars
+	w.condition = " LastMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -976,7 +976,7 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_NotEq(val string) *__ChatLastMe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgJson != " + u.nextDollars
+	w.condition = " LastMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -990,7 +990,7 @@ func (d *__ChatLastMessage_Selector) LastMsgJson_NotEq(val string) *__ChatLastMe
 
 //string
 func (u *__ChatLastMessage_Updater) ChatKey(newVal string) *__ChatLastMessage_Updater {
-	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	up := updateCol{"ChatKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
@@ -1031,7 +1031,7 @@ func (u *__ChatLastMessage_Updater) ForUserId_Increment(count int) *__ChatLastMe
 
 //string
 func (u *__ChatLastMessage_Updater) LastMsgJson(newVal string) *__ChatLastMessage_Updater {
-	up := updateCol{"LastMsgJson = " + u.nextDollar(), count}
+	up := updateCol{"LastMsgJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" LastMsgJson = "+ u.nextDollar()] = newVal
 	return u

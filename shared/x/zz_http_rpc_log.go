@@ -1953,7 +1953,7 @@ func (d *__HTTPRPCLog_Deleter) Time_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = " + u.nextDollars
+	w.condition = " Time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1964,7 +1964,7 @@ func (d *__HTTPRPCLog_Deleter) Time_NotEq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != " + u.nextDollars
+	w.condition = " Time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2013,7 +2013,7 @@ func (d *__HTTPRPCLog_Deleter) MethodFull_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = " + u.nextDollars
+	w.condition = " MethodFull = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2024,7 +2024,7 @@ func (d *__HTTPRPCLog_Deleter) MethodFull_NotEq(val string) *__HTTPRPCLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != " + u.nextDollars
+	w.condition = " MethodFull != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2073,7 +2073,7 @@ func (d *__HTTPRPCLog_Deleter) MethodParent_Eq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = " + u.nextDollars
+	w.condition = " MethodParent = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2084,7 +2084,7 @@ func (d *__HTTPRPCLog_Deleter) MethodParent_NotEq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != " + u.nextDollars
+	w.condition = " MethodParent != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2133,7 +2133,7 @@ func (d *__HTTPRPCLog_Deleter) SessionId_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = " + u.nextDollars
+	w.condition = " SessionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2144,7 +2144,7 @@ func (d *__HTTPRPCLog_Deleter) SessionId_NotEq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != " + u.nextDollars
+	w.condition = " SessionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2193,7 +2193,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestJson_Eq(val string) *__HTTPRPCLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = " + u.nextDollars
+	w.condition = " ReqestJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2204,7 +2204,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestJson_NotEq(val string) *__HTTPRPCLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != " + u.nextDollars
+	w.condition = " ReqestJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2253,7 +2253,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseJson_Eq(val string) *__HTTPRPCLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = " + u.nextDollars
+	w.condition = " ResponseJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2264,7 +2264,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseJson_NotEq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != " + u.nextDollars
+	w.condition = " ResponseJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2313,7 +2313,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = " + u.nextDollars
+	w.condition = " ReqestParamJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2324,7 +2324,7 @@ func (d *__HTTPRPCLog_Deleter) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != " + u.nextDollars
+	w.condition = " ReqestParamJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2373,7 +2373,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = " + u.nextDollars
+	w.condition = " ResponseMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2384,7 +2384,7 @@ func (d *__HTTPRPCLog_Deleter) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_D
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != " + u.nextDollars
+	w.condition = " ResponseMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2435,7 +2435,7 @@ func (d *__HTTPRPCLog_Updater) Time_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = " + u.nextDollars
+	w.condition = " Time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2446,7 +2446,7 @@ func (d *__HTTPRPCLog_Updater) Time_NotEq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != " + u.nextDollars
+	w.condition = " Time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2495,7 +2495,7 @@ func (d *__HTTPRPCLog_Updater) MethodFull_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = " + u.nextDollars
+	w.condition = " MethodFull = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2506,7 +2506,7 @@ func (d *__HTTPRPCLog_Updater) MethodFull_NotEq(val string) *__HTTPRPCLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != " + u.nextDollars
+	w.condition = " MethodFull != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2555,7 +2555,7 @@ func (d *__HTTPRPCLog_Updater) MethodParent_Eq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = " + u.nextDollars
+	w.condition = " MethodParent = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2566,7 +2566,7 @@ func (d *__HTTPRPCLog_Updater) MethodParent_NotEq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != " + u.nextDollars
+	w.condition = " MethodParent != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2615,7 +2615,7 @@ func (d *__HTTPRPCLog_Updater) SessionId_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = " + u.nextDollars
+	w.condition = " SessionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2626,7 +2626,7 @@ func (d *__HTTPRPCLog_Updater) SessionId_NotEq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != " + u.nextDollars
+	w.condition = " SessionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2675,7 +2675,7 @@ func (d *__HTTPRPCLog_Updater) ReqestJson_Eq(val string) *__HTTPRPCLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = " + u.nextDollars
+	w.condition = " ReqestJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2686,7 +2686,7 @@ func (d *__HTTPRPCLog_Updater) ReqestJson_NotEq(val string) *__HTTPRPCLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != " + u.nextDollars
+	w.condition = " ReqestJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2735,7 +2735,7 @@ func (d *__HTTPRPCLog_Updater) ResponseJson_Eq(val string) *__HTTPRPCLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = " + u.nextDollars
+	w.condition = " ResponseJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2746,7 +2746,7 @@ func (d *__HTTPRPCLog_Updater) ResponseJson_NotEq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != " + u.nextDollars
+	w.condition = " ResponseJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2795,7 +2795,7 @@ func (d *__HTTPRPCLog_Updater) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = " + u.nextDollars
+	w.condition = " ReqestParamJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2806,7 +2806,7 @@ func (d *__HTTPRPCLog_Updater) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != " + u.nextDollars
+	w.condition = " ReqestParamJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2855,7 +2855,7 @@ func (d *__HTTPRPCLog_Updater) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = " + u.nextDollars
+	w.condition = " ResponseMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2866,7 +2866,7 @@ func (d *__HTTPRPCLog_Updater) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_U
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != " + u.nextDollars
+	w.condition = " ResponseMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2917,7 +2917,7 @@ func (d *__HTTPRPCLog_Selector) Time_Eq(val string) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time = " + u.nextDollars
+	w.condition = " Time = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2928,7 +2928,7 @@ func (d *__HTTPRPCLog_Selector) Time_NotEq(val string) *__HTTPRPCLog_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Time != " + u.nextDollars
+	w.condition = " Time != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2977,7 +2977,7 @@ func (d *__HTTPRPCLog_Selector) MethodFull_Eq(val string) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull = " + u.nextDollars
+	w.condition = " MethodFull = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2988,7 +2988,7 @@ func (d *__HTTPRPCLog_Selector) MethodFull_NotEq(val string) *__HTTPRPCLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodFull != " + u.nextDollars
+	w.condition = " MethodFull != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3037,7 +3037,7 @@ func (d *__HTTPRPCLog_Selector) MethodParent_Eq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent = " + u.nextDollars
+	w.condition = " MethodParent = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3048,7 +3048,7 @@ func (d *__HTTPRPCLog_Selector) MethodParent_NotEq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MethodParent != " + u.nextDollars
+	w.condition = " MethodParent != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3097,7 +3097,7 @@ func (d *__HTTPRPCLog_Selector) SessionId_Eq(val string) *__HTTPRPCLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId = " + u.nextDollars
+	w.condition = " SessionId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3108,7 +3108,7 @@ func (d *__HTTPRPCLog_Selector) SessionId_NotEq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SessionId != " + u.nextDollars
+	w.condition = " SessionId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3157,7 +3157,7 @@ func (d *__HTTPRPCLog_Selector) ReqestJson_Eq(val string) *__HTTPRPCLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson = " + u.nextDollars
+	w.condition = " ReqestJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3168,7 +3168,7 @@ func (d *__HTTPRPCLog_Selector) ReqestJson_NotEq(val string) *__HTTPRPCLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestJson != " + u.nextDollars
+	w.condition = " ReqestJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3217,7 +3217,7 @@ func (d *__HTTPRPCLog_Selector) ResponseJson_Eq(val string) *__HTTPRPCLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson = " + u.nextDollars
+	w.condition = " ResponseJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3228,7 +3228,7 @@ func (d *__HTTPRPCLog_Selector) ResponseJson_NotEq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseJson != " + u.nextDollars
+	w.condition = " ResponseJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3277,7 +3277,7 @@ func (d *__HTTPRPCLog_Selector) ReqestParamJson_Eq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson = " + u.nextDollars
+	w.condition = " ReqestParamJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3288,7 +3288,7 @@ func (d *__HTTPRPCLog_Selector) ReqestParamJson_NotEq(val string) *__HTTPRPCLog_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ReqestParamJson != " + u.nextDollars
+	w.condition = " ReqestParamJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3337,7 +3337,7 @@ func (d *__HTTPRPCLog_Selector) ResponseMsgJson_Eq(val string) *__HTTPRPCLog_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson = " + u.nextDollars
+	w.condition = " ResponseMsgJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3348,7 +3348,7 @@ func (d *__HTTPRPCLog_Selector) ResponseMsgJson_NotEq(val string) *__HTTPRPCLog_
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ResponseMsgJson != " + u.nextDollars
+	w.condition = " ResponseMsgJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3389,7 +3389,7 @@ func (u *__HTTPRPCLog_Updater) Id_Increment(count int) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) Time(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"Time = " + u.nextDollar(), count}
+	up := updateCol{"Time = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Time = "+ u.nextDollar()] = newVal
 	return u
@@ -3399,7 +3399,7 @@ func (u *__HTTPRPCLog_Updater) Time(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) MethodFull(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"MethodFull = " + u.nextDollar(), count}
+	up := updateCol{"MethodFull = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MethodFull = "+ u.nextDollar()] = newVal
 	return u
@@ -3409,7 +3409,7 @@ func (u *__HTTPRPCLog_Updater) MethodFull(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) MethodParent(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"MethodParent = " + u.nextDollar(), count}
+	up := updateCol{"MethodParent = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MethodParent = "+ u.nextDollar()] = newVal
 	return u
@@ -3446,7 +3446,7 @@ func (u *__HTTPRPCLog_Updater) UserId_Increment(count int) *__HTTPRPCLog_Updater
 
 //string
 func (u *__HTTPRPCLog_Updater) SessionId(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"SessionId = " + u.nextDollar(), count}
+	up := updateCol{"SessionId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SessionId = "+ u.nextDollar()] = newVal
 	return u
@@ -3537,7 +3537,7 @@ func (u *__HTTPRPCLog_Updater) OutputSize_Increment(count int) *__HTTPRPCLog_Upd
 
 //string
 func (u *__HTTPRPCLog_Updater) ReqestJson(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"ReqestJson = " + u.nextDollar(), count}
+	up := updateCol{"ReqestJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ReqestJson = "+ u.nextDollar()] = newVal
 	return u
@@ -3547,7 +3547,7 @@ func (u *__HTTPRPCLog_Updater) ReqestJson(newVal string) *__HTTPRPCLog_Updater {
 
 //string
 func (u *__HTTPRPCLog_Updater) ResponseJson(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"ResponseJson = " + u.nextDollar(), count}
+	up := updateCol{"ResponseJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ResponseJson = "+ u.nextDollar()] = newVal
 	return u
@@ -3557,7 +3557,7 @@ func (u *__HTTPRPCLog_Updater) ResponseJson(newVal string) *__HTTPRPCLog_Updater
 
 //string
 func (u *__HTTPRPCLog_Updater) ReqestParamJson(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"ReqestParamJson = " + u.nextDollar(), count}
+	up := updateCol{"ReqestParamJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ReqestParamJson = "+ u.nextDollar()] = newVal
 	return u
@@ -3567,7 +3567,7 @@ func (u *__HTTPRPCLog_Updater) ReqestParamJson(newVal string) *__HTTPRPCLog_Upda
 
 //string
 func (u *__HTTPRPCLog_Updater) ResponseMsgJson(newVal string) *__HTTPRPCLog_Updater {
-	up := updateCol{"ResponseMsgJson = " + u.nextDollar(), count}
+	up := updateCol{"ResponseMsgJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ResponseMsgJson = "+ u.nextDollar()] = newVal
 	return u

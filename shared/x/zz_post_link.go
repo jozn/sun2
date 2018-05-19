@@ -659,7 +659,7 @@ func (d *__PostLink_Deleter) LinkUrl_Eq(val string) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = " + u.nextDollars
+	w.condition = " LinkUrl = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -670,7 +670,7 @@ func (d *__PostLink_Deleter) LinkUrl_NotEq(val string) *__PostLink_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != " + u.nextDollars
+	w.condition = " LinkUrl != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -721,7 +721,7 @@ func (d *__PostLink_Updater) LinkUrl_Eq(val string) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = " + u.nextDollars
+	w.condition = " LinkUrl = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -732,7 +732,7 @@ func (d *__PostLink_Updater) LinkUrl_NotEq(val string) *__PostLink_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != " + u.nextDollars
+	w.condition = " LinkUrl != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -783,7 +783,7 @@ func (d *__PostLink_Selector) LinkUrl_Eq(val string) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl = " + u.nextDollars
+	w.condition = " LinkUrl = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -794,7 +794,7 @@ func (d *__PostLink_Selector) LinkUrl_NotEq(val string) *__PostLink_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LinkUrl != " + u.nextDollars
+	w.condition = " LinkUrl != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -835,7 +835,7 @@ func (u *__PostLink_Updater) LinkId_Increment(count int) *__PostLink_Updater {
 
 //string
 func (u *__PostLink_Updater) LinkUrl(newVal string) *__PostLink_Updater {
-	up := updateCol{"LinkUrl = " + u.nextDollar(), count}
+	up := updateCol{"LinkUrl = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" LinkUrl = "+ u.nextDollar()] = newVal
 	return u

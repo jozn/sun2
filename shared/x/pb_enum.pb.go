@@ -134,6 +134,7 @@ It has these top-level messages:
 	PB_NotifyRemoved
 	PB_PhoneContact
 	PB_Post
+	PB_PostCopy
 	PB_PostCount
 	PB_PostDeleted
 	PB_PostKey
@@ -164,8 +165,16 @@ It has these top-level messages:
 	PB_SuggestedTopPost
 	PB_SuggestedUser
 	PB_ChatSync2
+	PB_LowerTable
 	PB_PushChat
 	PB_PushChat2
+	PB_HTTPRPCLog
+	PB_MetricLog
+	PB_XfileServiceInfoLog
+	PB_XfileServiceMetricLog
+	PB_XfileServiceRequestLog
+	PB_Account
+	PB_PostCdb
 	PB_UpdateRoomActionDoing
 	PB_UpdateMessageMeta
 	PB_Updates

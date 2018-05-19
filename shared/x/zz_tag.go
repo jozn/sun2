@@ -1607,7 +1607,7 @@ func (d *__Tag_Deleter) Name_Eq(val string) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = " + u.nextDollars
+	w.condition = " Name = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1618,7 +1618,7 @@ func (d *__Tag_Deleter) Name_NotEq(val string) *__Tag_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != " + u.nextDollars
+	w.condition = " Name != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1669,7 +1669,7 @@ func (d *__Tag_Updater) Name_Eq(val string) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = " + u.nextDollars
+	w.condition = " Name = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1680,7 @@ func (d *__Tag_Updater) Name_NotEq(val string) *__Tag_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != " + u.nextDollars
+	w.condition = " Name != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1731,7 +1731,7 @@ func (d *__Tag_Selector) Name_Eq(val string) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name = " + u.nextDollars
+	w.condition = " Name = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1742,7 +1742,7 @@ func (d *__Tag_Selector) Name_NotEq(val string) *__Tag_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Name != " + u.nextDollars
+	w.condition = " Name != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1783,7 +1783,7 @@ func (u *__Tag_Updater) TagId_Increment(count int) *__Tag_Updater {
 
 //string
 func (u *__Tag_Updater) Name(newVal string) *__Tag_Updater {
-	up := updateCol{"Name = " + u.nextDollar(), count}
+	up := updateCol{"Name = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Name = "+ u.nextDollar()] = newVal
 	return u

@@ -1314,7 +1314,7 @@ func (d *__LowerTable_Deleter) Text_Eq(val string) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = " + u.nextDollars
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1325,7 +1325,7 @@ func (d *__LowerTable_Deleter) Text_NotEq(val string) *__LowerTable_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != " + u.nextDollars
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1376,7 @@ func (d *__LowerTable_Updater) Text_Eq(val string) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = " + u.nextDollars
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1387,7 @@ func (d *__LowerTable_Updater) Text_NotEq(val string) *__LowerTable_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != " + u.nextDollars
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1438,7 +1438,7 @@ func (d *__LowerTable_Selector) Text_Eq(val string) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text = " + u.nextDollars
+	w.condition = " text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1449,7 +1449,7 @@ func (d *__LowerTable_Selector) Text_NotEq(val string) *__LowerTable_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " text != " + u.nextDollars
+	w.condition = " text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1490,7 +1490,7 @@ func (u *__LowerTable_Updater) Id_Increment(count int) *__LowerTable_Updater {
 
 //string
 func (u *__LowerTable_Updater) Text(newVal string) *__LowerTable_Updater {
-	up := updateCol{"text = " + u.nextDollar(), count}
+	up := updateCol{"text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" text = "+ u.nextDollar()] = newVal
 	return u

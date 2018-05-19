@@ -2241,7 +2241,7 @@ func (d *__FileMsg_Deleter) Extension_Eq(val string) *__FileMsg_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2252,7 +2252,7 @@ func (d *__FileMsg_Deleter) Extension_NotEq(val string) *__FileMsg_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2303,7 +2303,7 @@ func (d *__FileMsg_Updater) Extension_Eq(val string) *__FileMsg_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2314,7 +2314,7 @@ func (d *__FileMsg_Updater) Extension_NotEq(val string) *__FileMsg_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2365,7 +2365,7 @@ func (d *__FileMsg_Selector) Extension_Eq(val string) *__FileMsg_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension = " + u.nextDollars
+	w.condition = " Extension = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2376,7 +2376,7 @@ func (d *__FileMsg_Selector) Extension_NotEq(val string) *__FileMsg_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Extension != " + u.nextDollars
+	w.condition = " Extension != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2525,7 +2525,7 @@ func (u *__FileMsg_Updater) Height_Increment(count int) *__FileMsg_Updater {
 
 //string
 func (u *__FileMsg_Updater) Extension(newVal string) *__FileMsg_Updater {
-	up := updateCol{"Extension = " + u.nextDollar(), count}
+	up := updateCol{"Extension = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Extension = "+ u.nextDollar()] = newVal
 	return u

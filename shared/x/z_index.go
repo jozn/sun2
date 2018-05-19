@@ -292,6 +292,30 @@ func PostByPostId(db *sqlx.DB, postId int) (*Post, error) {
 	return &p, nil
 }
 
+// PostCopyByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_copy' as a PostCopy.
+func PostCopyByPostId(db *sqlx.DB, post_id int) (*PostCopy, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.post_copy ` +
+		`WHERE post_id = ?`
+
+	XOLog(sqlstr, post_id)
+	pc := PostCopy{
+		_exists: true,
+	}
+
+	err = db.Get(&pc, sqlstr, post_id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostCopy_LoadOne(&pc)
+
+	return &pc, nil
+}
+
 // PostCountByPostId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_count' as a PostCount.
 func PostCountByPostId(db *sqlx.DB, postId int) (*PostCount, error) {
 	var err error
@@ -1226,4 +1250,28 @@ func AccountById(db *sqlx.DB, id int) (*Account, error) {
 	OnAccount_LoadOne(&a)
 
 	return &a, nil
+}
+
+// PostCdbByPostId Generated from index 'primary' -- retrieves a row from 'suncdb.post_cdb' as a PostCdb.
+func PostCdbByPostId(db *sqlx.DB, post_id int) (*PostCdb, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM suncdb.post_cdb ` +
+		`WHERE post_id = ?`
+
+	XOLog(sqlstr, post_id)
+	pc := PostCdb{
+		_exists: true,
+	}
+
+	err = db.Get(&pc, sqlstr, post_id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnPostCdb_LoadOne(&pc)
+
+	return &pc, nil
 }

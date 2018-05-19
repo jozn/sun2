@@ -1923,7 +1923,7 @@ func (d *__Comment_Deleter) Text_Eq(val string) *__Comment_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1934,7 +1934,7 @@ func (d *__Comment_Deleter) Text_NotEq(val string) *__Comment_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1985,7 +1985,7 @@ func (d *__Comment_Updater) Text_Eq(val string) *__Comment_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1996,7 +1996,7 @@ func (d *__Comment_Updater) Text_NotEq(val string) *__Comment_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2047,7 +2047,7 @@ func (d *__Comment_Selector) Text_Eq(val string) *__Comment_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2058,7 +2058,7 @@ func (d *__Comment_Selector) Text_NotEq(val string) *__Comment_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2153,7 +2153,7 @@ func (u *__Comment_Updater) PostId_Increment(count int) *__Comment_Updater {
 
 //string
 func (u *__Comment_Updater) Text(newVal string) *__Comment_Updater {
-	up := updateCol{"Text = " + u.nextDollar(), count}
+	up := updateCol{"Text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u

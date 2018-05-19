@@ -2262,7 +2262,7 @@ func (d *__GroupMember_Deleter) GroupKey_Eq(val string) *__GroupMember_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey = " + u.nextDollars
+	w.condition = " GroupKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2273,7 +2273,7 @@ func (d *__GroupMember_Deleter) GroupKey_NotEq(val string) *__GroupMember_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey != " + u.nextDollars
+	w.condition = " GroupKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2324,7 +2324,7 @@ func (d *__GroupMember_Updater) GroupKey_Eq(val string) *__GroupMember_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey = " + u.nextDollars
+	w.condition = " GroupKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2335,7 +2335,7 @@ func (d *__GroupMember_Updater) GroupKey_NotEq(val string) *__GroupMember_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey != " + u.nextDollars
+	w.condition = " GroupKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2386,7 +2386,7 @@ func (d *__GroupMember_Selector) GroupKey_Eq(val string) *__GroupMember_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey = " + u.nextDollars
+	w.condition = " GroupKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2397,7 +2397,7 @@ func (d *__GroupMember_Selector) GroupKey_NotEq(val string) *__GroupMember_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupKey != " + u.nextDollars
+	w.condition = " GroupKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2465,7 +2465,7 @@ func (u *__GroupMember_Updater) GroupId_Increment(count int) *__GroupMember_Upda
 
 //string
 func (u *__GroupMember_Updater) GroupKey(newVal string) *__GroupMember_Updater {
-	up := updateCol{"GroupKey = " + u.nextDollar(), count}
+	up := updateCol{"GroupKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" GroupKey = "+ u.nextDollar()] = newVal
 	return u

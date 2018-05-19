@@ -3506,7 +3506,7 @@ func (d *__PushChat_Deleter) RoomKey_Eq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3517,7 +3517,7 @@ func (d *__PushChat_Deleter) RoomKey_NotEq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3566,7 +3566,7 @@ func (d *__PushChat_Deleter) ChatKey_Eq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3577,7 +3577,7 @@ func (d *__PushChat_Deleter) ChatKey_NotEq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3626,7 +3626,7 @@ func (d *__PushChat_Deleter) MessageJson_Eq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = " + u.nextDollars
+	w.condition = " MessageJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3637,7 +3637,7 @@ func (d *__PushChat_Deleter) MessageJson_NotEq(val string) *__PushChat_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != " + u.nextDollars
+	w.condition = " MessageJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3688,7 +3688,7 @@ func (d *__PushChat_Updater) RoomKey_Eq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3699,7 +3699,7 @@ func (d *__PushChat_Updater) RoomKey_NotEq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3748,7 +3748,7 @@ func (d *__PushChat_Updater) ChatKey_Eq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3759,7 +3759,7 @@ func (d *__PushChat_Updater) ChatKey_NotEq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3808,7 +3808,7 @@ func (d *__PushChat_Updater) MessageJson_Eq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = " + u.nextDollars
+	w.condition = " MessageJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3819,7 +3819,7 @@ func (d *__PushChat_Updater) MessageJson_NotEq(val string) *__PushChat_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != " + u.nextDollars
+	w.condition = " MessageJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3870,7 +3870,7 @@ func (d *__PushChat_Selector) RoomKey_Eq(val string) *__PushChat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3881,7 +3881,7 @@ func (d *__PushChat_Selector) RoomKey_NotEq(val string) *__PushChat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3930,7 +3930,7 @@ func (d *__PushChat_Selector) ChatKey_Eq(val string) *__PushChat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3941,7 +3941,7 @@ func (d *__PushChat_Selector) ChatKey_NotEq(val string) *__PushChat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3990,7 +3990,7 @@ func (d *__PushChat_Selector) MessageJson_Eq(val string) *__PushChat_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson = " + u.nextDollars
+	w.condition = " MessageJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4001,7 +4001,7 @@ func (d *__PushChat_Selector) MessageJson_NotEq(val string) *__PushChat_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MessageJson != " + u.nextDollars
+	w.condition = " MessageJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4096,7 +4096,7 @@ func (u *__PushChat_Updater) PushTypeId_Increment(count int) *__PushChat_Updater
 
 //string
 func (u *__PushChat_Updater) RoomKey(newVal string) *__PushChat_Updater {
-	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	up := updateCol{"RoomKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
@@ -4106,7 +4106,7 @@ func (u *__PushChat_Updater) RoomKey(newVal string) *__PushChat_Updater {
 
 //string
 func (u *__PushChat_Updater) ChatKey(newVal string) *__PushChat_Updater {
-	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	up := updateCol{"ChatKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
@@ -4282,7 +4282,7 @@ func (u *__PushChat_Updater) MessageFileId_Increment(count int) *__PushChat_Upda
 
 //string
 func (u *__PushChat_Updater) MessageJson(newVal string) *__PushChat_Updater {
-	up := updateCol{"MessageJson = " + u.nextDollar(), count}
+	up := updateCol{"MessageJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MessageJson = "+ u.nextDollar()] = newVal
 	return u

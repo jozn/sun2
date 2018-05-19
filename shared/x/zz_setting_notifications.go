@@ -6347,7 +6347,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_Eq(val string) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = " + u.nextDollars
+	w.condition = " SocialLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6358,7 +6358,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_NotEq(val string) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != " + u.nextDollars
+	w.condition = " SocialLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6409,7 +6409,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_Eq(val string) *__Setting
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = " + u.nextDollars
+	w.condition = " SocialLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6420,7 +6420,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_NotEq(val string) *__Sett
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != " + u.nextDollars
+	w.condition = " SocialLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6471,7 +6471,7 @@ func (d *__SettingNotification_Selector) SocialLedColor_Eq(val string) *__Settin
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor = " + u.nextDollars
+	w.condition = " SocialLedColor = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6482,7 +6482,7 @@ func (d *__SettingNotification_Selector) SocialLedColor_NotEq(val string) *__Set
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SocialLedColor != " + u.nextDollars
+	w.condition = " SocialLedColor != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6550,7 +6550,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_Increment(count int) *__Sett
 
 //string
 func (u *__SettingNotification_Updater) SocialLedColor(newVal string) *__SettingNotification_Updater {
-	up := updateCol{"SocialLedColor = " + u.nextDollar(), count}
+	up := updateCol{"SocialLedColor = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SocialLedColor = "+ u.nextDollar()] = newVal
 	return u

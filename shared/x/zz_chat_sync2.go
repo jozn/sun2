@@ -2558,7 +2558,7 @@ func (d *__ChatSync2_Deleter) RoomKey_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key = " + u.nextDollars
+	w.condition = " room_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2569,7 +2569,7 @@ func (d *__ChatSync2_Deleter) RoomKey_NotEq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key != " + u.nextDollars
+	w.condition = " room_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2618,7 +2618,7 @@ func (d *__ChatSync2_Deleter) ChatKey_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key = " + u.nextDollars
+	w.condition = " chat_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2629,7 +2629,7 @@ func (d *__ChatSync2_Deleter) ChatKey_NotEq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key != " + u.nextDollars
+	w.condition = " chat_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2678,7 +2678,7 @@ func (d *__ChatSync2_Deleter) MessageJson_Eq(val string) *__ChatSync2_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json = " + u.nextDollars
+	w.condition = " message_json = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2689,7 +2689,7 @@ func (d *__ChatSync2_Deleter) MessageJson_NotEq(val string) *__ChatSync2_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json != " + u.nextDollars
+	w.condition = " message_json != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2740,7 +2740,7 @@ func (d *__ChatSync2_Updater) RoomKey_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key = " + u.nextDollars
+	w.condition = " room_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2751,7 +2751,7 @@ func (d *__ChatSync2_Updater) RoomKey_NotEq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key != " + u.nextDollars
+	w.condition = " room_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2800,7 +2800,7 @@ func (d *__ChatSync2_Updater) ChatKey_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key = " + u.nextDollars
+	w.condition = " chat_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2811,7 +2811,7 @@ func (d *__ChatSync2_Updater) ChatKey_NotEq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key != " + u.nextDollars
+	w.condition = " chat_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2860,7 +2860,7 @@ func (d *__ChatSync2_Updater) MessageJson_Eq(val string) *__ChatSync2_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json = " + u.nextDollars
+	w.condition = " message_json = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2871,7 +2871,7 @@ func (d *__ChatSync2_Updater) MessageJson_NotEq(val string) *__ChatSync2_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json != " + u.nextDollars
+	w.condition = " message_json != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2922,7 +2922,7 @@ func (d *__ChatSync2_Selector) RoomKey_Eq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key = " + u.nextDollars
+	w.condition = " room_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2933,7 +2933,7 @@ func (d *__ChatSync2_Selector) RoomKey_NotEq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " room_key != " + u.nextDollars
+	w.condition = " room_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2982,7 +2982,7 @@ func (d *__ChatSync2_Selector) ChatKey_Eq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key = " + u.nextDollars
+	w.condition = " chat_key = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2993,7 +2993,7 @@ func (d *__ChatSync2_Selector) ChatKey_NotEq(val string) *__ChatSync2_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " chat_key != " + u.nextDollars
+	w.condition = " chat_key != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3042,7 +3042,7 @@ func (d *__ChatSync2_Selector) MessageJson_Eq(val string) *__ChatSync2_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json = " + u.nextDollars
+	w.condition = " message_json = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3053,7 +3053,7 @@ func (d *__ChatSync2_Selector) MessageJson_NotEq(val string) *__ChatSync2_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " message_json != " + u.nextDollars
+	w.condition = " message_json != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3148,7 +3148,7 @@ func (u *__ChatSync2_Updater) ChatSyncTypeId_Increment(count int) *__ChatSync2_U
 
 //string
 func (u *__ChatSync2_Updater) RoomKey(newVal string) *__ChatSync2_Updater {
-	up := updateCol{"room_key = " + u.nextDollar(), count}
+	up := updateCol{"room_key = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" room_key = "+ u.nextDollar()] = newVal
 	return u
@@ -3158,7 +3158,7 @@ func (u *__ChatSync2_Updater) RoomKey(newVal string) *__ChatSync2_Updater {
 
 //string
 func (u *__ChatSync2_Updater) ChatKey(newVal string) *__ChatSync2_Updater {
-	up := updateCol{"chat_key = " + u.nextDollar(), count}
+	up := updateCol{"chat_key = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" chat_key = "+ u.nextDollar()] = newVal
 	return u
@@ -3253,7 +3253,7 @@ func (u *__ChatSync2_Updater) MessageId_Increment(count int) *__ChatSync2_Update
 
 //string
 func (u *__ChatSync2_Updater) MessageJson(newVal string) *__ChatSync2_Updater {
-	up := updateCol{"message_json = " + u.nextDollar(), count}
+	up := updateCol{"message_json = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" message_json = "+ u.nextDollar()] = newVal
 	return u

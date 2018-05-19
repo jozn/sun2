@@ -2558,7 +2558,7 @@ func (d *__DirectMessage_Deleter) ChatKey_Eq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2569,7 +2569,7 @@ func (d *__DirectMessage_Deleter) ChatKey_NotEq(val string) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2618,7 +2618,7 @@ func (d *__DirectMessage_Deleter) RoomKey_Eq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2629,7 +2629,7 @@ func (d *__DirectMessage_Deleter) RoomKey_NotEq(val string) *__DirectMessage_Del
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2678,7 +2678,7 @@ func (d *__DirectMessage_Deleter) Text_Eq(val string) *__DirectMessage_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2689,7 +2689,7 @@ func (d *__DirectMessage_Deleter) Text_NotEq(val string) *__DirectMessage_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2740,7 +2740,7 @@ func (d *__DirectMessage_Updater) ChatKey_Eq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2751,7 +2751,7 @@ func (d *__DirectMessage_Updater) ChatKey_NotEq(val string) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2800,7 +2800,7 @@ func (d *__DirectMessage_Updater) RoomKey_Eq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2811,7 +2811,7 @@ func (d *__DirectMessage_Updater) RoomKey_NotEq(val string) *__DirectMessage_Upd
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2860,7 +2860,7 @@ func (d *__DirectMessage_Updater) Text_Eq(val string) *__DirectMessage_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2871,7 +2871,7 @@ func (d *__DirectMessage_Updater) Text_NotEq(val string) *__DirectMessage_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2922,7 +2922,7 @@ func (d *__DirectMessage_Selector) ChatKey_Eq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey = " + u.nextDollars
+	w.condition = " ChatKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2933,7 +2933,7 @@ func (d *__DirectMessage_Selector) ChatKey_NotEq(val string) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatKey != " + u.nextDollars
+	w.condition = " ChatKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2982,7 +2982,7 @@ func (d *__DirectMessage_Selector) RoomKey_Eq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey = " + u.nextDollars
+	w.condition = " RoomKey = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2993,7 +2993,7 @@ func (d *__DirectMessage_Selector) RoomKey_NotEq(val string) *__DirectMessage_Se
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " RoomKey != " + u.nextDollars
+	w.condition = " RoomKey != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3042,7 +3042,7 @@ func (d *__DirectMessage_Selector) Text_Eq(val string) *__DirectMessage_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text = " + u.nextDollars
+	w.condition = " Text = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3053,7 +3053,7 @@ func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Text != " + u.nextDollars
+	w.condition = " Text != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3067,7 +3067,7 @@ func (d *__DirectMessage_Selector) Text_NotEq(val string) *__DirectMessage_Selec
 
 //string
 func (u *__DirectMessage_Updater) ChatKey(newVal string) *__DirectMessage_Updater {
-	up := updateCol{"ChatKey = " + u.nextDollar(), count}
+	up := updateCol{"ChatKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ChatKey = "+ u.nextDollar()] = newVal
 	return u
@@ -3104,7 +3104,7 @@ func (u *__DirectMessage_Updater) MessageId_Increment(count int) *__DirectMessag
 
 //string
 func (u *__DirectMessage_Updater) RoomKey(newVal string) *__DirectMessage_Updater {
-	up := updateCol{"RoomKey = " + u.nextDollar(), count}
+	up := updateCol{"RoomKey = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" RoomKey = "+ u.nextDollar()] = newVal
 	return u
@@ -3195,7 +3195,7 @@ func (u *__DirectMessage_Updater) MessageTypeEnum_Increment(count int) *__Direct
 
 //string
 func (u *__DirectMessage_Updater) Text(newVal string) *__DirectMessage_Updater {
-	up := updateCol{"Text = " + u.nextDollar(), count}
+	up := updateCol{"Text = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Text = "+ u.nextDollar()] = newVal
 	return u

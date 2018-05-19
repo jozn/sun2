@@ -998,7 +998,7 @@ func (d *__PostKey_Deleter) PostKeyStr_Eq(val string) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = " + u.nextDollars
+	w.condition = " PostKeyStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1009,7 +1009,7 @@ func (d *__PostKey_Deleter) PostKeyStr_NotEq(val string) *__PostKey_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != " + u.nextDollars
+	w.condition = " PostKeyStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1060,7 +1060,7 @@ func (d *__PostKey_Updater) PostKeyStr_Eq(val string) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = " + u.nextDollars
+	w.condition = " PostKeyStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1071,7 +1071,7 @@ func (d *__PostKey_Updater) PostKeyStr_NotEq(val string) *__PostKey_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != " + u.nextDollars
+	w.condition = " PostKeyStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1122,7 +1122,7 @@ func (d *__PostKey_Selector) PostKeyStr_Eq(val string) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr = " + u.nextDollars
+	w.condition = " PostKeyStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1133,7 +1133,7 @@ func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostKeyStr != " + u.nextDollars
+	w.condition = " PostKeyStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1174,7 +1174,7 @@ func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
 
 //string
 func (u *__PostKey_Updater) PostKeyStr(newVal string) *__PostKey_Updater {
-	up := updateCol{"PostKeyStr = " + u.nextDollar(), count}
+	up := updateCol{"PostKeyStr = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostKeyStr = "+ u.nextDollar()] = newVal
 	return u

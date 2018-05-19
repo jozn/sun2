@@ -1316,7 +1316,7 @@ func (d *__TriggerLog_Deleter) ModelName_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = " + u.nextDollars
+	w.condition = " ModelName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1327,7 +1327,7 @@ func (d *__TriggerLog_Deleter) ModelName_NotEq(val string) *__TriggerLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != " + u.nextDollars
+	w.condition = " ModelName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1376,7 +1376,7 @@ func (d *__TriggerLog_Deleter) ChangeType_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = " + u.nextDollars
+	w.condition = " ChangeType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1387,7 +1387,7 @@ func (d *__TriggerLog_Deleter) ChangeType_NotEq(val string) *__TriggerLog_Delete
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != " + u.nextDollars
+	w.condition = " ChangeType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1436,7 +1436,7 @@ func (d *__TriggerLog_Deleter) TargetStr_Eq(val string) *__TriggerLog_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = " + u.nextDollars
+	w.condition = " TargetStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1447,7 +1447,7 @@ func (d *__TriggerLog_Deleter) TargetStr_NotEq(val string) *__TriggerLog_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != " + u.nextDollars
+	w.condition = " TargetStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1498,7 +1498,7 @@ func (d *__TriggerLog_Updater) ModelName_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = " + u.nextDollars
+	w.condition = " ModelName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1509,7 +1509,7 @@ func (d *__TriggerLog_Updater) ModelName_NotEq(val string) *__TriggerLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != " + u.nextDollars
+	w.condition = " ModelName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1558,7 +1558,7 @@ func (d *__TriggerLog_Updater) ChangeType_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = " + u.nextDollars
+	w.condition = " ChangeType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1569,7 +1569,7 @@ func (d *__TriggerLog_Updater) ChangeType_NotEq(val string) *__TriggerLog_Update
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != " + u.nextDollars
+	w.condition = " ChangeType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1618,7 +1618,7 @@ func (d *__TriggerLog_Updater) TargetStr_Eq(val string) *__TriggerLog_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = " + u.nextDollars
+	w.condition = " TargetStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1629,7 +1629,7 @@ func (d *__TriggerLog_Updater) TargetStr_NotEq(val string) *__TriggerLog_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != " + u.nextDollars
+	w.condition = " TargetStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1680,7 +1680,7 @@ func (d *__TriggerLog_Selector) ModelName_Eq(val string) *__TriggerLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName = " + u.nextDollars
+	w.condition = " ModelName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1691,7 +1691,7 @@ func (d *__TriggerLog_Selector) ModelName_NotEq(val string) *__TriggerLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ModelName != " + u.nextDollars
+	w.condition = " ModelName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1740,7 +1740,7 @@ func (d *__TriggerLog_Selector) ChangeType_Eq(val string) *__TriggerLog_Selector
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType = " + u.nextDollars
+	w.condition = " ChangeType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1751,7 +1751,7 @@ func (d *__TriggerLog_Selector) ChangeType_NotEq(val string) *__TriggerLog_Selec
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChangeType != " + u.nextDollars
+	w.condition = " ChangeType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1800,7 +1800,7 @@ func (d *__TriggerLog_Selector) TargetStr_Eq(val string) *__TriggerLog_Selector 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr = " + u.nextDollars
+	w.condition = " TargetStr = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1811,7 +1811,7 @@ func (d *__TriggerLog_Selector) TargetStr_NotEq(val string) *__TriggerLog_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TargetStr != " + u.nextDollars
+	w.condition = " TargetStr != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1852,7 +1852,7 @@ func (u *__TriggerLog_Updater) Id_Increment(count int) *__TriggerLog_Updater {
 
 //string
 func (u *__TriggerLog_Updater) ModelName(newVal string) *__TriggerLog_Updater {
-	up := updateCol{"ModelName = " + u.nextDollar(), count}
+	up := updateCol{"ModelName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ModelName = "+ u.nextDollar()] = newVal
 	return u
@@ -1862,7 +1862,7 @@ func (u *__TriggerLog_Updater) ModelName(newVal string) *__TriggerLog_Updater {
 
 //string
 func (u *__TriggerLog_Updater) ChangeType(newVal string) *__TriggerLog_Updater {
-	up := updateCol{"ChangeType = " + u.nextDollar(), count}
+	up := updateCol{"ChangeType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ChangeType = "+ u.nextDollar()] = newVal
 	return u
@@ -1899,7 +1899,7 @@ func (u *__TriggerLog_Updater) TargetId_Increment(count int) *__TriggerLog_Updat
 
 //string
 func (u *__TriggerLog_Updater) TargetStr(newVal string) *__TriggerLog_Updater {
-	up := updateCol{"TargetStr = " + u.nextDollar(), count}
+	up := updateCol{"TargetStr = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" TargetStr = "+ u.nextDollar()] = newVal
 	return u

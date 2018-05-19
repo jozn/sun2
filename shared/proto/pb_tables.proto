@@ -125,6 +125,28 @@ message PB_Post {
     int32 CreatedTime = 19;
     int64 ReSharedPostId = 20;
 }
+message PB_PostCopy {
+    int64 post_id = 1;
+    int32 user_id = 2;
+    int32 post_type_enum = 3;
+    int32 post_category_enum = 4;
+    int64 media_id = 5;
+    string post_key = 6;
+    string text = 7;
+    string rich_text = 8;
+    int32 media_count = 9;
+    int32 shared_to = 10;
+    int32 disable_comment = 11;
+    int32 source = 12;
+    int32 has_tag = 13;
+    int32 seq = 14;
+    int32 comments_count = 15;
+    int32 likes_count = 16;
+    int32 views_count = 17;
+    int32 edited_time = 18;
+    int32 created_time = 19;
+    int64 re_shared_post_id = 20;
+}
 message PB_PostCount {
     int64 PostId = 1;
     int64 ViewsCount = 2;
@@ -510,6 +532,28 @@ message PB_XfileServiceRequestLog {
     string CreatedTime = 6;
 }
 message PB_Account {
-     id = 1;
-     balance = 2;
+    int32 id = 1;
+    double balance = 2;
+}
+message PB_PostCdb {
+    int32 post_id = 1;
+    int32 user_id = 2;
+    int32 post_type_enum = 3;
+    int32 post_category_enum = 4;
+    int32 media_id = 5;
+    string post_key = 6;
+    string text = 7;
+    string rich_text = 8;
+    int32 media_count = 9;
+    int32 shared_to = 10;
+    int32 disable_comment = 11;
+    int32 source = 12;
+    int32 has_tag = 13;
+    int32 seq = 14;
+    int32 comments_count = 15;
+    int32 likes_count = 16;
+    int32 views_count = 17;
+    int32 edited_time = 18;
+    int32 created_time = 19;
+    int32 re_shared_post_id = 20;
 }

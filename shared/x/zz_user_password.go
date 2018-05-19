@@ -998,7 +998,7 @@ func (d *__UserPassword_Deleter) Password_Eq(val string) *__UserPassword_Deleter
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = " + u.nextDollars
+	w.condition = " Password = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1009,7 +1009,7 @@ func (d *__UserPassword_Deleter) Password_NotEq(val string) *__UserPassword_Dele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != " + u.nextDollars
+	w.condition = " Password != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1060,7 +1060,7 @@ func (d *__UserPassword_Updater) Password_Eq(val string) *__UserPassword_Updater
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = " + u.nextDollars
+	w.condition = " Password = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1071,7 +1071,7 @@ func (d *__UserPassword_Updater) Password_NotEq(val string) *__UserPassword_Upda
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != " + u.nextDollars
+	w.condition = " Password != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1122,7 +1122,7 @@ func (d *__UserPassword_Selector) Password_Eq(val string) *__UserPassword_Select
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password = " + u.nextDollars
+	w.condition = " Password = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1133,7 +1133,7 @@ func (d *__UserPassword_Selector) Password_NotEq(val string) *__UserPassword_Sel
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Password != " + u.nextDollars
+	w.condition = " Password != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1174,7 +1174,7 @@ func (u *__UserPassword_Updater) UserId_Increment(count int) *__UserPassword_Upd
 
 //string
 func (u *__UserPassword_Updater) Password(newVal string) *__UserPassword_Updater {
-	up := updateCol{"Password = " + u.nextDollar(), count}
+	up := updateCol{"Password = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Password = "+ u.nextDollar()] = newVal
 	return u

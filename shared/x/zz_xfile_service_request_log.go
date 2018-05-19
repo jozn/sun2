@@ -1608,7 +1608,7 @@ func (d *__XfileServiceRequestLog_Deleter) Url_Eq(val string) *__XfileServiceReq
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = " + u.nextDollars
+	w.condition = " Url = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1619,7 +1619,7 @@ func (d *__XfileServiceRequestLog_Deleter) Url_NotEq(val string) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != " + u.nextDollars
+	w.condition = " Url != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1668,7 +1668,7 @@ func (d *__XfileServiceRequestLog_Deleter) CreatedTime_Eq(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + u.nextDollars
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1679,7 +1679,7 @@ func (d *__XfileServiceRequestLog_Deleter) CreatedTime_NotEq(val string) *__Xfil
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + u.nextDollars
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1730,7 +1730,7 @@ func (d *__XfileServiceRequestLog_Updater) Url_Eq(val string) *__XfileServiceReq
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = " + u.nextDollars
+	w.condition = " Url = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1741,7 +1741,7 @@ func (d *__XfileServiceRequestLog_Updater) Url_NotEq(val string) *__XfileService
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != " + u.nextDollars
+	w.condition = " Url != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1790,7 +1790,7 @@ func (d *__XfileServiceRequestLog_Updater) CreatedTime_Eq(val string) *__XfileSe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + u.nextDollars
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1801,7 +1801,7 @@ func (d *__XfileServiceRequestLog_Updater) CreatedTime_NotEq(val string) *__Xfil
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + u.nextDollars
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1852,7 +1852,7 @@ func (d *__XfileServiceRequestLog_Selector) Url_Eq(val string) *__XfileServiceRe
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url = " + u.nextDollars
+	w.condition = " Url = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1863,7 +1863,7 @@ func (d *__XfileServiceRequestLog_Selector) Url_NotEq(val string) *__XfileServic
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Url != " + u.nextDollars
+	w.condition = " Url != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1912,7 +1912,7 @@ func (d *__XfileServiceRequestLog_Selector) CreatedTime_Eq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime = " + u.nextDollars
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1923,7 +1923,7 @@ func (d *__XfileServiceRequestLog_Selector) CreatedTime_NotEq(val string) *__Xfi
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedTime != " + u.nextDollars
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2018,7 +2018,7 @@ func (u *__XfileServiceRequestLog_Updater) InstanceId_Increment(count int) *__Xf
 
 //string
 func (u *__XfileServiceRequestLog_Updater) Url(newVal string) *__XfileServiceRequestLog_Updater {
-	up := updateCol{"Url = " + u.nextDollar(), count}
+	up := updateCol{"Url = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Url = "+ u.nextDollar()] = newVal
 	return u
@@ -2055,7 +2055,7 @@ func (u *__XfileServiceRequestLog_Updater) HttpCode_Increment(count int) *__Xfil
 
 //string
 func (u *__XfileServiceRequestLog_Updater) CreatedTime(newVal string) *__XfileServiceRequestLog_Updater {
-	up := updateCol{"CreatedTime = " + u.nextDollar(), count}
+	up := updateCol{"CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" CreatedTime = "+ u.nextDollar()] = newVal
 	return u

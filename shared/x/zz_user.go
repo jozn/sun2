@@ -9538,7 +9538,7 @@ func (d *__User_Deleter) UserName_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName = " + u.nextDollars
+	w.condition = " UserName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9549,7 +9549,7 @@ func (d *__User_Deleter) UserName_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName != " + u.nextDollars
+	w.condition = " UserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9598,7 +9598,7 @@ func (d *__User_Deleter) UserNameLower_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower = " + u.nextDollars
+	w.condition = " UserNameLower = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9609,7 +9609,7 @@ func (d *__User_Deleter) UserNameLower_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower != " + u.nextDollars
+	w.condition = " UserNameLower != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9658,7 +9658,7 @@ func (d *__User_Deleter) FirstName_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName = " + u.nextDollars
+	w.condition = " FirstName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9669,7 +9669,7 @@ func (d *__User_Deleter) FirstName_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName != " + u.nextDollars
+	w.condition = " FirstName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9718,7 +9718,7 @@ func (d *__User_Deleter) LastName_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName = " + u.nextDollars
+	w.condition = " LastName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9729,7 +9729,7 @@ func (d *__User_Deleter) LastName_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName != " + u.nextDollars
+	w.condition = " LastName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9778,7 +9778,7 @@ func (d *__User_Deleter) About_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About = " + u.nextDollars
+	w.condition = " About = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9789,7 +9789,7 @@ func (d *__User_Deleter) About_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About != " + u.nextDollars
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9838,7 +9838,7 @@ func (d *__User_Deleter) Email_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email = " + u.nextDollars
+	w.condition = " Email = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9849,7 +9849,7 @@ func (d *__User_Deleter) Email_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email != " + u.nextDollars
+	w.condition = " Email != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9898,7 +9898,7 @@ func (d *__User_Deleter) PasswordHash_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash = " + u.nextDollars
+	w.condition = " PasswordHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9909,7 +9909,7 @@ func (d *__User_Deleter) PasswordHash_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash != " + u.nextDollars
+	w.condition = " PasswordHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9958,7 +9958,7 @@ func (d *__User_Deleter) PasswordSalt_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt = " + u.nextDollars
+	w.condition = " PasswordSalt = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9969,7 +9969,7 @@ func (d *__User_Deleter) PasswordSalt_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt != " + u.nextDollars
+	w.condition = " PasswordSalt != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10018,7 +10018,7 @@ func (d *__User_Deleter) Phone2_Eq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 = " + u.nextDollars
+	w.condition = " Phone2 = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10029,7 +10029,7 @@ func (d *__User_Deleter) Phone2_NotEq(val string) *__User_Deleter {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 != " + u.nextDollars
+	w.condition = " Phone2 != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10080,7 +10080,7 @@ func (d *__User_Updater) UserName_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName = " + u.nextDollars
+	w.condition = " UserName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10091,7 +10091,7 @@ func (d *__User_Updater) UserName_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName != " + u.nextDollars
+	w.condition = " UserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10140,7 +10140,7 @@ func (d *__User_Updater) UserNameLower_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower = " + u.nextDollars
+	w.condition = " UserNameLower = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10151,7 +10151,7 @@ func (d *__User_Updater) UserNameLower_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower != " + u.nextDollars
+	w.condition = " UserNameLower != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10200,7 +10200,7 @@ func (d *__User_Updater) FirstName_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName = " + u.nextDollars
+	w.condition = " FirstName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10211,7 +10211,7 @@ func (d *__User_Updater) FirstName_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName != " + u.nextDollars
+	w.condition = " FirstName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10260,7 +10260,7 @@ func (d *__User_Updater) LastName_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName = " + u.nextDollars
+	w.condition = " LastName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10271,7 +10271,7 @@ func (d *__User_Updater) LastName_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName != " + u.nextDollars
+	w.condition = " LastName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10320,7 +10320,7 @@ func (d *__User_Updater) About_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About = " + u.nextDollars
+	w.condition = " About = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10331,7 +10331,7 @@ func (d *__User_Updater) About_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About != " + u.nextDollars
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10380,7 +10380,7 @@ func (d *__User_Updater) Email_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email = " + u.nextDollars
+	w.condition = " Email = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10391,7 +10391,7 @@ func (d *__User_Updater) Email_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email != " + u.nextDollars
+	w.condition = " Email != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10440,7 +10440,7 @@ func (d *__User_Updater) PasswordHash_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash = " + u.nextDollars
+	w.condition = " PasswordHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10451,7 +10451,7 @@ func (d *__User_Updater) PasswordHash_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash != " + u.nextDollars
+	w.condition = " PasswordHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10500,7 +10500,7 @@ func (d *__User_Updater) PasswordSalt_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt = " + u.nextDollars
+	w.condition = " PasswordSalt = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10511,7 +10511,7 @@ func (d *__User_Updater) PasswordSalt_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt != " + u.nextDollars
+	w.condition = " PasswordSalt != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10560,7 +10560,7 @@ func (d *__User_Updater) Phone2_Eq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 = " + u.nextDollars
+	w.condition = " Phone2 = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10571,7 +10571,7 @@ func (d *__User_Updater) Phone2_NotEq(val string) *__User_Updater {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 != " + u.nextDollars
+	w.condition = " Phone2 != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10622,7 +10622,7 @@ func (d *__User_Selector) UserName_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName = " + u.nextDollars
+	w.condition = " UserName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10633,7 +10633,7 @@ func (d *__User_Selector) UserName_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserName != " + u.nextDollars
+	w.condition = " UserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10682,7 +10682,7 @@ func (d *__User_Selector) UserNameLower_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower = " + u.nextDollars
+	w.condition = " UserNameLower = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10693,7 +10693,7 @@ func (d *__User_Selector) UserNameLower_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserNameLower != " + u.nextDollars
+	w.condition = " UserNameLower != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10742,7 +10742,7 @@ func (d *__User_Selector) FirstName_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName = " + u.nextDollars
+	w.condition = " FirstName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10753,7 +10753,7 @@ func (d *__User_Selector) FirstName_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " FirstName != " + u.nextDollars
+	w.condition = " FirstName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10802,7 +10802,7 @@ func (d *__User_Selector) LastName_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName = " + u.nextDollars
+	w.condition = " LastName = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10813,7 +10813,7 @@ func (d *__User_Selector) LastName_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastName != " + u.nextDollars
+	w.condition = " LastName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10862,7 +10862,7 @@ func (d *__User_Selector) About_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About = " + u.nextDollars
+	w.condition = " About = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10873,7 +10873,7 @@ func (d *__User_Selector) About_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " About != " + u.nextDollars
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10922,7 +10922,7 @@ func (d *__User_Selector) Email_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email = " + u.nextDollars
+	w.condition = " Email = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10933,7 +10933,7 @@ func (d *__User_Selector) Email_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Email != " + u.nextDollars
+	w.condition = " Email != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10982,7 +10982,7 @@ func (d *__User_Selector) PasswordHash_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash = " + u.nextDollars
+	w.condition = " PasswordHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10993,7 +10993,7 @@ func (d *__User_Selector) PasswordHash_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordHash != " + u.nextDollars
+	w.condition = " PasswordHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11042,7 +11042,7 @@ func (d *__User_Selector) PasswordSalt_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt = " + u.nextDollars
+	w.condition = " PasswordSalt = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11053,7 +11053,7 @@ func (d *__User_Selector) PasswordSalt_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PasswordSalt != " + u.nextDollars
+	w.condition = " PasswordSalt != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11102,7 +11102,7 @@ func (d *__User_Selector) Phone2_Eq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 = " + u.nextDollars
+	w.condition = " Phone2 = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11113,7 +11113,7 @@ func (d *__User_Selector) Phone2_NotEq(val string) *__User_Selector {
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Phone2 != " + u.nextDollars
+	w.condition = " Phone2 != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11154,7 +11154,7 @@ func (u *__User_Updater) UserId_Increment(count int) *__User_Updater {
 
 //string
 func (u *__User_Updater) UserName(newVal string) *__User_Updater {
-	up := updateCol{"UserName = " + u.nextDollar(), count}
+	up := updateCol{"UserName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserName = "+ u.nextDollar()] = newVal
 	return u
@@ -11164,7 +11164,7 @@ func (u *__User_Updater) UserName(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) UserNameLower(newVal string) *__User_Updater {
-	up := updateCol{"UserNameLower = " + u.nextDollar(), count}
+	up := updateCol{"UserNameLower = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserNameLower = "+ u.nextDollar()] = newVal
 	return u
@@ -11174,7 +11174,7 @@ func (u *__User_Updater) UserNameLower(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) FirstName(newVal string) *__User_Updater {
-	up := updateCol{"FirstName = " + u.nextDollar(), count}
+	up := updateCol{"FirstName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" FirstName = "+ u.nextDollar()] = newVal
 	return u
@@ -11184,7 +11184,7 @@ func (u *__User_Updater) FirstName(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) LastName(newVal string) *__User_Updater {
-	up := updateCol{"LastName = " + u.nextDollar(), count}
+	up := updateCol{"LastName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" LastName = "+ u.nextDollar()] = newVal
 	return u
@@ -11329,7 +11329,7 @@ func (u *__User_Updater) Phone_Increment(count int) *__User_Updater {
 
 //string
 func (u *__User_Updater) About(newVal string) *__User_Updater {
-	up := updateCol{"About = " + u.nextDollar(), count}
+	up := updateCol{"About = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" About = "+ u.nextDollar()] = newVal
 	return u
@@ -11339,7 +11339,7 @@ func (u *__User_Updater) About(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) Email(newVal string) *__User_Updater {
-	up := updateCol{"Email = " + u.nextDollar(), count}
+	up := updateCol{"Email = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Email = "+ u.nextDollar()] = newVal
 	return u
@@ -11349,7 +11349,7 @@ func (u *__User_Updater) Email(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) PasswordHash(newVal string) *__User_Updater {
-	up := updateCol{"PasswordHash = " + u.nextDollar(), count}
+	up := updateCol{"PasswordHash = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PasswordHash = "+ u.nextDollar()] = newVal
 	return u
@@ -11359,7 +11359,7 @@ func (u *__User_Updater) PasswordHash(newVal string) *__User_Updater {
 
 //string
 func (u *__User_Updater) PasswordSalt(newVal string) *__User_Updater {
-	up := updateCol{"PasswordSalt = " + u.nextDollar(), count}
+	up := updateCol{"PasswordSalt = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PasswordSalt = "+ u.nextDollar()] = newVal
 	return u
@@ -11990,7 +11990,7 @@ func (u *__User_Updater) LastActivityTime_Increment(count int) *__User_Updater {
 
 //string
 func (u *__User_Updater) Phone2(newVal string) *__User_Updater {
-	up := updateCol{"Phone2 = " + u.nextDollar(), count}
+	up := updateCol{"Phone2 = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Phone2 = "+ u.nextDollar()] = newVal
 	return u

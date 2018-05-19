@@ -1946,7 +1946,7 @@ func (d *__SearchClicked_Deleter) Query_Eq(val string) *__SearchClicked_Deleter 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = " + u.nextDollars
+	w.condition = " Query = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1957,7 +1957,7 @@ func (d *__SearchClicked_Deleter) Query_NotEq(val string) *__SearchClicked_Delet
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != " + u.nextDollars
+	w.condition = " Query != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2008,7 +2008,7 @@ func (d *__SearchClicked_Updater) Query_Eq(val string) *__SearchClicked_Updater 
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = " + u.nextDollars
+	w.condition = " Query = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2019,7 +2019,7 @@ func (d *__SearchClicked_Updater) Query_NotEq(val string) *__SearchClicked_Updat
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != " + u.nextDollars
+	w.condition = " Query != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2070,7 +2070,7 @@ func (d *__SearchClicked_Selector) Query_Eq(val string) *__SearchClicked_Selecto
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query = " + u.nextDollars
+	w.condition = " Query = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2081,7 +2081,7 @@ func (d *__SearchClicked_Selector) Query_NotEq(val string) *__SearchClicked_Sele
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Query != " + u.nextDollars
+	w.condition = " Query != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2122,7 +2122,7 @@ func (u *__SearchClicked_Updater) Id_Increment(count int) *__SearchClicked_Updat
 
 //string
 func (u *__SearchClicked_Updater) Query(newVal string) *__SearchClicked_Updater {
-	up := updateCol{"Query = " + u.nextDollar(), count}
+	up := updateCol{"Query = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Query = "+ u.nextDollar()] = newVal
 	return u

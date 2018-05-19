@@ -258,6 +258,61 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 	}
 }
 
+// PostCopy - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'UserId'.
+func (c _StoreImpl) PostCopy_Byuser_id(UserId int) (*PostCopy, bool) {
+	o, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", UserId))
+	if ok {
+		if obj, ok := o.(*PostCopy); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewPostCopy_Selector().user_id_Eq(UserId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.UserId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) PostCopy_Byuser_id_JustCache(UserId int) (*PostCopy, bool) {
+	o, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", UserId))
+	if ok {
+		if obj, ok := o.(*PostCopy); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostCopy_UserId:" + fmt.Sprintf("%v", UserId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadPostCopy_Byuser_ids(user_ids []int) {
+	not_cached := make([]int, 0, len(user_ids))
+
+	for _, id := range user_ids {
+		_, ok := RowCacheIndex.Get("PostCopy_UserId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewPostCopy_Selector().user_id_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("PostCopy_UserId:"+fmt.Sprintf("%v", row.user_id), row, 0)
+			}
+		}
+	}
+}
+
 // PostCount - PRIMARY
 
 // PostDeleted - PRIMARY
@@ -1352,3 +1407,5 @@ func (c _StoreImpl) PreLoadPushChat_BySeqs(Seqs []int) {
 // XfileServiceRequestLog - PRIMARY
 
 // Account - primary
+
+// PostCdb - primary

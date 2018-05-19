@@ -975,7 +975,7 @@ func (d *__XfileServiceMetricLog_Deleter) MetricJson_Eq(val string) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = " + u.nextDollars
+	w.condition = " MetricJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -986,7 +986,7 @@ func (d *__XfileServiceMetricLog_Deleter) MetricJson_NotEq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != " + u.nextDollars
+	w.condition = " MetricJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1037,7 +1037,7 @@ func (d *__XfileServiceMetricLog_Updater) MetricJson_Eq(val string) *__XfileServ
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = " + u.nextDollars
+	w.condition = " MetricJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1048,7 +1048,7 @@ func (d *__XfileServiceMetricLog_Updater) MetricJson_NotEq(val string) *__XfileS
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != " + u.nextDollars
+	w.condition = " MetricJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1099,7 +1099,7 @@ func (d *__XfileServiceMetricLog_Selector) MetricJson_Eq(val string) *__XfileSer
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson = " + u.nextDollars
+	w.condition = " MetricJson = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1110,7 +1110,7 @@ func (d *__XfileServiceMetricLog_Selector) MetricJson_NotEq(val string) *__Xfile
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MetricJson != " + u.nextDollars
+	w.condition = " MetricJson != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1178,7 +1178,7 @@ func (u *__XfileServiceMetricLog_Updater) InstanceId_Increment(count int) *__Xfi
 
 //string
 func (u *__XfileServiceMetricLog_Updater) MetricJson(newVal string) *__XfileServiceMetricLog_Updater {
-	up := updateCol{"MetricJson = " + u.nextDollar(), count}
+	up := updateCol{"MetricJson = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MetricJson = "+ u.nextDollar()] = newVal
 	return u
