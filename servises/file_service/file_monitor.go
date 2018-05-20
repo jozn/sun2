@@ -16,7 +16,7 @@ var inoLogDbChan = make(chan x.XfileServiceInfoLog, 1000)
 type httpWirterWrapper struct {
 	w    http.ResponseWriter
 	r    *http.Request
-	req  *file_common.RowReq
+	req  file_common.RowReq
 	code int
 }
 
@@ -42,6 +42,12 @@ func init() {
 }
 
 func saveMonitor_go() {
+	defer func() {
+		err := recover()
+		if err != nil {
+			go saveMonitor_go()
+		}
+	}()
 	var arrInfo []x.XfileServiceInfoLog
 	var arrReqs []x.XfileServiceRequestLog
 	tic := time.NewTicker(time.Second)
@@ -49,6 +55,7 @@ func saveMonitor_go() {
 		select {
 		case wrap := <-httpMonitorChan:
 			seqLog++
+			//if wrap.req != nil {
 			m := x.XfileServiceRequestLog{
 				Id:          helper.NextRowsSeqId(),
 				LocalSeq:    seqLog,
@@ -60,6 +67,7 @@ func saveMonitor_go() {
 			metricsLog.Exts[wrap.req.FileExtensionWithDot] += 1
 			metricsLog.Sizes[wrap.req.RequestedImageSize] += 1
 			arrReqs = append(arrReqs, m)
+			//}
 		case info := <-inoLogDbChan:
 			arrInfo = append(arrInfo, info)
 		case _ = <-tic.C:
@@ -82,6 +90,7 @@ var metricsLog = &metricsLogType{
 }
 
 func saveFileMetics_go() {
+	defer helper.JustRecover()
 	m := x.XfileServiceMetricLog{
 		Id:         helper.NextRowsSeqId(),
 		InstanceId: instanceLogId,

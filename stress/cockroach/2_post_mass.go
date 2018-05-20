@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"ms/sun/shared/conns"
+	"ms/sun/shared/dbs"
 	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
 	"sync/atomic"
@@ -42,7 +42,7 @@ func main() {
 				}
 				arr = append(arr, p)
 			}
-			err := x.MassInsert_PostCdb(arr, conns.DB_PG)
+			err := x.MassInsert_PostCdb(arr, dbs.DB_PG)
 			arr = arr[:0]
 			if i%100 == 0 {
 				fmt.Println(i)

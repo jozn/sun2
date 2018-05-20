@@ -582,54 +582,6 @@ func (c _StoreImpl) PreLoadPostByPostIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPostCopyByPostId(PostId int) (*PostCopy, bool) {
-	o, ok := RowCache.Get("PostCopy:" + strconv.Itoa(PostId))
-	if ok {
-		if obj, ok := o.(*PostCopy); ok {
-			return obj, true
-		}
-	}
-	obj2, err := PostCopyByPostId(base.DB, PostId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.PostCopy {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetPostCopyByPostId_JustCache(PostId int) (*PostCopy, bool) {
-	o, ok := RowCache.Get("PostCopy:" + strconv.Itoa(PostId))
-	if ok {
-		if obj, ok := o.(*PostCopy); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.PostCopy {
-		XOLogErr(errors.New("_JustCache is empty for PostCopy: " + strconv.Itoa(PostId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPostCopyByPostIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("PostCopy:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewPostCopy_Selector().PostId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetPostCountByPostId(PostId int) (*PostCount, bool) {
 	o, ok := RowCache.Get("PostCount:" + strconv.Itoa(PostId))
 	if ok {

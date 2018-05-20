@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ms/sun/shared/conns"
+	"ms/sun/shared/dbs"
 	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
 	"sync/atomic"
@@ -39,7 +39,7 @@ func main() {
 				ReSharedPostId:   0,
 			}
 
-			err := p.Insert(conns.DB_PG)
+			err := p.Insert(dbs.DB_PG)
 			helper.NoErr(err)
 		}
 

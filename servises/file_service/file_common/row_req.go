@@ -16,6 +16,7 @@ type RowReq struct {
 	FullUrlPath                      string
 	FileCategory                     FileCategory
 	FileName                         string
+	FileRefId                        int //64bit
 	FileDataStoreId                  int //64bit
 	FileExtensionWithDot             string
 	FileFormat                       fileFormat
@@ -31,35 +32,50 @@ type RowReq struct {
 	RowCacheOutDiskPathThumb         string
 	IsOrginalLocalDiskCacheAvailable bool
 	CacheFullModuleDirectory         string // "/web/galxy/chat/"
+	CacheFullModuleParentDirectory   string // "/web/galxy/chat/"
 	SelectedCacheDiskPath            string //web/file/a disk
 	Err                              error
+	MemoryCacheFinalFullPathFile     string
 }
 
 func NewRowReq(category FileCategory, url *url.URL) (row *RowReq) {
 	//fmt.Println(url.Path)
 	row = &RowReq{
-		FullUrlPath:              url.Path,
-		FileCategory:             category,
-		CacheFullModuleDirectory: CACHE_DIR_VERSION + "/" + category.cachePath + "/",
+		FullUrlPath:                    url.Path,
+		FileCategory:                   category,
+		CacheFullModuleParentDirectory: CACHE_DIR_VERSION + "/" + category.cachePath + "/",
 	}
 	row.extractParams()
-	row.CacheFullModuleDirectory = row.CacheFullModuleDirectory + removedDot(row.FileExtensionWithDot) + "/"
+	//row.CacheFullModuleDirectory = row.CacheFullModuleDirectory + removedDot(row.FileExtensionWithDot) + "/"
 	//row.FileExtensionWithDot = "media"
 
 	row.setOutputCacheFullPath()
 
-	if row.FileDataStoreId == 0 { //|| row.FileExtensionWithDot == "" {
+	if row.FileRefId == 0 { //|| row.FileExtensionWithDot == "" {
 		row.Err = ErrBadReq
 	}
 	return
 }
 
-func (r *RowReq) setOutputCacheFullPath() (err error) {
+func (r *RowReq) SetNewFileDataStoreId(fileFirstRefId int) {
+	r.FileDataStoreId = fileFirstRefId
+	r.setOutputCacheFullPath()
+}
+
+func (r *RowReq) SetNewFileDataStoreIdAndExtntion(fileFirstRefId int, ext string) {
+	r.FileDataStoreId = fileFirstRefId
+	r.FileExtensionWithDot = ext
+	r.setOutputCacheFullPath()
+}
+
+func (r *RowReq) setOutputCacheFullPath() {
+	//r.CacheFullModuleDirectory = r.CacheFullModuleParentDirectory + removedDot(r.FileExtensionWithDot) + "/"
+	r.CacheFullModuleDirectory = r.CacheFullModuleParentDirectory + "_all_/"
 	ids := r.FileName
 	//fmt.Println(ids)
 	if len(ids) < 10 {
 		r.Err = ErrFileNameTooShort
-		return ErrFileNameTooShort
+		return
 	}
 	r.RowCacheOutRelativePathDir = fmt.Sprintf("%s%s/%s/%s/%s/", r.CacheFullModuleDirectory,
 		ids[0:2], ids[2:4], ids[4:6], ids[6:8])
@@ -77,7 +93,7 @@ var fileRegex = regexp.MustCompile(`/([0-9]+(_[[:alnum:]]+)?(\.[\w\.]+)?)`)
 
 func (r *RowReq) extractParams() {
 	parts := fileRegex.FindStringSubmatch(r.FullUrlPath)
-	fmt.Println(parts)
+	//fmt.Println(parts)
 	if len(parts) < 2 {
 		r.Err = ErrBadReq
 	}
@@ -103,11 +119,13 @@ func (r *RowReq) extractParams() {
 
 	if sepInd == -1 { //no exte
 		r.FileExtensionWithDot = ""
-		r.FileDataStoreId = helper.StrToInt(strings.Split(r.FileName, "_")[0], 0)
+		r.FileRefId = helper.StrToInt(strings.Split(r.FileName, "_")[0], 0)
 	} else {
-		r.FileDataStoreId = helper.StrToInt(strings.Split(r.FileName[:sepInd], "_")[0], 0)
+		r.FileRefId = helper.StrToInt(strings.Split(r.FileName[:sepInd], "_")[0], 0)
 		r.FileExtensionWithDot = r.FileName[sepInd:]
 	}
+
+	r.FileDataStoreId = r.FileRefId
 
 	return
 }
@@ -117,9 +135,9 @@ func (r *RowReq) createRowOutCacheDir() {
 }
 
 func removedDot(s string) string {
-    if false {
-        return "all"
-    }
+	if false {
+		return "all"
+	}
 	return strings.Replace(s, ".", "", -1)
 }
 
@@ -128,7 +146,7 @@ func removedDot(s string) string {
     FullUrlPath:                  "/post_file/1518506476136010007_180.jpg",
     FileCategory:              file_service_old.FileCategory{UrlPath:"post_file", cachePath:"post_file", setterToStore:func(file_service_old.Row) {...}, getterOfStore:func(int) (*file_service_old.Row, error) {...}},
     FileName:                  "1518506476136010007_180.jpg",
-    FileDataStoreId:           1518506476136010007,
+    FileRefId:           1518506476136010007,
     FileExtensionWithDot:   "jpg",
     FileFormat:                0,
     RequestedImageSize:        180,

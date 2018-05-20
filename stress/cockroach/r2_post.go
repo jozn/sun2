@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"ms/sun/shared/conns"
+	"ms/sun/shared/dbs"
 	"ms/sun/shared/x"
 	"sync/atomic"
 	"time"
@@ -15,7 +15,7 @@ func main() {
 	fn := func() {
 		for {
 			atomic.AddInt64(&i, 1)
-			rows, err := x.PostCdbByPostId(conns.DB_PG,int(time.Now().Unix()) - (rand.Intn(1000)+100))
+			rows, err := x.PostCdbByPostId(dbs.DB_PG,int(time.Now().Unix()) - (rand.Intn(1000)+100))
 
 			if i% 1000 == 0{
                 fmt.Println((rows), err)

@@ -347,35 +347,6 @@ $$
 
 
 delimiter ;
-################################ PostCopy ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS post_copy_OnCreateLogger $$
-CREATE TRIGGER post_copy_OnCreateLogger AFTER INSERT ON post_copy
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","INSERT",NEW.post_id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger $$
-CREATE TRIGGER post_copy_OnUpdateLogger AFTER UPDATE ON post_copy
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","UPDATE",NEW.post_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger $$
-CREATE TRIGGER post_copy_OnDeleteLogger AFTER DELETE ON post_copy
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCopy","DELETE",OLD.post_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ PostCount ######################################
 
 /* #### delimiter $$
@@ -1589,10 +1560,6 @@ DROP TRIGGER IF EXISTS phone_contacts_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS post_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_OnDeleteLogger ;
-### PostCopy ##
-DROP TRIGGER IF EXISTS post_copy_OnCreateLogger ;
-DROP TRIGGER IF EXISTS post_copy_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS post_copy_OnDeleteLogger ;
 ### PostCount ##
 DROP TRIGGER IF EXISTS post_count_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_count_OnUpdateLogger ;

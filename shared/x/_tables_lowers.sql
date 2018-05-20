@@ -117,28 +117,6 @@ ALTER TABLE sun.post CHANGE COLUMN EditedTime edited_time int(11);
 ALTER TABLE sun.post CHANGE COLUMN CreatedTime created_time int(11);
 ALTER TABLE sun.post CHANGE COLUMN ReSharedPostId re_shared_post_id bigint(20);
 
-/*Table: post_copy  */
-ALTER TABLE sun.post_copy CHANGE COLUMN post_id post_id bigint(20);
-ALTER TABLE sun.post_copy CHANGE COLUMN user_id user_id int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN post_type_enum post_type_enum int(4);
-ALTER TABLE sun.post_copy CHANGE COLUMN post_category_enum post_category_enum int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN media_id media_id bigint(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN post_key post_key varchar(50);
-ALTER TABLE sun.post_copy CHANGE COLUMN text text text;
-ALTER TABLE sun.post_copy CHANGE COLUMN rich_text rich_text text;
-ALTER TABLE sun.post_copy CHANGE COLUMN media_count media_count tinyint(4);
-ALTER TABLE sun.post_copy CHANGE COLUMN shared_to shared_to int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN disable_comment disable_comment tinyint(1);
-ALTER TABLE sun.post_copy CHANGE COLUMN source source int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN has_tag has_tag int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN seq seq int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN comments_count comments_count int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN likes_count likes_count int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN views_count views_count int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN edited_time edited_time int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN created_time created_time int(11);
-ALTER TABLE sun.post_copy CHANGE COLUMN re_shared_post_id re_shared_post_id bigint(20);
-
 /*Table: post_count  */
 ALTER TABLE sun.post_count CHANGE COLUMN PostId post_id bigint(20);
 ALTER TABLE sun.post_count CHANGE COLUMN ViewsCount views_count bigint(20);

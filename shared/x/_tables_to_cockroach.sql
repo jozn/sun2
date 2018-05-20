@@ -141,30 +141,6 @@ CREATE TABLE IF NOT EXISTS sun.post (
     re_shared_post_id int NOT NULL ,
 );
 
-/*Table: post_copy  */
-CREATE TABLE IF NOT EXISTS sun.post_copy (
-    post_id int PRIMARY KEY NOT NULL ,
-    user_id int ,
-    post_type_enum int ,
-    post_category_enum int ,
-    media_id int ,
-    post_key string ,
-    text string ,
-    rich_text string ,
-    media_count int ,
-    shared_to int ,
-    disable_comment int ,
-    source int ,
-    has_tag int ,
-    seq int ,
-    comments_count int ,
-    likes_count int ,
-    views_count int ,
-    edited_time int ,
-    created_time int ,
-    re_shared_post_id int ,
-);
-
 /*Table: post_count  */
 CREATE TABLE IF NOT EXISTS sun.post_count (
     post_id int PRIMARY KEY NOT NULL ,

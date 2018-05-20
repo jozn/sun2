@@ -3,7 +3,7 @@ package main
 import (
     "ms/sun/shared/x"
     "ms/sun/shared/helper"
-    "ms/sun/shared/conns"
+    "ms/sun/shared/dbs"
 )
 
 func main()  {
@@ -31,6 +31,6 @@ func main()  {
         ReSharedPostId: 0,
     }
 
-    err := p.Save(conns.DB_PG)
+    err := p.Save(dbs.DB_PG)
     helper.NoErr(err)
 }

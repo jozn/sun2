@@ -345,59 +345,6 @@ func PBConvPB_Post_To_Post ( o *Post) *PB_Post {
 }
 */
 /*
-func PBConvPB__PostCopy_To_PostCopy( o *PB_PostCopy) *PostCopy {
-     n := &PostCopy{
-      post_id: int ( o.post_id ),
-      user_id: int ( o.user_id ),
-      post_type_enum: int ( o.post_type_enum ),
-      post_category_enum: int ( o.post_category_enum ),
-      media_id: int ( o.media_id ),
-      post_key: string ( o.post_key ),
-      text: string ( o.text ),
-      rich_text: string ( o.rich_text ),
-      media_count: int ( o.media_count ),
-      shared_to: int ( o.shared_to ),
-      disable_comment: int ( o.disable_comment ),
-      source: int ( o.source ),
-      has_tag: int ( o.has_tag ),
-      seq: int ( o.seq ),
-      comments_count: int ( o.comments_count ),
-      likes_count: int ( o.likes_count ),
-      views_count: int ( o.views_count ),
-      edited_time: int ( o.edited_time ),
-      created_time: int ( o.created_time ),
-      re_shared_post_id: int ( o.re_shared_post_id ),
-    }
-    return n
-}
-
-func PBConvPB_PostCopy_To_PostCopy ( o *PostCopy) *PB_PostCopy {
-     n := &PB_PostCopy{
-      post_id: int64 ( o.post_id ),
-      user_id: int32 ( o.user_id ),
-      post_type_enum: int32 ( o.post_type_enum ),
-      post_category_enum: int32 ( o.post_category_enum ),
-      media_id: int64 ( o.media_id ),
-      post_key: string ( o.post_key ),
-      text: string ( o.text ),
-      rich_text: string ( o.rich_text ),
-      media_count: int32 ( o.media_count ),
-      shared_to: int32 ( o.shared_to ),
-      disable_comment: int32 ( o.disable_comment ),
-      source: int32 ( o.source ),
-      has_tag: int32 ( o.has_tag ),
-      seq: int32 ( o.seq ),
-      comments_count: int32 ( o.comments_count ),
-      likes_count: int32 ( o.likes_count ),
-      views_count: int32 ( o.views_count ),
-      edited_time: int32 ( o.edited_time ),
-      created_time: int32 ( o.created_time ),
-      re_shared_post_id: int64 ( o.re_shared_post_id ),
-    }
-    return n
-}
-*/
-/*
 func PBConvPB__PostCount_To_PostCount( o *PB_PostCount) *PostCount {
      n := &PostCount{
       PostId: int ( o.PostId ),
@@ -1510,16 +1457,16 @@ func PBConvPB_XfileServiceRequestLog_To_XfileServiceRequestLog ( o *XfileService
 /*
 func PBConvPB__Account_To_Account( o *PB_Account) *Account {
      n := &Account{
-      id: int ( o.id ),
-      balance: float64 ( o.balance ),
+      id:  ( o.id ),
+      balance:  ( o.balance ),
     }
     return n
 }
 
 func PBConvPB_Account_To_Account ( o *Account) *PB_Account {
      n := &PB_Account{
-      id: int32 ( o.id ),
-      balance: float64 ( o.balance ),
+      id:  ( o.id ),
+      balance:  ( o.balance ),
     }
     return n
 }
@@ -1527,52 +1474,52 @@ func PBConvPB_Account_To_Account ( o *Account) *PB_Account {
 /*
 func PBConvPB__PostCdb_To_PostCdb( o *PB_PostCdb) *PostCdb {
      n := &PostCdb{
-      post_id: int ( o.post_id ),
-      user_id: int ( o.user_id ),
-      post_type_enum: int ( o.post_type_enum ),
-      post_category_enum: int ( o.post_category_enum ),
-      media_id: int ( o.media_id ),
-      post_key: string ( o.post_key ),
-      text: string ( o.text ),
-      rich_text: string ( o.rich_text ),
-      media_count: int ( o.media_count ),
-      shared_to: int ( o.shared_to ),
-      disable_comment: int ( o.disable_comment ),
-      source: int ( o.source ),
-      has_tag: int ( o.has_tag ),
-      seq: int ( o.seq ),
-      comments_count: int ( o.comments_count ),
-      likes_count: int ( o.likes_count ),
-      views_count: int ( o.views_count ),
-      edited_time: int ( o.edited_time ),
-      created_time: int ( o.created_time ),
-      re_shared_post_id: int ( o.re_shared_post_id ),
+      post_id:  ( o.post_id ),
+      user_id:  ( o.user_id ),
+      post_type_enum:  ( o.post_type_enum ),
+      post_category_enum:  ( o.post_category_enum ),
+      media_id:  ( o.media_id ),
+      post_key:  ( o.post_key ),
+      text:  ( o.text ),
+      rich_text:  ( o.rich_text ),
+      media_count:  ( o.media_count ),
+      shared_to:  ( o.shared_to ),
+      disable_comment:  ( o.disable_comment ),
+      source:  ( o.source ),
+      has_tag:  ( o.has_tag ),
+      seq:  ( o.seq ),
+      comments_count:  ( o.comments_count ),
+      likes_count:  ( o.likes_count ),
+      views_count:  ( o.views_count ),
+      edited_time:  ( o.edited_time ),
+      created_time:  ( o.created_time ),
+      re_shared_post_id:  ( o.re_shared_post_id ),
     }
     return n
 }
 
 func PBConvPB_PostCdb_To_PostCdb ( o *PostCdb) *PB_PostCdb {
      n := &PB_PostCdb{
-      post_id: int32 ( o.post_id ),
-      user_id: int32 ( o.user_id ),
-      post_type_enum: int32 ( o.post_type_enum ),
-      post_category_enum: int32 ( o.post_category_enum ),
-      media_id: int32 ( o.media_id ),
-      post_key: string ( o.post_key ),
-      text: string ( o.text ),
-      rich_text: string ( o.rich_text ),
-      media_count: int32 ( o.media_count ),
-      shared_to: int32 ( o.shared_to ),
-      disable_comment: int32 ( o.disable_comment ),
-      source: int32 ( o.source ),
-      has_tag: int32 ( o.has_tag ),
-      seq: int32 ( o.seq ),
-      comments_count: int32 ( o.comments_count ),
-      likes_count: int32 ( o.likes_count ),
-      views_count: int32 ( o.views_count ),
-      edited_time: int32 ( o.edited_time ),
-      created_time: int32 ( o.created_time ),
-      re_shared_post_id: int32 ( o.re_shared_post_id ),
+      post_id:  ( o.post_id ),
+      user_id:  ( o.user_id ),
+      post_type_enum:  ( o.post_type_enum ),
+      post_category_enum:  ( o.post_category_enum ),
+      media_id:  ( o.media_id ),
+      post_key:  ( o.post_key ),
+      text:  ( o.text ),
+      rich_text:  ( o.rich_text ),
+      media_count:  ( o.media_count ),
+      shared_to:  ( o.shared_to ),
+      disable_comment:  ( o.disable_comment ),
+      source:  ( o.source ),
+      has_tag:  ( o.has_tag ),
+      seq:  ( o.seq ),
+      comments_count:  ( o.comments_count ),
+      likes_count:  ( o.likes_count ),
+      views_count:  ( o.views_count ),
+      edited_time:  ( o.edited_time ),
+      created_time:  ( o.created_time ),
+      re_shared_post_id:  ( o.re_shared_post_id ),
     }
     return n
 }
