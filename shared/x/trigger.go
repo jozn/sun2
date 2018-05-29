@@ -27,7 +27,7 @@ type TriggerModelListener struct {
 	Comment TriggerIntModel
 	Post    TriggerIntModel
 	User    TriggerIntModel
-	Chat    TriggerStringModel
+	Chat    TriggerIntModel
 }
 
 var lastLoaded int
@@ -77,7 +77,7 @@ func triggerLoader() {
 						}
 					case "CHAT":
 						if listener.Chat != nil {
-							collect.Chat.OnInsert = append(collect.Chat.OnInsert, trig.TargetStr)
+							collect.Chat.OnInsert = append(collect.Chat.OnInsert, trig.TargetId)
 						}
 					}
 				case "UPDATE":
@@ -100,7 +100,7 @@ func triggerLoader() {
 						}
 					case "CHAT":
 						if listener.Chat != nil {
-							collect.Chat.OnUpdate = append(collect.Chat.OnUpdate, trig.TargetStr)
+							collect.Chat.OnUpdate = append(collect.Chat.OnUpdate, trig.TargetId)
 						}
 					}
 				case "DELETE":
@@ -123,7 +123,7 @@ func triggerLoader() {
 						}
 					case "CHAT":
 						if listener.Chat != nil {
-							collect.Chat.OnDelete = append(collect.Chat.OnDelete, trig.TargetStr)
+							collect.Chat.OnDelete = append(collect.Chat.OnDelete, trig.TargetId)
 						}
 					}
 				}
@@ -212,5 +212,5 @@ type triggerModelWalk struct {
 	Comment triggerIntCollection
 	Post    triggerIntCollection
 	User    triggerIntCollection
-	Chat    triggerStringCollection
+	Chat    triggerIntCollection
 }

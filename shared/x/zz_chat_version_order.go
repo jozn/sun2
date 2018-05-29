@@ -5,196 +5,173 @@ import (
 	"errors"
 	"strings"
 	//"time"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// UserMetaInfo represents a row from 'sun.user_meta_info'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatVersionOrder represents a row from 'sun_chat.chat_version_order'.
 
 // Manualy copy this to project
-type UserMetaInfo__ struct {
-	Id                  int `json:"Id"`                  // Id -
-	UserId              int `json:"UserId"`              // UserId -
-	IsNotificationDirty int `json:"IsNotificationDirty"` // IsNotificationDirty -
-	LastUserRecGen      int `json:"LastUserRecGen"`      // LastUserRecGen -
+type ChatVersionOrder__ struct {
+	VersionTime int `json:"VersionTime"` // VersionTime -
+	UserId      int `json:"UserId"`      // UserId -
+	ChatId      int `json:"ChatId"`      // ChatId -
+	OrderTime   int `json:"OrderTime"`   // OrderTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the UserMetaInfo exists in the database.
-func (umi *UserMetaInfo) Exists() bool {
-	return umi._exists
+// Exists determines if the ChatVersionOrder exists in the database.
+func (cvo *ChatVersionOrder) Exists() bool {
+	return cvo._exists
 }
 
-// Deleted provides information if the UserMetaInfo has been deleted from the database.
-func (umi *UserMetaInfo) Deleted() bool {
-	return umi._deleted
+// Deleted provides information if the ChatVersionOrder has been deleted from the database.
+func (cvo *ChatVersionOrder) Deleted() bool {
+	return cvo._deleted
 }
 
-// Insert inserts the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Insert(db XODB) error {
+// Insert inserts the ChatVersionOrder to the database.
+func (cvo *ChatVersionOrder) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if umi._exists {
+	if cvo._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.user_meta_info (` +
-		`UserId, IsNotificationDirty, LastUserRecGen` +
+	// sql insert query, primary key must be provided
+	const sqlstr = `INSERT INTO sun_chat.chat_version_order (` +
+		`VersionTime, UserId, ChatId, OrderTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.UserMetaInfo {
-		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	if LogTableSqlReq.ChatVersionOrder {
+		XOLog(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
 	}
-	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	_, err = db.Exec(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
-			XOLogErr(err)
-		}
-		return err
-	}
+	// set existence
+	cvo._exists = true
 
-	// set primary key and existence
-	umi.Id = int(id)
-	umi._exists = true
-
-	OnUserMetaInfo_AfterInsert(umi)
+	OnChatVersionOrder_AfterInsert(cvo)
 
 	return nil
 }
 
-// Insert inserts the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Replace(db XODB) error {
+// Insert inserts the ChatVersionOrder to the database.
+func (cvo *ChatVersionOrder) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.user_meta_info (` +
-		`UserId, IsNotificationDirty, LastUserRecGen` +
+	const sqlstr = `REPLACE INTO sun_chat.chat_version_order (` +
+		`VersionTime, UserId, ChatId, OrderTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.UserMetaInfo {
-		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	if LogTableSqlReq.ChatVersionOrder {
+		XOLog(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
 	}
-	res, err := db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen)
+	_, err = db.Exec(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
-			XOLogErr(err)
-		}
-		return err
-	}
+	cvo._exists = true
 
-	// set primary key and existence
-	umi.Id = int(id)
-	umi._exists = true
-
-	OnUserMetaInfo_AfterInsert(umi)
+	OnChatVersionOrder_AfterInsert(cvo)
 
 	return nil
 }
 
-// Update updates the UserMetaInfo in the database.
-func (umi *UserMetaInfo) Update(db XODB) error {
+// Update updates the ChatVersionOrder in the database.
+func (cvo *ChatVersionOrder) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !umi._exists {
+	if !cvo._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if umi._deleted {
+	if cvo._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.user_meta_info SET ` +
-		`UserId = ?, IsNotificationDirty = ?, LastUserRecGen = ?` +
-		` WHERE Id = ?`
+	const sqlstr = `UPDATE sun_chat.chat_version_order SET ` +
+		`UserId = ?, ChatId = ?, OrderTime = ?` +
+		` WHERE VersionTime = ?`
 
 	// run query
-	if LogTableSqlReq.UserMetaInfo {
-		XOLog(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
+	if LogTableSqlReq.ChatVersionOrder {
+		XOLog(sqlstr, cvo.UserId, cvo.ChatId, cvo.OrderTime, cvo.VersionTime)
 	}
-	_, err = db.Exec(sqlstr, umi.UserId, umi.IsNotificationDirty, umi.LastUserRecGen, umi.Id)
+	_, err = db.Exec(sqlstr, cvo.UserId, cvo.ChatId, cvo.OrderTime, cvo.VersionTime)
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLogErr(err)
 	}
-	OnUserMetaInfo_AfterUpdate(umi)
+	OnChatVersionOrder_AfterUpdate(cvo)
 
 	return err
 }
 
-// Save saves the UserMetaInfo to the database.
-func (umi *UserMetaInfo) Save(db XODB) error {
-	if umi.Exists() {
-		return umi.Update(db)
+// Save saves the ChatVersionOrder to the database.
+func (cvo *ChatVersionOrder) Save(db XODB) error {
+	if cvo.Exists() {
+		return cvo.Update(db)
 	}
 
-	return umi.Replace(db)
+	return cvo.Replace(db)
 }
 
-// Delete deletes the UserMetaInfo from the database.
-func (umi *UserMetaInfo) Delete(db XODB) error {
+// Delete deletes the ChatVersionOrder from the database.
+func (cvo *ChatVersionOrder) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !umi._exists {
+	if !cvo._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if umi._deleted {
+	if cvo._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.user_meta_info WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun_chat.chat_version_order WHERE VersionTime = ?`
 
 	// run query
-	if LogTableSqlReq.UserMetaInfo {
-		XOLog(sqlstr, umi.Id)
+	if LogTableSqlReq.ChatVersionOrder {
+		XOLog(sqlstr, cvo.VersionTime)
 	}
-	_, err = db.Exec(sqlstr, umi.Id)
+	_, err = db.Exec(sqlstr, cvo.VersionTime)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	umi._deleted = true
+	cvo._deleted = true
 
-	OnUserMetaInfo_AfterDelete(umi)
+	OnChatVersionOrder_AfterDelete(cvo)
 
 	return nil
 }
@@ -205,14 +182,14 @@ func (umi *UserMetaInfo) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __UserMetaInfo_Deleter struct {
+type __ChatVersionOrder_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __UserMetaInfo_Updater struct {
+type __ChatVersionOrder_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -221,7 +198,7 @@ type __UserMetaInfo_Updater struct {
 	isMysql     bool
 }
 
-type __UserMetaInfo_Selector struct {
+type __ChatVersionOrder_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -232,30 +209,30 @@ type __UserMetaInfo_Selector struct {
 	isMysql     bool
 }
 
-func NewUserMetaInfo_Deleter() *__UserMetaInfo_Deleter {
-	d := __UserMetaInfo_Deleter{whereSep: " AND "}
+func NewChatVersionOrder_Deleter() *__ChatVersionOrder_Deleter {
+	d := __ChatVersionOrder_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewUserMetaInfo_Updater() *__UserMetaInfo_Updater {
-	u := __UserMetaInfo_Updater{whereSep: " AND "}
+func NewChatVersionOrder_Updater() *__ChatVersionOrder_Updater {
+	u := __ChatVersionOrder_Updater{whereSep: " AND "}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewUserMetaInfo_Selector() *__UserMetaInfo_Selector {
-	u := __UserMetaInfo_Selector{whereSep: " AND ", selectCol: "*"}
+func NewChatVersionOrder_Selector() *__ChatVersionOrder_Selector {
+	u := __ChatVersionOrder_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__UserMetaInfo_Selector)nextDollars(size int) string  {
+func (m *__ChatVersionOrder_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__UserMetaInfo_Selector)nextDollar() string  {
+func (m *__ChatVersionOrder_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -266,143 +243,130 @@ func (m *__UserMetaInfo_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__UserMetaInfo_Deleter) nextDollars(size int) string {
+func (m *__ChatVersionOrder_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__UserMetaInfo_Deleter) nextDollar() string {
+func (m *__ChatVersionOrder_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__UserMetaInfo_Deleter) Or() *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) Or() *__ChatVersionOrder_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) VersionTime_In(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) Id_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) Id_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_Eq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_NotEq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_LT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_LE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_GT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) Id_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) VersionTime_GE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) UserId_In(ins []int) *__UserMetaInfo_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__UserMetaInfo_Deleter) UserId_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) UserId_In(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -415,7 +379,20 @@ func (u *__UserMetaInfo_Deleter) UserId_Ins(ins ...int) *__UserMetaInfo_Deleter 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) UserId_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) UserId_Ins(ins ...int) *__ChatVersionOrder_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatVersionOrder_Deleter) UserId_NotIn(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -428,7 +405,7 @@ func (u *__UserMetaInfo_Deleter) UserId_NotIn(ins []int) *__UserMetaInfo_Deleter
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_Eq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -439,7 +416,7 @@ func (d *__UserMetaInfo_Deleter) UserId_Eq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_NotEq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -450,7 +427,7 @@ func (d *__UserMetaInfo_Deleter) UserId_NotEq(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_LT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -461,7 +438,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_LE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -472,7 +449,7 @@ func (d *__UserMetaInfo_Deleter) UserId_LE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_GT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -483,7 +460,7 @@ func (d *__UserMetaInfo_Deleter) UserId_GT(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) UserId_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) UserId_GE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -494,354 +471,341 @@ func (d *__UserMetaInfo_Deleter) UserId_GE(val int) *__UserMetaInfo_Deleter {
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) ChatId_In(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) ChatId_Ins(ins ...int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) ChatId_NotIn(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_Eq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_NotEq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_LT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_LE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_GT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) IsNotificationDirty_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) ChatId_GE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_In(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) OrderTime_In(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Deleter) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Deleter {
+func (u *__ChatVersionOrder_Deleter) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_Eq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_Eq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = " + d.nextDollar()
+	w.condition = " OrderTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_NotEq(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != " + d.nextDollar()
+	w.condition = " OrderTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_LT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_LT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < " + d.nextDollar()
+	w.condition = " OrderTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_LE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_LE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= " + d.nextDollar()
+	w.condition = " OrderTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_GT(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_GT(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > " + d.nextDollar()
+	w.condition = " OrderTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Deleter) LastUserRecGen_GE(val int) *__UserMetaInfo_Deleter {
+func (d *__ChatVersionOrder_Deleter) OrderTime_GE(val int) *__ChatVersionOrder_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= " + d.nextDollar()
+	w.condition = " OrderTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__UserMetaInfo_Updater) nextDollars(size int) string {
+func (m *__ChatVersionOrder_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__UserMetaInfo_Updater) nextDollar() string {
+func (m *__ChatVersionOrder_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__UserMetaInfo_Updater) Or() *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) Or() *__ChatVersionOrder_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) VersionTime_In(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) Id_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_Eq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_NotEq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_LT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_LT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_LE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_LE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_GT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_GT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) Id_GE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) VersionTime_GE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) UserId_In(ins []int) *__UserMetaInfo_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__UserMetaInfo_Updater) UserId_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) UserId_In(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -854,7 +818,20 @@ func (u *__UserMetaInfo_Updater) UserId_Ins(ins ...int) *__UserMetaInfo_Updater 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) UserId_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) UserId_Ins(ins ...int) *__ChatVersionOrder_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatVersionOrder_Updater) UserId_NotIn(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -867,7 +844,7 @@ func (u *__UserMetaInfo_Updater) UserId_NotIn(ins []int) *__UserMetaInfo_Updater
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) UserId_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_Eq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -878,7 +855,7 @@ func (d *__UserMetaInfo_Updater) UserId_Eq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_NotEq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -889,7 +866,7 @@ func (d *__UserMetaInfo_Updater) UserId_NotEq(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_LT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_LT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -900,7 +877,7 @@ func (d *__UserMetaInfo_Updater) UserId_LT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_LE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_LE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -911,7 +888,7 @@ func (d *__UserMetaInfo_Updater) UserId_LE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_GT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_GT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -922,7 +899,7 @@ func (d *__UserMetaInfo_Updater) UserId_GT(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) UserId_GE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) UserId_GE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -933,354 +910,341 @@ func (d *__UserMetaInfo_Updater) UserId_GE(val int) *__UserMetaInfo_Updater {
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) ChatId_In(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) ChatId_Ins(ins ...int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) ChatId_NotIn(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_Eq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_NotEq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_LT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_LT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_LE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_LE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_GT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_GT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) IsNotificationDirty_GE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) ChatId_GE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_In(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) OrderTime_In(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_Eq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_Eq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = " + d.nextDollar()
+	w.condition = " OrderTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_NotEq(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != " + d.nextDollar()
+	w.condition = " OrderTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_LT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_LT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < " + d.nextDollar()
+	w.condition = " OrderTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_LE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_LE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= " + d.nextDollar()
+	w.condition = " OrderTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_GT(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_GT(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > " + d.nextDollar()
+	w.condition = " OrderTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Updater) LastUserRecGen_GE(val int) *__UserMetaInfo_Updater {
+func (d *__ChatVersionOrder_Updater) OrderTime_GE(val int) *__ChatVersionOrder_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= " + d.nextDollar()
+	w.condition = " OrderTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__UserMetaInfo_Selector) nextDollars(size int) string {
+func (m *__ChatVersionOrder_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__UserMetaInfo_Selector) nextDollar() string {
+func (m *__ChatVersionOrder_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__UserMetaInfo_Selector) Or() *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) Or() *__ChatVersionOrder_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) VersionTime_In(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Id_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) Id_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_Eq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_NotEq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_LT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_LT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_LE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_LE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_GT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_GT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) Id_GE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) VersionTime_GE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) UserId_In(ins []int) *__UserMetaInfo_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__UserMetaInfo_Selector) UserId_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) UserId_In(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1293,7 +1257,20 @@ func (u *__UserMetaInfo_Selector) UserId_Ins(ins ...int) *__UserMetaInfo_Selecto
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) UserId_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) UserId_Ins(ins ...int) *__ChatVersionOrder_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ChatVersionOrder_Selector) UserId_NotIn(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1306,7 +1283,7 @@ func (u *__UserMetaInfo_Selector) UserId_NotIn(ins []int) *__UserMetaInfo_Select
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) UserId_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_Eq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1317,7 +1294,7 @@ func (d *__UserMetaInfo_Selector) UserId_Eq(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_NotEq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1328,7 +1305,7 @@ func (d *__UserMetaInfo_Selector) UserId_NotEq(val int) *__UserMetaInfo_Selector
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_LT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_LT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1339,7 +1316,7 @@ func (d *__UserMetaInfo_Selector) UserId_LT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_LE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_LE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1350,7 +1327,7 @@ func (d *__UserMetaInfo_Selector) UserId_LE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_GT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_GT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1361,7 +1338,7 @@ func (d *__UserMetaInfo_Selector) UserId_GT(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) UserId_GE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) UserId_GE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1372,211 +1349,211 @@ func (d *__UserMetaInfo_Selector) UserId_GE(val int) *__UserMetaInfo_Selector {
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) ChatId_In(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) ChatId_Ins(ins ...int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) IsNotificationDirty_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) ChatId_NotIn(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " IsNotificationDirty NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_Eq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_NotEq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_LT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_LT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_LE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_LE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_GT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_GT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) IsNotificationDirty_GE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) ChatId_GE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " IsNotificationDirty >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_In(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) OrderTime_In(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_Ins(ins ...int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) LastUserRecGen_NotIn(ins []int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastUserRecGen NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_Eq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_Eq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen = " + d.nextDollar()
+	w.condition = " OrderTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_NotEq(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_NotEq(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen != " + d.nextDollar()
+	w.condition = " OrderTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_LT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_LT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen < " + d.nextDollar()
+	w.condition = " OrderTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_LE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_LE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen <= " + d.nextDollar()
+	w.condition = " OrderTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_GT(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_GT(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen > " + d.nextDollar()
+	w.condition = " OrderTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Selector {
+func (d *__ChatVersionOrder_Selector) OrderTime_GE(val int) *__ChatVersionOrder_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastUserRecGen >= " + d.nextDollar()
+	w.condition = " OrderTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1596,24 +1573,24 @@ func (d *__UserMetaInfo_Selector) LastUserRecGen_GE(val int) *__UserMetaInfo_Sel
 
 //ints
 
-func (u *__UserMetaInfo_Updater) Id(newVal int) *__UserMetaInfo_Updater {
-	up := updateCol{" Id = " + u.nextDollar(), newVal}
+func (u *__ChatVersionOrder_Updater) VersionTime(newVal int) *__ChatVersionOrder_Updater {
+	up := updateCol{" VersionTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Id = " + u.nextDollar()] = newVal
+	// u.updates[" VersionTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) VersionTime_Increment(count int) *__ChatVersionOrder_Updater {
 	if count > 0 {
-		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		up := updateCol{" VersionTime = VersionTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Id = Id+ " + u.nextDollar()] = count
+		//u.updates[" VersionTime = VersionTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		up := updateCol{" VersionTime = VersionTime- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" VersionTime = VersionTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1623,14 +1600,14 @@ func (u *__UserMetaInfo_Updater) Id_Increment(count int) *__UserMetaInfo_Updater
 
 //ints
 
-func (u *__UserMetaInfo_Updater) UserId(newVal int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) UserId(newVal int) *__ChatVersionOrder_Updater {
 	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) UserId_Increment(count int) *__ChatVersionOrder_Updater {
 	if count > 0 {
 		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1650,24 +1627,24 @@ func (u *__UserMetaInfo_Updater) UserId_Increment(count int) *__UserMetaInfo_Upd
 
 //ints
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty(newVal int) *__UserMetaInfo_Updater {
-	up := updateCol{" IsNotificationDirty = " + u.nextDollar(), newVal}
+func (u *__ChatVersionOrder_Updater) ChatId(newVal int) *__ChatVersionOrder_Updater {
+	up := updateCol{" ChatId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" IsNotificationDirty = " + u.nextDollar()] = newVal
+	// u.updates[" ChatId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) ChatId_Increment(count int) *__ChatVersionOrder_Updater {
 	if count > 0 {
-		up := updateCol{" IsNotificationDirty = IsNotificationDirty+ " + u.nextDollar(), count}
+		up := updateCol{" ChatId = ChatId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" IsNotificationDirty = IsNotificationDirty+ " + u.nextDollar()] = count
+		//u.updates[" ChatId = ChatId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" IsNotificationDirty = IsNotificationDirty- " + u.nextDollar(), count}
+		up := updateCol{" ChatId = ChatId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" IsNotificationDirty = IsNotificationDirty- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" ChatId = ChatId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1677,24 +1654,24 @@ func (u *__UserMetaInfo_Updater) IsNotificationDirty_Increment(count int) *__Use
 
 //ints
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen(newVal int) *__UserMetaInfo_Updater {
-	up := updateCol{" LastUserRecGen = " + u.nextDollar(), newVal}
+func (u *__ChatVersionOrder_Updater) OrderTime(newVal int) *__ChatVersionOrder_Updater {
+	up := updateCol{" OrderTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" LastUserRecGen = " + u.nextDollar()] = newVal
+	// u.updates[" OrderTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__UserMetaInfo_Updater) LastUserRecGen_Increment(count int) *__UserMetaInfo_Updater {
+func (u *__ChatVersionOrder_Updater) OrderTime_Increment(count int) *__ChatVersionOrder_Updater {
 	if count > 0 {
-		up := updateCol{" LastUserRecGen = LastUserRecGen+ " + u.nextDollar(), count}
+		up := updateCol{" OrderTime = OrderTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" LastUserRecGen = LastUserRecGen+ " + u.nextDollar()] = count
+		//u.updates[" OrderTime = OrderTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" LastUserRecGen = LastUserRecGen- " + u.nextDollar(), count}
+		up := updateCol{" OrderTime = OrderTime- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" LastUserRecGen = LastUserRecGen- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" OrderTime = OrderTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1707,86 +1684,86 @@ func (u *__UserMetaInfo_Updater) LastUserRecGen_Increment(count int) *__UserMeta
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__UserMetaInfo_Selector) OrderBy_Id_Desc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY Id DESC "
+func (u *__ChatVersionOrder_Selector) OrderBy_VersionTime_Desc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY VersionTime DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_Id_Asc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY Id ASC "
+func (u *__ChatVersionOrder_Selector) OrderBy_VersionTime_Asc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY VersionTime ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_Id() *__UserMetaInfo_Selector {
-	u.selectCol = "Id"
+func (u *__ChatVersionOrder_Selector) Select_VersionTime() *__ChatVersionOrder_Selector {
+	u.selectCol = "VersionTime"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_UserId_Desc() *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) OrderBy_UserId_Desc() *__ChatVersionOrder_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_UserId_Asc() *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) OrderBy_UserId_Asc() *__ChatVersionOrder_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_UserId() *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) Select_UserId() *__ChatVersionOrder_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_IsNotificationDirty_Desc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY IsNotificationDirty DESC "
+func (u *__ChatVersionOrder_Selector) OrderBy_ChatId_Desc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY ChatId DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_IsNotificationDirty_Asc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY IsNotificationDirty ASC "
+func (u *__ChatVersionOrder_Selector) OrderBy_ChatId_Asc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY ChatId ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_IsNotificationDirty() *__UserMetaInfo_Selector {
-	u.selectCol = "IsNotificationDirty"
+func (u *__ChatVersionOrder_Selector) Select_ChatId() *__ChatVersionOrder_Selector {
+	u.selectCol = "ChatId"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_LastUserRecGen_Desc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY LastUserRecGen DESC "
+func (u *__ChatVersionOrder_Selector) OrderBy_OrderTime_Desc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY OrderTime DESC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) OrderBy_LastUserRecGen_Asc() *__UserMetaInfo_Selector {
-	u.orderBy = " ORDER BY LastUserRecGen ASC "
+func (u *__ChatVersionOrder_Selector) OrderBy_OrderTime_Asc() *__ChatVersionOrder_Selector {
+	u.orderBy = " ORDER BY OrderTime ASC "
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Select_LastUserRecGen() *__UserMetaInfo_Selector {
-	u.selectCol = "LastUserRecGen"
+func (u *__ChatVersionOrder_Selector) Select_OrderTime() *__ChatVersionOrder_Selector {
+	u.selectCol = "OrderTime"
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Limit(num int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) Limit(num int) *__ChatVersionOrder_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Offset(num int) *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) Offset(num int) *__ChatVersionOrder_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__UserMetaInfo_Selector) Order_Rand() *__UserMetaInfo_Selector {
+func (u *__ChatVersionOrder_Selector) Order_Rand() *__ChatVersionOrder_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__UserMetaInfo_Selector) _stoSql() (string, []interface{}) {
+func (u *__ChatVersionOrder_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.user_meta_info"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.chat_version_order"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1806,20 +1783,20 @@ func (u *__UserMetaInfo_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__UserMetaInfo_Selector) GetRow(db *sqlx.DB) (*UserMetaInfo, error) {
+func (u *__ChatVersionOrder_Selector) GetRow(db *sqlx.DB) (*ChatVersionOrder, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &UserMetaInfo{}
+	row := &ChatVersionOrder{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1827,25 +1804,25 @@ func (u *__UserMetaInfo_Selector) GetRow(db *sqlx.DB) (*UserMetaInfo, error) {
 
 	row._exists = true
 
-	OnUserMetaInfo_LoadOne(row)
+	OnChatVersionOrder_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetRows(db *sqlx.DB) ([]*UserMetaInfo, error) {
+func (u *__ChatVersionOrder_Selector) GetRows(db *sqlx.DB) ([]*ChatVersionOrder, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*UserMetaInfo
+	var rows []*ChatVersionOrder
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1859,25 +1836,25 @@ func (u *__UserMetaInfo_Selector) GetRows(db *sqlx.DB) ([]*UserMetaInfo, error) 
 		rows[i]._exists = true
 	}
 
-	OnUserMetaInfo_LoadMany(rows)
+	OnChatVersionOrder_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) {
+func (u *__ChatVersionOrder_Selector) GetRows2(db *sqlx.DB) ([]ChatVersionOrder, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*UserMetaInfo
+	var rows []*ChatVersionOrder
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1891,9 +1868,9 @@ func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) 
 		rows[i]._exists = true
 	}
 
-	OnUserMetaInfo_LoadMany(rows)
+	OnChatVersionOrder_LoadMany(rows)
 
-	rows2 := make([]UserMetaInfo, len(rows))
+	rows2 := make([]ChatVersionOrder, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -1902,12 +1879,12 @@ func (u *__UserMetaInfo_Selector) GetRows2(db *sqlx.DB) ([]UserMetaInfo, error) 
 	return rows2, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__ChatVersionOrder_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -1915,7 +1892,7 @@ func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return "", err
@@ -1924,19 +1901,19 @@ func (u *__UserMetaInfo_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__ChatVersionOrder_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1945,19 +1922,19 @@ func (u *__UserMetaInfo_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) 
 	return rows, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__ChatVersionOrder_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1966,19 +1943,19 @@ func (u *__UserMetaInfo_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__UserMetaInfo_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__ChatVersionOrder_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1988,7 +1965,7 @@ func (u *__UserMetaInfo_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
+func (u *__ChatVersionOrder_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -2009,18 +1986,18 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.user_meta_info SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.chat_version_order SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2028,7 +2005,7 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2037,7 +2014,7 @@ func (u *__UserMetaInfo_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
+func (d *__ChatVersionOrder_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2050,15 +2027,15 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.user_meta_info WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.chat_version_order WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2067,7 +2044,7 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2076,20 +2053,21 @@ func (d *__UserMetaInfo_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  UserMetaInfo ////////////////
+///////////////////////// Mass insert - replace for  ChatVersionOrder ////////////////
 
-func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
+func MassInsert_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
-	sqlstr := "INSERT INTO sun.user_meta_info (" +
-		"UserId, IsNotificationDirty, LastUserRecGen" +
+	sqlstr := "INSERT INTO sun_chat.chat_version_order (" +
+		"VersionTime, UserId, ChatId, OrderTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2097,18 +2075,19 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.VersionTime)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.IsNotificationDirty)
-		vals = append(vals, row.LastUserRecGen)
+		vals = append(vals, row.ChatId)
+		vals = append(vals, row.OrderTime)
 
 	}
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return err
@@ -2117,15 +2096,18 @@ func MassInsert_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 	return nil
 }
 
-func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
+func MassReplace_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
-	sqlstr := "REPLACE INTO sun.user_meta_info (" +
-		"UserId, IsNotificationDirty, LastUserRecGen" +
+	sqlstr := "REPLACE INTO sun_chat.chat_version_order (" +
+		"VersionTime, UserId, ChatId, OrderTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2133,24 +2115,26 @@ func MassReplace_UserMetaInfo(rows []UserMetaInfo, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.VersionTime)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.IsNotificationDirty)
-		vals = append(vals, row.LastUserRecGen)
+		vals = append(vals, row.ChatId)
+		vals = append(vals, row.OrderTime)
 
 	}
 
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.UserMetaInfo {
+		if LogTableSqlReq.ChatVersionOrder {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////

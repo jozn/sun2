@@ -198,150 +198,6 @@ func (c _StoreImpl) PreLoadEventByEventIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetFollowingListById(Id int) (*FollowingList, bool) {
-	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingList); ok {
-			return obj, true
-		}
-	}
-	obj2, err := FollowingListById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.FollowingList {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetFollowingListById_JustCache(Id int) (*FollowingList, bool) {
-	o, ok := RowCache.Get("FollowingList:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingList); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.FollowingList {
-		XOLogErr(errors.New("_JustCache is empty for FollowingList: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadFollowingListByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("FollowingList:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewFollowingList_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetFollowingListMemberById(Id int) (*FollowingListMember, bool) {
-	o, ok := RowCache.Get("FollowingListMember:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingListMember); ok {
-			return obj, true
-		}
-	}
-	obj2, err := FollowingListMemberById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.FollowingListMember {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetFollowingListMemberById_JustCache(Id int) (*FollowingListMember, bool) {
-	o, ok := RowCache.Get("FollowingListMember:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingListMember); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.FollowingListMember {
-		XOLogErr(errors.New("_JustCache is empty for FollowingListMember: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadFollowingListMemberByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("FollowingListMember:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewFollowingListMember_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetFollowingListMemberRemovedById(Id int) (*FollowingListMemberRemoved, bool) {
-	o, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingListMemberRemoved); ok {
-			return obj, true
-		}
-	}
-	obj2, err := FollowingListMemberRemovedById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.FollowingListMemberRemoved {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetFollowingListMemberRemovedById_JustCache(Id int) (*FollowingListMemberRemoved, bool) {
-	o, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*FollowingListMemberRemoved); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.FollowingListMemberRemoved {
-		XOLogErr(errors.New("_JustCache is empty for FollowingListMemberRemoved: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadFollowingListMemberRemovedByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("FollowingListMemberRemoved:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewFollowingListMemberRemoved_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
 	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
 	if ok {
@@ -918,54 +774,6 @@ func (c _StoreImpl) PreLoadPostResharedByResharedIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSearchClickedById(Id int) (*SearchClicked, bool) {
-	o, ok := RowCache.Get("SearchClicked:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SearchClicked); ok {
-			return obj, true
-		}
-	}
-	obj2, err := SearchClickedById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.SearchClicked {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetSearchClickedById_JustCache(Id int) (*SearchClicked, bool) {
-	o, ok := RowCache.Get("SearchClicked:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*SearchClicked); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.SearchClicked {
-		XOLogErr(errors.New("_JustCache is empty for SearchClicked: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSearchClickedByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("SearchClicked:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewSearchClicked_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetSessionById(Id int) (*Session, bool) {
 	o, ok := RowCache.Get("Session:" + strconv.Itoa(Id))
 	if ok {
@@ -1302,110 +1110,62 @@ func (c _StoreImpl) PreLoadUserByUserIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetUserMetaInfoById(Id int) (*UserMetaInfo, bool) {
-	o, ok := RowCache.Get("UserMetaInfo:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetUserRelationByRelNanoId(RelNanoId int) (*UserRelation, bool) {
+	o, ok := RowCache.Get("UserRelation:" + strconv.Itoa(RelNanoId))
 	if ok {
-		if obj, ok := o.(*UserMetaInfo); ok {
+		if obj, ok := o.(*UserRelation); ok {
 			return obj, true
 		}
 	}
-	obj2, err := UserMetaInfoById(base.DB, Id)
+	obj2, err := UserRelationByRelNanoId(base.DB, RelNanoId)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.UserMetaInfo {
+	if LogTableSqlReq.UserRelation {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetUserMetaInfoById_JustCache(Id int) (*UserMetaInfo, bool) {
-	o, ok := RowCache.Get("UserMetaInfo:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetUserRelationByRelNanoId_JustCache(RelNanoId int) (*UserRelation, bool) {
+	o, ok := RowCache.Get("UserRelation:" + strconv.Itoa(RelNanoId))
 	if ok {
-		if obj, ok := o.(*UserMetaInfo); ok {
+		if obj, ok := o.(*UserRelation); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.UserMetaInfo {
-		XOLogErr(errors.New("_JustCache is empty for UserMetaInfo: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.UserRelation {
+		XOLogErr(errors.New("_JustCache is empty for UserRelation: " + strconv.Itoa(RelNanoId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadUserMetaInfoByIds(ids []int) {
+func (c _StoreImpl) PreLoadUserRelationByRelNanoIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("UserMetaInfo:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("UserRelation:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewUserMetaInfo_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewUserRelation_Selector().RelNanoId_In(not_cached).GetRows(base.DB)
 	}
 }
 
 // yes 222 int
 
-func (c _StoreImpl) GetUserPasswordByUserId(UserId int) (*UserPassword, bool) {
-	o, ok := RowCache.Get("UserPassword:" + strconv.Itoa(UserId))
-	if ok {
-		if obj, ok := o.(*UserPassword); ok {
-			return obj, true
-		}
-	}
-	obj2, err := UserPasswordByUserId(base.DB, UserId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.UserPassword {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetUserPasswordByUserId_JustCache(UserId int) (*UserPassword, bool) {
-	o, ok := RowCache.Get("UserPassword:" + strconv.Itoa(UserId))
-	if ok {
-		if obj, ok := o.(*UserPassword); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.UserPassword {
-		XOLogErr(errors.New("_JustCache is empty for UserPassword: " + strconv.Itoa(UserId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadUserPasswordByUserIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("UserPassword:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewUserPassword_Selector().UserId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
-	o, ok := RowCache.Get("Chat:" + ChatKey)
+func (c _StoreImpl) GetChatByChatId(ChatId int) (*Chat, bool) {
+	o, ok := RowCache.Get("Chat:" + strconv.Itoa(ChatId))
 	if ok {
 		if obj, ok := o.(*Chat); ok {
 			return obj, true
 		}
 	}
-	obj2, err := ChatByChatKey(base.DB, ChatKey)
+	obj2, err := ChatByChatId(base.DB, ChatId)
 	if err == nil {
 		return obj2, true
 	}
@@ -1415,8 +1175,8 @@ func (c _StoreImpl) GetChatByChatKey(ChatKey string) (*Chat, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) GetChatByChatKey_JustCache(ChatKey string) (*Chat, bool) {
-	o, ok := RowCache.Get("Chat:" + ChatKey)
+func (c _StoreImpl) GetChatByChatId_JustCache(ChatId int) (*Chat, bool) {
+	o, ok := RowCache.Get("Chat:" + strconv.Itoa(ChatId))
 	if ok {
 		if obj, ok := o.(*Chat); ok {
 			return obj, true
@@ -1424,36 +1184,36 @@ func (c _StoreImpl) GetChatByChatKey_JustCache(ChatKey string) (*Chat, bool) {
 	}
 
 	if LogTableSqlReq.Chat {
-		XOLogErr(errors.New("_JustCache is empty for Chat: " + ChatKey))
+		XOLogErr(errors.New("_JustCache is empty for Chat: " + strconv.Itoa(ChatId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadChatByChatKeys(ids []string) {
-	not_cached := make([]string, 0, len(ids))
+func (c _StoreImpl) PreLoadChatByChatIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("Chat:" + id)
+		_, ok := RowCache.Get("Chat:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewChat_Selector().ChatKey_In(not_cached).GetRows(base.DB)
+		NewChat_Selector().ChatId_In(not_cached).GetRows(base.DB)
 	}
 }
 
-// yes 222 string
+// yes 222 int
 
-func (c _StoreImpl) GetChatLastMessageByChatKey(ChatKey string) (*ChatLastMessage, bool) {
-	o, ok := RowCache.Get("ChatLastMessage:" + ChatKey)
+func (c _StoreImpl) GetChatLastMessageByChatIdGroupId(ChatIdGroupId string) (*ChatLastMessage, bool) {
+	o, ok := RowCache.Get("ChatLastMessage:" + ChatIdGroupId)
 	if ok {
 		if obj, ok := o.(*ChatLastMessage); ok {
 			return obj, true
 		}
 	}
-	obj2, err := ChatLastMessageByChatKey(base.DB, ChatKey)
+	obj2, err := ChatLastMessageByChatIdGroupId(base.DB, ChatIdGroupId)
 	if err == nil {
 		return obj2, true
 	}
@@ -1463,8 +1223,8 @@ func (c _StoreImpl) GetChatLastMessageByChatKey(ChatKey string) (*ChatLastMessag
 	return nil, false
 }
 
-func (c _StoreImpl) GetChatLastMessageByChatKey_JustCache(ChatKey string) (*ChatLastMessage, bool) {
-	o, ok := RowCache.Get("ChatLastMessage:" + ChatKey)
+func (c _StoreImpl) GetChatLastMessageByChatIdGroupId_JustCache(ChatIdGroupId string) (*ChatLastMessage, bool) {
+	o, ok := RowCache.Get("ChatLastMessage:" + ChatIdGroupId)
 	if ok {
 		if obj, ok := o.(*ChatLastMessage); ok {
 			return obj, true
@@ -1472,12 +1232,12 @@ func (c _StoreImpl) GetChatLastMessageByChatKey_JustCache(ChatKey string) (*Chat
 	}
 
 	if LogTableSqlReq.ChatLastMessage {
-		XOLogErr(errors.New("_JustCache is empty for ChatLastMessage: " + ChatKey))
+		XOLogErr(errors.New("_JustCache is empty for ChatLastMessage: " + ChatIdGroupId))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadChatLastMessageByChatKeys(ids []string) {
+func (c _StoreImpl) PreLoadChatLastMessageByChatIdGroupIds(ids []string) {
 	not_cached := make([]string, 0, len(ids))
 
 	for _, id := range ids {
@@ -1488,55 +1248,55 @@ func (c _StoreImpl) PreLoadChatLastMessageByChatKeys(ids []string) {
 	}
 
 	if len(not_cached) > 0 {
-		NewChatLastMessage_Selector().ChatKey_In(not_cached).GetRows(base.DB)
+		NewChatLastMessage_Selector().ChatIdGroupId_In(not_cached).GetRows(base.DB)
 	}
 }
 
 // yes 222 string
 
-func (c _StoreImpl) GetDirectMessageByMessageId(MessageId int) (*DirectMessage, bool) {
-	o, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(MessageId))
+func (c _StoreImpl) GetChatVersionOrderByVersionTime(VersionTime int) (*ChatVersionOrder, bool) {
+	o, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(VersionTime))
 	if ok {
-		if obj, ok := o.(*DirectMessage); ok {
+		if obj, ok := o.(*ChatVersionOrder); ok {
 			return obj, true
 		}
 	}
-	obj2, err := DirectMessageByMessageId(base.DB, MessageId)
+	obj2, err := ChatVersionOrderByVersionTime(base.DB, VersionTime)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.DirectMessage {
+	if LogTableSqlReq.ChatVersionOrder {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetDirectMessageByMessageId_JustCache(MessageId int) (*DirectMessage, bool) {
-	o, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(MessageId))
+func (c _StoreImpl) GetChatVersionOrderByVersionTime_JustCache(VersionTime int) (*ChatVersionOrder, bool) {
+	o, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(VersionTime))
 	if ok {
-		if obj, ok := o.(*DirectMessage); ok {
+		if obj, ok := o.(*ChatVersionOrder); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.DirectMessage {
-		XOLogErr(errors.New("_JustCache is empty for DirectMessage: " + strconv.Itoa(MessageId)))
+	if LogTableSqlReq.ChatVersionOrder {
+		XOLogErr(errors.New("_JustCache is empty for ChatVersionOrder: " + strconv.Itoa(VersionTime)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadDirectMessageByMessageIds(ids []int) {
+func (c _StoreImpl) PreLoadChatVersionOrderByVersionTimes(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("DirectMessage:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewDirectMessage_Selector().MessageId_In(not_cached).GetRows(base.DB)
+		NewChatVersionOrder_Selector().VersionTime_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1590,14 +1350,14 @@ func (c _StoreImpl) PreLoadGroupByGroupIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetGroupMemberById(Id int) (*GroupMember, bool) {
-	o, ok := RowCache.Get("GroupMember:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetGroupMemberByOrderId(OrderId int) (*GroupMember, bool) {
+	o, ok := RowCache.Get("GroupMember:" + strconv.Itoa(OrderId))
 	if ok {
 		if obj, ok := o.(*GroupMember); ok {
 			return obj, true
 		}
 	}
-	obj2, err := GroupMemberById(base.DB, Id)
+	obj2, err := GroupMemberByOrderId(base.DB, OrderId)
 	if err == nil {
 		return obj2, true
 	}
@@ -1607,8 +1367,8 @@ func (c _StoreImpl) GetGroupMemberById(Id int) (*GroupMember, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) GetGroupMemberById_JustCache(Id int) (*GroupMember, bool) {
-	o, ok := RowCache.Get("GroupMember:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetGroupMemberByOrderId_JustCache(OrderId int) (*GroupMember, bool) {
+	o, ok := RowCache.Get("GroupMember:" + strconv.Itoa(OrderId))
 	if ok {
 		if obj, ok := o.(*GroupMember); ok {
 			return obj, true
@@ -1616,12 +1376,12 @@ func (c _StoreImpl) GetGroupMemberById_JustCache(Id int) (*GroupMember, bool) {
 	}
 
 	if LogTableSqlReq.GroupMember {
-		XOLogErr(errors.New("_JustCache is empty for GroupMember: " + strconv.Itoa(Id)))
+		XOLogErr(errors.New("_JustCache is empty for GroupMember: " + strconv.Itoa(OrderId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadGroupMemberByIds(ids []int) {
+func (c _StoreImpl) PreLoadGroupMemberByOrderIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
@@ -1632,55 +1392,103 @@ func (c _StoreImpl) PreLoadGroupMemberByIds(ids []int) {
 	}
 
 	if len(not_cached) > 0 {
-		NewGroupMember_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewGroupMember_Selector().OrderId_In(not_cached).GetRows(base.DB)
 	}
 }
 
 // yes 222 int
 
-func (c _StoreImpl) GetGroupMessageByMessageId(MessageId int) (*GroupMessage, bool) {
-	o, ok := RowCache.Get("GroupMessage:" + strconv.Itoa(MessageId))
+func (c _StoreImpl) GetGroupOrderdUserByOrderId(OrderId int) (*GroupOrderdUser, bool) {
+	o, ok := RowCache.Get("GroupOrderdUser:" + strconv.Itoa(OrderId))
 	if ok {
-		if obj, ok := o.(*GroupMessage); ok {
+		if obj, ok := o.(*GroupOrderdUser); ok {
 			return obj, true
 		}
 	}
-	obj2, err := GroupMessageByMessageId(base.DB, MessageId)
+	obj2, err := GroupOrderdUserByOrderId(base.DB, OrderId)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.GroupMessage {
+	if LogTableSqlReq.GroupOrderdUser {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetGroupMessageByMessageId_JustCache(MessageId int) (*GroupMessage, bool) {
-	o, ok := RowCache.Get("GroupMessage:" + strconv.Itoa(MessageId))
+func (c _StoreImpl) GetGroupOrderdUserByOrderId_JustCache(OrderId int) (*GroupOrderdUser, bool) {
+	o, ok := RowCache.Get("GroupOrderdUser:" + strconv.Itoa(OrderId))
 	if ok {
-		if obj, ok := o.(*GroupMessage); ok {
+		if obj, ok := o.(*GroupOrderdUser); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.GroupMessage {
-		XOLogErr(errors.New("_JustCache is empty for GroupMessage: " + strconv.Itoa(MessageId)))
+	if LogTableSqlReq.GroupOrderdUser {
+		XOLogErr(errors.New("_JustCache is empty for GroupOrderdUser: " + strconv.Itoa(OrderId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadGroupMessageByMessageIds(ids []int) {
+func (c _StoreImpl) PreLoadGroupOrderdUserByOrderIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("GroupMessage:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("GroupOrderdUser:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewGroupMessage_Selector().MessageId_In(not_cached).GetRows(base.DB)
+		NewGroupOrderdUser_Selector().OrderId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetGroupPinedMsgByMsgId(MsgId int) (*GroupPinedMsg, bool) {
+	o, ok := RowCache.Get("GroupPinedMsg:" + strconv.Itoa(MsgId))
+	if ok {
+		if obj, ok := o.(*GroupPinedMsg); ok {
+			return obj, true
+		}
+	}
+	obj2, err := GroupPinedMsgByMsgId(base.DB, MsgId)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetGroupPinedMsgByMsgId_JustCache(MsgId int) (*GroupPinedMsg, bool) {
+	o, ok := RowCache.Get("GroupPinedMsg:" + strconv.Itoa(MsgId))
+	if ok {
+		if obj, ok := o.(*GroupPinedMsg); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLogErr(errors.New("_JustCache is empty for GroupPinedMsg: " + strconv.Itoa(MsgId)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadGroupPinedMsgByMsgIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("GroupPinedMsg:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewGroupPinedMsg_Selector().MsgId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -1974,102 +1782,6 @@ func (c _StoreImpl) PreLoadSuggestedUserByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetChatSync2BySyncId(SyncId int) (*ChatSync2, bool) {
-	o, ok := RowCache.Get("ChatSync2:" + strconv.Itoa(SyncId))
-	if ok {
-		if obj, ok := o.(*ChatSync2); ok {
-			return obj, true
-		}
-	}
-	obj2, err := ChatSync2BySyncId(base.DB, SyncId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.ChatSync2 {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetChatSync2BySyncId_JustCache(SyncId int) (*ChatSync2, bool) {
-	o, ok := RowCache.Get("ChatSync2:" + strconv.Itoa(SyncId))
-	if ok {
-		if obj, ok := o.(*ChatSync2); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.ChatSync2 {
-		XOLogErr(errors.New("_JustCache is empty for ChatSync2: " + strconv.Itoa(SyncId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadChatSync2BySyncIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("ChatSync2:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewChatSync2_Selector().SyncId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetLowerTableById(Id int) (*LowerTable, bool) {
-	o, ok := RowCache.Get("LowerTable:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*LowerTable); ok {
-			return obj, true
-		}
-	}
-	obj2, err := LowerTableById(base.DB, Id)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.LowerTable {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetLowerTableById_JustCache(Id int) (*LowerTable, bool) {
-	o, ok := RowCache.Get("LowerTable:" + strconv.Itoa(Id))
-	if ok {
-		if obj, ok := o.(*LowerTable); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.LowerTable {
-		XOLogErr(errors.New("_JustCache is empty for LowerTable: " + strconv.Itoa(Id)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadLowerTableByIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("LowerTable:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewLowerTable_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetPushChatByPushId(PushId int) (*PushChat, bool) {
 	o, ok := RowCache.Get("PushChat:" + strconv.Itoa(PushId))
 	if ok {
@@ -2113,54 +1825,6 @@ func (c _StoreImpl) PreLoadPushChatByPushIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPushChat_Selector().PushId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetPushChat2BySyncId(SyncId int) (*PushChat2, bool) {
-	o, ok := RowCache.Get("PushChat2:" + strconv.Itoa(SyncId))
-	if ok {
-		if obj, ok := o.(*PushChat2); ok {
-			return obj, true
-		}
-	}
-	obj2, err := PushChat2BySyncId(base.DB, SyncId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.PushChat2 {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetPushChat2BySyncId_JustCache(SyncId int) (*PushChat2, bool) {
-	o, ok := RowCache.Get("PushChat2:" + strconv.Itoa(SyncId))
-	if ok {
-		if obj, ok := o.(*PushChat2); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.PushChat2 {
-		XOLogErr(errors.New("_JustCache is empty for PushChat2: " + strconv.Itoa(SyncId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPushChat2BySyncIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("PushChat2:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewPushChat2_Selector().SyncId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -2406,97 +2070,49 @@ func (c _StoreImpl) PreLoadXfileServiceRequestLogByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetAccountById(Id int) (*Account, bool) {
-	o, ok := RowCache.Get("Account:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetInvalidateCacheByOrderId(OrderId int) (*InvalidateCache, bool) {
+	o, ok := RowCache.Get("InvalidateCache:" + strconv.Itoa(OrderId))
 	if ok {
-		if obj, ok := o.(*Account); ok {
+		if obj, ok := o.(*InvalidateCache); ok {
 			return obj, true
 		}
 	}
-	obj2, err := AccountById(base.DB, Id)
+	obj2, err := InvalidateCacheByOrderId(base.DB, OrderId)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.InvalidateCache {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetAccountById_JustCache(Id int) (*Account, bool) {
-	o, ok := RowCache.Get("Account:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetInvalidateCacheByOrderId_JustCache(OrderId int) (*InvalidateCache, bool) {
+	o, ok := RowCache.Get("InvalidateCache:" + strconv.Itoa(OrderId))
 	if ok {
-		if obj, ok := o.(*Account); ok {
+		if obj, ok := o.(*InvalidateCache); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.Account {
-		XOLogErr(errors.New("_JustCache is empty for Account: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.InvalidateCache {
+		XOLogErr(errors.New("_JustCache is empty for InvalidateCache: " + strconv.Itoa(OrderId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadAccountByIds(ids []int) {
+func (c _StoreImpl) PreLoadInvalidateCacheByOrderIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("Account:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("InvalidateCache:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewAccount_Selector().Id_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
-func (c _StoreImpl) GetPostCdbByPostId(PostId int) (*PostCdb, bool) {
-	o, ok := RowCache.Get("PostCdb:" + strconv.Itoa(PostId))
-	if ok {
-		if obj, ok := o.(*PostCdb); ok {
-			return obj, true
-		}
-	}
-	obj2, err := PostCdbByPostId(base.DB, PostId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.PostCdb {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetPostCdbByPostId_JustCache(PostId int) (*PostCdb, bool) {
-	o, ok := RowCache.Get("PostCdb:" + strconv.Itoa(PostId))
-	if ok {
-		if obj, ok := o.(*PostCdb); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.PostCdb {
-		XOLogErr(errors.New("_JustCache is empty for PostCdb: " + strconv.Itoa(PostId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadPostCdbByPostIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("PostCdb:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewPostCdb_Selector().PostId_In(not_cached).GetRows(base.DB)
+		NewInvalidateCache_Selector().OrderId_In(not_cached).GetRows(base.DB)
 	}
 }
 

@@ -34,30 +34,6 @@ ALTER TABLE sun.event CHANGE COLUMN ChatKey chat_key varchar(100);
 ALTER TABLE sun.event CHANGE COLUMN MessageId message_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN ReSharedId re_shared_id bigint(20);
 
-/*Table: following_list  */
-ALTER TABLE sun.following_list CHANGE COLUMN Id id int(11);
-ALTER TABLE sun.following_list CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.following_list CHANGE COLUMN ListType list_type int(11);
-ALTER TABLE sun.following_list CHANGE COLUMN Name name varchar(75);
-ALTER TABLE sun.following_list CHANGE COLUMN Count count int(11);
-ALTER TABLE sun.following_list CHANGE COLUMN IsAuto is_auto tinyint(1);
-ALTER TABLE sun.following_list CHANGE COLUMN IsPimiry is_pimiry tinyint(1);
-ALTER TABLE sun.following_list CHANGE COLUMN CreatedTime created_time int(11);
-
-/*Table: following_list_member  */
-ALTER TABLE sun.following_list_member CHANGE COLUMN Id id bigint(20);
-ALTER TABLE sun.following_list_member CHANGE COLUMN ListId list_id int(11);
-ALTER TABLE sun.following_list_member CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.following_list_member CHANGE COLUMN FollowedUserId followed_user_id int(11);
-ALTER TABLE sun.following_list_member CHANGE COLUMN CreatedTime created_time int(11);
-
-/*Table: following_list_member_removed  */
-ALTER TABLE sun.following_list_member_removed CHANGE COLUMN Id id bigint(20);
-ALTER TABLE sun.following_list_member_removed CHANGE COLUMN ListId list_id int(11);
-ALTER TABLE sun.following_list_member_removed CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.following_list_member_removed CHANGE COLUMN UnFollowedUserId un_followed_user_id int(11);
-ALTER TABLE sun.following_list_member_removed CHANGE COLUMN UpdatedTime updated_time int(11);
-
 /*Table: likes  */
 ALTER TABLE sun.likes CHANGE COLUMN Id id bigint(11);
 ALTER TABLE sun.likes CHANGE COLUMN PostId post_id bigint(11);
@@ -86,14 +62,10 @@ ALTER TABLE sun.notify_removed CHANGE COLUMN Id id bigint(20);
 /*Table: phone_contacts  */
 ALTER TABLE sun.phone_contacts CHANGE COLUMN Id id int(10);
 ALTER TABLE sun.phone_contacts CHANGE COLUMN UserId user_id int(10);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN Phone phone bigint(20);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN PhoneDisplayName phone_display_name varchar(250);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN PhoneFamilyName phone_family_name varchar(250);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN PhoneNumber phone_number varchar(250);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN PhoneNormalizedNumber phone_normalized_number varchar(15);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN PhoneContactRowId phone_contact_row_id int(10);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN DeviceUuidId device_uuid_id int(10);
-ALTER TABLE sun.phone_contacts CHANGE COLUMN CreatedTime created_time int(10);
+ALTER TABLE sun.phone_contacts CHANGE COLUMN ClientId client_id bigint(20);
+ALTER TABLE sun.phone_contacts CHANGE COLUMN Phone phone varchar(20);
+ALTER TABLE sun.phone_contacts CHANGE COLUMN FirstName first_name varchar(50);
+ALTER TABLE sun.phone_contacts CHANGE COLUMN LastName last_name varchar(50);
 
 /*Table: post  */
 ALTER TABLE sun.post CHANGE COLUMN PostId post_id bigint(20);
@@ -119,7 +91,11 @@ ALTER TABLE sun.post CHANGE COLUMN ReSharedPostId re_shared_post_id bigint(20);
 
 /*Table: post_count  */
 ALTER TABLE sun.post_count CHANGE COLUMN PostId post_id bigint(20);
+ALTER TABLE sun.post_count CHANGE COLUMN CommentsCount comments_count int(11);
+ALTER TABLE sun.post_count CHANGE COLUMN LikesCount likes_count int(11);
 ALTER TABLE sun.post_count CHANGE COLUMN ViewsCount views_count bigint(20);
+ALTER TABLE sun.post_count CHANGE COLUMN ReSharedCount re_shared_count int(11);
+ALTER TABLE sun.post_count CHANGE COLUMN ChatSharedCount chat_shared_count int(11);
 
 /*Table: post_deleted  */
 ALTER TABLE sun.post_deleted CHANGE COLUMN PostId post_id bigint(20);
@@ -168,14 +144,6 @@ ALTER TABLE sun.post_reshared CHANGE COLUMN PostUserId post_user_id int(11);
 ALTER TABLE sun.post_reshared CHANGE COLUMN PostTypeEnum post_type_enum tinyint(4);
 ALTER TABLE sun.post_reshared CHANGE COLUMN PostCategoryEnum post_category_enum tinyint(4);
 ALTER TABLE sun.post_reshared CHANGE COLUMN CreatedTime created_time int(11);
-
-/*Table: search_clicked  */
-ALTER TABLE sun.search_clicked CHANGE COLUMN Id id bigint(20);
-ALTER TABLE sun.search_clicked CHANGE COLUMN Query query varchar(100);
-ALTER TABLE sun.search_clicked CHANGE COLUMN ClickType click_type int(11);
-ALTER TABLE sun.search_clicked CHANGE COLUMN TargetId target_id int(11);
-ALTER TABLE sun.search_clicked CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.search_clicked CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: session  */
 ALTER TABLE sun.session CHANGE COLUMN Id id bigint(20);
@@ -259,13 +227,13 @@ ALTER TABLE sun.user CHANGE COLUMN UserName user_name varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN UserNameLower user_name_lower varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN FirstName first_name varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN LastName last_name varchar(250);
-ALTER TABLE sun.user CHANGE COLUMN UserTypeEnum user_type_enum int(11);
-ALTER TABLE sun.user CHANGE COLUMN UserLevelEnum user_level_enum int(11);
+ALTER TABLE sun.user CHANGE COLUMN IsVerified is_verified tinyint(4);
 ALTER TABLE sun.user CHANGE COLUMN AvatarId avatar_id bigint(20);
-ALTER TABLE sun.user CHANGE COLUMN ProfilePrivacyEnum profile_privacy_enum tinyint(10);
+ALTER TABLE sun.user CHANGE COLUMN ProfilePrivacy profile_privacy tinyint(10);
+ALTER TABLE sun.user CHANGE COLUMN OnlinePrivacy online_privacy int(11);
 ALTER TABLE sun.user CHANGE COLUMN Phone phone bigint(20);
-ALTER TABLE sun.user CHANGE COLUMN About about varchar(500);
 ALTER TABLE sun.user CHANGE COLUMN Email email varchar(250);
+ALTER TABLE sun.user CHANGE COLUMN About about varchar(500);
 ALTER TABLE sun.user CHANGE COLUMN PasswordHash password_hash varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PasswordSalt password_salt varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PostSeq post_seq int(11);
@@ -284,85 +252,102 @@ ALTER TABLE sun.user CHANGE COLUMN BoardCount board_count int(11);
 ALTER TABLE sun.user CHANGE COLUMN PinedCount pined_count int(11);
 ALTER TABLE sun.user CHANGE COLUMN LikesCount likes_count int(10);
 ALTER TABLE sun.user CHANGE COLUMN ResharedCount reshared_count int(10);
-ALTER TABLE sun.user CHANGE COLUMN LastActionTime last_action_time int(11);
 ALTER TABLE sun.user CHANGE COLUMN LastPostTime last_post_time int(11);
-ALTER TABLE sun.user CHANGE COLUMN PrimaryFollowingList primary_following_list int(10);
-ALTER TABLE sun.user CHANGE COLUMN CreatedSe created_se int(10);
-ALTER TABLE sun.user CHANGE COLUMN UpdatedMs updated_ms bigint(10);
-ALTER TABLE sun.user CHANGE COLUMN OnlinePrivacyEnum online_privacy_enum int(11);
-ALTER TABLE sun.user CHANGE COLUMN LastActivityTime last_activity_time int(11);
-ALTER TABLE sun.user CHANGE COLUMN Phone2 phone2 varchar(250);
+ALTER TABLE sun.user CHANGE COLUMN CreatedTime created_time int(10);
+ALTER TABLE sun.user CHANGE COLUMN VersionTime version_time int(10);
+ALTER TABLE sun.user CHANGE COLUMN IsDeleted is_deleted tinyint(4);
+ALTER TABLE sun.user CHANGE COLUMN IsBanned is_banned tinyint(4);
 
-/*Table: user_meta_info  */
-ALTER TABLE sun.user_meta_info CHANGE COLUMN Id id int(11);
-ALTER TABLE sun.user_meta_info CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.user_meta_info CHANGE COLUMN IsNotificationDirty is_notification_dirty tinyint(4);
-ALTER TABLE sun.user_meta_info CHANGE COLUMN LastUserRecGen last_user_rec_gen int(11);
-
-/*Table: user_password  */
-ALTER TABLE sun.user_password CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.user_password CHANGE COLUMN Password password varchar(100);
-ALTER TABLE sun.user_password CHANGE COLUMN CreatedTime created_time int(11);
+/*Table: user_relation  */
+ALTER TABLE sun.user_relation CHANGE COLUMN RelNanoId rel_nano_id bigint(20);
+ALTER TABLE sun.user_relation CHANGE COLUMN UserId user_id int(11);
+ALTER TABLE sun.user_relation CHANGE COLUMN PeerUserId peer_user_id int(11);
+ALTER TABLE sun.user_relation CHANGE COLUMN Follwing follwing tinyint(4);
+ALTER TABLE sun.user_relation CHANGE COLUMN Followed followed tinyint(4);
+ALTER TABLE sun.user_relation CHANGE COLUMN InContacts in_contacts tinyint(4);
+ALTER TABLE sun.user_relation CHANGE COLUMN MutualContact mutual_contact tinyint(4);
+ALTER TABLE sun.user_relation CHANGE COLUMN IsFavorite is_favorite tinyint(4);
+ALTER TABLE sun.user_relation CHANGE COLUMN Notify notify tinyint(4);
 
 /*Table: chat  */
+ALTER TABLE sun_chat.chat CHANGE COLUMN ChatId chat_id bigint(20);
 ALTER TABLE sun_chat.chat CHANGE COLUMN ChatKey chat_key varchar(50);
 ALTER TABLE sun_chat.chat CHANGE COLUMN RoomKey room_key varchar(50);
-ALTER TABLE sun_chat.chat CHANGE COLUMN RoomTypeEnum room_type_enum smallint(6);
+ALTER TABLE sun_chat.chat CHANGE COLUMN RoomType room_type smallint(6);
 ALTER TABLE sun_chat.chat CHANGE COLUMN UserId user_id int(11);
 ALTER TABLE sun_chat.chat CHANGE COLUMN PeerUserId peer_user_id int(11);
 ALTER TABLE sun_chat.chat CHANGE COLUMN GroupId group_id bigint(20);
-ALTER TABLE sun_chat.chat CHANGE COLUMN CreatedTime created_time int(11);
+ALTER TABLE sun_chat.chat CHANGE COLUMN HashTagId hash_tag_id bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN StartedByMe started_by_me tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Title title varchar(100);
+ALTER TABLE sun_chat.chat CHANGE COLUMN PinTime pin_time bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN FromMsgId from_msg_id bigint(20);
 ALTER TABLE sun_chat.chat CHANGE COLUMN Seq seq int(11);
+ALTER TABLE sun_chat.chat CHANGE COLUMN UnseenCount unseen_count int(11);
+ALTER TABLE sun_chat.chat CHANGE COLUMN LastMsgId last_msg_id bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN LastMsgStatus last_msg_status tinyint(4);
 ALTER TABLE sun_chat.chat CHANGE COLUMN SeenSeq seen_seq int(11);
-ALTER TABLE sun_chat.chat CHANGE COLUMN UpdatedMs updated_ms bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN SeenMsgId seen_msg_id bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN LastMsgIdRecived last_msg_id_recived bigint(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Left left tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Creator creator tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Kicked kicked tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Admin admin tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN Deactivated deactivated tinyint(4);
+ALTER TABLE sun_chat.chat CHANGE COLUMN VersionTime version_time int(20);
+ALTER TABLE sun_chat.chat CHANGE COLUMN OrderTime order_time int(11);
+ALTER TABLE sun_chat.chat CHANGE COLUMN CreatedTime created_time int(11);
+ALTER TABLE sun_chat.chat CHANGE COLUMN DraftText draft_text varchar(5000);
+ALTER TABLE sun_chat.chat CHANGE COLUMN DratReplyToMsgId drat_reply_to_msg_id bigint(20);
 
 /*Table: chat_last_message  */
-ALTER TABLE sun_chat.chat_last_message CHANGE COLUMN ChatKey chat_key varchar(75);
-ALTER TABLE sun_chat.chat_last_message CHANGE COLUMN ForUserId for_user_id int(11);
+ALTER TABLE sun_chat.chat_last_message CHANGE COLUMN ChatIdGroupId chat_id_group_id varchar(75);
 ALTER TABLE sun_chat.chat_last_message CHANGE COLUMN LastMsgPb last_msg_pb blob;
-ALTER TABLE sun_chat.chat_last_message CHANGE COLUMN LastMsgJson last_msg_json text;
 
-/*Table: direct_message  */
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN ChatKey chat_key varchar(75);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN MessageId message_id bigint(20);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN RoomKey room_key varchar(70);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN UserId user_id int(20);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN MessageFileId message_file_id bigint(20);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN MessageTypeEnum message_type_enum tinyint(4);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN Text text varchar(16000);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN CreatedTime created_time int(11);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN Seq seq int(11);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN DeliviryStatusEnum deliviry_status_enum tinyint(4);
-ALTER TABLE sun_chat.direct_message CHANGE COLUMN ExtraPB extra_pb blob;
+/*Table: chat_version_order  */
+ALTER TABLE sun_chat.chat_version_order CHANGE COLUMN VersionTime version_time bigint(20);
+ALTER TABLE sun_chat.chat_version_order CHANGE COLUMN UserId user_id int(11);
+ALTER TABLE sun_chat.chat_version_order CHANGE COLUMN ChatId chat_id int(11);
+ALTER TABLE sun_chat.chat_version_order CHANGE COLUMN OrderTime order_time int(11);
 
 /*Table: group  */
 ALTER TABLE sun_chat.group CHANGE COLUMN GroupId group_id bigint(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN GroupKey group_key varchar(50);
 ALTER TABLE sun_chat.group CHANGE COLUMN GroupName group_name varchar(200);
-ALTER TABLE sun_chat.group CHANGE COLUMN MembersCount members_count int(11);
-ALTER TABLE sun_chat.group CHANGE COLUMN GroupPrivacyEnum group_privacy_enum tinyint(4);
+ALTER TABLE sun_chat.group CHANGE COLUMN UserName user_name varchar(30);
+ALTER TABLE sun_chat.group CHANGE COLUMN IsSuperGroup is_super_group tinyint(4);
+ALTER TABLE sun_chat.group CHANGE COLUMN HashTagId hash_tag_id bigint(20);
 ALTER TABLE sun_chat.group CHANGE COLUMN CreatorUserId creator_user_id int(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN GroupPrivacy group_privacy tinyint(4);
+ALTER TABLE sun_chat.group CHANGE COLUMN HistoryViewAble history_view_able tinyint(4);
+ALTER TABLE sun_chat.group CHANGE COLUMN Seq seq bigint(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN LastMsgId last_msg_id bigint(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN PinedMsgId pined_msg_id bigint(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN AvatarRefId avatar_ref_id bigint(20);
+ALTER TABLE sun_chat.group CHANGE COLUMN AvatarCount avatar_count int(11);
+ALTER TABLE sun_chat.group CHANGE COLUMN About about varchar(1000);
+ALTER TABLE sun_chat.group CHANGE COLUMN InviteLink invite_link varchar(150);
+ALTER TABLE sun_chat.group CHANGE COLUMN MembersCount members_count int(11);
+ALTER TABLE sun_chat.group CHANGE COLUMN SortTime sort_time int(20);
 ALTER TABLE sun_chat.group CHANGE COLUMN CreatedTime created_time int(20);
-ALTER TABLE sun_chat.group CHANGE COLUMN UpdatedMs updated_ms bigint(20);
-ALTER TABLE sun_chat.group CHANGE COLUMN CurrentSeq current_seq int(11);
+ALTER TABLE sun_chat.group CHANGE COLUMN IsMute is_mute tinyint(4);
 
 /*Table: group_member  */
-ALTER TABLE sun_chat.group_member CHANGE COLUMN Id id bigint(20);
+ALTER TABLE sun_chat.group_member CHANGE COLUMN OrderId order_id bigint(20);
 ALTER TABLE sun_chat.group_member CHANGE COLUMN GroupId group_id bigint(20);
-ALTER TABLE sun_chat.group_member CHANGE COLUMN GroupKey group_key varchar(100);
 ALTER TABLE sun_chat.group_member CHANGE COLUMN UserId user_id int(11);
 ALTER TABLE sun_chat.group_member CHANGE COLUMN ByUserId by_user_id int(11);
-ALTER TABLE sun_chat.group_member CHANGE COLUMN GroupRoleEnumId group_role_enum_id tinyint(4);
+ALTER TABLE sun_chat.group_member CHANGE COLUMN GroupRole group_role tinyint(4);
 ALTER TABLE sun_chat.group_member CHANGE COLUMN CreatedTime created_time int(11);
 
-/*Table: group_message  */
-ALTER TABLE sun_chat.group_message CHANGE COLUMN MessageId message_id bigint(20);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN RoomKey room_key varchar(70);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN UserId user_id int(20);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN MessageFileId message_file_id bigint(20);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN MessageTypeEnum message_type_enum tinyint(4);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN Text text text;
-ALTER TABLE sun_chat.group_message CHANGE COLUMN CreatedMs created_ms bigint(20);
-ALTER TABLE sun_chat.group_message CHANGE COLUMN DeliveryStatusEnum delivery_status_enum tinyint(4);
+/*Table: group_orderd_user  */
+ALTER TABLE sun_chat.group_orderd_user CHANGE COLUMN OrderId order_id bigint(20);
+ALTER TABLE sun_chat.group_orderd_user CHANGE COLUMN GroupId group_id bigint(20);
+ALTER TABLE sun_chat.group_orderd_user CHANGE COLUMN UserId user_id int(11);
+
+/*Table: group_pined_msg  */
+ALTER TABLE sun_chat.group_pined_msg CHANGE COLUMN MsgId msg_id bigint(20);
+ALTER TABLE sun_chat.group_pined_msg CHANGE COLUMN MsgPb msg_pb blob;
 
 /*Table: file_msg  */
 ALTER TABLE sun_file.file_msg CHANGE COLUMN Id id bigint(20);
@@ -410,25 +395,6 @@ ALTER TABLE sun_meta.suggested_user CHANGE COLUMN TargetId target_id int(11);
 ALTER TABLE sun_meta.suggested_user CHANGE COLUMN Weight weight float;
 ALTER TABLE sun_meta.suggested_user CHANGE COLUMN CreatedTime created_time int(11);
 
-/*Table: chat_sync2  */
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN sync_id sync_id bigint(20);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN to_user_id to_user_id int(11);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN chat_sync_type_id chat_sync_type_id int(11);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN room_key room_key varchar(75);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN chat_key chat_key varchar(75);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN from_high_message_id from_high_message_id bigint(20);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN to_low_message_id to_low_message_id bigint(20);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN message_id message_id bigint(20);
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN message_pb message_pb blob;
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN message_json message_json text;
-ALTER TABLE sun_push.chat_sync2 CHANGE COLUMN created_time created_time int(11);
-
-/*Table: lower_table  */
-ALTER TABLE sun_push.lower_table CHANGE COLUMN id id int(11);
-ALTER TABLE sun_push.lower_table CHANGE COLUMN text text text;
-ALTER TABLE sun_push.lower_table CHANGE COLUMN time_stamp time_stamp int(11);
-ALTER TABLE sun_push.lower_table CHANGE COLUMN any_thing_more_ any_thing_more_ int(11);
-
 /*Table: push_chat  */
 ALTER TABLE sun_push.push_chat CHANGE COLUMN PushId push_id bigint(20);
 ALTER TABLE sun_push.push_chat CHANGE COLUMN ToUserId to_user_id int(11);
@@ -444,19 +410,6 @@ ALTER TABLE sun_push.push_chat CHANGE COLUMN MessageFileId message_file_id bigin
 ALTER TABLE sun_push.push_chat CHANGE COLUMN MessagePb message_pb blob;
 ALTER TABLE sun_push.push_chat CHANGE COLUMN MessageJson message_json text;
 ALTER TABLE sun_push.push_chat CHANGE COLUMN CreatedTime created_time int(11);
-
-/*Table: push_chat2  */
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN sync_id sync_id bigint(20);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN to_user_id to_user_id int(11);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN chat_sync_type_id chat_sync_type_id int(11);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN room_key room_key varchar(75);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN chat_key chat_key varchar(75);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN from_high_message_id from_high_message_id bigint(20);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN to_low_message_id to_low_message_id bigint(20);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN message_id message_id bigint(20);
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN message_pb message_pb blob;
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN message_json message_json text;
-ALTER TABLE sun_push.push_chat2 CHANGE COLUMN created_time created_time int(11);
 
 /*Table: http_rpc_log  */
 ALTER TABLE sun_log.http_rpc_log CHANGE COLUMN Id id int(11);
@@ -501,30 +454,8 @@ ALTER TABLE sun_log.xfile_service_request_log CHANGE COLUMN Url url varchar(1000
 ALTER TABLE sun_log.xfile_service_request_log CHANGE COLUMN HttpCode http_code int(11);
 ALTER TABLE sun_log.xfile_service_request_log CHANGE COLUMN CreatedTime created_time varchar(100);
 
-/*Table: accounts  */
-ALTER TABLE suncdb.accounts CHANGE COLUMN id id INT;
-ALTER TABLE suncdb.accounts CHANGE COLUMN balance balance DECIMAL;
-
-/*Table: post_cdb  */
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN post_id post_id INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN user_id user_id INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN post_type_enum post_type_enum INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN post_category_enum post_category_enum INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN media_id media_id INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN post_key post_key STRING;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN text text STRING;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN rich_text rich_text STRING;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN media_count media_count INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN shared_to shared_to INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN disable_comment disable_comment INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN source source INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN has_tag has_tag INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN seq seq INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN comments_count comments_count INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN likes_count likes_count INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN views_count views_count INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN edited_time edited_time INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN created_time created_time INT;
-ALTER TABLE suncdb.post_cdb CHANGE COLUMN re_shared_post_id re_shared_post_id INT;
+/*Table: invalidate_cache  */
+ALTER TABLE sun_internal.invalidate_cache CHANGE COLUMN OrderId order_id bigint(20);
+ALTER TABLE sun_internal.invalidate_cache CHANGE COLUMN CacheKey cache_key varchar(100);
 
 }

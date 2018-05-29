@@ -71,20 +71,6 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 
 // Event - PRIMARY
 
-// FollowingList - PRIMARY
-
-// FollowingListMember - PRIMARY
-
-// FollowingListMember - UserId
-
-// FollowingListMember - FollowedUserId
-
-// FollowingListMember - UserId_2
-
-// FollowingListMemberRemoved - PRIMARY
-
-// FollowingListMemberRemoved - UserId
-
 // Like - PRIMARY
 
 // Like - PostId
@@ -590,8 +576,6 @@ func (c _StoreImpl) PreLoadPostMedia_ByPostIds(PostIds []int) {
 
 // PostReshared - PRIMARY
 
-// SearchClicked - PRIMARY
-
 // Session - PRIMARY
 
 // Session - SessionUuid_2
@@ -928,121 +912,13 @@ func (c _StoreImpl) PreLoadUser_ByEmails(Emails []string) {
 	}
 }
 
-//field//field//field
-
-///// Generated from index 'Phone'.
-func (c _StoreImpl) User_ByPhone2(Phone2 string) (*User, bool) {
-	o, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", Phone2))
-	if ok {
-		if obj, ok := o.(*User); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewUser_Selector().Phone2_Eq(Phone2).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("User_Phone:"+fmt.Sprintf("%v", row.Phone2), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) User_ByPhone2_JustCache(Phone2 string) (*User, bool) {
-	o, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", Phone2))
-	if ok {
-		if obj, ok := o.(*User); ok {
-			return obj, true
-		}
-	}
-
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "User_Phone:" + fmt.Sprintf("%v", Phone2)))
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadUser_ByPhone2s(Phone2s []string) {
-	not_cached := make([]string, 0, len(Phone2s))
-
-	for _, id := range Phone2s {
-		_, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewUser_Selector().Phone2_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("User_Phone:"+fmt.Sprintf("%v", row.Phone2), row, 0)
-			}
-		}
-	}
-}
-
-// UserMetaInfo - PRIMARY
-
-//field//field//field
-
-///// Generated from index 'UserId2'.
-func (c _StoreImpl) UserMetaInfo_ByUserId(UserId int) (*UserMetaInfo, bool) {
-	o, ok := RowCacheIndex.Get("UserMetaInfo_UserId2:" + fmt.Sprintf("%v", UserId))
-	if ok {
-		if obj, ok := o.(*UserMetaInfo); ok {
-			return obj, true
-		}
-	}
-
-	row, err := NewUserMetaInfo_Selector().UserId_Eq(UserId).GetRow(base.DB)
-	if err == nil {
-		RowCacheIndex.Set("UserMetaInfo_UserId2:"+fmt.Sprintf("%v", row.UserId), row, 0)
-		return row, true
-	}
-
-	XOLogErr(err)
-	return nil, false
-}
-
-func (c _StoreImpl) UserMetaInfo_ByUserId_JustCache(UserId int) (*UserMetaInfo, bool) {
-	o, ok := RowCacheIndex.Get("UserMetaInfo_UserId2:" + fmt.Sprintf("%v", UserId))
-	if ok {
-		if obj, ok := o.(*UserMetaInfo); ok {
-			return obj, true
-		}
-	}
-
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "UserMetaInfo_UserId2:" + fmt.Sprintf("%v", UserId)))
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadUserMetaInfo_ByUserIds(UserIds []int) {
-	not_cached := make([]int, 0, len(UserIds))
-
-	for _, id := range UserIds {
-		_, ok := RowCacheIndex.Get("UserMetaInfo_UserId2:" + fmt.Sprintf("%v", id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		rows, err := NewUserMetaInfo_Selector().UserId_In(not_cached).GetRows(base.DB)
-		if err == nil {
-			for _, row := range rows {
-				RowCacheIndex.Set("UserMetaInfo_UserId2:"+fmt.Sprintf("%v", row.UserId), row, 0)
-			}
-		}
-	}
-}
-
-// UserPassword - PRIMARY
+// UserRelation - PRIMARY
 
 // Chat - PRIMARY
 
 // ChatLastMessage - PRIMARY
 
-// DirectMessage - PRIMARY
+// ChatVersionOrder - PRIMARY
 
 // Group - PRIMARY
 
@@ -1051,17 +927,17 @@ func (c _StoreImpl) PreLoadUserMetaInfo_ByUserIds(UserIds []int) {
 //field//field//field
 
 ///// Generated from index 'Id'.
-func (c _StoreImpl) GroupMember_ById(Id int) (*GroupMember, bool) {
-	o, ok := RowCacheIndex.Get("GroupMember_Id:" + fmt.Sprintf("%v", Id))
+func (c _StoreImpl) GroupMember_ByOrderId(OrderId int) (*GroupMember, bool) {
+	o, ok := RowCacheIndex.Get("GroupMember_Id:" + fmt.Sprintf("%v", OrderId))
 	if ok {
 		if obj, ok := o.(*GroupMember); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewGroupMember_Selector().Id_Eq(Id).GetRow(base.DB)
+	row, err := NewGroupMember_Selector().OrderId_Eq(OrderId).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("GroupMember_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+		RowCacheIndex.Set("GroupMember_Id:"+fmt.Sprintf("%v", row.OrderId), row, 0)
 		return row, true
 	}
 
@@ -1069,22 +945,22 @@ func (c _StoreImpl) GroupMember_ById(Id int) (*GroupMember, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) GroupMember_ById_JustCache(Id int) (*GroupMember, bool) {
-	o, ok := RowCacheIndex.Get("GroupMember_Id:" + fmt.Sprintf("%v", Id))
+func (c _StoreImpl) GroupMember_ByOrderId_JustCache(OrderId int) (*GroupMember, bool) {
+	o, ok := RowCacheIndex.Get("GroupMember_Id:" + fmt.Sprintf("%v", OrderId))
 	if ok {
 		if obj, ok := o.(*GroupMember); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "GroupMember_Id:" + fmt.Sprintf("%v", Id)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "GroupMember_Id:" + fmt.Sprintf("%v", OrderId)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadGroupMember_ByIds(Ids []int) {
-	not_cached := make([]int, 0, len(Ids))
+func (c _StoreImpl) PreLoadGroupMember_ByOrderIds(OrderIds []int) {
+	not_cached := make([]int, 0, len(OrderIds))
 
-	for _, id := range Ids {
+	for _, id := range OrderIds {
 		_, ok := RowCacheIndex.Get("GroupMember_Id:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
@@ -1092,16 +968,71 @@ func (c _StoreImpl) PreLoadGroupMember_ByIds(Ids []int) {
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewGroupMember_Selector().Id_In(not_cached).GetRows(base.DB)
+		rows, err := NewGroupMember_Selector().OrderId_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("GroupMember_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+				RowCacheIndex.Set("GroupMember_Id:"+fmt.Sprintf("%v", row.OrderId), row, 0)
 			}
 		}
 	}
 }
 
-// GroupMessage - PRIMARY
+// GroupOrderdUser - PRIMARY
+
+//field//field//field
+
+///// Generated from index 'GroupId'.
+func (c _StoreImpl) GroupOrderdUser_ByGroupId(GroupId int) (*GroupOrderdUser, bool) {
+	o, ok := RowCacheIndex.Get("GroupOrderdUser_GroupId:" + fmt.Sprintf("%v", GroupId))
+	if ok {
+		if obj, ok := o.(*GroupOrderdUser); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewGroupOrderdUser_Selector().GroupId_Eq(GroupId).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("GroupOrderdUser_GroupId:"+fmt.Sprintf("%v", row.GroupId), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) GroupOrderdUser_ByGroupId_JustCache(GroupId int) (*GroupOrderdUser, bool) {
+	o, ok := RowCacheIndex.Get("GroupOrderdUser_GroupId:" + fmt.Sprintf("%v", GroupId))
+	if ok {
+		if obj, ok := o.(*GroupOrderdUser); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "GroupOrderdUser_GroupId:" + fmt.Sprintf("%v", GroupId)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadGroupOrderdUser_ByGroupIds(GroupIds []int) {
+	not_cached := make([]int, 0, len(GroupIds))
+
+	for _, id := range GroupIds {
+		_, ok := RowCacheIndex.Get("GroupOrderdUser_GroupId:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewGroupOrderdUser_Selector().GroupId_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("GroupOrderdUser_GroupId:"+fmt.Sprintf("%v", row.GroupId), row, 0)
+			}
+		}
+	}
+}
+
+// GroupPinedMsg - PRIMARY
 
 // FileMsg - PRIMARY
 
@@ -1280,10 +1211,6 @@ func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
 
 // SuggestedUser - PRIMARY
 
-// ChatSync2 - PRIMARY
-
-// LowerTable - PRIMARY
-
 // PushChat - PRIMARY
 
 //field//field//field
@@ -1339,8 +1266,6 @@ func (c _StoreImpl) PreLoadPushChat_BySeqs(Seqs []int) {
 	}
 }
 
-// PushChat2 - PRIMARY
-
 // HTTPRPCLog - PRIMARY
 
 // MetricLog - PRIMARY
@@ -1351,6 +1276,4 @@ func (c _StoreImpl) PreLoadPushChat_BySeqs(Seqs []int) {
 
 // XfileServiceRequestLog - PRIMARY
 
-// Account - primary
-
-// PostCdb - primary
+// InvalidateCache - PRIMARY

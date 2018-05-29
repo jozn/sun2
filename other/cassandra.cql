@@ -24,7 +24,7 @@ create table sunc_file.file_ref (
 	mime_type varchar,
 	width int,
 	height int,
-	length int,
+	duration int,
 	extension varchar,
 	md5_key varchar,
 	storage_user_id int,

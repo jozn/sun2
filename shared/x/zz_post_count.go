@@ -15,8 +15,12 @@ import (
 
 // Manualy copy this to project
 type PostCount__ struct {
-	PostId     int `json:"PostId"`     // PostId -
-	ViewsCount int `json:"ViewsCount"` // ViewsCount -
+	PostId          int `json:"PostId"`          // PostId -
+	CommentsCount   int `json:"CommentsCount"`   // CommentsCount -
+	LikesCount      int `json:"LikesCount"`      // LikesCount -
+	ViewsCount      int `json:"ViewsCount"`      // ViewsCount -
+	ReSharedCount   int `json:"ReSharedCount"`   // ReSharedCount -
+	ChatSharedCount int `json:"ChatSharedCount"` // ChatSharedCount -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -42,16 +46,16 @@ func (pc *PostCount) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post_count (` +
-		`PostId, ViewsCount` +
+		`PostId, CommentsCount, LikesCount, ViewsCount, ReSharedCount, ChatSharedCount` +
 		`) VALUES (` +
-		`?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostCount {
-		XOLog(sqlstr, pc.PostId, pc.ViewsCount)
+		XOLog(sqlstr, pc.PostId, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount)
 	}
-	_, err = db.Exec(sqlstr, pc.PostId, pc.ViewsCount)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount)
 	if err != nil {
 		return err
 	}
@@ -71,16 +75,16 @@ func (pc *PostCount) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post_count (` +
-		`PostId, ViewsCount` +
+		`PostId, CommentsCount, LikesCount, ViewsCount, ReSharedCount, ChatSharedCount` +
 		`) VALUES (` +
-		`?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostCount {
-		XOLog(sqlstr, pc.PostId, pc.ViewsCount)
+		XOLog(sqlstr, pc.PostId, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount)
 	}
-	_, err = db.Exec(sqlstr, pc.PostId, pc.ViewsCount)
+	_, err = db.Exec(sqlstr, pc.PostId, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount)
 	if err != nil {
 		if LogTableSqlReq.PostCount {
 			XOLogErr(err)
@@ -111,14 +115,14 @@ func (pc *PostCount) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_count SET ` +
-		`ViewsCount = ?` +
+		`CommentsCount = ?, LikesCount = ?, ViewsCount = ?, ReSharedCount = ?, ChatSharedCount = ?` +
 		` WHERE PostId = ?`
 
 	// run query
 	if LogTableSqlReq.PostCount {
-		XOLog(sqlstr, pc.ViewsCount, pc.PostId)
+		XOLog(sqlstr, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount, pc.PostId)
 	}
-	_, err = db.Exec(sqlstr, pc.ViewsCount, pc.PostId)
+	_, err = db.Exec(sqlstr, pc.CommentsCount, pc.LikesCount, pc.ViewsCount, pc.ReSharedCount, pc.ChatSharedCount, pc.PostId)
 
 	if LogTableSqlReq.PostCount {
 		XOLogErr(err)
@@ -364,6 +368,216 @@ func (d *__PostCount_Deleter) PostId_GE(val int) *__PostCount_Deleter {
 	return d
 }
 
+func (u *__PostCount_Deleter) CommentsCount_In(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) CommentsCount_Ins(ins ...int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) CommentsCount_NotIn(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Deleter) CommentsCount_Eq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) CommentsCount_NotEq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) CommentsCount_LT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) CommentsCount_LE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) CommentsCount_GT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) CommentsCount_GE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Deleter) LikesCount_In(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) LikesCount_Ins(ins ...int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) LikesCount_NotIn(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Deleter) LikesCount_Eq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) LikesCount_NotEq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) LikesCount_LT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) LikesCount_LE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) LikesCount_GT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) LikesCount_GE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__PostCount_Deleter) ViewsCount_In(ins []int) *__PostCount_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -464,6 +678,216 @@ func (d *__PostCount_Deleter) ViewsCount_GE(val int) *__PostCount_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ViewsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Deleter) ReSharedCount_In(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ReSharedCount_Ins(ins ...int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ReSharedCount_NotIn(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_Eq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_NotEq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_LT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_LE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_GT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ReSharedCount_GE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Deleter) ChatSharedCount_In(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ChatSharedCount_Ins(ins ...int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Deleter) ChatSharedCount_NotIn(ins []int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_Eq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_NotEq(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_LT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_LE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_GT(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Deleter) ChatSharedCount_GE(val int) *__PostCount_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -593,6 +1017,216 @@ func (d *__PostCount_Updater) PostId_GE(val int) *__PostCount_Updater {
 	return d
 }
 
+func (u *__PostCount_Updater) CommentsCount_In(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) CommentsCount_Ins(ins ...int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) CommentsCount_NotIn(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Updater) CommentsCount_Eq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) CommentsCount_NotEq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) CommentsCount_LT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) CommentsCount_LE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) CommentsCount_GT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) CommentsCount_GE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Updater) LikesCount_In(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) LikesCount_Ins(ins ...int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) LikesCount_NotIn(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Updater) LikesCount_Eq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) LikesCount_NotEq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) LikesCount_LT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) LikesCount_LE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) LikesCount_GT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) LikesCount_GE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__PostCount_Updater) ViewsCount_In(ins []int) *__PostCount_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -693,6 +1327,216 @@ func (d *__PostCount_Updater) ViewsCount_GE(val int) *__PostCount_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ViewsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Updater) ReSharedCount_In(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ReSharedCount_Ins(ins ...int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ReSharedCount_NotIn(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Updater) ReSharedCount_Eq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ReSharedCount_NotEq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ReSharedCount_LT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ReSharedCount_LE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ReSharedCount_GT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ReSharedCount_GE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Updater) ChatSharedCount_In(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ChatSharedCount_Ins(ins ...int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Updater) ChatSharedCount_NotIn(ins []int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_Eq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_NotEq(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_LT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_LE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_GT(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Updater) ChatSharedCount_GE(val int) *__PostCount_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -822,6 +1666,216 @@ func (d *__PostCount_Selector) PostId_GE(val int) *__PostCount_Selector {
 	return d
 }
 
+func (u *__PostCount_Selector) CommentsCount_In(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) CommentsCount_Ins(ins ...int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) CommentsCount_NotIn(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CommentsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Selector) CommentsCount_Eq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) CommentsCount_NotEq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) CommentsCount_LT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) CommentsCount_LE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) CommentsCount_GT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) CommentsCount_GE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CommentsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Selector) LikesCount_In(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) LikesCount_Ins(ins ...int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) LikesCount_NotIn(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LikesCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Selector) LikesCount_Eq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) LikesCount_NotEq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) LikesCount_LT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) LikesCount_LE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) LikesCount_GT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) LikesCount_GE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LikesCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__PostCount_Selector) ViewsCount_In(ins []int) *__PostCount_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -927,6 +1981,216 @@ func (d *__PostCount_Selector) ViewsCount_GE(val int) *__PostCount_Selector {
 	return d
 }
 
+func (u *__PostCount_Selector) ReSharedCount_In(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ReSharedCount_Ins(ins ...int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ReSharedCount_NotIn(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ReSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Selector) ReSharedCount_Eq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ReSharedCount_NotEq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ReSharedCount_LT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ReSharedCount_LE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ReSharedCount_GT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ReSharedCount_GE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ReSharedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostCount_Selector) ChatSharedCount_In(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ChatSharedCount_Ins(ins ...int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostCount_Selector) ChatSharedCount_NotIn(ins []int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ChatSharedCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_Eq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_NotEq(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_LT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_LE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_GT(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostCount_Selector) ChatSharedCount_GE(val int) *__PostCount_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ChatSharedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -968,6 +2232,60 @@ func (u *__PostCount_Updater) PostId_Increment(count int) *__PostCount_Updater {
 
 //ints
 
+func (u *__PostCount_Updater) CommentsCount(newVal int) *__PostCount_Updater {
+	up := updateCol{" CommentsCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CommentsCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__PostCount_Updater) CommentsCount_Increment(count int) *__PostCount_Updater {
+	if count > 0 {
+		up := updateCol{" CommentsCount = CommentsCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CommentsCount = CommentsCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" CommentsCount = CommentsCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CommentsCount = CommentsCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__PostCount_Updater) LikesCount(newVal int) *__PostCount_Updater {
+	up := updateCol{" LikesCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LikesCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__PostCount_Updater) LikesCount_Increment(count int) *__PostCount_Updater {
+	if count > 0 {
+		up := updateCol{" LikesCount = LikesCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LikesCount = LikesCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" LikesCount = LikesCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LikesCount = LikesCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__PostCount_Updater) ViewsCount(newVal int) *__PostCount_Updater {
 	up := updateCol{" ViewsCount = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -986,6 +2304,60 @@ func (u *__PostCount_Updater) ViewsCount_Increment(count int) *__PostCount_Updat
 		up := updateCol{" ViewsCount = ViewsCount- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" ViewsCount = ViewsCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__PostCount_Updater) ReSharedCount(newVal int) *__PostCount_Updater {
+	up := updateCol{" ReSharedCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ReSharedCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__PostCount_Updater) ReSharedCount_Increment(count int) *__PostCount_Updater {
+	if count > 0 {
+		up := updateCol{" ReSharedCount = ReSharedCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ReSharedCount = ReSharedCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" ReSharedCount = ReSharedCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ReSharedCount = ReSharedCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__PostCount_Updater) ChatSharedCount(newVal int) *__PostCount_Updater {
+	up := updateCol{" ChatSharedCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ChatSharedCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__PostCount_Updater) ChatSharedCount_Increment(count int) *__PostCount_Updater {
+	if count > 0 {
+		up := updateCol{" ChatSharedCount = ChatSharedCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ChatSharedCount = ChatSharedCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" ChatSharedCount = ChatSharedCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ChatSharedCount = ChatSharedCount- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1013,6 +2385,36 @@ func (u *__PostCount_Selector) Select_PostId() *__PostCount_Selector {
 	return u
 }
 
+func (u *__PostCount_Selector) OrderBy_CommentsCount_Desc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY CommentsCount DESC "
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_CommentsCount_Asc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY CommentsCount ASC "
+	return u
+}
+
+func (u *__PostCount_Selector) Select_CommentsCount() *__PostCount_Selector {
+	u.selectCol = "CommentsCount"
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_LikesCount_Desc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY LikesCount DESC "
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_LikesCount_Asc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY LikesCount ASC "
+	return u
+}
+
+func (u *__PostCount_Selector) Select_LikesCount() *__PostCount_Selector {
+	u.selectCol = "LikesCount"
+	return u
+}
+
 func (u *__PostCount_Selector) OrderBy_ViewsCount_Desc() *__PostCount_Selector {
 	u.orderBy = " ORDER BY ViewsCount DESC "
 	return u
@@ -1025,6 +2427,36 @@ func (u *__PostCount_Selector) OrderBy_ViewsCount_Asc() *__PostCount_Selector {
 
 func (u *__PostCount_Selector) Select_ViewsCount() *__PostCount_Selector {
 	u.selectCol = "ViewsCount"
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_ReSharedCount_Desc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ReSharedCount DESC "
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_ReSharedCount_Asc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ReSharedCount ASC "
+	return u
+}
+
+func (u *__PostCount_Selector) Select_ReSharedCount() *__PostCount_Selector {
+	u.selectCol = "ReSharedCount"
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_ChatSharedCount_Desc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ChatSharedCount DESC "
+	return u
+}
+
+func (u *__PostCount_Selector) OrderBy_ChatSharedCount_Asc() *__PostCount_Selector {
+	u.orderBy = " ORDER BY ChatSharedCount ASC "
+	return u
+}
+
+func (u *__PostCount_Selector) Select_ChatSharedCount() *__PostCount_Selector {
+	u.selectCol = "ChatSharedCount"
 	return u
 }
 
@@ -1348,10 +2780,10 @@ func MassInsert_PostCount(rows []PostCount, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(2, ln, true)
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_count (" +
-		"PostId, ViewsCount" +
+		"PostId, CommentsCount, LikesCount, ViewsCount, ReSharedCount, ChatSharedCount" +
 		") VALUES " + insVals
 
 	// run query
@@ -1360,7 +2792,11 @@ func MassInsert_PostCount(rows []PostCount, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.CommentsCount)
+		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
+		vals = append(vals, row.ReSharedCount)
+		vals = append(vals, row.ChatSharedCount)
 
 	}
 
@@ -1386,10 +2822,10 @@ func MassReplace_PostCount(rows []PostCount, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(2, ln, true)
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_count (" +
-		"PostId, ViewsCount" +
+		"PostId, CommentsCount, LikesCount, ViewsCount, ReSharedCount, ChatSharedCount" +
 		") VALUES " + insVals
 
 	// run query
@@ -1398,7 +2834,11 @@ func MassReplace_PostCount(rows []PostCount, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.CommentsCount)
+		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
+		vals = append(vals, row.ReSharedCount)
+		vals = append(vals, row.ChatSharedCount)
 
 	}
 
@@ -1418,6 +2858,14 @@ func MassReplace_PostCount(rows []PostCount, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
 
 //
 

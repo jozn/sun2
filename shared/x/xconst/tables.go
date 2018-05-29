@@ -1,110 +1,94 @@
 package xconst
 
 const (
-	Action_Table                       = "action"
-	Action_TableGo                     = "Action"
-	Comment_Table                      = "comment"
-	Comment_TableGo                    = "Comment"
-	CommentDeleted_Table               = "comment_deleted"
-	CommentDeleted_TableGo             = "CommentDeleted"
-	Event_Table                        = "event"
-	Event_TableGo                      = "Event"
-	FollowingList_Table                = "following_list"
-	FollowingList_TableGo              = "FollowingList"
-	FollowingListMember_Table          = "following_list_member"
-	FollowingListMember_TableGo        = "FollowingListMember"
-	FollowingListMemberRemoved_Table   = "following_list_member_removed"
-	FollowingListMemberRemoved_TableGo = "FollowingListMemberRemoved"
-	Like_Table                         = "likes"
-	Like_TableGo                       = "Like"
-	Notify_Table                       = "notify"
-	Notify_TableGo                     = "Notify"
-	NotifyRemoved_Table                = "notify_removed"
-	NotifyRemoved_TableGo              = "NotifyRemoved"
-	PhoneContact_Table                 = "phone_contacts"
-	PhoneContact_TableGo               = "PhoneContact"
-	Post_Table                         = "post"
-	Post_TableGo                       = "Post"
-	PostCount_Table                    = "post_count"
-	PostCount_TableGo                  = "PostCount"
-	PostDeleted_Table                  = "post_deleted"
-	PostDeleted_TableGo                = "PostDeleted"
-	PostKey_Table                      = "post_keys"
-	PostKey_TableGo                    = "PostKey"
-	PostLink_Table                     = "post_link"
-	PostLink_TableGo                   = "PostLink"
-	PostMedia_Table                    = "post_media"
-	PostMedia_TableGo                  = "PostMedia"
-	PostMentioned_Table                = "post_mentioned"
-	PostMentioned_TableGo              = "PostMentioned"
-	PostReshared_Table                 = "post_reshared"
-	PostReshared_TableGo               = "PostReshared"
-	SearchClicked_Table                = "search_clicked"
-	SearchClicked_TableGo              = "SearchClicked"
-	Session_Table                      = "session"
-	Session_TableGo                    = "Session"
-	SettingClient_Table                = "setting_client"
-	SettingClient_TableGo              = "SettingClient"
-	SettingNotification_Table          = "setting_notifications"
-	SettingNotification_TableGo        = "SettingNotification"
-	Tag_Table                          = "tag"
-	Tag_TableGo                        = "Tag"
-	TagPost_Table                      = "tag_post"
-	TagPost_TableGo                    = "TagPost"
-	TriggerLog_Table                   = "trigger_log"
-	TriggerLog_TableGo                 = "TriggerLog"
-	User_Table                         = "user"
-	User_TableGo                       = "User"
-	UserMetaInfo_Table                 = "user_meta_info"
-	UserMetaInfo_TableGo               = "UserMetaInfo"
-	UserPassword_Table                 = "user_password"
-	UserPassword_TableGo               = "UserPassword"
-	Chat_Table                         = "chat"
-	Chat_TableGo                       = "Chat"
-	ChatLastMessage_Table              = "chat_last_message"
-	ChatLastMessage_TableGo            = "ChatLastMessage"
-	DirectMessage_Table                = "direct_message"
-	DirectMessage_TableGo              = "DirectMessage"
-	Group_Table                        = "group"
-	Group_TableGo                      = "Group"
-	GroupMember_Table                  = "group_member"
-	GroupMember_TableGo                = "GroupMember"
-	GroupMessage_Table                 = "group_message"
-	GroupMessage_TableGo               = "GroupMessage"
-	FileMsg_Table                      = "file_msg"
-	FileMsg_TableGo                    = "FileMsg"
-	FilePost_Table                     = "file_post"
-	FilePost_TableGo                   = "FilePost"
-	ActionFanout_Table                 = "action_fanout"
-	ActionFanout_TableGo               = "ActionFanout"
-	HomeFanout_Table                   = "home_fanout"
-	HomeFanout_TableGo                 = "HomeFanout"
-	SuggestedTopPost_Table             = "suggested_top_posts"
-	SuggestedTopPost_TableGo           = "SuggestedTopPost"
-	SuggestedUser_Table                = "suggested_user"
-	SuggestedUser_TableGo              = "SuggestedUser"
-	ChatSync2_Table                    = "chat_sync2"
-	ChatSync2_TableGo                  = "ChatSync2"
-	LowerTable_Table                   = "lower_table"
-	LowerTable_TableGo                 = "LowerTable"
-	PushChat_Table                     = "push_chat"
-	PushChat_TableGo                   = "PushChat"
-	PushChat2_Table                    = "push_chat2"
-	PushChat2_TableGo                  = "PushChat2"
-	HTTPRPCLog_Table                   = "http_rpc_log"
-	HTTPRPCLog_TableGo                 = "HTTPRPCLog"
-	MetricLog_Table                    = "metric_log"
-	MetricLog_TableGo                  = "MetricLog"
-	XfileServiceInfoLog_Table          = "xfile_service_info_log"
-	XfileServiceInfoLog_TableGo        = "XfileServiceInfoLog"
-	XfileServiceMetricLog_Table        = "xfile_service_metric_log"
-	XfileServiceMetricLog_TableGo      = "XfileServiceMetricLog"
-	XfileServiceRequestLog_Table       = "xfile_service_request_log"
-	XfileServiceRequestLog_TableGo     = "XfileServiceRequestLog"
-	Account_Table                      = "accounts"
-	Account_TableGo                    = "Account"
-	PostCdb_Table                      = "post_cdb"
-	PostCdb_TableGo                    = "PostCdb"
+	Action_Table                   = "action"
+	Action_TableGo                 = "Action"
+	Comment_Table                  = "comment"
+	Comment_TableGo                = "Comment"
+	CommentDeleted_Table           = "comment_deleted"
+	CommentDeleted_TableGo         = "CommentDeleted"
+	Event_Table                    = "event"
+	Event_TableGo                  = "Event"
+	Like_Table                     = "likes"
+	Like_TableGo                   = "Like"
+	Notify_Table                   = "notify"
+	Notify_TableGo                 = "Notify"
+	NotifyRemoved_Table            = "notify_removed"
+	NotifyRemoved_TableGo          = "NotifyRemoved"
+	PhoneContact_Table             = "phone_contacts"
+	PhoneContact_TableGo           = "PhoneContact"
+	Post_Table                     = "post"
+	Post_TableGo                   = "Post"
+	PostCount_Table                = "post_count"
+	PostCount_TableGo              = "PostCount"
+	PostDeleted_Table              = "post_deleted"
+	PostDeleted_TableGo            = "PostDeleted"
+	PostKey_Table                  = "post_keys"
+	PostKey_TableGo                = "PostKey"
+	PostLink_Table                 = "post_link"
+	PostLink_TableGo               = "PostLink"
+	PostMedia_Table                = "post_media"
+	PostMedia_TableGo              = "PostMedia"
+	PostMentioned_Table            = "post_mentioned"
+	PostMentioned_TableGo          = "PostMentioned"
+	PostReshared_Table             = "post_reshared"
+	PostReshared_TableGo           = "PostReshared"
+	Session_Table                  = "session"
+	Session_TableGo                = "Session"
+	SettingClient_Table            = "setting_client"
+	SettingClient_TableGo          = "SettingClient"
+	SettingNotification_Table      = "setting_notifications"
+	SettingNotification_TableGo    = "SettingNotification"
+	Tag_Table                      = "tag"
+	Tag_TableGo                    = "Tag"
+	TagPost_Table                  = "tag_post"
+	TagPost_TableGo                = "TagPost"
+	TriggerLog_Table               = "trigger_log"
+	TriggerLog_TableGo             = "TriggerLog"
+	User_Table                     = "user"
+	User_TableGo                   = "User"
+	UserRelation_Table             = "user_relation"
+	UserRelation_TableGo           = "UserRelation"
+	Chat_Table                     = "chat"
+	Chat_TableGo                   = "Chat"
+	ChatLastMessage_Table          = "chat_last_message"
+	ChatLastMessage_TableGo        = "ChatLastMessage"
+	ChatVersionOrder_Table         = "chat_version_order"
+	ChatVersionOrder_TableGo       = "ChatVersionOrder"
+	Group_Table                    = "group"
+	Group_TableGo                  = "Group"
+	GroupMember_Table              = "group_member"
+	GroupMember_TableGo            = "GroupMember"
+	GroupOrderdUser_Table          = "group_orderd_user"
+	GroupOrderdUser_TableGo        = "GroupOrderdUser"
+	GroupPinedMsg_Table            = "group_pined_msg"
+	GroupPinedMsg_TableGo          = "GroupPinedMsg"
+	FileMsg_Table                  = "file_msg"
+	FileMsg_TableGo                = "FileMsg"
+	FilePost_Table                 = "file_post"
+	FilePost_TableGo               = "FilePost"
+	ActionFanout_Table             = "action_fanout"
+	ActionFanout_TableGo           = "ActionFanout"
+	HomeFanout_Table               = "home_fanout"
+	HomeFanout_TableGo             = "HomeFanout"
+	SuggestedTopPost_Table         = "suggested_top_posts"
+	SuggestedTopPost_TableGo       = "SuggestedTopPost"
+	SuggestedUser_Table            = "suggested_user"
+	SuggestedUser_TableGo          = "SuggestedUser"
+	PushChat_Table                 = "push_chat"
+	PushChat_TableGo               = "PushChat"
+	HTTPRPCLog_Table               = "http_rpc_log"
+	HTTPRPCLog_TableGo             = "HTTPRPCLog"
+	MetricLog_Table                = "metric_log"
+	MetricLog_TableGo              = "MetricLog"
+	XfileServiceInfoLog_Table      = "xfile_service_info_log"
+	XfileServiceInfoLog_TableGo    = "XfileServiceInfoLog"
+	XfileServiceMetricLog_Table    = "xfile_service_metric_log"
+	XfileServiceMetricLog_TableGo  = "XfileServiceMetricLog"
+	XfileServiceRequestLog_Table   = "xfile_service_request_log"
+	XfileServiceRequestLog_TableGo = "XfileServiceRequestLog"
+	InvalidateCache_Table          = "invalidate_cache"
+	InvalidateCache_TableGo        = "InvalidateCache"
 )
 
 var Action = struct {
@@ -181,57 +165,6 @@ var Event = struct {
 	ReSharedId:   "ReSharedId",
 }
 
-var FollowingList = struct {
-	Id          string
-	UserId      string
-	ListType    string
-	Name        string
-	Count       string
-	IsAuto      string
-	IsPimiry    string
-	CreatedTime string
-}{
-
-	Id:          "Id",
-	UserId:      "UserId",
-	ListType:    "ListType",
-	Name:        "Name",
-	Count:       "Count",
-	IsAuto:      "IsAuto",
-	IsPimiry:    "IsPimiry",
-	CreatedTime: "CreatedTime",
-}
-
-var FollowingListMember = struct {
-	Id             string
-	ListId         string
-	UserId         string
-	FollowedUserId string
-	CreatedTime    string
-}{
-
-	Id:             "Id",
-	ListId:         "ListId",
-	UserId:         "UserId",
-	FollowedUserId: "FollowedUserId",
-	CreatedTime:    "CreatedTime",
-}
-
-var FollowingListMemberRemoved = struct {
-	Id               string
-	ListId           string
-	UserId           string
-	UnFollowedUserId string
-	UpdatedTime      string
-}{
-
-	Id:               "Id",
-	ListId:           "ListId",
-	UserId:           "UserId",
-	UnFollowedUserId: "UnFollowedUserId",
-	UpdatedTime:      "UpdatedTime",
-}
-
 var Like = struct {
 	Id           string
 	PostId       string
@@ -286,28 +219,20 @@ var NotifyRemoved = struct {
 }
 
 var PhoneContact = struct {
-	Id                    string
-	UserId                string
-	Phone                 string
-	PhoneDisplayName      string
-	PhoneFamilyName       string
-	PhoneNumber           string
-	PhoneNormalizedNumber string
-	PhoneContactRowId     string
-	DeviceUuidId          string
-	CreatedTime           string
+	Id        string
+	UserId    string
+	ClientId  string
+	Phone     string
+	FirstName string
+	LastName  string
 }{
 
-	Id:                    "Id",
-	UserId:                "UserId",
-	Phone:                 "Phone",
-	PhoneDisplayName:      "PhoneDisplayName",
-	PhoneFamilyName:       "PhoneFamilyName",
-	PhoneNumber:           "PhoneNumber",
-	PhoneNormalizedNumber: "PhoneNormalizedNumber",
-	PhoneContactRowId:     "PhoneContactRowId",
-	DeviceUuidId:          "DeviceUuidId",
-	CreatedTime:           "CreatedTime",
+	Id:        "Id",
+	UserId:    "UserId",
+	ClientId:  "ClientId",
+	Phone:     "Phone",
+	FirstName: "FirstName",
+	LastName:  "LastName",
 }
 
 var Post = struct {
@@ -356,12 +281,20 @@ var Post = struct {
 }
 
 var PostCount = struct {
-	PostId     string
-	ViewsCount string
+	PostId          string
+	CommentsCount   string
+	LikesCount      string
+	ViewsCount      string
+	ReSharedCount   string
+	ChatSharedCount string
 }{
 
-	PostId:     "PostId",
-	ViewsCount: "ViewsCount",
+	PostId:          "PostId",
+	CommentsCount:   "CommentsCount",
+	LikesCount:      "LikesCount",
+	ViewsCount:      "ViewsCount",
+	ReSharedCount:   "ReSharedCount",
+	ChatSharedCount: "ChatSharedCount",
 }
 
 var PostDeleted = struct {
@@ -464,23 +397,6 @@ var PostReshared = struct {
 	PostTypeEnum:     "PostTypeEnum",
 	PostCategoryEnum: "PostCategoryEnum",
 	CreatedTime:      "CreatedTime",
-}
-
-var SearchClicked = struct {
-	Id          string
-	Query       string
-	ClickType   string
-	TargetId    string
-	UserId      string
-	CreatedTime string
-}{
-
-	Id:          "Id",
-	Query:       "Query",
-	ClickType:   "ClickType",
-	TargetId:    "TargetId",
-	UserId:      "UserId",
-	CreatedTime: "CreatedTime",
 }
 
 var Session = struct {
@@ -642,234 +558,268 @@ var TriggerLog = struct {
 }
 
 var User = struct {
-	UserId               string
-	UserName             string
-	UserNameLower        string
-	FirstName            string
-	LastName             string
-	UserTypeEnum         string
-	UserLevelEnum        string
-	AvatarId             string
-	ProfilePrivacyEnum   string
-	Phone                string
-	About                string
-	Email                string
-	PasswordHash         string
-	PasswordSalt         string
-	PostSeq              string
-	FollowersCount       string
-	FollowingCount       string
-	PostsCount           string
-	MediaCount           string
-	PhotoCount           string
-	VideoCount           string
-	GifCount             string
-	AudioCount           string
-	VoiceCount           string
-	FileCount            string
-	LinkCount            string
-	BoardCount           string
-	PinedCount           string
-	LikesCount           string
-	ResharedCount        string
-	LastActionTime       string
-	LastPostTime         string
-	PrimaryFollowingList string
-	CreatedSe            string
-	UpdatedMs            string
-	OnlinePrivacyEnum    string
-	LastActivityTime     string
-	Phone2               string
+	UserId         string
+	UserName       string
+	UserNameLower  string
+	FirstName      string
+	LastName       string
+	IsVerified     string
+	AvatarId       string
+	ProfilePrivacy string
+	OnlinePrivacy  string
+	Phone          string
+	Email          string
+	About          string
+	PasswordHash   string
+	PasswordSalt   string
+	PostSeq        string
+	FollowersCount string
+	FollowingCount string
+	PostsCount     string
+	MediaCount     string
+	PhotoCount     string
+	VideoCount     string
+	GifCount       string
+	AudioCount     string
+	VoiceCount     string
+	FileCount      string
+	LinkCount      string
+	BoardCount     string
+	PinedCount     string
+	LikesCount     string
+	ResharedCount  string
+	LastPostTime   string
+	CreatedTime    string
+	VersionTime    string
+	IsDeleted      string
+	IsBanned       string
 }{
 
-	UserId:               "UserId",
-	UserName:             "UserName",
-	UserNameLower:        "UserNameLower",
-	FirstName:            "FirstName",
-	LastName:             "LastName",
-	UserTypeEnum:         "UserTypeEnum",
-	UserLevelEnum:        "UserLevelEnum",
-	AvatarId:             "AvatarId",
-	ProfilePrivacyEnum:   "ProfilePrivacyEnum",
-	Phone:                "Phone",
-	About:                "About",
-	Email:                "Email",
-	PasswordHash:         "PasswordHash",
-	PasswordSalt:         "PasswordSalt",
-	PostSeq:              "PostSeq",
-	FollowersCount:       "FollowersCount",
-	FollowingCount:       "FollowingCount",
-	PostsCount:           "PostsCount",
-	MediaCount:           "MediaCount",
-	PhotoCount:           "PhotoCount",
-	VideoCount:           "VideoCount",
-	GifCount:             "GifCount",
-	AudioCount:           "AudioCount",
-	VoiceCount:           "VoiceCount",
-	FileCount:            "FileCount",
-	LinkCount:            "LinkCount",
-	BoardCount:           "BoardCount",
-	PinedCount:           "PinedCount",
-	LikesCount:           "LikesCount",
-	ResharedCount:        "ResharedCount",
-	LastActionTime:       "LastActionTime",
-	LastPostTime:         "LastPostTime",
-	PrimaryFollowingList: "PrimaryFollowingList",
-	CreatedSe:            "CreatedSe",
-	UpdatedMs:            "UpdatedMs",
-	OnlinePrivacyEnum:    "OnlinePrivacyEnum",
-	LastActivityTime:     "LastActivityTime",
-	Phone2:               "Phone2",
+	UserId:         "UserId",
+	UserName:       "UserName",
+	UserNameLower:  "UserNameLower",
+	FirstName:      "FirstName",
+	LastName:       "LastName",
+	IsVerified:     "IsVerified",
+	AvatarId:       "AvatarId",
+	ProfilePrivacy: "ProfilePrivacy",
+	OnlinePrivacy:  "OnlinePrivacy",
+	Phone:          "Phone",
+	Email:          "Email",
+	About:          "About",
+	PasswordHash:   "PasswordHash",
+	PasswordSalt:   "PasswordSalt",
+	PostSeq:        "PostSeq",
+	FollowersCount: "FollowersCount",
+	FollowingCount: "FollowingCount",
+	PostsCount:     "PostsCount",
+	MediaCount:     "MediaCount",
+	PhotoCount:     "PhotoCount",
+	VideoCount:     "VideoCount",
+	GifCount:       "GifCount",
+	AudioCount:     "AudioCount",
+	VoiceCount:     "VoiceCount",
+	FileCount:      "FileCount",
+	LinkCount:      "LinkCount",
+	BoardCount:     "BoardCount",
+	PinedCount:     "PinedCount",
+	LikesCount:     "LikesCount",
+	ResharedCount:  "ResharedCount",
+	LastPostTime:   "LastPostTime",
+	CreatedTime:    "CreatedTime",
+	VersionTime:    "VersionTime",
+	IsDeleted:      "IsDeleted",
+	IsBanned:       "IsBanned",
 }
 
-var UserMetaInfo = struct {
-	Id                  string
-	UserId              string
-	IsNotificationDirty string
-	LastUserRecGen      string
+var UserRelation = struct {
+	RelNanoId     string
+	UserId        string
+	PeerUserId    string
+	Follwing      string
+	Followed      string
+	InContacts    string
+	MutualContact string
+	IsFavorite    string
+	Notify        string
 }{
 
-	Id:                  "Id",
-	UserId:              "UserId",
-	IsNotificationDirty: "IsNotificationDirty",
-	LastUserRecGen:      "LastUserRecGen",
-}
-
-var UserPassword = struct {
-	UserId      string
-	Password    string
-	CreatedTime string
-}{
-
-	UserId:      "UserId",
-	Password:    "Password",
-	CreatedTime: "CreatedTime",
+	RelNanoId:     "RelNanoId",
+	UserId:        "UserId",
+	PeerUserId:    "PeerUserId",
+	Follwing:      "Follwing",
+	Followed:      "Followed",
+	InContacts:    "InContacts",
+	MutualContact: "MutualContact",
+	IsFavorite:    "IsFavorite",
+	Notify:        "Notify",
 }
 
 var Chat = struct {
-	ChatKey      string
-	RoomKey      string
-	RoomTypeEnum string
-	UserId       string
-	PeerUserId   string
-	GroupId      string
-	CreatedTime  string
-	Seq          string
-	SeenSeq      string
-	UpdatedMs    string
+	ChatId           string
+	ChatKey          string
+	RoomKey          string
+	RoomType         string
+	UserId           string
+	PeerUserId       string
+	GroupId          string
+	HashTagId        string
+	StartedByMe      string
+	Title            string
+	PinTime          string
+	FromMsgId        string
+	Seq              string
+	UnseenCount      string
+	LastMsgId        string
+	LastMsgStatus    string
+	SeenSeq          string
+	SeenMsgId        string
+	LastMsgIdRecived string
+	Left             string
+	Creator          string
+	Kicked           string
+	Admin            string
+	Deactivated      string
+	VersionTime      string
+	OrderTime        string
+	CreatedTime      string
+	DraftText        string
+	DratReplyToMsgId string
 }{
 
-	ChatKey:      "ChatKey",
-	RoomKey:      "RoomKey",
-	RoomTypeEnum: "RoomTypeEnum",
-	UserId:       "UserId",
-	PeerUserId:   "PeerUserId",
-	GroupId:      "GroupId",
-	CreatedTime:  "CreatedTime",
-	Seq:          "Seq",
-	SeenSeq:      "SeenSeq",
-	UpdatedMs:    "UpdatedMs",
+	ChatId:           "ChatId",
+	ChatKey:          "ChatKey",
+	RoomKey:          "RoomKey",
+	RoomType:         "RoomType",
+	UserId:           "UserId",
+	PeerUserId:       "PeerUserId",
+	GroupId:          "GroupId",
+	HashTagId:        "HashTagId",
+	StartedByMe:      "StartedByMe",
+	Title:            "Title",
+	PinTime:          "PinTime",
+	FromMsgId:        "FromMsgId",
+	Seq:              "Seq",
+	UnseenCount:      "UnseenCount",
+	LastMsgId:        "LastMsgId",
+	LastMsgStatus:    "LastMsgStatus",
+	SeenSeq:          "SeenSeq",
+	SeenMsgId:        "SeenMsgId",
+	LastMsgIdRecived: "LastMsgIdRecived",
+	Left:             "Left",
+	Creator:          "Creator",
+	Kicked:           "Kicked",
+	Admin:            "Admin",
+	Deactivated:      "Deactivated",
+	VersionTime:      "VersionTime",
+	OrderTime:        "OrderTime",
+	CreatedTime:      "CreatedTime",
+	DraftText:        "DraftText",
+	DratReplyToMsgId: "DratReplyToMsgId",
 }
 
 var ChatLastMessage = struct {
-	ChatKey     string
-	ForUserId   string
-	LastMsgPb   string
-	LastMsgJson string
+	ChatIdGroupId string
+	LastMsgPb     string
 }{
 
-	ChatKey:     "ChatKey",
-	ForUserId:   "ForUserId",
-	LastMsgPb:   "LastMsgPb",
-	LastMsgJson: "LastMsgJson",
+	ChatIdGroupId: "ChatIdGroupId",
+	LastMsgPb:     "LastMsgPb",
 }
 
-var DirectMessage = struct {
-	ChatKey            string
-	MessageId          string
-	RoomKey            string
-	UserId             string
-	MessageFileId      string
-	MessageTypeEnum    string
-	Text               string
-	CreatedTime        string
-	Seq                string
-	DeliviryStatusEnum string
-	ExtraPB            string
+var ChatVersionOrder = struct {
+	VersionTime string
+	UserId      string
+	ChatId      string
+	OrderTime   string
 }{
 
-	ChatKey:            "ChatKey",
-	MessageId:          "MessageId",
-	RoomKey:            "RoomKey",
-	UserId:             "UserId",
-	MessageFileId:      "MessageFileId",
-	MessageTypeEnum:    "MessageTypeEnum",
-	Text:               "Text",
-	CreatedTime:        "CreatedTime",
-	Seq:                "Seq",
-	DeliviryStatusEnum: "DeliviryStatusEnum",
-	ExtraPB:            "ExtraPB",
+	VersionTime: "VersionTime",
+	UserId:      "UserId",
+	ChatId:      "ChatId",
+	OrderTime:   "OrderTime",
 }
 
 var Group = struct {
-	GroupId          string
-	GroupName        string
-	MembersCount     string
-	GroupPrivacyEnum string
-	CreatorUserId    string
-	CreatedTime      string
-	UpdatedMs        string
-	CurrentSeq       string
+	GroupId         string
+	GroupKey        string
+	GroupName       string
+	UserName        string
+	IsSuperGroup    string
+	HashTagId       string
+	CreatorUserId   string
+	GroupPrivacy    string
+	HistoryViewAble string
+	Seq             string
+	LastMsgId       string
+	PinedMsgId      string
+	AvatarRefId     string
+	AvatarCount     string
+	About           string
+	InviteLink      string
+	MembersCount    string
+	SortTime        string
+	CreatedTime     string
+	IsMute          string
 }{
 
-	GroupId:          "GroupId",
-	GroupName:        "GroupName",
-	MembersCount:     "MembersCount",
-	GroupPrivacyEnum: "GroupPrivacyEnum",
-	CreatorUserId:    "CreatorUserId",
-	CreatedTime:      "CreatedTime",
-	UpdatedMs:        "UpdatedMs",
-	CurrentSeq:       "CurrentSeq",
+	GroupId:         "GroupId",
+	GroupKey:        "GroupKey",
+	GroupName:       "GroupName",
+	UserName:        "UserName",
+	IsSuperGroup:    "IsSuperGroup",
+	HashTagId:       "HashTagId",
+	CreatorUserId:   "CreatorUserId",
+	GroupPrivacy:    "GroupPrivacy",
+	HistoryViewAble: "HistoryViewAble",
+	Seq:             "Seq",
+	LastMsgId:       "LastMsgId",
+	PinedMsgId:      "PinedMsgId",
+	AvatarRefId:     "AvatarRefId",
+	AvatarCount:     "AvatarCount",
+	About:           "About",
+	InviteLink:      "InviteLink",
+	MembersCount:    "MembersCount",
+	SortTime:        "SortTime",
+	CreatedTime:     "CreatedTime",
+	IsMute:          "IsMute",
 }
 
 var GroupMember = struct {
-	Id              string
-	GroupId         string
-	GroupKey        string
-	UserId          string
-	ByUserId        string
-	GroupRoleEnumId string
-	CreatedTime     string
+	OrderId     string
+	GroupId     string
+	UserId      string
+	ByUserId    string
+	GroupRole   string
+	CreatedTime string
 }{
 
-	Id:              "Id",
-	GroupId:         "GroupId",
-	GroupKey:        "GroupKey",
-	UserId:          "UserId",
-	ByUserId:        "ByUserId",
-	GroupRoleEnumId: "GroupRoleEnumId",
-	CreatedTime:     "CreatedTime",
+	OrderId:     "OrderId",
+	GroupId:     "GroupId",
+	UserId:      "UserId",
+	ByUserId:    "ByUserId",
+	GroupRole:   "GroupRole",
+	CreatedTime: "CreatedTime",
 }
 
-var GroupMessage = struct {
-	MessageId          string
-	RoomKey            string
-	UserId             string
-	MessageFileId      string
-	MessageTypeEnum    string
-	Text               string
-	CreatedMs          string
-	DeliveryStatusEnum string
+var GroupOrderdUser = struct {
+	OrderId string
+	GroupId string
+	UserId  string
 }{
 
-	MessageId:          "MessageId",
-	RoomKey:            "RoomKey",
-	UserId:             "UserId",
-	MessageFileId:      "MessageFileId",
-	MessageTypeEnum:    "MessageTypeEnum",
-	Text:               "Text",
-	CreatedMs:          "CreatedMs",
-	DeliveryStatusEnum: "DeliveryStatusEnum",
+	OrderId: "OrderId",
+	GroupId: "GroupId",
+	UserId:  "UserId",
+}
+
+var GroupPinedMsg = struct {
+	MsgId string
+	MsgPb string
+}{
+
+	MsgId: "MsgId",
+	MsgPb: "MsgPb",
 }
 
 var FileMsg = struct {
@@ -970,46 +920,6 @@ var SuggestedUser = struct {
 	CreatedTime: "CreatedTime",
 }
 
-var ChatSync2 = struct {
-	SyncId            string
-	ToUserId          string
-	ChatSyncTypeId    string
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId string
-	ToLowMessageId    string
-	MessageId         string
-	MessagePb         string
-	MessageJson       string
-	CreatedTime       string
-}{
-
-	SyncId:            "sync_id",
-	ToUserId:          "to_user_id",
-	ChatSyncTypeId:    "chat_sync_type_id",
-	RoomKey:           "room_key",
-	ChatKey:           "chat_key",
-	FromHighMessageId: "from_high_message_id",
-	ToLowMessageId:    "to_low_message_id",
-	MessageId:         "message_id",
-	MessagePb:         "message_pb",
-	MessageJson:       "message_json",
-	CreatedTime:       "created_time",
-}
-
-var LowerTable = struct {
-	Id           string
-	Text         string
-	TimeStamp    string
-	AnyThingMore string
-}{
-
-	Id:           "id",
-	Text:         "text",
-	TimeStamp:    "time_stamp",
-	AnyThingMore: "any_thing_more_",
-}
-
 var PushChat = struct {
 	PushId            string
 	ToUserId          string
@@ -1041,33 +951,6 @@ var PushChat = struct {
 	MessagePb:         "MessagePb",
 	MessageJson:       "MessageJson",
 	CreatedTime:       "CreatedTime",
-}
-
-var PushChat2 = struct {
-	SyncId            string
-	ToUserId          string
-	ChatSyncTypeId    string
-	RoomKey           string
-	ChatKey           string
-	FromHighMessageId string
-	ToLowMessageId    string
-	MessageId         string
-	MessagePb         string
-	MessageJson       string
-	CreatedTime       string
-}{
-
-	SyncId:            "sync_id",
-	ToUserId:          "to_user_id",
-	ChatSyncTypeId:    "chat_sync_type_id",
-	RoomKey:           "room_key",
-	ChatKey:           "chat_key",
-	FromHighMessageId: "from_high_message_id",
-	ToLowMessageId:    "to_low_message_id",
-	MessageId:         "message_id",
-	MessagePb:         "message_pb",
-	MessageJson:       "message_json",
-	CreatedTime:       "created_time",
 }
 
 var HTTPRPCLog = struct {
@@ -1161,56 +1044,11 @@ var XfileServiceRequestLog = struct {
 	CreatedTime: "CreatedTime",
 }
 
-var Account = struct {
-	Id      string
-	Balance string
+var InvalidateCache = struct {
+	OrderId  string
+	CacheKey string
 }{
 
-	Id:      "id",
-	Balance: "balance",
-}
-
-var PostCdb = struct {
-	PostId           string
-	UserId           string
-	PostTypeEnum     string
-	PostCategoryEnum string
-	MediaId          string
-	PostKey          string
-	Text             string
-	RichText         string
-	MediaCount       string
-	SharedTo         string
-	DisableComment   string
-	Source           string
-	HasTag           string
-	Seq              string
-	CommentsCount    string
-	LikesCount       string
-	ViewsCount       string
-	EditedTime       string
-	CreatedTime      string
-	ReSharedPostId   string
-}{
-
-	PostId:           "post_id",
-	UserId:           "user_id",
-	PostTypeEnum:     "post_type_enum",
-	PostCategoryEnum: "post_category_enum",
-	MediaId:          "media_id",
-	PostKey:          "post_key",
-	Text:             "text",
-	RichText:         "rich_text",
-	MediaCount:       "media_count",
-	SharedTo:         "shared_to",
-	DisableComment:   "disable_comment",
-	Source:           "source",
-	HasTag:           "has_tag",
-	Seq:              "seq",
-	CommentsCount:    "comments_count",
-	LikesCount:       "likes_count",
-	ViewsCount:       "views_count",
-	EditedTime:       "edited_time",
-	CreatedTime:      "created_time",
-	ReSharedPostId:   "re_shared_post_id",
+	OrderId:  "OrderId",
+	CacheKey: "CacheKey",
 }

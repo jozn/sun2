@@ -9,114 +9,91 @@ option go_package = "x";
 
 import "pb_enum.proto";
 import "pb_views.proto";
+import "pb_changes.proto";
 
-// AddNewMessage
-message PB_ChatParam_AddNewMessage {
-    PB_MessageView MessageView = 1;
-//    PB_MessageFileView MessageFileView = 2;
-    bytes FileBlob = 10 ;
-}
+message PB_RPC_Chat_Types{
 
-message PB_ChatResponse_AddNewMessage {
-    PB_MessageView MessageView = 2;
-}
+    message AddNewMessage {
+        message Param {
+            PB_MessageView MessageView = 1;
+            bytes FileBlob = 10 ;
+        }
+        message Response {
+             PB_MessageView MessageView = 2;
+        }
+    }
 
-// SetRoomActionDoing
-message PB_ChatParam_SetRoomActionDoing {
-    int64 GroupId = 1;
-    string DirectRoomKey = 2;
-    RoomActionDoingEnum ActionType = 3;
-}
-message PB_ChatResponse_SetRoomActionDoing{
-}
+    message SetRoomActionDoing {
+        message Param {
+            int64 GroupId = 1;
+            string DirectRoomKey = 2;
+            RoomActionDoingEnum ActionType = 3;
+        }
+        message Response {
+        
+        }
+    }
 
-/////////////////////////////////////
-message PB_ChatParam_SetMessagesAsReceived {
-    string RoomKey = 1;
-    repeated int64 MessageIds = 3;
-}
-message PB_ChatResponse_SetMessagesAsReceived {
+    message GetChatList {
+        message Param {
+            
+        }
+        message Response {
+             repeated PB_ChatView Chats = 2;
+        }
+    }
 
-}
+    message GetChatHistory {
+        message Param {
+            string ChatId = 1;
+            string GroupId = 2;
+            int32 Limit = 3;
+            int64 FromTopMessageId = 4;//can be
+        }
+        message Response {
+            repeated PB_MessageView MessagesViews = 2 ;
+            bool HasMore = 3;
+        }
+    }
 
-/////////////////////////////////////
-message PB_ChatParam_SetChatMessagesRangeAsSeen {
-    string RoomKey = 1;
-    int64 FromOlderMessageId = 2;
-    int64 TopNewerMessageId = 3;
-    int32 LastSeqSeen = 4;
-    int64 SeenTimeMs = 5;
-}
-message PB_ChatResponse_SetChatMessagesRangeAsSeen {
+    message PushRoomsChange {
+        message Param {
+            PB_RoomsChanges RoomsChanges = 1;
+        }
 
-}
+        message Response {
+            bool Done = 1;
+            uint64 UserChatVersionSeq = 2;
+            uint64 UserChatVersionTime = 3;//nano
+        }
+    }
 
-/////////////////////////////////////
-message PB_ChatParam_DeleteChatHistory {//d+g
-    string ChatKey = 1;
-    int64 FromMessageId = 2;//must persent
-}
-message PB_ChatResponse_DeleteChatHistory {
+    message GetRoomsChange {
+        message Param {
+            uint64 UserChatVersionSeq = 2;
+            uint64 UserChatVersionTime = 3;
+        }
 
+        message Response {
+            PB_PushChanges PushChanges = 1;
+        }
+    }
 }
-
-/////////////////////////////////////
-message PB_ChatParam_DeleteMessagesByIds {
-    string ChatKey = 1;
-    bool Both = 2;
-    repeated int64 MessagesIds = 10;
-}
-message PB_ChatResponse_DeleteMessagesByIds {
-
-}
-
-/////////////////////////////////////
-message PB_ChatParam_EditMessage {
-    string RoomKey = 1;
-    int64 MessageId = 3;
-    string NewText = 4;
-}
-message PB_ChatResponse_EditMessage {
-
-}
-////////////////////////////////////////////////////////
-
-message PB_ChatParam_GetChatList {
-
-}
-message PB_ChatResponse_GetChatList {
-    repeated PB_ChatView Chats = 2;
-}
-
-// GetChatHistoryToOlder
-message PB_ChatParam_GetChatHistoryToOlder {
-    string ChatKey = 1;
-    int32 Limit = 2;
-    int64 FromTopMessageId = 3;//can be
-}
-message PB_ChatResponse_GetChatHistoryToOlder {
-    repeated PB_MessageView MessagesViews = 2 ;
-    bool HasMore = 3;
-}
-
 ////////////////////////////////////////////////////////
 
 service RPC_Chat {
-    rpc AddNewMessage (PB_ChatParam_AddNewMessage) returns (PB_ChatResponse_AddNewMessage);
-    rpc SetRoomActionDoing (PB_ChatParam_SetRoomActionDoing) returns (PB_ChatResponse_SetRoomActionDoing);
-    rpc SetMessagesAsReceived (PB_ChatParam_SetMessagesAsReceived) returns (PB_ChatResponse_SetMessagesAsReceived);
-    rpc SetMessagesRangeAsSeen (PB_ChatParam_SetChatMessagesRangeAsSeen) returns (PB_ChatResponse_SetChatMessagesRangeAsSeen);
-    rpc DeleteChatHistory (PB_ChatParam_DeleteChatHistory) returns (PB_ChatResponse_DeleteChatHistory);
-    rpc DeleteMessagesByIds (PB_ChatParam_DeleteMessagesByIds) returns (PB_ChatResponse_DeleteMessagesByIds);
-    rpc EditMessage (PB_ChatParam_EditMessage) returns (PB_ChatResponse_EditMessage);
-    rpc GetChatList (PB_ChatParam_GetChatList) returns (PB_ChatResponse_GetChatList);
-    rpc GetChatHistoryToOlder (PB_ChatParam_GetChatHistoryToOlder) returns (PB_ChatResponse_GetChatHistoryToOlder);
-
+    rpc AddNewMessage (PB_RPC_Chat_Types.AddNewMessage.Param) returns (PB_RPC_Chat_Types.AddNewMessage.Response);
+    rpc SetRoomActionDoing (PB_RPC_Chat_Types.SetRoomActionDoing.Param) returns (PB_RPC_Chat_Types.SetRoomActionDoing.Response);
+    rpc GetChatList (PB_RPC_Chat_Types.GetChatList.Param) returns (PB_RPC_Chat_Types.GetChatList.Response);
+    rpc GetChatHistory (PB_RPC_Chat_Types.GetChatHistory.Param) returns (PB_RPC_Chat_Types.GetChatHistory.Response);
+    rpc PushRoomsChange (PB_RPC_Chat_Types.PushRoomsChange.Param) returns (PB_RPC_Chat_Types.PushRoomsChange.Response);
+    rpc GetRoomsChange (PB_RPC_Chat_Types.GetRoomsChange.Param) returns (PB_RPC_Chat_Types.GetRoomsChange.Response);
 }
 
 ////////////////////////////////
 
-/*message PB_MessageForwardedFrom {
+/*
+message PB_MessageForwardedFrom {
     int64 RoomId = 1;
     RoomTypeEnum RoomTypeEnum = 2;
     int64 MessageId = 3;

@@ -115,93 +115,6 @@ $$
 
 
  #### delimiter ;*/
-################################ FollowingList ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS following_list_OnCreateLogger $$
-CREATE TRIGGER following_list_OnCreateLogger AFTER INSERT ON following_list
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingList","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_OnUpdateLogger $$
-CREATE TRIGGER following_list_OnUpdateLogger AFTER UPDATE ON following_list
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingList","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_OnDeleteLogger $$
-CREATE TRIGGER following_list_OnDeleteLogger AFTER DELETE ON following_list
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingList","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ FollowingListMember ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS following_list_member_OnCreateLogger $$
-CREATE TRIGGER following_list_member_OnCreateLogger AFTER INSERT ON following_list_member
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMember","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_member_OnUpdateLogger $$
-CREATE TRIGGER following_list_member_OnUpdateLogger AFTER UPDATE ON following_list_member
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMember","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_member_OnDeleteLogger $$
-CREATE TRIGGER following_list_member_OnDeleteLogger AFTER DELETE ON following_list_member
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMember","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ FollowingListMemberRemoved ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS following_list_member_removed_OnCreateLogger $$
-CREATE TRIGGER following_list_member_removed_OnCreateLogger AFTER INSERT ON following_list_member_removed
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMemberRemoved","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_member_removed_OnUpdateLogger $$
-CREATE TRIGGER following_list_member_removed_OnUpdateLogger AFTER UPDATE ON following_list_member_removed
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMemberRemoved","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS following_list_member_removed_OnDeleteLogger $$
-CREATE TRIGGER following_list_member_removed_OnDeleteLogger AFTER DELETE ON following_list_member_removed
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("FollowingListMemberRemoved","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ Like ######################################
 
 /* #### delimiter $$
@@ -550,35 +463,6 @@ $$
 
 
  #### delimiter ;*/
-################################ SearchClicked ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS search_clicked_OnCreateLogger $$
-CREATE TRIGGER search_clicked_OnCreateLogger AFTER INSERT ON search_clicked
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SearchClicked","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS search_clicked_OnUpdateLogger $$
-CREATE TRIGGER search_clicked_OnUpdateLogger AFTER UPDATE ON search_clicked
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SearchClicked","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS search_clicked_OnDeleteLogger $$
-CREATE TRIGGER search_clicked_OnDeleteLogger AFTER DELETE ON search_clicked
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("SearchClicked","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ Session ######################################
 
 /* #### delimiter $$
@@ -782,59 +666,30 @@ $$
 
 
 delimiter ;
-################################ UserMetaInfo ######################################
+################################ UserRelation ######################################
 
 /* #### delimiter $$
-DROP TRIGGER IF EXISTS user_meta_info_OnCreateLogger $$
-CREATE TRIGGER user_meta_info_OnCreateLogger AFTER INSERT ON user_meta_info
+DROP TRIGGER IF EXISTS user_relation_OnCreateLogger $$
+CREATE TRIGGER user_relation_OnCreateLogger AFTER INSERT ON user_relation
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserMetaInfo","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserRelation","INSERT",NEW.RelNanoId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
-DROP TRIGGER IF EXISTS user_meta_info_OnUpdateLogger $$
-CREATE TRIGGER user_meta_info_OnUpdateLogger AFTER UPDATE ON user_meta_info
+DROP TRIGGER IF EXISTS user_relation_OnUpdateLogger $$
+CREATE TRIGGER user_relation_OnUpdateLogger AFTER UPDATE ON user_relation
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserMetaInfo","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserRelation","UPDATE",NEW.RelNanoId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
-DROP TRIGGER IF EXISTS user_meta_info_OnDeleteLogger $$
-CREATE TRIGGER user_meta_info_OnDeleteLogger AFTER DELETE ON user_meta_info
+DROP TRIGGER IF EXISTS user_relation_OnDeleteLogger $$
+CREATE TRIGGER user_relation_OnDeleteLogger AFTER DELETE ON user_relation
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserMetaInfo","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ UserPassword ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS user_password_OnCreateLogger $$
-CREATE TRIGGER user_password_OnCreateLogger AFTER INSERT ON user_password
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserPassword","INSERT",NEW.UserId, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS user_password_OnUpdateLogger $$
-CREATE TRIGGER user_password_OnUpdateLogger AFTER UPDATE ON user_password
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserPassword","UPDATE",NEW.UserId, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS user_password_OnDeleteLogger $$
-CREATE TRIGGER user_password_OnDeleteLogger AFTER DELETE ON user_password
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserPassword","DELETE",OLD.UserId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("UserRelation","DELETE",OLD.RelNanoId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -847,7 +702,7 @@ DROP TRIGGER IF EXISTS chat_OnCreateLogger $$
 CREATE TRIGGER chat_OnCreateLogger AFTER INSERT ON chat
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Chat","INSERT",NEW.ChatKey, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Chat","INSERT",NEW.ChatId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -855,7 +710,7 @@ DROP TRIGGER IF EXISTS chat_OnUpdateLogger $$
 CREATE TRIGGER chat_OnUpdateLogger AFTER UPDATE ON chat
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Chat","UPDATE",NEW.ChatKey, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Chat","UPDATE",NEW.ChatId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -863,7 +718,7 @@ DROP TRIGGER IF EXISTS chat_OnDeleteLogger $$
 CREATE TRIGGER chat_OnDeleteLogger AFTER DELETE ON chat
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("Chat","DELETE",OLD.ChatKey, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Chat","DELETE",OLD.ChatId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -876,7 +731,7 @@ DROP TRIGGER IF EXISTS chat_last_message_OnCreateLogger $$
 CREATE TRIGGER chat_last_message_OnCreateLogger AFTER INSERT ON chat_last_message
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","INSERT",NEW.ChatKey, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","INSERT",NEW.ChatIdGroupId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -884,7 +739,7 @@ DROP TRIGGER IF EXISTS chat_last_message_OnUpdateLogger $$
 CREATE TRIGGER chat_last_message_OnUpdateLogger AFTER UPDATE ON chat_last_message
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","UPDATE",NEW.ChatKey, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","UPDATE",NEW.ChatIdGroupId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -892,36 +747,36 @@ DROP TRIGGER IF EXISTS chat_last_message_OnDeleteLogger $$
 CREATE TRIGGER chat_last_message_OnDeleteLogger AFTER DELETE ON chat_last_message
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","DELETE",OLD.ChatKey, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetStr,CreatedSe) VALUES ("ChatLastMessage","DELETE",OLD.ChatIdGroupId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
 
  #### delimiter ;*/
-################################ DirectMessage ######################################
+################################ ChatVersionOrder ######################################
 
 /* #### delimiter $$
-DROP TRIGGER IF EXISTS direct_message_OnCreateLogger $$
-CREATE TRIGGER direct_message_OnCreateLogger AFTER INSERT ON direct_message
+DROP TRIGGER IF EXISTS chat_version_order_OnCreateLogger $$
+CREATE TRIGGER chat_version_order_OnCreateLogger AFTER INSERT ON chat_version_order
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("DirectMessage","INSERT",NEW.MessageId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatVersionOrder","INSERT",NEW.VersionTime, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
-DROP TRIGGER IF EXISTS direct_message_OnUpdateLogger $$
-CREATE TRIGGER direct_message_OnUpdateLogger AFTER UPDATE ON direct_message
+DROP TRIGGER IF EXISTS chat_version_order_OnUpdateLogger $$
+CREATE TRIGGER chat_version_order_OnUpdateLogger AFTER UPDATE ON chat_version_order
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("DirectMessage","UPDATE",NEW.MessageId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatVersionOrder","UPDATE",NEW.VersionTime, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
-DROP TRIGGER IF EXISTS direct_message_OnDeleteLogger $$
-CREATE TRIGGER direct_message_OnDeleteLogger AFTER DELETE ON direct_message
+DROP TRIGGER IF EXISTS chat_version_order_OnDeleteLogger $$
+CREATE TRIGGER chat_version_order_OnDeleteLogger AFTER DELETE ON chat_version_order
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("DirectMessage","DELETE",OLD.MessageId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatVersionOrder","DELETE",OLD.VersionTime, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -963,7 +818,7 @@ DROP TRIGGER IF EXISTS group_member_OnCreateLogger $$
 CREATE TRIGGER group_member_OnCreateLogger AFTER INSERT ON group_member
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","INSERT",NEW.OrderId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
@@ -971,7 +826,7 @@ DROP TRIGGER IF EXISTS group_member_OnUpdateLogger $$
 CREATE TRIGGER group_member_OnUpdateLogger AFTER UPDATE ON group_member
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","UPDATE",NEW.OrderId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -979,36 +834,65 @@ DROP TRIGGER IF EXISTS group_member_OnDeleteLogger $$
 CREATE TRIGGER group_member_OnDeleteLogger AFTER DELETE ON group_member
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMember","DELETE",OLD.OrderId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
 
  #### delimiter ;*/
-################################ GroupMessage ######################################
+################################ GroupOrderdUser ######################################
 
 /* #### delimiter $$
-DROP TRIGGER IF EXISTS group_message_OnCreateLogger $$
-CREATE TRIGGER group_message_OnCreateLogger AFTER INSERT ON group_message
+DROP TRIGGER IF EXISTS group_orderd_user_OnCreateLogger $$
+CREATE TRIGGER group_orderd_user_OnCreateLogger AFTER INSERT ON group_orderd_user
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMessage","INSERT",NEW.MessageId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupOrderdUser","INSERT",NEW.OrderId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
-DROP TRIGGER IF EXISTS group_message_OnUpdateLogger $$
-CREATE TRIGGER group_message_OnUpdateLogger AFTER UPDATE ON group_message
+DROP TRIGGER IF EXISTS group_orderd_user_OnUpdateLogger $$
+CREATE TRIGGER group_orderd_user_OnUpdateLogger AFTER UPDATE ON group_orderd_user
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMessage","UPDATE",NEW.MessageId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupOrderdUser","UPDATE",NEW.OrderId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
-DROP TRIGGER IF EXISTS group_message_OnDeleteLogger $$
-CREATE TRIGGER group_message_OnDeleteLogger AFTER DELETE ON group_message
+DROP TRIGGER IF EXISTS group_orderd_user_OnDeleteLogger $$
+CREATE TRIGGER group_orderd_user_OnDeleteLogger AFTER DELETE ON group_orderd_user
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupMessage","DELETE",OLD.MessageId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupOrderdUser","DELETE",OLD.OrderId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ GroupPinedMsg ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS group_pined_msg_OnCreateLogger $$
+CREATE TRIGGER group_pined_msg_OnCreateLogger AFTER INSERT ON group_pined_msg
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupPinedMsg","INSERT",NEW.MsgId, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS group_pined_msg_OnUpdateLogger $$
+CREATE TRIGGER group_pined_msg_OnUpdateLogger AFTER UPDATE ON group_pined_msg
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupPinedMsg","UPDATE",NEW.MsgId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS group_pined_msg_OnDeleteLogger $$
+CREATE TRIGGER group_pined_msg_OnDeleteLogger AFTER DELETE ON group_pined_msg
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("GroupPinedMsg","DELETE",OLD.MsgId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1188,64 +1072,6 @@ $$
 
 
  #### delimiter ;*/
-################################ ChatSync2 ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS chat_sync2_OnCreateLogger $$
-CREATE TRIGGER chat_sync2_OnCreateLogger AFTER INSERT ON chat_sync2
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","INSERT",NEW.sync_id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS chat_sync2_OnUpdateLogger $$
-CREATE TRIGGER chat_sync2_OnUpdateLogger AFTER UPDATE ON chat_sync2
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","UPDATE",NEW.sync_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS chat_sync2_OnDeleteLogger $$
-CREATE TRIGGER chat_sync2_OnDeleteLogger AFTER DELETE ON chat_sync2
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ChatSync2","DELETE",OLD.sync_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ LowerTable ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS lower_table_OnCreateLogger $$
-CREATE TRIGGER lower_table_OnCreateLogger AFTER INSERT ON lower_table
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","INSERT",NEW.id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS lower_table_OnUpdateLogger $$
-CREATE TRIGGER lower_table_OnUpdateLogger AFTER UPDATE ON lower_table
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","UPDATE",NEW.id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS lower_table_OnDeleteLogger $$
-CREATE TRIGGER lower_table_OnDeleteLogger AFTER DELETE ON lower_table
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("LowerTable","DELETE",OLD.id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
 ################################ PushChat ######################################
 
 /* #### delimiter $$
@@ -1270,35 +1096,6 @@ CREATE TRIGGER push_chat_OnDeleteLogger AFTER DELETE ON push_chat
   FOR EACH ROW
   BEGIN
    	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat","DELETE",OLD.PushId, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ PushChat2 ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS push_chat2_OnCreateLogger $$
-CREATE TRIGGER push_chat2_OnCreateLogger AFTER INSERT ON push_chat2
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","INSERT",NEW.sync_id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS push_chat2_OnUpdateLogger $$
-CREATE TRIGGER push_chat2_OnUpdateLogger AFTER UPDATE ON push_chat2
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","UPDATE",NEW.sync_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS push_chat2_OnDeleteLogger $$
-CREATE TRIGGER push_chat2_OnDeleteLogger AFTER DELETE ON push_chat2
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PushChat2","DELETE",OLD.sync_id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1449,59 +1246,30 @@ $$
 
 
  #### delimiter ;*/
-################################ Account ######################################
+################################ InvalidateCache ######################################
 
 /* #### delimiter $$
-DROP TRIGGER IF EXISTS accounts_OnCreateLogger $$
-CREATE TRIGGER accounts_OnCreateLogger AFTER INSERT ON accounts
+DROP TRIGGER IF EXISTS invalidate_cache_OnCreateLogger $$
+CREATE TRIGGER invalidate_cache_OnCreateLogger AFTER INSERT ON invalidate_cache
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","INSERT",NEW.id, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("InvalidateCache","INSERT",NEW.OrderId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
-DROP TRIGGER IF EXISTS accounts_OnUpdateLogger $$
-CREATE TRIGGER accounts_OnUpdateLogger AFTER UPDATE ON accounts
+DROP TRIGGER IF EXISTS invalidate_cache_OnUpdateLogger $$
+CREATE TRIGGER invalidate_cache_OnUpdateLogger AFTER UPDATE ON invalidate_cache
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","UPDATE",NEW.id, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("InvalidateCache","UPDATE",NEW.OrderId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
-DROP TRIGGER IF EXISTS accounts_OnDeleteLogger $$
-CREATE TRIGGER accounts_OnDeleteLogger AFTER DELETE ON accounts
+DROP TRIGGER IF EXISTS invalidate_cache_OnDeleteLogger $$
+CREATE TRIGGER invalidate_cache_OnDeleteLogger AFTER DELETE ON invalidate_cache
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("Account","DELETE",OLD.id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-
- #### delimiter ;*/
-################################ PostCdb ######################################
-
-/* #### delimiter $$
-DROP TRIGGER IF EXISTS post_cdb_OnCreateLogger $$
-CREATE TRIGGER post_cdb_OnCreateLogger AFTER INSERT ON post_cdb
-  FOR EACH ROW
-  BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","INSERT",NEW.post_id, UNIX_TIMESTAMP(NOW()) );
-  END;
-$$
-
-DROP TRIGGER IF EXISTS post_cdb_OnUpdateLogger $$
-CREATE TRIGGER post_cdb_OnUpdateLogger AFTER UPDATE ON post_cdb
-  FOR EACH ROW
-  BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","UPDATE",NEW.post_id, UNIX_TIMESTAMP(NOW()));
-  END;
-$$
-
-DROP TRIGGER IF EXISTS post_cdb_OnDeleteLogger $$
-CREATE TRIGGER post_cdb_OnDeleteLogger AFTER DELETE ON post_cdb
-  FOR EACH ROW
-  BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostCdb","DELETE",OLD.post_id, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("InvalidateCache","DELETE",OLD.OrderId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1528,18 +1296,6 @@ DROP TRIGGER IF EXISTS comment_deleted_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS event_OnCreateLogger ;
 DROP TRIGGER IF EXISTS event_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS event_OnDeleteLogger ;
-### FollowingList ##
-DROP TRIGGER IF EXISTS following_list_OnCreateLogger ;
-DROP TRIGGER IF EXISTS following_list_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS following_list_OnDeleteLogger ;
-### FollowingListMember ##
-DROP TRIGGER IF EXISTS following_list_member_OnCreateLogger ;
-DROP TRIGGER IF EXISTS following_list_member_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS following_list_member_OnDeleteLogger ;
-### FollowingListMemberRemoved ##
-DROP TRIGGER IF EXISTS following_list_member_removed_OnCreateLogger ;
-DROP TRIGGER IF EXISTS following_list_member_removed_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS following_list_member_removed_OnDeleteLogger ;
 ### Like ##
 DROP TRIGGER IF EXISTS likes_OnCreateLogger ;
 DROP TRIGGER IF EXISTS likes_OnUpdateLogger ;
@@ -1588,10 +1344,6 @@ DROP TRIGGER IF EXISTS post_mentioned_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS post_reshared_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_reshared_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_reshared_OnDeleteLogger ;
-### SearchClicked ##
-DROP TRIGGER IF EXISTS search_clicked_OnCreateLogger ;
-DROP TRIGGER IF EXISTS search_clicked_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS search_clicked_OnDeleteLogger ;
 ### Session ##
 DROP TRIGGER IF EXISTS session_OnCreateLogger ;
 DROP TRIGGER IF EXISTS session_OnUpdateLogger ;
@@ -1620,14 +1372,10 @@ DROP TRIGGER IF EXISTS trigger_log_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS user_OnCreateLogger ;
 DROP TRIGGER IF EXISTS user_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS user_OnDeleteLogger ;
-### UserMetaInfo ##
-DROP TRIGGER IF EXISTS user_meta_info_OnCreateLogger ;
-DROP TRIGGER IF EXISTS user_meta_info_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS user_meta_info_OnDeleteLogger ;
-### UserPassword ##
-DROP TRIGGER IF EXISTS user_password_OnCreateLogger ;
-DROP TRIGGER IF EXISTS user_password_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS user_password_OnDeleteLogger ;
+### UserRelation ##
+DROP TRIGGER IF EXISTS user_relation_OnCreateLogger ;
+DROP TRIGGER IF EXISTS user_relation_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS user_relation_OnDeleteLogger ;
 ### Chat ##
 DROP TRIGGER IF EXISTS chat_OnCreateLogger ;
 DROP TRIGGER IF EXISTS chat_OnUpdateLogger ;
@@ -1636,10 +1384,10 @@ DROP TRIGGER IF EXISTS chat_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS chat_last_message_OnCreateLogger ;
 DROP TRIGGER IF EXISTS chat_last_message_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS chat_last_message_OnDeleteLogger ;
-### DirectMessage ##
-DROP TRIGGER IF EXISTS direct_message_OnCreateLogger ;
-DROP TRIGGER IF EXISTS direct_message_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS direct_message_OnDeleteLogger ;
+### ChatVersionOrder ##
+DROP TRIGGER IF EXISTS chat_version_order_OnCreateLogger ;
+DROP TRIGGER IF EXISTS chat_version_order_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS chat_version_order_OnDeleteLogger ;
 ### Group ##
 DROP TRIGGER IF EXISTS group_OnCreateLogger ;
 DROP TRIGGER IF EXISTS group_OnUpdateLogger ;
@@ -1648,10 +1396,14 @@ DROP TRIGGER IF EXISTS group_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS group_member_OnCreateLogger ;
 DROP TRIGGER IF EXISTS group_member_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS group_member_OnDeleteLogger ;
-### GroupMessage ##
-DROP TRIGGER IF EXISTS group_message_OnCreateLogger ;
-DROP TRIGGER IF EXISTS group_message_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS group_message_OnDeleteLogger ;
+### GroupOrderdUser ##
+DROP TRIGGER IF EXISTS group_orderd_user_OnCreateLogger ;
+DROP TRIGGER IF EXISTS group_orderd_user_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS group_orderd_user_OnDeleteLogger ;
+### GroupPinedMsg ##
+DROP TRIGGER IF EXISTS group_pined_msg_OnCreateLogger ;
+DROP TRIGGER IF EXISTS group_pined_msg_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS group_pined_msg_OnDeleteLogger ;
 ### FileMsg ##
 DROP TRIGGER IF EXISTS file_msg_OnCreateLogger ;
 DROP TRIGGER IF EXISTS file_msg_OnUpdateLogger ;
@@ -1676,22 +1428,10 @@ DROP TRIGGER IF EXISTS suggested_top_posts_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS suggested_user_OnCreateLogger ;
 DROP TRIGGER IF EXISTS suggested_user_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS suggested_user_OnDeleteLogger ;
-### ChatSync2 ##
-DROP TRIGGER IF EXISTS chat_sync2_OnCreateLogger ;
-DROP TRIGGER IF EXISTS chat_sync2_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS chat_sync2_OnDeleteLogger ;
-### LowerTable ##
-DROP TRIGGER IF EXISTS lower_table_OnCreateLogger ;
-DROP TRIGGER IF EXISTS lower_table_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS lower_table_OnDeleteLogger ;
 ### PushChat ##
 DROP TRIGGER IF EXISTS push_chat_OnCreateLogger ;
 DROP TRIGGER IF EXISTS push_chat_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS push_chat_OnDeleteLogger ;
-### PushChat2 ##
-DROP TRIGGER IF EXISTS push_chat2_OnCreateLogger ;
-DROP TRIGGER IF EXISTS push_chat2_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS push_chat2_OnDeleteLogger ;
 ### HTTPRPCLog ##
 DROP TRIGGER IF EXISTS http_rpc_log_OnCreateLogger ;
 DROP TRIGGER IF EXISTS http_rpc_log_OnUpdateLogger ;
@@ -1712,12 +1452,8 @@ DROP TRIGGER IF EXISTS xfile_service_metric_log_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnCreateLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS xfile_service_request_log_OnDeleteLogger ;
-### Account ##
-DROP TRIGGER IF EXISTS accounts_OnCreateLogger ;
-DROP TRIGGER IF EXISTS accounts_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS accounts_OnDeleteLogger ;
-### PostCdb ##
-DROP TRIGGER IF EXISTS post_cdb_OnCreateLogger ;
-DROP TRIGGER IF EXISTS post_cdb_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS post_cdb_OnDeleteLogger ;
+### InvalidateCache ##
+DROP TRIGGER IF EXISTS invalidate_cache_OnCreateLogger ;
+DROP TRIGGER IF EXISTS invalidate_cache_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS invalidate_cache_OnDeleteLogger ;
 */

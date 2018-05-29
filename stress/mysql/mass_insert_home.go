@@ -26,22 +26,23 @@ func main() {
 
 func f4() {
 	for {
-		arr := make([]x.Home, 0, 50)
-		for i := 0; i < 1000; i++ {
-			p := x.Home{
-				Id:        helper.NextRowsSeqId(),
+		arr := make([]x.HomeFanout, 0, 50)
+		for i := 0; i < 100; i++ {
+			p := x.HomeFanout{
+				OrderId:        helper.NextRowsSeqId(),
 				ForUserId: rand.Intn(10000)+1,
 				PostId:    helper.NextRowsSeqId(),
 			}
+            i4++
+            if i4%1000 == 0{
 
+                fmt.Println(i4)
+            }
 			arr = append(arr, p)
 		}
-        i4++
-		if i4%1 == 0{
 
-            fmt.Println(i4)
-        }
-		x.MassReplace_Home(arr, base.DB)
+
+		x.MassReplace_HomeFanout(arr, base.DB)
 	}
 
 }

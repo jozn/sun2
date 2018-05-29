@@ -17,420 +17,400 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// AddNewMessage
-type PB_ChatParam_AddNewMessage struct {
-	MessageView *PB_MessageView `protobuf:"bytes,1,opt,name=MessageView" json:"MessageView,omitempty"`
-	//    PB_MessageFileView MessageFileView = 2;
-	FileBlob []byte `protobuf:"bytes,10,opt,name=FileBlob,proto3" json:"FileBlob,omitempty"`
+type PB_RPC_Chat_Types struct {
 }
 
-func (m *PB_ChatParam_AddNewMessage) Reset()                    { *m = PB_ChatParam_AddNewMessage{} }
-func (m *PB_ChatParam_AddNewMessage) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatParam_AddNewMessage) ProtoMessage()               {}
-func (*PB_ChatParam_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (m *PB_RPC_Chat_Types) Reset()                    { *m = PB_RPC_Chat_Types{} }
+func (m *PB_RPC_Chat_Types) String() string            { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types) ProtoMessage()               {}
+func (*PB_RPC_Chat_Types) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
 
-func (m *PB_ChatParam_AddNewMessage) GetMessageView() *PB_MessageView {
+type PB_RPC_Chat_Types_AddNewMessage struct {
+}
+
+func (m *PB_RPC_Chat_Types_AddNewMessage) Reset()         { *m = PB_RPC_Chat_Types_AddNewMessage{} }
+func (m *PB_RPC_Chat_Types_AddNewMessage) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_AddNewMessage) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_AddNewMessage) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 0}
+}
+
+type PB_RPC_Chat_Types_AddNewMessage_Param struct {
+	MessageView *PB_MessageView `protobuf:"bytes,1,opt,name=MessageView" json:"MessageView,omitempty"`
+	FileBlob    []byte          `protobuf:"bytes,10,opt,name=FileBlob,proto3" json:"FileBlob,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_AddNewMessage_Param) Reset()         { *m = PB_RPC_Chat_Types_AddNewMessage_Param{} }
+func (m *PB_RPC_Chat_Types_AddNewMessage_Param) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_AddNewMessage_Param) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_AddNewMessage_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 0, 0}
+}
+
+func (m *PB_RPC_Chat_Types_AddNewMessage_Param) GetMessageView() *PB_MessageView {
 	if m != nil {
 		return m.MessageView
 	}
 	return nil
 }
 
-func (m *PB_ChatParam_AddNewMessage) GetFileBlob() []byte {
+func (m *PB_RPC_Chat_Types_AddNewMessage_Param) GetFileBlob() []byte {
 	if m != nil {
 		return m.FileBlob
 	}
 	return nil
 }
 
-type PB_ChatResponse_AddNewMessage struct {
+type PB_RPC_Chat_Types_AddNewMessage_Response struct {
 	MessageView *PB_MessageView `protobuf:"bytes,2,opt,name=MessageView" json:"MessageView,omitempty"`
 }
 
-func (m *PB_ChatResponse_AddNewMessage) Reset()                    { *m = PB_ChatResponse_AddNewMessage{} }
-func (m *PB_ChatResponse_AddNewMessage) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_AddNewMessage) ProtoMessage()               {}
-func (*PB_ChatResponse_AddNewMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (m *PB_RPC_Chat_Types_AddNewMessage_Response) Reset() {
+	*m = PB_RPC_Chat_Types_AddNewMessage_Response{}
+}
+func (m *PB_RPC_Chat_Types_AddNewMessage_Response) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_AddNewMessage_Response) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_AddNewMessage_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 0, 1}
+}
 
-func (m *PB_ChatResponse_AddNewMessage) GetMessageView() *PB_MessageView {
+func (m *PB_RPC_Chat_Types_AddNewMessage_Response) GetMessageView() *PB_MessageView {
 	if m != nil {
 		return m.MessageView
 	}
 	return nil
 }
 
-// SetRoomActionDoing
-type PB_ChatParam_SetRoomActionDoing struct {
+type PB_RPC_Chat_Types_SetRoomActionDoing struct {
+}
+
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing) Reset()         { *m = PB_RPC_Chat_Types_SetRoomActionDoing{} }
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_SetRoomActionDoing) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_SetRoomActionDoing) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 1}
+}
+
+type PB_RPC_Chat_Types_SetRoomActionDoing_Param struct {
 	GroupId       int64               `protobuf:"varint,1,opt,name=GroupId" json:"GroupId,omitempty"`
 	DirectRoomKey string              `protobuf:"bytes,2,opt,name=DirectRoomKey" json:"DirectRoomKey,omitempty"`
 	ActionType    RoomActionDoingEnum `protobuf:"varint,3,opt,name=ActionType,enum=RoomActionDoingEnum" json:"ActionType,omitempty"`
 }
 
-func (m *PB_ChatParam_SetRoomActionDoing) Reset()                    { *m = PB_ChatParam_SetRoomActionDoing{} }
-func (m *PB_ChatParam_SetRoomActionDoing) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatParam_SetRoomActionDoing) ProtoMessage()               {}
-func (*PB_ChatParam_SetRoomActionDoing) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) Reset() {
+	*m = PB_RPC_Chat_Types_SetRoomActionDoing_Param{}
+}
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) String() string {
+	return proto.CompactTextString(m)
+}
+func (*PB_RPC_Chat_Types_SetRoomActionDoing_Param) ProtoMessage() {}
+func (*PB_RPC_Chat_Types_SetRoomActionDoing_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 1, 0}
+}
 
-func (m *PB_ChatParam_SetRoomActionDoing) GetGroupId() int64 {
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) GetGroupId() int64 {
 	if m != nil {
 		return m.GroupId
 	}
 	return 0
 }
 
-func (m *PB_ChatParam_SetRoomActionDoing) GetDirectRoomKey() string {
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) GetDirectRoomKey() string {
 	if m != nil {
 		return m.DirectRoomKey
 	}
 	return ""
 }
 
-func (m *PB_ChatParam_SetRoomActionDoing) GetActionType() RoomActionDoingEnum {
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) GetActionType() RoomActionDoingEnum {
 	if m != nil {
 		return m.ActionType
 	}
 	return RoomActionDoingEnum_UNKNOWN_ROOM_ACTION_DOING
 }
 
-type PB_ChatResponse_SetRoomActionDoing struct {
+type PB_RPC_Chat_Types_SetRoomActionDoing_Response struct {
 }
 
-func (m *PB_ChatResponse_SetRoomActionDoing) Reset()         { *m = PB_ChatResponse_SetRoomActionDoing{} }
-func (m *PB_ChatResponse_SetRoomActionDoing) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_SetRoomActionDoing) ProtoMessage()    {}
-func (*PB_ChatResponse_SetRoomActionDoing) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{3}
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Response) Reset() {
+	*m = PB_RPC_Chat_Types_SetRoomActionDoing_Response{}
 }
-
-// ///////////////////////////////////
-type PB_ChatParam_SetMessagesAsReceived struct {
-	RoomKey    string  `protobuf:"bytes,1,opt,name=RoomKey" json:"RoomKey,omitempty"`
-	MessageIds []int64 `protobuf:"varint,3,rep,packed,name=MessageIds" json:"MessageIds,omitempty"`
-}
-
-func (m *PB_ChatParam_SetMessagesAsReceived) Reset()         { *m = PB_ChatParam_SetMessagesAsReceived{} }
-func (m *PB_ChatParam_SetMessagesAsReceived) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatParam_SetMessagesAsReceived) ProtoMessage()    {}
-func (*PB_ChatParam_SetMessagesAsReceived) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{4}
-}
-
-func (m *PB_ChatParam_SetMessagesAsReceived) GetRoomKey() string {
-	if m != nil {
-		return m.RoomKey
-	}
-	return ""
-}
-
-func (m *PB_ChatParam_SetMessagesAsReceived) GetMessageIds() []int64 {
-	if m != nil {
-		return m.MessageIds
-	}
-	return nil
-}
-
-type PB_ChatResponse_SetMessagesAsReceived struct {
-}
-
-func (m *PB_ChatResponse_SetMessagesAsReceived) Reset()         { *m = PB_ChatResponse_SetMessagesAsReceived{} }
-func (m *PB_ChatResponse_SetMessagesAsReceived) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_SetMessagesAsReceived) ProtoMessage()    {}
-func (*PB_ChatResponse_SetMessagesAsReceived) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{5}
-}
-
-// ///////////////////////////////////
-type PB_ChatParam_SetChatMessagesRangeAsSeen struct {
-	RoomKey            string `protobuf:"bytes,1,opt,name=RoomKey" json:"RoomKey,omitempty"`
-	FromOlderMessageId int64  `protobuf:"varint,2,opt,name=FromOlderMessageId" json:"FromOlderMessageId,omitempty"`
-	TopNewerMessageId  int64  `protobuf:"varint,3,opt,name=TopNewerMessageId" json:"TopNewerMessageId,omitempty"`
-	LastSeqSeen        int32  `protobuf:"varint,4,opt,name=LastSeqSeen" json:"LastSeqSeen,omitempty"`
-	SeenTimeMs         int64  `protobuf:"varint,5,opt,name=SeenTimeMs" json:"SeenTimeMs,omitempty"`
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) Reset() {
-	*m = PB_ChatParam_SetChatMessagesRangeAsSeen{}
-}
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatParam_SetChatMessagesRangeAsSeen) ProtoMessage()    {}
-func (*PB_ChatParam_SetChatMessagesRangeAsSeen) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{6}
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetRoomKey() string {
-	if m != nil {
-		return m.RoomKey
-	}
-	return ""
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetFromOlderMessageId() int64 {
-	if m != nil {
-		return m.FromOlderMessageId
-	}
-	return 0
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetTopNewerMessageId() int64 {
-	if m != nil {
-		return m.TopNewerMessageId
-	}
-	return 0
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetLastSeqSeen() int32 {
-	if m != nil {
-		return m.LastSeqSeen
-	}
-	return 0
-}
-
-func (m *PB_ChatParam_SetChatMessagesRangeAsSeen) GetSeenTimeMs() int64 {
-	if m != nil {
-		return m.SeenTimeMs
-	}
-	return 0
-}
-
-type PB_ChatResponse_SetChatMessagesRangeAsSeen struct {
-}
-
-func (m *PB_ChatResponse_SetChatMessagesRangeAsSeen) Reset() {
-	*m = PB_ChatResponse_SetChatMessagesRangeAsSeen{}
-}
-func (m *PB_ChatResponse_SetChatMessagesRangeAsSeen) String() string {
+func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Response) String() string {
 	return proto.CompactTextString(m)
 }
-func (*PB_ChatResponse_SetChatMessagesRangeAsSeen) ProtoMessage() {}
-func (*PB_ChatResponse_SetChatMessagesRangeAsSeen) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{7}
+func (*PB_RPC_Chat_Types_SetRoomActionDoing_Response) ProtoMessage() {}
+func (*PB_RPC_Chat_Types_SetRoomActionDoing_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 1, 1}
 }
 
-// ///////////////////////////////////
-type PB_ChatParam_DeleteChatHistory struct {
-	ChatKey       string `protobuf:"bytes,1,opt,name=ChatKey" json:"ChatKey,omitempty"`
-	FromMessageId int64  `protobuf:"varint,2,opt,name=FromMessageId" json:"FromMessageId,omitempty"`
+type PB_RPC_Chat_Types_GetChatList struct {
 }
 
-func (m *PB_ChatParam_DeleteChatHistory) Reset()                    { *m = PB_ChatParam_DeleteChatHistory{} }
-func (m *PB_ChatParam_DeleteChatHistory) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatParam_DeleteChatHistory) ProtoMessage()               {}
-func (*PB_ChatParam_DeleteChatHistory) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{8} }
-
-func (m *PB_ChatParam_DeleteChatHistory) GetChatKey() string {
-	if m != nil {
-		return m.ChatKey
-	}
-	return ""
+func (m *PB_RPC_Chat_Types_GetChatList) Reset()         { *m = PB_RPC_Chat_Types_GetChatList{} }
+func (m *PB_RPC_Chat_Types_GetChatList) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatList) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatList) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 2}
 }
 
-func (m *PB_ChatParam_DeleteChatHistory) GetFromMessageId() int64 {
-	if m != nil {
-		return m.FromMessageId
-	}
-	return 0
+type PB_RPC_Chat_Types_GetChatList_Param struct {
 }
 
-type PB_ChatResponse_DeleteChatHistory struct {
+func (m *PB_RPC_Chat_Types_GetChatList_Param) Reset()         { *m = PB_RPC_Chat_Types_GetChatList_Param{} }
+func (m *PB_RPC_Chat_Types_GetChatList_Param) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatList_Param) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatList_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 2, 0}
 }
 
-func (m *PB_ChatResponse_DeleteChatHistory) Reset()         { *m = PB_ChatResponse_DeleteChatHistory{} }
-func (m *PB_ChatResponse_DeleteChatHistory) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_DeleteChatHistory) ProtoMessage()    {}
-func (*PB_ChatResponse_DeleteChatHistory) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{9}
-}
-
-// ///////////////////////////////////
-type PB_ChatParam_DeleteMessagesByIds struct {
-	ChatKey     string  `protobuf:"bytes,1,opt,name=ChatKey" json:"ChatKey,omitempty"`
-	Both        bool    `protobuf:"varint,2,opt,name=Both" json:"Both,omitempty"`
-	MessagesIds []int64 `protobuf:"varint,10,rep,packed,name=MessagesIds" json:"MessagesIds,omitempty"`
-}
-
-func (m *PB_ChatParam_DeleteMessagesByIds) Reset()         { *m = PB_ChatParam_DeleteMessagesByIds{} }
-func (m *PB_ChatParam_DeleteMessagesByIds) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatParam_DeleteMessagesByIds) ProtoMessage()    {}
-func (*PB_ChatParam_DeleteMessagesByIds) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{10}
-}
-
-func (m *PB_ChatParam_DeleteMessagesByIds) GetChatKey() string {
-	if m != nil {
-		return m.ChatKey
-	}
-	return ""
-}
-
-func (m *PB_ChatParam_DeleteMessagesByIds) GetBoth() bool {
-	if m != nil {
-		return m.Both
-	}
-	return false
-}
-
-func (m *PB_ChatParam_DeleteMessagesByIds) GetMessagesIds() []int64 {
-	if m != nil {
-		return m.MessagesIds
-	}
-	return nil
-}
-
-type PB_ChatResponse_DeleteMessagesByIds struct {
-}
-
-func (m *PB_ChatResponse_DeleteMessagesByIds) Reset()         { *m = PB_ChatResponse_DeleteMessagesByIds{} }
-func (m *PB_ChatResponse_DeleteMessagesByIds) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_DeleteMessagesByIds) ProtoMessage()    {}
-func (*PB_ChatResponse_DeleteMessagesByIds) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{11}
-}
-
-// ///////////////////////////////////
-type PB_ChatParam_EditMessage struct {
-	RoomKey   string `protobuf:"bytes,1,opt,name=RoomKey" json:"RoomKey,omitempty"`
-	MessageId int64  `protobuf:"varint,3,opt,name=MessageId" json:"MessageId,omitempty"`
-	NewText   string `protobuf:"bytes,4,opt,name=NewText" json:"NewText,omitempty"`
-}
-
-func (m *PB_ChatParam_EditMessage) Reset()                    { *m = PB_ChatParam_EditMessage{} }
-func (m *PB_ChatParam_EditMessage) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatParam_EditMessage) ProtoMessage()               {}
-func (*PB_ChatParam_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{12} }
-
-func (m *PB_ChatParam_EditMessage) GetRoomKey() string {
-	if m != nil {
-		return m.RoomKey
-	}
-	return ""
-}
-
-func (m *PB_ChatParam_EditMessage) GetMessageId() int64 {
-	if m != nil {
-		return m.MessageId
-	}
-	return 0
-}
-
-func (m *PB_ChatParam_EditMessage) GetNewText() string {
-	if m != nil {
-		return m.NewText
-	}
-	return ""
-}
-
-type PB_ChatResponse_EditMessage struct {
-}
-
-func (m *PB_ChatResponse_EditMessage) Reset()                    { *m = PB_ChatResponse_EditMessage{} }
-func (m *PB_ChatResponse_EditMessage) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_EditMessage) ProtoMessage()               {}
-func (*PB_ChatResponse_EditMessage) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{13} }
-
-type PB_ChatParam_GetChatList struct {
-}
-
-func (m *PB_ChatParam_GetChatList) Reset()                    { *m = PB_ChatParam_GetChatList{} }
-func (m *PB_ChatParam_GetChatList) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatParam_GetChatList) ProtoMessage()               {}
-func (*PB_ChatParam_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{14} }
-
-type PB_ChatResponse_GetChatList struct {
+type PB_RPC_Chat_Types_GetChatList_Response struct {
 	Chats []*PB_ChatView `protobuf:"bytes,2,rep,name=Chats" json:"Chats,omitempty"`
 }
 
-func (m *PB_ChatResponse_GetChatList) Reset()                    { *m = PB_ChatResponse_GetChatList{} }
-func (m *PB_ChatResponse_GetChatList) String() string            { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_GetChatList) ProtoMessage()               {}
-func (*PB_ChatResponse_GetChatList) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{15} }
+func (m *PB_RPC_Chat_Types_GetChatList_Response) Reset() {
+	*m = PB_RPC_Chat_Types_GetChatList_Response{}
+}
+func (m *PB_RPC_Chat_Types_GetChatList_Response) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatList_Response) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatList_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 2, 1}
+}
 
-func (m *PB_ChatResponse_GetChatList) GetChats() []*PB_ChatView {
+func (m *PB_RPC_Chat_Types_GetChatList_Response) GetChats() []*PB_ChatView {
 	if m != nil {
 		return m.Chats
 	}
 	return nil
 }
 
-// GetChatHistoryToOlder
-type PB_ChatParam_GetChatHistoryToOlder struct {
-	ChatKey          string `protobuf:"bytes,1,opt,name=ChatKey" json:"ChatKey,omitempty"`
-	Limit            int32  `protobuf:"varint,2,opt,name=Limit" json:"Limit,omitempty"`
-	FromTopMessageId int64  `protobuf:"varint,3,opt,name=FromTopMessageId" json:"FromTopMessageId,omitempty"`
+type PB_RPC_Chat_Types_GetChatHistory struct {
 }
 
-func (m *PB_ChatParam_GetChatHistoryToOlder) Reset()         { *m = PB_ChatParam_GetChatHistoryToOlder{} }
-func (m *PB_ChatParam_GetChatHistoryToOlder) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatParam_GetChatHistoryToOlder) ProtoMessage()    {}
-func (*PB_ChatParam_GetChatHistoryToOlder) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{16}
+func (m *PB_RPC_Chat_Types_GetChatHistory) Reset()         { *m = PB_RPC_Chat_Types_GetChatHistory{} }
+func (m *PB_RPC_Chat_Types_GetChatHistory) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatHistory) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatHistory) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 3}
 }
 
-func (m *PB_ChatParam_GetChatHistoryToOlder) GetChatKey() string {
+type PB_RPC_Chat_Types_GetChatHistory_Param struct {
+	ChatId           string `protobuf:"bytes,1,opt,name=ChatId" json:"ChatId,omitempty"`
+	GroupId          string `protobuf:"bytes,2,opt,name=GroupId" json:"GroupId,omitempty"`
+	Limit            int32  `protobuf:"varint,3,opt,name=Limit" json:"Limit,omitempty"`
+	FromTopMessageId int64  `protobuf:"varint,4,opt,name=FromTopMessageId" json:"FromTopMessageId,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) Reset() {
+	*m = PB_RPC_Chat_Types_GetChatHistory_Param{}
+}
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatHistory_Param) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatHistory_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 3, 0}
+}
+
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) GetChatId() string {
 	if m != nil {
-		return m.ChatKey
+		return m.ChatId
 	}
 	return ""
 }
 
-func (m *PB_ChatParam_GetChatHistoryToOlder) GetLimit() int32 {
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) GetGroupId() string {
+	if m != nil {
+		return m.GroupId
+	}
+	return ""
+}
+
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) GetLimit() int32 {
 	if m != nil {
 		return m.Limit
 	}
 	return 0
 }
 
-func (m *PB_ChatParam_GetChatHistoryToOlder) GetFromTopMessageId() int64 {
+func (m *PB_RPC_Chat_Types_GetChatHistory_Param) GetFromTopMessageId() int64 {
 	if m != nil {
 		return m.FromTopMessageId
 	}
 	return 0
 }
 
-type PB_ChatResponse_GetChatHistoryToOlder struct {
+type PB_RPC_Chat_Types_GetChatHistory_Response struct {
 	MessagesViews []*PB_MessageView `protobuf:"bytes,2,rep,name=MessagesViews" json:"MessagesViews,omitempty"`
 	HasMore       bool              `protobuf:"varint,3,opt,name=HasMore" json:"HasMore,omitempty"`
 }
 
-func (m *PB_ChatResponse_GetChatHistoryToOlder) Reset()         { *m = PB_ChatResponse_GetChatHistoryToOlder{} }
-func (m *PB_ChatResponse_GetChatHistoryToOlder) String() string { return proto.CompactTextString(m) }
-func (*PB_ChatResponse_GetChatHistoryToOlder) ProtoMessage()    {}
-func (*PB_ChatResponse_GetChatHistoryToOlder) Descriptor() ([]byte, []int) {
-	return fileDescriptor4, []int{17}
+func (m *PB_RPC_Chat_Types_GetChatHistory_Response) Reset() {
+	*m = PB_RPC_Chat_Types_GetChatHistory_Response{}
+}
+func (m *PB_RPC_Chat_Types_GetChatHistory_Response) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetChatHistory_Response) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetChatHistory_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 3, 1}
 }
 
-func (m *PB_ChatResponse_GetChatHistoryToOlder) GetMessagesViews() []*PB_MessageView {
+func (m *PB_RPC_Chat_Types_GetChatHistory_Response) GetMessagesViews() []*PB_MessageView {
 	if m != nil {
 		return m.MessagesViews
 	}
 	return nil
 }
 
-func (m *PB_ChatResponse_GetChatHistoryToOlder) GetHasMore() bool {
+func (m *PB_RPC_Chat_Types_GetChatHistory_Response) GetHasMore() bool {
 	if m != nil {
 		return m.HasMore
 	}
 	return false
 }
 
+type PB_RPC_Chat_Types_PushRoomsChange struct {
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange) Reset()         { *m = PB_RPC_Chat_Types_PushRoomsChange{} }
+func (m *PB_RPC_Chat_Types_PushRoomsChange) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_PushRoomsChange) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_PushRoomsChange) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 4}
+}
+
+type PB_RPC_Chat_Types_PushRoomsChange_Param struct {
+	RoomsChanges *PB_RoomsChanges `protobuf:"bytes,1,opt,name=RoomsChanges" json:"RoomsChanges,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) Reset() {
+	*m = PB_RPC_Chat_Types_PushRoomsChange_Param{}
+}
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_PushRoomsChange_Param) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_PushRoomsChange_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 4, 0}
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) GetRoomsChanges() *PB_RoomsChanges {
+	if m != nil {
+		return m.RoomsChanges
+	}
+	return nil
+}
+
+type PB_RPC_Chat_Types_PushRoomsChange_Response struct {
+	Done                bool   `protobuf:"varint,1,opt,name=Done" json:"Done,omitempty"`
+	UserChatVersionSeq  uint64 `protobuf:"varint,2,opt,name=UserChatVersionSeq" json:"UserChatVersionSeq,omitempty"`
+	UserChatVersionTime uint64 `protobuf:"varint,3,opt,name=UserChatVersionTime" json:"UserChatVersionTime,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) Reset() {
+	*m = PB_RPC_Chat_Types_PushRoomsChange_Response{}
+}
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) String() string {
+	return proto.CompactTextString(m)
+}
+func (*PB_RPC_Chat_Types_PushRoomsChange_Response) ProtoMessage() {}
+func (*PB_RPC_Chat_Types_PushRoomsChange_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 4, 1}
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) GetDone() bool {
+	if m != nil {
+		return m.Done
+	}
+	return false
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) GetUserChatVersionSeq() uint64 {
+	if m != nil {
+		return m.UserChatVersionSeq
+	}
+	return 0
+}
+
+func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) GetUserChatVersionTime() uint64 {
+	if m != nil {
+		return m.UserChatVersionTime
+	}
+	return 0
+}
+
+type PB_RPC_Chat_Types_GetRoomsChange struct {
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange) Reset()         { *m = PB_RPC_Chat_Types_GetRoomsChange{} }
+func (m *PB_RPC_Chat_Types_GetRoomsChange) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetRoomsChange) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetRoomsChange) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 5}
+}
+
+type PB_RPC_Chat_Types_GetRoomsChange_Param struct {
+	UserChatVersionSeq  uint64 `protobuf:"varint,2,opt,name=UserChatVersionSeq" json:"UserChatVersionSeq,omitempty"`
+	UserChatVersionTime uint64 `protobuf:"varint,3,opt,name=UserChatVersionTime" json:"UserChatVersionTime,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) Reset() {
+	*m = PB_RPC_Chat_Types_GetRoomsChange_Param{}
+}
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetRoomsChange_Param) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetRoomsChange_Param) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 5, 0}
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) GetUserChatVersionSeq() uint64 {
+	if m != nil {
+		return m.UserChatVersionSeq
+	}
+	return 0
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) GetUserChatVersionTime() uint64 {
+	if m != nil {
+		return m.UserChatVersionTime
+	}
+	return 0
+}
+
+type PB_RPC_Chat_Types_GetRoomsChange_Response struct {
+	PushChanges *PB_PushChanges `protobuf:"bytes,1,opt,name=PushChanges" json:"PushChanges,omitempty"`
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) Reset() {
+	*m = PB_RPC_Chat_Types_GetRoomsChange_Response{}
+}
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) String() string { return proto.CompactTextString(m) }
+func (*PB_RPC_Chat_Types_GetRoomsChange_Response) ProtoMessage()    {}
+func (*PB_RPC_Chat_Types_GetRoomsChange_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor3, []int{0, 5, 1}
+}
+
+func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) GetPushChanges() *PB_PushChanges {
+	if m != nil {
+		return m.PushChanges
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterType((*PB_ChatParam_AddNewMessage)(nil), "PB_ChatParam_AddNewMessage")
-	proto.RegisterType((*PB_ChatResponse_AddNewMessage)(nil), "PB_ChatResponse_AddNewMessage")
-	proto.RegisterType((*PB_ChatParam_SetRoomActionDoing)(nil), "PB_ChatParam_SetRoomActionDoing")
-	proto.RegisterType((*PB_ChatResponse_SetRoomActionDoing)(nil), "PB_ChatResponse_SetRoomActionDoing")
-	proto.RegisterType((*PB_ChatParam_SetMessagesAsReceived)(nil), "PB_ChatParam_SetMessagesAsReceived")
-	proto.RegisterType((*PB_ChatResponse_SetMessagesAsReceived)(nil), "PB_ChatResponse_SetMessagesAsReceived")
-	proto.RegisterType((*PB_ChatParam_SetChatMessagesRangeAsSeen)(nil), "PB_ChatParam_SetChatMessagesRangeAsSeen")
-	proto.RegisterType((*PB_ChatResponse_SetChatMessagesRangeAsSeen)(nil), "PB_ChatResponse_SetChatMessagesRangeAsSeen")
-	proto.RegisterType((*PB_ChatParam_DeleteChatHistory)(nil), "PB_ChatParam_DeleteChatHistory")
-	proto.RegisterType((*PB_ChatResponse_DeleteChatHistory)(nil), "PB_ChatResponse_DeleteChatHistory")
-	proto.RegisterType((*PB_ChatParam_DeleteMessagesByIds)(nil), "PB_ChatParam_DeleteMessagesByIds")
-	proto.RegisterType((*PB_ChatResponse_DeleteMessagesByIds)(nil), "PB_ChatResponse_DeleteMessagesByIds")
-	proto.RegisterType((*PB_ChatParam_EditMessage)(nil), "PB_ChatParam_EditMessage")
-	proto.RegisterType((*PB_ChatResponse_EditMessage)(nil), "PB_ChatResponse_EditMessage")
-	proto.RegisterType((*PB_ChatParam_GetChatList)(nil), "PB_ChatParam_GetChatList")
-	proto.RegisterType((*PB_ChatResponse_GetChatList)(nil), "PB_ChatResponse_GetChatList")
-	proto.RegisterType((*PB_ChatParam_GetChatHistoryToOlder)(nil), "PB_ChatParam_GetChatHistoryToOlder")
-	proto.RegisterType((*PB_ChatResponse_GetChatHistoryToOlder)(nil), "PB_ChatResponse_GetChatHistoryToOlder")
+	proto.RegisterType((*PB_RPC_Chat_Types)(nil), "PB_RPC_Chat_Types")
+	proto.RegisterType((*PB_RPC_Chat_Types_AddNewMessage)(nil), "PB_RPC_Chat_Types.AddNewMessage")
+	proto.RegisterType((*PB_RPC_Chat_Types_AddNewMessage_Param)(nil), "PB_RPC_Chat_Types.AddNewMessage.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_AddNewMessage_Response)(nil), "PB_RPC_Chat_Types.AddNewMessage.Response")
+	proto.RegisterType((*PB_RPC_Chat_Types_SetRoomActionDoing)(nil), "PB_RPC_Chat_Types.SetRoomActionDoing")
+	proto.RegisterType((*PB_RPC_Chat_Types_SetRoomActionDoing_Param)(nil), "PB_RPC_Chat_Types.SetRoomActionDoing.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_SetRoomActionDoing_Response)(nil), "PB_RPC_Chat_Types.SetRoomActionDoing.Response")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatList)(nil), "PB_RPC_Chat_Types.GetChatList")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatList_Param)(nil), "PB_RPC_Chat_Types.GetChatList.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatList_Response)(nil), "PB_RPC_Chat_Types.GetChatList.Response")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatHistory)(nil), "PB_RPC_Chat_Types.GetChatHistory")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatHistory_Param)(nil), "PB_RPC_Chat_Types.GetChatHistory.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetChatHistory_Response)(nil), "PB_RPC_Chat_Types.GetChatHistory.Response")
+	proto.RegisterType((*PB_RPC_Chat_Types_PushRoomsChange)(nil), "PB_RPC_Chat_Types.PushRoomsChange")
+	proto.RegisterType((*PB_RPC_Chat_Types_PushRoomsChange_Param)(nil), "PB_RPC_Chat_Types.PushRoomsChange.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_PushRoomsChange_Response)(nil), "PB_RPC_Chat_Types.PushRoomsChange.Response")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetRoomsChange)(nil), "PB_RPC_Chat_Types.GetRoomsChange")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetRoomsChange_Param)(nil), "PB_RPC_Chat_Types.GetRoomsChange.Param")
+	proto.RegisterType((*PB_RPC_Chat_Types_GetRoomsChange_Response)(nil), "PB_RPC_Chat_Types.GetRoomsChange.Response")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -444,15 +424,12 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for RPC_Chat service
 
 type RPC_ChatClient interface {
-	AddNewMessage(ctx context.Context, in *PB_ChatParam_AddNewMessage, opts ...grpc.CallOption) (*PB_ChatResponse_AddNewMessage, error)
-	SetRoomActionDoing(ctx context.Context, in *PB_ChatParam_SetRoomActionDoing, opts ...grpc.CallOption) (*PB_ChatResponse_SetRoomActionDoing, error)
-	SetMessagesAsReceived(ctx context.Context, in *PB_ChatParam_SetMessagesAsReceived, opts ...grpc.CallOption) (*PB_ChatResponse_SetMessagesAsReceived, error)
-	SetMessagesRangeAsSeen(ctx context.Context, in *PB_ChatParam_SetChatMessagesRangeAsSeen, opts ...grpc.CallOption) (*PB_ChatResponse_SetChatMessagesRangeAsSeen, error)
-	DeleteChatHistory(ctx context.Context, in *PB_ChatParam_DeleteChatHistory, opts ...grpc.CallOption) (*PB_ChatResponse_DeleteChatHistory, error)
-	DeleteMessagesByIds(ctx context.Context, in *PB_ChatParam_DeleteMessagesByIds, opts ...grpc.CallOption) (*PB_ChatResponse_DeleteMessagesByIds, error)
-	EditMessage(ctx context.Context, in *PB_ChatParam_EditMessage, opts ...grpc.CallOption) (*PB_ChatResponse_EditMessage, error)
-	GetChatList(ctx context.Context, in *PB_ChatParam_GetChatList, opts ...grpc.CallOption) (*PB_ChatResponse_GetChatList, error)
-	GetChatHistoryToOlder(ctx context.Context, in *PB_ChatParam_GetChatHistoryToOlder, opts ...grpc.CallOption) (*PB_ChatResponse_GetChatHistoryToOlder, error)
+	AddNewMessage(ctx context.Context, in *PB_RPC_Chat_Types_AddNewMessage_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_AddNewMessage_Response, error)
+	SetRoomActionDoing(ctx context.Context, in *PB_RPC_Chat_Types_SetRoomActionDoing_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_SetRoomActionDoing_Response, error)
+	GetChatList(ctx context.Context, in *PB_RPC_Chat_Types_GetChatList_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetChatList_Response, error)
+	GetChatHistory(ctx context.Context, in *PB_RPC_Chat_Types_GetChatHistory_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetChatHistory_Response, error)
+	PushRoomsChange(ctx context.Context, in *PB_RPC_Chat_Types_PushRoomsChange_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_PushRoomsChange_Response, error)
+	GetRoomsChange(ctx context.Context, in *PB_RPC_Chat_Types_GetRoomsChange_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetRoomsChange_Response, error)
 }
 
 type rPC_ChatClient struct {
@@ -463,8 +440,8 @@ func NewRPC_ChatClient(cc *grpc.ClientConn) RPC_ChatClient {
 	return &rPC_ChatClient{cc}
 }
 
-func (c *rPC_ChatClient) AddNewMessage(ctx context.Context, in *PB_ChatParam_AddNewMessage, opts ...grpc.CallOption) (*PB_ChatResponse_AddNewMessage, error) {
-	out := new(PB_ChatResponse_AddNewMessage)
+func (c *rPC_ChatClient) AddNewMessage(ctx context.Context, in *PB_RPC_Chat_Types_AddNewMessage_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_AddNewMessage_Response, error) {
+	out := new(PB_RPC_Chat_Types_AddNewMessage_Response)
 	err := grpc.Invoke(ctx, "/RPC_Chat/AddNewMessage", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -472,8 +449,8 @@ func (c *rPC_ChatClient) AddNewMessage(ctx context.Context, in *PB_ChatParam_Add
 	return out, nil
 }
 
-func (c *rPC_ChatClient) SetRoomActionDoing(ctx context.Context, in *PB_ChatParam_SetRoomActionDoing, opts ...grpc.CallOption) (*PB_ChatResponse_SetRoomActionDoing, error) {
-	out := new(PB_ChatResponse_SetRoomActionDoing)
+func (c *rPC_ChatClient) SetRoomActionDoing(ctx context.Context, in *PB_RPC_Chat_Types_SetRoomActionDoing_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_SetRoomActionDoing_Response, error) {
+	out := new(PB_RPC_Chat_Types_SetRoomActionDoing_Response)
 	err := grpc.Invoke(ctx, "/RPC_Chat/SetRoomActionDoing", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -481,53 +458,8 @@ func (c *rPC_ChatClient) SetRoomActionDoing(ctx context.Context, in *PB_ChatPara
 	return out, nil
 }
 
-func (c *rPC_ChatClient) SetMessagesAsReceived(ctx context.Context, in *PB_ChatParam_SetMessagesAsReceived, opts ...grpc.CallOption) (*PB_ChatResponse_SetMessagesAsReceived, error) {
-	out := new(PB_ChatResponse_SetMessagesAsReceived)
-	err := grpc.Invoke(ctx, "/RPC_Chat/SetMessagesAsReceived", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPC_ChatClient) SetMessagesRangeAsSeen(ctx context.Context, in *PB_ChatParam_SetChatMessagesRangeAsSeen, opts ...grpc.CallOption) (*PB_ChatResponse_SetChatMessagesRangeAsSeen, error) {
-	out := new(PB_ChatResponse_SetChatMessagesRangeAsSeen)
-	err := grpc.Invoke(ctx, "/RPC_Chat/SetMessagesRangeAsSeen", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPC_ChatClient) DeleteChatHistory(ctx context.Context, in *PB_ChatParam_DeleteChatHistory, opts ...grpc.CallOption) (*PB_ChatResponse_DeleteChatHistory, error) {
-	out := new(PB_ChatResponse_DeleteChatHistory)
-	err := grpc.Invoke(ctx, "/RPC_Chat/DeleteChatHistory", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPC_ChatClient) DeleteMessagesByIds(ctx context.Context, in *PB_ChatParam_DeleteMessagesByIds, opts ...grpc.CallOption) (*PB_ChatResponse_DeleteMessagesByIds, error) {
-	out := new(PB_ChatResponse_DeleteMessagesByIds)
-	err := grpc.Invoke(ctx, "/RPC_Chat/DeleteMessagesByIds", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPC_ChatClient) EditMessage(ctx context.Context, in *PB_ChatParam_EditMessage, opts ...grpc.CallOption) (*PB_ChatResponse_EditMessage, error) {
-	out := new(PB_ChatResponse_EditMessage)
-	err := grpc.Invoke(ctx, "/RPC_Chat/EditMessage", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPC_ChatClient) GetChatList(ctx context.Context, in *PB_ChatParam_GetChatList, opts ...grpc.CallOption) (*PB_ChatResponse_GetChatList, error) {
-	out := new(PB_ChatResponse_GetChatList)
+func (c *rPC_ChatClient) GetChatList(ctx context.Context, in *PB_RPC_Chat_Types_GetChatList_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetChatList_Response, error) {
+	out := new(PB_RPC_Chat_Types_GetChatList_Response)
 	err := grpc.Invoke(ctx, "/RPC_Chat/GetChatList", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
@@ -535,9 +467,27 @@ func (c *rPC_ChatClient) GetChatList(ctx context.Context, in *PB_ChatParam_GetCh
 	return out, nil
 }
 
-func (c *rPC_ChatClient) GetChatHistoryToOlder(ctx context.Context, in *PB_ChatParam_GetChatHistoryToOlder, opts ...grpc.CallOption) (*PB_ChatResponse_GetChatHistoryToOlder, error) {
-	out := new(PB_ChatResponse_GetChatHistoryToOlder)
-	err := grpc.Invoke(ctx, "/RPC_Chat/GetChatHistoryToOlder", in, out, c.cc, opts...)
+func (c *rPC_ChatClient) GetChatHistory(ctx context.Context, in *PB_RPC_Chat_Types_GetChatHistory_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetChatHistory_Response, error) {
+	out := new(PB_RPC_Chat_Types_GetChatHistory_Response)
+	err := grpc.Invoke(ctx, "/RPC_Chat/GetChatHistory", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rPC_ChatClient) PushRoomsChange(ctx context.Context, in *PB_RPC_Chat_Types_PushRoomsChange_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_PushRoomsChange_Response, error) {
+	out := new(PB_RPC_Chat_Types_PushRoomsChange_Response)
+	err := grpc.Invoke(ctx, "/RPC_Chat/PushRoomsChange", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rPC_ChatClient) GetRoomsChange(ctx context.Context, in *PB_RPC_Chat_Types_GetRoomsChange_Param, opts ...grpc.CallOption) (*PB_RPC_Chat_Types_GetRoomsChange_Response, error) {
+	out := new(PB_RPC_Chat_Types_GetRoomsChange_Response)
+	err := grpc.Invoke(ctx, "/RPC_Chat/GetRoomsChange", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -547,15 +497,12 @@ func (c *rPC_ChatClient) GetChatHistoryToOlder(ctx context.Context, in *PB_ChatP
 // Server API for RPC_Chat service
 
 type RPC_ChatServer interface {
-	AddNewMessage(context.Context, *PB_ChatParam_AddNewMessage) (*PB_ChatResponse_AddNewMessage, error)
-	SetRoomActionDoing(context.Context, *PB_ChatParam_SetRoomActionDoing) (*PB_ChatResponse_SetRoomActionDoing, error)
-	SetMessagesAsReceived(context.Context, *PB_ChatParam_SetMessagesAsReceived) (*PB_ChatResponse_SetMessagesAsReceived, error)
-	SetMessagesRangeAsSeen(context.Context, *PB_ChatParam_SetChatMessagesRangeAsSeen) (*PB_ChatResponse_SetChatMessagesRangeAsSeen, error)
-	DeleteChatHistory(context.Context, *PB_ChatParam_DeleteChatHistory) (*PB_ChatResponse_DeleteChatHistory, error)
-	DeleteMessagesByIds(context.Context, *PB_ChatParam_DeleteMessagesByIds) (*PB_ChatResponse_DeleteMessagesByIds, error)
-	EditMessage(context.Context, *PB_ChatParam_EditMessage) (*PB_ChatResponse_EditMessage, error)
-	GetChatList(context.Context, *PB_ChatParam_GetChatList) (*PB_ChatResponse_GetChatList, error)
-	GetChatHistoryToOlder(context.Context, *PB_ChatParam_GetChatHistoryToOlder) (*PB_ChatResponse_GetChatHistoryToOlder, error)
+	AddNewMessage(context.Context, *PB_RPC_Chat_Types_AddNewMessage_Param) (*PB_RPC_Chat_Types_AddNewMessage_Response, error)
+	SetRoomActionDoing(context.Context, *PB_RPC_Chat_Types_SetRoomActionDoing_Param) (*PB_RPC_Chat_Types_SetRoomActionDoing_Response, error)
+	GetChatList(context.Context, *PB_RPC_Chat_Types_GetChatList_Param) (*PB_RPC_Chat_Types_GetChatList_Response, error)
+	GetChatHistory(context.Context, *PB_RPC_Chat_Types_GetChatHistory_Param) (*PB_RPC_Chat_Types_GetChatHistory_Response, error)
+	PushRoomsChange(context.Context, *PB_RPC_Chat_Types_PushRoomsChange_Param) (*PB_RPC_Chat_Types_PushRoomsChange_Response, error)
+	GetRoomsChange(context.Context, *PB_RPC_Chat_Types_GetRoomsChange_Param) (*PB_RPC_Chat_Types_GetRoomsChange_Response, error)
 }
 
 func RegisterRPC_ChatServer(s *grpc.Server, srv RPC_ChatServer) {
@@ -563,7 +510,7 @@ func RegisterRPC_ChatServer(s *grpc.Server, srv RPC_ChatServer) {
 }
 
 func _RPC_Chat_AddNewMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_AddNewMessage)
+	in := new(PB_RPC_Chat_Types_AddNewMessage_Param)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -575,13 +522,13 @@ func _RPC_Chat_AddNewMessage_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/RPC_Chat/AddNewMessage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).AddNewMessage(ctx, req.(*PB_ChatParam_AddNewMessage))
+		return srv.(RPC_ChatServer).AddNewMessage(ctx, req.(*PB_RPC_Chat_Types_AddNewMessage_Param))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPC_Chat_SetRoomActionDoing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_SetRoomActionDoing)
+	in := new(PB_RPC_Chat_Types_SetRoomActionDoing_Param)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -593,103 +540,13 @@ func _RPC_Chat_SetRoomActionDoing_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: "/RPC_Chat/SetRoomActionDoing",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).SetRoomActionDoing(ctx, req.(*PB_ChatParam_SetRoomActionDoing))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_Chat_SetMessagesAsReceived_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_SetMessagesAsReceived)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPC_ChatServer).SetMessagesAsReceived(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RPC_Chat/SetMessagesAsReceived",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).SetMessagesAsReceived(ctx, req.(*PB_ChatParam_SetMessagesAsReceived))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_Chat_SetMessagesRangeAsSeen_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_SetChatMessagesRangeAsSeen)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPC_ChatServer).SetMessagesRangeAsSeen(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RPC_Chat/SetMessagesRangeAsSeen",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).SetMessagesRangeAsSeen(ctx, req.(*PB_ChatParam_SetChatMessagesRangeAsSeen))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_Chat_DeleteChatHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_DeleteChatHistory)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPC_ChatServer).DeleteChatHistory(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RPC_Chat/DeleteChatHistory",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).DeleteChatHistory(ctx, req.(*PB_ChatParam_DeleteChatHistory))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_Chat_DeleteMessagesByIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_DeleteMessagesByIds)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPC_ChatServer).DeleteMessagesByIds(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RPC_Chat/DeleteMessagesByIds",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).DeleteMessagesByIds(ctx, req.(*PB_ChatParam_DeleteMessagesByIds))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_Chat_EditMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_EditMessage)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPC_ChatServer).EditMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/RPC_Chat/EditMessage",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).EditMessage(ctx, req.(*PB_ChatParam_EditMessage))
+		return srv.(RPC_ChatServer).SetRoomActionDoing(ctx, req.(*PB_RPC_Chat_Types_SetRoomActionDoing_Param))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RPC_Chat_GetChatList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_GetChatList)
+	in := new(PB_RPC_Chat_Types_GetChatList_Param)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -701,25 +558,61 @@ func _RPC_Chat_GetChatList_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/RPC_Chat/GetChatList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).GetChatList(ctx, req.(*PB_ChatParam_GetChatList))
+		return srv.(RPC_ChatServer).GetChatList(ctx, req.(*PB_RPC_Chat_Types_GetChatList_Param))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_Chat_GetChatHistoryToOlder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PB_ChatParam_GetChatHistoryToOlder)
+func _RPC_Chat_GetChatHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PB_RPC_Chat_Types_GetChatHistory_Param)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPC_ChatServer).GetChatHistoryToOlder(ctx, in)
+		return srv.(RPC_ChatServer).GetChatHistory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/RPC_Chat/GetChatHistoryToOlder",
+		FullMethod: "/RPC_Chat/GetChatHistory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPC_ChatServer).GetChatHistoryToOlder(ctx, req.(*PB_ChatParam_GetChatHistoryToOlder))
+		return srv.(RPC_ChatServer).GetChatHistory(ctx, req.(*PB_RPC_Chat_Types_GetChatHistory_Param))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RPC_Chat_PushRoomsChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PB_RPC_Chat_Types_PushRoomsChange_Param)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPC_ChatServer).PushRoomsChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RPC_Chat/PushRoomsChange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPC_ChatServer).PushRoomsChange(ctx, req.(*PB_RPC_Chat_Types_PushRoomsChange_Param))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RPC_Chat_GetRoomsChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PB_RPC_Chat_Types_GetRoomsChange_Param)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPC_ChatServer).GetRoomsChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RPC_Chat/GetRoomsChange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPC_ChatServer).GetRoomsChange(ctx, req.(*PB_RPC_Chat_Types_GetRoomsChange_Param))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -737,91 +630,69 @@ var _RPC_Chat_serviceDesc = grpc.ServiceDesc{
 			Handler:    _RPC_Chat_SetRoomActionDoing_Handler,
 		},
 		{
-			MethodName: "SetMessagesAsReceived",
-			Handler:    _RPC_Chat_SetMessagesAsReceived_Handler,
-		},
-		{
-			MethodName: "SetMessagesRangeAsSeen",
-			Handler:    _RPC_Chat_SetMessagesRangeAsSeen_Handler,
-		},
-		{
-			MethodName: "DeleteChatHistory",
-			Handler:    _RPC_Chat_DeleteChatHistory_Handler,
-		},
-		{
-			MethodName: "DeleteMessagesByIds",
-			Handler:    _RPC_Chat_DeleteMessagesByIds_Handler,
-		},
-		{
-			MethodName: "EditMessage",
-			Handler:    _RPC_Chat_EditMessage_Handler,
-		},
-		{
 			MethodName: "GetChatList",
 			Handler:    _RPC_Chat_GetChatList_Handler,
 		},
 		{
-			MethodName: "GetChatHistoryToOlder",
-			Handler:    _RPC_Chat_GetChatHistoryToOlder_Handler,
+			MethodName: "GetChatHistory",
+			Handler:    _RPC_Chat_GetChatHistory_Handler,
+		},
+		{
+			MethodName: "PushRoomsChange",
+			Handler:    _RPC_Chat_PushRoomsChange_Handler,
+		},
+		{
+			MethodName: "GetRoomsChange",
+			Handler:    _RPC_Chat_GetRoomsChange_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "pb_rpc_chat.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor4) }
+func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor3) }
 
-var fileDescriptor4 = []byte{
-	// 805 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0xeb, 0x6e, 0xdb, 0x36,
-	0x14, 0x86, 0xaa, 0xba, 0x73, 0x8e, 0xeb, 0x6e, 0xe6, 0xda, 0x41, 0x53, 0xdb, 0x54, 0xa5, 0xd3,
-	0xd5, 0xc8, 0x02, 0x02, 0xf3, 0xb6, 0x07, 0xb0, 0x73, 0xc7, 0x9c, 0xcc, 0x60, 0x8c, 0x61, 0xd8,
-	0x80, 0x78, 0xb2, 0x45, 0x24, 0xc2, 0x2c, 0x53, 0x13, 0x95, 0x38, 0xfe, 0xb7, 0xb7, 0xd8, 0xcb,
-	0xec, 0x6d, 0xf6, 0x22, 0x03, 0x69, 0xc9, 0xa5, 0x2e, 0x91, 0xfd, 0x2b, 0xfa, 0x0e, 0x0f, 0x79,
-	0xbe, 0x73, 0xfb, 0x62, 0x68, 0x85, 0x93, 0x71, 0x14, 0x4e, 0xc7, 0xd3, 0x5b, 0x37, 0x26, 0x61,
-	0xc4, 0x63, 0x6e, 0x37, 0xc3, 0xc9, 0x98, 0xcd, 0xef, 0x82, 0x04, 0xbe, 0x08, 0x27, 0xe3, 0x7b,
-	0x9f, 0x2d, 0xc4, 0x0a, 0xe3, 0x3f, 0xc1, 0x1e, 0xf6, 0xc7, 0x87, 0xb7, 0x6e, 0x3c, 0x74, 0x23,
-	0x37, 0x18, 0xf7, 0x3c, 0xef, 0x92, 0x2d, 0x2e, 0x98, 0x10, 0xee, 0x0d, 0x43, 0xdf, 0x41, 0x23,
-	0xf9, 0xfc, 0xc5, 0x67, 0x0b, 0xcb, 0x70, 0x8c, 0x4e, 0xa3, 0xfb, 0x39, 0x19, 0xf6, 0xc7, 0x9a,
-	0x99, 0xea, 0x3e, 0xc8, 0x86, 0xfa, 0x89, 0x3f, 0x63, 0xfd, 0x19, 0x9f, 0x58, 0xe0, 0x18, 0x9d,
-	0xe7, 0x74, 0x8d, 0x31, 0x85, 0xb7, 0x49, 0x30, 0xca, 0x44, 0xc8, 0xe7, 0x82, 0x55, 0xc7, 0x7b,
-	0xb2, 0x39, 0x1e, 0xfe, 0xc7, 0x80, 0x77, 0x99, 0x0c, 0xae, 0x58, 0x4c, 0x39, 0x0f, 0x7a, 0xd3,
-	0xd8, 0xe7, 0xf3, 0x23, 0xee, 0xcf, 0x6f, 0x90, 0x05, 0x9f, 0x9d, 0x46, 0xfc, 0x2e, 0x3c, 0xf7,
-	0x54, 0x0a, 0x26, 0x4d, 0x21, 0xda, 0x83, 0xe6, 0x91, 0x1f, 0xb1, 0xa9, 0xba, 0xf2, 0x13, 0x5b,
-	0xaa, 0x90, 0x3b, 0x34, 0x6b, 0x44, 0x3f, 0x00, 0xac, 0x9e, 0x1b, 0x2d, 0x43, 0x66, 0x99, 0x8e,
-	0xd1, 0x79, 0xd1, 0x7d, 0x49, 0x72, 0x51, 0x8e, 0xe7, 0x77, 0x01, 0xd5, 0xfc, 0xf0, 0x1e, 0xe0,
-	0x7c, 0xb6, 0x45, 0x6e, 0xf8, 0x7a, 0xed, 0xb5, 0xa6, 0x9f, 0xa4, 0x27, 0x7a, 0x82, 0xb2, 0x29,
-	0xf3, 0xef, 0x99, 0x27, 0x33, 0x48, 0x19, 0x1a, 0x8a, 0x61, 0x0a, 0xd1, 0x2e, 0x40, 0xe2, 0x7f,
-	0xee, 0x09, 0xcb, 0x74, 0xcc, 0x8e, 0x49, 0x35, 0x0b, 0xfe, 0x08, 0x1f, 0x4a, 0x58, 0x14, 0x43,
-	0xe0, 0xff, 0x0c, 0xf8, 0x98, 0x67, 0x22, 0x41, 0xea, 0x4a, 0xdd, 0xf9, 0x0d, 0xeb, 0x89, 0x2b,
-	0xc6, 0xe6, 0x15, 0x74, 0x08, 0xa0, 0x93, 0x88, 0x07, 0x3f, 0xcf, 0x3c, 0x16, 0xad, 0x59, 0xa8,
-	0xaa, 0x9a, 0xb4, 0xe4, 0x04, 0x1d, 0x40, 0x6b, 0xc4, 0xc3, 0x4b, 0xb6, 0xd0, 0xdd, 0x4d, 0xe5,
-	0x5e, 0x3c, 0x40, 0x0e, 0x34, 0x06, 0xae, 0x88, 0xaf, 0xd8, 0x5f, 0x92, 0x86, 0xf5, 0xd4, 0x31,
-	0x3a, 0x35, 0xaa, 0x9b, 0x64, 0x39, 0xe4, 0xdf, 0x91, 0x1f, 0xb0, 0x0b, 0x61, 0xd5, 0xd4, 0x43,
-	0x9a, 0x05, 0x1f, 0xc0, 0x7e, 0x49, 0x39, 0x1e, 0xc9, 0x13, 0xff, 0x01, 0xbb, 0x99, 0x92, 0x1c,
-	0xb1, 0x19, 0x8b, 0x99, 0xc4, 0x67, 0xbe, 0x88, 0x79, 0xb4, 0x94, 0x95, 0x90, 0x50, 0xab, 0x44,
-	0x02, 0xe5, 0x68, 0xc9, 0x7c, 0xf3, 0x45, 0xc8, 0x1a, 0x71, 0x1b, 0xde, 0xe7, 0xf9, 0x14, 0x82,
-	0xe0, 0x08, 0x9c, 0x12, 0x1a, 0x29, 0xe1, 0xfe, 0xf2, 0xdc, 0x13, 0x15, 0x44, 0x10, 0x3c, 0xed,
-	0xf3, 0xf8, 0x56, 0xc5, 0xaf, 0x53, 0xf5, 0x2d, 0x0b, 0x99, 0x5e, 0x97, 0x63, 0x03, 0x6a, 0x6c,
-	0x74, 0x13, 0xfe, 0x00, 0xed, 0x72, 0x62, 0x99, 0xb0, 0x78, 0x06, 0x56, 0x86, 0xda, 0xb1, 0xe7,
-	0xa7, 0x95, 0xac, 0x98, 0x92, 0x37, 0xb0, 0x93, 0xef, 0xf6, 0x27, 0x83, 0xbc, 0x77, 0xc9, 0x16,
-	0x23, 0xf6, 0x10, 0xab, 0x0e, 0xef, 0xd0, 0x14, 0xe2, 0xb7, 0xf0, 0x3a, 0x4f, 0x4a, 0x0b, 0x88,
-	0xed, 0x1c, 0x99, 0xd3, 0x55, 0x67, 0x07, 0xbe, 0x88, 0x71, 0xaf, 0x78, 0x55, 0x3b, 0x46, 0x18,
-	0x6a, 0xf2, 0x5b, 0x58, 0x4f, 0x1c, 0xb3, 0xd3, 0xe8, 0x3e, 0x27, 0x89, 0xb3, 0x12, 0x9c, 0xd5,
-	0x11, 0xfe, 0xdb, 0xc8, 0xed, 0x6a, 0xf2, 0x40, 0xd2, 0xa6, 0x11, 0x57, 0xb3, 0x5d, 0xd1, 0x89,
-	0x97, 0x50, 0x1b, 0xf8, 0x81, 0x1f, 0xab, 0x56, 0xd4, 0xe8, 0x0a, 0xa0, 0x7d, 0xf8, 0x42, 0xce,
-	0xc4, 0x88, 0x87, 0xf9, 0x9a, 0x14, 0xec, 0xf8, 0xa1, 0xb8, 0xcd, 0xe5, 0x24, 0x7e, 0x84, 0x66,
-	0xda, 0x28, 0x99, 0x42, 0x9a, 0x57, 0x41, 0x4b, 0xb3, 0x5e, 0x92, 0xfb, 0x99, 0x2b, 0x2e, 0x78,
-	0xb4, 0x92, 0xb9, 0x3a, 0x4d, 0x61, 0xf7, 0xdf, 0x67, 0x50, 0xa7, 0xc3, 0x43, 0x15, 0x1b, 0x0d,
-	0xa0, 0x99, 0x15, 0xee, 0xd7, 0xe4, 0xf1, 0xff, 0x22, 0xf6, 0x2e, 0xa9, 0x56, 0xfd, 0xdf, 0x01,
-	0x95, 0x88, 0xb6, 0x43, 0x36, 0xc8, 0xba, 0xdd, 0x26, 0x9b, 0xf5, 0x15, 0x79, 0xf0, 0xaa, 0x5c,
-	0x52, 0xdb, 0x64, 0xb3, 0xee, 0xda, 0xdf, 0x90, 0xad, 0xc4, 0x13, 0x71, 0xf8, 0x4a, 0x3b, 0xd0,
-	0xa5, 0xb2, 0x43, 0xb6, 0x14, 0x55, 0xfb, 0x5b, 0xb2, 0xbd, 0x32, 0xa1, 0x5f, 0xa1, 0x55, 0x14,
-	0xa3, 0x77, 0xa4, 0x5a, 0xad, 0x6c, 0x4c, 0x36, 0x8a, 0x0d, 0xba, 0x86, 0x2f, 0xcb, 0xf4, 0xe5,
-	0x3d, 0xd9, 0x24, 0x41, 0xf6, 0x1e, 0xd9, 0x42, 0x31, 0xd0, 0x09, 0x34, 0x74, 0x91, 0xf8, 0x9a,
-	0x3c, 0xa6, 0x1f, 0xf6, 0x1b, 0x52, 0xb1, 0xec, 0xf2, 0x1d, 0x7d, 0x81, 0x73, 0xef, 0x68, 0x47,
-	0x25, 0xef, 0xe8, 0x17, 0x3d, 0x78, 0x55, 0xbe, 0x42, 0x6d, 0xb2, 0x79, 0xd9, 0x4b, 0x06, 0xa4,
-	0xd4, 0xaf, 0xdf, 0x82, 0xba, 0x1f, 0x91, 0x40, 0x90, 0x70, 0x72, 0x66, 0x0e, 0x8d, 0xdf, 0x8c,
-	0x87, 0xc9, 0x33, 0xf5, 0x0b, 0xec, 0xfb, 0xff, 0x03, 0x00, 0x00, 0xff, 0xff, 0xbd, 0x40, 0xdf,
-	0x5d, 0xb5, 0x09, 0x00, 0x00,
+var fileDescriptor3 = []byte{
+	// 650 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x55, 0xcd, 0x6e, 0x13, 0x3d,
+	0x14, 0xd5, 0x34, 0x49, 0x3b, 0xbd, 0x69, 0xfa, 0xe3, 0xaf, 0xfa, 0x14, 0x79, 0x15, 0x55, 0x15,
+	0x84, 0x56, 0x1a, 0x41, 0x28, 0xcb, 0x2e, 0x9a, 0x96, 0xfe, 0x88, 0x16, 0x45, 0x6e, 0xe9, 0x02,
+	0x90, 0x46, 0x99, 0xc4, 0x6a, 0x2c, 0x75, 0xc6, 0xd3, 0xf1, 0x84, 0x52, 0x21, 0x24, 0xde, 0x84,
+	0x5d, 0x1f, 0x82, 0xd7, 0xe0, 0x2d, 0x78, 0x01, 0xb6, 0xc8, 0x1e, 0xcf, 0xe0, 0xf9, 0x81, 0x74,
+	0xc3, 0x2e, 0xf7, 0xf8, 0xf8, 0x9e, 0x7b, 0xce, 0xd8, 0x0e, 0xac, 0x85, 0x9e, 0x1b, 0x85, 0x23,
+	0x77, 0x34, 0x19, 0xc6, 0x4e, 0x18, 0xf1, 0x98, 0xe3, 0x56, 0xe8, 0xb9, 0x34, 0x98, 0xfa, 0xba,
+	0x5c, 0x0e, 0x3d, 0xf7, 0x03, 0xa3, 0xb7, 0x42, 0xd7, 0xab, 0xa1, 0x27, 0xd9, 0xc1, 0x15, 0xd5,
+	0xc8, 0xc6, 0xbd, 0x0d, 0x6b, 0x83, 0xbe, 0x4b, 0x06, 0xfb, 0xee, 0xfe, 0x64, 0x18, 0xbb, 0x17,
+	0x77, 0x21, 0x15, 0xf8, 0xde, 0x82, 0xd6, 0xde, 0x78, 0xfc, 0x9a, 0xde, 0x9e, 0x51, 0x21, 0x86,
+	0x57, 0x14, 0x5f, 0x42, 0x63, 0x30, 0x8c, 0x86, 0x3e, 0x7a, 0x06, 0x4d, 0x8d, 0x5d, 0x32, 0x7a,
+	0xdb, 0xb6, 0x3a, 0x56, 0xb7, 0xd9, 0x5b, 0x71, 0x06, 0x7d, 0xd7, 0x80, 0x89, 0xc9, 0x41, 0x18,
+	0xec, 0x43, 0x76, 0x4d, 0xfb, 0xd7, 0xdc, 0x6b, 0x43, 0xc7, 0xea, 0x2e, 0x91, 0xac, 0xc6, 0xbb,
+	0x60, 0x13, 0x2a, 0x42, 0x1e, 0x08, 0x5a, 0x6c, 0x3d, 0x37, 0xbb, 0x35, 0xfe, 0x6a, 0x01, 0x3a,
+	0xa7, 0x31, 0xe1, 0xdc, 0xdf, 0x1b, 0xc5, 0x8c, 0x07, 0x07, 0x9c, 0x05, 0x57, 0xf8, 0x73, 0x3a,
+	0x6d, 0x1b, 0x16, 0x8e, 0x22, 0x3e, 0x0d, 0x4f, 0xc6, 0x6a, 0xd2, 0x1a, 0x49, 0x4b, 0xb4, 0x09,
+	0xad, 0x03, 0x16, 0xd1, 0x91, 0xda, 0xfb, 0x8a, 0xde, 0x29, 0xb9, 0x45, 0x92, 0x07, 0xd1, 0x0e,
+	0x40, 0xd2, 0x57, 0xe6, 0xd2, 0xae, 0x75, 0xac, 0xee, 0x72, 0x6f, 0xdd, 0x29, 0xc8, 0xbd, 0x0c,
+	0xa6, 0x3e, 0x31, 0x78, 0x18, 0x7e, 0x9b, 0xc2, 0x87, 0xd0, 0x3c, 0xa2, 0xb1, 0xcc, 0xf6, 0x94,
+	0x89, 0x18, 0x2f, 0xe8, 0xc9, 0xb0, 0x63, 0x18, 0xdf, 0x80, 0x86, 0x24, 0x88, 0xf6, 0x5c, 0xa7,
+	0xd6, 0x6d, 0xf6, 0x96, 0xa4, 0x65, 0x09, 0x28, 0xbf, 0xc9, 0x12, 0xfe, 0x61, 0xc1, 0xb2, 0x6e,
+	0x74, 0xcc, 0x44, 0xcc, 0xa3, 0x3b, 0xfc, 0x29, 0x75, 0xf9, 0x3f, 0xcc, 0x4b, 0x5c, 0x9b, 0x5c,
+	0x24, 0xba, 0x32, 0xdd, 0x27, 0xee, 0x32, 0xf7, 0xeb, 0xd0, 0x38, 0x65, 0x3e, 0x8b, 0x95, 0xa5,
+	0x06, 0x49, 0x0a, 0xb4, 0x05, 0xab, 0x87, 0x11, 0xf7, 0x2f, 0x78, 0xa8, 0x33, 0x3e, 0x19, 0xb7,
+	0xeb, 0x2a, 0xb6, 0x12, 0x8e, 0xdf, 0x19, 0xf3, 0xbf, 0x80, 0x96, 0x5e, 0x10, 0x72, 0xe4, 0xd4,
+	0x47, 0xe9, 0xd3, 0xe5, 0x59, 0x72, 0xbc, 0xe3, 0xa1, 0x38, 0xe3, 0x51, 0x92, 0xac, 0x4d, 0xd2,
+	0x12, 0x7f, 0xb7, 0x60, 0x65, 0x30, 0x15, 0x13, 0x19, 0xb4, 0xd8, 0x57, 0x07, 0x16, 0xef, 0xa6,
+	0x6e, 0x77, 0x60, 0xc9, 0xc0, 0x85, 0x3e, 0x82, 0xab, 0x52, 0xcc, 0xc4, 0x49, 0x8e, 0x85, 0xbf,
+	0x58, 0xc6, 0xc0, 0x08, 0xea, 0x07, 0x3c, 0xa0, 0x6a, 0xab, 0x4d, 0xd4, 0x6f, 0xe4, 0x00, 0x7a,
+	0x23, 0x68, 0xa4, 0x72, 0xa7, 0x91, 0x60, 0x3c, 0x38, 0xa7, 0x37, 0x2a, 0xb7, 0x3a, 0xa9, 0x58,
+	0x41, 0x4f, 0xe1, 0xbf, 0x02, 0x7a, 0xc1, 0xfc, 0xc4, 0x49, 0x9d, 0x54, 0x2d, 0xe1, 0x6f, 0xc9,
+	0x27, 0x34, 0x4d, 0xb1, 0xd4, 0xd4, 0xbf, 0x57, 0x2f, 0xdc, 0x34, 0x19, 0x6f, 0x3e, 0x41, 0xf5,
+	0xb9, 0x0c, 0x98, 0x98, 0x9c, 0xde, 0xcf, 0x3a, 0xd8, 0xe9, 0x2b, 0x81, 0xbc, 0xc2, 0xf3, 0x80,
+	0x1e, 0x39, 0xa5, 0x47, 0xc4, 0xc9, 0x31, 0x9c, 0xe4, 0xd4, 0x3f, 0x99, 0xc9, 0xcb, 0x66, 0xbc,
+	0xa9, 0xba, 0xd9, 0x68, 0xbb, 0xa2, 0x41, 0x99, 0xa6, 0xd5, 0x9c, 0x87, 0x91, 0x33, 0xc9, 0xf7,
+	0xb9, 0xbb, 0x8a, 0x36, 0x2b, 0xb6, 0x1b, 0xeb, 0x5a, 0xe4, 0xf1, 0x0c, 0x56, 0xd6, 0x9d, 0x16,
+	0x2f, 0x30, 0xfa, 0xcb, 0x56, 0x4d, 0xd1, 0x1a, 0x5b, 0xb3, 0x89, 0x99, 0xcc, 0xa4, 0x74, 0x75,
+	0x50, 0xb7, 0x62, 0x7b, 0x81, 0xa3, 0x85, 0xb6, 0x1f, 0xc0, 0x2c, 0x18, 0x32, 0x85, 0xfe, 0x60,
+	0xa8, 0xac, 0xb3, 0x35, 0x9b, 0x98, 0xca, 0xf4, 0xd7, 0xc0, 0x66, 0x91, 0xe3, 0x0b, 0x27, 0xf4,
+	0x8e, 0x6b, 0x03, 0xeb, 0xad, 0xf5, 0xd1, 0x9b, 0x57, 0x7f, 0x5e, 0xcf, 0x7f, 0x05, 0x00, 0x00,
+	0xff, 0xff, 0x3e, 0xf8, 0x71, 0x17, 0x02, 0x07, 0x00, 0x00,
 }

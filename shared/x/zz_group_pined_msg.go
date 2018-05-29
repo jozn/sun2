@@ -11,165 +11,165 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Account represents a row from 'suncdb.accounts'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// GroupPinedMsg represents a row from 'sun_chat.group_pined_msg'.
 
 // Manualy copy this to project
-type Account__ struct {
-	Id      int     `json:"id"`      // id -
-	Balance float64 `json:"balance"` // balance -
+type GroupPinedMsg__ struct {
+	MsgId int    `json:"MsgId"` // MsgId -
+	MsgPb []byte `json:"MsgPb"` // MsgPb -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the Account exists in the database.
-func (a *Account) Exists() bool {
-	return a._exists
+// Exists determines if the GroupPinedMsg exists in the database.
+func (gpm *GroupPinedMsg) Exists() bool {
+	return gpm._exists
 }
 
-// Deleted provides information if the Account has been deleted from the database.
-func (a *Account) Deleted() bool {
-	return a._deleted
+// Deleted provides information if the GroupPinedMsg has been deleted from the database.
+func (gpm *GroupPinedMsg) Deleted() bool {
+	return gpm._deleted
 }
 
-// Insert inserts the Account to the database.
-func (a *Account) Insert(db XODB) error {
+// Insert inserts the GroupPinedMsg to the database.
+func (gpm *GroupPinedMsg) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if a._exists {
+	if gpm._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO suncdb.accounts (` +
-		`id, balance` +
-		`) VALUES (` +
-		`$1, $2` +
-		`)`
-
-	// run query
-	if LogTableSqlReq.Account {
-		XOLog(sqlstr, a.Id, a.Balance)
-	}
-	_, err = db.Exec(sqlstr, a.Id, a.Balance)
-	if err != nil {
-		return err
-	}
-
-	// set existence
-	a._exists = true
-
-	OnAccount_AfterInsert(a)
-
-	return nil
-}
-
-// Insert inserts the Account to the database.
-func (a *Account) Replace(db XODB) error {
-	var err error
-
-	// sql query
-
-	const sqlstr = `UPSERT INTO suncdb.accounts (` +
-		`id, balance` +
+	const sqlstr = `INSERT INTO sun_chat.group_pined_msg (` +
+		`MsgId, MsgPb` +
 		`) VALUES (` +
 		`?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.Account {
-		XOLog(sqlstr, a.Id, a.Balance)
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLog(sqlstr, gpm.MsgId, gpm.MsgPb)
 	}
-	_, err = db.Exec(sqlstr, a.Id, a.Balance)
+	_, err = db.Exec(sqlstr, gpm.MsgId, gpm.MsgPb)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		return err
+	}
+
+	// set existence
+	gpm._exists = true
+
+	OnGroupPinedMsg_AfterInsert(gpm)
+
+	return nil
+}
+
+// Insert inserts the GroupPinedMsg to the database.
+func (gpm *GroupPinedMsg) Replace(db XODB) error {
+	var err error
+
+	// sql query
+
+	const sqlstr = `REPLACE INTO sun_chat.group_pined_msg (` +
+		`MsgId, MsgPb` +
+		`) VALUES (` +
+		`?, ?` +
+		`)`
+
+	// run query
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLog(sqlstr, gpm.MsgId, gpm.MsgPb)
+	}
+	_, err = db.Exec(sqlstr, gpm.MsgId, gpm.MsgPb)
+	if err != nil {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	a._exists = true
+	gpm._exists = true
 
-	OnAccount_AfterInsert(a)
+	OnGroupPinedMsg_AfterInsert(gpm)
 
 	return nil
 }
 
-// Update updates the Account in the database.
-func (a *Account) Update(db XODB) error {
+// Update updates the GroupPinedMsg in the database.
+func (gpm *GroupPinedMsg) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !a._exists {
+	if !gpm._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if a._deleted {
+	if gpm._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE suncdb.accounts SET ` +
-		`balance = $1` +
-		` WHERE id = $2`
+	const sqlstr = `UPDATE sun_chat.group_pined_msg SET ` +
+		`MsgPb = ?` +
+		` WHERE MsgId = ?`
 
 	// run query
-	if LogTableSqlReq.Account {
-		XOLog(sqlstr, a.Balance, a.Id)
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLog(sqlstr, gpm.MsgPb, gpm.MsgId)
 	}
-	_, err = db.Exec(sqlstr, a.Balance, a.Id)
+	_, err = db.Exec(sqlstr, gpm.MsgPb, gpm.MsgId)
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLogErr(err)
 	}
-	OnAccount_AfterUpdate(a)
+	OnGroupPinedMsg_AfterUpdate(gpm)
 
 	return err
 }
 
-// Save saves the Account to the database.
-func (a *Account) Save(db XODB) error {
-	if a.Exists() {
-		return a.Update(db)
+// Save saves the GroupPinedMsg to the database.
+func (gpm *GroupPinedMsg) Save(db XODB) error {
+	if gpm.Exists() {
+		return gpm.Update(db)
 	}
 
-	return a.Replace(db)
+	return gpm.Replace(db)
 }
 
-// Delete deletes the Account from the database.
-func (a *Account) Delete(db XODB) error {
+// Delete deletes the GroupPinedMsg from the database.
+func (gpm *GroupPinedMsg) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !a._exists {
+	if !gpm._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if a._deleted {
+	if gpm._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM suncdb.accounts WHERE id = $1`
+	const sqlstr = `DELETE FROM sun_chat.group_pined_msg WHERE MsgId = ?`
 
 	// run query
-	if LogTableSqlReq.Account {
-		XOLog(sqlstr, a.Id)
+	if LogTableSqlReq.GroupPinedMsg {
+		XOLog(sqlstr, gpm.MsgId)
 	}
-	_, err = db.Exec(sqlstr, a.Id)
+	_, err = db.Exec(sqlstr, gpm.MsgId)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	a._deleted = true
+	gpm._deleted = true
 
-	OnAccount_AfterDelete(a)
+	OnGroupPinedMsg_AfterDelete(gpm)
 
 	return nil
 }
@@ -180,14 +180,14 @@ func (a *Account) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Account_Deleter struct {
+type __GroupPinedMsg_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __Account_Updater struct {
+type __GroupPinedMsg_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -196,7 +196,7 @@ type __Account_Updater struct {
 	isMysql     bool
 }
 
-type __Account_Selector struct {
+type __GroupPinedMsg_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -207,30 +207,30 @@ type __Account_Selector struct {
 	isMysql     bool
 }
 
-func NewAccount_Deleter() *__Account_Deleter {
-	d := __Account_Deleter{whereSep: " AND "}
+func NewGroupPinedMsg_Deleter() *__GroupPinedMsg_Deleter {
+	d := __GroupPinedMsg_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewAccount_Updater() *__Account_Updater {
-	u := __Account_Updater{whereSep: " AND "}
+func NewGroupPinedMsg_Updater() *__GroupPinedMsg_Updater {
+	u := __GroupPinedMsg_Updater{whereSep: " AND "}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewAccount_Selector() *__Account_Selector {
-	u := __Account_Selector{whereSep: " AND ", selectCol: "*"}
+func NewGroupPinedMsg_Selector() *__GroupPinedMsg_Selector {
+	u := __GroupPinedMsg_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__Account_Selector)nextDollars(size int) string  {
+func (m *__GroupPinedMsg_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__Account_Selector)nextDollar() string  {
+func (m *__GroupPinedMsg_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -241,372 +241,372 @@ func (m *__Account_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Account_Deleter) nextDollars(size int) string {
+func (m *__GroupPinedMsg_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Account_Deleter) nextDollar() string {
+func (m *__GroupPinedMsg_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Account_Deleter) Or() *__Account_Deleter {
+func (u *__GroupPinedMsg_Deleter) Or() *__GroupPinedMsg_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Account_Deleter) Id_In(ins []int) *__Account_Deleter {
+func (u *__GroupPinedMsg_Deleter) MsgId_In(ins []int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Deleter) Id_Ins(ins ...int) *__Account_Deleter {
+func (u *__GroupPinedMsg_Deleter) MsgId_Ins(ins ...int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Deleter) Id_NotIn(ins []int) *__Account_Deleter {
+func (u *__GroupPinedMsg_Deleter) MsgId_NotIn(ins []int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Account_Deleter) Id_Eq(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_Eq(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = " + d.nextDollar()
+	w.condition = " MsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Deleter) Id_NotEq(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_NotEq(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != " + d.nextDollar()
+	w.condition = " MsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Deleter) Id_LT(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_LT(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < " + d.nextDollar()
+	w.condition = " MsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Deleter) Id_LE(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_LE(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= " + d.nextDollar()
+	w.condition = " MsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Deleter) Id_GT(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_GT(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > " + d.nextDollar()
+	w.condition = " MsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Deleter) Id_GE(val int) *__Account_Deleter {
+func (d *__GroupPinedMsg_Deleter) MsgId_GE(val int) *__GroupPinedMsg_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= " + d.nextDollar()
+	w.condition = " MsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Account_Updater) nextDollars(size int) string {
+func (m *__GroupPinedMsg_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Account_Updater) nextDollar() string {
+func (m *__GroupPinedMsg_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Account_Updater) Or() *__Account_Updater {
+func (u *__GroupPinedMsg_Updater) Or() *__GroupPinedMsg_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Account_Updater) Id_In(ins []int) *__Account_Updater {
+func (u *__GroupPinedMsg_Updater) MsgId_In(ins []int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Updater) Id_Ins(ins ...int) *__Account_Updater {
+func (u *__GroupPinedMsg_Updater) MsgId_Ins(ins ...int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Updater) Id_NotIn(ins []int) *__Account_Updater {
+func (u *__GroupPinedMsg_Updater) MsgId_NotIn(ins []int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Account_Updater) Id_Eq(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_Eq(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = " + d.nextDollar()
+	w.condition = " MsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Updater) Id_NotEq(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_NotEq(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != " + d.nextDollar()
+	w.condition = " MsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Updater) Id_LT(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_LT(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < " + d.nextDollar()
+	w.condition = " MsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Updater) Id_LE(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_LE(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= " + d.nextDollar()
+	w.condition = " MsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Updater) Id_GT(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_GT(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > " + d.nextDollar()
+	w.condition = " MsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Updater) Id_GE(val int) *__Account_Updater {
+func (d *__GroupPinedMsg_Updater) MsgId_GE(val int) *__GroupPinedMsg_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= " + d.nextDollar()
+	w.condition = " MsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Account_Selector) nextDollars(size int) string {
+func (m *__GroupPinedMsg_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Account_Selector) nextDollar() string {
+func (m *__GroupPinedMsg_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Account_Selector) Or() *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) Or() *__GroupPinedMsg_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Account_Selector) Id_In(ins []int) *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) MsgId_In(ins []int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Selector) Id_Ins(ins ...int) *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) MsgId_Ins(ins ...int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Account_Selector) Id_NotIn(ins []int) *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) MsgId_NotIn(ins []int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Account_Selector) Id_Eq(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_Eq(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id = " + d.nextDollar()
+	w.condition = " MsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Selector) Id_NotEq(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_NotEq(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id != " + d.nextDollar()
+	w.condition = " MsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Selector) Id_LT(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_LT(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id < " + d.nextDollar()
+	w.condition = " MsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Selector) Id_LE(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_LE(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id <= " + d.nextDollar()
+	w.condition = " MsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Selector) Id_GT(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_GT(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id > " + d.nextDollar()
+	w.condition = " MsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Account_Selector) Id_GE(val int) *__Account_Selector {
+func (d *__GroupPinedMsg_Selector) MsgId_GE(val int) *__GroupPinedMsg_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " id >= " + d.nextDollar()
+	w.condition = " MsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -626,24 +626,24 @@ func (d *__Account_Selector) Id_GE(val int) *__Account_Selector {
 
 //ints
 
-func (u *__Account_Updater) Id(newVal int) *__Account_Updater {
-	up := updateCol{" id = " + u.nextDollar(), newVal}
+func (u *__GroupPinedMsg_Updater) MsgId(newVal int) *__GroupPinedMsg_Updater {
+	up := updateCol{" MsgId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" id = " + u.nextDollar()] = newVal
+	// u.updates[" MsgId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Account_Updater) Id_Increment(count int) *__Account_Updater {
+func (u *__GroupPinedMsg_Updater) MsgId_Increment(count int) *__GroupPinedMsg_Updater {
 	if count > 0 {
-		up := updateCol{" id = id+ " + u.nextDollar(), count}
+		up := updateCol{" MsgId = MsgId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" id = id+ " + u.nextDollar()] = count
+		//u.updates[" MsgId = MsgId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" id = id- " + u.nextDollar(), count}
+		up := updateCol{" MsgId = MsgId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" id = id- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" MsgId = MsgId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -660,56 +660,56 @@ func (u *__Account_Updater) Id_Increment(count int) *__Account_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Account_Selector) OrderBy_Id_Desc() *__Account_Selector {
-	u.orderBy = " ORDER BY id DESC "
+func (u *__GroupPinedMsg_Selector) OrderBy_MsgId_Desc() *__GroupPinedMsg_Selector {
+	u.orderBy = " ORDER BY MsgId DESC "
 	return u
 }
 
-func (u *__Account_Selector) OrderBy_Id_Asc() *__Account_Selector {
-	u.orderBy = " ORDER BY id ASC "
+func (u *__GroupPinedMsg_Selector) OrderBy_MsgId_Asc() *__GroupPinedMsg_Selector {
+	u.orderBy = " ORDER BY MsgId ASC "
 	return u
 }
 
-func (u *__Account_Selector) Select_Id() *__Account_Selector {
-	u.selectCol = "id"
+func (u *__GroupPinedMsg_Selector) Select_MsgId() *__GroupPinedMsg_Selector {
+	u.selectCol = "MsgId"
 	return u
 }
 
-func (u *__Account_Selector) OrderBy_Balance_Desc() *__Account_Selector {
-	u.orderBy = " ORDER BY balance DESC "
+func (u *__GroupPinedMsg_Selector) OrderBy_MsgPb_Desc() *__GroupPinedMsg_Selector {
+	u.orderBy = " ORDER BY MsgPb DESC "
 	return u
 }
 
-func (u *__Account_Selector) OrderBy_Balance_Asc() *__Account_Selector {
-	u.orderBy = " ORDER BY balance ASC "
+func (u *__GroupPinedMsg_Selector) OrderBy_MsgPb_Asc() *__GroupPinedMsg_Selector {
+	u.orderBy = " ORDER BY MsgPb ASC "
 	return u
 }
 
-func (u *__Account_Selector) Select_Balance() *__Account_Selector {
-	u.selectCol = "balance"
+func (u *__GroupPinedMsg_Selector) Select_MsgPb() *__GroupPinedMsg_Selector {
+	u.selectCol = "MsgPb"
 	return u
 }
 
-func (u *__Account_Selector) Limit(num int) *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) Limit(num int) *__GroupPinedMsg_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Account_Selector) Offset(num int) *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) Offset(num int) *__GroupPinedMsg_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__Account_Selector) Order_Rand() *__Account_Selector {
+func (u *__GroupPinedMsg_Selector) Order_Rand() *__GroupPinedMsg_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Account_Selector) _stoSql() (string, []interface{}) {
+func (u *__GroupPinedMsg_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM suncdb.accounts"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.group_pined_msg"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -729,20 +729,20 @@ func (u *__Account_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Account_Selector) GetRow(db *sqlx.DB) (*Account, error) {
+func (u *__GroupPinedMsg_Selector) GetRow(db *sqlx.DB) (*GroupPinedMsg, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &Account{}
+	row := &GroupPinedMsg{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -750,25 +750,25 @@ func (u *__Account_Selector) GetRow(db *sqlx.DB) (*Account, error) {
 
 	row._exists = true
 
-	OnAccount_LoadOne(row)
+	OnGroupPinedMsg_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Account_Selector) GetRows(db *sqlx.DB) ([]*Account, error) {
+func (u *__GroupPinedMsg_Selector) GetRows(db *sqlx.DB) ([]*GroupPinedMsg, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*Account
+	var rows []*GroupPinedMsg
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -782,25 +782,25 @@ func (u *__Account_Selector) GetRows(db *sqlx.DB) ([]*Account, error) {
 		rows[i]._exists = true
 	}
 
-	OnAccount_LoadMany(rows)
+	OnGroupPinedMsg_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Account_Selector) GetRows2(db *sqlx.DB) ([]Account, error) {
+func (u *__GroupPinedMsg_Selector) GetRows2(db *sqlx.DB) ([]GroupPinedMsg, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*Account
+	var rows []*GroupPinedMsg
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -814,9 +814,9 @@ func (u *__Account_Selector) GetRows2(db *sqlx.DB) ([]Account, error) {
 		rows[i]._exists = true
 	}
 
-	OnAccount_LoadMany(rows)
+	OnGroupPinedMsg_LoadMany(rows)
 
-	rows2 := make([]Account, len(rows))
+	rows2 := make([]GroupPinedMsg, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -825,12 +825,12 @@ func (u *__Account_Selector) GetRows2(db *sqlx.DB) ([]Account, error) {
 	return rows2, nil
 }
 
-func (u *__Account_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__GroupPinedMsg_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -838,7 +838,7 @@ func (u *__Account_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return "", err
@@ -847,19 +847,19 @@ func (u *__Account_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Account_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__GroupPinedMsg_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -868,19 +868,19 @@ func (u *__Account_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Account_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__GroupPinedMsg_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -889,19 +889,19 @@ func (u *__Account_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Account_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__GroupPinedMsg_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -911,7 +911,7 @@ func (u *__Account_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Account_Updater) Update(db XODB) (int, error) {
+func (u *__GroupPinedMsg_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -932,18 +932,18 @@ func (u *__Account_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE suncdb.accounts SET ` + sqlUpdate
+	sqlstr := `UPDATE sun_chat.group_pined_msg SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -951,7 +951,7 @@ func (u *__Account_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -960,7 +960,7 @@ func (u *__Account_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Account_Deleter) Delete(db XODB) (int, error) {
+func (d *__GroupPinedMsg_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -973,15 +973,15 @@ func (d *__Account_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM suncdb.accounts WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun_chat.group_pined_msg WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -990,7 +990,7 @@ func (d *__Account_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -999,9 +999,9 @@ func (d *__Account_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Account ////////////////
+///////////////////////// Mass insert - replace for  GroupPinedMsg ////////////////
 
-func MassInsert_Account(rows []Account, db XODB) error {
+func MassInsert_GroupPinedMsg(rows []GroupPinedMsg, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -1010,10 +1010,10 @@ func MassInsert_Account(rows []Account, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(2, ln, false)
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
-	sqlstr := "INSERT INTO suncdb.accounts (" +
-		"id, balance" +
+	sqlstr := "INSERT INTO sun_chat.group_pined_msg (" +
+		"MsgId, MsgPb" +
 		") VALUES " + insVals
 
 	// run query
@@ -1021,17 +1021,17 @@ func MassInsert_Account(rows []Account, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Id)
-		vals = append(vals, row.Balance)
+		vals = append(vals, row.MsgId)
+		vals = append(vals, row.MsgPb)
 
 	}
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return err
@@ -1040,7 +1040,7 @@ func MassInsert_Account(rows []Account, db XODB) error {
 	return nil
 }
 
-func MassReplace_Account(rows []Account, db XODB) error {
+func MassReplace_GroupPinedMsg(rows []GroupPinedMsg, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -1048,10 +1048,10 @@ func MassReplace_Account(rows []Account, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(2, ln, false)
+	insVals := helper.SqlManyDollars(2, ln, true)
 	// sql query
-	sqlstr := "REPLACE INTO suncdb.accounts (" +
-		"id, balance" +
+	sqlstr := "REPLACE INTO sun_chat.group_pined_msg (" +
+		"MsgId, MsgPb" +
 		") VALUES " + insVals
 
 	// run query
@@ -1059,17 +1059,17 @@ func MassReplace_Account(rows []Account, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.Id)
-		vals = append(vals, row.Balance)
+		vals = append(vals, row.MsgId)
+		vals = append(vals, row.MsgPb)
 
 	}
 
-	if LogTableSqlReq.Account {
+	if LogTableSqlReq.GroupPinedMsg {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Account {
+		if LogTableSqlReq.GroupPinedMsg {
 			XOLogErr(err)
 		}
 		return err

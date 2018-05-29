@@ -2,18 +2,21 @@ package main
 
 import (
 	"fmt"
-	"ms/sun_old/base"
+	//"ms/sun_old/base"
 	"ms/sun/shared/x"
+    "ms/sun/shared/base"
 )
 
 func main() {
+    //x.LogTableSqlReq
     n:=0
     next := func() int {
         n++
         return n
     }
+    i := 0
     work := func() {
-        for i := 0; i < 100000; i++ {
+        for ; i < 1000000; i++ {
             m := next()
             p := x.HomeFanout{
                 OrderId:    m,
@@ -22,7 +25,7 @@ func main() {
                 PostUserId: m,
             }
             p.Save(base.DB)
-            if m%10000 == 0 {
+            if m%1000 == 0 {
                 fmt.Println("i: ", m)
             }
         }

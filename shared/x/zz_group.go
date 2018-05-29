@@ -15,14 +15,26 @@ import (
 
 // Manualy copy this to project
 type Group__ struct {
-	GroupId          int    `json:"GroupId"`          // GroupId -
-	GroupName        string `json:"GroupName"`        // GroupName -
-	MembersCount     int    `json:"MembersCount"`     // MembersCount -
-	GroupPrivacyEnum int    `json:"GroupPrivacyEnum"` // GroupPrivacyEnum -
-	CreatorUserId    int    `json:"CreatorUserId"`    // CreatorUserId -
-	CreatedTime      int    `json:"CreatedTime"`      // CreatedTime -
-	UpdatedMs        int    `json:"UpdatedMs"`        // UpdatedMs -
-	CurrentSeq       int    `json:"CurrentSeq"`       // CurrentSeq -
+	GroupId         int    `json:"GroupId"`         // GroupId -
+	GroupKey        string `json:"GroupKey"`        // GroupKey -
+	GroupName       string `json:"GroupName"`       // GroupName -
+	UserName        string `json:"UserName"`        // UserName -
+	IsSuperGroup    int    `json:"IsSuperGroup"`    // IsSuperGroup -
+	HashTagId       int    `json:"HashTagId"`       // HashTagId -
+	CreatorUserId   int    `json:"CreatorUserId"`   // CreatorUserId -
+	GroupPrivacy    int    `json:"GroupPrivacy"`    // GroupPrivacy -
+	HistoryViewAble int    `json:"HistoryViewAble"` // HistoryViewAble -
+	Seq             int    `json:"Seq"`             // Seq -
+	LastMsgId       int    `json:"LastMsgId"`       // LastMsgId -
+	PinedMsgId      int    `json:"PinedMsgId"`      // PinedMsgId -
+	AvatarRefId     int    `json:"AvatarRefId"`     // AvatarRefId -
+	AvatarCount     int    `json:"AvatarCount"`     // AvatarCount -
+	About           string `json:"About"`           // About -
+	InviteLink      string `json:"InviteLink"`      // InviteLink -
+	MembersCount    int    `json:"MembersCount"`    // MembersCount -
+	SortTime        int    `json:"SortTime"`        // SortTime -
+	CreatedTime     int    `json:"CreatedTime"`     // CreatedTime -
+	IsMute          int    `json:"IsMute"`          // IsMute -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -48,16 +60,16 @@ func (g *Group) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.group (` +
-		`GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq` +
+		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
 	}
-	_, err = db.Exec(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
 	if err != nil {
 		return err
 	}
@@ -77,16 +89,16 @@ func (g *Group) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.group (` +
-		`GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq` +
+		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
 	}
-	_, err = db.Exec(sqlstr, g.GroupId, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq)
+	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
 	if err != nil {
 		if LogTableSqlReq.Group {
 			XOLogErr(err)
@@ -117,14 +129,14 @@ func (g *Group) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.group SET ` +
-		`GroupName = ?, MembersCount = ?, GroupPrivacyEnum = ?, CreatorUserId = ?, CreatedTime = ?, UpdatedMs = ?, CurrentSeq = ?` +
+		`GroupKey = ?, GroupName = ?, UserName = ?, IsSuperGroup = ?, HashTagId = ?, CreatorUserId = ?, GroupPrivacy = ?, HistoryViewAble = ?, Seq = ?, LastMsgId = ?, PinedMsgId = ?, AvatarRefId = ?, AvatarCount = ?, About = ?, InviteLink = ?, MembersCount = ?, SortTime = ?, CreatedTime = ?, IsMute = ?` +
 		` WHERE GroupId = ?`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq, g.GroupId)
+		XOLog(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute, g.GroupId)
 	}
-	_, err = db.Exec(sqlstr, g.GroupName, g.MembersCount, g.GroupPrivacyEnum, g.CreatorUserId, g.CreatedTime, g.UpdatedMs, g.CurrentSeq, g.GroupId)
+	_, err = db.Exec(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute, g.GroupId)
 
 	if LogTableSqlReq.Group {
 		XOLogErr(err)
@@ -370,211 +382,211 @@ func (d *__Group_Deleter) GroupId_GE(val int) *__Group_Deleter {
 	return d
 }
 
-func (u *__Group_Deleter) MembersCount_In(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) IsSuperGroup_In(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) MembersCount_Ins(ins ...int) *__Group_Deleter {
+func (u *__Group_Deleter) IsSuperGroup_Ins(ins ...int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) MembersCount_NotIn(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) IsSuperGroup_NotIn(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Deleter) MembersCount_Eq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_Eq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount = " + d.nextDollar()
+	w.condition = " IsSuperGroup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) MembersCount_NotEq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_NotEq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount != " + d.nextDollar()
+	w.condition = " IsSuperGroup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) MembersCount_LT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_LT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount < " + d.nextDollar()
+	w.condition = " IsSuperGroup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) MembersCount_LE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_LE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount <= " + d.nextDollar()
+	w.condition = " IsSuperGroup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) MembersCount_GT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_GT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount > " + d.nextDollar()
+	w.condition = " IsSuperGroup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) MembersCount_GE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsSuperGroup_GE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount >= " + d.nextDollar()
+	w.condition = " IsSuperGroup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Group_Deleter) GroupPrivacyEnum_In(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) HashTagId_In(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) GroupPrivacyEnum_Ins(ins ...int) *__Group_Deleter {
+func (u *__Group_Deleter) HashTagId_Ins(ins ...int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) GroupPrivacyEnum_NotIn(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) HashTagId_NotIn(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_Eq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_Eq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum = " + d.nextDollar()
+	w.condition = " HashTagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_NotEq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_NotEq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum != " + d.nextDollar()
+	w.condition = " HashTagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_LT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_LT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum < " + d.nextDollar()
+	w.condition = " HashTagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_LE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_LE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum <= " + d.nextDollar()
+	w.condition = " HashTagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_GT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_GT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum > " + d.nextDollar()
+	w.condition = " HashTagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) GroupPrivacyEnum_GE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) HashTagId_GE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum >= " + d.nextDollar()
+	w.condition = " HashTagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -685,6 +697,951 @@ func (d *__Group_Deleter) CreatorUserId_GE(val int) *__Group_Deleter {
 	return d
 }
 
+func (u *__Group_Deleter) GroupPrivacy_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) GroupPrivacy_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) GroupPrivacy_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) GroupPrivacy_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupPrivacy_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupPrivacy_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupPrivacy_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupPrivacy_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupPrivacy_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) HistoryViewAble_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) HistoryViewAble_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) HistoryViewAble_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) HistoryViewAble_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) HistoryViewAble_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) HistoryViewAble_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) HistoryViewAble_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) HistoryViewAble_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) HistoryViewAble_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) Seq_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) Seq_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) Seq_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) Seq_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) Seq_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) Seq_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) Seq_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) Seq_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) Seq_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) LastMsgId_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) LastMsgId_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) LastMsgId_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) LastMsgId_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) LastMsgId_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) LastMsgId_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) LastMsgId_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) LastMsgId_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) LastMsgId_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) PinedMsgId_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) PinedMsgId_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) PinedMsgId_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) PinedMsgId_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) PinedMsgId_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) PinedMsgId_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) PinedMsgId_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) PinedMsgId_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) PinedMsgId_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) AvatarRefId_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AvatarRefId_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AvatarRefId_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) AvatarRefId_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarRefId_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarRefId_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarRefId_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarRefId_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarRefId_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) AvatarCount_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AvatarCount_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AvatarCount_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) AvatarCount_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarCount_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarCount_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarCount_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarCount_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AvatarCount_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) MembersCount_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) MembersCount_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) MembersCount_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) MembersCount_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) MembersCount_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) MembersCount_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) MembersCount_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) MembersCount_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) MembersCount_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) SortTime_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) SortTime_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) SortTime_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) SortTime_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) SortTime_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) SortTime_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) SortTime_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) SortTime_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) SortTime_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Deleter) CreatedTime_In(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -790,211 +1747,106 @@ func (d *__Group_Deleter) CreatedTime_GE(val int) *__Group_Deleter {
 	return d
 }
 
-func (u *__Group_Deleter) UpdatedMs_In(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) IsMute_In(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) UpdatedMs_Ins(ins ...int) *__Group_Deleter {
+func (u *__Group_Deleter) IsMute_Ins(ins ...int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) UpdatedMs_NotIn(ins []int) *__Group_Deleter {
+func (u *__Group_Deleter) IsMute_NotIn(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Deleter) UpdatedMs_Eq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_Eq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsMute = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) UpdatedMs_NotEq(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_NotEq(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsMute != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) UpdatedMs_LT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_LT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsMute < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) UpdatedMs_LE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_LE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsMute <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) UpdatedMs_GT(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_GT(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsMute > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) UpdatedMs_GE(val int) *__Group_Deleter {
+func (d *__Group_Deleter) IsMute_GE(val int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Group_Deleter) CurrentSeq_In(ins []int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Deleter) CurrentSeq_Ins(ins ...int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Deleter) CurrentSeq_NotIn(ins []int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Group_Deleter) CurrentSeq_Eq(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Deleter) CurrentSeq_NotEq(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Deleter) CurrentSeq_LT(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Deleter) CurrentSeq_LE(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Deleter) CurrentSeq_GT(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Deleter) CurrentSeq_GE(val int) *__Group_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq >= " + d.nextDollar()
+	w.condition = " IsMute >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1124,211 +1976,211 @@ func (d *__Group_Updater) GroupId_GE(val int) *__Group_Updater {
 	return d
 }
 
-func (u *__Group_Updater) MembersCount_In(ins []int) *__Group_Updater {
+func (u *__Group_Updater) IsSuperGroup_In(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) MembersCount_Ins(ins ...int) *__Group_Updater {
+func (u *__Group_Updater) IsSuperGroup_Ins(ins ...int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) MembersCount_NotIn(ins []int) *__Group_Updater {
+func (u *__Group_Updater) IsSuperGroup_NotIn(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Updater) MembersCount_Eq(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_Eq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount = " + d.nextDollar()
+	w.condition = " IsSuperGroup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) MembersCount_NotEq(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_NotEq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount != " + d.nextDollar()
+	w.condition = " IsSuperGroup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) MembersCount_LT(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_LT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount < " + d.nextDollar()
+	w.condition = " IsSuperGroup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) MembersCount_LE(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_LE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount <= " + d.nextDollar()
+	w.condition = " IsSuperGroup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) MembersCount_GT(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_GT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount > " + d.nextDollar()
+	w.condition = " IsSuperGroup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) MembersCount_GE(val int) *__Group_Updater {
+func (d *__Group_Updater) IsSuperGroup_GE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount >= " + d.nextDollar()
+	w.condition = " IsSuperGroup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Group_Updater) GroupPrivacyEnum_In(ins []int) *__Group_Updater {
+func (u *__Group_Updater) HashTagId_In(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) GroupPrivacyEnum_Ins(ins ...int) *__Group_Updater {
+func (u *__Group_Updater) HashTagId_Ins(ins ...int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) GroupPrivacyEnum_NotIn(ins []int) *__Group_Updater {
+func (u *__Group_Updater) HashTagId_NotIn(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_Eq(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_Eq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum = " + d.nextDollar()
+	w.condition = " HashTagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_NotEq(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_NotEq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum != " + d.nextDollar()
+	w.condition = " HashTagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_LT(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_LT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum < " + d.nextDollar()
+	w.condition = " HashTagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_LE(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_LE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum <= " + d.nextDollar()
+	w.condition = " HashTagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_GT(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_GT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum > " + d.nextDollar()
+	w.condition = " HashTagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) GroupPrivacyEnum_GE(val int) *__Group_Updater {
+func (d *__Group_Updater) HashTagId_GE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum >= " + d.nextDollar()
+	w.condition = " HashTagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1439,6 +2291,951 @@ func (d *__Group_Updater) CreatorUserId_GE(val int) *__Group_Updater {
 	return d
 }
 
+func (u *__Group_Updater) GroupPrivacy_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) GroupPrivacy_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) GroupPrivacy_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) GroupPrivacy_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupPrivacy_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupPrivacy_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupPrivacy_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupPrivacy_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupPrivacy_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) HistoryViewAble_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) HistoryViewAble_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) HistoryViewAble_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) HistoryViewAble_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) HistoryViewAble_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) HistoryViewAble_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) HistoryViewAble_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) HistoryViewAble_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) HistoryViewAble_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) Seq_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) Seq_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) Seq_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) Seq_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) Seq_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) Seq_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) Seq_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) Seq_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) Seq_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) LastMsgId_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) LastMsgId_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) LastMsgId_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) LastMsgId_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) LastMsgId_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) LastMsgId_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) LastMsgId_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) LastMsgId_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) LastMsgId_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) PinedMsgId_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) PinedMsgId_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) PinedMsgId_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) PinedMsgId_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) PinedMsgId_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) PinedMsgId_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) PinedMsgId_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) PinedMsgId_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) PinedMsgId_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) AvatarRefId_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AvatarRefId_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AvatarRefId_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) AvatarRefId_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarRefId_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarRefId_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarRefId_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarRefId_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarRefId_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) AvatarCount_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AvatarCount_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AvatarCount_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) AvatarCount_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarCount_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarCount_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarCount_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarCount_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AvatarCount_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) MembersCount_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) MembersCount_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) MembersCount_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) MembersCount_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) MembersCount_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) MembersCount_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) MembersCount_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) MembersCount_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) MembersCount_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) SortTime_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) SortTime_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) SortTime_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) SortTime_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) SortTime_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) SortTime_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) SortTime_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) SortTime_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) SortTime_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Updater) CreatedTime_In(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1544,211 +3341,106 @@ func (d *__Group_Updater) CreatedTime_GE(val int) *__Group_Updater {
 	return d
 }
 
-func (u *__Group_Updater) UpdatedMs_In(ins []int) *__Group_Updater {
+func (u *__Group_Updater) IsMute_In(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) UpdatedMs_Ins(ins ...int) *__Group_Updater {
+func (u *__Group_Updater) IsMute_Ins(ins ...int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) UpdatedMs_NotIn(ins []int) *__Group_Updater {
+func (u *__Group_Updater) IsMute_NotIn(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Updater) UpdatedMs_Eq(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_Eq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsMute = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) UpdatedMs_NotEq(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_NotEq(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsMute != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) UpdatedMs_LT(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_LT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsMute < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) UpdatedMs_LE(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_LE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsMute <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) UpdatedMs_GT(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_GT(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsMute > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) UpdatedMs_GE(val int) *__Group_Updater {
+func (d *__Group_Updater) IsMute_GE(val int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Group_Updater) CurrentSeq_In(ins []int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Updater) CurrentSeq_Ins(ins ...int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Updater) CurrentSeq_NotIn(ins []int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Group_Updater) CurrentSeq_Eq(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Updater) CurrentSeq_NotEq(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Updater) CurrentSeq_LT(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Updater) CurrentSeq_LE(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Updater) CurrentSeq_GT(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Updater) CurrentSeq_GE(val int) *__Group_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq >= " + d.nextDollar()
+	w.condition = " IsMute >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1878,211 +3570,211 @@ func (d *__Group_Selector) GroupId_GE(val int) *__Group_Selector {
 	return d
 }
 
-func (u *__Group_Selector) MembersCount_In(ins []int) *__Group_Selector {
+func (u *__Group_Selector) IsSuperGroup_In(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) MembersCount_Ins(ins ...int) *__Group_Selector {
+func (u *__Group_Selector) IsSuperGroup_Ins(ins ...int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) MembersCount_NotIn(ins []int) *__Group_Selector {
+func (u *__Group_Selector) IsSuperGroup_NotIn(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsSuperGroup NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Selector) MembersCount_Eq(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_Eq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount = " + d.nextDollar()
+	w.condition = " IsSuperGroup = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) MembersCount_NotEq(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_NotEq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount != " + d.nextDollar()
+	w.condition = " IsSuperGroup != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) MembersCount_LT(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_LT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount < " + d.nextDollar()
+	w.condition = " IsSuperGroup < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) MembersCount_LE(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_LE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount <= " + d.nextDollar()
+	w.condition = " IsSuperGroup <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) MembersCount_GT(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_GT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount > " + d.nextDollar()
+	w.condition = " IsSuperGroup > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) MembersCount_GE(val int) *__Group_Selector {
+func (d *__Group_Selector) IsSuperGroup_GE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " MembersCount >= " + d.nextDollar()
+	w.condition = " IsSuperGroup >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Group_Selector) GroupPrivacyEnum_In(ins []int) *__Group_Selector {
+func (u *__Group_Selector) HashTagId_In(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) GroupPrivacyEnum_Ins(ins ...int) *__Group_Selector {
+func (u *__Group_Selector) HashTagId_Ins(ins ...int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) GroupPrivacyEnum_NotIn(ins []int) *__Group_Selector {
+func (u *__Group_Selector) HashTagId_NotIn(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_Eq(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_Eq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum = " + d.nextDollar()
+	w.condition = " HashTagId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_NotEq(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_NotEq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum != " + d.nextDollar()
+	w.condition = " HashTagId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_LT(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_LT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum < " + d.nextDollar()
+	w.condition = " HashTagId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_LE(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_LE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum <= " + d.nextDollar()
+	w.condition = " HashTagId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_GT(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_GT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum > " + d.nextDollar()
+	w.condition = " HashTagId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) GroupPrivacyEnum_GE(val int) *__Group_Selector {
+func (d *__Group_Selector) HashTagId_GE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupPrivacyEnum >= " + d.nextDollar()
+	w.condition = " HashTagId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2193,6 +3885,951 @@ func (d *__Group_Selector) CreatorUserId_GE(val int) *__Group_Selector {
 	return d
 }
 
+func (u *__Group_Selector) GroupPrivacy_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) GroupPrivacy_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) GroupPrivacy_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) GroupPrivacy_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupPrivacy_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupPrivacy_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupPrivacy_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupPrivacy_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupPrivacy_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) HistoryViewAble_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) HistoryViewAble_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) HistoryViewAble_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HistoryViewAble NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) HistoryViewAble_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) HistoryViewAble_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) HistoryViewAble_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) HistoryViewAble_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) HistoryViewAble_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) HistoryViewAble_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HistoryViewAble >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) Seq_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) Seq_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) Seq_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) Seq_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) Seq_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) Seq_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) Seq_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) Seq_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) Seq_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) LastMsgId_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) LastMsgId_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) LastMsgId_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " LastMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) LastMsgId_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) LastMsgId_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) LastMsgId_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) LastMsgId_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) LastMsgId_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) LastMsgId_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " LastMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) PinedMsgId_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) PinedMsgId_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) PinedMsgId_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PinedMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) PinedMsgId_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) PinedMsgId_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) PinedMsgId_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) PinedMsgId_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) PinedMsgId_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) PinedMsgId_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PinedMsgId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) AvatarRefId_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AvatarRefId_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AvatarRefId_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) AvatarRefId_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarRefId_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarRefId_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarRefId_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarRefId_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarRefId_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarRefId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) AvatarCount_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AvatarCount_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AvatarCount_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AvatarCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) AvatarCount_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarCount_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarCount_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarCount_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarCount_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AvatarCount_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AvatarCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) MembersCount_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) MembersCount_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) MembersCount_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MembersCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) MembersCount_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) MembersCount_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) MembersCount_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) MembersCount_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) MembersCount_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) MembersCount_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MembersCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) SortTime_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) SortTime_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) SortTime_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SortTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) SortTime_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) SortTime_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) SortTime_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) SortTime_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) SortTime_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) SortTime_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SortTime >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Selector) CreatedTime_In(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2298,211 +4935,106 @@ func (d *__Group_Selector) CreatedTime_GE(val int) *__Group_Selector {
 	return d
 }
 
-func (u *__Group_Selector) UpdatedMs_In(ins []int) *__Group_Selector {
+func (u *__Group_Selector) IsMute_In(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) UpdatedMs_Ins(ins ...int) *__Group_Selector {
+func (u *__Group_Selector) IsMute_Ins(ins ...int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) UpdatedMs_NotIn(ins []int) *__Group_Selector {
+func (u *__Group_Selector) IsMute_NotIn(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsMute NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Selector) UpdatedMs_Eq(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_Eq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsMute = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) UpdatedMs_NotEq(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_NotEq(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsMute != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) UpdatedMs_LT(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_LT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsMute < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) UpdatedMs_LE(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_LE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsMute <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) UpdatedMs_GT(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_GT(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsMute > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) UpdatedMs_GE(val int) *__Group_Selector {
+func (d *__Group_Selector) IsMute_GE(val int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Group_Selector) CurrentSeq_In(ins []int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Selector) CurrentSeq_Ins(ins ...int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Group_Selector) CurrentSeq_NotIn(ins []int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CurrentSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Group_Selector) CurrentSeq_Eq(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Selector) CurrentSeq_NotEq(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Selector) CurrentSeq_LT(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Selector) CurrentSeq_LE(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Selector) CurrentSeq_GT(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Group_Selector) CurrentSeq_GE(val int) *__Group_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CurrentSeq >= " + d.nextDollar()
+	w.condition = " IsMute >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2511,6 +5043,66 @@ func (d *__Group_Selector) CurrentSeq_GE(val int) *__Group_Selector {
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
+
+func (u *__Group_Deleter) GroupKey_In(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) GroupKey_NotIn(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Deleter) GroupKey_Like(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) GroupKey_Eq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) GroupKey_NotEq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__Group_Deleter) GroupName_In(ins []string) *__Group_Deleter {
 	w := whereClause{}
@@ -2572,7 +5164,247 @@ func (d *__Group_Deleter) GroupName_NotEq(val string) *__Group_Deleter {
 	return d
 }
 
+func (u *__Group_Deleter) UserName_In(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) UserName_NotIn(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Deleter) UserName_Like(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) UserName_Eq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) UserName_NotEq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) About_In(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) About_NotIn(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Deleter) About_Like(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) About_Eq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) About_NotEq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) InviteLink_In(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) InviteLink_NotIn(ins []string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Deleter) InviteLink_Like(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) InviteLink_Eq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) InviteLink_NotEq(val string) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
+
+func (u *__Group_Updater) GroupKey_In(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) GroupKey_NotIn(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Updater) GroupKey_Like(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) GroupKey_Eq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) GroupKey_NotEq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__Group_Updater) GroupName_In(ins []string) *__Group_Updater {
 	w := whereClause{}
@@ -2634,7 +5466,247 @@ func (d *__Group_Updater) GroupName_NotEq(val string) *__Group_Updater {
 	return d
 }
 
+func (u *__Group_Updater) UserName_In(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) UserName_NotIn(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Updater) UserName_Like(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) UserName_Eq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) UserName_NotEq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) About_In(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) About_NotIn(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Updater) About_Like(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) About_Eq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) About_NotEq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) InviteLink_In(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) InviteLink_NotIn(ins []string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Updater) InviteLink_Like(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) InviteLink_Eq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) InviteLink_NotEq(val string) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ////////ints
+
+func (u *__Group_Selector) GroupKey_In(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) GroupKey_NotIn(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Selector) GroupKey_Like(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) GroupKey_Eq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) GroupKey_NotEq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupKey != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
 
 func (u *__Group_Selector) GroupName_In(ins []string) *__Group_Selector {
 	w := whereClause{}
@@ -2696,6 +5768,186 @@ func (d *__Group_Selector) GroupName_NotEq(val string) *__Group_Selector {
 	return d
 }
 
+func (u *__Group_Selector) UserName_In(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) UserName_NotIn(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Selector) UserName_Like(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) UserName_Eq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) UserName_NotEq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " UserName != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) About_In(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) About_NotIn(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Selector) About_Like(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) About_Eq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) About_NotEq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) InviteLink_In(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) InviteLink_NotIn(ins []string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Group_Selector) InviteLink_Like(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) InviteLink_Eq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) InviteLink_NotEq(val string) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " InviteLink != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 /// End of wheres for selectors , updators, deletor
 
 /////////////////////////////// Updater /////////////////////////////
@@ -2730,6 +5982,16 @@ func (u *__Group_Updater) GroupId_Increment(count int) *__Group_Updater {
 //ints
 
 //string
+func (u *__Group_Updater) GroupKey(newVal string) *__Group_Updater {
+	up := updateCol{"GroupKey = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" GroupKey = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
 func (u *__Group_Updater) GroupName(newVal string) *__Group_Updater {
 	up := updateCol{"GroupName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -2739,24 +6001,34 @@ func (u *__Group_Updater) GroupName(newVal string) *__Group_Updater {
 
 //ints
 
-func (u *__Group_Updater) MembersCount(newVal int) *__Group_Updater {
-	up := updateCol{" MembersCount = " + u.nextDollar(), newVal}
+//string
+func (u *__Group_Updater) UserName(newVal string) *__Group_Updater {
+	up := updateCol{"UserName = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" MembersCount = " + u.nextDollar()] = newVal
+	// u.updates[" UserName = "+ u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Group_Updater) MembersCount_Increment(count int) *__Group_Updater {
+//ints
+
+func (u *__Group_Updater) IsSuperGroup(newVal int) *__Group_Updater {
+	up := updateCol{" IsSuperGroup = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsSuperGroup = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) IsSuperGroup_Increment(count int) *__Group_Updater {
 	if count > 0 {
-		up := updateCol{" MembersCount = MembersCount+ " + u.nextDollar(), count}
+		up := updateCol{" IsSuperGroup = IsSuperGroup+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" MembersCount = MembersCount+ " + u.nextDollar()] = count
+		//u.updates[" IsSuperGroup = IsSuperGroup+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" MembersCount = MembersCount- " + u.nextDollar(), count}
+		up := updateCol{" IsSuperGroup = IsSuperGroup- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" MembersCount = MembersCount- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsSuperGroup = IsSuperGroup- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2766,24 +6038,24 @@ func (u *__Group_Updater) MembersCount_Increment(count int) *__Group_Updater {
 
 //ints
 
-func (u *__Group_Updater) GroupPrivacyEnum(newVal int) *__Group_Updater {
-	up := updateCol{" GroupPrivacyEnum = " + u.nextDollar(), newVal}
+func (u *__Group_Updater) HashTagId(newVal int) *__Group_Updater {
+	up := updateCol{" HashTagId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" GroupPrivacyEnum = " + u.nextDollar()] = newVal
+	// u.updates[" HashTagId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Group_Updater) GroupPrivacyEnum_Increment(count int) *__Group_Updater {
+func (u *__Group_Updater) HashTagId_Increment(count int) *__Group_Updater {
 	if count > 0 {
-		up := updateCol{" GroupPrivacyEnum = GroupPrivacyEnum+ " + u.nextDollar(), count}
+		up := updateCol{" HashTagId = HashTagId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" GroupPrivacyEnum = GroupPrivacyEnum+ " + u.nextDollar()] = count
+		//u.updates[" HashTagId = HashTagId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" GroupPrivacyEnum = GroupPrivacyEnum- " + u.nextDollar(), count}
+		up := updateCol{" HashTagId = HashTagId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" GroupPrivacyEnum = GroupPrivacyEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" HashTagId = HashTagId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2820,6 +6092,269 @@ func (u *__Group_Updater) CreatorUserId_Increment(count int) *__Group_Updater {
 
 //ints
 
+func (u *__Group_Updater) GroupPrivacy(newVal int) *__Group_Updater {
+	up := updateCol{" GroupPrivacy = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" GroupPrivacy = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) GroupPrivacy_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" GroupPrivacy = GroupPrivacy+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" GroupPrivacy = GroupPrivacy+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" GroupPrivacy = GroupPrivacy- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" GroupPrivacy = GroupPrivacy- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) HistoryViewAble(newVal int) *__Group_Updater {
+	up := updateCol{" HistoryViewAble = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" HistoryViewAble = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) HistoryViewAble_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" HistoryViewAble = HistoryViewAble+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" HistoryViewAble = HistoryViewAble+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" HistoryViewAble = HistoryViewAble- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" HistoryViewAble = HistoryViewAble- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) Seq(newVal int) *__Group_Updater {
+	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Seq = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) Seq_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) LastMsgId(newVal int) *__Group_Updater {
+	up := updateCol{" LastMsgId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" LastMsgId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) LastMsgId_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" LastMsgId = LastMsgId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" LastMsgId = LastMsgId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" LastMsgId = LastMsgId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" LastMsgId = LastMsgId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) PinedMsgId(newVal int) *__Group_Updater {
+	up := updateCol{" PinedMsgId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PinedMsgId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) PinedMsgId_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" PinedMsgId = PinedMsgId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PinedMsgId = PinedMsgId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" PinedMsgId = PinedMsgId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PinedMsgId = PinedMsgId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) AvatarRefId(newVal int) *__Group_Updater {
+	up := updateCol{" AvatarRefId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AvatarRefId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) AvatarRefId_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" AvatarRefId = AvatarRefId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AvatarRefId = AvatarRefId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" AvatarRefId = AvatarRefId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AvatarRefId = AvatarRefId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) AvatarCount(newVal int) *__Group_Updater {
+	up := updateCol{" AvatarCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AvatarCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) AvatarCount_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" AvatarCount = AvatarCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AvatarCount = AvatarCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" AvatarCount = AvatarCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AvatarCount = AvatarCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+//string
+func (u *__Group_Updater) About(newVal string) *__Group_Updater {
+	up := updateCol{"About = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" About = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__Group_Updater) InviteLink(newVal string) *__Group_Updater {
+	up := updateCol{"InviteLink = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" InviteLink = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+func (u *__Group_Updater) MembersCount(newVal int) *__Group_Updater {
+	up := updateCol{" MembersCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MembersCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) MembersCount_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" MembersCount = MembersCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MembersCount = MembersCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" MembersCount = MembersCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MembersCount = MembersCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) SortTime(newVal int) *__Group_Updater {
+	up := updateCol{" SortTime = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SortTime = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) SortTime_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" SortTime = SortTime+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SortTime = SortTime+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" SortTime = SortTime- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SortTime = SortTime- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Group_Updater) CreatedTime(newVal int) *__Group_Updater {
 	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -2847,51 +6382,24 @@ func (u *__Group_Updater) CreatedTime_Increment(count int) *__Group_Updater {
 
 //ints
 
-func (u *__Group_Updater) UpdatedMs(newVal int) *__Group_Updater {
-	up := updateCol{" UpdatedMs = " + u.nextDollar(), newVal}
+func (u *__Group_Updater) IsMute(newVal int) *__Group_Updater {
+	up := updateCol{" IsMute = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" UpdatedMs = " + u.nextDollar()] = newVal
+	// u.updates[" IsMute = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Group_Updater) UpdatedMs_Increment(count int) *__Group_Updater {
+func (u *__Group_Updater) IsMute_Increment(count int) *__Group_Updater {
 	if count > 0 {
-		up := updateCol{" UpdatedMs = UpdatedMs+ " + u.nextDollar(), count}
+		up := updateCol{" IsMute = IsMute+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" UpdatedMs = UpdatedMs+ " + u.nextDollar()] = count
+		//u.updates[" IsMute = IsMute+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" UpdatedMs = UpdatedMs- " + u.nextDollar(), count}
+		up := updateCol{" IsMute = IsMute- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" UpdatedMs = UpdatedMs- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__Group_Updater) CurrentSeq(newVal int) *__Group_Updater {
-	up := updateCol{" CurrentSeq = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" CurrentSeq = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Group_Updater) CurrentSeq_Increment(count int) *__Group_Updater {
-	if count > 0 {
-		up := updateCol{" CurrentSeq = CurrentSeq+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" CurrentSeq = CurrentSeq+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" CurrentSeq = CurrentSeq- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" CurrentSeq = CurrentSeq- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsMute = IsMute- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2919,6 +6427,21 @@ func (u *__Group_Selector) Select_GroupId() *__Group_Selector {
 	return u
 }
 
+func (u *__Group_Selector) OrderBy_GroupKey_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY GroupKey DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_GroupKey_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY GroupKey ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_GroupKey() *__Group_Selector {
+	u.selectCol = "GroupKey"
+	return u
+}
+
 func (u *__Group_Selector) OrderBy_GroupName_Desc() *__Group_Selector {
 	u.orderBy = " ORDER BY GroupName DESC "
 	return u
@@ -2934,33 +6457,48 @@ func (u *__Group_Selector) Select_GroupName() *__Group_Selector {
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_MembersCount_Desc() *__Group_Selector {
-	u.orderBy = " ORDER BY MembersCount DESC "
+func (u *__Group_Selector) OrderBy_UserName_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY UserName DESC "
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_MembersCount_Asc() *__Group_Selector {
-	u.orderBy = " ORDER BY MembersCount ASC "
+func (u *__Group_Selector) OrderBy_UserName_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY UserName ASC "
 	return u
 }
 
-func (u *__Group_Selector) Select_MembersCount() *__Group_Selector {
-	u.selectCol = "MembersCount"
+func (u *__Group_Selector) Select_UserName() *__Group_Selector {
+	u.selectCol = "UserName"
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_GroupPrivacyEnum_Desc() *__Group_Selector {
-	u.orderBy = " ORDER BY GroupPrivacyEnum DESC "
+func (u *__Group_Selector) OrderBy_IsSuperGroup_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsSuperGroup DESC "
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_GroupPrivacyEnum_Asc() *__Group_Selector {
-	u.orderBy = " ORDER BY GroupPrivacyEnum ASC "
+func (u *__Group_Selector) OrderBy_IsSuperGroup_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsSuperGroup ASC "
 	return u
 }
 
-func (u *__Group_Selector) Select_GroupPrivacyEnum() *__Group_Selector {
-	u.selectCol = "GroupPrivacyEnum"
+func (u *__Group_Selector) Select_IsSuperGroup() *__Group_Selector {
+	u.selectCol = "IsSuperGroup"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_HashTagId_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY HashTagId DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_HashTagId_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY HashTagId ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_HashTagId() *__Group_Selector {
+	u.selectCol = "HashTagId"
 	return u
 }
 
@@ -2979,6 +6517,171 @@ func (u *__Group_Selector) Select_CreatorUserId() *__Group_Selector {
 	return u
 }
 
+func (u *__Group_Selector) OrderBy_GroupPrivacy_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY GroupPrivacy DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_GroupPrivacy_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY GroupPrivacy ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_GroupPrivacy() *__Group_Selector {
+	u.selectCol = "GroupPrivacy"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_HistoryViewAble_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY HistoryViewAble DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_HistoryViewAble_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY HistoryViewAble ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_HistoryViewAble() *__Group_Selector {
+	u.selectCol = "HistoryViewAble"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_Seq_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY Seq DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_Seq_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY Seq ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_Seq() *__Group_Selector {
+	u.selectCol = "Seq"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_LastMsgId_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY LastMsgId DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_LastMsgId_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY LastMsgId ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_LastMsgId() *__Group_Selector {
+	u.selectCol = "LastMsgId"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_PinedMsgId_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY PinedMsgId DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_PinedMsgId_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY PinedMsgId ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_PinedMsgId() *__Group_Selector {
+	u.selectCol = "PinedMsgId"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AvatarRefId_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY AvatarRefId DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AvatarRefId_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY AvatarRefId ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_AvatarRefId() *__Group_Selector {
+	u.selectCol = "AvatarRefId"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AvatarCount_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY AvatarCount DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AvatarCount_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY AvatarCount ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_AvatarCount() *__Group_Selector {
+	u.selectCol = "AvatarCount"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_About_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY About DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_About_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY About ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_About() *__Group_Selector {
+	u.selectCol = "About"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_InviteLink_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY InviteLink DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_InviteLink_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY InviteLink ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_InviteLink() *__Group_Selector {
+	u.selectCol = "InviteLink"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_MembersCount_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY MembersCount DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_MembersCount_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY MembersCount ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_MembersCount() *__Group_Selector {
+	u.selectCol = "MembersCount"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_SortTime_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY SortTime DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_SortTime_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY SortTime ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_SortTime() *__Group_Selector {
+	u.selectCol = "SortTime"
+	return u
+}
+
 func (u *__Group_Selector) OrderBy_CreatedTime_Desc() *__Group_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
@@ -2994,33 +6697,18 @@ func (u *__Group_Selector) Select_CreatedTime() *__Group_Selector {
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_UpdatedMs_Desc() *__Group_Selector {
-	u.orderBy = " ORDER BY UpdatedMs DESC "
+func (u *__Group_Selector) OrderBy_IsMute_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsMute DESC "
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_UpdatedMs_Asc() *__Group_Selector {
-	u.orderBy = " ORDER BY UpdatedMs ASC "
+func (u *__Group_Selector) OrderBy_IsMute_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsMute ASC "
 	return u
 }
 
-func (u *__Group_Selector) Select_UpdatedMs() *__Group_Selector {
-	u.selectCol = "UpdatedMs"
-	return u
-}
-
-func (u *__Group_Selector) OrderBy_CurrentSeq_Desc() *__Group_Selector {
-	u.orderBy = " ORDER BY CurrentSeq DESC "
-	return u
-}
-
-func (u *__Group_Selector) OrderBy_CurrentSeq_Asc() *__Group_Selector {
-	u.orderBy = " ORDER BY CurrentSeq ASC "
-	return u
-}
-
-func (u *__Group_Selector) Select_CurrentSeq() *__Group_Selector {
-	u.selectCol = "CurrentSeq"
+func (u *__Group_Selector) Select_IsMute() *__Group_Selector {
+	u.selectCol = "IsMute"
 	return u
 }
 
@@ -3344,10 +7032,10 @@ func MassInsert_Group(rows []Group, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(8, ln, true)
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.group (" +
-		"GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq" +
+		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute" +
 		") VALUES " + insVals
 
 	// run query
@@ -3356,13 +7044,25 @@ func MassInsert_Group(rows []Group, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.GroupId)
+		vals = append(vals, row.GroupKey)
 		vals = append(vals, row.GroupName)
-		vals = append(vals, row.MembersCount)
-		vals = append(vals, row.GroupPrivacyEnum)
+		vals = append(vals, row.UserName)
+		vals = append(vals, row.IsSuperGroup)
+		vals = append(vals, row.HashTagId)
 		vals = append(vals, row.CreatorUserId)
+		vals = append(vals, row.GroupPrivacy)
+		vals = append(vals, row.HistoryViewAble)
+		vals = append(vals, row.Seq)
+		vals = append(vals, row.LastMsgId)
+		vals = append(vals, row.PinedMsgId)
+		vals = append(vals, row.AvatarRefId)
+		vals = append(vals, row.AvatarCount)
+		vals = append(vals, row.About)
+		vals = append(vals, row.InviteLink)
+		vals = append(vals, row.MembersCount)
+		vals = append(vals, row.SortTime)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.UpdatedMs)
-		vals = append(vals, row.CurrentSeq)
+		vals = append(vals, row.IsMute)
 
 	}
 
@@ -3388,10 +7088,10 @@ func MassReplace_Group(rows []Group, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(8, ln, true)
+	insVals := helper.SqlManyDollars(20, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.group (" +
-		"GroupId, GroupName, MembersCount, GroupPrivacyEnum, CreatorUserId, CreatedTime, UpdatedMs, CurrentSeq" +
+		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute" +
 		") VALUES " + insVals
 
 	// run query
@@ -3400,13 +7100,25 @@ func MassReplace_Group(rows []Group, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.GroupId)
+		vals = append(vals, row.GroupKey)
 		vals = append(vals, row.GroupName)
-		vals = append(vals, row.MembersCount)
-		vals = append(vals, row.GroupPrivacyEnum)
+		vals = append(vals, row.UserName)
+		vals = append(vals, row.IsSuperGroup)
+		vals = append(vals, row.HashTagId)
 		vals = append(vals, row.CreatorUserId)
+		vals = append(vals, row.GroupPrivacy)
+		vals = append(vals, row.HistoryViewAble)
+		vals = append(vals, row.Seq)
+		vals = append(vals, row.LastMsgId)
+		vals = append(vals, row.PinedMsgId)
+		vals = append(vals, row.AvatarRefId)
+		vals = append(vals, row.AvatarCount)
+		vals = append(vals, row.About)
+		vals = append(vals, row.InviteLink)
+		vals = append(vals, row.MembersCount)
+		vals = append(vals, row.SortTime)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.UpdatedMs)
-		vals = append(vals, row.CurrentSeq)
+		vals = append(vals, row.IsMute)
 
 	}
 
@@ -3426,6 +7138,30 @@ func MassReplace_Group(rows []Group, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
 
 //
 

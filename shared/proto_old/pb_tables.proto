@@ -42,6 +42,30 @@ message PB_Event {
     int64 MessageId = 10;
     int64 ReSharedId = 11;
 }
+message PB_FollowingList {
+    int32 Id = 1;
+    int32 UserId = 2;
+    int32 ListType = 3;
+    string Name = 4;
+    int32 Count = 5;
+    int32 IsAuto = 6;
+    int32 IsPimiry = 7;
+    int32 CreatedTime = 8;
+}
+message PB_FollowingListMember {
+    int64 Id = 1;
+    int32 ListId = 2;
+    int32 UserId = 3;
+    int32 FollowedUserId = 4;
+    int32 CreatedTime = 5;
+}
+message PB_FollowingListMemberRemoved {
+    int64 Id = 1;
+    int32 ListId = 2;
+    int32 UserId = 3;
+    int32 UnFollowedUserId = 4;
+    int32 UpdatedTime = 5;
+}
 message PB_Like {
     int64 Id = 1;
     int64 PostId = 2;
@@ -70,10 +94,14 @@ message PB_NotifyRemoved {
 message PB_PhoneContact {
     int32 Id = 1;
     int32 UserId = 2;
-    int64 ClientId = 3;
-    string Phone = 4;
-    string FirstName = 5;
-    string LastName = 6;
+    int64 Phone = 3;
+    string PhoneDisplayName = 4;
+    string PhoneFamilyName = 5;
+    string PhoneNumber = 6;
+    string PhoneNormalizedNumber = 7;
+    int32 PhoneContactRowId = 8;
+    int32 DeviceUuidId = 9;
+    int32 CreatedTime = 10;
 }
 message PB_Post {
     int64 PostId = 1;
@@ -99,11 +127,7 @@ message PB_Post {
 }
 message PB_PostCount {
     int64 PostId = 1;
-    int32 CommentsCount = 2;
-    int32 LikesCount = 3;
-    int64 ViewsCount = 4;
-    int32 ReSharedCount = 5;
-    int32 ChatSharedCount = 6;
+    int64 ViewsCount = 2;
 }
 message PB_PostDeleted {
     int64 PostId = 1;
@@ -152,6 +176,14 @@ message PB_PostReshared {
     int32 PostTypeEnum = 5;
     int32 PostCategoryEnum = 6;
     int32 CreatedTime = 7;
+}
+message PB_SearchClicked {
+    int64 Id = 1;
+    string Query = 2;
+    int32 ClickType = 3;
+    int32 TargetId = 4;
+    int32 UserId = 5;
+    int32 CreatedTime = 6;
 }
 message PB_Session {
     int64 Id = 1;
@@ -235,13 +267,13 @@ message PB_User {
     string UserNameLower = 3;
     string FirstName = 4;
     string LastName = 5;
-    int32 IsVerified = 6;
-    int64 AvatarId = 7;
-    int32 ProfilePrivacy = 8;
-    int32 OnlinePrivacy = 9;
+    int32 UserTypeEnum = 6;
+    int32 UserLevelEnum = 7;
+    int64 AvatarId = 8;
+    int32 ProfilePrivacyEnum = 9;
     int64 Phone = 10;
-    string Email = 11;
-    string About = 12;
+    string About = 11;
+    string Email = 12;
     string PasswordHash = 13;
     string PasswordSalt = 14;
     int32 PostSeq = 15;
@@ -260,22 +292,25 @@ message PB_User {
     int32 PinedCount = 28;
     int32 LikesCount = 29;
     int32 ResharedCount = 30;
-    int32 LastPostTime = 31;
-    int32 CreatedTime = 32;
-    int32 VersionTime = 33;
-    int32 IsDeleted = 34;
-    int32 IsBanned = 35;
+    int32 LastActionTime = 31;
+    int32 LastPostTime = 32;
+    int32 PrimaryFollowingList = 33;
+    int32 CreatedSe = 34;
+    int64 UpdatedMs = 35;
+    int32 OnlinePrivacyEnum = 36;
+    int32 LastActivityTime = 37;
+    string Phone2 = 38;
 }
-message PB_UserRelation {
-    int64 RelNanoId = 1;
+message PB_UserMetaInfo {
+    int32 Id = 1;
     int32 UserId = 2;
-    int32 PeerUserId = 3;
-    int32 Follwing = 4;
-    int32 Followed = 5;
-    int32 InContacts = 6;
-    int32 MutualContact = 7;
-    int32 IsFavorite = 8;
-    int32 Notify = 9;
+    int32 IsNotificationDirty = 3;
+    int32 LastUserRecGen = 4;
+}
+message PB_UserPassword {
+    int32 UserId = 1;
+    string Password = 2;
+    int32 CreatedTime = 3;
 }
 message PB_Chat {
     int64 ChatId = 1;
@@ -286,37 +321,27 @@ message PB_Chat {
     int32 PeerUserId = 6;
     int64 GroupId = 7;
     int64 HashTagId = 8;
-    int32 StartedByMe = 9;
-    string Title = 10;
-    int64 PinTime = 11;
-    int64 FromMsgId = 12;
-    int32 Seq = 13;
-    int32 UnseenCount = 14;
-    int64 LastMsgId = 15;
-    int32 LastMsgStatus = 16;
-    int32 SeenSeq = 17;
-    int64 SeenMsgId = 18;
-    int64 LastMsgIdRecived = 19;
-    int32 Left = 20;
-    int32 Creator = 21;
-    int32 Kicked = 22;
-    int32 Admin = 23;
-    int32 Deactivated = 24;
-    int32 VersionTime = 25;
-    int32 OrderTime = 26;
-    int32 CreatedTime = 27;
-    string DraftText = 28;
-    int64 DratReplyToMsgId = 29;
+    string Title = 9;
+    int64 PinTime = 10;
+    int32 Seq = 11;
+    int64 LastMsgId = 12;
+    int32 LastMsgStatus = 13;
+    int32 SeenSeq = 14;
+    int64 SeenMsgId = 15;
+    int32 Left = 16;
+    int32 Creator = 17;
+    int32 Kicked = 18;
+    int32 Admin = 19;
+    int32 Deactivated = 20;
+    int32 Version = 21;
+    int32 OrderTime = 22;
+    int32 CreatedTime = 23;
+    string DraftText = 24;
+    int64 DratReplyToMsgId = 25;
 }
 message PB_ChatLastMessage {
     string ChatIdGroupId = 1;
     bytes LastMsgPb = 2;
-}
-message PB_ChatVersionOrder {
-    int64 VersionTime = 1;
-    int32 UserId = 2;
-    int32 ChatId = 3;
-    int32 OrderTime = 4;
 }
 message PB_Group {
     int64 GroupId = 1;
@@ -327,18 +352,16 @@ message PB_Group {
     int64 HashTagId = 6;
     int32 CreatorUserId = 7;
     int32 GroupPrivacy = 8;
-    int32 HistoryViewAble = 9;
-    int64 Seq = 10;
-    int64 LastMsgId = 11;
-    int64 PinedMsgId = 12;
-    int64 AvatarRefId = 13;
-    int32 AvatarCount = 14;
-    string About = 15;
-    string InviteLink = 16;
-    int32 MembersCount = 17;
-    int32 SortTime = 18;
-    int32 CreatedTime = 19;
-    int32 IsMute = 20;
+    int64 Seq = 9;
+    int64 LastMsgId = 10;
+    int64 PinedMsgId = 11;
+    int64 AvatarRefId = 12;
+    int32 AvatarCount = 13;
+    string About = 14;
+    string InviteLink = 15;
+    int32 MembersCount = 16;
+    int64 UpdatedMs = 17;
+    int32 CreatedTime = 18;
 }
 message PB_GroupMember {
     int64 OrderId = 1;
@@ -403,6 +426,25 @@ message PB_SuggestedUser {
     float Weight = 4;
     int32 CreatedTime = 5;
 }
+message PB_ChatSync2 {
+    int64 sync_id = 1;
+    int32 to_user_id = 2;
+    int32 chat_sync_type_id = 3;
+    string room_key = 4;
+    string chat_key = 5;
+    int64 from_high_message_id = 6;
+    int64 to_low_message_id = 7;
+    int64 message_id = 8;
+    bytes message_pb = 9;
+    string message_json = 10;
+    int32 created_time = 11;
+}
+message PB_LowerTable {
+    int32 id = 1;
+    string text = 2;
+    int32 time_stamp = 3;
+    int32 any_thing_more_ = 4;
+}
 message PB_PushChat {
     int64 PushId = 1;
     int32 ToUserId = 2;
@@ -418,6 +460,19 @@ message PB_PushChat {
     bytes MessagePb = 12;
     string MessageJson = 13;
     int32 CreatedTime = 14;
+}
+message PB_PushChat2 {
+    int64 sync_id = 1;
+    int32 to_user_id = 2;
+    int32 chat_sync_type_id = 3;
+    string room_key = 4;
+    string chat_key = 5;
+    int64 from_high_message_id = 6;
+    int64 to_low_message_id = 7;
+    int64 message_id = 8;
+    bytes message_pb = 9;
+    string message_json = 10;
+    int32 created_time = 11;
 }
 message PB_HTTPRPCLog {
     int32 Id = 1;
@@ -461,8 +516,4 @@ message PB_XfileServiceRequestLog {
     string Url = 4;
     int32 HttpCode = 5;
     string CreatedTime = 6;
-}
-message PB_InvalidateCache {
-    int64 OrderId = 1;
-    string CacheKey = 2;
 }

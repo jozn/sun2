@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -14,13 +15,12 @@ import (
 
 // Manualy copy this to project
 type GroupMember__ struct {
-	Id              int    `json:"Id"`              // Id -
-	GroupId         int    `json:"GroupId"`         // GroupId -
-	GroupKey        string `json:"GroupKey"`        // GroupKey -
-	UserId          int    `json:"UserId"`          // UserId -
-	ByUserId        int    `json:"ByUserId"`        // ByUserId -
-	GroupRoleEnumId int    `json:"GroupRoleEnumId"` // GroupRoleEnumId -
-	CreatedTime     int    `json:"CreatedTime"`     // CreatedTime -
+	OrderId     int `json:"OrderId"`     // OrderId -
+	GroupId     int `json:"GroupId"`     // GroupId -
+	UserId      int `json:"UserId"`      // UserId -
+	ByUserId    int `json:"ByUserId"`    // ByUserId -
+	GroupRole   int `json:"GroupRole"`   // GroupRole -
+	CreatedTime int `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -44,36 +44,23 @@ func (gm *GroupMember) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.group_member (` +
-		`GroupId, GroupKey, UserId, ByUserId, GroupRoleEnumId, CreatedTime` +
+		`OrderId, GroupId, UserId, ByUserId, GroupRole, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.GroupMember {
-		XOLog(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime)
+		XOLog(sqlstr, gm.OrderId, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime)
+	_, err = db.Exec(sqlstr, gm.OrderId, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.GroupMember {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.GroupMember {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	gm.Id = int(id)
+	// set existence
 	gm._exists = true
 
 	OnGroupMember_AfterInsert(gm)
@@ -88,16 +75,16 @@ func (gm *GroupMember) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.group_member (` +
-		`GroupId, GroupKey, UserId, ByUserId, GroupRoleEnumId, CreatedTime` +
+		`OrderId, GroupId, UserId, ByUserId, GroupRole, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.GroupMember {
-		XOLog(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime)
+		XOLog(sqlstr, gm.OrderId, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime)
+	_, err = db.Exec(sqlstr, gm.OrderId, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.GroupMember {
 			XOLogErr(err)
@@ -105,17 +92,6 @@ func (gm *GroupMember) Replace(db XODB) error {
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.GroupMember {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	gm.Id = int(id)
 	gm._exists = true
 
 	OnGroupMember_AfterInsert(gm)
@@ -139,14 +115,14 @@ func (gm *GroupMember) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.group_member SET ` +
-		`GroupId = ?, GroupKey = ?, UserId = ?, ByUserId = ?, GroupRoleEnumId = ?, CreatedTime = ?` +
-		` WHERE Id = ?`
+		`GroupId = ?, UserId = ?, ByUserId = ?, GroupRole = ?, CreatedTime = ?` +
+		` WHERE OrderId = ?`
 
 	// run query
 	if LogTableSqlReq.GroupMember {
-		XOLog(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime, gm.Id)
+		XOLog(sqlstr, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime, gm.OrderId)
 	}
-	_, err = db.Exec(sqlstr, gm.GroupId, gm.GroupKey, gm.UserId, gm.ByUserId, gm.GroupRoleEnumId, gm.CreatedTime, gm.Id)
+	_, err = db.Exec(sqlstr, gm.GroupId, gm.UserId, gm.ByUserId, gm.GroupRole, gm.CreatedTime, gm.OrderId)
 
 	if LogTableSqlReq.GroupMember {
 		XOLogErr(err)
@@ -180,13 +156,13 @@ func (gm *GroupMember) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_chat.group_member WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun_chat.group_member WHERE OrderId = ?`
 
 	// run query
 	if LogTableSqlReq.GroupMember {
-		XOLog(sqlstr, gm.Id)
+		XOLog(sqlstr, gm.OrderId)
 	}
-	_, err = db.Exec(sqlstr, gm.Id)
+	_, err = db.Exec(sqlstr, gm.OrderId)
 	if err != nil {
 		if LogTableSqlReq.GroupMember {
 			XOLogErr(err)
@@ -287,106 +263,106 @@ func (u *__GroupMember_Deleter) Or() *__GroupMember_Deleter {
 	return u
 }
 
-func (u *__GroupMember_Deleter) Id_In(ins []int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) OrderId_In(ins []int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Deleter) Id_Ins(ins ...int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) OrderId_Ins(ins ...int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Deleter) Id_NotIn(ins []int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) OrderId_NotIn(ins []int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Deleter) Id_Eq(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_Eq(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) Id_NotEq(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_NotEq(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) Id_LT(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_LT(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) Id_LE(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_LE(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) Id_GT(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_GT(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) Id_GE(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) OrderId_GE(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -707,106 +683,106 @@ func (d *__GroupMember_Deleter) ByUserId_GE(val int) *__GroupMember_Deleter {
 	return d
 }
 
-func (u *__GroupMember_Deleter) GroupRoleEnumId_In(ins []int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) GroupRole_In(ins []int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Deleter) GroupRoleEnumId_Ins(ins ...int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) GroupRole_Ins(ins ...int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Deleter) GroupRoleEnumId_NotIn(ins []int) *__GroupMember_Deleter {
+func (u *__GroupMember_Deleter) GroupRole_NotIn(ins []int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_Eq(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_Eq(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId = " + d.nextDollar()
+	w.condition = " GroupRole = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_NotEq(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_NotEq(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId != " + d.nextDollar()
+	w.condition = " GroupRole != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_LT(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_LT(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId < " + d.nextDollar()
+	w.condition = " GroupRole < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_LE(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_LE(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId <= " + d.nextDollar()
+	w.condition = " GroupRole <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_GT(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_GT(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId > " + d.nextDollar()
+	w.condition = " GroupRole > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Deleter) GroupRoleEnumId_GE(val int) *__GroupMember_Deleter {
+func (d *__GroupMember_Deleter) GroupRole_GE(val int) *__GroupMember_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId >= " + d.nextDollar()
+	w.condition = " GroupRole >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -936,106 +912,106 @@ func (u *__GroupMember_Updater) Or() *__GroupMember_Updater {
 	return u
 }
 
-func (u *__GroupMember_Updater) Id_In(ins []int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) OrderId_In(ins []int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Updater) Id_Ins(ins ...int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) OrderId_Ins(ins ...int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Updater) Id_NotIn(ins []int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) OrderId_NotIn(ins []int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Updater) Id_Eq(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_Eq(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) Id_NotEq(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_NotEq(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) Id_LT(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_LT(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) Id_LE(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_LE(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) Id_GT(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_GT(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) Id_GE(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) OrderId_GE(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1356,106 +1332,106 @@ func (d *__GroupMember_Updater) ByUserId_GE(val int) *__GroupMember_Updater {
 	return d
 }
 
-func (u *__GroupMember_Updater) GroupRoleEnumId_In(ins []int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) GroupRole_In(ins []int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Updater) GroupRoleEnumId_Ins(ins ...int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) GroupRole_Ins(ins ...int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Updater) GroupRoleEnumId_NotIn(ins []int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) GroupRole_NotIn(ins []int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_Eq(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_Eq(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId = " + d.nextDollar()
+	w.condition = " GroupRole = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_NotEq(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_NotEq(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId != " + d.nextDollar()
+	w.condition = " GroupRole != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_LT(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_LT(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId < " + d.nextDollar()
+	w.condition = " GroupRole < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_LE(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_LE(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId <= " + d.nextDollar()
+	w.condition = " GroupRole <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_GT(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_GT(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId > " + d.nextDollar()
+	w.condition = " GroupRole > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Updater) GroupRoleEnumId_GE(val int) *__GroupMember_Updater {
+func (d *__GroupMember_Updater) GroupRole_GE(val int) *__GroupMember_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId >= " + d.nextDollar()
+	w.condition = " GroupRole >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1585,106 +1561,106 @@ func (u *__GroupMember_Selector) Or() *__GroupMember_Selector {
 	return u
 }
 
-func (u *__GroupMember_Selector) Id_In(ins []int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) OrderId_In(ins []int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Selector) Id_Ins(ins ...int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) OrderId_Ins(ins ...int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Selector) Id_NotIn(ins []int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) OrderId_NotIn(ins []int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " OrderId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Selector) Id_Eq(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_Eq(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id = " + d.nextDollar()
+	w.condition = " OrderId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) Id_NotEq(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_NotEq(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id != " + d.nextDollar()
+	w.condition = " OrderId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) Id_LT(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_LT(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id < " + d.nextDollar()
+	w.condition = " OrderId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) Id_LE(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_LE(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id <= " + d.nextDollar()
+	w.condition = " OrderId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) Id_GT(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_GT(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id > " + d.nextDollar()
+	w.condition = " OrderId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) Id_GE(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) OrderId_GE(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Id >= " + d.nextDollar()
+	w.condition = " OrderId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2005,106 +1981,106 @@ func (d *__GroupMember_Selector) ByUserId_GE(val int) *__GroupMember_Selector {
 	return d
 }
 
-func (u *__GroupMember_Selector) GroupRoleEnumId_In(ins []int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) GroupRole_In(ins []int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Selector) GroupRoleEnumId_Ins(ins ...int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) GroupRole_Ins(ins ...int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__GroupMember_Selector) GroupRoleEnumId_NotIn(ins []int) *__GroupMember_Selector {
+func (u *__GroupMember_Selector) GroupRole_NotIn(ins []int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " GroupRole NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_Eq(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_Eq(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId = " + d.nextDollar()
+	w.condition = " GroupRole = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_NotEq(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_NotEq(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId != " + d.nextDollar()
+	w.condition = " GroupRole != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_LT(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_LT(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId < " + d.nextDollar()
+	w.condition = " GroupRole < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_LE(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_LE(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId <= " + d.nextDollar()
+	w.condition = " GroupRole <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_GT(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_GT(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId > " + d.nextDollar()
+	w.condition = " GroupRole > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__GroupMember_Selector) GroupRoleEnumId_GE(val int) *__GroupMember_Selector {
+func (d *__GroupMember_Selector) GroupRole_GE(val int) *__GroupMember_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " GroupRoleEnumId >= " + d.nextDollar()
+	w.condition = " GroupRole >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2219,189 +2195,9 @@ func (d *__GroupMember_Selector) CreatedTime_GE(val int) *__GroupMember_Selector
 
 ////////ints
 
-func (u *__GroupMember_Deleter) GroupKey_In(ins []string) *__GroupMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__GroupMember_Deleter) GroupKey_NotIn(ins []string) *__GroupMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__GroupMember_Deleter) GroupKey_Like(val string) *__GroupMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__GroupMember_Deleter) GroupKey_Eq(val string) *__GroupMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__GroupMember_Deleter) GroupKey_NotEq(val string) *__GroupMember_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
 
-func (u *__GroupMember_Updater) GroupKey_In(ins []string) *__GroupMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__GroupMember_Updater) GroupKey_NotIn(ins []string) *__GroupMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__GroupMember_Updater) GroupKey_Like(val string) *__GroupMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__GroupMember_Updater) GroupKey_Eq(val string) *__GroupMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__GroupMember_Updater) GroupKey_NotEq(val string) *__GroupMember_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ////////ints
-
-func (u *__GroupMember_Selector) GroupKey_In(ins []string) *__GroupMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__GroupMember_Selector) GroupKey_NotIn(ins []string) *__GroupMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " GroupKey NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__GroupMember_Selector) GroupKey_Like(val string) *__GroupMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__GroupMember_Selector) GroupKey_Eq(val string) *__GroupMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__GroupMember_Selector) GroupKey_NotEq(val string) *__GroupMember_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " GroupKey != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
 
 /// End of wheres for selectors , updators, deletor
 
@@ -2409,24 +2205,24 @@ func (d *__GroupMember_Selector) GroupKey_NotEq(val string) *__GroupMember_Selec
 
 //ints
 
-func (u *__GroupMember_Updater) Id(newVal int) *__GroupMember_Updater {
-	up := updateCol{" Id = " + u.nextDollar(), newVal}
+func (u *__GroupMember_Updater) OrderId(newVal int) *__GroupMember_Updater {
+	up := updateCol{" OrderId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Id = " + u.nextDollar()] = newVal
+	// u.updates[" OrderId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__GroupMember_Updater) Id_Increment(count int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) OrderId_Increment(count int) *__GroupMember_Updater {
 	if count > 0 {
-		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		up := updateCol{" OrderId = OrderId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Id = Id+ " + u.nextDollar()] = count
+		//u.updates[" OrderId = OrderId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		up := updateCol{" OrderId = OrderId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" OrderId = OrderId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2460,16 +2256,6 @@ func (u *__GroupMember_Updater) GroupId_Increment(count int) *__GroupMember_Upda
 }
 
 //string
-
-//ints
-
-//string
-func (u *__GroupMember_Updater) GroupKey(newVal string) *__GroupMember_Updater {
-	up := updateCol{"GroupKey = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" GroupKey = "+ u.nextDollar()] = newVal
-	return u
-}
 
 //ints
 
@@ -2527,24 +2313,24 @@ func (u *__GroupMember_Updater) ByUserId_Increment(count int) *__GroupMember_Upd
 
 //ints
 
-func (u *__GroupMember_Updater) GroupRoleEnumId(newVal int) *__GroupMember_Updater {
-	up := updateCol{" GroupRoleEnumId = " + u.nextDollar(), newVal}
+func (u *__GroupMember_Updater) GroupRole(newVal int) *__GroupMember_Updater {
+	up := updateCol{" GroupRole = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" GroupRoleEnumId = " + u.nextDollar()] = newVal
+	// u.updates[" GroupRole = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__GroupMember_Updater) GroupRoleEnumId_Increment(count int) *__GroupMember_Updater {
+func (u *__GroupMember_Updater) GroupRole_Increment(count int) *__GroupMember_Updater {
 	if count > 0 {
-		up := updateCol{" GroupRoleEnumId = GroupRoleEnumId+ " + u.nextDollar(), count}
+		up := updateCol{" GroupRole = GroupRole+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" GroupRoleEnumId = GroupRoleEnumId+ " + u.nextDollar()] = count
+		//u.updates[" GroupRole = GroupRole+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" GroupRoleEnumId = GroupRoleEnumId- " + u.nextDollar(), count}
+		up := updateCol{" GroupRole = GroupRole- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" GroupRoleEnumId = GroupRoleEnumId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" GroupRole = GroupRole- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2584,18 +2370,18 @@ func (u *__GroupMember_Updater) CreatedTime_Increment(count int) *__GroupMember_
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__GroupMember_Selector) OrderBy_Id_Desc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY Id DESC "
+func (u *__GroupMember_Selector) OrderBy_OrderId_Desc() *__GroupMember_Selector {
+	u.orderBy = " ORDER BY OrderId DESC "
 	return u
 }
 
-func (u *__GroupMember_Selector) OrderBy_Id_Asc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY Id ASC "
+func (u *__GroupMember_Selector) OrderBy_OrderId_Asc() *__GroupMember_Selector {
+	u.orderBy = " ORDER BY OrderId ASC "
 	return u
 }
 
-func (u *__GroupMember_Selector) Select_Id() *__GroupMember_Selector {
-	u.selectCol = "Id"
+func (u *__GroupMember_Selector) Select_OrderId() *__GroupMember_Selector {
+	u.selectCol = "OrderId"
 	return u
 }
 
@@ -2611,21 +2397,6 @@ func (u *__GroupMember_Selector) OrderBy_GroupId_Asc() *__GroupMember_Selector {
 
 func (u *__GroupMember_Selector) Select_GroupId() *__GroupMember_Selector {
 	u.selectCol = "GroupId"
-	return u
-}
-
-func (u *__GroupMember_Selector) OrderBy_GroupKey_Desc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY GroupKey DESC "
-	return u
-}
-
-func (u *__GroupMember_Selector) OrderBy_GroupKey_Asc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY GroupKey ASC "
-	return u
-}
-
-func (u *__GroupMember_Selector) Select_GroupKey() *__GroupMember_Selector {
-	u.selectCol = "GroupKey"
 	return u
 }
 
@@ -2659,18 +2430,18 @@ func (u *__GroupMember_Selector) Select_ByUserId() *__GroupMember_Selector {
 	return u
 }
 
-func (u *__GroupMember_Selector) OrderBy_GroupRoleEnumId_Desc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY GroupRoleEnumId DESC "
+func (u *__GroupMember_Selector) OrderBy_GroupRole_Desc() *__GroupMember_Selector {
+	u.orderBy = " ORDER BY GroupRole DESC "
 	return u
 }
 
-func (u *__GroupMember_Selector) OrderBy_GroupRoleEnumId_Asc() *__GroupMember_Selector {
-	u.orderBy = " ORDER BY GroupRoleEnumId ASC "
+func (u *__GroupMember_Selector) OrderBy_GroupRole_Asc() *__GroupMember_Selector {
+	u.orderBy = " ORDER BY GroupRole ASC "
 	return u
 }
 
-func (u *__GroupMember_Selector) Select_GroupRoleEnumId() *__GroupMember_Selector {
-	u.selectCol = "GroupRoleEnumId"
+func (u *__GroupMember_Selector) Select_GroupRole() *__GroupMember_Selector {
+	u.selectCol = "GroupRole"
 	return u
 }
 
@@ -3006,12 +2777,13 @@ func MassInsert_GroupMember(rows []GroupMember, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.group_member (" +
-		"GroupId, GroupKey, UserId, ByUserId, GroupRoleEnumId, CreatedTime" +
+		"OrderId, GroupId, UserId, ByUserId, GroupRole, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3019,11 +2791,11 @@ func MassInsert_GroupMember(rows []GroupMember, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.OrderId)
 		vals = append(vals, row.GroupId)
-		vals = append(vals, row.GroupKey)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.ByUserId)
-		vals = append(vals, row.GroupRoleEnumId)
+		vals = append(vals, row.GroupRole)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -3043,14 +2815,17 @@ func MassInsert_GroupMember(rows []GroupMember, db XODB) error {
 }
 
 func MassReplace_GroupMember(rows []GroupMember, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.group_member (" +
-		"GroupId, GroupKey, UserId, ByUserId, GroupRoleEnumId, CreatedTime" +
+		"OrderId, GroupId, UserId, ByUserId, GroupRole, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3058,11 +2833,11 @@ func MassReplace_GroupMember(rows []GroupMember, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.OrderId)
 		vals = append(vals, row.GroupId)
-		vals = append(vals, row.GroupKey)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.ByUserId)
-		vals = append(vals, row.GroupRoleEnumId)
+		vals = append(vals, row.GroupRole)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -3079,11 +2854,10 @@ func MassReplace_GroupMember(rows []GroupMember, db XODB) error {
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

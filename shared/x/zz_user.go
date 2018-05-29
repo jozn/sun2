@@ -14,44 +14,41 @@ import (
 
 // Manualy copy this to project
 type User__ struct {
-	UserId               int    `json:"UserId"`               // UserId -
-	UserName             string `json:"UserName"`             // UserName -
-	UserNameLower        string `json:"UserNameLower"`        // UserNameLower -
-	FirstName            string `json:"FirstName"`            // FirstName -
-	LastName             string `json:"LastName"`             // LastName -
-	UserTypeEnum         int    `json:"UserTypeEnum"`         // UserTypeEnum -
-	UserLevelEnum        int    `json:"UserLevelEnum"`        // UserLevelEnum -
-	AvatarId             int    `json:"AvatarId"`             // AvatarId -
-	ProfilePrivacyEnum   int    `json:"ProfilePrivacyEnum"`   // ProfilePrivacyEnum -
-	Phone                int    `json:"Phone"`                // Phone -
-	About                string `json:"About"`                // About -
-	Email                string `json:"Email"`                // Email -
-	PasswordHash         string `json:"PasswordHash"`         // PasswordHash -
-	PasswordSalt         string `json:"PasswordSalt"`         // PasswordSalt -
-	PostSeq              int    `json:"PostSeq"`              // PostSeq -
-	FollowersCount       int    `json:"FollowersCount"`       // FollowersCount -
-	FollowingCount       int    `json:"FollowingCount"`       // FollowingCount -
-	PostsCount           int    `json:"PostsCount"`           // PostsCount -
-	MediaCount           int    `json:"MediaCount"`           // MediaCount -
-	PhotoCount           int    `json:"PhotoCount"`           // PhotoCount -
-	VideoCount           int    `json:"VideoCount"`           // VideoCount -
-	GifCount             int    `json:"GifCount"`             // GifCount -
-	AudioCount           int    `json:"AudioCount"`           // AudioCount -
-	VoiceCount           int    `json:"VoiceCount"`           // VoiceCount -
-	FileCount            int    `json:"FileCount"`            // FileCount -
-	LinkCount            int    `json:"LinkCount"`            // LinkCount -
-	BoardCount           int    `json:"BoardCount"`           // BoardCount -
-	PinedCount           int    `json:"PinedCount"`           // PinedCount -
-	LikesCount           int    `json:"LikesCount"`           // LikesCount -
-	ResharedCount        int    `json:"ResharedCount"`        // ResharedCount -
-	LastActionTime       int    `json:"LastActionTime"`       // LastActionTime -
-	LastPostTime         int    `json:"LastPostTime"`         // LastPostTime -
-	PrimaryFollowingList int    `json:"PrimaryFollowingList"` // PrimaryFollowingList -
-	CreatedSe            int    `json:"CreatedSe"`            // CreatedSe -
-	UpdatedMs            int    `json:"UpdatedMs"`            // UpdatedMs -
-	OnlinePrivacyEnum    int    `json:"OnlinePrivacyEnum"`    // OnlinePrivacyEnum -
-	LastActivityTime     int    `json:"LastActivityTime"`     // LastActivityTime -
-	Phone2               string `json:"Phone2"`               // Phone2 -
+	UserId         int    `json:"UserId"`         // UserId -
+	UserName       string `json:"UserName"`       // UserName -
+	UserNameLower  string `json:"UserNameLower"`  // UserNameLower -
+	FirstName      string `json:"FirstName"`      // FirstName -
+	LastName       string `json:"LastName"`       // LastName -
+	IsVerified     int    `json:"IsVerified"`     // IsVerified -
+	AvatarId       int    `json:"AvatarId"`       // AvatarId -
+	ProfilePrivacy int    `json:"ProfilePrivacy"` // ProfilePrivacy -
+	OnlinePrivacy  int    `json:"OnlinePrivacy"`  // OnlinePrivacy -
+	Phone          int    `json:"Phone"`          // Phone -
+	Email          string `json:"Email"`          // Email -
+	About          string `json:"About"`          // About -
+	PasswordHash   string `json:"PasswordHash"`   // PasswordHash -
+	PasswordSalt   string `json:"PasswordSalt"`   // PasswordSalt -
+	PostSeq        int    `json:"PostSeq"`        // PostSeq -
+	FollowersCount int    `json:"FollowersCount"` // FollowersCount -
+	FollowingCount int    `json:"FollowingCount"` // FollowingCount -
+	PostsCount     int    `json:"PostsCount"`     // PostsCount -
+	MediaCount     int    `json:"MediaCount"`     // MediaCount -
+	PhotoCount     int    `json:"PhotoCount"`     // PhotoCount -
+	VideoCount     int    `json:"VideoCount"`     // VideoCount -
+	GifCount       int    `json:"GifCount"`       // GifCount -
+	AudioCount     int    `json:"AudioCount"`     // AudioCount -
+	VoiceCount     int    `json:"VoiceCount"`     // VoiceCount -
+	FileCount      int    `json:"FileCount"`      // FileCount -
+	LinkCount      int    `json:"LinkCount"`      // LinkCount -
+	BoardCount     int    `json:"BoardCount"`     // BoardCount -
+	PinedCount     int    `json:"PinedCount"`     // PinedCount -
+	LikesCount     int    `json:"LikesCount"`     // LikesCount -
+	ResharedCount  int    `json:"ResharedCount"`  // ResharedCount -
+	LastPostTime   int    `json:"LastPostTime"`   // LastPostTime -
+	CreatedTime    int    `json:"CreatedTime"`    // CreatedTime -
+	VersionTime    int    `json:"VersionTime"`    // VersionTime -
+	IsDeleted      int    `json:"IsDeleted"`      // IsDeleted -
+	IsBanned       int    `json:"IsBanned"`       // IsBanned -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -77,16 +74,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -119,16 +116,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -170,14 +167,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, UserTypeEnum = ?, UserLevelEnum = ?, AvatarId = ?, ProfilePrivacyEnum = ?, Phone = ?, About = ?, Email = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastActionTime = ?, LastPostTime = ?, PrimaryFollowingList = ?, CreatedSe = ?, UpdatedMs = ?, OnlinePrivacyEnum = ?, LastActivityTime = ?, Phone2 = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, Phone = ?, Email = ?, About = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.UserTypeEnum, u.UserLevelEnum, u.AvatarId, u.ProfilePrivacyEnum, u.Phone, u.About, u.Email, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastActionTime, u.LastPostTime, u.PrimaryFollowingList, u.CreatedSe, u.UpdatedMs, u.OnlinePrivacyEnum, u.LastActivityTime, u.Phone2, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -423,211 +420,106 @@ func (d *__User_Deleter) UserId_GE(val int) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) UserTypeEnum_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsVerified_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) UserTypeEnum_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) IsVerified_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) UserTypeEnum_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsVerified_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) UserTypeEnum_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum = " + d.nextDollar()
+	w.condition = " IsVerified = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UserTypeEnum_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum != " + d.nextDollar()
+	w.condition = " IsVerified != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UserTypeEnum_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum < " + d.nextDollar()
+	w.condition = " IsVerified < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UserTypeEnum_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum <= " + d.nextDollar()
+	w.condition = " IsVerified <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UserTypeEnum_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum > " + d.nextDollar()
+	w.condition = " IsVerified > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UserTypeEnum_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsVerified_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Deleter) UserLevelEnum_In(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) UserLevelEnum_Ins(ins ...int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) UserLevelEnum_NotIn(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) UserLevelEnum_Eq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) UserLevelEnum_NotEq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) UserLevelEnum_LT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) UserLevelEnum_LE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) UserLevelEnum_GT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) UserLevelEnum_GE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum >= " + d.nextDollar()
+	w.condition = " IsVerified >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -738,106 +630,211 @@ func (d *__User_Deleter) AvatarId_GE(val int) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) ProfilePrivacyEnum_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) ProfilePrivacy_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) ProfilePrivacyEnum_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) ProfilePrivacy_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) ProfilePrivacyEnum_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) ProfilePrivacy_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum = " + d.nextDollar()
+	w.condition = " ProfilePrivacy = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum != " + d.nextDollar()
+	w.condition = " ProfilePrivacy != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum < " + d.nextDollar()
+	w.condition = " ProfilePrivacy < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum <= " + d.nextDollar()
+	w.condition = " ProfilePrivacy <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum > " + d.nextDollar()
+	w.condition = " ProfilePrivacy > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) ProfilePrivacyEnum_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) ProfilePrivacy_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum >= " + d.nextDollar()
+	w.condition = " ProfilePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) OnlinePrivacy_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) OnlinePrivacy_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) OnlinePrivacy_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) OnlinePrivacy_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) OnlinePrivacy_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) OnlinePrivacy_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) OnlinePrivacy_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) OnlinePrivacy_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) OnlinePrivacy_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2628,111 +2625,6 @@ func (d *__User_Deleter) ResharedCount_GE(val int) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) LastActionTime_In(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) LastActionTime_Ins(ins ...int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) LastActionTime_NotIn(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) LastActionTime_Eq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActionTime_NotEq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActionTime_LT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActionTime_LE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActionTime_GT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActionTime_GE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Deleter) LastPostTime_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2838,526 +2730,421 @@ func (d *__User_Deleter) LastPostTime_GE(val int) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) PrimaryFollowingList_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) CreatedTime_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) PrimaryFollowingList_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) CreatedTime_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) PrimaryFollowingList_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) CreatedTime_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) PrimaryFollowingList_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) CreatedTime_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Deleter) CreatedSe_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) VersionTime_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) CreatedSe_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) VersionTime_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) CreatedSe_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) VersionTime_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) CreatedSe_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) CreatedSe_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) CreatedSe_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) CreatedSe_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) CreatedSe_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) CreatedSe_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) VersionTime_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Deleter) UpdatedMs_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsDeleted_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) UpdatedMs_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) IsDeleted_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) UpdatedMs_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsDeleted_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) UpdatedMs_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsDeleted = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UpdatedMs_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsDeleted != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UpdatedMs_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsDeleted < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UpdatedMs_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsDeleted <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UpdatedMs_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsDeleted > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) UpdatedMs_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsDeleted_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
+	w.condition = " IsDeleted >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Deleter) OnlinePrivacyEnum_In(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsBanned_In(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) OnlinePrivacyEnum_Ins(ins ...int) *__User_Deleter {
+func (u *__User_Deleter) IsBanned_Ins(ins ...int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Deleter) OnlinePrivacyEnum_NotIn(ins []int) *__User_Deleter {
+func (u *__User_Deleter) IsBanned_NotIn(ins []int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_Eq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_Eq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum = " + d.nextDollar()
+	w.condition = " IsBanned = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_NotEq(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_NotEq(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum != " + d.nextDollar()
+	w.condition = " IsBanned != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_LT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_LT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum < " + d.nextDollar()
+	w.condition = " IsBanned < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_LE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_LE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum <= " + d.nextDollar()
+	w.condition = " IsBanned <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_GT(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_GT(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum > " + d.nextDollar()
+	w.condition = " IsBanned > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Deleter) OnlinePrivacyEnum_GE(val int) *__User_Deleter {
+func (d *__User_Deleter) IsBanned_GE(val int) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Deleter) LastActivityTime_In(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) LastActivityTime_Ins(ins ...int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) LastActivityTime_NotIn(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) LastActivityTime_Eq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActivityTime_NotEq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActivityTime_LT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActivityTime_LE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActivityTime_GT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) LastActivityTime_GE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime >= " + d.nextDollar()
+	w.condition = " IsBanned >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3487,211 +3274,106 @@ func (d *__User_Updater) UserId_GE(val int) *__User_Updater {
 	return d
 }
 
-func (u *__User_Updater) UserTypeEnum_In(ins []int) *__User_Updater {
+func (u *__User_Updater) IsVerified_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) UserTypeEnum_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) IsVerified_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) UserTypeEnum_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) IsVerified_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) UserTypeEnum_Eq(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum = " + d.nextDollar()
+	w.condition = " IsVerified = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UserTypeEnum_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum != " + d.nextDollar()
+	w.condition = " IsVerified != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UserTypeEnum_LT(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum < " + d.nextDollar()
+	w.condition = " IsVerified < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UserTypeEnum_LE(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum <= " + d.nextDollar()
+	w.condition = " IsVerified <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UserTypeEnum_GT(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum > " + d.nextDollar()
+	w.condition = " IsVerified > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UserTypeEnum_GE(val int) *__User_Updater {
+func (d *__User_Updater) IsVerified_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Updater) UserLevelEnum_In(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) UserLevelEnum_Ins(ins ...int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) UserLevelEnum_NotIn(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) UserLevelEnum_Eq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) UserLevelEnum_NotEq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) UserLevelEnum_LT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) UserLevelEnum_LE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) UserLevelEnum_GT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) UserLevelEnum_GE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum >= " + d.nextDollar()
+	w.condition = " IsVerified >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3802,106 +3484,211 @@ func (d *__User_Updater) AvatarId_GE(val int) *__User_Updater {
 	return d
 }
 
-func (u *__User_Updater) ProfilePrivacyEnum_In(ins []int) *__User_Updater {
+func (u *__User_Updater) ProfilePrivacy_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) ProfilePrivacyEnum_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) ProfilePrivacy_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) ProfilePrivacyEnum_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) ProfilePrivacy_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_Eq(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum = " + d.nextDollar()
+	w.condition = " ProfilePrivacy = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum != " + d.nextDollar()
+	w.condition = " ProfilePrivacy != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_LT(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum < " + d.nextDollar()
+	w.condition = " ProfilePrivacy < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_LE(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum <= " + d.nextDollar()
+	w.condition = " ProfilePrivacy <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_GT(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum > " + d.nextDollar()
+	w.condition = " ProfilePrivacy > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) ProfilePrivacyEnum_GE(val int) *__User_Updater {
+func (d *__User_Updater) ProfilePrivacy_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum >= " + d.nextDollar()
+	w.condition = " ProfilePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) OnlinePrivacy_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) OnlinePrivacy_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) OnlinePrivacy_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) OnlinePrivacy_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) OnlinePrivacy_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) OnlinePrivacy_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) OnlinePrivacy_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) OnlinePrivacy_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) OnlinePrivacy_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5692,111 +5479,6 @@ func (d *__User_Updater) ResharedCount_GE(val int) *__User_Updater {
 	return d
 }
 
-func (u *__User_Updater) LastActionTime_In(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) LastActionTime_Ins(ins ...int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) LastActionTime_NotIn(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) LastActionTime_Eq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActionTime_NotEq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActionTime_LT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActionTime_LE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActionTime_GT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActionTime_GE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Updater) LastPostTime_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -5902,526 +5584,421 @@ func (d *__User_Updater) LastPostTime_GE(val int) *__User_Updater {
 	return d
 }
 
-func (u *__User_Updater) PrimaryFollowingList_In(ins []int) *__User_Updater {
+func (u *__User_Updater) CreatedTime_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) PrimaryFollowingList_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) CreatedTime_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) PrimaryFollowingList_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) CreatedTime_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) PrimaryFollowingList_Eq(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) PrimaryFollowingList_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) PrimaryFollowingList_LT(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) PrimaryFollowingList_LE(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) PrimaryFollowingList_GT(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) PrimaryFollowingList_GE(val int) *__User_Updater {
+func (d *__User_Updater) CreatedTime_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Updater) CreatedSe_In(ins []int) *__User_Updater {
+func (u *__User_Updater) VersionTime_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) CreatedSe_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) VersionTime_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) CreatedSe_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) VersionTime_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) CreatedSe_Eq(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) CreatedSe_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) CreatedSe_LT(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) CreatedSe_LE(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) CreatedSe_GT(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) CreatedSe_GE(val int) *__User_Updater {
+func (d *__User_Updater) VersionTime_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Updater) UpdatedMs_In(ins []int) *__User_Updater {
+func (u *__User_Updater) IsDeleted_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) UpdatedMs_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) IsDeleted_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) UpdatedMs_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) IsDeleted_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) UpdatedMs_Eq(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsDeleted = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UpdatedMs_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsDeleted != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UpdatedMs_LT(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsDeleted < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UpdatedMs_LE(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsDeleted <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UpdatedMs_GT(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsDeleted > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) UpdatedMs_GE(val int) *__User_Updater {
+func (d *__User_Updater) IsDeleted_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
+	w.condition = " IsDeleted >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Updater) OnlinePrivacyEnum_In(ins []int) *__User_Updater {
+func (u *__User_Updater) IsBanned_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) OnlinePrivacyEnum_Ins(ins ...int) *__User_Updater {
+func (u *__User_Updater) IsBanned_Ins(ins ...int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Updater) OnlinePrivacyEnum_NotIn(ins []int) *__User_Updater {
+func (u *__User_Updater) IsBanned_NotIn(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_Eq(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_Eq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum = " + d.nextDollar()
+	w.condition = " IsBanned = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_NotEq(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_NotEq(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum != " + d.nextDollar()
+	w.condition = " IsBanned != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_LT(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_LT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum < " + d.nextDollar()
+	w.condition = " IsBanned < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_LE(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_LE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum <= " + d.nextDollar()
+	w.condition = " IsBanned <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_GT(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_GT(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum > " + d.nextDollar()
+	w.condition = " IsBanned > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Updater) OnlinePrivacyEnum_GE(val int) *__User_Updater {
+func (d *__User_Updater) IsBanned_GE(val int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Updater) LastActivityTime_In(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) LastActivityTime_Ins(ins ...int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) LastActivityTime_NotIn(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) LastActivityTime_Eq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActivityTime_NotEq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActivityTime_LT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActivityTime_LE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActivityTime_GT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) LastActivityTime_GE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime >= " + d.nextDollar()
+	w.condition = " IsBanned >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6551,211 +6128,106 @@ func (d *__User_Selector) UserId_GE(val int) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) UserTypeEnum_In(ins []int) *__User_Selector {
+func (u *__User_Selector) IsVerified_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) UserTypeEnum_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) IsVerified_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) UserTypeEnum_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) IsVerified_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UserTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsVerified NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) UserTypeEnum_Eq(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum = " + d.nextDollar()
+	w.condition = " IsVerified = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UserTypeEnum_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum != " + d.nextDollar()
+	w.condition = " IsVerified != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UserTypeEnum_LT(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum < " + d.nextDollar()
+	w.condition = " IsVerified < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UserTypeEnum_LE(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum <= " + d.nextDollar()
+	w.condition = " IsVerified <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UserTypeEnum_GT(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum > " + d.nextDollar()
+	w.condition = " IsVerified > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UserTypeEnum_GE(val int) *__User_Selector {
+func (d *__User_Selector) IsVerified_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UserTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Selector) UserLevelEnum_In(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) UserLevelEnum_Ins(ins ...int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) UserLevelEnum_NotIn(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserLevelEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) UserLevelEnum_Eq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) UserLevelEnum_NotEq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) UserLevelEnum_LT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) UserLevelEnum_LE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) UserLevelEnum_GT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) UserLevelEnum_GE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " UserLevelEnum >= " + d.nextDollar()
+	w.condition = " IsVerified >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6866,106 +6338,211 @@ func (d *__User_Selector) AvatarId_GE(val int) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) ProfilePrivacyEnum_In(ins []int) *__User_Selector {
+func (u *__User_Selector) ProfilePrivacy_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) ProfilePrivacyEnum_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) ProfilePrivacy_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) ProfilePrivacyEnum_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) ProfilePrivacy_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ProfilePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_Eq(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum = " + d.nextDollar()
+	w.condition = " ProfilePrivacy = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum != " + d.nextDollar()
+	w.condition = " ProfilePrivacy != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_LT(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum < " + d.nextDollar()
+	w.condition = " ProfilePrivacy < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_LE(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum <= " + d.nextDollar()
+	w.condition = " ProfilePrivacy <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_GT(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum > " + d.nextDollar()
+	w.condition = " ProfilePrivacy > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) ProfilePrivacyEnum_GE(val int) *__User_Selector {
+func (d *__User_Selector) ProfilePrivacy_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ProfilePrivacyEnum >= " + d.nextDollar()
+	w.condition = " ProfilePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) OnlinePrivacy_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) OnlinePrivacy_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) OnlinePrivacy_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " OnlinePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) OnlinePrivacy_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) OnlinePrivacy_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) OnlinePrivacy_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) OnlinePrivacy_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) OnlinePrivacy_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) OnlinePrivacy_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " OnlinePrivacy >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -8756,111 +8333,6 @@ func (d *__User_Selector) ResharedCount_GE(val int) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) LastActionTime_In(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) LastActionTime_Ins(ins ...int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) LastActionTime_NotIn(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) LastActionTime_Eq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActionTime_NotEq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActionTime_LT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActionTime_LE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActionTime_GT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActionTime_GE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActionTime >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Selector) LastPostTime_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -8966,526 +8438,421 @@ func (d *__User_Selector) LastPostTime_GE(val int) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) PrimaryFollowingList_In(ins []int) *__User_Selector {
+func (u *__User_Selector) CreatedTime_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) PrimaryFollowingList_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) CreatedTime_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) PrimaryFollowingList_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) CreatedTime_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) PrimaryFollowingList_Eq(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) PrimaryFollowingList_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) PrimaryFollowingList_LT(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) PrimaryFollowingList_LE(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) PrimaryFollowingList_GT(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) PrimaryFollowingList_GE(val int) *__User_Selector {
+func (d *__User_Selector) CreatedTime_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PrimaryFollowingList >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Selector) CreatedSe_In(ins []int) *__User_Selector {
+func (u *__User_Selector) VersionTime_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) CreatedSe_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) VersionTime_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) CreatedSe_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) VersionTime_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " CreatedSe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) CreatedSe_Eq(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe = " + d.nextDollar()
+	w.condition = " VersionTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) CreatedSe_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe != " + d.nextDollar()
+	w.condition = " VersionTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) CreatedSe_LT(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe < " + d.nextDollar()
+	w.condition = " VersionTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) CreatedSe_LE(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe <= " + d.nextDollar()
+	w.condition = " VersionTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) CreatedSe_GT(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe > " + d.nextDollar()
+	w.condition = " VersionTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) CreatedSe_GE(val int) *__User_Selector {
+func (d *__User_Selector) VersionTime_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " CreatedSe >= " + d.nextDollar()
+	w.condition = " VersionTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Selector) UpdatedMs_In(ins []int) *__User_Selector {
+func (u *__User_Selector) IsDeleted_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) UpdatedMs_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) IsDeleted_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) UpdatedMs_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) IsDeleted_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " UpdatedMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) UpdatedMs_Eq(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs = " + d.nextDollar()
+	w.condition = " IsDeleted = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UpdatedMs_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs != " + d.nextDollar()
+	w.condition = " IsDeleted != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UpdatedMs_LT(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs < " + d.nextDollar()
+	w.condition = " IsDeleted < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UpdatedMs_LE(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs <= " + d.nextDollar()
+	w.condition = " IsDeleted <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UpdatedMs_GT(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs > " + d.nextDollar()
+	w.condition = " IsDeleted > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) UpdatedMs_GE(val int) *__User_Selector {
+func (d *__User_Selector) IsDeleted_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " UpdatedMs >= " + d.nextDollar()
+	w.condition = " IsDeleted >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__User_Selector) OnlinePrivacyEnum_In(ins []int) *__User_Selector {
+func (u *__User_Selector) IsBanned_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) OnlinePrivacyEnum_Ins(ins ...int) *__User_Selector {
+func (u *__User_Selector) IsBanned_Ins(ins ...int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__User_Selector) OnlinePrivacyEnum_NotIn(ins []int) *__User_Selector {
+func (u *__User_Selector) IsBanned_NotIn(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_Eq(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_Eq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum = " + d.nextDollar()
+	w.condition = " IsBanned = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_NotEq(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_NotEq(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum != " + d.nextDollar()
+	w.condition = " IsBanned != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_LT(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_LT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum < " + d.nextDollar()
+	w.condition = " IsBanned < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_LE(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_LE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum <= " + d.nextDollar()
+	w.condition = " IsBanned <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_GT(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_GT(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum > " + d.nextDollar()
+	w.condition = " IsBanned > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__User_Selector) OnlinePrivacyEnum_GE(val int) *__User_Selector {
+func (d *__User_Selector) IsBanned_GE(val int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OnlinePrivacyEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Selector) LastActivityTime_In(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) LastActivityTime_Ins(ins ...int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) LastActivityTime_NotIn(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " LastActivityTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) LastActivityTime_Eq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActivityTime_NotEq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActivityTime_LT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActivityTime_LE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActivityTime_GT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) LastActivityTime_GE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " LastActivityTime >= " + d.nextDollar()
+	w.condition = " IsBanned >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9735,66 +9102,6 @@ func (d *__User_Deleter) LastName_NotEq(val string) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) About_In(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) About_NotIn(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Deleter) About_Like(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) About_Eq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) About_NotEq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Deleter) Email_In(ins []string) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -9850,6 +9157,66 @@ func (d *__User_Deleter) Email_NotEq(val string) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Email != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) About_In(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) About_NotIn(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Deleter) About_Like(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) About_Eq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) About_NotEq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9970,66 +9337,6 @@ func (d *__User_Deleter) PasswordSalt_NotEq(val string) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PasswordSalt != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Deleter) Phone2_In(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) Phone2_NotIn(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Deleter) Phone2_Like(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) Phone2_Eq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone2_NotEq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10277,66 +9584,6 @@ func (d *__User_Updater) LastName_NotEq(val string) *__User_Updater {
 	return d
 }
 
-func (u *__User_Updater) About_In(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) About_NotIn(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Updater) About_Like(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) About_Eq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) About_NotEq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Updater) Email_In(ins []string) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -10392,6 +9639,66 @@ func (d *__User_Updater) Email_NotEq(val string) *__User_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Email != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) About_In(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) About_NotIn(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Updater) About_Like(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) About_Eq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) About_NotEq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10512,66 +9819,6 @@ func (d *__User_Updater) PasswordSalt_NotEq(val string) *__User_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PasswordSalt != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Updater) Phone2_In(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) Phone2_NotIn(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Updater) Phone2_Like(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) Phone2_Eq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone2_NotEq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10819,66 +10066,6 @@ func (d *__User_Selector) LastName_NotEq(val string) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) About_In(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) About_NotIn(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Selector) About_Like(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) About_Eq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) About_NotEq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " About != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Selector) Email_In(ins []string) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -10934,6 +10121,66 @@ func (d *__User_Selector) Email_NotEq(val string) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Email != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) About_In(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) About_NotIn(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " About NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Selector) About_Like(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) About_Eq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) About_NotEq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " About != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11059,66 +10306,6 @@ func (d *__User_Selector) PasswordSalt_NotEq(val string) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) Phone2_In(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) Phone2_NotIn(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone2 NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Selector) Phone2_Like(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) Phone2_Eq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone2_NotEq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone2 != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 /// End of wheres for selectors , updators, deletor
 
 /////////////////////////////// Updater /////////////////////////////
@@ -11192,51 +10379,24 @@ func (u *__User_Updater) LastName(newVal string) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) UserTypeEnum(newVal int) *__User_Updater {
-	up := updateCol{" UserTypeEnum = " + u.nextDollar(), newVal}
+func (u *__User_Updater) IsVerified(newVal int) *__User_Updater {
+	up := updateCol{" IsVerified = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" UserTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" IsVerified = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) UserTypeEnum_Increment(count int) *__User_Updater {
+func (u *__User_Updater) IsVerified_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" UserTypeEnum = UserTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" IsVerified = IsVerified+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" UserTypeEnum = UserTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" IsVerified = IsVerified+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" UserTypeEnum = UserTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" IsVerified = IsVerified- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" UserTypeEnum = UserTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__User_Updater) UserLevelEnum(newVal int) *__User_Updater {
-	up := updateCol{" UserLevelEnum = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" UserLevelEnum = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__User_Updater) UserLevelEnum_Increment(count int) *__User_Updater {
-	if count > 0 {
-		up := updateCol{" UserLevelEnum = UserLevelEnum+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" UserLevelEnum = UserLevelEnum+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" UserLevelEnum = UserLevelEnum- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" UserLevelEnum = UserLevelEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsVerified = IsVerified- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -11273,24 +10433,51 @@ func (u *__User_Updater) AvatarId_Increment(count int) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) ProfilePrivacyEnum(newVal int) *__User_Updater {
-	up := updateCol{" ProfilePrivacyEnum = " + u.nextDollar(), newVal}
+func (u *__User_Updater) ProfilePrivacy(newVal int) *__User_Updater {
+	up := updateCol{" ProfilePrivacy = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" ProfilePrivacyEnum = " + u.nextDollar()] = newVal
+	// u.updates[" ProfilePrivacy = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) ProfilePrivacyEnum_Increment(count int) *__User_Updater {
+func (u *__User_Updater) ProfilePrivacy_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" ProfilePrivacyEnum = ProfilePrivacyEnum+ " + u.nextDollar(), count}
+		up := updateCol{" ProfilePrivacy = ProfilePrivacy+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" ProfilePrivacyEnum = ProfilePrivacyEnum+ " + u.nextDollar()] = count
+		//u.updates[" ProfilePrivacy = ProfilePrivacy+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" ProfilePrivacyEnum = ProfilePrivacyEnum- " + u.nextDollar(), count}
+		up := updateCol{" ProfilePrivacy = ProfilePrivacy- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" ProfilePrivacyEnum = ProfilePrivacyEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" ProfilePrivacy = ProfilePrivacy- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) OnlinePrivacy(newVal int) *__User_Updater {
+	up := updateCol{" OnlinePrivacy = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" OnlinePrivacy = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__User_Updater) OnlinePrivacy_Increment(count int) *__User_Updater {
+	if count > 0 {
+		up := updateCol{" OnlinePrivacy = OnlinePrivacy+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" OnlinePrivacy = OnlinePrivacy+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" OnlinePrivacy = OnlinePrivacy- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" OnlinePrivacy = OnlinePrivacy- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -11328,20 +10515,20 @@ func (u *__User_Updater) Phone_Increment(count int) *__User_Updater {
 //ints
 
 //string
-func (u *__User_Updater) About(newVal string) *__User_Updater {
-	up := updateCol{"About = " + u.nextDollar(), newVal}
+func (u *__User_Updater) Email(newVal string) *__User_Updater {
+	up := updateCol{"Email = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" About = "+ u.nextDollar()] = newVal
+	// u.updates[" Email = "+ u.nextDollar()] = newVal
 	return u
 }
 
 //ints
 
 //string
-func (u *__User_Updater) Email(newVal string) *__User_Updater {
-	up := updateCol{"Email = " + u.nextDollar(), newVal}
+func (u *__User_Updater) About(newVal string) *__User_Updater {
+	up := updateCol{"About = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Email = "+ u.nextDollar()] = newVal
+	// u.updates[" About = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -11799,33 +10986,6 @@ func (u *__User_Updater) ResharedCount_Increment(count int) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) LastActionTime(newVal int) *__User_Updater {
-	up := updateCol{" LastActionTime = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" LastActionTime = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__User_Updater) LastActionTime_Increment(count int) *__User_Updater {
-	if count > 0 {
-		up := updateCol{" LastActionTime = LastActionTime+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" LastActionTime = LastActionTime+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" LastActionTime = LastActionTime- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" LastActionTime = LastActionTime- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 func (u *__User_Updater) LastPostTime(newVal int) *__User_Updater {
 	up := updateCol{" LastPostTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -11853,24 +11013,24 @@ func (u *__User_Updater) LastPostTime_Increment(count int) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) PrimaryFollowingList(newVal int) *__User_Updater {
-	up := updateCol{" PrimaryFollowingList = " + u.nextDollar(), newVal}
+func (u *__User_Updater) CreatedTime(newVal int) *__User_Updater {
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PrimaryFollowingList = " + u.nextDollar()] = newVal
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) PrimaryFollowingList_Increment(count int) *__User_Updater {
+func (u *__User_Updater) CreatedTime_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" PrimaryFollowingList = PrimaryFollowingList+ " + u.nextDollar(), count}
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PrimaryFollowingList = PrimaryFollowingList+ " + u.nextDollar()] = count
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PrimaryFollowingList = PrimaryFollowingList- " + u.nextDollar(), count}
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PrimaryFollowingList = PrimaryFollowingList- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -11880,24 +11040,24 @@ func (u *__User_Updater) PrimaryFollowingList_Increment(count int) *__User_Updat
 
 //ints
 
-func (u *__User_Updater) CreatedSe(newVal int) *__User_Updater {
-	up := updateCol{" CreatedSe = " + u.nextDollar(), newVal}
+func (u *__User_Updater) VersionTime(newVal int) *__User_Updater {
+	up := updateCol{" VersionTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" CreatedSe = " + u.nextDollar()] = newVal
+	// u.updates[" VersionTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) CreatedSe_Increment(count int) *__User_Updater {
+func (u *__User_Updater) VersionTime_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" CreatedSe = CreatedSe+ " + u.nextDollar(), count}
+		up := updateCol{" VersionTime = VersionTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" CreatedSe = CreatedSe+ " + u.nextDollar()] = count
+		//u.updates[" VersionTime = VersionTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" CreatedSe = CreatedSe- " + u.nextDollar(), count}
+		up := updateCol{" VersionTime = VersionTime- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" CreatedSe = CreatedSe- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" VersionTime = VersionTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -11907,24 +11067,24 @@ func (u *__User_Updater) CreatedSe_Increment(count int) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) UpdatedMs(newVal int) *__User_Updater {
-	up := updateCol{" UpdatedMs = " + u.nextDollar(), newVal}
+func (u *__User_Updater) IsDeleted(newVal int) *__User_Updater {
+	up := updateCol{" IsDeleted = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" UpdatedMs = " + u.nextDollar()] = newVal
+	// u.updates[" IsDeleted = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) UpdatedMs_Increment(count int) *__User_Updater {
+func (u *__User_Updater) IsDeleted_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" UpdatedMs = UpdatedMs+ " + u.nextDollar(), count}
+		up := updateCol{" IsDeleted = IsDeleted+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" UpdatedMs = UpdatedMs+ " + u.nextDollar()] = count
+		//u.updates[" IsDeleted = IsDeleted+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" UpdatedMs = UpdatedMs- " + u.nextDollar(), count}
+		up := updateCol{" IsDeleted = IsDeleted- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" UpdatedMs = UpdatedMs- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsDeleted = IsDeleted- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -11934,67 +11094,30 @@ func (u *__User_Updater) UpdatedMs_Increment(count int) *__User_Updater {
 
 //ints
 
-func (u *__User_Updater) OnlinePrivacyEnum(newVal int) *__User_Updater {
-	up := updateCol{" OnlinePrivacyEnum = " + u.nextDollar(), newVal}
+func (u *__User_Updater) IsBanned(newVal int) *__User_Updater {
+	up := updateCol{" IsBanned = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" OnlinePrivacyEnum = " + u.nextDollar()] = newVal
+	// u.updates[" IsBanned = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__User_Updater) OnlinePrivacyEnum_Increment(count int) *__User_Updater {
+func (u *__User_Updater) IsBanned_Increment(count int) *__User_Updater {
 	if count > 0 {
-		up := updateCol{" OnlinePrivacyEnum = OnlinePrivacyEnum+ " + u.nextDollar(), count}
+		up := updateCol{" IsBanned = IsBanned+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" OnlinePrivacyEnum = OnlinePrivacyEnum+ " + u.nextDollar()] = count
+		//u.updates[" IsBanned = IsBanned+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" OnlinePrivacyEnum = OnlinePrivacyEnum- " + u.nextDollar(), count}
+		up := updateCol{" IsBanned = IsBanned- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" OnlinePrivacyEnum = OnlinePrivacyEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsBanned = IsBanned- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
 }
 
 //string
-
-//ints
-
-func (u *__User_Updater) LastActivityTime(newVal int) *__User_Updater {
-	up := updateCol{" LastActivityTime = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" LastActivityTime = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__User_Updater) LastActivityTime_Increment(count int) *__User_Updater {
-	if count > 0 {
-		up := updateCol{" LastActivityTime = LastActivityTime+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" LastActivityTime = LastActivityTime+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" LastActivityTime = LastActivityTime- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" LastActivityTime = LastActivityTime- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-//string
-func (u *__User_Updater) Phone2(newVal string) *__User_Updater {
-	up := updateCol{"Phone2 = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" Phone2 = "+ u.nextDollar()] = newVal
-	return u
-}
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
@@ -12076,33 +11199,18 @@ func (u *__User_Selector) Select_LastName() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_UserTypeEnum_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY UserTypeEnum DESC "
+func (u *__User_Selector) OrderBy_IsVerified_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY IsVerified DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_UserTypeEnum_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY UserTypeEnum ASC "
+func (u *__User_Selector) OrderBy_IsVerified_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY IsVerified ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_UserTypeEnum() *__User_Selector {
-	u.selectCol = "UserTypeEnum"
-	return u
-}
-
-func (u *__User_Selector) OrderBy_UserLevelEnum_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY UserLevelEnum DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_UserLevelEnum_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY UserLevelEnum ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_UserLevelEnum() *__User_Selector {
-	u.selectCol = "UserLevelEnum"
+func (u *__User_Selector) Select_IsVerified() *__User_Selector {
+	u.selectCol = "IsVerified"
 	return u
 }
 
@@ -12121,18 +11229,33 @@ func (u *__User_Selector) Select_AvatarId() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_ProfilePrivacyEnum_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY ProfilePrivacyEnum DESC "
+func (u *__User_Selector) OrderBy_ProfilePrivacy_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY ProfilePrivacy DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_ProfilePrivacyEnum_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY ProfilePrivacyEnum ASC "
+func (u *__User_Selector) OrderBy_ProfilePrivacy_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY ProfilePrivacy ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_ProfilePrivacyEnum() *__User_Selector {
-	u.selectCol = "ProfilePrivacyEnum"
+func (u *__User_Selector) Select_ProfilePrivacy() *__User_Selector {
+	u.selectCol = "ProfilePrivacy"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_OnlinePrivacy_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY OnlinePrivacy DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_OnlinePrivacy_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY OnlinePrivacy ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_OnlinePrivacy() *__User_Selector {
+	u.selectCol = "OnlinePrivacy"
 	return u
 }
 
@@ -12151,21 +11274,6 @@ func (u *__User_Selector) Select_Phone() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_About_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY About DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_About_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY About ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_About() *__User_Selector {
-	u.selectCol = "About"
-	return u
-}
-
 func (u *__User_Selector) OrderBy_Email_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY Email DESC "
 	return u
@@ -12178,6 +11286,21 @@ func (u *__User_Selector) OrderBy_Email_Asc() *__User_Selector {
 
 func (u *__User_Selector) Select_Email() *__User_Selector {
 	u.selectCol = "Email"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_About_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY About DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_About_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY About ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_About() *__User_Selector {
+	u.selectCol = "About"
 	return u
 }
 
@@ -12451,21 +11574,6 @@ func (u *__User_Selector) Select_ResharedCount() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_LastActionTime_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY LastActionTime DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_LastActionTime_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY LastActionTime ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_LastActionTime() *__User_Selector {
-	u.selectCol = "LastActionTime"
-	return u
-}
-
 func (u *__User_Selector) OrderBy_LastPostTime_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY LastPostTime DESC "
 	return u
@@ -12481,93 +11589,63 @@ func (u *__User_Selector) Select_LastPostTime() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_PrimaryFollowingList_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY PrimaryFollowingList DESC "
+func (u *__User_Selector) OrderBy_CreatedTime_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_PrimaryFollowingList_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY PrimaryFollowingList ASC "
+func (u *__User_Selector) OrderBy_CreatedTime_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_PrimaryFollowingList() *__User_Selector {
-	u.selectCol = "PrimaryFollowingList"
+func (u *__User_Selector) Select_CreatedTime() *__User_Selector {
+	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__User_Selector) OrderBy_CreatedSe_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY CreatedSe DESC "
+func (u *__User_Selector) OrderBy_VersionTime_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY VersionTime DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_CreatedSe_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY CreatedSe ASC "
+func (u *__User_Selector) OrderBy_VersionTime_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY VersionTime ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_CreatedSe() *__User_Selector {
-	u.selectCol = "CreatedSe"
+func (u *__User_Selector) Select_VersionTime() *__User_Selector {
+	u.selectCol = "VersionTime"
 	return u
 }
 
-func (u *__User_Selector) OrderBy_UpdatedMs_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY UpdatedMs DESC "
+func (u *__User_Selector) OrderBy_IsDeleted_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY IsDeleted DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_UpdatedMs_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY UpdatedMs ASC "
+func (u *__User_Selector) OrderBy_IsDeleted_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY IsDeleted ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_UpdatedMs() *__User_Selector {
-	u.selectCol = "UpdatedMs"
+func (u *__User_Selector) Select_IsDeleted() *__User_Selector {
+	u.selectCol = "IsDeleted"
 	return u
 }
 
-func (u *__User_Selector) OrderBy_OnlinePrivacyEnum_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY OnlinePrivacyEnum DESC "
+func (u *__User_Selector) OrderBy_IsBanned_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY IsBanned DESC "
 	return u
 }
 
-func (u *__User_Selector) OrderBy_OnlinePrivacyEnum_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY OnlinePrivacyEnum ASC "
+func (u *__User_Selector) OrderBy_IsBanned_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY IsBanned ASC "
 	return u
 }
 
-func (u *__User_Selector) Select_OnlinePrivacyEnum() *__User_Selector {
-	u.selectCol = "OnlinePrivacyEnum"
-	return u
-}
-
-func (u *__User_Selector) OrderBy_LastActivityTime_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY LastActivityTime DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_LastActivityTime_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY LastActivityTime ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_LastActivityTime() *__User_Selector {
-	u.selectCol = "LastActivityTime"
-	return u
-}
-
-func (u *__User_Selector) OrderBy_Phone2_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY Phone2 DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_Phone2_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY Phone2 ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_Phone2() *__User_Selector {
-	u.selectCol = "Phone2"
+func (u *__User_Selector) Select_IsBanned() *__User_Selector {
+	u.selectCol = "IsBanned"
 	return u
 }
 
@@ -12888,12 +11966,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -12905,13 +11983,13 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.UserNameLower)
 		vals = append(vals, row.FirstName)
 		vals = append(vals, row.LastName)
-		vals = append(vals, row.UserTypeEnum)
-		vals = append(vals, row.UserLevelEnum)
+		vals = append(vals, row.IsVerified)
 		vals = append(vals, row.AvatarId)
-		vals = append(vals, row.ProfilePrivacyEnum)
+		vals = append(vals, row.ProfilePrivacy)
+		vals = append(vals, row.OnlinePrivacy)
 		vals = append(vals, row.Phone)
-		vals = append(vals, row.About)
 		vals = append(vals, row.Email)
+		vals = append(vals, row.About)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -12930,14 +12008,11 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.PinedCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ResharedCount)
-		vals = append(vals, row.LastActionTime)
 		vals = append(vals, row.LastPostTime)
-		vals = append(vals, row.PrimaryFollowingList)
-		vals = append(vals, row.CreatedSe)
-		vals = append(vals, row.UpdatedMs)
-		vals = append(vals, row.OnlinePrivacyEnum)
-		vals = append(vals, row.LastActivityTime)
-		vals = append(vals, row.Phone2)
+		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.VersionTime)
+		vals = append(vals, row.IsDeleted)
+		vals = append(vals, row.IsBanned)
 
 	}
 
@@ -12958,12 +12033,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, UserTypeEnum, UserLevelEnum, AvatarId, ProfilePrivacyEnum, Phone, About, Email, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastActionTime, LastPostTime, PrimaryFollowingList, CreatedSe, UpdatedMs, OnlinePrivacyEnum, LastActivityTime, Phone2" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -12975,13 +12050,13 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.UserNameLower)
 		vals = append(vals, row.FirstName)
 		vals = append(vals, row.LastName)
-		vals = append(vals, row.UserTypeEnum)
-		vals = append(vals, row.UserLevelEnum)
+		vals = append(vals, row.IsVerified)
 		vals = append(vals, row.AvatarId)
-		vals = append(vals, row.ProfilePrivacyEnum)
+		vals = append(vals, row.ProfilePrivacy)
+		vals = append(vals, row.OnlinePrivacy)
 		vals = append(vals, row.Phone)
-		vals = append(vals, row.About)
 		vals = append(vals, row.Email)
+		vals = append(vals, row.About)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -13000,14 +12075,11 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.PinedCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ResharedCount)
-		vals = append(vals, row.LastActionTime)
 		vals = append(vals, row.LastPostTime)
-		vals = append(vals, row.PrimaryFollowingList)
-		vals = append(vals, row.CreatedSe)
-		vals = append(vals, row.UpdatedMs)
-		vals = append(vals, row.OnlinePrivacyEnum)
-		vals = append(vals, row.LastActivityTime)
-		vals = append(vals, row.Phone2)
+		vals = append(vals, row.CreatedTime)
+		vals = append(vals, row.VersionTime)
+		vals = append(vals, row.IsDeleted)
+		vals = append(vals, row.IsBanned)
 
 	}
 
@@ -13026,12 +12098,6 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
-
-//
-
-//
 
 //
 

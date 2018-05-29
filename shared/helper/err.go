@@ -30,7 +30,7 @@ func XCLogErr(err error) {
 func XCLog(str ...interface{}) {
 	if config.IS_DEBUG {
 		if len(str) > 0 {
-			log.Println("CQL: ", str)
+			//log.Println("CQL: ", str)
 		}
 	}
 }
