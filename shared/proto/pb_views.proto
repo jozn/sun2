@@ -138,3 +138,64 @@ message PB_UserView {
     //with me
     FollowingEnum MyFollwing = 300;
 }
+
+message PB_SettingNotificationView {
+
+}
+
+message PB_AppConfig {
+    bool DeprecatedClient = 1;
+    bool HasNewUpdate  = 2;
+
+}
+
+message PB_UserProfileView {
+
+}
+
+message PB_UserViewRowify {
+    int64 Id = 1;
+    int32 CreatedTime = 2;
+    PB_UserView UserView = 10;
+}
+
+message PB_PostViewRowify {
+    int64 Id = 1;
+    PB_PostView PostView = 10;
+}
+
+message PB_TopTagWithSamplePosts {
+    PB_TagView TagView = 1;
+    repeated PB_PostView PostViewList = 2;
+}
+
+message PB_SelfUserView {
+    //1-30 basic user table views
+    PB_UserView UserView = 1;
+
+    //30-50 privacy
+    int ProfilePrivacy = 30;
+    int OnlinePrivacy = 32;
+    int CallPrivacy = 33;
+    int AddToGroupPrivacy = 34;
+    int SeenMessagePrivacy = 35;
+
+    // 100 other views
+    PB_SettingNotificationView SettingNotification = 100;
+   // settings , notifactions settings,... 
+    //privacy 
+    
+}
+
+
+enum PB_Error {
+    ServerErrors Error = 1;
+     bool ShowError = 2;
+     string ErrorMessage = 3;
+}
+
+enum ServerErrors {
+    ERR_CLIENT_IS_DEPRECATED = 1;
+    ERR_SERVER_UPGRADING = 2;
+    
+}

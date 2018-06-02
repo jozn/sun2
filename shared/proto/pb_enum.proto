@@ -34,6 +34,16 @@ enum UserLevelEnum{
     SUSPONDED_IRAN = 5;
 }
 
+enum GeneralPrivacyEnum{
+    UNKNOWN_GENERAL_PRIVACY = 0;
+    ALL_PEOPLE_PRIVACY = 1;
+    NOBODY_PRIVACY = 2;
+    CONTACTS_ONLY_PRIVACY = 3;
+    FOLLOWED_ONLY_PRIVACY = 4;
+    CONTACTS_AND_FOLLOWD_PRIVACY = 5;
+}
+
+//DEP
 enum UserOnlinePrivacyEnum{
     E4 = 0;
 }
