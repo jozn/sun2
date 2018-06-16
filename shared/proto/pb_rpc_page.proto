@@ -8,6 +8,8 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 option go_package = "x";
 import "pb_global.proto";
 import "pb_views.proto";
+import "pb_enum.proto";
+
 
 message RPC_Page_Types {
     message GetCommentsPage {
@@ -92,6 +94,19 @@ message RPC_Page_Types {
     }
 
     message GetFollowersPage {
+        message Param {
+            int64 PostId = 1;
+            int32 Limit = 2;
+            int64 LastId = 3;
+        }
+
+        message Response {
+            PB_Error Error = 1;
+            repeated PB_UserViewRowify UserViewRowifyList = 2;
+        }
+    }
+
+    message GetFollowingsPage {
         message Param {
             int64 PostId = 1;
             int32 Limit = 2;

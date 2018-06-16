@@ -8,6 +8,7 @@ option optimize_for = LITE_RUNTIME; //CODE_SIZE;
 option go_package = "x";
 
 import "pb_enum.proto";
+import "pb_views.proto";
 
 message RPC_User_Types {
     message UpdateAbout {
@@ -62,9 +63,9 @@ message RPC_User_Types {
 
 service RPC_User {
    // rpc GetBlockedList (PB_UserParam_BlockedList) returns (PB_UserResponse_BlockedList);//to pages 
-    rpc UpdateAbout (RPC_Auth_User.UpdateAbout.Param) returns (RPC_Auth_User.UpdateAbout.Response);
-    rpc UpdateUserName (RPC_Auth_User.UpdateUserName.Param) returns (RPC_Auth_User.UpdateUserName.Response);
-    rpc ChangePrivacy (RPC_Auth_User.ChangePrivacy.Param) returns (RPC_Auth_User.ChangePrivacy.Response);
-    rpc ChangeAvatar (RPC_Auth_User.ChangeAvatar.Param) returns (RPC_Auth_User.ChangeAvatar.Response);
-    //rpc CheckUserName (RPC_Auth_User.UpdateUserName.Param) returns (RPC_Auth_User.UpdateUserName.Response); //to others
+    rpc UpdateAbout (RPC_User_Types.UpdateAbout.Param) returns (RPC_User_Types.UpdateAbout.Response);
+    rpc UpdateUserName (RPC_User_Types.UpdateUserName.Param) returns (RPC_User_Types.UpdateUserName.Response);
+    rpc ChangePrivacy (RPC_User_Types.ChangePrivacy.Param) returns (RPC_User_Types.ChangePrivacy.Response);
+    rpc ChangeAvatar (RPC_User_Types.ChangeAvatar.Param) returns (RPC_User_Types.ChangeAvatar.Response);
+    //rpc CheckUserName (RPC_User_Types.UpdateUserName.Param) returns (RPC_User_Types.UpdateUserName.Response); //to others
 }

@@ -23,7 +23,7 @@ type PB_RPC_Chat_Types struct {
 func (m *PB_RPC_Chat_Types) Reset()                    { *m = PB_RPC_Chat_Types{} }
 func (m *PB_RPC_Chat_Types) String() string            { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types) ProtoMessage()               {}
-func (*PB_RPC_Chat_Types) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
+func (*PB_RPC_Chat_Types) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 type PB_RPC_Chat_Types_AddNewMessage struct {
 }
@@ -32,7 +32,7 @@ func (m *PB_RPC_Chat_Types_AddNewMessage) Reset()         { *m = PB_RPC_Chat_Typ
 func (m *PB_RPC_Chat_Types_AddNewMessage) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_AddNewMessage) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_AddNewMessage) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 0}
+	return fileDescriptor4, []int{0, 0}
 }
 
 type PB_RPC_Chat_Types_AddNewMessage_Param struct {
@@ -44,7 +44,7 @@ func (m *PB_RPC_Chat_Types_AddNewMessage_Param) Reset()         { *m = PB_RPC_Ch
 func (m *PB_RPC_Chat_Types_AddNewMessage_Param) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_AddNewMessage_Param) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_AddNewMessage_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 0, 0}
+	return fileDescriptor4, []int{0, 0, 0}
 }
 
 func (m *PB_RPC_Chat_Types_AddNewMessage_Param) GetMessageView() *PB_MessageView {
@@ -71,7 +71,7 @@ func (m *PB_RPC_Chat_Types_AddNewMessage_Response) Reset() {
 func (m *PB_RPC_Chat_Types_AddNewMessage_Response) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_AddNewMessage_Response) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_AddNewMessage_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 0, 1}
+	return fileDescriptor4, []int{0, 0, 1}
 }
 
 func (m *PB_RPC_Chat_Types_AddNewMessage_Response) GetMessageView() *PB_MessageView {
@@ -88,7 +88,7 @@ func (m *PB_RPC_Chat_Types_SetRoomActionDoing) Reset()         { *m = PB_RPC_Cha
 func (m *PB_RPC_Chat_Types_SetRoomActionDoing) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_SetRoomActionDoing) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_SetRoomActionDoing) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 1}
+	return fileDescriptor4, []int{0, 1}
 }
 
 type PB_RPC_Chat_Types_SetRoomActionDoing_Param struct {
@@ -105,7 +105,7 @@ func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) String() string {
 }
 func (*PB_RPC_Chat_Types_SetRoomActionDoing_Param) ProtoMessage() {}
 func (*PB_RPC_Chat_Types_SetRoomActionDoing_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 1, 0}
+	return fileDescriptor4, []int{0, 1, 0}
 }
 
 func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Param) GetGroupId() int64 {
@@ -140,7 +140,7 @@ func (m *PB_RPC_Chat_Types_SetRoomActionDoing_Response) String() string {
 }
 func (*PB_RPC_Chat_Types_SetRoomActionDoing_Response) ProtoMessage() {}
 func (*PB_RPC_Chat_Types_SetRoomActionDoing_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 1, 1}
+	return fileDescriptor4, []int{0, 1, 1}
 }
 
 type PB_RPC_Chat_Types_GetChatList struct {
@@ -150,7 +150,7 @@ func (m *PB_RPC_Chat_Types_GetChatList) Reset()         { *m = PB_RPC_Chat_Types
 func (m *PB_RPC_Chat_Types_GetChatList) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatList) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatList) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 2}
+	return fileDescriptor4, []int{0, 2}
 }
 
 type PB_RPC_Chat_Types_GetChatList_Param struct {
@@ -160,7 +160,7 @@ func (m *PB_RPC_Chat_Types_GetChatList_Param) Reset()         { *m = PB_RPC_Chat
 func (m *PB_RPC_Chat_Types_GetChatList_Param) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatList_Param) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatList_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 2, 0}
+	return fileDescriptor4, []int{0, 2, 0}
 }
 
 type PB_RPC_Chat_Types_GetChatList_Response struct {
@@ -173,7 +173,7 @@ func (m *PB_RPC_Chat_Types_GetChatList_Response) Reset() {
 func (m *PB_RPC_Chat_Types_GetChatList_Response) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatList_Response) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatList_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 2, 1}
+	return fileDescriptor4, []int{0, 2, 1}
 }
 
 func (m *PB_RPC_Chat_Types_GetChatList_Response) GetChats() []*PB_ChatView {
@@ -190,7 +190,7 @@ func (m *PB_RPC_Chat_Types_GetChatHistory) Reset()         { *m = PB_RPC_Chat_Ty
 func (m *PB_RPC_Chat_Types_GetChatHistory) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatHistory) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatHistory) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 3}
+	return fileDescriptor4, []int{0, 3}
 }
 
 type PB_RPC_Chat_Types_GetChatHistory_Param struct {
@@ -206,7 +206,7 @@ func (m *PB_RPC_Chat_Types_GetChatHistory_Param) Reset() {
 func (m *PB_RPC_Chat_Types_GetChatHistory_Param) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatHistory_Param) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatHistory_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 3, 0}
+	return fileDescriptor4, []int{0, 3, 0}
 }
 
 func (m *PB_RPC_Chat_Types_GetChatHistory_Param) GetChatId() string {
@@ -248,7 +248,7 @@ func (m *PB_RPC_Chat_Types_GetChatHistory_Response) Reset() {
 func (m *PB_RPC_Chat_Types_GetChatHistory_Response) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetChatHistory_Response) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetChatHistory_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 3, 1}
+	return fileDescriptor4, []int{0, 3, 1}
 }
 
 func (m *PB_RPC_Chat_Types_GetChatHistory_Response) GetMessagesViews() []*PB_MessageView {
@@ -272,7 +272,7 @@ func (m *PB_RPC_Chat_Types_PushRoomsChange) Reset()         { *m = PB_RPC_Chat_T
 func (m *PB_RPC_Chat_Types_PushRoomsChange) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_PushRoomsChange) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_PushRoomsChange) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 4}
+	return fileDescriptor4, []int{0, 4}
 }
 
 type PB_RPC_Chat_Types_PushRoomsChange_Param struct {
@@ -285,7 +285,7 @@ func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) Reset() {
 func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_PushRoomsChange_Param) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_PushRoomsChange_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 4, 0}
+	return fileDescriptor4, []int{0, 4, 0}
 }
 
 func (m *PB_RPC_Chat_Types_PushRoomsChange_Param) GetRoomsChanges() *PB_RoomsChanges {
@@ -309,7 +309,7 @@ func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) String() string {
 }
 func (*PB_RPC_Chat_Types_PushRoomsChange_Response) ProtoMessage() {}
 func (*PB_RPC_Chat_Types_PushRoomsChange_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 4, 1}
+	return fileDescriptor4, []int{0, 4, 1}
 }
 
 func (m *PB_RPC_Chat_Types_PushRoomsChange_Response) GetDone() bool {
@@ -340,7 +340,7 @@ func (m *PB_RPC_Chat_Types_GetRoomsChange) Reset()         { *m = PB_RPC_Chat_Ty
 func (m *PB_RPC_Chat_Types_GetRoomsChange) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetRoomsChange) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetRoomsChange) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 5}
+	return fileDescriptor4, []int{0, 5}
 }
 
 type PB_RPC_Chat_Types_GetRoomsChange_Param struct {
@@ -354,7 +354,7 @@ func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) Reset() {
 func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetRoomsChange_Param) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetRoomsChange_Param) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 5, 0}
+	return fileDescriptor4, []int{0, 5, 0}
 }
 
 func (m *PB_RPC_Chat_Types_GetRoomsChange_Param) GetUserChatVersionSeq() uint64 {
@@ -381,7 +381,7 @@ func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) Reset() {
 func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) String() string { return proto.CompactTextString(m) }
 func (*PB_RPC_Chat_Types_GetRoomsChange_Response) ProtoMessage()    {}
 func (*PB_RPC_Chat_Types_GetRoomsChange_Response) Descriptor() ([]byte, []int) {
-	return fileDescriptor3, []int{0, 5, 1}
+	return fileDescriptor4, []int{0, 5, 1}
 }
 
 func (m *PB_RPC_Chat_Types_GetRoomsChange_Response) GetPushChanges() *PB_PushChanges {
@@ -650,9 +650,9 @@ var _RPC_Chat_serviceDesc = grpc.ServiceDesc{
 	Metadata: "pb_rpc_chat.proto",
 }
 
-func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor3) }
+func init() { proto.RegisterFile("pb_rpc_chat.proto", fileDescriptor4) }
 
-var fileDescriptor3 = []byte{
+var fileDescriptor4 = []byte{
 	// 650 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x55, 0xcd, 0x6e, 0x13, 0x3d,
 	0x14, 0xd5, 0x34, 0x49, 0x3b, 0xbd, 0x69, 0xfa, 0xe3, 0xaf, 0xfa, 0x14, 0x79, 0x15, 0x55, 0x15,

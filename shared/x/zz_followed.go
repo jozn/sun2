@@ -5,173 +5,196 @@ import (
 	"errors"
 	"strings"
 	//"time"
-	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ChatVersionOrder represents a row from 'sun_chat.chat_version_order'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Followed represents a row from 'sun.followed'.
 
 // Manualy copy this to project
-type ChatVersionOrder__ struct {
-	VersionTime int `json:"VersionTime"` // VersionTime -
-	UserId      int `json:"UserId"`      // UserId -
-	ChatId      int `json:"ChatId"`      // ChatId -
-	OrderTime   int `json:"OrderTime"`   // OrderTime -
+type Followed__ struct {
+	Id             int `json:"Id"`             // Id -
+	UserId         int `json:"UserId"`         // UserId -
+	FollowedUserId int `json:"FollowedUserId"` // FollowedUserId -
+	CreatedTime    int `json:"CreatedTime"`    // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the ChatVersionOrder exists in the database.
-func (cvo *ChatVersionOrder) Exists() bool {
-	return cvo._exists
+// Exists determines if the Followed exists in the database.
+func (f *Followed) Exists() bool {
+	return f._exists
 }
 
-// Deleted provides information if the ChatVersionOrder has been deleted from the database.
-func (cvo *ChatVersionOrder) Deleted() bool {
-	return cvo._deleted
+// Deleted provides information if the Followed has been deleted from the database.
+func (f *Followed) Deleted() bool {
+	return f._deleted
 }
 
-// Insert inserts the ChatVersionOrder to the database.
-func (cvo *ChatVersionOrder) Insert(db XODB) error {
+// Insert inserts the Followed to the database.
+func (f *Followed) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if cvo._exists {
+	if f._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key must be provided
-	const sqlstr = `INSERT INTO sun_chat.chat_version_order (` +
-		`VersionTime, UserId, ChatId, OrderTime` +
+	// sql insert query, primary key provided by autoincrement
+	const sqlstr = `INSERT INTO sun.followed (` +
+		`UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.ChatVersionOrder {
-		XOLog(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
+	if LogTableSqlReq.Followed {
+		XOLog(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
+	res, err := db.Exec(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
 	if err != nil {
-		return err
-	}
-
-	// set existence
-	cvo._exists = true
-
-	OnChatVersionOrder_AfterInsert(cvo)
-
-	return nil
-}
-
-// Insert inserts the ChatVersionOrder to the database.
-func (cvo *ChatVersionOrder) Replace(db XODB) error {
-	var err error
-
-	// sql query
-
-	const sqlstr = `REPLACE INTO sun_chat.chat_version_order (` +
-		`VersionTime, UserId, ChatId, OrderTime` +
-		`) VALUES (` +
-		`?, ?, ?, ?` +
-		`)`
-
-	// run query
-	if LogTableSqlReq.ChatVersionOrder {
-		XOLog(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
-	}
-	_, err = db.Exec(sqlstr, cvo.VersionTime, cvo.UserId, cvo.ChatId, cvo.OrderTime)
-	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	cvo._exists = true
+	// retrieve id
+	id, err := res.LastInsertId()
+	if err != nil {
+		if LogTableSqlReq.Followed {
+			XOLogErr(err)
+		}
+		return err
+	}
 
-	OnChatVersionOrder_AfterInsert(cvo)
+	// set primary key and existence
+	f.Id = int(id)
+	f._exists = true
+
+	OnFollowed_AfterInsert(f)
 
 	return nil
 }
 
-// Update updates the ChatVersionOrder in the database.
-func (cvo *ChatVersionOrder) Update(db XODB) error {
+// Insert inserts the Followed to the database.
+func (f *Followed) Replace(db XODB) error {
+	var err error
+
+	// sql query
+
+	const sqlstr = `REPLACE INTO sun.followed (` +
+		`UserId, FollowedUserId, CreatedTime` +
+		`) VALUES (` +
+		`?, ?, ?` +
+		`)`
+
+	// run query
+	if LogTableSqlReq.Followed {
+		XOLog(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+	}
+	res, err := db.Exec(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+	if err != nil {
+		if LogTableSqlReq.Followed {
+			XOLogErr(err)
+		}
+		return err
+	}
+
+	// retrieve id
+	id, err := res.LastInsertId()
+	if err != nil {
+		if LogTableSqlReq.Followed {
+			XOLogErr(err)
+		}
+		return err
+	}
+
+	// set primary key and existence
+	f.Id = int(id)
+	f._exists = true
+
+	OnFollowed_AfterInsert(f)
+
+	return nil
+}
+
+// Update updates the Followed in the database.
+func (f *Followed) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !cvo._exists {
+	if !f._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if cvo._deleted {
+	if f._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun_chat.chat_version_order SET ` +
-		`UserId = ?, ChatId = ?, OrderTime = ?` +
-		` WHERE VersionTime = ?`
+	const sqlstr = `UPDATE sun.followed SET ` +
+		`UserId = ?, FollowedUserId = ?, CreatedTime = ?` +
+		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.ChatVersionOrder {
-		XOLog(sqlstr, cvo.UserId, cvo.ChatId, cvo.OrderTime, cvo.VersionTime)
+	if LogTableSqlReq.Followed {
+		XOLog(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime, f.Id)
 	}
-	_, err = db.Exec(sqlstr, cvo.UserId, cvo.ChatId, cvo.OrderTime, cvo.VersionTime)
+	_, err = db.Exec(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime, f.Id)
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLogErr(err)
 	}
-	OnChatVersionOrder_AfterUpdate(cvo)
+	OnFollowed_AfterUpdate(f)
 
 	return err
 }
 
-// Save saves the ChatVersionOrder to the database.
-func (cvo *ChatVersionOrder) Save(db XODB) error {
-	if cvo.Exists() {
-		return cvo.Update(db)
+// Save saves the Followed to the database.
+func (f *Followed) Save(db XODB) error {
+	if f.Exists() {
+		return f.Update(db)
 	}
 
-	return cvo.Replace(db)
+	return f.Replace(db)
 }
 
-// Delete deletes the ChatVersionOrder from the database.
-func (cvo *ChatVersionOrder) Delete(db XODB) error {
+// Delete deletes the Followed from the database.
+func (f *Followed) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !cvo._exists {
+	if !f._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if cvo._deleted {
+	if f._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_chat.chat_version_order WHERE VersionTime = ?`
+	const sqlstr = `DELETE FROM sun.followed WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.ChatVersionOrder {
-		XOLog(sqlstr, cvo.VersionTime)
+	if LogTableSqlReq.Followed {
+		XOLog(sqlstr, f.Id)
 	}
-	_, err = db.Exec(sqlstr, cvo.VersionTime)
+	_, err = db.Exec(sqlstr, f.Id)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	cvo._deleted = true
+	f._deleted = true
 
-	OnChatVersionOrder_AfterDelete(cvo)
+	OnFollowed_AfterDelete(f)
 
 	return nil
 }
@@ -182,14 +205,14 @@ func (cvo *ChatVersionOrder) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __ChatVersionOrder_Deleter struct {
+type __Followed_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __ChatVersionOrder_Updater struct {
+type __Followed_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -198,7 +221,7 @@ type __ChatVersionOrder_Updater struct {
 	isMysql     bool
 }
 
-type __ChatVersionOrder_Selector struct {
+type __Followed_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -209,30 +232,30 @@ type __ChatVersionOrder_Selector struct {
 	isMysql     bool
 }
 
-func NewChatVersionOrder_Deleter() *__ChatVersionOrder_Deleter {
-	d := __ChatVersionOrder_Deleter{whereSep: " AND "}
+func NewFollowed_Deleter() *__Followed_Deleter {
+	d := __Followed_Deleter{whereSep: " AND "}
 	return &d
 }
 
-func NewChatVersionOrder_Updater() *__ChatVersionOrder_Updater {
-	u := __ChatVersionOrder_Updater{whereSep: " AND "}
+func NewFollowed_Updater() *__Followed_Updater {
+	u := __Followed_Updater{whereSep: " AND "}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewChatVersionOrder_Selector() *__ChatVersionOrder_Selector {
-	u := __ChatVersionOrder_Selector{whereSep: " AND ", selectCol: "*"}
+func NewFollowed_Selector() *__Followed_Selector {
+	u := __Followed_Selector{whereSep: " AND ", selectCol: "*"}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__ChatVersionOrder_Selector)nextDollars(size int) string  {
+func (m *__Followed_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__ChatVersionOrder_Selector)nextDollar() string  {
+func (m *__Followed_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -243,143 +266,130 @@ func (m *__ChatVersionOrder_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__ChatVersionOrder_Deleter) nextDollars(size int) string {
+func (m *__Followed_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__ChatVersionOrder_Deleter) nextDollar() string {
+func (m *__Followed_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__ChatVersionOrder_Deleter) Or() *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) Or() *__Followed_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) VersionTime_In(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) Id_In(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) Id_Ins(ins ...int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) Id_NotIn(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_Eq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_Eq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_NotEq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_NotEq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_LT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_LT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_LE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_LE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_GT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_GT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) VersionTime_GE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) Id_GE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Deleter) UserId_In(ins []int) *__ChatVersionOrder_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatVersionOrder_Deleter) UserId_Ins(ins ...int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) UserId_In(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -392,7 +402,20 @@ func (u *__ChatVersionOrder_Deleter) UserId_Ins(ins ...int) *__ChatVersionOrder_
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) UserId_NotIn(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) UserId_Ins(ins ...int) *__Followed_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Followed_Deleter) UserId_NotIn(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -405,7 +428,7 @@ func (u *__ChatVersionOrder_Deleter) UserId_NotIn(ins []int) *__ChatVersionOrder
 	return u
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_Eq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_Eq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -416,7 +439,7 @@ func (d *__ChatVersionOrder_Deleter) UserId_Eq(val int) *__ChatVersionOrder_Dele
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_NotEq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_NotEq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -427,7 +450,7 @@ func (d *__ChatVersionOrder_Deleter) UserId_NotEq(val int) *__ChatVersionOrder_D
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_LT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_LT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -438,7 +461,7 @@ func (d *__ChatVersionOrder_Deleter) UserId_LT(val int) *__ChatVersionOrder_Dele
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_LE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_LE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -449,7 +472,7 @@ func (d *__ChatVersionOrder_Deleter) UserId_LE(val int) *__ChatVersionOrder_Dele
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_GT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_GT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -460,7 +483,7 @@ func (d *__ChatVersionOrder_Deleter) UserId_GT(val int) *__ChatVersionOrder_Dele
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) UserId_GE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) UserId_GE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -471,354 +494,341 @@ func (d *__ChatVersionOrder_Deleter) UserId_GE(val int) *__ChatVersionOrder_Dele
 	return d
 }
 
-func (u *__ChatVersionOrder_Deleter) ChatId_In(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) FollowedUserId_In(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) ChatId_Ins(ins ...int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) FollowedUserId_Ins(ins ...int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) ChatId_NotIn(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) FollowedUserId_NotIn(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_Eq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_Eq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId = " + d.nextDollar()
+	w.condition = " FollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_NotEq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_NotEq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId != " + d.nextDollar()
+	w.condition = " FollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_LT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_LT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId < " + d.nextDollar()
+	w.condition = " FollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_LE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_LE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId <= " + d.nextDollar()
+	w.condition = " FollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_GT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_GT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId > " + d.nextDollar()
+	w.condition = " FollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) ChatId_GE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) FollowedUserId_GE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId >= " + d.nextDollar()
+	w.condition = " FollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Deleter) OrderTime_In(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) CreatedTime_In(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) CreatedTime_Ins(ins ...int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Deleter) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Deleter {
+func (u *__Followed_Deleter) CreatedTime_NotIn(ins []int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_Eq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_Eq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_NotEq(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_NotEq(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_LT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_LT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_LE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_LE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_GT(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_GT(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Deleter) OrderTime_GE(val int) *__ChatVersionOrder_Deleter {
+func (d *__Followed_Deleter) CreatedTime_GE(val int) *__Followed_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__ChatVersionOrder_Updater) nextDollars(size int) string {
+func (m *__Followed_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__ChatVersionOrder_Updater) nextDollar() string {
+func (m *__Followed_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__ChatVersionOrder_Updater) Or() *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) Or() *__Followed_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) VersionTime_In(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) Id_In(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) Id_Ins(ins ...int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) Id_NotIn(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_Eq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_Eq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_NotEq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_NotEq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_LT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_LT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_LE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_LE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_GT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_GT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) VersionTime_GE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) Id_GE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Updater) UserId_In(ins []int) *__ChatVersionOrder_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatVersionOrder_Updater) UserId_Ins(ins ...int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) UserId_In(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -831,7 +841,20 @@ func (u *__ChatVersionOrder_Updater) UserId_Ins(ins ...int) *__ChatVersionOrder_
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) UserId_NotIn(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) UserId_Ins(ins ...int) *__Followed_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Followed_Updater) UserId_NotIn(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -844,7 +867,7 @@ func (u *__ChatVersionOrder_Updater) UserId_NotIn(ins []int) *__ChatVersionOrder
 	return u
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_Eq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_Eq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -855,7 +878,7 @@ func (d *__ChatVersionOrder_Updater) UserId_Eq(val int) *__ChatVersionOrder_Upda
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_NotEq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_NotEq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -866,7 +889,7 @@ func (d *__ChatVersionOrder_Updater) UserId_NotEq(val int) *__ChatVersionOrder_U
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_LT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_LT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -877,7 +900,7 @@ func (d *__ChatVersionOrder_Updater) UserId_LT(val int) *__ChatVersionOrder_Upda
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_LE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_LE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -888,7 +911,7 @@ func (d *__ChatVersionOrder_Updater) UserId_LE(val int) *__ChatVersionOrder_Upda
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_GT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_GT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -899,7 +922,7 @@ func (d *__ChatVersionOrder_Updater) UserId_GT(val int) *__ChatVersionOrder_Upda
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) UserId_GE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) UserId_GE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -910,354 +933,341 @@ func (d *__ChatVersionOrder_Updater) UserId_GE(val int) *__ChatVersionOrder_Upda
 	return d
 }
 
-func (u *__ChatVersionOrder_Updater) ChatId_In(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) FollowedUserId_In(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) ChatId_Ins(ins ...int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) FollowedUserId_Ins(ins ...int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) ChatId_NotIn(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) FollowedUserId_NotIn(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_Eq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_Eq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId = " + d.nextDollar()
+	w.condition = " FollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_NotEq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_NotEq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId != " + d.nextDollar()
+	w.condition = " FollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_LT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_LT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId < " + d.nextDollar()
+	w.condition = " FollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_LE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_LE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId <= " + d.nextDollar()
+	w.condition = " FollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_GT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_GT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId > " + d.nextDollar()
+	w.condition = " FollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) ChatId_GE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) FollowedUserId_GE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId >= " + d.nextDollar()
+	w.condition = " FollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Updater) OrderTime_In(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) CreatedTime_In(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) CreatedTime_Ins(ins ...int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) CreatedTime_NotIn(ins []int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_Eq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_Eq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_NotEq(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_NotEq(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_LT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_LT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_LE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_LE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_GT(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_GT(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Updater) OrderTime_GE(val int) *__ChatVersionOrder_Updater {
+func (d *__Followed_Updater) CreatedTime_GE(val int) *__Followed_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__ChatVersionOrder_Selector) nextDollars(size int) string {
+func (m *__Followed_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__ChatVersionOrder_Selector) nextDollar() string {
+func (m *__Followed_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__ChatVersionOrder_Selector) Or() *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Or() *__Followed_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) VersionTime_In(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Id_In(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) VersionTime_Ins(ins ...int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Id_Ins(ins ...int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) VersionTime_NotIn(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Id_NotIn(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_Eq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_Eq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " Id = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_NotEq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_NotEq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " Id != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_LT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_LT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " Id < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_LE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_LE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " Id <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_GT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_GT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " Id > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) VersionTime_GE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) Id_GE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " Id >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Selector) UserId_In(ins []int) *__ChatVersionOrder_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__ChatVersionOrder_Selector) UserId_Ins(ins ...int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) UserId_In(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1270,7 +1280,20 @@ func (u *__ChatVersionOrder_Selector) UserId_Ins(ins ...int) *__ChatVersionOrder
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) UserId_NotIn(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) UserId_Ins(ins ...int) *__Followed_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Followed_Selector) UserId_NotIn(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1283,7 +1306,7 @@ func (u *__ChatVersionOrder_Selector) UserId_NotIn(ins []int) *__ChatVersionOrde
 	return u
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_Eq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_Eq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1294,7 +1317,7 @@ func (d *__ChatVersionOrder_Selector) UserId_Eq(val int) *__ChatVersionOrder_Sel
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_NotEq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_NotEq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1305,7 +1328,7 @@ func (d *__ChatVersionOrder_Selector) UserId_NotEq(val int) *__ChatVersionOrder_
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_LT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_LT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1316,7 +1339,7 @@ func (d *__ChatVersionOrder_Selector) UserId_LT(val int) *__ChatVersionOrder_Sel
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_LE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_LE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1327,7 +1350,7 @@ func (d *__ChatVersionOrder_Selector) UserId_LE(val int) *__ChatVersionOrder_Sel
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_GT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_GT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1338,7 +1361,7 @@ func (d *__ChatVersionOrder_Selector) UserId_GT(val int) *__ChatVersionOrder_Sel
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) UserId_GE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) UserId_GE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1349,211 +1372,211 @@ func (d *__ChatVersionOrder_Selector) UserId_GE(val int) *__ChatVersionOrder_Sel
 	return d
 }
 
-func (u *__ChatVersionOrder_Selector) ChatId_In(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) FollowedUserId_In(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) ChatId_Ins(ins ...int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) FollowedUserId_Ins(ins ...int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) ChatId_NotIn(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) FollowedUserId_NotIn(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " FollowedUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_Eq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_Eq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId = " + d.nextDollar()
+	w.condition = " FollowedUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_NotEq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_NotEq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId != " + d.nextDollar()
+	w.condition = " FollowedUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_LT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_LT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId < " + d.nextDollar()
+	w.condition = " FollowedUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_LE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_LE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId <= " + d.nextDollar()
+	w.condition = " FollowedUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_GT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_GT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId > " + d.nextDollar()
+	w.condition = " FollowedUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) ChatId_GE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) FollowedUserId_GE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ChatId >= " + d.nextDollar()
+	w.condition = " FollowedUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__ChatVersionOrder_Selector) OrderTime_In(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) CreatedTime_In(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderTime_Ins(ins ...int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) CreatedTime_Ins(ins ...int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderTime_NotIn(ins []int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) CreatedTime_NotIn(ins []int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " OrderTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_Eq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_Eq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime = " + d.nextDollar()
+	w.condition = " CreatedTime = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_NotEq(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_NotEq(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime != " + d.nextDollar()
+	w.condition = " CreatedTime != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_LT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_LT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime < " + d.nextDollar()
+	w.condition = " CreatedTime < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_LE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_LE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime <= " + d.nextDollar()
+	w.condition = " CreatedTime <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_GT(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_GT(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime > " + d.nextDollar()
+	w.condition = " CreatedTime > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__ChatVersionOrder_Selector) OrderTime_GE(val int) *__ChatVersionOrder_Selector {
+func (d *__Followed_Selector) CreatedTime_GE(val int) *__Followed_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " OrderTime >= " + d.nextDollar()
+	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1573,24 +1596,24 @@ func (d *__ChatVersionOrder_Selector) OrderTime_GE(val int) *__ChatVersionOrder_
 
 //ints
 
-func (u *__ChatVersionOrder_Updater) VersionTime(newVal int) *__ChatVersionOrder_Updater {
-	up := updateCol{" VersionTime = " + u.nextDollar(), newVal}
+func (u *__Followed_Updater) Id(newVal int) *__Followed_Updater {
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" VersionTime = " + u.nextDollar()] = newVal
+	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) VersionTime_Increment(count int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) Id_Increment(count int) *__Followed_Updater {
 	if count > 0 {
-		up := updateCol{" VersionTime = VersionTime+ " + u.nextDollar(), count}
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" VersionTime = VersionTime+ " + u.nextDollar()] = count
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" VersionTime = VersionTime- " + u.nextDollar(), count}
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" VersionTime = VersionTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1600,14 +1623,14 @@ func (u *__ChatVersionOrder_Updater) VersionTime_Increment(count int) *__ChatVer
 
 //ints
 
-func (u *__ChatVersionOrder_Updater) UserId(newVal int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) UserId(newVal int) *__Followed_Updater {
 	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) UserId_Increment(count int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) UserId_Increment(count int) *__Followed_Updater {
 	if count > 0 {
 		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1627,24 +1650,24 @@ func (u *__ChatVersionOrder_Updater) UserId_Increment(count int) *__ChatVersionO
 
 //ints
 
-func (u *__ChatVersionOrder_Updater) ChatId(newVal int) *__ChatVersionOrder_Updater {
-	up := updateCol{" ChatId = " + u.nextDollar(), newVal}
+func (u *__Followed_Updater) FollowedUserId(newVal int) *__Followed_Updater {
+	up := updateCol{" FollowedUserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" ChatId = " + u.nextDollar()] = newVal
+	// u.updates[" FollowedUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) ChatId_Increment(count int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) FollowedUserId_Increment(count int) *__Followed_Updater {
 	if count > 0 {
-		up := updateCol{" ChatId = ChatId+ " + u.nextDollar(), count}
+		up := updateCol{" FollowedUserId = FollowedUserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" ChatId = ChatId+ " + u.nextDollar()] = count
+		//u.updates[" FollowedUserId = FollowedUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" ChatId = ChatId- " + u.nextDollar(), count}
+		up := updateCol{" FollowedUserId = FollowedUserId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" ChatId = ChatId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" FollowedUserId = FollowedUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1654,24 +1677,24 @@ func (u *__ChatVersionOrder_Updater) ChatId_Increment(count int) *__ChatVersionO
 
 //ints
 
-func (u *__ChatVersionOrder_Updater) OrderTime(newVal int) *__ChatVersionOrder_Updater {
-	up := updateCol{" OrderTime = " + u.nextDollar(), newVal}
+func (u *__Followed_Updater) CreatedTime(newVal int) *__Followed_Updater {
+	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" OrderTime = " + u.nextDollar()] = newVal
+	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__ChatVersionOrder_Updater) OrderTime_Increment(count int) *__ChatVersionOrder_Updater {
+func (u *__Followed_Updater) CreatedTime_Increment(count int) *__Followed_Updater {
 	if count > 0 {
-		up := updateCol{" OrderTime = OrderTime+ " + u.nextDollar(), count}
+		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" OrderTime = OrderTime+ " + u.nextDollar()] = count
+		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" OrderTime = OrderTime- " + u.nextDollar(), count}
+		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" OrderTime = OrderTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1684,86 +1707,86 @@ func (u *__ChatVersionOrder_Updater) OrderTime_Increment(count int) *__ChatVersi
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__ChatVersionOrder_Selector) OrderBy_VersionTime_Desc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY VersionTime DESC "
+func (u *__Followed_Selector) OrderBy_Id_Desc() *__Followed_Selector {
+	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_VersionTime_Asc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY VersionTime ASC "
+func (u *__Followed_Selector) OrderBy_Id_Asc() *__Followed_Selector {
+	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Select_VersionTime() *__ChatVersionOrder_Selector {
-	u.selectCol = "VersionTime"
+func (u *__Followed_Selector) Select_Id() *__Followed_Selector {
+	u.selectCol = "Id"
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_UserId_Desc() *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) OrderBy_UserId_Desc() *__Followed_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_UserId_Asc() *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) OrderBy_UserId_Asc() *__Followed_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Select_UserId() *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Select_UserId() *__Followed_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_ChatId_Desc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY ChatId DESC "
+func (u *__Followed_Selector) OrderBy_FollowedUserId_Desc() *__Followed_Selector {
+	u.orderBy = " ORDER BY FollowedUserId DESC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_ChatId_Asc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY ChatId ASC "
+func (u *__Followed_Selector) OrderBy_FollowedUserId_Asc() *__Followed_Selector {
+	u.orderBy = " ORDER BY FollowedUserId ASC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Select_ChatId() *__ChatVersionOrder_Selector {
-	u.selectCol = "ChatId"
+func (u *__Followed_Selector) Select_FollowedUserId() *__Followed_Selector {
+	u.selectCol = "FollowedUserId"
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_OrderTime_Desc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY OrderTime DESC "
+func (u *__Followed_Selector) OrderBy_CreatedTime_Desc() *__Followed_Selector {
+	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) OrderBy_OrderTime_Asc() *__ChatVersionOrder_Selector {
-	u.orderBy = " ORDER BY OrderTime ASC "
+func (u *__Followed_Selector) OrderBy_CreatedTime_Asc() *__Followed_Selector {
+	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Select_OrderTime() *__ChatVersionOrder_Selector {
-	u.selectCol = "OrderTime"
+func (u *__Followed_Selector) Select_CreatedTime() *__Followed_Selector {
+	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Limit(num int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Limit(num int) *__Followed_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Offset(num int) *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Offset(num int) *__Followed_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__ChatVersionOrder_Selector) Order_Rand() *__ChatVersionOrder_Selector {
+func (u *__Followed_Selector) Order_Rand() *__Followed_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__ChatVersionOrder_Selector) _stoSql() (string, []interface{}) {
+func (u *__Followed_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun_chat.chat_version_order"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.followed"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -1783,20 +1806,20 @@ func (u *__ChatVersionOrder_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__ChatVersionOrder_Selector) GetRow(db *sqlx.DB) (*ChatVersionOrder, error) {
+func (u *__Followed_Selector) GetRow(db *sqlx.DB) (*Followed, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &ChatVersionOrder{}
+	row := &Followed{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1804,25 +1827,25 @@ func (u *__ChatVersionOrder_Selector) GetRow(db *sqlx.DB) (*ChatVersionOrder, er
 
 	row._exists = true
 
-	OnChatVersionOrder_LoadOne(row)
+	OnFollowed_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__ChatVersionOrder_Selector) GetRows(db *sqlx.DB) ([]*ChatVersionOrder, error) {
+func (u *__Followed_Selector) GetRows(db *sqlx.DB) ([]*Followed, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*ChatVersionOrder
+	var rows []*Followed
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1836,25 +1859,25 @@ func (u *__ChatVersionOrder_Selector) GetRows(db *sqlx.DB) ([]*ChatVersionOrder,
 		rows[i]._exists = true
 	}
 
-	OnChatVersionOrder_LoadMany(rows)
+	OnFollowed_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__ChatVersionOrder_Selector) GetRows2(db *sqlx.DB) ([]ChatVersionOrder, error) {
+func (u *__Followed_Selector) GetRows2(db *sqlx.DB) ([]Followed, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*ChatVersionOrder
+	var rows []*Followed
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1868,9 +1891,9 @@ func (u *__ChatVersionOrder_Selector) GetRows2(db *sqlx.DB) ([]ChatVersionOrder,
 		rows[i]._exists = true
 	}
 
-	OnChatVersionOrder_LoadMany(rows)
+	OnFollowed_LoadMany(rows)
 
-	rows2 := make([]ChatVersionOrder, len(rows))
+	rows2 := make([]Followed, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -1879,12 +1902,12 @@ func (u *__ChatVersionOrder_Selector) GetRows2(db *sqlx.DB) ([]ChatVersionOrder,
 	return rows2, nil
 }
 
-func (u *__ChatVersionOrder_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__Followed_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -1892,7 +1915,7 @@ func (u *__ChatVersionOrder_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return "", err
@@ -1901,19 +1924,19 @@ func (u *__ChatVersionOrder_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__ChatVersionOrder_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__Followed_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1922,19 +1945,19 @@ func (u *__ChatVersionOrder_Selector) GetStringSlice(db *sqlx.DB) ([]string, err
 	return rows, nil
 }
 
-func (u *__ChatVersionOrder_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__Followed_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1943,19 +1966,19 @@ func (u *__ChatVersionOrder_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__ChatVersionOrder_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__Followed_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1965,7 +1988,7 @@ func (u *__ChatVersionOrder_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__ChatVersionOrder_Updater) Update(db XODB) (int, error) {
+func (u *__Followed_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -1986,18 +2009,18 @@ func (u *__ChatVersionOrder_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun_chat.chat_version_order SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.followed SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2005,7 +2028,7 @@ func (u *__ChatVersionOrder_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2014,7 +2037,7 @@ func (u *__ChatVersionOrder_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__ChatVersionOrder_Deleter) Delete(db XODB) (int, error) {
+func (d *__Followed_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2027,15 +2050,15 @@ func (d *__ChatVersionOrder_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun_chat.chat_version_order WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.followed WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2044,7 +2067,7 @@ func (d *__ChatVersionOrder_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2053,21 +2076,20 @@ func (d *__ChatVersionOrder_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  ChatVersionOrder ////////////////
+///////////////////////// Mass insert - replace for  Followed ////////////////
 
-func MassInsert_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
+func MassInsert_Followed(rows []Followed, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-
-	// insVals_:= strings.Repeat(s, ln)
-	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(4, ln, true)
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	insVals_ := strings.Repeat(s, ln)
+	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "INSERT INTO sun_chat.chat_version_order (" +
-		"VersionTime, UserId, ChatId, OrderTime" +
+	sqlstr := "INSERT INTO sun.followed (" +
+		"UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2075,19 +2097,18 @@ func MassInsert_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.VersionTime)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.ChatId)
-		vals = append(vals, row.OrderTime)
+		vals = append(vals, row.FollowedUserId)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return err
@@ -2096,18 +2117,15 @@ func MassInsert_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
 	return nil
 }
 
-func MassReplace_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
-	if len(rows) == 0 {
-		return errors.New("rows slice should not be empty - inserted nothing")
-	}
+func MassReplace_Followed(rows []Followed, db XODB) error {
 	var err error
 	ln := len(rows)
-	// insVals_:= strings.Repeat(s, ln)
-	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(4, ln, true)
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
+	insVals_ := strings.Repeat(s, ln)
+	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
-	sqlstr := "REPLACE INTO sun_chat.chat_version_order (" +
-		"VersionTime, UserId, ChatId, OrderTime" +
+	sqlstr := "REPLACE INTO sun.followed (" +
+		"UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2115,26 +2133,24 @@ func MassReplace_ChatVersionOrder(rows []ChatVersionOrder, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.VersionTime)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.ChatId)
-		vals = append(vals, row.OrderTime)
+		vals = append(vals, row.FollowedUserId)
+		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.Followed {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.ChatVersionOrder {
+		if LogTableSqlReq.Followed {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	return nil
-
 }
 
 //////////////////// Play ///////////////////////////////

@@ -4,9 +4,8 @@ import "ms/sun/shared/x"
 
 //var RpcAll = x.RPC_AllHandlersInteract{}
 var RpcAll = x.RPC_AllHandlersInteract{
-	RPC_Auth:  rpc_auth(0),
-	//RPC_Chat:  rpc_chat(0),
-	//RPC_Other: rpc_other(0),
+	RPC_Chat:  rpc_chat(0),
+	RPC_Other: rpc_other(0),
 }
 
 func init() {

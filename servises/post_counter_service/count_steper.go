@@ -37,7 +37,7 @@ func stepperProceedMap(mp map[int]int) {
 	if len(mp) == 0 {
 		return
 	}
-    fmt.Println("stepperProceedMap: ", mp)
+    fmt.Println("stepperProceedMap - with size: ", len(mp))
 
 	arrCnts := make([]*postCount, 0, len(mp))
 	for pid, cnt := range mp {

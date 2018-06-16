@@ -5,7 +5,7 @@ func PBConvPB__Action_To_Action( o *PB_Action) *Action {
      n := &Action{
       ActionId: int ( o.ActionId ),
       ActorUserId: int ( o.ActorUserId ),
-      ActionTypeEnum: int ( o.ActionTypeEnum ),
+      ActionType: int ( o.ActionType ),
       PeerUserId: int ( o.PeerUserId ),
       PostId: int ( o.PostId ),
       CommentId: int ( o.CommentId ),
@@ -19,11 +19,32 @@ func PBConvPB_Action_To_Action ( o *Action) *PB_Action {
      n := &PB_Action{
       ActionId: int64 ( o.ActionId ),
       ActorUserId: int32 ( o.ActorUserId ),
-      ActionTypeEnum: int32 ( o.ActionTypeEnum ),
+      ActionType: int32 ( o.ActionType ),
       PeerUserId: int32 ( o.PeerUserId ),
       PostId: int64 ( o.PostId ),
       CommentId: int64 ( o.CommentId ),
       Murmur64Hash: int64 ( o.Murmur64Hash ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__Blocked_To_Blocked( o *PB_Blocked) *Blocked {
+     n := &Blocked{
+      Id: int ( o.Id ),
+      UserId: int ( o.UserId ),
+      BlockedUserId: int ( o.BlockedUserId ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_Blocked_To_Blocked ( o *Blocked) *PB_Blocked {
+     n := &PB_Blocked{
+      Id: int64 ( o.Id ),
+      UserId: int32 ( o.UserId ),
+      BlockedUserId: int32 ( o.BlockedUserId ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -37,6 +58,7 @@ func PBConvPB__Comment_To_Comment( o *PB_Comment) *Comment {
       PostId: int ( o.PostId ),
       Text: string ( o.Text ),
       LikesCount: int ( o.LikesCount ),
+      IsEdited: int ( o.IsEdited ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
@@ -49,6 +71,7 @@ func PBConvPB_Comment_To_Comment ( o *Comment) *PB_Comment {
       PostId: int64 ( o.PostId ),
       Text: string ( o.Text ),
       LikesCount: int32 ( o.LikesCount ),
+      IsEdited: int32 ( o.IsEdited ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -107,6 +130,27 @@ func PBConvPB_Event_To_Event ( o *Event) *PB_Event {
 }
 */
 /*
+func PBConvPB__Followed_To_Followed( o *PB_Followed) *Followed {
+     n := &Followed{
+      Id: int ( o.Id ),
+      UserId: int ( o.UserId ),
+      FollowedUserId: int ( o.FollowedUserId ),
+      CreatedTime: int ( o.CreatedTime ),
+    }
+    return n
+}
+
+func PBConvPB_Followed_To_Followed ( o *Followed) *PB_Followed {
+     n := &PB_Followed{
+      Id: int64 ( o.Id ),
+      UserId: int32 ( o.UserId ),
+      FollowedUserId: int32 ( o.FollowedUserId ),
+      CreatedTime: int32 ( o.CreatedTime ),
+    }
+    return n
+}
+*/
+/*
 func PBConvPB__Like_To_Like( o *PB_Like) *Like {
      n := &Like{
       Id: int ( o.Id ),
@@ -137,7 +181,7 @@ func PBConvPB__Notify_To_Notify( o *PB_Notify) *Notify {
       NotifyId: int ( o.NotifyId ),
       ForUserId: int ( o.ForUserId ),
       ActorUserId: int ( o.ActorUserId ),
-      NotifyTypeEnum: int ( o.NotifyTypeEnum ),
+      NotifyType: int ( o.NotifyType ),
       PostId: int ( o.PostId ),
       CommentId: int ( o.CommentId ),
       PeerUserId: int ( o.PeerUserId ),
@@ -153,7 +197,7 @@ func PBConvPB_Notify_To_Notify ( o *Notify) *PB_Notify {
       NotifyId: int64 ( o.NotifyId ),
       ForUserId: int32 ( o.ForUserId ),
       ActorUserId: int32 ( o.ActorUserId ),
-      NotifyTypeEnum: int32 ( o.NotifyTypeEnum ),
+      NotifyType: int32 ( o.NotifyType ),
       PostId: int64 ( o.PostId ),
       CommentId: int64 ( o.CommentId ),
       PeerUserId: int32 ( o.PeerUserId ),
@@ -198,7 +242,7 @@ func PBConvPB__PhoneContact_To_PhoneContact( o *PB_PhoneContact) *PhoneContact {
 
 func PBConvPB_PhoneContact_To_PhoneContact ( o *PhoneContact) *PB_PhoneContact {
      n := &PB_PhoneContact{
-      Id: int32 ( o.Id ),
+      Id: int64 ( o.Id ),
       UserId: int32 ( o.UserId ),
       ClientId: int64 ( o.ClientId ),
       Phone: string ( o.Phone ),
@@ -389,8 +433,7 @@ func PBConvPB__PostMentioned_To_PostMentioned( o *PB_PostMentioned) *PostMention
       ForUserId: int ( o.ForUserId ),
       PostId: int ( o.PostId ),
       PostUserId: int ( o.PostUserId ),
-      PostTypeEnum: int ( o.PostTypeEnum ),
-      PostCategoryEnum: int ( o.PostCategoryEnum ),
+      PostType: int ( o.PostType ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
@@ -402,8 +445,7 @@ func PBConvPB_PostMentioned_To_PostMentioned ( o *PostMentioned) *PB_PostMention
       ForUserId: int32 ( o.ForUserId ),
       PostId: int64 ( o.PostId ),
       PostUserId: int32 ( o.PostUserId ),
-      PostTypeEnum: int32 ( o.PostTypeEnum ),
-      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
+      PostType: int32 ( o.PostType ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -413,11 +455,9 @@ func PBConvPB_PostMentioned_To_PostMentioned ( o *PostMentioned) *PB_PostMention
 func PBConvPB__PostReshared_To_PostReshared( o *PB_PostReshared) *PostReshared {
      n := &PostReshared{
       ResharedId: int ( o.ResharedId ),
-      ByUserId: int ( o.ByUserId ),
       PostId: int ( o.PostId ),
+      ByUserId: int ( o.ByUserId ),
       PostUserId: int ( o.PostUserId ),
-      PostTypeEnum: int ( o.PostTypeEnum ),
-      PostCategoryEnum: int ( o.PostCategoryEnum ),
       CreatedTime: int ( o.CreatedTime ),
     }
     return n
@@ -426,11 +466,9 @@ func PBConvPB__PostReshared_To_PostReshared( o *PB_PostReshared) *PostReshared {
 func PBConvPB_PostReshared_To_PostReshared ( o *PostReshared) *PB_PostReshared {
      n := &PB_PostReshared{
       ResharedId: int64 ( o.ResharedId ),
-      ByUserId: int32 ( o.ByUserId ),
       PostId: int64 ( o.PostId ),
+      ByUserId: int32 ( o.ByUserId ),
       PostUserId: int32 ( o.PostUserId ),
-      PostTypeEnum: int32 ( o.PostTypeEnum ),
-      PostCategoryEnum: int32 ( o.PostCategoryEnum ),
       CreatedTime: int32 ( o.CreatedTime ),
     }
     return n
@@ -459,59 +497,6 @@ func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
       AppVersion: int32 ( o.AppVersion ),
       ActiveTime: int32 ( o.ActiveTime ),
       CreatedTime: int32 ( o.CreatedTime ),
-    }
-    return n
-}
-*/
-/*
-func PBConvPB__SettingClient_To_SettingClient( o *PB_SettingClient) *SettingClient {
-     n := &SettingClient{
-      UserId: int ( o.UserId ),
-      AutoDownloadWifiVoice: int ( o.AutoDownloadWifiVoice ),
-      AutoDownloadWifiImage: int ( o.AutoDownloadWifiImage ),
-      AutoDownloadWifiVideo: int ( o.AutoDownloadWifiVideo ),
-      AutoDownloadWifiFile: int ( o.AutoDownloadWifiFile ),
-      AutoDownloadWifiMusic: int ( o.AutoDownloadWifiMusic ),
-      AutoDownloadWifiGif: int ( o.AutoDownloadWifiGif ),
-      AutoDownloadCellularVoice: int ( o.AutoDownloadCellularVoice ),
-      AutoDownloadCellularImage: int ( o.AutoDownloadCellularImage ),
-      AutoDownloadCellularVideo: int ( o.AutoDownloadCellularVideo ),
-      AutoDownloadCellularFile: int ( o.AutoDownloadCellularFile ),
-      AutoDownloadCellularMusic: int ( o.AutoDownloadCellularMusic ),
-      AutoDownloadCellularGif: int ( o.AutoDownloadCellularGif ),
-      AutoDownloadRoamingVoice: int ( o.AutoDownloadRoamingVoice ),
-      AutoDownloadRoamingImage: int ( o.AutoDownloadRoamingImage ),
-      AutoDownloadRoamingVideo: int ( o.AutoDownloadRoamingVideo ),
-      AutoDownloadRoamingFile: int ( o.AutoDownloadRoamingFile ),
-      AutoDownloadRoamingMusic: int ( o.AutoDownloadRoamingMusic ),
-      AutoDownloadRoamingGif: int ( o.AutoDownloadRoamingGif ),
-      SaveToGallery: int ( o.SaveToGallery ),
-    }
-    return n
-}
-
-func PBConvPB_SettingClient_To_SettingClient ( o *SettingClient) *PB_SettingClient {
-     n := &PB_SettingClient{
-      UserId: int32 ( o.UserId ),
-      AutoDownloadWifiVoice: int32 ( o.AutoDownloadWifiVoice ),
-      AutoDownloadWifiImage: int32 ( o.AutoDownloadWifiImage ),
-      AutoDownloadWifiVideo: int32 ( o.AutoDownloadWifiVideo ),
-      AutoDownloadWifiFile: int32 ( o.AutoDownloadWifiFile ),
-      AutoDownloadWifiMusic: int32 ( o.AutoDownloadWifiMusic ),
-      AutoDownloadWifiGif: int32 ( o.AutoDownloadWifiGif ),
-      AutoDownloadCellularVoice: int32 ( o.AutoDownloadCellularVoice ),
-      AutoDownloadCellularImage: int32 ( o.AutoDownloadCellularImage ),
-      AutoDownloadCellularVideo: int32 ( o.AutoDownloadCellularVideo ),
-      AutoDownloadCellularFile: int32 ( o.AutoDownloadCellularFile ),
-      AutoDownloadCellularMusic: int32 ( o.AutoDownloadCellularMusic ),
-      AutoDownloadCellularGif: int32 ( o.AutoDownloadCellularGif ),
-      AutoDownloadRoamingVoice: int32 ( o.AutoDownloadRoamingVoice ),
-      AutoDownloadRoamingImage: int32 ( o.AutoDownloadRoamingImage ),
-      AutoDownloadRoamingVideo: int32 ( o.AutoDownloadRoamingVideo ),
-      AutoDownloadRoamingFile: int32 ( o.AutoDownloadRoamingFile ),
-      AutoDownloadRoamingMusic: int32 ( o.AutoDownloadRoamingMusic ),
-      AutoDownloadRoamingGif: int32 ( o.AutoDownloadRoamingGif ),
-      SaveToGallery: int32 ( o.SaveToGallery ),
     }
     return n
 }
@@ -565,6 +550,45 @@ func PBConvPB_SettingNotification_To_SettingNotification ( o *SettingNotificatio
       DirectPopup: int32 ( o.DirectPopup ),
       DirectSound: int32 ( o.DirectSound ),
       DirectPriority: int32 ( o.DirectPriority ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__Sm_To_Sm( o *PB_Sm) *Sm {
+     n := &Sm{
+      Id: int ( o.Id ),
+      Hash: string ( o.Hash ),
+      ClientPhone: string ( o.ClientPhone ),
+      GenratedCode: int ( o.GenratedCode ),
+      SmsSenderNumber: string ( o.SmsSenderNumber ),
+      SmsSendStatues: string ( o.SmsSendStatues ),
+      Carrier: string ( o.Carrier ),
+      Country: []byte ( o.Country ),
+      IsValidPhone: int ( o.IsValidPhone ),
+      IsConfirmed: int ( o.IsConfirmed ),
+      IsLogin: int ( o.IsLogin ),
+      IsRegister: int ( o.IsRegister ),
+      RetriedCount: int ( o.RetriedCount ),
+    }
+    return n
+}
+
+func PBConvPB_Sm_To_Sm ( o *Sm) *PB_Sm {
+     n := &PB_Sm{
+      Id: int32 ( o.Id ),
+      Hash: string ( o.Hash ),
+      ClientPhone: string ( o.ClientPhone ),
+      GenratedCode: int32 ( o.GenratedCode ),
+      SmsSenderNumber: string ( o.SmsSenderNumber ),
+      SmsSendStatues: string ( o.SmsSendStatues ),
+      Carrier: string ( o.Carrier ),
+      Country: []byte ( o.Country ),
+      IsValidPhone: int32 ( o.IsValidPhone ),
+      IsConfirmed: int32 ( o.IsConfirmed ),
+      IsLogin: int32 ( o.IsLogin ),
+      IsRegister: int32 ( o.IsRegister ),
+      RetriedCount: int32 ( o.RetriedCount ),
     }
     return n
 }
@@ -654,6 +678,9 @@ func PBConvPB__User_To_User( o *PB_User) *User {
       AvatarId: int ( o.AvatarId ),
       ProfilePrivacy: int ( o.ProfilePrivacy ),
       OnlinePrivacy: int ( o.OnlinePrivacy ),
+      CallPrivacy: int ( o.CallPrivacy ),
+      AddToGroupPrivacy: int ( o.AddToGroupPrivacy ),
+      SeenMessagePrivacy: int ( o.SeenMessagePrivacy ),
       Phone: int ( o.Phone ),
       Email: string ( o.Email ),
       About: string ( o.About ),
@@ -695,6 +722,9 @@ func PBConvPB_User_To_User ( o *User) *PB_User {
       AvatarId: int64 ( o.AvatarId ),
       ProfilePrivacy: int32 ( o.ProfilePrivacy ),
       OnlinePrivacy: int32 ( o.OnlinePrivacy ),
+      CallPrivacy: int32 ( o.CallPrivacy ),
+      AddToGroupPrivacy: int32 ( o.AddToGroupPrivacy ),
+      SeenMessagePrivacy: int32 ( o.SeenMessagePrivacy ),
       Phone: int64 ( o.Phone ),
       Email: string ( o.Email ),
       About: string ( o.About ),
@@ -767,23 +797,29 @@ func PBConvPB__Chat_To_Chat( o *PB_Chat) *Chat {
       PeerUserId: int ( o.PeerUserId ),
       GroupId: int ( o.GroupId ),
       HashTagId: int ( o.HashTagId ),
-      StartedByMe: int ( o.StartedByMe ),
       Title: string ( o.Title ),
-      PinTime: int ( o.PinTime ),
+      PinTimeMs: int ( o.PinTimeMs ),
       FromMsgId: int ( o.FromMsgId ),
-      Seq: int ( o.Seq ),
       UnseenCount: int ( o.UnseenCount ),
+      Seq: int ( o.Seq ),
       LastMsgId: int ( o.LastMsgId ),
-      LastMsgStatus: int ( o.LastMsgStatus ),
-      SeenSeq: int ( o.SeenSeq ),
-      SeenMsgId: int ( o.SeenMsgId ),
-      LastMsgIdRecived: int ( o.LastMsgIdRecived ),
-      Left: int ( o.Left ),
-      Creator: int ( o.Creator ),
-      Kicked: int ( o.Kicked ),
-      Admin: int ( o.Admin ),
-      Deactivated: int ( o.Deactivated ),
-      VersionTime: int ( o.VersionTime ),
+      LastMyMsgStatus: int ( o.LastMyMsgStatus ),
+      MyLastSeenSeq: int ( o.MyLastSeenSeq ),
+      MyLastSeenMsgId: int ( o.MyLastSeenMsgId ),
+      PeerLastSeenMsgId: int ( o.PeerLastSeenMsgId ),
+      MyLastDeliveredSeq: int ( o.MyLastDeliveredSeq ),
+      MyLastDeliveredMsgId: int ( o.MyLastDeliveredMsgId ),
+      PeerLastDeliveredMsgId: int ( o.PeerLastDeliveredMsgId ),
+      IsActive: int ( o.IsActive ),
+      IsLeft: int ( o.IsLeft ),
+      IsCreator: int ( o.IsCreator ),
+      IsKicked: int ( o.IsKicked ),
+      IsAdmin: int ( o.IsAdmin ),
+      IsDeactivated: int ( o.IsDeactivated ),
+      IsMuted: int ( o.IsMuted ),
+      MuteUntil: int ( o.MuteUntil ),
+      VersionTimeMs: int ( o.VersionTimeMs ),
+      VersionSeq: int ( o.VersionSeq ),
       OrderTime: int ( o.OrderTime ),
       CreatedTime: int ( o.CreatedTime ),
       DraftText: string ( o.DraftText ),
@@ -802,27 +838,50 @@ func PBConvPB_Chat_To_Chat ( o *Chat) *PB_Chat {
       PeerUserId: int32 ( o.PeerUserId ),
       GroupId: int64 ( o.GroupId ),
       HashTagId: int64 ( o.HashTagId ),
-      StartedByMe: int32 ( o.StartedByMe ),
       Title: string ( o.Title ),
-      PinTime: int64 ( o.PinTime ),
+      PinTimeMs: int64 ( o.PinTimeMs ),
       FromMsgId: int64 ( o.FromMsgId ),
-      Seq: int32 ( o.Seq ),
       UnseenCount: int32 ( o.UnseenCount ),
+      Seq: int32 ( o.Seq ),
       LastMsgId: int64 ( o.LastMsgId ),
-      LastMsgStatus: int32 ( o.LastMsgStatus ),
-      SeenSeq: int32 ( o.SeenSeq ),
-      SeenMsgId: int64 ( o.SeenMsgId ),
-      LastMsgIdRecived: int64 ( o.LastMsgIdRecived ),
-      Left: int32 ( o.Left ),
-      Creator: int32 ( o.Creator ),
-      Kicked: int32 ( o.Kicked ),
-      Admin: int32 ( o.Admin ),
-      Deactivated: int32 ( o.Deactivated ),
-      VersionTime: int32 ( o.VersionTime ),
+      LastMyMsgStatus: int32 ( o.LastMyMsgStatus ),
+      MyLastSeenSeq: int32 ( o.MyLastSeenSeq ),
+      MyLastSeenMsgId: int64 ( o.MyLastSeenMsgId ),
+      PeerLastSeenMsgId: int64 ( o.PeerLastSeenMsgId ),
+      MyLastDeliveredSeq: int32 ( o.MyLastDeliveredSeq ),
+      MyLastDeliveredMsgId: int64 ( o.MyLastDeliveredMsgId ),
+      PeerLastDeliveredMsgId: int64 ( o.PeerLastDeliveredMsgId ),
+      IsActive: int32 ( o.IsActive ),
+      IsLeft: int32 ( o.IsLeft ),
+      IsCreator: int32 ( o.IsCreator ),
+      IsKicked: int32 ( o.IsKicked ),
+      IsAdmin: int32 ( o.IsAdmin ),
+      IsDeactivated: int32 ( o.IsDeactivated ),
+      IsMuted: int32 ( o.IsMuted ),
+      MuteUntil: int32 ( o.MuteUntil ),
+      VersionTimeMs: int64 ( o.VersionTimeMs ),
+      VersionSeq: int32 ( o.VersionSeq ),
       OrderTime: int32 ( o.OrderTime ),
       CreatedTime: int32 ( o.CreatedTime ),
       DraftText: string ( o.DraftText ),
       DratReplyToMsgId: int64 ( o.DratReplyToMsgId ),
+    }
+    return n
+}
+*/
+/*
+func PBConvPB__ChatDeleted_To_ChatDeleted( o *PB_ChatDeleted) *ChatDeleted {
+     n := &ChatDeleted{
+      ChatId: int ( o.ChatId ),
+      RoomKey: string ( o.RoomKey ),
+    }
+    return n
+}
+
+func PBConvPB_ChatDeleted_To_ChatDeleted ( o *ChatDeleted) *PB_ChatDeleted {
+     n := &PB_ChatDeleted{
+      ChatId: int64 ( o.ChatId ),
+      RoomKey: string ( o.RoomKey ),
     }
     return n
 }
@@ -845,22 +904,20 @@ func PBConvPB_ChatLastMessage_To_ChatLastMessage ( o *ChatLastMessage) *PB_ChatL
 }
 */
 /*
-func PBConvPB__ChatVersionOrder_To_ChatVersionOrder( o *PB_ChatVersionOrder) *ChatVersionOrder {
-     n := &ChatVersionOrder{
-      VersionTime: int ( o.VersionTime ),
+func PBConvPB__ChatUserVersion_To_ChatUserVersion( o *PB_ChatUserVersion) *ChatUserVersion {
+     n := &ChatUserVersion{
       UserId: int ( o.UserId ),
       ChatId: int ( o.ChatId ),
-      OrderTime: int ( o.OrderTime ),
+      VersionTimeNano: int ( o.VersionTimeNano ),
     }
     return n
 }
 
-func PBConvPB_ChatVersionOrder_To_ChatVersionOrder ( o *ChatVersionOrder) *PB_ChatVersionOrder {
-     n := &PB_ChatVersionOrder{
-      VersionTime: int64 ( o.VersionTime ),
+func PBConvPB_ChatUserVersion_To_ChatUserVersion ( o *ChatUserVersion) *PB_ChatUserVersion {
+     n := &PB_ChatUserVersion{
       UserId: int32 ( o.UserId ),
-      ChatId: int32 ( o.ChatId ),
-      OrderTime: int32 ( o.OrderTime ),
+      ChatId: int64 ( o.ChatId ),
+      VersionTimeNano: int32 ( o.VersionTimeNano ),
     }
     return n
 }
@@ -883,11 +940,15 @@ func PBConvPB__Group_To_Group( o *PB_Group) *Group {
       AvatarRefId: int ( o.AvatarRefId ),
       AvatarCount: int ( o.AvatarCount ),
       About: string ( o.About ),
-      InviteLink: string ( o.InviteLink ),
+      InviteLinkHash: string ( o.InviteLinkHash ),
       MembersCount: int ( o.MembersCount ),
+      AdminsCount: int ( o.AdminsCount ),
+      ModeratorCounts: int ( o.ModeratorCounts ),
       SortTime: int ( o.SortTime ),
       CreatedTime: int ( o.CreatedTime ),
       IsMute: int ( o.IsMute ),
+      IsDeleted: int ( o.IsDeleted ),
+      IsBanned: int ( o.IsBanned ),
     }
     return n
 }
@@ -909,11 +970,15 @@ func PBConvPB_Group_To_Group ( o *Group) *PB_Group {
       AvatarRefId: int64 ( o.AvatarRefId ),
       AvatarCount: int32 ( o.AvatarCount ),
       About: string ( o.About ),
-      InviteLink: string ( o.InviteLink ),
+      InviteLinkHash: string ( o.InviteLinkHash ),
       MembersCount: int32 ( o.MembersCount ),
+      AdminsCount: int32 ( o.AdminsCount ),
+      ModeratorCounts: int32 ( o.ModeratorCounts ),
       SortTime: int32 ( o.SortTime ),
       CreatedTime: int32 ( o.CreatedTime ),
       IsMute: int32 ( o.IsMute ),
+      IsDeleted: int32 ( o.IsDeleted ),
+      IsBanned: int32 ( o.IsBanned ),
     }
     return n
 }

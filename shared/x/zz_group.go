@@ -30,11 +30,15 @@ type Group__ struct {
 	AvatarRefId     int    `json:"AvatarRefId"`     // AvatarRefId -
 	AvatarCount     int    `json:"AvatarCount"`     // AvatarCount -
 	About           string `json:"About"`           // About -
-	InviteLink      string `json:"InviteLink"`      // InviteLink -
+	InviteLinkHash  string `json:"InviteLinkHash"`  // InviteLinkHash -
 	MembersCount    int    `json:"MembersCount"`    // MembersCount -
+	AdminsCount     int    `json:"AdminsCount"`     // AdminsCount -
+	ModeratorCounts int    `json:"ModeratorCounts"` // ModeratorCounts -
 	SortTime        int    `json:"SortTime"`        // SortTime -
 	CreatedTime     int    `json:"CreatedTime"`     // CreatedTime -
 	IsMute          int    `json:"IsMute"`          // IsMute -
+	IsDeleted       int    `json:"IsDeleted"`       // IsDeleted -
+	IsBanned        int    `json:"IsBanned"`        // IsBanned -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -60,16 +64,16 @@ func (g *Group) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.group (` +
-		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute` +
+		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLinkHash, MembersCount, AdminsCount, ModeratorCounts, SortTime, CreatedTime, IsMute, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
+		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned)
 	}
-	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
+	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned)
 	if err != nil {
 		return err
 	}
@@ -89,16 +93,16 @@ func (g *Group) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.group (` +
-		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute` +
+		`GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLinkHash, MembersCount, AdminsCount, ModeratorCounts, SortTime, CreatedTime, IsMute, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
+		XOLog(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned)
 	}
-	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute)
+	_, err = db.Exec(sqlstr, g.GroupId, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.Group {
 			XOLogErr(err)
@@ -129,14 +133,14 @@ func (g *Group) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.group SET ` +
-		`GroupKey = ?, GroupName = ?, UserName = ?, IsSuperGroup = ?, HashTagId = ?, CreatorUserId = ?, GroupPrivacy = ?, HistoryViewAble = ?, Seq = ?, LastMsgId = ?, PinedMsgId = ?, AvatarRefId = ?, AvatarCount = ?, About = ?, InviteLink = ?, MembersCount = ?, SortTime = ?, CreatedTime = ?, IsMute = ?` +
+		`GroupKey = ?, GroupName = ?, UserName = ?, IsSuperGroup = ?, HashTagId = ?, CreatorUserId = ?, GroupPrivacy = ?, HistoryViewAble = ?, Seq = ?, LastMsgId = ?, PinedMsgId = ?, AvatarRefId = ?, AvatarCount = ?, About = ?, InviteLinkHash = ?, MembersCount = ?, AdminsCount = ?, ModeratorCounts = ?, SortTime = ?, CreatedTime = ?, IsMute = ?, IsDeleted = ?, IsBanned = ?` +
 		` WHERE GroupId = ?`
 
 	// run query
 	if LogTableSqlReq.Group {
-		XOLog(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute, g.GroupId)
+		XOLog(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned, g.GroupId)
 	}
-	_, err = db.Exec(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLink, g.MembersCount, g.SortTime, g.CreatedTime, g.IsMute, g.GroupId)
+	_, err = db.Exec(sqlstr, g.GroupKey, g.GroupName, g.UserName, g.IsSuperGroup, g.HashTagId, g.CreatorUserId, g.GroupPrivacy, g.HistoryViewAble, g.Seq, g.LastMsgId, g.PinedMsgId, g.AvatarRefId, g.AvatarCount, g.About, g.InviteLinkHash, g.MembersCount, g.AdminsCount, g.ModeratorCounts, g.SortTime, g.CreatedTime, g.IsMute, g.IsDeleted, g.IsBanned, g.GroupId)
 
 	if LogTableSqlReq.Group {
 		XOLogErr(err)
@@ -1537,6 +1541,216 @@ func (d *__Group_Deleter) MembersCount_GE(val int) *__Group_Deleter {
 	return d
 }
 
+func (u *__Group_Deleter) AdminsCount_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AdminsCount_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) AdminsCount_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) AdminsCount_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AdminsCount_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AdminsCount_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AdminsCount_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AdminsCount_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) AdminsCount_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) ModeratorCounts_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) ModeratorCounts_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) ModeratorCounts_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) ModeratorCounts_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) ModeratorCounts_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) ModeratorCounts_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) ModeratorCounts_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) ModeratorCounts_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) ModeratorCounts_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Deleter) SortTime_In(ins []int) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1847,6 +2061,216 @@ func (d *__Group_Deleter) IsMute_GE(val int) *__Group_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " IsMute >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) IsDeleted_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) IsDeleted_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) IsDeleted_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) IsDeleted_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsDeleted_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsDeleted_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsDeleted_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsDeleted_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsDeleted_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Deleter) IsBanned_In(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) IsBanned_Ins(ins ...int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Deleter) IsBanned_NotIn(ins []int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Deleter) IsBanned_Eq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsBanned_NotEq(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsBanned_LT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsBanned_LE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsBanned_GT(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Deleter) IsBanned_GE(val int) *__Group_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3131,6 +3555,216 @@ func (d *__Group_Updater) MembersCount_GE(val int) *__Group_Updater {
 	return d
 }
 
+func (u *__Group_Updater) AdminsCount_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AdminsCount_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) AdminsCount_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) AdminsCount_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AdminsCount_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AdminsCount_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AdminsCount_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AdminsCount_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) AdminsCount_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) ModeratorCounts_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) ModeratorCounts_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) ModeratorCounts_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) ModeratorCounts_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) ModeratorCounts_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) ModeratorCounts_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) ModeratorCounts_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) ModeratorCounts_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) ModeratorCounts_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Updater) SortTime_In(ins []int) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -3441,6 +4075,216 @@ func (d *__Group_Updater) IsMute_GE(val int) *__Group_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " IsMute >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) IsDeleted_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) IsDeleted_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) IsDeleted_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) IsDeleted_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsDeleted_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsDeleted_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsDeleted_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsDeleted_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsDeleted_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Updater) IsBanned_In(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) IsBanned_Ins(ins ...int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Updater) IsBanned_NotIn(ins []int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Updater) IsBanned_Eq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsBanned_NotEq(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsBanned_LT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsBanned_LE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsBanned_GT(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Updater) IsBanned_GE(val int) *__Group_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4725,6 +5569,216 @@ func (d *__Group_Selector) MembersCount_GE(val int) *__Group_Selector {
 	return d
 }
 
+func (u *__Group_Selector) AdminsCount_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AdminsCount_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) AdminsCount_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AdminsCount NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) AdminsCount_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AdminsCount_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AdminsCount_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AdminsCount_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AdminsCount_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) AdminsCount_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AdminsCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) ModeratorCounts_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) ModeratorCounts_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) ModeratorCounts_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " ModeratorCounts NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) ModeratorCounts_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) ModeratorCounts_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) ModeratorCounts_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) ModeratorCounts_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) ModeratorCounts_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) ModeratorCounts_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " ModeratorCounts >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Group_Selector) SortTime_In(ins []int) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -5040,6 +6094,216 @@ func (d *__Group_Selector) IsMute_GE(val int) *__Group_Selector {
 	return d
 }
 
+func (u *__Group_Selector) IsDeleted_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) IsDeleted_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) IsDeleted_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeleted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) IsDeleted_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsDeleted_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsDeleted_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsDeleted_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsDeleted_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsDeleted_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeleted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Group_Selector) IsBanned_In(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) IsBanned_Ins(ins ...int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Group_Selector) IsBanned_NotIn(ins []int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBanned NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Group_Selector) IsBanned_Eq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsBanned_NotEq(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsBanned_LT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsBanned_LE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsBanned_GT(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Group_Selector) IsBanned_GE(val int) *__Group_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBanned >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -5284,61 +6548,61 @@ func (d *__Group_Deleter) About_NotEq(val string) *__Group_Deleter {
 	return d
 }
 
-func (u *__Group_Deleter) InviteLink_In(ins []string) *__Group_Deleter {
+func (u *__Group_Deleter) InviteLinkHash_In(ins []string) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Deleter) InviteLink_NotIn(ins []string) *__Group_Deleter {
+func (u *__Group_Deleter) InviteLinkHash_NotIn(ins []string) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Group_Deleter) InviteLink_Like(val string) *__Group_Deleter {
+func (u *__Group_Deleter) InviteLinkHash_Like(val string) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink LIKE " + u.nextDollar()
+	w.condition = " InviteLinkHash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Deleter) InviteLink_Eq(val string) *__Group_Deleter {
+func (d *__Group_Deleter) InviteLinkHash_Eq(val string) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink = " + d.nextDollar()
+	w.condition = " InviteLinkHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Deleter) InviteLink_NotEq(val string) *__Group_Deleter {
+func (d *__Group_Deleter) InviteLinkHash_NotEq(val string) *__Group_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink != " + d.nextDollar()
+	w.condition = " InviteLinkHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5586,61 +6850,61 @@ func (d *__Group_Updater) About_NotEq(val string) *__Group_Updater {
 	return d
 }
 
-func (u *__Group_Updater) InviteLink_In(ins []string) *__Group_Updater {
+func (u *__Group_Updater) InviteLinkHash_In(ins []string) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Updater) InviteLink_NotIn(ins []string) *__Group_Updater {
+func (u *__Group_Updater) InviteLinkHash_NotIn(ins []string) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Group_Updater) InviteLink_Like(val string) *__Group_Updater {
+func (u *__Group_Updater) InviteLinkHash_Like(val string) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink LIKE " + u.nextDollar()
+	w.condition = " InviteLinkHash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Updater) InviteLink_Eq(val string) *__Group_Updater {
+func (d *__Group_Updater) InviteLinkHash_Eq(val string) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink = " + d.nextDollar()
+	w.condition = " InviteLinkHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Updater) InviteLink_NotEq(val string) *__Group_Updater {
+func (d *__Group_Updater) InviteLinkHash_NotEq(val string) *__Group_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink != " + d.nextDollar()
+	w.condition = " InviteLinkHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5888,61 +7152,61 @@ func (d *__Group_Selector) About_NotEq(val string) *__Group_Selector {
 	return d
 }
 
-func (u *__Group_Selector) InviteLink_In(ins []string) *__Group_Selector {
+func (u *__Group_Selector) InviteLinkHash_In(ins []string) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Group_Selector) InviteLink_NotIn(ins []string) *__Group_Selector {
+func (u *__Group_Selector) InviteLinkHash_NotIn(ins []string) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " InviteLink NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " InviteLinkHash NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Group_Selector) InviteLink_Like(val string) *__Group_Selector {
+func (u *__Group_Selector) InviteLinkHash_Like(val string) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink LIKE " + u.nextDollar()
+	w.condition = " InviteLinkHash LIKE " + u.nextDollar()
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Group_Selector) InviteLink_Eq(val string) *__Group_Selector {
+func (d *__Group_Selector) InviteLinkHash_Eq(val string) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink = " + d.nextDollar()
+	w.condition = " InviteLinkHash = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Group_Selector) InviteLink_NotEq(val string) *__Group_Selector {
+func (d *__Group_Selector) InviteLinkHash_NotEq(val string) *__Group_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " InviteLink != " + d.nextDollar()
+	w.condition = " InviteLinkHash != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6292,10 +7556,10 @@ func (u *__Group_Updater) About(newVal string) *__Group_Updater {
 //ints
 
 //string
-func (u *__Group_Updater) InviteLink(newVal string) *__Group_Updater {
-	up := updateCol{"InviteLink = " + u.nextDollar(), newVal}
+func (u *__Group_Updater) InviteLinkHash(newVal string) *__Group_Updater {
+	up := updateCol{"InviteLinkHash = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" InviteLink = "+ u.nextDollar()] = newVal
+	// u.updates[" InviteLinkHash = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -6319,6 +7583,60 @@ func (u *__Group_Updater) MembersCount_Increment(count int) *__Group_Updater {
 		up := updateCol{" MembersCount = MembersCount- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" MembersCount = MembersCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) AdminsCount(newVal int) *__Group_Updater {
+	up := updateCol{" AdminsCount = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AdminsCount = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) AdminsCount_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" AdminsCount = AdminsCount+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AdminsCount = AdminsCount+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" AdminsCount = AdminsCount- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AdminsCount = AdminsCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) ModeratorCounts(newVal int) *__Group_Updater {
+	up := updateCol{" ModeratorCounts = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" ModeratorCounts = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) ModeratorCounts_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" ModeratorCounts = ModeratorCounts+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" ModeratorCounts = ModeratorCounts+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" ModeratorCounts = ModeratorCounts- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" ModeratorCounts = ModeratorCounts- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6400,6 +7718,60 @@ func (u *__Group_Updater) IsMute_Increment(count int) *__Group_Updater {
 		up := updateCol{" IsMute = IsMute- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" IsMute = IsMute- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) IsDeleted(newVal int) *__Group_Updater {
+	up := updateCol{" IsDeleted = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsDeleted = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) IsDeleted_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" IsDeleted = IsDeleted+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsDeleted = IsDeleted+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsDeleted = IsDeleted- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsDeleted = IsDeleted- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Group_Updater) IsBanned(newVal int) *__Group_Updater {
+	up := updateCol{" IsBanned = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsBanned = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Group_Updater) IsBanned_Increment(count int) *__Group_Updater {
+	if count > 0 {
+		up := updateCol{" IsBanned = IsBanned+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsBanned = IsBanned+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsBanned = IsBanned- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsBanned = IsBanned- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6637,18 +8009,18 @@ func (u *__Group_Selector) Select_About() *__Group_Selector {
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_InviteLink_Desc() *__Group_Selector {
-	u.orderBy = " ORDER BY InviteLink DESC "
+func (u *__Group_Selector) OrderBy_InviteLinkHash_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY InviteLinkHash DESC "
 	return u
 }
 
-func (u *__Group_Selector) OrderBy_InviteLink_Asc() *__Group_Selector {
-	u.orderBy = " ORDER BY InviteLink ASC "
+func (u *__Group_Selector) OrderBy_InviteLinkHash_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY InviteLinkHash ASC "
 	return u
 }
 
-func (u *__Group_Selector) Select_InviteLink() *__Group_Selector {
-	u.selectCol = "InviteLink"
+func (u *__Group_Selector) Select_InviteLinkHash() *__Group_Selector {
+	u.selectCol = "InviteLinkHash"
 	return u
 }
 
@@ -6664,6 +8036,36 @@ func (u *__Group_Selector) OrderBy_MembersCount_Asc() *__Group_Selector {
 
 func (u *__Group_Selector) Select_MembersCount() *__Group_Selector {
 	u.selectCol = "MembersCount"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AdminsCount_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY AdminsCount DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_AdminsCount_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY AdminsCount ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_AdminsCount() *__Group_Selector {
+	u.selectCol = "AdminsCount"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_ModeratorCounts_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY ModeratorCounts DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_ModeratorCounts_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY ModeratorCounts ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_ModeratorCounts() *__Group_Selector {
+	u.selectCol = "ModeratorCounts"
 	return u
 }
 
@@ -6709,6 +8111,36 @@ func (u *__Group_Selector) OrderBy_IsMute_Asc() *__Group_Selector {
 
 func (u *__Group_Selector) Select_IsMute() *__Group_Selector {
 	u.selectCol = "IsMute"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_IsDeleted_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsDeleted DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_IsDeleted_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsDeleted ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_IsDeleted() *__Group_Selector {
+	u.selectCol = "IsDeleted"
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_IsBanned_Desc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsBanned DESC "
+	return u
+}
+
+func (u *__Group_Selector) OrderBy_IsBanned_Asc() *__Group_Selector {
+	u.orderBy = " ORDER BY IsBanned ASC "
+	return u
+}
+
+func (u *__Group_Selector) Select_IsBanned() *__Group_Selector {
+	u.selectCol = "IsBanned"
 	return u
 }
 
@@ -7032,10 +8464,10 @@ func MassInsert_Group(rows []Group, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(20, ln, true)
+	insVals := helper.SqlManyDollars(24, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.group (" +
-		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute" +
+		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLinkHash, MembersCount, AdminsCount, ModeratorCounts, SortTime, CreatedTime, IsMute, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -7058,11 +8490,15 @@ func MassInsert_Group(rows []Group, db XODB) error {
 		vals = append(vals, row.AvatarRefId)
 		vals = append(vals, row.AvatarCount)
 		vals = append(vals, row.About)
-		vals = append(vals, row.InviteLink)
+		vals = append(vals, row.InviteLinkHash)
 		vals = append(vals, row.MembersCount)
+		vals = append(vals, row.AdminsCount)
+		vals = append(vals, row.ModeratorCounts)
 		vals = append(vals, row.SortTime)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.IsMute)
+		vals = append(vals, row.IsDeleted)
+		vals = append(vals, row.IsBanned)
 
 	}
 
@@ -7088,10 +8524,10 @@ func MassReplace_Group(rows []Group, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(20, ln, true)
+	insVals := helper.SqlManyDollars(24, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.group (" +
-		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLink, MembersCount, SortTime, CreatedTime, IsMute" +
+		"GroupId, GroupKey, GroupName, UserName, IsSuperGroup, HashTagId, CreatorUserId, GroupPrivacy, HistoryViewAble, Seq, LastMsgId, PinedMsgId, AvatarRefId, AvatarCount, About, InviteLinkHash, MembersCount, AdminsCount, ModeratorCounts, SortTime, CreatedTime, IsMute, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -7114,11 +8550,15 @@ func MassReplace_Group(rows []Group, db XODB) error {
 		vals = append(vals, row.AvatarRefId)
 		vals = append(vals, row.AvatarCount)
 		vals = append(vals, row.About)
-		vals = append(vals, row.InviteLink)
+		vals = append(vals, row.InviteLinkHash)
 		vals = append(vals, row.MembersCount)
+		vals = append(vals, row.AdminsCount)
+		vals = append(vals, row.ModeratorCounts)
 		vals = append(vals, row.SortTime)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.IsMute)
+		vals = append(vals, row.IsDeleted)
+		vals = append(vals, row.IsBanned)
 
 	}
 
@@ -7138,6 +8578,14 @@ func MassReplace_Group(rows []Group, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
 
 //
 

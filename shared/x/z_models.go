@@ -2,14 +2,14 @@ package x
 
 // action 'Action'.
 type Action struct {
-	ActionId       int `db:"ActionId"`
-	ActorUserId    int `db:"ActorUserId"`
-	ActionTypeEnum int `db:"ActionTypeEnum"`
-	PeerUserId     int `db:"PeerUserId"`
-	PostId         int `db:"PostId"`
-	CommentId      int `db:"CommentId"`
-	Murmur64Hash   int `db:"Murmur64Hash"`
-	CreatedTime    int `db:"CreatedTime"`
+	ActionId     int `db:"ActionId"`
+	ActorUserId  int `db:"ActorUserId"`
+	ActionType   int `db:"ActionType"`
+	PeerUserId   int `db:"PeerUserId"`
+	PostId       int `db:"PostId"`
+	CommentId    int `db:"CommentId"`
+	Murmur64Hash int `db:"Murmur64Hash"`
+	CreatedTime  int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -18,11 +18,28 @@ type Action struct {
 := &x.Action {
 	ActionId: 0,
 	ActorUserId: 0,
-	ActionTypeEnum: 0,
+	ActionType: 0,
 	PeerUserId: 0,
 	PostId: 0,
 	CommentId: 0,
 	Murmur64Hash: 0,
+	CreatedTime: 0,
+*/
+// blocked 'Blocked'.
+type Blocked struct {
+	Id            int `db:"Id"`
+	UserId        int `db:"UserId"`
+	BlockedUserId int `db:"BlockedUserId"`
+	CreatedTime   int `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Blocked {
+	Id: 0,
+	UserId: 0,
+	BlockedUserId: 0,
 	CreatedTime: 0,
 */
 // comment 'Comment'.
@@ -32,6 +49,7 @@ type Comment struct {
 	PostId      int    `db:"PostId"`
 	Text        string `db:"Text"`
 	LikesCount  int    `db:"LikesCount"`
+	IsEdited    int    `db:"IsEdited"`
 	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
@@ -44,6 +62,7 @@ type Comment struct {
 	PostId: 0,
 	Text: "",
 	LikesCount: 0,
+	IsEdited: 0,
 	CreatedTime: 0,
 */
 // comment_deleted 'CommentDeleted'.
@@ -90,6 +109,23 @@ type Event struct {
 	MessageId: 0,
 	ReSharedId: 0,
 */
+// followed 'Followed'.
+type Followed struct {
+	Id             int `db:"Id"`
+	UserId         int `db:"UserId"`
+	FollowedUserId int `db:"FollowedUserId"`
+	CreatedTime    int `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Followed {
+	Id: 0,
+	UserId: 0,
+	FollowedUserId: 0,
+	CreatedTime: 0,
+*/
 // likes 'Like'.
 type Like struct {
 	Id           int `db:"Id"`
@@ -113,16 +149,16 @@ type Like struct {
 */
 // notify 'Notify'.
 type Notify struct {
-	NotifyId       int `db:"NotifyId"`
-	ForUserId      int `db:"ForUserId"`
-	ActorUserId    int `db:"ActorUserId"`
-	NotifyTypeEnum int `db:"NotifyTypeEnum"`
-	PostId         int `db:"PostId"`
-	CommentId      int `db:"CommentId"`
-	PeerUserId     int `db:"PeerUserId"`
-	Murmur64Hash   int `db:"Murmur64Hash"`
-	SeenStatus     int `db:"SeenStatus"`
-	CreatedTime    int `db:"CreatedTime"`
+	NotifyId     int `db:"NotifyId"`
+	ForUserId    int `db:"ForUserId"`
+	ActorUserId  int `db:"ActorUserId"`
+	NotifyType   int `db:"NotifyType"`
+	PostId       int `db:"PostId"`
+	CommentId    int `db:"CommentId"`
+	PeerUserId   int `db:"PeerUserId"`
+	Murmur64Hash int `db:"Murmur64Hash"`
+	SeenStatus   int `db:"SeenStatus"`
+	CreatedTime  int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -132,7 +168,7 @@ type Notify struct {
 	NotifyId: 0,
 	ForUserId: 0,
 	ActorUserId: 0,
-	NotifyTypeEnum: 0,
+	NotifyType: 0,
 	PostId: 0,
 	CommentId: 0,
 	PeerUserId: 0,
@@ -328,13 +364,12 @@ type PostMedia struct {
 */
 // post_mentioned 'PostMentioned'.
 type PostMentioned struct {
-	MentionedId      int `db:"MentionedId"`
-	ForUserId        int `db:"ForUserId"`
-	PostId           int `db:"PostId"`
-	PostUserId       int `db:"PostUserId"`
-	PostTypeEnum     int `db:"PostTypeEnum"`
-	PostCategoryEnum int `db:"PostCategoryEnum"`
-	CreatedTime      int `db:"CreatedTime"`
+	MentionedId int `db:"MentionedId"`
+	ForUserId   int `db:"ForUserId"`
+	PostId      int `db:"PostId"`
+	PostUserId  int `db:"PostUserId"`
+	PostType    int `db:"PostType"`
+	CreatedTime int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -345,19 +380,16 @@ type PostMentioned struct {
 	ForUserId: 0,
 	PostId: 0,
 	PostUserId: 0,
-	PostTypeEnum: 0,
-	PostCategoryEnum: 0,
+	PostType: 0,
 	CreatedTime: 0,
 */
 // post_reshared 'PostReshared'.
 type PostReshared struct {
-	ResharedId       int `db:"ResharedId"`
-	ByUserId         int `db:"ByUserId"`
-	PostId           int `db:"PostId"`
-	PostUserId       int `db:"PostUserId"`
-	PostTypeEnum     int `db:"PostTypeEnum"`
-	PostCategoryEnum int `db:"PostCategoryEnum"`
-	CreatedTime      int `db:"CreatedTime"`
+	ResharedId  int `db:"ResharedId"`
+	PostId      int `db:"PostId"`
+	ByUserId    int `db:"ByUserId"`
+	PostUserId  int `db:"PostUserId"`
+	CreatedTime int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -365,11 +397,9 @@ type PostReshared struct {
 /*
 := &x.PostReshared {
 	ResharedId: 0,
-	ByUserId: 0,
 	PostId: 0,
+	ByUserId: 0,
 	PostUserId: 0,
-	PostTypeEnum: 0,
-	PostCategoryEnum: 0,
 	CreatedTime: 0,
 */
 // session 'Session'.
@@ -394,55 +424,6 @@ type Session struct {
 	AppVersion: 0,
 	ActiveTime: 0,
 	CreatedTime: 0,
-*/
-// setting_client 'SettingClient'.
-type SettingClient struct {
-	UserId                    int `db:"UserId"`
-	AutoDownloadWifiVoice     int `db:"AutoDownloadWifiVoice"`
-	AutoDownloadWifiImage     int `db:"AutoDownloadWifiImage"`
-	AutoDownloadWifiVideo     int `db:"AutoDownloadWifiVideo"`
-	AutoDownloadWifiFile      int `db:"AutoDownloadWifiFile"`
-	AutoDownloadWifiMusic     int `db:"AutoDownloadWifiMusic"`
-	AutoDownloadWifiGif       int `db:"AutoDownloadWifiGif"`
-	AutoDownloadCellularVoice int `db:"AutoDownloadCellularVoice"`
-	AutoDownloadCellularImage int `db:"AutoDownloadCellularImage"`
-	AutoDownloadCellularVideo int `db:"AutoDownloadCellularVideo"`
-	AutoDownloadCellularFile  int `db:"AutoDownloadCellularFile"`
-	AutoDownloadCellularMusic int `db:"AutoDownloadCellularMusic"`
-	AutoDownloadCellularGif   int `db:"AutoDownloadCellularGif"`
-	AutoDownloadRoamingVoice  int `db:"AutoDownloadRoamingVoice"`
-	AutoDownloadRoamingImage  int `db:"AutoDownloadRoamingImage"`
-	AutoDownloadRoamingVideo  int `db:"AutoDownloadRoamingVideo"`
-	AutoDownloadRoamingFile   int `db:"AutoDownloadRoamingFile"`
-	AutoDownloadRoamingMusic  int `db:"AutoDownloadRoamingMusic"`
-	AutoDownloadRoamingGif    int `db:"AutoDownloadRoamingGif"`
-	SaveToGallery             int `db:"SaveToGallery"`
-
-	_exists, _deleted bool
-}
-
-/*
-:= &x.SettingClient {
-	UserId: 0,
-	AutoDownloadWifiVoice: 0,
-	AutoDownloadWifiImage: 0,
-	AutoDownloadWifiVideo: 0,
-	AutoDownloadWifiFile: 0,
-	AutoDownloadWifiMusic: 0,
-	AutoDownloadWifiGif: 0,
-	AutoDownloadCellularVoice: 0,
-	AutoDownloadCellularImage: 0,
-	AutoDownloadCellularVideo: 0,
-	AutoDownloadCellularFile: 0,
-	AutoDownloadCellularMusic: 0,
-	AutoDownloadCellularGif: 0,
-	AutoDownloadRoamingVoice: 0,
-	AutoDownloadRoamingImage: 0,
-	AutoDownloadRoamingVideo: 0,
-	AutoDownloadRoamingFile: 0,
-	AutoDownloadRoamingMusic: 0,
-	AutoDownloadRoamingGif: 0,
-	SaveToGallery: 0,
 */
 // setting_notifications 'SettingNotification'.
 type SettingNotification struct {
@@ -492,6 +473,41 @@ type SettingNotification struct {
 	DirectPopup: 0,
 	DirectSound: 0,
 	DirectPriority: 0,
+*/
+// sms 'Sm'.
+type Sm struct {
+	Id              uint   `db:"Id"`
+	Hash            string `db:"Hash"`
+	ClientPhone     string `db:"ClientPhone"`
+	GenratedCode    int    `db:"GenratedCode"`
+	SmsSenderNumber string `db:"SmsSenderNumber"`
+	SmsSendStatues  string `db:"SmsSendStatues"`
+	Carrier         string `db:"Carrier"`
+	Country         []byte `db:"Country"`
+	IsValidPhone    int    `db:"IsValidPhone"`
+	IsConfirmed     int    `db:"IsConfirmed"`
+	IsLogin         int    `db:"IsLogin"`
+	IsRegister      int    `db:"IsRegister"`
+	RetriedCount    int    `db:"RetriedCount"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.Sm {
+	Id: UNKNOWN,
+	Hash: "",
+	ClientPhone: "",
+	GenratedCode: 0,
+	SmsSenderNumber: "",
+	SmsSendStatues: "",
+	Carrier: "",
+	Country: []byte{},
+	IsValidPhone: 0,
+	IsConfirmed: 0,
+	IsLogin: 0,
+	IsRegister: 0,
+	RetriedCount: 0,
 */
 // tag 'Tag'.
 type Tag struct {
@@ -556,41 +572,44 @@ type TriggerLog struct {
 */
 // user 'User'.
 type User struct {
-	UserId         int    `db:"UserId"`
-	UserName       string `db:"UserName"`
-	UserNameLower  string `db:"UserNameLower"` //nojson
-	FirstName      string `db:"FirstName"`
-	LastName       string `db:"LastName"`
-	IsVerified     int    `db:"IsVerified"`
-	AvatarId       int    `db:"AvatarId"`
-	ProfilePrivacy int    `db:"ProfilePrivacy"`
-	OnlinePrivacy  int    `db:"OnlinePrivacy"`
-	Phone          int    `db:"Phone"`
-	Email          string `db:"Email"`
-	About          string `db:"About"`
-	PasswordHash   string `db:"PasswordHash"`
-	PasswordSalt   string `db:"PasswordSalt"`
-	PostSeq        int    `db:"PostSeq"`
-	FollowersCount int    `db:"FollowersCount"`
-	FollowingCount int    `db:"FollowingCount"`
-	PostsCount     int    `db:"PostsCount"`
-	MediaCount     int    `db:"MediaCount"`
-	PhotoCount     int    `db:"PhotoCount"`
-	VideoCount     int    `db:"VideoCount"`
-	GifCount       int    `db:"GifCount"`
-	AudioCount     int    `db:"AudioCount"`
-	VoiceCount     int    `db:"VoiceCount"`
-	FileCount      int    `db:"FileCount"`
-	LinkCount      int    `db:"LinkCount"`
-	BoardCount     int    `db:"BoardCount"`
-	PinedCount     int    `db:"PinedCount"`
-	LikesCount     int    `db:"LikesCount"`
-	ResharedCount  int    `db:"ResharedCount"`
-	LastPostTime   int    `db:"LastPostTime"`
-	CreatedTime    int    `db:"CreatedTime"`
-	VersionTime    int    `db:"VersionTime"`
-	IsDeleted      int    `db:"IsDeleted"`
-	IsBanned       int    `db:"IsBanned"`
+	UserId             int    `db:"UserId"`
+	UserName           string `db:"UserName"`
+	UserNameLower      string `db:"UserNameLower"` //nojson
+	FirstName          string `db:"FirstName"`
+	LastName           string `db:"LastName"`
+	IsVerified         int    `db:"IsVerified"`
+	AvatarId           int    `db:"AvatarId"`
+	ProfilePrivacy     int    `db:"ProfilePrivacy"`
+	OnlinePrivacy      int    `db:"OnlinePrivacy"`
+	CallPrivacy        int    `db:"CallPrivacy"`
+	AddToGroupPrivacy  int    `db:"AddToGroupPrivacy"`
+	SeenMessagePrivacy int    `db:"SeenMessagePrivacy"`
+	Phone              int    `db:"Phone"`
+	Email              string `db:"Email"`
+	About              string `db:"About"`
+	PasswordHash       string `db:"PasswordHash"`
+	PasswordSalt       string `db:"PasswordSalt"`
+	PostSeq            int    `db:"PostSeq"`
+	FollowersCount     int    `db:"FollowersCount"`
+	FollowingCount     int    `db:"FollowingCount"`
+	PostsCount         int    `db:"PostsCount"`
+	MediaCount         int    `db:"MediaCount"`
+	PhotoCount         int    `db:"PhotoCount"`
+	VideoCount         int    `db:"VideoCount"`
+	GifCount           int    `db:"GifCount"`
+	AudioCount         int    `db:"AudioCount"`
+	VoiceCount         int    `db:"VoiceCount"`
+	FileCount          int    `db:"FileCount"`
+	LinkCount          int    `db:"LinkCount"`
+	BoardCount         int    `db:"BoardCount"`
+	PinedCount         int    `db:"PinedCount"`
+	LikesCount         int    `db:"LikesCount"`
+	ResharedCount      int    `db:"ResharedCount"`
+	LastPostTime       int    `db:"LastPostTime"`
+	CreatedTime        int    `db:"CreatedTime"`
+	VersionTime        int    `db:"VersionTime"`
+	IsDeleted          int    `db:"IsDeleted"`
+	IsBanned           int    `db:"IsBanned"`
 
 	_exists, _deleted bool
 }
@@ -606,6 +625,9 @@ type User struct {
 	AvatarId: 0,
 	ProfilePrivacy: 0,
 	OnlinePrivacy: 0,
+	CallPrivacy: 0,
+	AddToGroupPrivacy: 0,
+	SeenMessagePrivacy: 0,
 	Phone: 0,
 	Email: "",
 	About: "",
@@ -662,35 +684,41 @@ type UserRelation struct {
 */
 // chat 'Chat'.
 type Chat struct {
-	ChatId           int    `db:"ChatId"`
-	ChatKey          string `db:"ChatKey"`
-	RoomKey          string `db:"RoomKey"`
-	RoomType         int    `db:"RoomType"`
-	UserId           int    `db:"UserId"`
-	PeerUserId       int    `db:"PeerUserId"`
-	GroupId          int    `db:"GroupId"`
-	HashTagId        int    `db:"HashTagId"`
-	StartedByMe      int    `db:"StartedByMe"`
-	Title            string `db:"Title"`
-	PinTime          int    `db:"PinTime"`
-	FromMsgId        int    `db:"FromMsgId"`
-	Seq              int    `db:"Seq"`
-	UnseenCount      int    `db:"UnseenCount"`
-	LastMsgId        int    `db:"LastMsgId"`
-	LastMsgStatus    int    `db:"LastMsgStatus"`
-	SeenSeq          int    `db:"SeenSeq"`
-	SeenMsgId        int    `db:"SeenMsgId"`
-	LastMsgIdRecived int    `db:"LastMsgIdRecived"`
-	Left             int    `db:"Left"`
-	Creator          int    `db:"Creator"`
-	Kicked           int    `db:"Kicked"`
-	Admin            int    `db:"Admin"`
-	Deactivated      int    `db:"Deactivated"`
-	VersionTime      int    `db:"VersionTime"`
-	OrderTime        int    `db:"OrderTime"`
-	CreatedTime      int    `db:"CreatedTime"`
-	DraftText        string `db:"DraftText"`
-	DratReplyToMsgId int    `db:"DratReplyToMsgId"`
+	ChatId                 int    `db:"ChatId"`
+	ChatKey                string `db:"ChatKey"`
+	RoomKey                string `db:"RoomKey"`
+	RoomType               int    `db:"RoomType"`
+	UserId                 int    `db:"UserId"`
+	PeerUserId             int    `db:"PeerUserId"`
+	GroupId                int    `db:"GroupId"`
+	HashTagId              int    `db:"HashTagId"`
+	Title                  string `db:"Title"`
+	PinTimeMs              int    `db:"PinTimeMs"`
+	FromMsgId              int    `db:"FromMsgId"`
+	UnseenCount            int    `db:"UnseenCount"`
+	Seq                    int    `db:"Seq"`
+	LastMsgId              int    `db:"LastMsgId"`
+	LastMyMsgStatus        int    `db:"LastMyMsgStatus"`
+	MyLastSeenSeq          int    `db:"MyLastSeenSeq"`
+	MyLastSeenMsgId        int    `db:"MyLastSeenMsgId"`
+	PeerLastSeenMsgId      int    `db:"PeerLastSeenMsgId"`
+	MyLastDeliveredSeq     int    `db:"MyLastDeliveredSeq"`
+	MyLastDeliveredMsgId   int    `db:"MyLastDeliveredMsgId"`
+	PeerLastDeliveredMsgId int    `db:"PeerLastDeliveredMsgId"`
+	IsActive               int    `db:"IsActive"`
+	IsLeft                 int    `db:"IsLeft"`
+	IsCreator              int    `db:"IsCreator"`
+	IsKicked               int    `db:"IsKicked"`
+	IsAdmin                int    `db:"IsAdmin"`
+	IsDeactivated          int    `db:"IsDeactivated"`
+	IsMuted                int    `db:"IsMuted"`
+	MuteUntil              int    `db:"MuteUntil"`
+	VersionTimeMs          int    `db:"VersionTimeMs"`
+	VersionSeq             int    `db:"VersionSeq"`
+	OrderTime              int    `db:"OrderTime"`
+	CreatedTime            int    `db:"CreatedTime"`
+	DraftText              string `db:"DraftText"`
+	DratReplyToMsgId       int    `db:"DratReplyToMsgId"`
 
 	_exists, _deleted bool
 }
@@ -705,27 +733,46 @@ type Chat struct {
 	PeerUserId: 0,
 	GroupId: 0,
 	HashTagId: 0,
-	StartedByMe: 0,
 	Title: "",
-	PinTime: 0,
+	PinTimeMs: 0,
 	FromMsgId: 0,
-	Seq: 0,
 	UnseenCount: 0,
+	Seq: 0,
 	LastMsgId: 0,
-	LastMsgStatus: 0,
-	SeenSeq: 0,
-	SeenMsgId: 0,
-	LastMsgIdRecived: 0,
-	Left: 0,
-	Creator: 0,
-	Kicked: 0,
-	Admin: 0,
-	Deactivated: 0,
-	VersionTime: 0,
+	LastMyMsgStatus: 0,
+	MyLastSeenSeq: 0,
+	MyLastSeenMsgId: 0,
+	PeerLastSeenMsgId: 0,
+	MyLastDeliveredSeq: 0,
+	MyLastDeliveredMsgId: 0,
+	PeerLastDeliveredMsgId: 0,
+	IsActive: 0,
+	IsLeft: 0,
+	IsCreator: 0,
+	IsKicked: 0,
+	IsAdmin: 0,
+	IsDeactivated: 0,
+	IsMuted: 0,
+	MuteUntil: 0,
+	VersionTimeMs: 0,
+	VersionSeq: 0,
 	OrderTime: 0,
 	CreatedTime: 0,
 	DraftText: "",
 	DratReplyToMsgId: 0,
+*/
+// chat_deleted 'ChatDeleted'.
+type ChatDeleted struct {
+	ChatId  int    `db:"ChatId"`
+	RoomKey string `db:"RoomKey"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ChatDeleted {
+	ChatId: 0,
+	RoomKey: "",
 */
 // chat_last_message 'ChatLastMessage'.
 type ChatLastMessage struct {
@@ -740,22 +787,20 @@ type ChatLastMessage struct {
 	ChatIdGroupId: "",
 	LastMsgPb: []byte{},
 */
-// chat_version_order 'ChatVersionOrder'.
-type ChatVersionOrder struct {
-	VersionTime int `db:"VersionTime"`
-	UserId      int `db:"UserId"`
-	ChatId      int `db:"ChatId"`
-	OrderTime   int `db:"OrderTime"`
+// chat_user_version 'ChatUserVersion'.
+type ChatUserVersion struct {
+	UserId          int `db:"UserId"`
+	ChatId          int `db:"ChatId"`
+	VersionTimeNano int `db:"VersionTimeNano"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &x.ChatVersionOrder {
-	VersionTime: 0,
+:= &x.ChatUserVersion {
 	UserId: 0,
 	ChatId: 0,
-	OrderTime: 0,
+	VersionTimeNano: 0,
 */
 // group 'Group'.
 type Group struct {
@@ -774,11 +819,15 @@ type Group struct {
 	AvatarRefId     int    `db:"AvatarRefId"`
 	AvatarCount     int    `db:"AvatarCount"`
 	About           string `db:"About"`
-	InviteLink      string `db:"InviteLink"`
+	InviteLinkHash  string `db:"InviteLinkHash"`
 	MembersCount    int    `db:"MembersCount"`
+	AdminsCount     int    `db:"AdminsCount"`
+	ModeratorCounts int    `db:"ModeratorCounts"`
 	SortTime        int    `db:"SortTime"`
 	CreatedTime     int    `db:"CreatedTime"`
 	IsMute          int    `db:"IsMute"`
+	IsDeleted       int    `db:"IsDeleted"`
+	IsBanned        int    `db:"IsBanned"`
 
 	_exists, _deleted bool
 }
@@ -800,11 +849,15 @@ type Group struct {
 	AvatarRefId: 0,
 	AvatarCount: 0,
 	About: "",
-	InviteLink: "",
+	InviteLinkHash: "",
 	MembersCount: 0,
+	AdminsCount: 0,
+	ModeratorCounts: 0,
 	SortTime: 0,
 	CreatedTime: 0,
 	IsMute: 0,
+	IsDeleted: 0,
+	IsBanned: 0,
 */
 // group_member 'GroupMember'.
 type GroupMember struct {
@@ -1142,9 +1195,11 @@ type InvalidateCache struct {
 ///////////////// Skip Loging Tables ////////////////
 type LogTableSql struct {
 	Action                 bool
+	Blocked                bool
 	Comment                bool
 	CommentDeleted         bool
 	Event                  bool
+	Followed               bool
 	Like                   bool
 	Notify                 bool
 	NotifyRemoved          bool
@@ -1158,16 +1213,17 @@ type LogTableSql struct {
 	PostMentioned          bool
 	PostReshared           bool
 	Session                bool
-	SettingClient          bool
 	SettingNotification    bool
+	Sm                     bool
 	Tag                    bool
 	TagPost                bool
 	TriggerLog             bool
 	User                   bool
 	UserRelation           bool
 	Chat                   bool
+	ChatDeleted            bool
 	ChatLastMessage        bool
-	ChatVersionOrder       bool
+	ChatUserVersion        bool
 	Group                  bool
 	GroupMember            bool
 	GroupOrderdUser        bool
@@ -1190,9 +1246,11 @@ type LogTableSql struct {
 var LogTableSqlReq = LogTableSql{
 
 	Action:                 true,
+	Blocked:                true,
 	Comment:                true,
 	CommentDeleted:         true,
 	Event:                  true,
+	Followed:               true,
 	Like:                   true,
 	Notify:                 true,
 	NotifyRemoved:          true,
@@ -1206,16 +1264,17 @@ var LogTableSqlReq = LogTableSql{
 	PostMentioned:          true,
 	PostReshared:           true,
 	Session:                true,
-	SettingClient:          true,
 	SettingNotification:    true,
+	Sm:                     true,
 	Tag:                    true,
 	TagPost:                true,
 	TriggerLog:             true,
 	User:                   true,
 	UserRelation:           true,
 	Chat:                   true,
+	ChatDeleted:            true,
 	ChatLastMessage:        true,
-	ChatVersionOrder:       true,
+	ChatUserVersion:        true,
 	Group:                  true,
 	GroupMember:            true,
 	GroupOrderdUser:        true,

@@ -8,7 +8,12 @@ It is generated from these files:
 	pb_changes.proto
 	pb_enum.proto
 	pb_global.proto
+	pb_rpc_auth2.proto
 	pb_rpc_chat.proto
+	pb_rpc_general.proto
+	pb_rpc_page.proto
+	pb_rpc_social.proto
+	pb_rpc_user.proto
 	pb_tables.proto
 	pb_views.proto
 
@@ -20,11 +25,18 @@ It has these top-level messages:
 	PB_CommandReachedToServer
 	PB_CommandReachedToClient
 	PB_ResponseToClient
+	RPC_Auth_Types
 	PB_RPC_Chat_Types
+	RPC_General_Types
+	RPC_Page_Types
+	RPC_Social_Types
+	RPC_User_Types
 	PB_Action
+	PB_Blocked
 	PB_Comment
 	PB_CommentDeleted
 	PB_Event
+	PB_Followed
 	PB_Like
 	PB_Notify
 	PB_NotifyRemoved
@@ -38,7 +50,6 @@ It has these top-level messages:
 	PB_PostMentioned
 	PB_PostReshared
 	PB_Session
-	PB_SettingClient
 	PB_SettingNotification
 	PB_Tag
 	PB_TagPost
@@ -46,8 +57,9 @@ It has these top-level messages:
 	PB_User
 	PB_UserRelation
 	PB_Chat
+	PB_ChatDeleted
 	PB_ChatLastMessage
-	PB_ChatVersionOrder
+	PB_ChatUserVersion
 	PB_Group
 	PB_GroupMember
 	PB_GroupOrderdUser
@@ -65,12 +77,26 @@ It has these top-level messages:
 	PB_XfileServiceMetricLog
 	PB_XfileServiceRequestLog
 	PB_InvalidateCache
+	PB_MediaView
+	PB_ActionView
+	PB_NotifyView
+	PB_CommentView
+	PB_PostView
 	PB_ChatView
 	PB_GroupView
 	PB_GroupMemberView
 	PB_MessageView
 	PB_FileRedView
 	PB_UserView
+	PB_SettingNotificationView
+	PB_AppConfig
+	PB_UserProfileView
+	PB_UserViewRowify
+	PB_PostViewRowify
+	PB_TagView
+	PB_TopTagWithSamplePosts
+	PB_SelfUserView
+	PB_Error
 */
 package x
 

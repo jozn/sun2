@@ -224,6 +224,24 @@ var PB_ResponseToClient__FOlD = &PB_ResponseToClient{
 	Data:         []byte{},
 }
 
+type RPC_Auth_Types_Flat struct {
+}
+
+//ToPB
+func (m *RPC_Auth_Types) ToFlat() *RPC_Auth_Types_Flat {
+	r := &RPC_Auth_Types_Flat{}
+	return r
+}
+
+//ToPB
+func (m *RPC_Auth_Types_Flat) ToPB() *RPC_Auth_Types {
+	r := &RPC_Auth_Types{}
+	return r
+}
+
+//folding
+var RPC_Auth_Types__FOlD = &RPC_Auth_Types{}
+
 type PB_RPC_Chat_Types_Flat struct {
 }
 
@@ -242,28 +260,100 @@ func (m *PB_RPC_Chat_Types_Flat) ToPB() *PB_RPC_Chat_Types {
 //folding
 var PB_RPC_Chat_Types__FOlD = &PB_RPC_Chat_Types{}
 
+type RPC_General_Types_Flat struct {
+}
+
+//ToPB
+func (m *RPC_General_Types) ToFlat() *RPC_General_Types_Flat {
+	r := &RPC_General_Types_Flat{}
+	return r
+}
+
+//ToPB
+func (m *RPC_General_Types_Flat) ToPB() *RPC_General_Types {
+	r := &RPC_General_Types{}
+	return r
+}
+
+//folding
+var RPC_General_Types__FOlD = &RPC_General_Types{}
+
+type RPC_Page_Types_Flat struct {
+}
+
+//ToPB
+func (m *RPC_Page_Types) ToFlat() *RPC_Page_Types_Flat {
+	r := &RPC_Page_Types_Flat{}
+	return r
+}
+
+//ToPB
+func (m *RPC_Page_Types_Flat) ToPB() *RPC_Page_Types {
+	r := &RPC_Page_Types{}
+	return r
+}
+
+//folding
+var RPC_Page_Types__FOlD = &RPC_Page_Types{}
+
+type RPC_Social_Types_Flat struct {
+}
+
+//ToPB
+func (m *RPC_Social_Types) ToFlat() *RPC_Social_Types_Flat {
+	r := &RPC_Social_Types_Flat{}
+	return r
+}
+
+//ToPB
+func (m *RPC_Social_Types_Flat) ToPB() *RPC_Social_Types {
+	r := &RPC_Social_Types{}
+	return r
+}
+
+//folding
+var RPC_Social_Types__FOlD = &RPC_Social_Types{}
+
+type RPC_User_Types_Flat struct {
+}
+
+//ToPB
+func (m *RPC_User_Types) ToFlat() *RPC_User_Types_Flat {
+	r := &RPC_User_Types_Flat{}
+	return r
+}
+
+//ToPB
+func (m *RPC_User_Types_Flat) ToPB() *RPC_User_Types {
+	r := &RPC_User_Types{}
+	return r
+}
+
+//folding
+var RPC_User_Types__FOlD = &RPC_User_Types{}
+
 type PB_Action_Flat struct {
-	ActionId       int
-	ActorUserId    int
-	ActionTypeEnum int
-	PeerUserId     int
-	PostId         int
-	CommentId      int
-	Murmur64Hash   int
-	CreatedTime    int
+	ActionId     int
+	ActorUserId  int
+	ActionType   int
+	PeerUserId   int
+	PostId       int
+	CommentId    int
+	Murmur64Hash int
+	CreatedTime  int
 }
 
 //ToPB
 func (m *PB_Action) ToFlat() *PB_Action_Flat {
 	r := &PB_Action_Flat{
-		ActionId:       int(m.ActionId),
-		ActorUserId:    int(m.ActorUserId),
-		ActionTypeEnum: int(m.ActionTypeEnum),
-		PeerUserId:     int(m.PeerUserId),
-		PostId:         int(m.PostId),
-		CommentId:      int(m.CommentId),
-		Murmur64Hash:   int(m.Murmur64Hash),
-		CreatedTime:    int(m.CreatedTime),
+		ActionId:     int(m.ActionId),
+		ActorUserId:  int(m.ActorUserId),
+		ActionType:   int(m.ActionType),
+		PeerUserId:   int(m.PeerUserId),
+		PostId:       int(m.PostId),
+		CommentId:    int(m.CommentId),
+		Murmur64Hash: int(m.Murmur64Hash),
+		CreatedTime:  int(m.CreatedTime),
 	}
 	return r
 }
@@ -271,28 +361,65 @@ func (m *PB_Action) ToFlat() *PB_Action_Flat {
 //ToPB
 func (m *PB_Action_Flat) ToPB() *PB_Action {
 	r := &PB_Action{
-		ActionId:       int64(m.ActionId),
-		ActorUserId:    int32(m.ActorUserId),
-		ActionTypeEnum: int32(m.ActionTypeEnum),
-		PeerUserId:     int32(m.PeerUserId),
-		PostId:         int64(m.PostId),
-		CommentId:      int64(m.CommentId),
-		Murmur64Hash:   int64(m.Murmur64Hash),
-		CreatedTime:    int32(m.CreatedTime),
+		ActionId:     int64(m.ActionId),
+		ActorUserId:  int32(m.ActorUserId),
+		ActionType:   int32(m.ActionType),
+		PeerUserId:   int32(m.PeerUserId),
+		PostId:       int64(m.PostId),
+		CommentId:    int64(m.CommentId),
+		Murmur64Hash: int64(m.Murmur64Hash),
+		CreatedTime:  int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_Action__FOlD = &PB_Action{
-	ActionId:       0,
-	ActorUserId:    0,
-	ActionTypeEnum: 0,
-	PeerUserId:     0,
-	PostId:         0,
-	CommentId:      0,
-	Murmur64Hash:   0,
-	CreatedTime:    0,
+	ActionId:     0,
+	ActorUserId:  0,
+	ActionType:   0,
+	PeerUserId:   0,
+	PostId:       0,
+	CommentId:    0,
+	Murmur64Hash: 0,
+	CreatedTime:  0,
+}
+
+type PB_Blocked_Flat struct {
+	Id            int
+	UserId        int
+	BlockedUserId int
+	CreatedTime   int
+}
+
+//ToPB
+func (m *PB_Blocked) ToFlat() *PB_Blocked_Flat {
+	r := &PB_Blocked_Flat{
+		Id:            int(m.Id),
+		UserId:        int(m.UserId),
+		BlockedUserId: int(m.BlockedUserId),
+		CreatedTime:   int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Blocked_Flat) ToPB() *PB_Blocked {
+	r := &PB_Blocked{
+		Id:            int64(m.Id),
+		UserId:        int32(m.UserId),
+		BlockedUserId: int32(m.BlockedUserId),
+		CreatedTime:   int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_Blocked__FOlD = &PB_Blocked{
+	Id:            0,
+	UserId:        0,
+	BlockedUserId: 0,
+	CreatedTime:   0,
 }
 
 type PB_Comment_Flat struct {
@@ -301,6 +428,7 @@ type PB_Comment_Flat struct {
 	PostId      int
 	Text        string
 	LikesCount  int
+	IsEdited    int
 	CreatedTime int
 }
 
@@ -312,6 +440,7 @@ func (m *PB_Comment) ToFlat() *PB_Comment_Flat {
 		PostId:      int(m.PostId),
 		Text:        m.Text,
 		LikesCount:  int(m.LikesCount),
+		IsEdited:    int(m.IsEdited),
 		CreatedTime: int(m.CreatedTime),
 	}
 	return r
@@ -325,6 +454,7 @@ func (m *PB_Comment_Flat) ToPB() *PB_Comment {
 		PostId:      int64(m.PostId),
 		Text:        m.Text,
 		LikesCount:  int32(m.LikesCount),
+		IsEdited:    int32(m.IsEdited),
 		CreatedTime: int32(m.CreatedTime),
 	}
 	return r
@@ -337,6 +467,7 @@ var PB_Comment__FOlD = &PB_Comment{
 	PostId:      0,
 	Text:        "",
 	LikesCount:  0,
+	IsEdited:    0,
 	CreatedTime: 0,
 }
 
@@ -434,6 +565,43 @@ var PB_Event__FOlD = &PB_Event{
 	ReSharedId:   0,
 }
 
+type PB_Followed_Flat struct {
+	Id             int
+	UserId         int
+	FollowedUserId int
+	CreatedTime    int
+}
+
+//ToPB
+func (m *PB_Followed) ToFlat() *PB_Followed_Flat {
+	r := &PB_Followed_Flat{
+		Id:             int(m.Id),
+		UserId:         int(m.UserId),
+		FollowedUserId: int(m.FollowedUserId),
+		CreatedTime:    int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Followed_Flat) ToPB() *PB_Followed {
+	r := &PB_Followed{
+		Id:             int64(m.Id),
+		UserId:         int32(m.UserId),
+		FollowedUserId: int32(m.FollowedUserId),
+		CreatedTime:    int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_Followed__FOlD = &PB_Followed{
+	Id:             0,
+	UserId:         0,
+	FollowedUserId: 0,
+	CreatedTime:    0,
+}
+
 type PB_Like_Flat struct {
 	Id           int
 	PostId       int
@@ -480,31 +648,31 @@ var PB_Like__FOlD = &PB_Like{
 }
 
 type PB_Notify_Flat struct {
-	NotifyId       int
-	ForUserId      int
-	ActorUserId    int
-	NotifyTypeEnum int
-	PostId         int
-	CommentId      int
-	PeerUserId     int
-	Murmur64Hash   int
-	SeenStatus     int
-	CreatedTime    int
+	NotifyId     int
+	ForUserId    int
+	ActorUserId  int
+	NotifyType   int
+	PostId       int
+	CommentId    int
+	PeerUserId   int
+	Murmur64Hash int
+	SeenStatus   int
+	CreatedTime  int
 }
 
 //ToPB
 func (m *PB_Notify) ToFlat() *PB_Notify_Flat {
 	r := &PB_Notify_Flat{
-		NotifyId:       int(m.NotifyId),
-		ForUserId:      int(m.ForUserId),
-		ActorUserId:    int(m.ActorUserId),
-		NotifyTypeEnum: int(m.NotifyTypeEnum),
-		PostId:         int(m.PostId),
-		CommentId:      int(m.CommentId),
-		PeerUserId:     int(m.PeerUserId),
-		Murmur64Hash:   int(m.Murmur64Hash),
-		SeenStatus:     int(m.SeenStatus),
-		CreatedTime:    int(m.CreatedTime),
+		NotifyId:     int(m.NotifyId),
+		ForUserId:    int(m.ForUserId),
+		ActorUserId:  int(m.ActorUserId),
+		NotifyType:   int(m.NotifyType),
+		PostId:       int(m.PostId),
+		CommentId:    int(m.CommentId),
+		PeerUserId:   int(m.PeerUserId),
+		Murmur64Hash: int(m.Murmur64Hash),
+		SeenStatus:   int(m.SeenStatus),
+		CreatedTime:  int(m.CreatedTime),
 	}
 	return r
 }
@@ -512,32 +680,32 @@ func (m *PB_Notify) ToFlat() *PB_Notify_Flat {
 //ToPB
 func (m *PB_Notify_Flat) ToPB() *PB_Notify {
 	r := &PB_Notify{
-		NotifyId:       int64(m.NotifyId),
-		ForUserId:      int32(m.ForUserId),
-		ActorUserId:    int32(m.ActorUserId),
-		NotifyTypeEnum: int32(m.NotifyTypeEnum),
-		PostId:         int64(m.PostId),
-		CommentId:      int64(m.CommentId),
-		PeerUserId:     int32(m.PeerUserId),
-		Murmur64Hash:   int64(m.Murmur64Hash),
-		SeenStatus:     int32(m.SeenStatus),
-		CreatedTime:    int32(m.CreatedTime),
+		NotifyId:     int64(m.NotifyId),
+		ForUserId:    int32(m.ForUserId),
+		ActorUserId:  int32(m.ActorUserId),
+		NotifyType:   int32(m.NotifyType),
+		PostId:       int64(m.PostId),
+		CommentId:    int64(m.CommentId),
+		PeerUserId:   int32(m.PeerUserId),
+		Murmur64Hash: int64(m.Murmur64Hash),
+		SeenStatus:   int32(m.SeenStatus),
+		CreatedTime:  int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_Notify__FOlD = &PB_Notify{
-	NotifyId:       0,
-	ForUserId:      0,
-	ActorUserId:    0,
-	NotifyTypeEnum: 0,
-	PostId:         0,
-	CommentId:      0,
-	PeerUserId:     0,
-	Murmur64Hash:   0,
-	SeenStatus:     0,
-	CreatedTime:    0,
+	NotifyId:     0,
+	ForUserId:    0,
+	ActorUserId:  0,
+	NotifyType:   0,
+	PostId:       0,
+	CommentId:    0,
+	PeerUserId:   0,
+	Murmur64Hash: 0,
+	SeenStatus:   0,
+	CreatedTime:  0,
 }
 
 type PB_NotifyRemoved_Flat struct {
@@ -598,7 +766,7 @@ func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
 //ToPB
 func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
 	r := &PB_PhoneContact{
-		Id:        int32(m.Id),
+		Id:        int64(m.Id),
 		UserId:    int32(m.UserId),
 		ClientId:  int64(m.ClientId),
 		Phone:     m.Phone,
@@ -937,25 +1105,23 @@ var PB_PostMedia__FOlD = &PB_PostMedia{
 }
 
 type PB_PostMentioned_Flat struct {
-	MentionedId      int
-	ForUserId        int
-	PostId           int
-	PostUserId       int
-	PostTypeEnum     int
-	PostCategoryEnum int
-	CreatedTime      int
+	MentionedId int
+	ForUserId   int
+	PostId      int
+	PostUserId  int
+	PostType    int
+	CreatedTime int
 }
 
 //ToPB
 func (m *PB_PostMentioned) ToFlat() *PB_PostMentioned_Flat {
 	r := &PB_PostMentioned_Flat{
-		MentionedId:      int(m.MentionedId),
-		ForUserId:        int(m.ForUserId),
-		PostId:           int(m.PostId),
-		PostUserId:       int(m.PostUserId),
-		PostTypeEnum:     int(m.PostTypeEnum),
-		PostCategoryEnum: int(m.PostCategoryEnum),
-		CreatedTime:      int(m.CreatedTime),
+		MentionedId: int(m.MentionedId),
+		ForUserId:   int(m.ForUserId),
+		PostId:      int(m.PostId),
+		PostUserId:  int(m.PostUserId),
+		PostType:    int(m.PostType),
+		CreatedTime: int(m.CreatedTime),
 	}
 	return r
 }
@@ -963,48 +1129,42 @@ func (m *PB_PostMentioned) ToFlat() *PB_PostMentioned_Flat {
 //ToPB
 func (m *PB_PostMentioned_Flat) ToPB() *PB_PostMentioned {
 	r := &PB_PostMentioned{
-		MentionedId:      int64(m.MentionedId),
-		ForUserId:        int32(m.ForUserId),
-		PostId:           int64(m.PostId),
-		PostUserId:       int32(m.PostUserId),
-		PostTypeEnum:     int32(m.PostTypeEnum),
-		PostCategoryEnum: int32(m.PostCategoryEnum),
-		CreatedTime:      int32(m.CreatedTime),
+		MentionedId: int64(m.MentionedId),
+		ForUserId:   int32(m.ForUserId),
+		PostId:      int64(m.PostId),
+		PostUserId:  int32(m.PostUserId),
+		PostType:    int32(m.PostType),
+		CreatedTime: int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_PostMentioned__FOlD = &PB_PostMentioned{
-	MentionedId:      0,
-	ForUserId:        0,
-	PostId:           0,
-	PostUserId:       0,
-	PostTypeEnum:     0,
-	PostCategoryEnum: 0,
-	CreatedTime:      0,
+	MentionedId: 0,
+	ForUserId:   0,
+	PostId:      0,
+	PostUserId:  0,
+	PostType:    0,
+	CreatedTime: 0,
 }
 
 type PB_PostReshared_Flat struct {
-	ResharedId       int
-	ByUserId         int
-	PostId           int
-	PostUserId       int
-	PostTypeEnum     int
-	PostCategoryEnum int
-	CreatedTime      int
+	ResharedId  int
+	PostId      int
+	ByUserId    int
+	PostUserId  int
+	CreatedTime int
 }
 
 //ToPB
 func (m *PB_PostReshared) ToFlat() *PB_PostReshared_Flat {
 	r := &PB_PostReshared_Flat{
-		ResharedId:       int(m.ResharedId),
-		ByUserId:         int(m.ByUserId),
-		PostId:           int(m.PostId),
-		PostUserId:       int(m.PostUserId),
-		PostTypeEnum:     int(m.PostTypeEnum),
-		PostCategoryEnum: int(m.PostCategoryEnum),
-		CreatedTime:      int(m.CreatedTime),
+		ResharedId:  int(m.ResharedId),
+		PostId:      int(m.PostId),
+		ByUserId:    int(m.ByUserId),
+		PostUserId:  int(m.PostUserId),
+		CreatedTime: int(m.CreatedTime),
 	}
 	return r
 }
@@ -1012,26 +1172,22 @@ func (m *PB_PostReshared) ToFlat() *PB_PostReshared_Flat {
 //ToPB
 func (m *PB_PostReshared_Flat) ToPB() *PB_PostReshared {
 	r := &PB_PostReshared{
-		ResharedId:       int64(m.ResharedId),
-		ByUserId:         int32(m.ByUserId),
-		PostId:           int64(m.PostId),
-		PostUserId:       int32(m.PostUserId),
-		PostTypeEnum:     int32(m.PostTypeEnum),
-		PostCategoryEnum: int32(m.PostCategoryEnum),
-		CreatedTime:      int32(m.CreatedTime),
+		ResharedId:  int64(m.ResharedId),
+		PostId:      int64(m.PostId),
+		ByUserId:    int32(m.ByUserId),
+		PostUserId:  int32(m.PostUserId),
+		CreatedTime: int32(m.CreatedTime),
 	}
 	return r
 }
 
 //folding
 var PB_PostReshared__FOlD = &PB_PostReshared{
-	ResharedId:       0,
-	ByUserId:         0,
-	PostId:           0,
-	PostUserId:       0,
-	PostTypeEnum:     0,
-	PostCategoryEnum: 0,
-	CreatedTime:      0,
+	ResharedId:  0,
+	PostId:      0,
+	ByUserId:    0,
+	PostUserId:  0,
+	CreatedTime: 0,
 }
 
 type PB_Session_Flat struct {
@@ -1081,107 +1237,6 @@ var PB_Session__FOlD = &PB_Session{
 	AppVersion:    0,
 	ActiveTime:    0,
 	CreatedTime:   0,
-}
-
-type PB_SettingClient_Flat struct {
-	UserId                    int
-	AutoDownloadWifiVoice     int
-	AutoDownloadWifiImage     int
-	AutoDownloadWifiVideo     int
-	AutoDownloadWifiFile      int
-	AutoDownloadWifiMusic     int
-	AutoDownloadWifiGif       int
-	AutoDownloadCellularVoice int
-	AutoDownloadCellularImage int
-	AutoDownloadCellularVideo int
-	AutoDownloadCellularFile  int
-	AutoDownloadCellularMusic int
-	AutoDownloadCellularGif   int
-	AutoDownloadRoamingVoice  int
-	AutoDownloadRoamingImage  int
-	AutoDownloadRoamingVideo  int
-	AutoDownloadRoamingFile   int
-	AutoDownloadRoamingMusic  int
-	AutoDownloadRoamingGif    int
-	SaveToGallery             int
-}
-
-//ToPB
-func (m *PB_SettingClient) ToFlat() *PB_SettingClient_Flat {
-	r := &PB_SettingClient_Flat{
-		UserId:                    int(m.UserId),
-		AutoDownloadWifiVoice:     int(m.AutoDownloadWifiVoice),
-		AutoDownloadWifiImage:     int(m.AutoDownloadWifiImage),
-		AutoDownloadWifiVideo:     int(m.AutoDownloadWifiVideo),
-		AutoDownloadWifiFile:      int(m.AutoDownloadWifiFile),
-		AutoDownloadWifiMusic:     int(m.AutoDownloadWifiMusic),
-		AutoDownloadWifiGif:       int(m.AutoDownloadWifiGif),
-		AutoDownloadCellularVoice: int(m.AutoDownloadCellularVoice),
-		AutoDownloadCellularImage: int(m.AutoDownloadCellularImage),
-		AutoDownloadCellularVideo: int(m.AutoDownloadCellularVideo),
-		AutoDownloadCellularFile:  int(m.AutoDownloadCellularFile),
-		AutoDownloadCellularMusic: int(m.AutoDownloadCellularMusic),
-		AutoDownloadCellularGif:   int(m.AutoDownloadCellularGif),
-		AutoDownloadRoamingVoice:  int(m.AutoDownloadRoamingVoice),
-		AutoDownloadRoamingImage:  int(m.AutoDownloadRoamingImage),
-		AutoDownloadRoamingVideo:  int(m.AutoDownloadRoamingVideo),
-		AutoDownloadRoamingFile:   int(m.AutoDownloadRoamingFile),
-		AutoDownloadRoamingMusic:  int(m.AutoDownloadRoamingMusic),
-		AutoDownloadRoamingGif:    int(m.AutoDownloadRoamingGif),
-		SaveToGallery:             int(m.SaveToGallery),
-	}
-	return r
-}
-
-//ToPB
-func (m *PB_SettingClient_Flat) ToPB() *PB_SettingClient {
-	r := &PB_SettingClient{
-		UserId:                    int32(m.UserId),
-		AutoDownloadWifiVoice:     int32(m.AutoDownloadWifiVoice),
-		AutoDownloadWifiImage:     int32(m.AutoDownloadWifiImage),
-		AutoDownloadWifiVideo:     int32(m.AutoDownloadWifiVideo),
-		AutoDownloadWifiFile:      int32(m.AutoDownloadWifiFile),
-		AutoDownloadWifiMusic:     int32(m.AutoDownloadWifiMusic),
-		AutoDownloadWifiGif:       int32(m.AutoDownloadWifiGif),
-		AutoDownloadCellularVoice: int32(m.AutoDownloadCellularVoice),
-		AutoDownloadCellularImage: int32(m.AutoDownloadCellularImage),
-		AutoDownloadCellularVideo: int32(m.AutoDownloadCellularVideo),
-		AutoDownloadCellularFile:  int32(m.AutoDownloadCellularFile),
-		AutoDownloadCellularMusic: int32(m.AutoDownloadCellularMusic),
-		AutoDownloadCellularGif:   int32(m.AutoDownloadCellularGif),
-		AutoDownloadRoamingVoice:  int32(m.AutoDownloadRoamingVoice),
-		AutoDownloadRoamingImage:  int32(m.AutoDownloadRoamingImage),
-		AutoDownloadRoamingVideo:  int32(m.AutoDownloadRoamingVideo),
-		AutoDownloadRoamingFile:   int32(m.AutoDownloadRoamingFile),
-		AutoDownloadRoamingMusic:  int32(m.AutoDownloadRoamingMusic),
-		AutoDownloadRoamingGif:    int32(m.AutoDownloadRoamingGif),
-		SaveToGallery:             int32(m.SaveToGallery),
-	}
-	return r
-}
-
-//folding
-var PB_SettingClient__FOlD = &PB_SettingClient{
-	UserId:                    0,
-	AutoDownloadWifiVoice:     0,
-	AutoDownloadWifiImage:     0,
-	AutoDownloadWifiVideo:     0,
-	AutoDownloadWifiFile:      0,
-	AutoDownloadWifiMusic:     0,
-	AutoDownloadWifiGif:       0,
-	AutoDownloadCellularVoice: 0,
-	AutoDownloadCellularImage: 0,
-	AutoDownloadCellularVideo: 0,
-	AutoDownloadCellularFile:  0,
-	AutoDownloadCellularMusic: 0,
-	AutoDownloadCellularGif:   0,
-	AutoDownloadRoamingVoice:  0,
-	AutoDownloadRoamingImage:  0,
-	AutoDownloadRoamingVideo:  0,
-	AutoDownloadRoamingFile:   0,
-	AutoDownloadRoamingMusic:  0,
-	AutoDownloadRoamingGif:    0,
-	SaveToGallery:             0,
 }
 
 type PB_SettingNotification_Flat struct {
@@ -1417,81 +1472,87 @@ var PB_TriggerLog__FOlD = &PB_TriggerLog{
 }
 
 type PB_User_Flat struct {
-	UserId         int
-	UserName       string
-	UserNameLower  string
-	FirstName      string
-	LastName       string
-	IsVerified     int
-	AvatarId       int
-	ProfilePrivacy int
-	OnlinePrivacy  int
-	Phone          int
-	Email          string
-	About          string
-	PasswordHash   string
-	PasswordSalt   string
-	PostSeq        int
-	FollowersCount int
-	FollowingCount int
-	PostsCount     int
-	MediaCount     int
-	PhotoCount     int
-	VideoCount     int
-	GifCount       int
-	AudioCount     int
-	VoiceCount     int
-	FileCount      int
-	LinkCount      int
-	BoardCount     int
-	PinedCount     int
-	LikesCount     int
-	ResharedCount  int
-	LastPostTime   int
-	CreatedTime    int
-	VersionTime    int
-	IsDeleted      int
-	IsBanned       int
+	UserId             int
+	UserName           string
+	UserNameLower      string
+	FirstName          string
+	LastName           string
+	IsVerified         int
+	AvatarId           int
+	ProfilePrivacy     int
+	OnlinePrivacy      int
+	CallPrivacy        int
+	AddToGroupPrivacy  int
+	SeenMessagePrivacy int
+	Phone              int
+	Email              string
+	About              string
+	PasswordHash       string
+	PasswordSalt       string
+	PostSeq            int
+	FollowersCount     int
+	FollowingCount     int
+	PostsCount         int
+	MediaCount         int
+	PhotoCount         int
+	VideoCount         int
+	GifCount           int
+	AudioCount         int
+	VoiceCount         int
+	FileCount          int
+	LinkCount          int
+	BoardCount         int
+	PinedCount         int
+	LikesCount         int
+	ResharedCount      int
+	LastPostTime       int
+	CreatedTime        int
+	VersionTime        int
+	IsDeleted          int
+	IsBanned           int
 }
 
 //ToPB
 func (m *PB_User) ToFlat() *PB_User_Flat {
 	r := &PB_User_Flat{
-		UserId:         int(m.UserId),
-		UserName:       m.UserName,
-		UserNameLower:  m.UserNameLower,
-		FirstName:      m.FirstName,
-		LastName:       m.LastName,
-		IsVerified:     int(m.IsVerified),
-		AvatarId:       int(m.AvatarId),
-		ProfilePrivacy: int(m.ProfilePrivacy),
-		OnlinePrivacy:  int(m.OnlinePrivacy),
-		Phone:          int(m.Phone),
-		Email:          m.Email,
-		About:          m.About,
-		PasswordHash:   m.PasswordHash,
-		PasswordSalt:   m.PasswordSalt,
-		PostSeq:        int(m.PostSeq),
-		FollowersCount: int(m.FollowersCount),
-		FollowingCount: int(m.FollowingCount),
-		PostsCount:     int(m.PostsCount),
-		MediaCount:     int(m.MediaCount),
-		PhotoCount:     int(m.PhotoCount),
-		VideoCount:     int(m.VideoCount),
-		GifCount:       int(m.GifCount),
-		AudioCount:     int(m.AudioCount),
-		VoiceCount:     int(m.VoiceCount),
-		FileCount:      int(m.FileCount),
-		LinkCount:      int(m.LinkCount),
-		BoardCount:     int(m.BoardCount),
-		PinedCount:     int(m.PinedCount),
-		LikesCount:     int(m.LikesCount),
-		ResharedCount:  int(m.ResharedCount),
-		LastPostTime:   int(m.LastPostTime),
-		CreatedTime:    int(m.CreatedTime),
-		VersionTime:    int(m.VersionTime),
-		IsDeleted:      int(m.IsDeleted),
-		IsBanned:       int(m.IsBanned),
+		UserId:             int(m.UserId),
+		UserName:           m.UserName,
+		UserNameLower:      m.UserNameLower,
+		FirstName:          m.FirstName,
+		LastName:           m.LastName,
+		IsVerified:         int(m.IsVerified),
+		AvatarId:           int(m.AvatarId),
+		ProfilePrivacy:     int(m.ProfilePrivacy),
+		OnlinePrivacy:      int(m.OnlinePrivacy),
+		CallPrivacy:        int(m.CallPrivacy),
+		AddToGroupPrivacy:  int(m.AddToGroupPrivacy),
+		SeenMessagePrivacy: int(m.SeenMessagePrivacy),
+		Phone:              int(m.Phone),
+		Email:              m.Email,
+		About:              m.About,
+		PasswordHash:       m.PasswordHash,
+		PasswordSalt:       m.PasswordSalt,
+		PostSeq:            int(m.PostSeq),
+		FollowersCount:     int(m.FollowersCount),
+		FollowingCount:     int(m.FollowingCount),
+		PostsCount:         int(m.PostsCount),
+		MediaCount:         int(m.MediaCount),
+		PhotoCount:         int(m.PhotoCount),
+		VideoCount:         int(m.VideoCount),
+		GifCount:           int(m.GifCount),
+		AudioCount:         int(m.AudioCount),
+		VoiceCount:         int(m.VoiceCount),
+		FileCount:          int(m.FileCount),
+		LinkCount:          int(m.LinkCount),
+		BoardCount:         int(m.BoardCount),
+		PinedCount:         int(m.PinedCount),
+		LikesCount:         int(m.LikesCount),
+		ResharedCount:      int(m.ResharedCount),
+		LastPostTime:       int(m.LastPostTime),
+		CreatedTime:        int(m.CreatedTime),
+		VersionTime:        int(m.VersionTime),
+		IsDeleted:          int(m.IsDeleted),
+		IsBanned:           int(m.IsBanned),
 	}
 	return r
 }
@@ -1499,82 +1560,88 @@ func (m *PB_User) ToFlat() *PB_User_Flat {
 //ToPB
 func (m *PB_User_Flat) ToPB() *PB_User {
 	r := &PB_User{
-		UserId:         int32(m.UserId),
-		UserName:       m.UserName,
-		UserNameLower:  m.UserNameLower,
-		FirstName:      m.FirstName,
-		LastName:       m.LastName,
-		IsVerified:     int32(m.IsVerified),
-		AvatarId:       int64(m.AvatarId),
-		ProfilePrivacy: int32(m.ProfilePrivacy),
-		OnlinePrivacy:  int32(m.OnlinePrivacy),
-		Phone:          int64(m.Phone),
-		Email:          m.Email,
-		About:          m.About,
-		PasswordHash:   m.PasswordHash,
-		PasswordSalt:   m.PasswordSalt,
-		PostSeq:        int32(m.PostSeq),
-		FollowersCount: int32(m.FollowersCount),
-		FollowingCount: int32(m.FollowingCount),
-		PostsCount:     int32(m.PostsCount),
-		MediaCount:     int32(m.MediaCount),
-		PhotoCount:     int32(m.PhotoCount),
-		VideoCount:     int32(m.VideoCount),
-		GifCount:       int32(m.GifCount),
-		AudioCount:     int32(m.AudioCount),
-		VoiceCount:     int32(m.VoiceCount),
-		FileCount:      int32(m.FileCount),
-		LinkCount:      int32(m.LinkCount),
-		BoardCount:     int32(m.BoardCount),
-		PinedCount:     int32(m.PinedCount),
-		LikesCount:     int32(m.LikesCount),
-		ResharedCount:  int32(m.ResharedCount),
-		LastPostTime:   int32(m.LastPostTime),
-		CreatedTime:    int32(m.CreatedTime),
-		VersionTime:    int32(m.VersionTime),
-		IsDeleted:      int32(m.IsDeleted),
-		IsBanned:       int32(m.IsBanned),
+		UserId:             int32(m.UserId),
+		UserName:           m.UserName,
+		UserNameLower:      m.UserNameLower,
+		FirstName:          m.FirstName,
+		LastName:           m.LastName,
+		IsVerified:         int32(m.IsVerified),
+		AvatarId:           int64(m.AvatarId),
+		ProfilePrivacy:     int32(m.ProfilePrivacy),
+		OnlinePrivacy:      int32(m.OnlinePrivacy),
+		CallPrivacy:        int32(m.CallPrivacy),
+		AddToGroupPrivacy:  int32(m.AddToGroupPrivacy),
+		SeenMessagePrivacy: int32(m.SeenMessagePrivacy),
+		Phone:              int64(m.Phone),
+		Email:              m.Email,
+		About:              m.About,
+		PasswordHash:       m.PasswordHash,
+		PasswordSalt:       m.PasswordSalt,
+		PostSeq:            int32(m.PostSeq),
+		FollowersCount:     int32(m.FollowersCount),
+		FollowingCount:     int32(m.FollowingCount),
+		PostsCount:         int32(m.PostsCount),
+		MediaCount:         int32(m.MediaCount),
+		PhotoCount:         int32(m.PhotoCount),
+		VideoCount:         int32(m.VideoCount),
+		GifCount:           int32(m.GifCount),
+		AudioCount:         int32(m.AudioCount),
+		VoiceCount:         int32(m.VoiceCount),
+		FileCount:          int32(m.FileCount),
+		LinkCount:          int32(m.LinkCount),
+		BoardCount:         int32(m.BoardCount),
+		PinedCount:         int32(m.PinedCount),
+		LikesCount:         int32(m.LikesCount),
+		ResharedCount:      int32(m.ResharedCount),
+		LastPostTime:       int32(m.LastPostTime),
+		CreatedTime:        int32(m.CreatedTime),
+		VersionTime:        int32(m.VersionTime),
+		IsDeleted:          int32(m.IsDeleted),
+		IsBanned:           int32(m.IsBanned),
 	}
 	return r
 }
 
 //folding
 var PB_User__FOlD = &PB_User{
-	UserId:         0,
-	UserName:       "",
-	UserNameLower:  "",
-	FirstName:      "",
-	LastName:       "",
-	IsVerified:     0,
-	AvatarId:       0,
-	ProfilePrivacy: 0,
-	OnlinePrivacy:  0,
-	Phone:          0,
-	Email:          "",
-	About:          "",
-	PasswordHash:   "",
-	PasswordSalt:   "",
-	PostSeq:        0,
-	FollowersCount: 0,
-	FollowingCount: 0,
-	PostsCount:     0,
-	MediaCount:     0,
-	PhotoCount:     0,
-	VideoCount:     0,
-	GifCount:       0,
-	AudioCount:     0,
-	VoiceCount:     0,
-	FileCount:      0,
-	LinkCount:      0,
-	BoardCount:     0,
-	PinedCount:     0,
-	LikesCount:     0,
-	ResharedCount:  0,
-	LastPostTime:   0,
-	CreatedTime:    0,
-	VersionTime:    0,
-	IsDeleted:      0,
-	IsBanned:       0,
+	UserId:             0,
+	UserName:           "",
+	UserNameLower:      "",
+	FirstName:          "",
+	LastName:           "",
+	IsVerified:         0,
+	AvatarId:           0,
+	ProfilePrivacy:     0,
+	OnlinePrivacy:      0,
+	CallPrivacy:        0,
+	AddToGroupPrivacy:  0,
+	SeenMessagePrivacy: 0,
+	Phone:              0,
+	Email:              "",
+	About:              "",
+	PasswordHash:       "",
+	PasswordSalt:       "",
+	PostSeq:            0,
+	FollowersCount:     0,
+	FollowingCount:     0,
+	PostsCount:         0,
+	MediaCount:         0,
+	PhotoCount:         0,
+	VideoCount:         0,
+	GifCount:           0,
+	AudioCount:         0,
+	VoiceCount:         0,
+	FileCount:          0,
+	LinkCount:          0,
+	BoardCount:         0,
+	PinedCount:         0,
+	LikesCount:         0,
+	ResharedCount:      0,
+	LastPostTime:       0,
+	CreatedTime:        0,
+	VersionTime:        0,
+	IsDeleted:          0,
+	IsBanned:           0,
 }
 
 type PB_UserRelation_Flat struct {
@@ -1635,69 +1702,81 @@ var PB_UserRelation__FOlD = &PB_UserRelation{
 }
 
 type PB_Chat_Flat struct {
-	ChatId           int
-	ChatKey          string
-	RoomKey          string
-	RoomType         int
-	UserId           int
-	PeerUserId       int
-	GroupId          int
-	HashTagId        int
-	StartedByMe      int
-	Title            string
-	PinTime          int
-	FromMsgId        int
-	Seq              int
-	UnseenCount      int
-	LastMsgId        int
-	LastMsgStatus    int
-	SeenSeq          int
-	SeenMsgId        int
-	LastMsgIdRecived int
-	Left             int
-	Creator          int
-	Kicked           int
-	Admin            int
-	Deactivated      int
-	VersionTime      int
-	OrderTime        int
-	CreatedTime      int
-	DraftText        string
-	DratReplyToMsgId int
+	ChatId                 int
+	ChatKey                string
+	RoomKey                string
+	RoomType               int
+	UserId                 int
+	PeerUserId             int
+	GroupId                int
+	HashTagId              int
+	Title                  string
+	PinTimeMs              int
+	FromMsgId              int
+	UnseenCount            int
+	Seq                    int
+	LastMsgId              int
+	LastMyMsgStatus        int
+	MyLastSeenSeq          int
+	MyLastSeenMsgId        int
+	PeerLastSeenMsgId      int
+	MyLastDeliveredSeq     int
+	MyLastDeliveredMsgId   int
+	PeerLastDeliveredMsgId int
+	IsActive               int
+	IsLeft                 int
+	IsCreator              int
+	IsKicked               int
+	IsAdmin                int
+	IsDeactivated          int
+	IsMuted                int
+	MuteUntil              int
+	VersionTimeMs          int
+	VersionSeq             int
+	OrderTime              int
+	CreatedTime            int
+	DraftText              string
+	DratReplyToMsgId       int
 }
 
 //ToPB
 func (m *PB_Chat) ToFlat() *PB_Chat_Flat {
 	r := &PB_Chat_Flat{
-		ChatId:           int(m.ChatId),
-		ChatKey:          m.ChatKey,
-		RoomKey:          m.RoomKey,
-		RoomType:         int(m.RoomType),
-		UserId:           int(m.UserId),
-		PeerUserId:       int(m.PeerUserId),
-		GroupId:          int(m.GroupId),
-		HashTagId:        int(m.HashTagId),
-		StartedByMe:      int(m.StartedByMe),
-		Title:            m.Title,
-		PinTime:          int(m.PinTime),
-		FromMsgId:        int(m.FromMsgId),
-		Seq:              int(m.Seq),
-		UnseenCount:      int(m.UnseenCount),
-		LastMsgId:        int(m.LastMsgId),
-		LastMsgStatus:    int(m.LastMsgStatus),
-		SeenSeq:          int(m.SeenSeq),
-		SeenMsgId:        int(m.SeenMsgId),
-		LastMsgIdRecived: int(m.LastMsgIdRecived),
-		Left:             int(m.Left),
-		Creator:          int(m.Creator),
-		Kicked:           int(m.Kicked),
-		Admin:            int(m.Admin),
-		Deactivated:      int(m.Deactivated),
-		VersionTime:      int(m.VersionTime),
-		OrderTime:        int(m.OrderTime),
-		CreatedTime:      int(m.CreatedTime),
-		DraftText:        m.DraftText,
-		DratReplyToMsgId: int(m.DratReplyToMsgId),
+		ChatId:                 int(m.ChatId),
+		ChatKey:                m.ChatKey,
+		RoomKey:                m.RoomKey,
+		RoomType:               int(m.RoomType),
+		UserId:                 int(m.UserId),
+		PeerUserId:             int(m.PeerUserId),
+		GroupId:                int(m.GroupId),
+		HashTagId:              int(m.HashTagId),
+		Title:                  m.Title,
+		PinTimeMs:              int(m.PinTimeMs),
+		FromMsgId:              int(m.FromMsgId),
+		UnseenCount:            int(m.UnseenCount),
+		Seq:                    int(m.Seq),
+		LastMsgId:              int(m.LastMsgId),
+		LastMyMsgStatus:        int(m.LastMyMsgStatus),
+		MyLastSeenSeq:          int(m.MyLastSeenSeq),
+		MyLastSeenMsgId:        int(m.MyLastSeenMsgId),
+		PeerLastSeenMsgId:      int(m.PeerLastSeenMsgId),
+		MyLastDeliveredSeq:     int(m.MyLastDeliveredSeq),
+		MyLastDeliveredMsgId:   int(m.MyLastDeliveredMsgId),
+		PeerLastDeliveredMsgId: int(m.PeerLastDeliveredMsgId),
+		IsActive:               int(m.IsActive),
+		IsLeft:                 int(m.IsLeft),
+		IsCreator:              int(m.IsCreator),
+		IsKicked:               int(m.IsKicked),
+		IsAdmin:                int(m.IsAdmin),
+		IsDeactivated:          int(m.IsDeactivated),
+		IsMuted:                int(m.IsMuted),
+		MuteUntil:              int(m.MuteUntil),
+		VersionTimeMs:          int(m.VersionTimeMs),
+		VersionSeq:             int(m.VersionSeq),
+		OrderTime:              int(m.OrderTime),
+		CreatedTime:            int(m.CreatedTime),
+		DraftText:              m.DraftText,
+		DratReplyToMsgId:       int(m.DratReplyToMsgId),
 	}
 	return r
 }
@@ -1705,70 +1784,111 @@ func (m *PB_Chat) ToFlat() *PB_Chat_Flat {
 //ToPB
 func (m *PB_Chat_Flat) ToPB() *PB_Chat {
 	r := &PB_Chat{
-		ChatId:           int64(m.ChatId),
-		ChatKey:          m.ChatKey,
-		RoomKey:          m.RoomKey,
-		RoomType:         int32(m.RoomType),
-		UserId:           int32(m.UserId),
-		PeerUserId:       int32(m.PeerUserId),
-		GroupId:          int64(m.GroupId),
-		HashTagId:        int64(m.HashTagId),
-		StartedByMe:      int32(m.StartedByMe),
-		Title:            m.Title,
-		PinTime:          int64(m.PinTime),
-		FromMsgId:        int64(m.FromMsgId),
-		Seq:              int32(m.Seq),
-		UnseenCount:      int32(m.UnseenCount),
-		LastMsgId:        int64(m.LastMsgId),
-		LastMsgStatus:    int32(m.LastMsgStatus),
-		SeenSeq:          int32(m.SeenSeq),
-		SeenMsgId:        int64(m.SeenMsgId),
-		LastMsgIdRecived: int64(m.LastMsgIdRecived),
-		Left:             int32(m.Left),
-		Creator:          int32(m.Creator),
-		Kicked:           int32(m.Kicked),
-		Admin:            int32(m.Admin),
-		Deactivated:      int32(m.Deactivated),
-		VersionTime:      int32(m.VersionTime),
-		OrderTime:        int32(m.OrderTime),
-		CreatedTime:      int32(m.CreatedTime),
-		DraftText:        m.DraftText,
-		DratReplyToMsgId: int64(m.DratReplyToMsgId),
+		ChatId:                 int64(m.ChatId),
+		ChatKey:                m.ChatKey,
+		RoomKey:                m.RoomKey,
+		RoomType:               int32(m.RoomType),
+		UserId:                 int32(m.UserId),
+		PeerUserId:             int32(m.PeerUserId),
+		GroupId:                int64(m.GroupId),
+		HashTagId:              int64(m.HashTagId),
+		Title:                  m.Title,
+		PinTimeMs:              int64(m.PinTimeMs),
+		FromMsgId:              int64(m.FromMsgId),
+		UnseenCount:            int32(m.UnseenCount),
+		Seq:                    int32(m.Seq),
+		LastMsgId:              int64(m.LastMsgId),
+		LastMyMsgStatus:        int32(m.LastMyMsgStatus),
+		MyLastSeenSeq:          int32(m.MyLastSeenSeq),
+		MyLastSeenMsgId:        int64(m.MyLastSeenMsgId),
+		PeerLastSeenMsgId:      int64(m.PeerLastSeenMsgId),
+		MyLastDeliveredSeq:     int32(m.MyLastDeliveredSeq),
+		MyLastDeliveredMsgId:   int64(m.MyLastDeliveredMsgId),
+		PeerLastDeliveredMsgId: int64(m.PeerLastDeliveredMsgId),
+		IsActive:               int32(m.IsActive),
+		IsLeft:                 int32(m.IsLeft),
+		IsCreator:              int32(m.IsCreator),
+		IsKicked:               int32(m.IsKicked),
+		IsAdmin:                int32(m.IsAdmin),
+		IsDeactivated:          int32(m.IsDeactivated),
+		IsMuted:                int32(m.IsMuted),
+		MuteUntil:              int32(m.MuteUntil),
+		VersionTimeMs:          int64(m.VersionTimeMs),
+		VersionSeq:             int32(m.VersionSeq),
+		OrderTime:              int32(m.OrderTime),
+		CreatedTime:            int32(m.CreatedTime),
+		DraftText:              m.DraftText,
+		DratReplyToMsgId:       int64(m.DratReplyToMsgId),
 	}
 	return r
 }
 
 //folding
 var PB_Chat__FOlD = &PB_Chat{
-	ChatId:           0,
-	ChatKey:          "",
-	RoomKey:          "",
-	RoomType:         0,
-	UserId:           0,
-	PeerUserId:       0,
-	GroupId:          0,
-	HashTagId:        0,
-	StartedByMe:      0,
-	Title:            "",
-	PinTime:          0,
-	FromMsgId:        0,
-	Seq:              0,
-	UnseenCount:      0,
-	LastMsgId:        0,
-	LastMsgStatus:    0,
-	SeenSeq:          0,
-	SeenMsgId:        0,
-	LastMsgIdRecived: 0,
-	Left:             0,
-	Creator:          0,
-	Kicked:           0,
-	Admin:            0,
-	Deactivated:      0,
-	VersionTime:      0,
-	OrderTime:        0,
-	CreatedTime:      0,
-	DraftText:        "",
-	DratReplyToMsgId: 0,
+	ChatId:                 0,
+	ChatKey:                "",
+	RoomKey:                "",
+	RoomType:               0,
+	UserId:                 0,
+	PeerUserId:             0,
+	GroupId:                0,
+	HashTagId:              0,
+	Title:                  "",
+	PinTimeMs:              0,
+	FromMsgId:              0,
+	UnseenCount:            0,
+	Seq:                    0,
+	LastMsgId:              0,
+	LastMyMsgStatus:        0,
+	MyLastSeenSeq:          0,
+	MyLastSeenMsgId:        0,
+	PeerLastSeenMsgId:      0,
+	MyLastDeliveredSeq:     0,
+	MyLastDeliveredMsgId:   0,
+	PeerLastDeliveredMsgId: 0,
+	IsActive:               0,
+	IsLeft:                 0,
+	IsCreator:              0,
+	IsKicked:               0,
+	IsAdmin:                0,
+	IsDeactivated:          0,
+	IsMuted:                0,
+	MuteUntil:              0,
+	VersionTimeMs:          0,
+	VersionSeq:             0,
+	OrderTime:              0,
+	CreatedTime:            0,
+	DraftText:              "",
+	DratReplyToMsgId:       0,
+}
+
+type PB_ChatDeleted_Flat struct {
+	ChatId  int
+	RoomKey string
+}
+
+//ToPB
+func (m *PB_ChatDeleted) ToFlat() *PB_ChatDeleted_Flat {
+	r := &PB_ChatDeleted_Flat{
+		ChatId:  int(m.ChatId),
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_ChatDeleted_Flat) ToPB() *PB_ChatDeleted {
+	r := &PB_ChatDeleted{
+		ChatId:  int64(m.ChatId),
+		RoomKey: m.RoomKey,
+	}
+	return r
+}
+
+//folding
+var PB_ChatDeleted__FOlD = &PB_ChatDeleted{
+	ChatId:  0,
+	RoomKey: "",
 }
 
 type PB_ChatLastMessage_Flat struct {
@@ -1800,41 +1920,37 @@ var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
 	LastMsgPb:     []byte{},
 }
 
-type PB_ChatVersionOrder_Flat struct {
-	VersionTime int
-	UserId      int
-	ChatId      int
-	OrderTime   int
+type PB_ChatUserVersion_Flat struct {
+	UserId          int
+	ChatId          int
+	VersionTimeNano int
 }
 
 //ToPB
-func (m *PB_ChatVersionOrder) ToFlat() *PB_ChatVersionOrder_Flat {
-	r := &PB_ChatVersionOrder_Flat{
-		VersionTime: int(m.VersionTime),
-		UserId:      int(m.UserId),
-		ChatId:      int(m.ChatId),
-		OrderTime:   int(m.OrderTime),
+func (m *PB_ChatUserVersion) ToFlat() *PB_ChatUserVersion_Flat {
+	r := &PB_ChatUserVersion_Flat{
+		UserId:          int(m.UserId),
+		ChatId:          int(m.ChatId),
+		VersionTimeNano: int(m.VersionTimeNano),
 	}
 	return r
 }
 
 //ToPB
-func (m *PB_ChatVersionOrder_Flat) ToPB() *PB_ChatVersionOrder {
-	r := &PB_ChatVersionOrder{
-		VersionTime: int64(m.VersionTime),
-		UserId:      int32(m.UserId),
-		ChatId:      int32(m.ChatId),
-		OrderTime:   int32(m.OrderTime),
+func (m *PB_ChatUserVersion_Flat) ToPB() *PB_ChatUserVersion {
+	r := &PB_ChatUserVersion{
+		UserId:          int32(m.UserId),
+		ChatId:          int64(m.ChatId),
+		VersionTimeNano: int32(m.VersionTimeNano),
 	}
 	return r
 }
 
 //folding
-var PB_ChatVersionOrder__FOlD = &PB_ChatVersionOrder{
-	VersionTime: 0,
-	UserId:      0,
-	ChatId:      0,
-	OrderTime:   0,
+var PB_ChatUserVersion__FOlD = &PB_ChatUserVersion{
+	UserId:          0,
+	ChatId:          0,
+	VersionTimeNano: 0,
 }
 
 type PB_Group_Flat struct {
@@ -1853,11 +1969,15 @@ type PB_Group_Flat struct {
 	AvatarRefId     int
 	AvatarCount     int
 	About           string
-	InviteLink      string
+	InviteLinkHash  string
 	MembersCount    int
+	AdminsCount     int
+	ModeratorCounts int
 	SortTime        int
 	CreatedTime     int
 	IsMute          int
+	IsDeleted       int
+	IsBanned        int
 }
 
 //ToPB
@@ -1878,11 +1998,15 @@ func (m *PB_Group) ToFlat() *PB_Group_Flat {
 		AvatarRefId:     int(m.AvatarRefId),
 		AvatarCount:     int(m.AvatarCount),
 		About:           m.About,
-		InviteLink:      m.InviteLink,
+		InviteLinkHash:  m.InviteLinkHash,
 		MembersCount:    int(m.MembersCount),
+		AdminsCount:     int(m.AdminsCount),
+		ModeratorCounts: int(m.ModeratorCounts),
 		SortTime:        int(m.SortTime),
 		CreatedTime:     int(m.CreatedTime),
 		IsMute:          int(m.IsMute),
+		IsDeleted:       int(m.IsDeleted),
+		IsBanned:        int(m.IsBanned),
 	}
 	return r
 }
@@ -1905,11 +2029,15 @@ func (m *PB_Group_Flat) ToPB() *PB_Group {
 		AvatarRefId:     int64(m.AvatarRefId),
 		AvatarCount:     int32(m.AvatarCount),
 		About:           m.About,
-		InviteLink:      m.InviteLink,
+		InviteLinkHash:  m.InviteLinkHash,
 		MembersCount:    int32(m.MembersCount),
+		AdminsCount:     int32(m.AdminsCount),
+		ModeratorCounts: int32(m.ModeratorCounts),
 		SortTime:        int32(m.SortTime),
 		CreatedTime:     int32(m.CreatedTime),
 		IsMute:          int32(m.IsMute),
+		IsDeleted:       int32(m.IsDeleted),
+		IsBanned:        int32(m.IsBanned),
 	}
 	return r
 }
@@ -1931,11 +2059,15 @@ var PB_Group__FOlD = &PB_Group{
 	AvatarRefId:     0,
 	AvatarCount:     0,
 	About:           "",
-	InviteLink:      "",
+	InviteLinkHash:  "",
 	MembersCount:    0,
+	AdminsCount:     0,
+	ModeratorCounts: 0,
 	SortTime:        0,
 	CreatedTime:     0,
 	IsMute:          0,
+	IsDeleted:       0,
+	IsBanned:        0,
 }
 
 type PB_GroupMember_Flat struct {
@@ -2650,6 +2782,285 @@ var PB_InvalidateCache__FOlD = &PB_InvalidateCache{
 	CacheKey: "",
 }
 
+type PB_MediaView_Flat struct {
+}
+
+//ToPB
+func (m *PB_MediaView) ToFlat() *PB_MediaView_Flat {
+	r := &PB_MediaView_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_MediaView_Flat) ToPB() *PB_MediaView {
+	r := &PB_MediaView{}
+	return r
+}
+
+//folding
+var PB_MediaView__FOlD = &PB_MediaView{}
+
+type PB_ActionView_Flat struct {
+	ActionId              int
+	ActorUserId           int
+	ActionTypeEnum        int
+	PeerUserId            int
+	PostId                int
+	CommentId             int
+	Murmur64Hash          int
+	CreatedTime           int
+	ActorUserView         PB_UserView
+	PostView              PB_PostView
+	CommentView           PB_CommentView
+	FollowedUserView      PB_UserView
+	ContentOwenerUserView PB_UserView
+}
+
+//ToPB
+func (m *PB_ActionView) ToFlat() *PB_ActionView_Flat {
+	r := &PB_ActionView_Flat{
+		ActionId:       int(m.ActionId),
+		ActorUserId:    int(m.ActorUserId),
+		ActionTypeEnum: int(m.ActionTypeEnum),
+		PeerUserId:     int(m.PeerUserId),
+		PostId:         int(m.PostId),
+		CommentId:      int(m.CommentId),
+		Murmur64Hash:   int(m.Murmur64Hash),
+		CreatedTime:    int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_ActionView_Flat) ToPB() *PB_ActionView {
+	r := &PB_ActionView{
+		ActionId:       int64(m.ActionId),
+		ActorUserId:    int32(m.ActorUserId),
+		ActionTypeEnum: int32(m.ActionTypeEnum),
+		PeerUserId:     int32(m.PeerUserId),
+		PostId:         int64(m.PostId),
+		CommentId:      int64(m.CommentId),
+		Murmur64Hash:   int64(m.Murmur64Hash),
+		CreatedTime:    int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_ActionView__FOlD = &PB_ActionView{
+	ActionId:       0,
+	ActorUserId:    0,
+	ActionTypeEnum: 0,
+	PeerUserId:     0,
+	PostId:         0,
+	CommentId:      0,
+	Murmur64Hash:   0,
+	CreatedTime:    0,
+}
+
+type PB_NotifyView_Flat struct {
+	NotifyId      int
+	ForUserId     int
+	ActorUserId   int
+	NotiyTypeEnum int
+	PostId        int
+	CommentId     int
+	PeerUserId    int
+	Murmur64Hash  int
+	SeenStatus    int
+	CreatedTime   int
+	ActorUserView PB_UserView
+	PostView      PB_PostView
+	CommentView   PB_CommentView
+}
+
+//ToPB
+func (m *PB_NotifyView) ToFlat() *PB_NotifyView_Flat {
+	r := &PB_NotifyView_Flat{
+		NotifyId:      int(m.NotifyId),
+		ForUserId:     int(m.ForUserId),
+		ActorUserId:   int(m.ActorUserId),
+		NotiyTypeEnum: int(m.NotiyTypeEnum),
+		PostId:        int(m.PostId),
+		CommentId:     int(m.CommentId),
+		PeerUserId:    int(m.PeerUserId),
+		Murmur64Hash:  int(m.Murmur64Hash),
+		SeenStatus:    int(m.SeenStatus),
+		CreatedTime:   int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_NotifyView_Flat) ToPB() *PB_NotifyView {
+	r := &PB_NotifyView{
+		NotifyId:      int64(m.NotifyId),
+		ForUserId:     int32(m.ForUserId),
+		ActorUserId:   int32(m.ActorUserId),
+		NotiyTypeEnum: int32(m.NotiyTypeEnum),
+		PostId:        int64(m.PostId),
+		CommentId:     int64(m.CommentId),
+		PeerUserId:    int32(m.PeerUserId),
+		Murmur64Hash:  int64(m.Murmur64Hash),
+		SeenStatus:    int32(m.SeenStatus),
+		CreatedTime:   int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_NotifyView__FOlD = &PB_NotifyView{
+	NotifyId:      0,
+	ForUserId:     0,
+	ActorUserId:   0,
+	NotiyTypeEnum: 0,
+	PostId:        0,
+	CommentId:     0,
+	PeerUserId:    0,
+	Murmur64Hash:  0,
+	SeenStatus:    0,
+	CreatedTime:   0,
+}
+
+type PB_CommentView_Flat struct {
+	CommentId      int
+	UserId         int
+	PostId         int
+	Text           string
+	LikesCount     int
+	CreatedTime    int
+	SenderUserView PB_UserView
+}
+
+//ToPB
+func (m *PB_CommentView) ToFlat() *PB_CommentView_Flat {
+	r := &PB_CommentView_Flat{
+		CommentId:   int(m.CommentId),
+		UserId:      int(m.UserId),
+		PostId:      int(m.PostId),
+		Text:        m.Text,
+		LikesCount:  int(m.LikesCount),
+		CreatedTime: int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_CommentView_Flat) ToPB() *PB_CommentView {
+	r := &PB_CommentView{
+		CommentId:   int64(m.CommentId),
+		UserId:      int32(m.UserId),
+		PostId:      int64(m.PostId),
+		Text:        m.Text,
+		LikesCount:  int32(m.LikesCount),
+		CreatedTime: int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_CommentView__FOlD = &PB_CommentView{
+	CommentId:   0,
+	UserId:      0,
+	PostId:      0,
+	Text:        "",
+	LikesCount:  0,
+	CreatedTime: 0,
+}
+
+type PB_PostView_Flat struct {
+	PostId           int
+	UserId           int
+	PostTypeEnum     PostTypeEnum
+	Text             string
+	RichText         string
+	MediaCount       int
+	SharedTo         int
+	DisableComment   int
+	HasTag           int
+	CommentsCount    int
+	LikesCount       int
+	ViewsCount       int
+	EditedTime       int
+	CreatedTime      int
+	ReSharedPostId   int
+	DidILiked        bool
+	DidIReShared     bool
+	SenderUserView   PB_UserView
+	ReSharedUserView PB_UserView
+	MediaView        PB_MediaView
+	MediaViewList    []PB_MediaView
+}
+
+//ToPB
+func (m *PB_PostView) ToFlat() *PB_PostView_Flat {
+	r := &PB_PostView_Flat{
+		PostId: int(m.PostId),
+		UserId: int(m.UserId),
+
+		Text:           m.Text,
+		RichText:       m.RichText,
+		MediaCount:     int(m.MediaCount),
+		SharedTo:       int(m.SharedTo),
+		DisableComment: int(m.DisableComment),
+		HasTag:         int(m.HasTag),
+		CommentsCount:  int(m.CommentsCount),
+		LikesCount:     int(m.LikesCount),
+		ViewsCount:     int(m.ViewsCount),
+		EditedTime:     int(m.EditedTime),
+		CreatedTime:    int(m.CreatedTime),
+		ReSharedPostId: int(m.ReSharedPostId),
+		DidILiked:      m.DidILiked,
+		DidIReShared:   m.DidIReShared,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostView_Flat) ToPB() *PB_PostView {
+	r := &PB_PostView{
+		PostId: int64(m.PostId),
+		UserId: int32(m.UserId),
+
+		Text:           m.Text,
+		RichText:       m.RichText,
+		MediaCount:     int32(m.MediaCount),
+		SharedTo:       int32(m.SharedTo),
+		DisableComment: int32(m.DisableComment),
+		HasTag:         int32(m.HasTag),
+		CommentsCount:  int32(m.CommentsCount),
+		LikesCount:     int32(m.LikesCount),
+		ViewsCount:     int32(m.ViewsCount),
+		EditedTime:     int32(m.EditedTime),
+		CreatedTime:    int32(m.CreatedTime),
+		ReSharedPostId: int64(m.ReSharedPostId),
+		DidILiked:      m.DidILiked,
+		DidIReShared:   m.DidIReShared,
+	}
+	return r
+}
+
+//folding
+var PB_PostView__FOlD = &PB_PostView{
+	PostId: 0,
+	UserId: 0,
+
+	Text:           "",
+	RichText:       "",
+	MediaCount:     0,
+	SharedTo:       0,
+	DisableComment: 0,
+	HasTag:         0,
+	CommentsCount:  0,
+	LikesCount:     0,
+	ViewsCount:     0,
+	EditedTime:     0,
+	CreatedTime:    0,
+	ReSharedPostId: 0,
+	DidILiked:      false,
+	DidIReShared:   false,
+}
+
 type PB_ChatView_Flat struct {
 	ChatId             int
 	ChatKey            string
@@ -3162,6 +3573,267 @@ var PB_UserView__FOlD = &PB_UserView{
 	LastActiveTimeShow: "",
 }
 
+type PB_SettingNotificationView_Flat struct {
+}
+
+//ToPB
+func (m *PB_SettingNotificationView) ToFlat() *PB_SettingNotificationView_Flat {
+	r := &PB_SettingNotificationView_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_SettingNotificationView_Flat) ToPB() *PB_SettingNotificationView {
+	r := &PB_SettingNotificationView{}
+	return r
+}
+
+//folding
+var PB_SettingNotificationView__FOlD = &PB_SettingNotificationView{}
+
+type PB_AppConfig_Flat struct {
+	DeprecatedClient bool
+	HasNewUpdate     bool
+}
+
+//ToPB
+func (m *PB_AppConfig) ToFlat() *PB_AppConfig_Flat {
+	r := &PB_AppConfig_Flat{
+		DeprecatedClient: m.DeprecatedClient,
+		HasNewUpdate:     m.HasNewUpdate,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_AppConfig_Flat) ToPB() *PB_AppConfig {
+	r := &PB_AppConfig{
+		DeprecatedClient: m.DeprecatedClient,
+		HasNewUpdate:     m.HasNewUpdate,
+	}
+	return r
+}
+
+//folding
+var PB_AppConfig__FOlD = &PB_AppConfig{
+	DeprecatedClient: false,
+	HasNewUpdate:     false,
+}
+
+type PB_UserProfileView_Flat struct {
+}
+
+//ToPB
+func (m *PB_UserProfileView) ToFlat() *PB_UserProfileView_Flat {
+	r := &PB_UserProfileView_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_UserProfileView_Flat) ToPB() *PB_UserProfileView {
+	r := &PB_UserProfileView{}
+	return r
+}
+
+//folding
+var PB_UserProfileView__FOlD = &PB_UserProfileView{}
+
+type PB_UserViewRowify_Flat struct {
+	Id          int
+	CreatedTime int
+	UserView    PB_UserView
+}
+
+//ToPB
+func (m *PB_UserViewRowify) ToFlat() *PB_UserViewRowify_Flat {
+	r := &PB_UserViewRowify_Flat{
+		Id:          int(m.Id),
+		CreatedTime: int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_UserViewRowify_Flat) ToPB() *PB_UserViewRowify {
+	r := &PB_UserViewRowify{
+		Id:          int64(m.Id),
+		CreatedTime: int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
+	Id:          0,
+	CreatedTime: 0,
+}
+
+type PB_PostViewRowify_Flat struct {
+	Id       int
+	PostView PB_PostView
+}
+
+//ToPB
+func (m *PB_PostViewRowify) ToFlat() *PB_PostViewRowify_Flat {
+	r := &PB_PostViewRowify_Flat{
+		Id: int(m.Id),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_PostViewRowify_Flat) ToPB() *PB_PostViewRowify {
+	r := &PB_PostViewRowify{
+		Id: int64(m.Id),
+	}
+	return r
+}
+
+//folding
+var PB_PostViewRowify__FOlD = &PB_PostViewRowify{
+	Id: 0,
+}
+
+type PB_TagView_Flat struct {
+	TagId         int
+	Name          string
+	Count         int
+	TagStatusEnum int
+	CreatedTime   int
+}
+
+//ToPB
+func (m *PB_TagView) ToFlat() *PB_TagView_Flat {
+	r := &PB_TagView_Flat{
+		TagId:         int(m.TagId),
+		Name:          m.Name,
+		Count:         int(m.Count),
+		TagStatusEnum: int(m.TagStatusEnum),
+		CreatedTime:   int(m.CreatedTime),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_TagView_Flat) ToPB() *PB_TagView {
+	r := &PB_TagView{
+		TagId:         int64(m.TagId),
+		Name:          m.Name,
+		Count:         int32(m.Count),
+		TagStatusEnum: int32(m.TagStatusEnum),
+		CreatedTime:   int32(m.CreatedTime),
+	}
+	return r
+}
+
+//folding
+var PB_TagView__FOlD = &PB_TagView{
+	TagId:         0,
+	Name:          "",
+	Count:         0,
+	TagStatusEnum: 0,
+	CreatedTime:   0,
+}
+
+type PB_TopTagWithSamplePosts_Flat struct {
+	TagView      PB_TagView
+	PostViewList []PB_PostView
+}
+
+//ToPB
+func (m *PB_TopTagWithSamplePosts) ToFlat() *PB_TopTagWithSamplePosts_Flat {
+	r := &PB_TopTagWithSamplePosts_Flat{}
+	return r
+}
+
+//ToPB
+func (m *PB_TopTagWithSamplePosts_Flat) ToPB() *PB_TopTagWithSamplePosts {
+	r := &PB_TopTagWithSamplePosts{}
+	return r
+}
+
+//folding
+var PB_TopTagWithSamplePosts__FOlD = &PB_TopTagWithSamplePosts{}
+
+type PB_SelfUserView_Flat struct {
+	UserView            PB_UserView
+	ProfilePrivacy      int
+	OnlinePrivacy       int
+	CallPrivacy         int
+	AddToGroupPrivacy   int
+	SeenMessagePrivacy  int
+	SettingNotification PB_SettingNotificationView
+}
+
+//ToPB
+func (m *PB_SelfUserView) ToFlat() *PB_SelfUserView_Flat {
+	r := &PB_SelfUserView_Flat{
+
+		ProfilePrivacy:     int(m.ProfilePrivacy),
+		OnlinePrivacy:      int(m.OnlinePrivacy),
+		CallPrivacy:        int(m.CallPrivacy),
+		AddToGroupPrivacy:  int(m.AddToGroupPrivacy),
+		SeenMessagePrivacy: int(m.SeenMessagePrivacy),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_SelfUserView_Flat) ToPB() *PB_SelfUserView {
+	r := &PB_SelfUserView{
+
+		ProfilePrivacy:     int32(m.ProfilePrivacy),
+		OnlinePrivacy:      int32(m.OnlinePrivacy),
+		CallPrivacy:        int32(m.CallPrivacy),
+		AddToGroupPrivacy:  int32(m.AddToGroupPrivacy),
+		SeenMessagePrivacy: int32(m.SeenMessagePrivacy),
+	}
+	return r
+}
+
+//folding
+var PB_SelfUserView__FOlD = &PB_SelfUserView{
+
+	ProfilePrivacy:     0,
+	OnlinePrivacy:      0,
+	CallPrivacy:        0,
+	AddToGroupPrivacy:  0,
+	SeenMessagePrivacy: 0,
+}
+
+type PB_Error_Flat struct {
+	Error        ServerErrors
+	ShowError    bool
+	ErrorMessage string
+}
+
+//ToPB
+func (m *PB_Error) ToFlat() *PB_Error_Flat {
+	r := &PB_Error_Flat{
+
+		ShowError:    m.ShowError,
+		ErrorMessage: m.ErrorMessage,
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Error_Flat) ToPB() *PB_Error {
+	r := &PB_Error{
+
+		ShowError:    m.ShowError,
+		ErrorMessage: m.ErrorMessage,
+	}
+	return r
+}
+
+//folding
+var PB_Error__FOlD = &PB_Error{
+
+	ShowError:    false,
+	ErrorMessage: "",
+}
+
 /*
 ///// to_flat ///
 
@@ -3228,8 +3900,38 @@ r := &PB_ResponseToClient_Flat{
 return r
 }
 
+func(m *RPC_Auth_Types)ToFlat() *RPC_Auth_Types_Flat {
+r := &RPC_Auth_Types_Flat{
+}
+return r
+}
+
 func(m *PB_RPC_Chat_Types)ToFlat() *PB_RPC_Chat_Types_Flat {
 r := &PB_RPC_Chat_Types_Flat{
+}
+return r
+}
+
+func(m *RPC_General_Types)ToFlat() *RPC_General_Types_Flat {
+r := &RPC_General_Types_Flat{
+}
+return r
+}
+
+func(m *RPC_Page_Types)ToFlat() *RPC_Page_Types_Flat {
+r := &RPC_Page_Types_Flat{
+}
+return r
+}
+
+func(m *RPC_Social_Types)ToFlat() *RPC_Social_Types_Flat {
+r := &RPC_Social_Types_Flat{
+}
+return r
+}
+
+func(m *RPC_User_Types)ToFlat() *RPC_User_Types_Flat {
+r := &RPC_User_Types_Flat{
 }
 return r
 }
@@ -3238,11 +3940,21 @@ func(m *PB_Action)ToFlat() *PB_Action_Flat {
 r := &PB_Action_Flat{
     ActionId:  int(m.ActionId) ,
     ActorUserId:  int(m.ActorUserId) ,
-    ActionTypeEnum:  int(m.ActionTypeEnum) ,
+    ActionType:  int(m.ActionType) ,
     PeerUserId:  int(m.PeerUserId) ,
     PostId:  int(m.PostId) ,
     CommentId:  int(m.CommentId) ,
     Murmur64Hash:  int(m.Murmur64Hash) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_Blocked)ToFlat() *PB_Blocked_Flat {
+r := &PB_Blocked_Flat{
+    Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    BlockedUserId:  int(m.BlockedUserId) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -3255,6 +3967,7 @@ r := &PB_Comment_Flat{
     PostId:  int(m.PostId) ,
     Text:  m.Text ,
     LikesCount:  int(m.LikesCount) ,
+    IsEdited:  int(m.IsEdited) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -3285,6 +3998,16 @@ r := &PB_Event_Flat{
 return r
 }
 
+func(m *PB_Followed)ToFlat() *PB_Followed_Flat {
+r := &PB_Followed_Flat{
+    Id:  int(m.Id) ,
+    UserId:  int(m.UserId) ,
+    FollowedUserId:  int(m.FollowedUserId) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
 func(m *PB_Like)ToFlat() *PB_Like_Flat {
 r := &PB_Like_Flat{
     Id:  int(m.Id) ,
@@ -3302,7 +4025,7 @@ r := &PB_Notify_Flat{
     NotifyId:  int(m.NotifyId) ,
     ForUserId:  int(m.ForUserId) ,
     ActorUserId:  int(m.ActorUserId) ,
-    NotifyTypeEnum:  int(m.NotifyTypeEnum) ,
+    NotifyType:  int(m.NotifyType) ,
     PostId:  int(m.PostId) ,
     CommentId:  int(m.CommentId) ,
     PeerUserId:  int(m.PeerUserId) ,
@@ -3424,8 +4147,7 @@ r := &PB_PostMentioned_Flat{
     ForUserId:  int(m.ForUserId) ,
     PostId:  int(m.PostId) ,
     PostUserId:  int(m.PostUserId) ,
-    PostTypeEnum:  int(m.PostTypeEnum) ,
-    PostCategoryEnum:  int(m.PostCategoryEnum) ,
+    PostType:  int(m.PostType) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -3434,11 +4156,9 @@ return r
 func(m *PB_PostReshared)ToFlat() *PB_PostReshared_Flat {
 r := &PB_PostReshared_Flat{
     ResharedId:  int(m.ResharedId) ,
-    ByUserId:  int(m.ByUserId) ,
     PostId:  int(m.PostId) ,
+    ByUserId:  int(m.ByUserId) ,
     PostUserId:  int(m.PostUserId) ,
-    PostTypeEnum:  int(m.PostTypeEnum) ,
-    PostCategoryEnum:  int(m.PostCategoryEnum) ,
     CreatedTime:  int(m.CreatedTime) ,
 }
 return r
@@ -3453,32 +4173,6 @@ r := &PB_Session_Flat{
     AppVersion:  int(m.AppVersion) ,
     ActiveTime:  int(m.ActiveTime) ,
     CreatedTime:  int(m.CreatedTime) ,
-}
-return r
-}
-
-func(m *PB_SettingClient)ToFlat() *PB_SettingClient_Flat {
-r := &PB_SettingClient_Flat{
-    UserId:  int(m.UserId) ,
-    AutoDownloadWifiVoice:  int(m.AutoDownloadWifiVoice) ,
-    AutoDownloadWifiImage:  int(m.AutoDownloadWifiImage) ,
-    AutoDownloadWifiVideo:  int(m.AutoDownloadWifiVideo) ,
-    AutoDownloadWifiFile:  int(m.AutoDownloadWifiFile) ,
-    AutoDownloadWifiMusic:  int(m.AutoDownloadWifiMusic) ,
-    AutoDownloadWifiGif:  int(m.AutoDownloadWifiGif) ,
-    AutoDownloadCellularVoice:  int(m.AutoDownloadCellularVoice) ,
-    AutoDownloadCellularImage:  int(m.AutoDownloadCellularImage) ,
-    AutoDownloadCellularVideo:  int(m.AutoDownloadCellularVideo) ,
-    AutoDownloadCellularFile:  int(m.AutoDownloadCellularFile) ,
-    AutoDownloadCellularMusic:  int(m.AutoDownloadCellularMusic) ,
-    AutoDownloadCellularGif:  int(m.AutoDownloadCellularGif) ,
-    AutoDownloadRoamingVoice:  int(m.AutoDownloadRoamingVoice) ,
-    AutoDownloadRoamingImage:  int(m.AutoDownloadRoamingImage) ,
-    AutoDownloadRoamingVideo:  int(m.AutoDownloadRoamingVideo) ,
-    AutoDownloadRoamingFile:  int(m.AutoDownloadRoamingFile) ,
-    AutoDownloadRoamingMusic:  int(m.AutoDownloadRoamingMusic) ,
-    AutoDownloadRoamingGif:  int(m.AutoDownloadRoamingGif) ,
-    SaveToGallery:  int(m.SaveToGallery) ,
 }
 return r
 }
@@ -3555,6 +4249,9 @@ r := &PB_User_Flat{
     AvatarId:  int(m.AvatarId) ,
     ProfilePrivacy:  int(m.ProfilePrivacy) ,
     OnlinePrivacy:  int(m.OnlinePrivacy) ,
+    CallPrivacy:  int(m.CallPrivacy) ,
+    AddToGroupPrivacy:  int(m.AddToGroupPrivacy) ,
+    SeenMessagePrivacy:  int(m.SeenMessagePrivacy) ,
     Phone:  int(m.Phone) ,
     Email:  m.Email ,
     About:  m.About ,
@@ -3610,27 +4307,41 @@ r := &PB_Chat_Flat{
     PeerUserId:  int(m.PeerUserId) ,
     GroupId:  int(m.GroupId) ,
     HashTagId:  int(m.HashTagId) ,
-    StartedByMe:  int(m.StartedByMe) ,
     Title:  m.Title ,
-    PinTime:  int(m.PinTime) ,
+    PinTimeMs:  int(m.PinTimeMs) ,
     FromMsgId:  int(m.FromMsgId) ,
-    Seq:  int(m.Seq) ,
     UnseenCount:  int(m.UnseenCount) ,
+    Seq:  int(m.Seq) ,
     LastMsgId:  int(m.LastMsgId) ,
-    LastMsgStatus:  int(m.LastMsgStatus) ,
-    SeenSeq:  int(m.SeenSeq) ,
-    SeenMsgId:  int(m.SeenMsgId) ,
-    LastMsgIdRecived:  int(m.LastMsgIdRecived) ,
-    Left:  int(m.Left) ,
-    Creator:  int(m.Creator) ,
-    Kicked:  int(m.Kicked) ,
-    Admin:  int(m.Admin) ,
-    Deactivated:  int(m.Deactivated) ,
-    VersionTime:  int(m.VersionTime) ,
+    LastMyMsgStatus:  int(m.LastMyMsgStatus) ,
+    MyLastSeenSeq:  int(m.MyLastSeenSeq) ,
+    MyLastSeenMsgId:  int(m.MyLastSeenMsgId) ,
+    PeerLastSeenMsgId:  int(m.PeerLastSeenMsgId) ,
+    MyLastDeliveredSeq:  int(m.MyLastDeliveredSeq) ,
+    MyLastDeliveredMsgId:  int(m.MyLastDeliveredMsgId) ,
+    PeerLastDeliveredMsgId:  int(m.PeerLastDeliveredMsgId) ,
+    IsActive:  int(m.IsActive) ,
+    IsLeft:  int(m.IsLeft) ,
+    IsCreator:  int(m.IsCreator) ,
+    IsKicked:  int(m.IsKicked) ,
+    IsAdmin:  int(m.IsAdmin) ,
+    IsDeactivated:  int(m.IsDeactivated) ,
+    IsMuted:  int(m.IsMuted) ,
+    MuteUntil:  int(m.MuteUntil) ,
+    VersionTimeMs:  int(m.VersionTimeMs) ,
+    VersionSeq:  int(m.VersionSeq) ,
     OrderTime:  int(m.OrderTime) ,
     CreatedTime:  int(m.CreatedTime) ,
     DraftText:  m.DraftText ,
     DratReplyToMsgId:  int(m.DratReplyToMsgId) ,
+}
+return r
+}
+
+func(m *PB_ChatDeleted)ToFlat() *PB_ChatDeleted_Flat {
+r := &PB_ChatDeleted_Flat{
+    ChatId:  int(m.ChatId) ,
+    RoomKey:  m.RoomKey ,
 }
 return r
 }
@@ -3643,12 +4354,11 @@ r := &PB_ChatLastMessage_Flat{
 return r
 }
 
-func(m *PB_ChatVersionOrder)ToFlat() *PB_ChatVersionOrder_Flat {
-r := &PB_ChatVersionOrder_Flat{
-    VersionTime:  int(m.VersionTime) ,
+func(m *PB_ChatUserVersion)ToFlat() *PB_ChatUserVersion_Flat {
+r := &PB_ChatUserVersion_Flat{
     UserId:  int(m.UserId) ,
     ChatId:  int(m.ChatId) ,
-    OrderTime:  int(m.OrderTime) ,
+    VersionTimeNano:  int(m.VersionTimeNano) ,
 }
 return r
 }
@@ -3670,11 +4380,15 @@ r := &PB_Group_Flat{
     AvatarRefId:  int(m.AvatarRefId) ,
     AvatarCount:  int(m.AvatarCount) ,
     About:  m.About ,
-    InviteLink:  m.InviteLink ,
+    InviteLinkHash:  m.InviteLinkHash ,
     MembersCount:  int(m.MembersCount) ,
+    AdminsCount:  int(m.AdminsCount) ,
+    ModeratorCounts:  int(m.ModeratorCounts) ,
     SortTime:  int(m.SortTime) ,
     CreatedTime:  int(m.CreatedTime) ,
     IsMute:  int(m.IsMute) ,
+    IsDeleted:  int(m.IsDeleted) ,
+    IsBanned:  int(m.IsBanned) ,
 }
 return r
 }
@@ -3869,6 +4583,90 @@ r := &PB_InvalidateCache_Flat{
 return r
 }
 
+func(m *PB_MediaView)ToFlat() *PB_MediaView_Flat {
+r := &PB_MediaView_Flat{
+}
+return r
+}
+
+func(m *PB_ActionView)ToFlat() *PB_ActionView_Flat {
+r := &PB_ActionView_Flat{
+    ActionId:  int(m.ActionId) ,
+    ActorUserId:  int(m.ActorUserId) ,
+    ActionTypeEnum:  int(m.ActionTypeEnum) ,
+    PeerUserId:  int(m.PeerUserId) ,
+    PostId:  int(m.PostId) ,
+    CommentId:  int(m.CommentId) ,
+    Murmur64Hash:  int(m.Murmur64Hash) ,
+    CreatedTime:  int(m.CreatedTime) ,
+
+
+
+
+
+}
+return r
+}
+
+func(m *PB_NotifyView)ToFlat() *PB_NotifyView_Flat {
+r := &PB_NotifyView_Flat{
+    NotifyId:  int(m.NotifyId) ,
+    ForUserId:  int(m.ForUserId) ,
+    ActorUserId:  int(m.ActorUserId) ,
+    NotiyTypeEnum:  int(m.NotiyTypeEnum) ,
+    PostId:  int(m.PostId) ,
+    CommentId:  int(m.CommentId) ,
+    PeerUserId:  int(m.PeerUserId) ,
+    Murmur64Hash:  int(m.Murmur64Hash) ,
+    SeenStatus:  int(m.SeenStatus) ,
+    CreatedTime:  int(m.CreatedTime) ,
+
+
+
+}
+return r
+}
+
+func(m *PB_CommentView)ToFlat() *PB_CommentView_Flat {
+r := &PB_CommentView_Flat{
+    CommentId:  int(m.CommentId) ,
+    UserId:  int(m.UserId) ,
+    PostId:  int(m.PostId) ,
+    Text:  m.Text ,
+    LikesCount:  int(m.LikesCount) ,
+    CreatedTime:  int(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostView)ToFlat() *PB_PostView_Flat {
+r := &PB_PostView_Flat{
+    PostId:  int(m.PostId) ,
+    UserId:  int(m.UserId) ,
+
+    Text:  m.Text ,
+    RichText:  m.RichText ,
+    MediaCount:  int(m.MediaCount) ,
+    SharedTo:  int(m.SharedTo) ,
+    DisableComment:  int(m.DisableComment) ,
+    HasTag:  int(m.HasTag) ,
+    CommentsCount:  int(m.CommentsCount) ,
+    LikesCount:  int(m.LikesCount) ,
+    ViewsCount:  int(m.ViewsCount) ,
+    EditedTime:  int(m.EditedTime) ,
+    CreatedTime:  int(m.CreatedTime) ,
+    ReSharedPostId:  int(m.ReSharedPostId) ,
+    DidILiked:  m.DidILiked ,
+    DidIReShared:  m.DidIReShared ,
+
+
+
+
+}
+return r
+}
+
 func(m *PB_ChatView)ToFlat() *PB_ChatView_Flat {
 r := &PB_ChatView_Flat{
     ChatId:  int(m.ChatId) ,
@@ -4006,6 +4804,84 @@ r := &PB_UserView_Flat{
 return r
 }
 
+func(m *PB_SettingNotificationView)ToFlat() *PB_SettingNotificationView_Flat {
+r := &PB_SettingNotificationView_Flat{
+}
+return r
+}
+
+func(m *PB_AppConfig)ToFlat() *PB_AppConfig_Flat {
+r := &PB_AppConfig_Flat{
+    DeprecatedClient:  m.DeprecatedClient ,
+    HasNewUpdate:  m.HasNewUpdate ,
+}
+return r
+}
+
+func(m *PB_UserProfileView)ToFlat() *PB_UserProfileView_Flat {
+r := &PB_UserProfileView_Flat{
+}
+return r
+}
+
+func(m *PB_UserViewRowify)ToFlat() *PB_UserViewRowify_Flat {
+r := &PB_UserViewRowify_Flat{
+    Id:  int(m.Id) ,
+    CreatedTime:  int(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostViewRowify)ToFlat() *PB_PostViewRowify_Flat {
+r := &PB_PostViewRowify_Flat{
+    Id:  int(m.Id) ,
+
+}
+return r
+}
+
+func(m *PB_TagView)ToFlat() *PB_TagView_Flat {
+r := &PB_TagView_Flat{
+    TagId:  int(m.TagId) ,
+    Name:  m.Name ,
+    Count:  int(m.Count) ,
+    TagStatusEnum:  int(m.TagStatusEnum) ,
+    CreatedTime:  int(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_TopTagWithSamplePosts)ToFlat() *PB_TopTagWithSamplePosts_Flat {
+r := &PB_TopTagWithSamplePosts_Flat{
+
+
+}
+return r
+}
+
+func(m *PB_SelfUserView)ToFlat() *PB_SelfUserView_Flat {
+r := &PB_SelfUserView_Flat{
+
+    ProfilePrivacy:  int(m.ProfilePrivacy) ,
+    OnlinePrivacy:  int(m.OnlinePrivacy) ,
+    CallPrivacy:  int(m.CallPrivacy) ,
+    AddToGroupPrivacy:  int(m.AddToGroupPrivacy) ,
+    SeenMessagePrivacy:  int(m.SeenMessagePrivacy) ,
+
+}
+return r
+}
+
+func(m *PB_Error)ToFlat() *PB_Error_Flat {
+r := &PB_Error_Flat{
+
+    ShowError:  m.ShowError ,
+    ErrorMessage:  m.ErrorMessage ,
+}
+return r
+}
+
 
 
 ///// from_flat ///
@@ -4073,8 +4949,38 @@ r := &PB_ResponseToClient{
 return r
 }
 
+func(m *RPC_Auth_Types_Flat)ToPB() *RPC_Auth_Types {
+r := &RPC_Auth_Types{
+}
+return r
+}
+
 func(m *PB_RPC_Chat_Types_Flat)ToPB() *PB_RPC_Chat_Types {
 r := &PB_RPC_Chat_Types{
+}
+return r
+}
+
+func(m *RPC_General_Types_Flat)ToPB() *RPC_General_Types {
+r := &RPC_General_Types{
+}
+return r
+}
+
+func(m *RPC_Page_Types_Flat)ToPB() *RPC_Page_Types {
+r := &RPC_Page_Types{
+}
+return r
+}
+
+func(m *RPC_Social_Types_Flat)ToPB() *RPC_Social_Types {
+r := &RPC_Social_Types{
+}
+return r
+}
+
+func(m *RPC_User_Types_Flat)ToPB() *RPC_User_Types {
+r := &RPC_User_Types{
 }
 return r
 }
@@ -4083,11 +4989,21 @@ func(m *PB_Action_Flat)ToPB() *PB_Action {
 r := &PB_Action{
     ActionId:  int64(m.ActionId) ,
     ActorUserId:  int32(m.ActorUserId) ,
-    ActionTypeEnum:  int32(m.ActionTypeEnum) ,
+    ActionType:  int32(m.ActionType) ,
     PeerUserId:  int32(m.PeerUserId) ,
     PostId:  int64(m.PostId) ,
     CommentId:  int64(m.CommentId) ,
     Murmur64Hash:  int64(m.Murmur64Hash) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_Blocked_Flat)ToPB() *PB_Blocked {
+r := &PB_Blocked{
+    Id:  int64(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    BlockedUserId:  int32(m.BlockedUserId) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -4100,6 +5016,7 @@ r := &PB_Comment{
     PostId:  int64(m.PostId) ,
     Text:  m.Text ,
     LikesCount:  int32(m.LikesCount) ,
+    IsEdited:  int32(m.IsEdited) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -4130,6 +5047,16 @@ r := &PB_Event{
 return r
 }
 
+func(m *PB_Followed_Flat)ToPB() *PB_Followed {
+r := &PB_Followed{
+    Id:  int64(m.Id) ,
+    UserId:  int32(m.UserId) ,
+    FollowedUserId:  int32(m.FollowedUserId) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
 func(m *PB_Like_Flat)ToPB() *PB_Like {
 r := &PB_Like{
     Id:  int64(m.Id) ,
@@ -4147,7 +5074,7 @@ r := &PB_Notify{
     NotifyId:  int64(m.NotifyId) ,
     ForUserId:  int32(m.ForUserId) ,
     ActorUserId:  int32(m.ActorUserId) ,
-    NotifyTypeEnum:  int32(m.NotifyTypeEnum) ,
+    NotifyType:  int32(m.NotifyType) ,
     PostId:  int64(m.PostId) ,
     CommentId:  int64(m.CommentId) ,
     PeerUserId:  int32(m.PeerUserId) ,
@@ -4169,7 +5096,7 @@ return r
 
 func(m *PB_PhoneContact_Flat)ToPB() *PB_PhoneContact {
 r := &PB_PhoneContact{
-    Id:  int32(m.Id) ,
+    Id:  int64(m.Id) ,
     UserId:  int32(m.UserId) ,
     ClientId:  int64(m.ClientId) ,
     Phone:  m.Phone ,
@@ -4269,8 +5196,7 @@ r := &PB_PostMentioned{
     ForUserId:  int32(m.ForUserId) ,
     PostId:  int64(m.PostId) ,
     PostUserId:  int32(m.PostUserId) ,
-    PostTypeEnum:  int32(m.PostTypeEnum) ,
-    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
+    PostType:  int32(m.PostType) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -4279,11 +5205,9 @@ return r
 func(m *PB_PostReshared_Flat)ToPB() *PB_PostReshared {
 r := &PB_PostReshared{
     ResharedId:  int64(m.ResharedId) ,
-    ByUserId:  int32(m.ByUserId) ,
     PostId:  int64(m.PostId) ,
+    ByUserId:  int32(m.ByUserId) ,
     PostUserId:  int32(m.PostUserId) ,
-    PostTypeEnum:  int32(m.PostTypeEnum) ,
-    PostCategoryEnum:  int32(m.PostCategoryEnum) ,
     CreatedTime:  int32(m.CreatedTime) ,
 }
 return r
@@ -4298,32 +5222,6 @@ r := &PB_Session{
     AppVersion:  int32(m.AppVersion) ,
     ActiveTime:  int32(m.ActiveTime) ,
     CreatedTime:  int32(m.CreatedTime) ,
-}
-return r
-}
-
-func(m *PB_SettingClient_Flat)ToPB() *PB_SettingClient {
-r := &PB_SettingClient{
-    UserId:  int32(m.UserId) ,
-    AutoDownloadWifiVoice:  int32(m.AutoDownloadWifiVoice) ,
-    AutoDownloadWifiImage:  int32(m.AutoDownloadWifiImage) ,
-    AutoDownloadWifiVideo:  int32(m.AutoDownloadWifiVideo) ,
-    AutoDownloadWifiFile:  int32(m.AutoDownloadWifiFile) ,
-    AutoDownloadWifiMusic:  int32(m.AutoDownloadWifiMusic) ,
-    AutoDownloadWifiGif:  int32(m.AutoDownloadWifiGif) ,
-    AutoDownloadCellularVoice:  int32(m.AutoDownloadCellularVoice) ,
-    AutoDownloadCellularImage:  int32(m.AutoDownloadCellularImage) ,
-    AutoDownloadCellularVideo:  int32(m.AutoDownloadCellularVideo) ,
-    AutoDownloadCellularFile:  int32(m.AutoDownloadCellularFile) ,
-    AutoDownloadCellularMusic:  int32(m.AutoDownloadCellularMusic) ,
-    AutoDownloadCellularGif:  int32(m.AutoDownloadCellularGif) ,
-    AutoDownloadRoamingVoice:  int32(m.AutoDownloadRoamingVoice) ,
-    AutoDownloadRoamingImage:  int32(m.AutoDownloadRoamingImage) ,
-    AutoDownloadRoamingVideo:  int32(m.AutoDownloadRoamingVideo) ,
-    AutoDownloadRoamingFile:  int32(m.AutoDownloadRoamingFile) ,
-    AutoDownloadRoamingMusic:  int32(m.AutoDownloadRoamingMusic) ,
-    AutoDownloadRoamingGif:  int32(m.AutoDownloadRoamingGif) ,
-    SaveToGallery:  int32(m.SaveToGallery) ,
 }
 return r
 }
@@ -4400,6 +5298,9 @@ r := &PB_User{
     AvatarId:  int64(m.AvatarId) ,
     ProfilePrivacy:  int32(m.ProfilePrivacy) ,
     OnlinePrivacy:  int32(m.OnlinePrivacy) ,
+    CallPrivacy:  int32(m.CallPrivacy) ,
+    AddToGroupPrivacy:  int32(m.AddToGroupPrivacy) ,
+    SeenMessagePrivacy:  int32(m.SeenMessagePrivacy) ,
     Phone:  int64(m.Phone) ,
     Email:  m.Email ,
     About:  m.About ,
@@ -4455,27 +5356,41 @@ r := &PB_Chat{
     PeerUserId:  int32(m.PeerUserId) ,
     GroupId:  int64(m.GroupId) ,
     HashTagId:  int64(m.HashTagId) ,
-    StartedByMe:  int32(m.StartedByMe) ,
     Title:  m.Title ,
-    PinTime:  int64(m.PinTime) ,
+    PinTimeMs:  int64(m.PinTimeMs) ,
     FromMsgId:  int64(m.FromMsgId) ,
-    Seq:  int32(m.Seq) ,
     UnseenCount:  int32(m.UnseenCount) ,
+    Seq:  int32(m.Seq) ,
     LastMsgId:  int64(m.LastMsgId) ,
-    LastMsgStatus:  int32(m.LastMsgStatus) ,
-    SeenSeq:  int32(m.SeenSeq) ,
-    SeenMsgId:  int64(m.SeenMsgId) ,
-    LastMsgIdRecived:  int64(m.LastMsgIdRecived) ,
-    Left:  int32(m.Left) ,
-    Creator:  int32(m.Creator) ,
-    Kicked:  int32(m.Kicked) ,
-    Admin:  int32(m.Admin) ,
-    Deactivated:  int32(m.Deactivated) ,
-    VersionTime:  int32(m.VersionTime) ,
+    LastMyMsgStatus:  int32(m.LastMyMsgStatus) ,
+    MyLastSeenSeq:  int32(m.MyLastSeenSeq) ,
+    MyLastSeenMsgId:  int64(m.MyLastSeenMsgId) ,
+    PeerLastSeenMsgId:  int64(m.PeerLastSeenMsgId) ,
+    MyLastDeliveredSeq:  int32(m.MyLastDeliveredSeq) ,
+    MyLastDeliveredMsgId:  int64(m.MyLastDeliveredMsgId) ,
+    PeerLastDeliveredMsgId:  int64(m.PeerLastDeliveredMsgId) ,
+    IsActive:  int32(m.IsActive) ,
+    IsLeft:  int32(m.IsLeft) ,
+    IsCreator:  int32(m.IsCreator) ,
+    IsKicked:  int32(m.IsKicked) ,
+    IsAdmin:  int32(m.IsAdmin) ,
+    IsDeactivated:  int32(m.IsDeactivated) ,
+    IsMuted:  int32(m.IsMuted) ,
+    MuteUntil:  int32(m.MuteUntil) ,
+    VersionTimeMs:  int64(m.VersionTimeMs) ,
+    VersionSeq:  int32(m.VersionSeq) ,
     OrderTime:  int32(m.OrderTime) ,
     CreatedTime:  int32(m.CreatedTime) ,
     DraftText:  m.DraftText ,
     DratReplyToMsgId:  int64(m.DratReplyToMsgId) ,
+}
+return r
+}
+
+func(m *PB_ChatDeleted_Flat)ToPB() *PB_ChatDeleted {
+r := &PB_ChatDeleted{
+    ChatId:  int64(m.ChatId) ,
+    RoomKey:  m.RoomKey ,
 }
 return r
 }
@@ -4488,12 +5403,11 @@ r := &PB_ChatLastMessage{
 return r
 }
 
-func(m *PB_ChatVersionOrder_Flat)ToPB() *PB_ChatVersionOrder {
-r := &PB_ChatVersionOrder{
-    VersionTime:  int64(m.VersionTime) ,
+func(m *PB_ChatUserVersion_Flat)ToPB() *PB_ChatUserVersion {
+r := &PB_ChatUserVersion{
     UserId:  int32(m.UserId) ,
-    ChatId:  int32(m.ChatId) ,
-    OrderTime:  int32(m.OrderTime) ,
+    ChatId:  int64(m.ChatId) ,
+    VersionTimeNano:  int32(m.VersionTimeNano) ,
 }
 return r
 }
@@ -4515,11 +5429,15 @@ r := &PB_Group{
     AvatarRefId:  int64(m.AvatarRefId) ,
     AvatarCount:  int32(m.AvatarCount) ,
     About:  m.About ,
-    InviteLink:  m.InviteLink ,
+    InviteLinkHash:  m.InviteLinkHash ,
     MembersCount:  int32(m.MembersCount) ,
+    AdminsCount:  int32(m.AdminsCount) ,
+    ModeratorCounts:  int32(m.ModeratorCounts) ,
     SortTime:  int32(m.SortTime) ,
     CreatedTime:  int32(m.CreatedTime) ,
     IsMute:  int32(m.IsMute) ,
+    IsDeleted:  int32(m.IsDeleted) ,
+    IsBanned:  int32(m.IsBanned) ,
 }
 return r
 }
@@ -4714,6 +5632,90 @@ r := &PB_InvalidateCache{
 return r
 }
 
+func(m *PB_MediaView_Flat)ToPB() *PB_MediaView {
+r := &PB_MediaView{
+}
+return r
+}
+
+func(m *PB_ActionView_Flat)ToPB() *PB_ActionView {
+r := &PB_ActionView{
+    ActionId:  int64(m.ActionId) ,
+    ActorUserId:  int32(m.ActorUserId) ,
+    ActionTypeEnum:  int32(m.ActionTypeEnum) ,
+    PeerUserId:  int32(m.PeerUserId) ,
+    PostId:  int64(m.PostId) ,
+    CommentId:  int64(m.CommentId) ,
+    Murmur64Hash:  int64(m.Murmur64Hash) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+
+
+
+
+
+}
+return r
+}
+
+func(m *PB_NotifyView_Flat)ToPB() *PB_NotifyView {
+r := &PB_NotifyView{
+    NotifyId:  int64(m.NotifyId) ,
+    ForUserId:  int32(m.ForUserId) ,
+    ActorUserId:  int32(m.ActorUserId) ,
+    NotiyTypeEnum:  int32(m.NotiyTypeEnum) ,
+    PostId:  int64(m.PostId) ,
+    CommentId:  int64(m.CommentId) ,
+    PeerUserId:  int32(m.PeerUserId) ,
+    Murmur64Hash:  int64(m.Murmur64Hash) ,
+    SeenStatus:  int32(m.SeenStatus) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+
+
+
+}
+return r
+}
+
+func(m *PB_CommentView_Flat)ToPB() *PB_CommentView {
+r := &PB_CommentView{
+    CommentId:  int64(m.CommentId) ,
+    UserId:  int32(m.UserId) ,
+    PostId:  int64(m.PostId) ,
+    Text:  m.Text ,
+    LikesCount:  int32(m.LikesCount) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostView_Flat)ToPB() *PB_PostView {
+r := &PB_PostView{
+    PostId:  int64(m.PostId) ,
+    UserId:  int32(m.UserId) ,
+
+    Text:  m.Text ,
+    RichText:  m.RichText ,
+    MediaCount:  int32(m.MediaCount) ,
+    SharedTo:  int32(m.SharedTo) ,
+    DisableComment:  int32(m.DisableComment) ,
+    HasTag:  int32(m.HasTag) ,
+    CommentsCount:  int32(m.CommentsCount) ,
+    LikesCount:  int32(m.LikesCount) ,
+    ViewsCount:  int32(m.ViewsCount) ,
+    EditedTime:  int32(m.EditedTime) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+    ReSharedPostId:  int64(m.ReSharedPostId) ,
+    DidILiked:  m.DidILiked ,
+    DidIReShared:  m.DidIReShared ,
+
+
+
+
+}
+return r
+}
+
 func(m *PB_ChatView_Flat)ToPB() *PB_ChatView {
 r := &PB_ChatView{
     ChatId:  int64(m.ChatId) ,
@@ -4851,6 +5853,84 @@ r := &PB_UserView{
 return r
 }
 
+func(m *PB_SettingNotificationView_Flat)ToPB() *PB_SettingNotificationView {
+r := &PB_SettingNotificationView{
+}
+return r
+}
+
+func(m *PB_AppConfig_Flat)ToPB() *PB_AppConfig {
+r := &PB_AppConfig{
+    DeprecatedClient:  m.DeprecatedClient ,
+    HasNewUpdate:  m.HasNewUpdate ,
+}
+return r
+}
+
+func(m *PB_UserProfileView_Flat)ToPB() *PB_UserProfileView {
+r := &PB_UserProfileView{
+}
+return r
+}
+
+func(m *PB_UserViewRowify_Flat)ToPB() *PB_UserViewRowify {
+r := &PB_UserViewRowify{
+    Id:  int64(m.Id) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+
+}
+return r
+}
+
+func(m *PB_PostViewRowify_Flat)ToPB() *PB_PostViewRowify {
+r := &PB_PostViewRowify{
+    Id:  int64(m.Id) ,
+
+}
+return r
+}
+
+func(m *PB_TagView_Flat)ToPB() *PB_TagView {
+r := &PB_TagView{
+    TagId:  int64(m.TagId) ,
+    Name:  m.Name ,
+    Count:  int32(m.Count) ,
+    TagStatusEnum:  int32(m.TagStatusEnum) ,
+    CreatedTime:  int32(m.CreatedTime) ,
+}
+return r
+}
+
+func(m *PB_TopTagWithSamplePosts_Flat)ToPB() *PB_TopTagWithSamplePosts {
+r := &PB_TopTagWithSamplePosts{
+
+
+}
+return r
+}
+
+func(m *PB_SelfUserView_Flat)ToPB() *PB_SelfUserView {
+r := &PB_SelfUserView{
+
+    ProfilePrivacy:  int32(m.ProfilePrivacy) ,
+    OnlinePrivacy:  int32(m.OnlinePrivacy) ,
+    CallPrivacy:  int32(m.CallPrivacy) ,
+    AddToGroupPrivacy:  int32(m.AddToGroupPrivacy) ,
+    SeenMessagePrivacy:  int32(m.SeenMessagePrivacy) ,
+
+}
+return r
+}
+
+func(m *PB_Error_Flat)ToPB() *PB_Error {
+r := &PB_Error{
+
+    ShowError:  m.ShowError ,
+    ErrorMessage:  m.ErrorMessage ,
+}
+return r
+}
+
 
 
 ///// folding ///
@@ -4904,18 +5984,46 @@ var PB_ResponseToClient__FOlD = &PB_ResponseToClient{
 }
 
 
+var RPC_Auth_Types__FOlD = &RPC_Auth_Types{
+}
+
+
 var PB_RPC_Chat_Types__FOlD = &PB_RPC_Chat_Types{
+}
+
+
+var RPC_General_Types__FOlD = &RPC_General_Types{
+}
+
+
+var RPC_Page_Types__FOlD = &RPC_Page_Types{
+}
+
+
+var RPC_Social_Types__FOlD = &RPC_Social_Types{
+}
+
+
+var RPC_User_Types__FOlD = &RPC_User_Types{
 }
 
 
 var PB_Action__FOlD = &PB_Action{
         ActionId:  0 ,
         ActorUserId:  0 ,
-        ActionTypeEnum:  0 ,
+        ActionType:  0 ,
         PeerUserId:  0 ,
         PostId:  0 ,
         CommentId:  0 ,
         Murmur64Hash:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_Blocked__FOlD = &PB_Blocked{
+        Id:  0 ,
+        UserId:  0 ,
+        BlockedUserId:  0 ,
         CreatedTime:  0 ,
 }
 
@@ -4926,6 +6034,7 @@ var PB_Comment__FOlD = &PB_Comment{
         PostId:  0 ,
         Text:  "" ,
         LikesCount:  0 ,
+        IsEdited:  0 ,
         CreatedTime:  0 ,
 }
 
@@ -4951,6 +6060,14 @@ var PB_Event__FOlD = &PB_Event{
 }
 
 
+var PB_Followed__FOlD = &PB_Followed{
+        Id:  0 ,
+        UserId:  0 ,
+        FollowedUserId:  0 ,
+        CreatedTime:  0 ,
+}
+
+
 var PB_Like__FOlD = &PB_Like{
         Id:  0 ,
         PostId:  0 ,
@@ -4965,7 +6082,7 @@ var PB_Notify__FOlD = &PB_Notify{
         NotifyId:  0 ,
         ForUserId:  0 ,
         ActorUserId:  0 ,
-        NotifyTypeEnum:  0 ,
+        NotifyType:  0 ,
         PostId:  0 ,
         CommentId:  0 ,
         PeerUserId:  0 ,
@@ -5069,19 +6186,16 @@ var PB_PostMentioned__FOlD = &PB_PostMentioned{
         ForUserId:  0 ,
         PostId:  0 ,
         PostUserId:  0 ,
-        PostTypeEnum:  0 ,
-        PostCategoryEnum:  0 ,
+        PostType:  0 ,
         CreatedTime:  0 ,
 }
 
 
 var PB_PostReshared__FOlD = &PB_PostReshared{
         ResharedId:  0 ,
-        ByUserId:  0 ,
         PostId:  0 ,
+        ByUserId:  0 ,
         PostUserId:  0 ,
-        PostTypeEnum:  0 ,
-        PostCategoryEnum:  0 ,
         CreatedTime:  0 ,
 }
 
@@ -5094,30 +6208,6 @@ var PB_Session__FOlD = &PB_Session{
         AppVersion:  0 ,
         ActiveTime:  0 ,
         CreatedTime:  0 ,
-}
-
-
-var PB_SettingClient__FOlD = &PB_SettingClient{
-        UserId:  0 ,
-        AutoDownloadWifiVoice:  0 ,
-        AutoDownloadWifiImage:  0 ,
-        AutoDownloadWifiVideo:  0 ,
-        AutoDownloadWifiFile:  0 ,
-        AutoDownloadWifiMusic:  0 ,
-        AutoDownloadWifiGif:  0 ,
-        AutoDownloadCellularVoice:  0 ,
-        AutoDownloadCellularImage:  0 ,
-        AutoDownloadCellularVideo:  0 ,
-        AutoDownloadCellularFile:  0 ,
-        AutoDownloadCellularMusic:  0 ,
-        AutoDownloadCellularGif:  0 ,
-        AutoDownloadRoamingVoice:  0 ,
-        AutoDownloadRoamingImage:  0 ,
-        AutoDownloadRoamingVideo:  0 ,
-        AutoDownloadRoamingFile:  0 ,
-        AutoDownloadRoamingMusic:  0 ,
-        AutoDownloadRoamingGif:  0 ,
-        SaveToGallery:  0 ,
 }
 
 
@@ -5184,6 +6274,9 @@ var PB_User__FOlD = &PB_User{
         AvatarId:  0 ,
         ProfilePrivacy:  0 ,
         OnlinePrivacy:  0 ,
+        CallPrivacy:  0 ,
+        AddToGroupPrivacy:  0 ,
+        SeenMessagePrivacy:  0 ,
         Phone:  0 ,
         Email:  "" ,
         About:  "" ,
@@ -5235,27 +6328,39 @@ var PB_Chat__FOlD = &PB_Chat{
         PeerUserId:  0 ,
         GroupId:  0 ,
         HashTagId:  0 ,
-        StartedByMe:  0 ,
         Title:  "" ,
-        PinTime:  0 ,
+        PinTimeMs:  0 ,
         FromMsgId:  0 ,
-        Seq:  0 ,
         UnseenCount:  0 ,
+        Seq:  0 ,
         LastMsgId:  0 ,
-        LastMsgStatus:  0 ,
-        SeenSeq:  0 ,
-        SeenMsgId:  0 ,
-        LastMsgIdRecived:  0 ,
-        Left:  0 ,
-        Creator:  0 ,
-        Kicked:  0 ,
-        Admin:  0 ,
-        Deactivated:  0 ,
-        VersionTime:  0 ,
+        LastMyMsgStatus:  0 ,
+        MyLastSeenSeq:  0 ,
+        MyLastSeenMsgId:  0 ,
+        PeerLastSeenMsgId:  0 ,
+        MyLastDeliveredSeq:  0 ,
+        MyLastDeliveredMsgId:  0 ,
+        PeerLastDeliveredMsgId:  0 ,
+        IsActive:  0 ,
+        IsLeft:  0 ,
+        IsCreator:  0 ,
+        IsKicked:  0 ,
+        IsAdmin:  0 ,
+        IsDeactivated:  0 ,
+        IsMuted:  0 ,
+        MuteUntil:  0 ,
+        VersionTimeMs:  0 ,
+        VersionSeq:  0 ,
         OrderTime:  0 ,
         CreatedTime:  0 ,
         DraftText:  "" ,
         DratReplyToMsgId:  0 ,
+}
+
+
+var PB_ChatDeleted__FOlD = &PB_ChatDeleted{
+        ChatId:  0 ,
+        RoomKey:  "" ,
 }
 
 
@@ -5265,11 +6370,10 @@ var PB_ChatLastMessage__FOlD = &PB_ChatLastMessage{
 }
 
 
-var PB_ChatVersionOrder__FOlD = &PB_ChatVersionOrder{
-        VersionTime:  0 ,
+var PB_ChatUserVersion__FOlD = &PB_ChatUserVersion{
         UserId:  0 ,
         ChatId:  0 ,
-        OrderTime:  0 ,
+        VersionTimeNano:  0 ,
 }
 
 
@@ -5289,11 +6393,15 @@ var PB_Group__FOlD = &PB_Group{
         AvatarRefId:  0 ,
         AvatarCount:  0 ,
         About:  "" ,
-        InviteLink:  "" ,
+        InviteLinkHash:  "" ,
         MembersCount:  0 ,
+        AdminsCount:  0 ,
+        ModeratorCounts:  0 ,
         SortTime:  0 ,
         CreatedTime:  0 ,
         IsMute:  0 ,
+        IsDeleted:  0 ,
+        IsBanned:  0 ,
 }
 
 
@@ -5455,6 +6563,80 @@ var PB_InvalidateCache__FOlD = &PB_InvalidateCache{
 }
 
 
+var PB_MediaView__FOlD = &PB_MediaView{
+}
+
+
+var PB_ActionView__FOlD = &PB_ActionView{
+        ActionId:  0 ,
+        ActorUserId:  0 ,
+        ActionTypeEnum:  0 ,
+        PeerUserId:  0 ,
+        PostId:  0 ,
+        CommentId:  0 ,
+        Murmur64Hash:  0 ,
+        CreatedTime:  0 ,
+
+
+
+
+
+}
+
+
+var PB_NotifyView__FOlD = &PB_NotifyView{
+        NotifyId:  0 ,
+        ForUserId:  0 ,
+        ActorUserId:  0 ,
+        NotiyTypeEnum:  0 ,
+        PostId:  0 ,
+        CommentId:  0 ,
+        PeerUserId:  0 ,
+        Murmur64Hash:  0 ,
+        SeenStatus:  0 ,
+        CreatedTime:  0 ,
+
+
+
+}
+
+
+var PB_CommentView__FOlD = &PB_CommentView{
+        CommentId:  0 ,
+        UserId:  0 ,
+        PostId:  0 ,
+        Text:  "" ,
+        LikesCount:  0 ,
+        CreatedTime:  0 ,
+
+}
+
+
+var PB_PostView__FOlD = &PB_PostView{
+        PostId:  0 ,
+        UserId:  0 ,
+
+        Text:  "" ,
+        RichText:  "" ,
+        MediaCount:  0 ,
+        SharedTo:  0 ,
+        DisableComment:  0 ,
+        HasTag:  0 ,
+        CommentsCount:  0 ,
+        LikesCount:  0 ,
+        ViewsCount:  0 ,
+        EditedTime:  0 ,
+        CreatedTime:  0 ,
+        ReSharedPostId:  0 ,
+        DidILiked:  false ,
+        DidIReShared:  false ,
+
+
+
+
+}
+
+
 var PB_ChatView__FOlD = &PB_ChatView{
         ChatId:  0 ,
         ChatKey:  "" ,
@@ -5577,6 +6759,66 @@ var PB_UserView__FOlD = &PB_UserView{
         LastActiveTime:  0 ,
         LastActiveTimeShow:  "" ,
 
+}
+
+
+var PB_SettingNotificationView__FOlD = &PB_SettingNotificationView{
+}
+
+
+var PB_AppConfig__FOlD = &PB_AppConfig{
+        DeprecatedClient:  false ,
+        HasNewUpdate:  false ,
+}
+
+
+var PB_UserProfileView__FOlD = &PB_UserProfileView{
+}
+
+
+var PB_UserViewRowify__FOlD = &PB_UserViewRowify{
+        Id:  0 ,
+        CreatedTime:  0 ,
+
+}
+
+
+var PB_PostViewRowify__FOlD = &PB_PostViewRowify{
+        Id:  0 ,
+
+}
+
+
+var PB_TagView__FOlD = &PB_TagView{
+        TagId:  0 ,
+        Name:  "" ,
+        Count:  0 ,
+        TagStatusEnum:  0 ,
+        CreatedTime:  0 ,
+}
+
+
+var PB_TopTagWithSamplePosts__FOlD = &PB_TopTagWithSamplePosts{
+
+
+}
+
+
+var PB_SelfUserView__FOlD = &PB_SelfUserView{
+
+        ProfilePrivacy:  0 ,
+        OnlinePrivacy:  0 ,
+        CallPrivacy:  0 ,
+        AddToGroupPrivacy:  0 ,
+        SeenMessagePrivacy:  0 ,
+
+}
+
+
+var PB_Error__FOlD = &PB_Error{
+
+        ShowError:  false ,
+        ErrorMessage:  "" ,
 }
 
 

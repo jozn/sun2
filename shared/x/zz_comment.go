@@ -20,6 +20,7 @@ type Comment__ struct {
 	PostId      int    `json:"PostId"`      // PostId -
 	Text        string `json:"Text"`        // Text -
 	LikesCount  int    `json:"LikesCount"`  // LikesCount -
+	IsEdited    int    `json:"IsEdited"`    // IsEdited -
 	CreatedTime int    `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
@@ -46,16 +47,16 @@ func (c *Comment) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.comment (` +
-		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime` +
+		`CommentId, UserId, PostId, Text, LikesCount, IsEdited, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Comment {
-		XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+		XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -75,16 +76,16 @@ func (c *Comment) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.comment (` +
-		`CommentId, UserId, PostId, Text, LikesCount, CreatedTime` +
+		`CommentId, UserId, PostId, Text, LikesCount, IsEdited, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Comment {
-		XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+		XOLog(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime)
+	_, err = db.Exec(sqlstr, c.CommentId, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Comment {
 			XOLogErr(err)
@@ -115,14 +116,14 @@ func (c *Comment) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.comment SET ` +
-		`UserId = ?, PostId = ?, Text = ?, LikesCount = ?, CreatedTime = ?` +
+		`UserId = ?, PostId = ?, Text = ?, LikesCount = ?, IsEdited = ?, CreatedTime = ?` +
 		` WHERE CommentId = ?`
 
 	// run query
 	if LogTableSqlReq.Comment {
-		XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.CommentId)
+		XOLog(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime, c.CommentId)
 	}
-	_, err = db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.CreatedTime, c.CommentId)
+	_, err = db.Exec(sqlstr, c.UserId, c.PostId, c.Text, c.LikesCount, c.IsEdited, c.CreatedTime, c.CommentId)
 
 	if LogTableSqlReq.Comment {
 		XOLogErr(err)
@@ -683,6 +684,111 @@ func (d *__Comment_Deleter) LikesCount_GE(val int) *__Comment_Deleter {
 	return d
 }
 
+func (u *__Comment_Deleter) IsEdited_In(ins []int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Deleter) IsEdited_Ins(ins ...int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Deleter) IsEdited_NotIn(ins []int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Comment_Deleter) IsEdited_Eq(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Deleter) IsEdited_NotEq(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Deleter) IsEdited_LT(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Deleter) IsEdited_LE(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Deleter) IsEdited_GT(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Deleter) IsEdited_GE(val int) *__Comment_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Comment_Deleter) CreatedTime_In(ins []int) *__Comment_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1222,6 +1328,111 @@ func (d *__Comment_Updater) LikesCount_GE(val int) *__Comment_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " LikesCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Comment_Updater) IsEdited_In(ins []int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Updater) IsEdited_Ins(ins ...int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Updater) IsEdited_NotIn(ins []int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Comment_Updater) IsEdited_Eq(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Updater) IsEdited_NotEq(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Updater) IsEdited_LT(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Updater) IsEdited_LE(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Updater) IsEdited_GT(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Updater) IsEdited_GE(val int) *__Comment_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1771,6 +1982,111 @@ func (d *__Comment_Selector) LikesCount_GE(val int) *__Comment_Selector {
 	return d
 }
 
+func (u *__Comment_Selector) IsEdited_In(ins []int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Selector) IsEdited_Ins(ins ...int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Comment_Selector) IsEdited_NotIn(ins []int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsEdited NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Comment_Selector) IsEdited_Eq(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Selector) IsEdited_NotEq(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Selector) IsEdited_LT(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Selector) IsEdited_LE(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Selector) IsEdited_GT(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Comment_Selector) IsEdited_GE(val int) *__Comment_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsEdited >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Comment_Selector) CreatedTime_In(ins []int) *__Comment_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2188,6 +2504,33 @@ func (u *__Comment_Updater) LikesCount_Increment(count int) *__Comment_Updater {
 
 //ints
 
+func (u *__Comment_Updater) IsEdited(newVal int) *__Comment_Updater {
+	up := updateCol{" IsEdited = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsEdited = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Comment_Updater) IsEdited_Increment(count int) *__Comment_Updater {
+	if count > 0 {
+		up := updateCol{" IsEdited = IsEdited+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsEdited = IsEdited+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsEdited = IsEdited- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsEdited = IsEdited- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Comment_Updater) CreatedTime(newVal int) *__Comment_Updater {
 	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -2290,6 +2633,21 @@ func (u *__Comment_Selector) OrderBy_LikesCount_Asc() *__Comment_Selector {
 
 func (u *__Comment_Selector) Select_LikesCount() *__Comment_Selector {
 	u.selectCol = "LikesCount"
+	return u
+}
+
+func (u *__Comment_Selector) OrderBy_IsEdited_Desc() *__Comment_Selector {
+	u.orderBy = " ORDER BY IsEdited DESC "
+	return u
+}
+
+func (u *__Comment_Selector) OrderBy_IsEdited_Asc() *__Comment_Selector {
+	u.orderBy = " ORDER BY IsEdited ASC "
+	return u
+}
+
+func (u *__Comment_Selector) Select_IsEdited() *__Comment_Selector {
+	u.selectCol = "IsEdited"
 	return u
 }
 
@@ -2628,10 +2986,10 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(6, ln, true)
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.comment (" +
-		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime" +
+		"CommentId, UserId, PostId, Text, LikesCount, IsEdited, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2644,6 +3002,7 @@ func MassInsert_Comment(rows []Comment, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.LikesCount)
+		vals = append(vals, row.IsEdited)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2670,10 +3029,10 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(6, ln, true)
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.comment (" +
-		"CommentId, UserId, PostId, Text, LikesCount, CreatedTime" +
+		"CommentId, UserId, PostId, Text, LikesCount, IsEdited, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2686,6 +3045,7 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.LikesCount)
+		vals = append(vals, row.IsEdited)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2706,6 +3066,8 @@ func MassReplace_Comment(rows []Comment, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

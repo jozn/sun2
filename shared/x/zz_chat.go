@@ -15,35 +15,41 @@ import (
 
 // Manualy copy this to project
 type Chat__ struct {
-	ChatId           int    `json:"ChatId"`           // ChatId -
-	ChatKey          string `json:"ChatKey"`          // ChatKey -
-	RoomKey          string `json:"RoomKey"`          // RoomKey -
-	RoomType         int    `json:"RoomType"`         // RoomType -
-	UserId           int    `json:"UserId"`           // UserId -
-	PeerUserId       int    `json:"PeerUserId"`       // PeerUserId -
-	GroupId          int    `json:"GroupId"`          // GroupId -
-	HashTagId        int    `json:"HashTagId"`        // HashTagId -
-	StartedByMe      int    `json:"StartedByMe"`      // StartedByMe -
-	Title            string `json:"Title"`            // Title -
-	PinTime          int    `json:"PinTime"`          // PinTime -
-	FromMsgId        int    `json:"FromMsgId"`        // FromMsgId -
-	Seq              int    `json:"Seq"`              // Seq -
-	UnseenCount      int    `json:"UnseenCount"`      // UnseenCount -
-	LastMsgId        int    `json:"LastMsgId"`        // LastMsgId -
-	LastMsgStatus    int    `json:"LastMsgStatus"`    // LastMsgStatus -
-	SeenSeq          int    `json:"SeenSeq"`          // SeenSeq -
-	SeenMsgId        int    `json:"SeenMsgId"`        // SeenMsgId -
-	LastMsgIdRecived int    `json:"LastMsgIdRecived"` // LastMsgIdRecived -
-	Left             int    `json:"Left"`             // Left -
-	Creator          int    `json:"Creator"`          // Creator -
-	Kicked           int    `json:"Kicked"`           // Kicked -
-	Admin            int    `json:"Admin"`            // Admin -
-	Deactivated      int    `json:"Deactivated"`      // Deactivated -
-	VersionTime      int    `json:"VersionTime"`      // VersionTime -
-	OrderTime        int    `json:"OrderTime"`        // OrderTime -
-	CreatedTime      int    `json:"CreatedTime"`      // CreatedTime -
-	DraftText        string `json:"DraftText"`        // DraftText -
-	DratReplyToMsgId int    `json:"DratReplyToMsgId"` // DratReplyToMsgId -
+	ChatId                 int    `json:"ChatId"`                 // ChatId -
+	ChatKey                string `json:"ChatKey"`                // ChatKey -
+	RoomKey                string `json:"RoomKey"`                // RoomKey -
+	RoomType               int    `json:"RoomType"`               // RoomType -
+	UserId                 int    `json:"UserId"`                 // UserId -
+	PeerUserId             int    `json:"PeerUserId"`             // PeerUserId -
+	GroupId                int    `json:"GroupId"`                // GroupId -
+	HashTagId              int    `json:"HashTagId"`              // HashTagId -
+	Title                  string `json:"Title"`                  // Title -
+	PinTimeMs              int    `json:"PinTimeMs"`              // PinTimeMs -
+	FromMsgId              int    `json:"FromMsgId"`              // FromMsgId -
+	UnseenCount            int    `json:"UnseenCount"`            // UnseenCount -
+	Seq                    int    `json:"Seq"`                    // Seq -
+	LastMsgId              int    `json:"LastMsgId"`              // LastMsgId -
+	LastMyMsgStatus        int    `json:"LastMyMsgStatus"`        // LastMyMsgStatus -
+	MyLastSeenSeq          int    `json:"MyLastSeenSeq"`          // MyLastSeenSeq -
+	MyLastSeenMsgId        int    `json:"MyLastSeenMsgId"`        // MyLastSeenMsgId -
+	PeerLastSeenMsgId      int    `json:"PeerLastSeenMsgId"`      // PeerLastSeenMsgId -
+	MyLastDeliveredSeq     int    `json:"MyLastDeliveredSeq"`     // MyLastDeliveredSeq -
+	MyLastDeliveredMsgId   int    `json:"MyLastDeliveredMsgId"`   // MyLastDeliveredMsgId -
+	PeerLastDeliveredMsgId int    `json:"PeerLastDeliveredMsgId"` // PeerLastDeliveredMsgId -
+	IsActive               int    `json:"IsActive"`               // IsActive -
+	IsLeft                 int    `json:"IsLeft"`                 // IsLeft -
+	IsCreator              int    `json:"IsCreator"`              // IsCreator -
+	IsKicked               int    `json:"IsKicked"`               // IsKicked -
+	IsAdmin                int    `json:"IsAdmin"`                // IsAdmin -
+	IsDeactivated          int    `json:"IsDeactivated"`          // IsDeactivated -
+	IsMuted                int    `json:"IsMuted"`                // IsMuted -
+	MuteUntil              int    `json:"MuteUntil"`              // MuteUntil -
+	VersionTimeMs          int    `json:"VersionTimeMs"`          // VersionTimeMs -
+	VersionSeq             int    `json:"VersionSeq"`             // VersionSeq -
+	OrderTime              int    `json:"OrderTime"`              // OrderTime -
+	CreatedTime            int    `json:"CreatedTime"`            // CreatedTime -
+	DraftText              string `json:"DraftText"`              // DraftText -
+	DratReplyToMsgId       int    `json:"DratReplyToMsgId"`       // DratReplyToMsgId -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -69,16 +75,16 @@ func (c *Chat) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun_chat.chat (` +
-		`ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, StartedByMe, Title, PinTime, FromMsgId, Seq, UnseenCount, LastMsgId, LastMsgStatus, SeenSeq, SeenMsgId, LastMsgIdRecived, Left, Creator, Kicked, Admin, Deactivated, VersionTime, OrderTime, CreatedTime, DraftText, DratReplyToMsgId` +
+		`ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, Title, PinTimeMs, FromMsgId, UnseenCount, Seq, LastMsgId, LastMyMsgStatus, MyLastSeenSeq, MyLastSeenMsgId, PeerLastSeenMsgId, MyLastDeliveredSeq, MyLastDeliveredMsgId, PeerLastDeliveredMsgId, IsActive, IsLeft, IsCreator, IsKicked, IsAdmin, IsDeactivated, IsMuted, MuteUntil, VersionTimeMs, VersionSeq, OrderTime, CreatedTime, DraftText, DratReplyToMsgId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Chat {
-		XOLog(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
+		XOLog(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
 	}
-	_, err = db.Exec(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
+	_, err = db.Exec(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
 	if err != nil {
 		return err
 	}
@@ -98,16 +104,16 @@ func (c *Chat) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun_chat.chat (` +
-		`ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, StartedByMe, Title, PinTime, FromMsgId, Seq, UnseenCount, LastMsgId, LastMsgStatus, SeenSeq, SeenMsgId, LastMsgIdRecived, Left, Creator, Kicked, Admin, Deactivated, VersionTime, OrderTime, CreatedTime, DraftText, DratReplyToMsgId` +
+		`ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, Title, PinTimeMs, FromMsgId, UnseenCount, Seq, LastMsgId, LastMyMsgStatus, MyLastSeenSeq, MyLastSeenMsgId, PeerLastSeenMsgId, MyLastDeliveredSeq, MyLastDeliveredMsgId, PeerLastDeliveredMsgId, IsActive, IsLeft, IsCreator, IsKicked, IsAdmin, IsDeactivated, IsMuted, MuteUntil, VersionTimeMs, VersionSeq, OrderTime, CreatedTime, DraftText, DratReplyToMsgId` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Chat {
-		XOLog(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
+		XOLog(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
 	}
-	_, err = db.Exec(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
+	_, err = db.Exec(sqlstr, c.ChatId, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId)
 	if err != nil {
 		if LogTableSqlReq.Chat {
 			XOLogErr(err)
@@ -138,14 +144,14 @@ func (c *Chat) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.chat SET ` +
-		`ChatKey = ?, RoomKey = ?, RoomType = ?, UserId = ?, PeerUserId = ?, GroupId = ?, HashTagId = ?, StartedByMe = ?, Title = ?, PinTime = ?, FromMsgId = ?, Seq = ?, UnseenCount = ?, LastMsgId = ?, LastMsgStatus = ?, SeenSeq = ?, SeenMsgId = ?, LastMsgIdRecived = ?, Left = ?, Creator = ?, Kicked = ?, Admin = ?, Deactivated = ?, VersionTime = ?, OrderTime = ?, CreatedTime = ?, DraftText = ?, DratReplyToMsgId = ?` +
+		`ChatKey = ?, RoomKey = ?, RoomType = ?, UserId = ?, PeerUserId = ?, GroupId = ?, HashTagId = ?, Title = ?, PinTimeMs = ?, FromMsgId = ?, UnseenCount = ?, Seq = ?, LastMsgId = ?, LastMyMsgStatus = ?, MyLastSeenSeq = ?, MyLastSeenMsgId = ?, PeerLastSeenMsgId = ?, MyLastDeliveredSeq = ?, MyLastDeliveredMsgId = ?, PeerLastDeliveredMsgId = ?, IsActive = ?, IsLeft = ?, IsCreator = ?, IsKicked = ?, IsAdmin = ?, IsDeactivated = ?, IsMuted = ?, MuteUntil = ?, VersionTimeMs = ?, VersionSeq = ?, OrderTime = ?, CreatedTime = ?, DraftText = ?, DratReplyToMsgId = ?` +
 		` WHERE ChatId = ?`
 
 	// run query
 	if LogTableSqlReq.Chat {
-		XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId, c.ChatId)
+		XOLog(sqlstr, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId, c.ChatId)
 	}
-	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.StartedByMe, c.Title, c.PinTime, c.FromMsgId, c.Seq, c.UnseenCount, c.LastMsgId, c.LastMsgStatus, c.SeenSeq, c.SeenMsgId, c.LastMsgIdRecived, c.Left, c.Creator, c.Kicked, c.Admin, c.Deactivated, c.VersionTime, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId, c.ChatId)
+	_, err = db.Exec(sqlstr, c.ChatKey, c.RoomKey, c.RoomType, c.UserId, c.PeerUserId, c.GroupId, c.HashTagId, c.Title, c.PinTimeMs, c.FromMsgId, c.UnseenCount, c.Seq, c.LastMsgId, c.LastMyMsgStatus, c.MyLastSeenSeq, c.MyLastSeenMsgId, c.PeerLastSeenMsgId, c.MyLastDeliveredSeq, c.MyLastDeliveredMsgId, c.PeerLastDeliveredMsgId, c.IsActive, c.IsLeft, c.IsCreator, c.IsKicked, c.IsAdmin, c.IsDeactivated, c.IsMuted, c.MuteUntil, c.VersionTimeMs, c.VersionSeq, c.OrderTime, c.CreatedTime, c.DraftText, c.DratReplyToMsgId, c.ChatId)
 
 	if LogTableSqlReq.Chat {
 		XOLogErr(err)
@@ -916,211 +922,106 @@ func (d *__Chat_Deleter) HashTagId_GE(val int) *__Chat_Deleter {
 	return d
 }
 
-func (u *__Chat_Deleter) StartedByMe_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PinTimeMs_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) StartedByMe_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PinTimeMs_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) StartedByMe_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PinTimeMs_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) StartedByMe_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe = " + d.nextDollar()
+	w.condition = " PinTimeMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartedByMe_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe != " + d.nextDollar()
+	w.condition = " PinTimeMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartedByMe_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe < " + d.nextDollar()
+	w.condition = " PinTimeMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartedByMe_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe <= " + d.nextDollar()
+	w.condition = " PinTimeMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartedByMe_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe > " + d.nextDollar()
+	w.condition = " PinTimeMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) StartedByMe_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PinTimeMs_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Deleter) PinTime_In(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) PinTime_Ins(ins ...int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) PinTime_NotIn(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Deleter) PinTime_Eq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) PinTime_NotEq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) PinTime_LT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) PinTime_LE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) PinTime_GT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) PinTime_GE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime >= " + d.nextDollar()
+	w.condition = " PinTimeMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1231,111 +1132,6 @@ func (d *__Chat_Deleter) FromMsgId_GE(val int) *__Chat_Deleter {
 	return d
 }
 
-func (u *__Chat_Deleter) Seq_In(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) Seq_Ins(ins ...int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Deleter) Seq_NotIn(ins []int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Deleter) Seq_Eq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) Seq_NotEq(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) Seq_LT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) Seq_LE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) Seq_GT(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Deleter) Seq_GE(val int) *__Chat_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Chat_Deleter) UnseenCount_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1436,6 +1232,111 @@ func (d *__Chat_Deleter) UnseenCount_GE(val int) *__Chat_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " UnseenCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) Seq_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) Seq_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) Seq_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) Seq_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) Seq_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) Seq_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) Seq_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) Seq_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) Seq_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1546,1051 +1447,1786 @@ func (d *__Chat_Deleter) LastMsgId_GE(val int) *__Chat_Deleter {
 	return d
 }
 
-func (u *__Chat_Deleter) LastMsgStatus_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) LastMyMsgStatus_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMsgStatus_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) LastMyMsgStatus_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMsgStatus_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) LastMyMsgStatus_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus = " + d.nextDollar()
+	w.condition = " LastMyMsgStatus = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus != " + d.nextDollar()
+	w.condition = " LastMyMsgStatus != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus < " + d.nextDollar()
+	w.condition = " LastMyMsgStatus < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus <= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus > " + d.nextDollar()
+	w.condition = " LastMyMsgStatus > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgStatus_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) LastMyMsgStatus_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus >= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) SeenSeq_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenSeq_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) SeenSeq_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenSeq_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) SeenSeq_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenSeq_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) SeenSeq_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = " + d.nextDollar()
+	w.condition = " MyLastSeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenSeq_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != " + d.nextDollar()
+	w.condition = " MyLastSeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenSeq_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < " + d.nextDollar()
+	w.condition = " MyLastSeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenSeq_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenSeq_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > " + d.nextDollar()
+	w.condition = " MyLastSeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenSeq_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenSeq_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) SeenMsgId_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenMsgId_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) SeenMsgId_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenMsgId_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) SeenMsgId_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastSeenMsgId_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) SeenMsgId_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId = " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenMsgId_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId != " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenMsgId_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId < " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenMsgId_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId <= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenMsgId_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId > " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) SeenMsgId_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastSeenMsgId_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId >= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) LastMsgIdRecived_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastSeenMsgId_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMsgIdRecived_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastSeenMsgId_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) LastMsgIdRecived_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastSeenMsgId_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived = " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived != " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived < " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived <= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived > " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) LastMsgIdRecived_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastSeenMsgId_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived >= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) Left_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredSeq_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Left_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredSeq_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Left_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredSeq_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) Left_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left = " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Left_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left != " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Left_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left < " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Left_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Left_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left > " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Left_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredSeq_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) Creator_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredMsgId_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Creator_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredMsgId_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Creator_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) MyLastDeliveredMsgId_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) Creator_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator = " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Creator_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator != " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Creator_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator < " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Creator_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Creator_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator > " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Creator_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) MyLastDeliveredMsgId_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) Kicked_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastDeliveredMsgId_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Kicked_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastDeliveredMsgId_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Kicked_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) PeerLastDeliveredMsgId_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) Kicked_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked = " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Kicked_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked != " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Kicked_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked < " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Kicked_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked <= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Kicked_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked > " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Kicked_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) PeerLastDeliveredMsgId_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked >= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) Admin_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsActive_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Admin_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsActive_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Admin_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsActive_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) Admin_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin = " + d.nextDollar()
+	w.condition = " IsActive = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Admin_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin != " + d.nextDollar()
+	w.condition = " IsActive != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Admin_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin < " + d.nextDollar()
+	w.condition = " IsActive < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Admin_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin <= " + d.nextDollar()
+	w.condition = " IsActive <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Admin_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin > " + d.nextDollar()
+	w.condition = " IsActive > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Admin_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsActive_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin >= " + d.nextDollar()
+	w.condition = " IsActive >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) Deactivated_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsLeft_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Deactivated_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsLeft_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) Deactivated_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsLeft_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) Deactivated_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated = " + d.nextDollar()
+	w.condition = " IsLeft = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Deactivated_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated != " + d.nextDollar()
+	w.condition = " IsLeft != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Deactivated_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated < " + d.nextDollar()
+	w.condition = " IsLeft < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Deactivated_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated <= " + d.nextDollar()
+	w.condition = " IsLeft <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Deactivated_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated > " + d.nextDollar()
+	w.condition = " IsLeft > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) Deactivated_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsLeft_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated >= " + d.nextDollar()
+	w.condition = " IsLeft >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Deleter) VersionTime_In(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsCreator_In(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) VersionTime_Ins(ins ...int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsCreator_Ins(ins ...int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Deleter) VersionTime_NotIn(ins []int) *__Chat_Deleter {
+func (u *__Chat_Deleter) IsCreator_NotIn(ins []int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Deleter) VersionTime_Eq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_Eq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " IsCreator = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) VersionTime_NotEq(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_NotEq(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " IsCreator != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) VersionTime_LT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_LT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " IsCreator < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) VersionTime_LE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_LE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " IsCreator <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) VersionTime_GT(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_GT(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " IsCreator > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Deleter) VersionTime_GE(val int) *__Chat_Deleter {
+func (d *__Chat_Deleter) IsCreator_GE(val int) *__Chat_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " IsCreator >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) IsKicked_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsKicked_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsKicked_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) IsKicked_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsKicked_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsKicked_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsKicked_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsKicked_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsKicked_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) IsAdmin_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsAdmin_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsAdmin_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) IsAdmin_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsAdmin_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsAdmin_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsAdmin_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsAdmin_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsAdmin_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) IsDeactivated_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsDeactivated_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsDeactivated_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) IsDeactivated_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsDeactivated_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsDeactivated_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsDeactivated_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsDeactivated_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsDeactivated_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) IsMuted_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsMuted_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) IsMuted_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) IsMuted_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsMuted_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsMuted_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsMuted_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsMuted_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) IsMuted_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) MuteUntil_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) MuteUntil_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) MuteUntil_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) MuteUntil_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) MuteUntil_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) MuteUntil_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) MuteUntil_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) MuteUntil_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) MuteUntil_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) VersionTimeMs_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) VersionTimeMs_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) VersionTimeMs_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionTimeMs_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Deleter) VersionSeq_In(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) VersionSeq_Ins(ins ...int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Deleter) VersionSeq_NotIn(ins []int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Deleter) VersionSeq_Eq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionSeq_NotEq(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionSeq_LT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionSeq_LE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionSeq_GT(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Deleter) VersionSeq_GE(val int) *__Chat_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3560,211 +4196,106 @@ func (d *__Chat_Updater) HashTagId_GE(val int) *__Chat_Updater {
 	return d
 }
 
-func (u *__Chat_Updater) StartedByMe_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PinTimeMs_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) StartedByMe_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) PinTimeMs_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) StartedByMe_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PinTimeMs_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) StartedByMe_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe = " + d.nextDollar()
+	w.condition = " PinTimeMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartedByMe_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe != " + d.nextDollar()
+	w.condition = " PinTimeMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartedByMe_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe < " + d.nextDollar()
+	w.condition = " PinTimeMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartedByMe_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe <= " + d.nextDollar()
+	w.condition = " PinTimeMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartedByMe_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe > " + d.nextDollar()
+	w.condition = " PinTimeMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) StartedByMe_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PinTimeMs_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Updater) PinTime_In(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) PinTime_Ins(ins ...int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) PinTime_NotIn(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Updater) PinTime_Eq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) PinTime_NotEq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) PinTime_LT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) PinTime_LE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) PinTime_GT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) PinTime_GE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime >= " + d.nextDollar()
+	w.condition = " PinTimeMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3875,111 +4406,6 @@ func (d *__Chat_Updater) FromMsgId_GE(val int) *__Chat_Updater {
 	return d
 }
 
-func (u *__Chat_Updater) Seq_In(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) Seq_Ins(ins ...int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Updater) Seq_NotIn(ins []int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Updater) Seq_Eq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) Seq_NotEq(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) Seq_LT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) Seq_LE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) Seq_GT(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Updater) Seq_GE(val int) *__Chat_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Chat_Updater) UnseenCount_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4080,6 +4506,111 @@ func (d *__Chat_Updater) UnseenCount_GE(val int) *__Chat_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " UnseenCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) Seq_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) Seq_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) Seq_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) Seq_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) Seq_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) Seq_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) Seq_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) Seq_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) Seq_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4190,1051 +4721,1786 @@ func (d *__Chat_Updater) LastMsgId_GE(val int) *__Chat_Updater {
 	return d
 }
 
-func (u *__Chat_Updater) LastMsgStatus_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) LastMyMsgStatus_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgStatus_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) LastMyMsgStatus_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgStatus_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) LastMyMsgStatus_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) LastMsgStatus_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus = " + d.nextDollar()
+	w.condition = " LastMyMsgStatus = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgStatus_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus != " + d.nextDollar()
+	w.condition = " LastMyMsgStatus != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgStatus_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus < " + d.nextDollar()
+	w.condition = " LastMyMsgStatus < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgStatus_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus <= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgStatus_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus > " + d.nextDollar()
+	w.condition = " LastMyMsgStatus > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgStatus_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) LastMyMsgStatus_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus >= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) SeenSeq_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenSeq_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) SeenSeq_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenSeq_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) SeenSeq_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenSeq_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) SeenSeq_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = " + d.nextDollar()
+	w.condition = " MyLastSeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenSeq_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != " + d.nextDollar()
+	w.condition = " MyLastSeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenSeq_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < " + d.nextDollar()
+	w.condition = " MyLastSeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenSeq_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenSeq_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > " + d.nextDollar()
+	w.condition = " MyLastSeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenSeq_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenSeq_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) SeenMsgId_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenMsgId_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) SeenMsgId_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenMsgId_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) SeenMsgId_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenMsgId_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) SeenMsgId_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId = " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenMsgId_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId != " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenMsgId_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId < " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenMsgId_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId <= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenMsgId_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId > " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) SeenMsgId_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastSeenMsgId_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId >= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) LastMsgIdRecived_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastSeenMsgId_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgIdRecived_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastSeenMsgId_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgIdRecived_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastSeenMsgId_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived = " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived != " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived < " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived <= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived > " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) LastMsgIdRecived_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastSeenMsgId_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived >= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) Left_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredSeq_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Left_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredSeq_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Left_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredSeq_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) Left_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left = " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Left_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left != " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Left_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left < " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Left_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Left_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left > " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Left_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredSeq_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) Creator_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredMsgId_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Creator_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredMsgId_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Creator_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredMsgId_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) Creator_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator = " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Creator_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator != " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Creator_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator < " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Creator_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Creator_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator > " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Creator_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) MyLastDeliveredMsgId_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) Kicked_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastDeliveredMsgId_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Kicked_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastDeliveredMsgId_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Kicked_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastDeliveredMsgId_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) Kicked_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked = " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Kicked_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked != " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Kicked_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked < " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Kicked_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked <= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Kicked_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked > " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Kicked_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) PeerLastDeliveredMsgId_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked >= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) Admin_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsActive_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Admin_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) IsActive_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Admin_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsActive_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) Admin_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin = " + d.nextDollar()
+	w.condition = " IsActive = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Admin_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin != " + d.nextDollar()
+	w.condition = " IsActive != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Admin_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin < " + d.nextDollar()
+	w.condition = " IsActive < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Admin_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin <= " + d.nextDollar()
+	w.condition = " IsActive <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Admin_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin > " + d.nextDollar()
+	w.condition = " IsActive > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Admin_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsActive_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin >= " + d.nextDollar()
+	w.condition = " IsActive >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) Deactivated_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsLeft_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Deactivated_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) IsLeft_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) Deactivated_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsLeft_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) Deactivated_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated = " + d.nextDollar()
+	w.condition = " IsLeft = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Deactivated_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated != " + d.nextDollar()
+	w.condition = " IsLeft != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Deactivated_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated < " + d.nextDollar()
+	w.condition = " IsLeft < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Deactivated_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated <= " + d.nextDollar()
+	w.condition = " IsLeft <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Deactivated_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated > " + d.nextDollar()
+	w.condition = " IsLeft > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) Deactivated_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsLeft_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated >= " + d.nextDollar()
+	w.condition = " IsLeft >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Updater) VersionTime_In(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsCreator_In(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) VersionTime_Ins(ins ...int) *__Chat_Updater {
+func (u *__Chat_Updater) IsCreator_Ins(ins ...int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Updater) VersionTime_NotIn(ins []int) *__Chat_Updater {
+func (u *__Chat_Updater) IsCreator_NotIn(ins []int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Updater) VersionTime_Eq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_Eq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " IsCreator = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) VersionTime_NotEq(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_NotEq(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " IsCreator != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) VersionTime_LT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_LT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " IsCreator < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) VersionTime_LE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_LE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " IsCreator <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) VersionTime_GT(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_GT(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " IsCreator > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Updater) VersionTime_GE(val int) *__Chat_Updater {
+func (d *__Chat_Updater) IsCreator_GE(val int) *__Chat_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " IsCreator >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) IsKicked_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsKicked_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsKicked_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) IsKicked_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsKicked_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsKicked_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsKicked_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsKicked_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsKicked_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) IsAdmin_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsAdmin_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsAdmin_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) IsAdmin_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsAdmin_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsAdmin_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsAdmin_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsAdmin_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsAdmin_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) IsDeactivated_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsDeactivated_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsDeactivated_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) IsDeactivated_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsDeactivated_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsDeactivated_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsDeactivated_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsDeactivated_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsDeactivated_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) IsMuted_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsMuted_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) IsMuted_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) IsMuted_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsMuted_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsMuted_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsMuted_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsMuted_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) IsMuted_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) MuteUntil_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) MuteUntil_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) MuteUntil_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) MuteUntil_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) MuteUntil_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) MuteUntil_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) MuteUntil_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) MuteUntil_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) MuteUntil_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) VersionTimeMs_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) VersionTimeMs_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) VersionTimeMs_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) VersionTimeMs_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionTimeMs_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionTimeMs_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionTimeMs_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionTimeMs_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionTimeMs_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Updater) VersionSeq_In(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) VersionSeq_Ins(ins ...int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Updater) VersionSeq_NotIn(ins []int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Updater) VersionSeq_Eq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionSeq_NotEq(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionSeq_LT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionSeq_LE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionSeq_GT(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Updater) VersionSeq_GE(val int) *__Chat_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6204,211 +7470,106 @@ func (d *__Chat_Selector) HashTagId_GE(val int) *__Chat_Selector {
 	return d
 }
 
-func (u *__Chat_Selector) StartedByMe_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PinTimeMs_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) StartedByMe_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) PinTimeMs_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) StartedByMe_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PinTimeMs_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " StartedByMe NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PinTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) StartedByMe_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe = " + d.nextDollar()
+	w.condition = " PinTimeMs = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartedByMe_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe != " + d.nextDollar()
+	w.condition = " PinTimeMs != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartedByMe_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe < " + d.nextDollar()
+	w.condition = " PinTimeMs < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartedByMe_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe <= " + d.nextDollar()
+	w.condition = " PinTimeMs <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartedByMe_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe > " + d.nextDollar()
+	w.condition = " PinTimeMs > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) StartedByMe_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PinTimeMs_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " StartedByMe >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Chat_Selector) PinTime_In(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) PinTime_Ins(ins ...int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) PinTime_NotIn(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PinTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Selector) PinTime_Eq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) PinTime_NotEq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) PinTime_LT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) PinTime_LE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) PinTime_GT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) PinTime_GE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PinTime >= " + d.nextDollar()
+	w.condition = " PinTimeMs >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6519,111 +7680,6 @@ func (d *__Chat_Selector) FromMsgId_GE(val int) *__Chat_Selector {
 	return d
 }
 
-func (u *__Chat_Selector) Seq_In(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) Seq_Ins(ins ...int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Chat_Selector) Seq_NotIn(ins []int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Chat_Selector) Seq_Eq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) Seq_NotEq(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) Seq_LT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) Seq_LE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) Seq_GT(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Chat_Selector) Seq_GE(val int) *__Chat_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Seq >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Chat_Selector) UnseenCount_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -6724,6 +7780,111 @@ func (d *__Chat_Selector) UnseenCount_GE(val int) *__Chat_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " UnseenCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) Seq_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) Seq_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) Seq_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Seq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) Seq_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) Seq_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) Seq_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) Seq_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) Seq_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) Seq_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Seq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6834,1051 +7995,1786 @@ func (d *__Chat_Selector) LastMsgId_GE(val int) *__Chat_Selector {
 	return d
 }
 
-func (u *__Chat_Selector) LastMsgStatus_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) LastMyMsgStatus_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMsgStatus_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) LastMyMsgStatus_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMsgStatus_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) LastMyMsgStatus_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " LastMyMsgStatus NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) LastMsgStatus_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus = " + d.nextDollar()
+	w.condition = " LastMyMsgStatus = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgStatus_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus != " + d.nextDollar()
+	w.condition = " LastMyMsgStatus != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgStatus_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus < " + d.nextDollar()
+	w.condition = " LastMyMsgStatus < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgStatus_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus <= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgStatus_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus > " + d.nextDollar()
+	w.condition = " LastMyMsgStatus > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgStatus_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) LastMyMsgStatus_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgStatus >= " + d.nextDollar()
+	w.condition = " LastMyMsgStatus >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) SeenSeq_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenSeq_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) SeenSeq_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenSeq_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) SeenSeq_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenSeq_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) SeenSeq_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq = " + d.nextDollar()
+	w.condition = " MyLastSeenSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenSeq_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq != " + d.nextDollar()
+	w.condition = " MyLastSeenSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenSeq_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq < " + d.nextDollar()
+	w.condition = " MyLastSeenSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenSeq_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq <= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenSeq_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq > " + d.nextDollar()
+	w.condition = " MyLastSeenSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenSeq_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenSeq_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenSeq >= " + d.nextDollar()
+	w.condition = " MyLastSeenSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) SeenMsgId_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenMsgId_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) SeenMsgId_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenMsgId_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) SeenMsgId_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastSeenMsgId_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " SeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) SeenMsgId_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId = " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenMsgId_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId != " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenMsgId_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId < " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenMsgId_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId <= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenMsgId_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId > " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) SeenMsgId_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastSeenMsgId_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " SeenMsgId >= " + d.nextDollar()
+	w.condition = " MyLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) LastMsgIdRecived_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastSeenMsgId_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMsgIdRecived_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastSeenMsgId_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) LastMsgIdRecived_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastSeenMsgId_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastSeenMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived = " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived != " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived < " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived <= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived > " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) LastMsgIdRecived_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastSeenMsgId_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LastMsgIdRecived >= " + d.nextDollar()
+	w.condition = " PeerLastSeenMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) Left_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredSeq_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Left_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredSeq_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Left_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredSeq_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Left NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) Left_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left = " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Left_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left != " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Left_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left < " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Left_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Left_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left > " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Left_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredSeq_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Left >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) Creator_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredMsgId_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Creator_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredMsgId_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Creator_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) MyLastDeliveredMsgId_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Creator NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " MyLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) Creator_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator = " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Creator_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator != " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Creator_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator < " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Creator_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator <= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Creator_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator > " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Creator_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) MyLastDeliveredMsgId_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Creator >= " + d.nextDollar()
+	w.condition = " MyLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) Kicked_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastDeliveredMsgId_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Kicked_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastDeliveredMsgId_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Kicked_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) PeerLastDeliveredMsgId_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Kicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PeerLastDeliveredMsgId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) Kicked_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked = " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Kicked_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked != " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Kicked_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked < " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Kicked_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked <= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Kicked_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked > " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Kicked_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) PeerLastDeliveredMsgId_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Kicked >= " + d.nextDollar()
+	w.condition = " PeerLastDeliveredMsgId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) Admin_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsActive_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Admin_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) IsActive_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Admin_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsActive_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Admin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsActive NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) Admin_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin = " + d.nextDollar()
+	w.condition = " IsActive = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Admin_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin != " + d.nextDollar()
+	w.condition = " IsActive != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Admin_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin < " + d.nextDollar()
+	w.condition = " IsActive < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Admin_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin <= " + d.nextDollar()
+	w.condition = " IsActive <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Admin_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin > " + d.nextDollar()
+	w.condition = " IsActive > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Admin_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsActive_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Admin >= " + d.nextDollar()
+	w.condition = " IsActive >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) Deactivated_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsLeft_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Deactivated_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) IsLeft_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) Deactivated_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsLeft_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Deactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsLeft NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) Deactivated_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated = " + d.nextDollar()
+	w.condition = " IsLeft = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Deactivated_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated != " + d.nextDollar()
+	w.condition = " IsLeft != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Deactivated_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated < " + d.nextDollar()
+	w.condition = " IsLeft < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Deactivated_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated <= " + d.nextDollar()
+	w.condition = " IsLeft <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Deactivated_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated > " + d.nextDollar()
+	w.condition = " IsLeft > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) Deactivated_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsLeft_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Deactivated >= " + d.nextDollar()
+	w.condition = " IsLeft >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__Chat_Selector) VersionTime_In(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsCreator_In(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) VersionTime_Ins(ins ...int) *__Chat_Selector {
+func (u *__Chat_Selector) IsCreator_Ins(ins ...int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Chat_Selector) VersionTime_NotIn(ins []int) *__Chat_Selector {
+func (u *__Chat_Selector) IsCreator_NotIn(ins []int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " VersionTime NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " IsCreator NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Chat_Selector) VersionTime_Eq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_Eq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime = " + d.nextDollar()
+	w.condition = " IsCreator = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) VersionTime_NotEq(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_NotEq(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime != " + d.nextDollar()
+	w.condition = " IsCreator != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) VersionTime_LT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_LT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime < " + d.nextDollar()
+	w.condition = " IsCreator < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) VersionTime_LE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_LE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime <= " + d.nextDollar()
+	w.condition = " IsCreator <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) VersionTime_GT(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_GT(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime > " + d.nextDollar()
+	w.condition = " IsCreator > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Chat_Selector) VersionTime_GE(val int) *__Chat_Selector {
+func (d *__Chat_Selector) IsCreator_GE(val int) *__Chat_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " VersionTime >= " + d.nextDollar()
+	w.condition = " IsCreator >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) IsKicked_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsKicked_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsKicked_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsKicked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) IsKicked_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsKicked_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsKicked_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsKicked_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsKicked_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsKicked_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsKicked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) IsAdmin_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsAdmin_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsAdmin_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsAdmin NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) IsAdmin_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsAdmin_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsAdmin_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsAdmin_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsAdmin_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsAdmin_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsAdmin >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) IsDeactivated_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsDeactivated_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsDeactivated_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsDeactivated NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) IsDeactivated_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsDeactivated_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsDeactivated_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsDeactivated_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsDeactivated_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsDeactivated_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsDeactivated >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) IsMuted_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsMuted_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) IsMuted_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsMuted NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) IsMuted_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsMuted_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsMuted_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsMuted_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsMuted_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) IsMuted_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsMuted >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) MuteUntil_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) MuteUntil_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) MuteUntil_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " MuteUntil NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) MuteUntil_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) MuteUntil_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) MuteUntil_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) MuteUntil_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) MuteUntil_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) MuteUntil_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " MuteUntil >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) VersionTimeMs_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) VersionTimeMs_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) VersionTimeMs_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionTimeMs NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) VersionTimeMs_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionTimeMs_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionTimeMs_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionTimeMs_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionTimeMs_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionTimeMs_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionTimeMs >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Chat_Selector) VersionSeq_In(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) VersionSeq_Ins(ins ...int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Chat_Selector) VersionSeq_NotIn(ins []int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " VersionSeq NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Chat_Selector) VersionSeq_Eq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionSeq_NotEq(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionSeq_LT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionSeq_LE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionSeq_GT(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Chat_Selector) VersionSeq_GE(val int) *__Chat_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " VersionSeq >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -9115,33 +11011,6 @@ func (u *__Chat_Updater) HashTagId_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) StartedByMe(newVal int) *__Chat_Updater {
-	up := updateCol{" StartedByMe = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" StartedByMe = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Chat_Updater) StartedByMe_Increment(count int) *__Chat_Updater {
-	if count > 0 {
-		up := updateCol{" StartedByMe = StartedByMe+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" StartedByMe = StartedByMe+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" StartedByMe = StartedByMe- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" StartedByMe = StartedByMe- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 //string
 func (u *__Chat_Updater) Title(newVal string) *__Chat_Updater {
 	up := updateCol{"Title = " + u.nextDollar(), newVal}
@@ -9152,24 +11021,24 @@ func (u *__Chat_Updater) Title(newVal string) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) PinTime(newVal int) *__Chat_Updater {
-	up := updateCol{" PinTime = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) PinTimeMs(newVal int) *__Chat_Updater {
+	up := updateCol{" PinTimeMs = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PinTime = " + u.nextDollar()] = newVal
+	// u.updates[" PinTimeMs = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) PinTime_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) PinTimeMs_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" PinTime = PinTime+ " + u.nextDollar(), count}
+		up := updateCol{" PinTimeMs = PinTimeMs+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PinTime = PinTime+ " + u.nextDollar()] = count
+		//u.updates[" PinTimeMs = PinTimeMs+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PinTime = PinTime- " + u.nextDollar(), count}
+		up := updateCol{" PinTimeMs = PinTimeMs- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PinTime = PinTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PinTimeMs = PinTimeMs- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9206,33 +11075,6 @@ func (u *__Chat_Updater) FromMsgId_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Seq(newVal int) *__Chat_Updater {
-	up := updateCol{" Seq = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" Seq = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Chat_Updater) Seq_Increment(count int) *__Chat_Updater {
-	if count > 0 {
-		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 func (u *__Chat_Updater) UnseenCount(newVal int) *__Chat_Updater {
 	up := updateCol{" UnseenCount = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -9251,6 +11093,33 @@ func (u *__Chat_Updater) UnseenCount_Increment(count int) *__Chat_Updater {
 		up := updateCol{" UnseenCount = UnseenCount- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" UnseenCount = UnseenCount- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) Seq(newVal int) *__Chat_Updater {
+	up := updateCol{" Seq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Seq = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) Seq_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" Seq = Seq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Seq = Seq+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" Seq = Seq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Seq = Seq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9287,24 +11156,24 @@ func (u *__Chat_Updater) LastMsgId_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) LastMsgStatus(newVal int) *__Chat_Updater {
-	up := updateCol{" LastMsgStatus = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) LastMyMsgStatus(newVal int) *__Chat_Updater {
+	up := updateCol{" LastMyMsgStatus = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" LastMsgStatus = " + u.nextDollar()] = newVal
+	// u.updates[" LastMyMsgStatus = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgStatus_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) LastMyMsgStatus_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" LastMsgStatus = LastMsgStatus+ " + u.nextDollar(), count}
+		up := updateCol{" LastMyMsgStatus = LastMyMsgStatus+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" LastMsgStatus = LastMsgStatus+ " + u.nextDollar()] = count
+		//u.updates[" LastMyMsgStatus = LastMyMsgStatus+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" LastMsgStatus = LastMsgStatus- " + u.nextDollar(), count}
+		up := updateCol{" LastMyMsgStatus = LastMyMsgStatus- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" LastMsgStatus = LastMsgStatus- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" LastMyMsgStatus = LastMyMsgStatus- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9314,24 +11183,24 @@ func (u *__Chat_Updater) LastMsgStatus_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) SeenSeq(newVal int) *__Chat_Updater {
-	up := updateCol{" SeenSeq = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) MyLastSeenSeq(newVal int) *__Chat_Updater {
+	up := updateCol{" MyLastSeenSeq = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" SeenSeq = " + u.nextDollar()] = newVal
+	// u.updates[" MyLastSeenSeq = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) SeenSeq_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenSeq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" SeenSeq = SeenSeq+ " + u.nextDollar(), count}
+		up := updateCol{" MyLastSeenSeq = MyLastSeenSeq+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" SeenSeq = SeenSeq+ " + u.nextDollar()] = count
+		//u.updates[" MyLastSeenSeq = MyLastSeenSeq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" SeenSeq = SeenSeq- " + u.nextDollar(), count}
+		up := updateCol{" MyLastSeenSeq = MyLastSeenSeq- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" SeenSeq = SeenSeq- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" MyLastSeenSeq = MyLastSeenSeq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9341,24 +11210,24 @@ func (u *__Chat_Updater) SeenSeq_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) SeenMsgId(newVal int) *__Chat_Updater {
-	up := updateCol{" SeenMsgId = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) MyLastSeenMsgId(newVal int) *__Chat_Updater {
+	up := updateCol{" MyLastSeenMsgId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" SeenMsgId = " + u.nextDollar()] = newVal
+	// u.updates[" MyLastSeenMsgId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) SeenMsgId_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastSeenMsgId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" SeenMsgId = SeenMsgId+ " + u.nextDollar(), count}
+		up := updateCol{" MyLastSeenMsgId = MyLastSeenMsgId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" SeenMsgId = SeenMsgId+ " + u.nextDollar()] = count
+		//u.updates[" MyLastSeenMsgId = MyLastSeenMsgId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" SeenMsgId = SeenMsgId- " + u.nextDollar(), count}
+		up := updateCol{" MyLastSeenMsgId = MyLastSeenMsgId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" SeenMsgId = SeenMsgId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" MyLastSeenMsgId = MyLastSeenMsgId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9368,24 +11237,24 @@ func (u *__Chat_Updater) SeenMsgId_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) LastMsgIdRecived(newVal int) *__Chat_Updater {
-	up := updateCol{" LastMsgIdRecived = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) PeerLastSeenMsgId(newVal int) *__Chat_Updater {
+	up := updateCol{" PeerLastSeenMsgId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" LastMsgIdRecived = " + u.nextDollar()] = newVal
+	// u.updates[" PeerLastSeenMsgId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) LastMsgIdRecived_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastSeenMsgId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" LastMsgIdRecived = LastMsgIdRecived+ " + u.nextDollar(), count}
+		up := updateCol{" PeerLastSeenMsgId = PeerLastSeenMsgId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" LastMsgIdRecived = LastMsgIdRecived+ " + u.nextDollar()] = count
+		//u.updates[" PeerLastSeenMsgId = PeerLastSeenMsgId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" LastMsgIdRecived = LastMsgIdRecived- " + u.nextDollar(), count}
+		up := updateCol{" PeerLastSeenMsgId = PeerLastSeenMsgId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" LastMsgIdRecived = LastMsgIdRecived- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PeerLastSeenMsgId = PeerLastSeenMsgId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9395,24 +11264,24 @@ func (u *__Chat_Updater) LastMsgIdRecived_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Left(newVal int) *__Chat_Updater {
-	up := updateCol{" Left = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) MyLastDeliveredSeq(newVal int) *__Chat_Updater {
+	up := updateCol{" MyLastDeliveredSeq = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Left = " + u.nextDollar()] = newVal
+	// u.updates[" MyLastDeliveredSeq = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) Left_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredSeq_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" Left = Left+ " + u.nextDollar(), count}
+		up := updateCol{" MyLastDeliveredSeq = MyLastDeliveredSeq+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Left = Left+ " + u.nextDollar()] = count
+		//u.updates[" MyLastDeliveredSeq = MyLastDeliveredSeq+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Left = Left- " + u.nextDollar(), count}
+		up := updateCol{" MyLastDeliveredSeq = MyLastDeliveredSeq- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Left = Left- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" MyLastDeliveredSeq = MyLastDeliveredSeq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9422,24 +11291,24 @@ func (u *__Chat_Updater) Left_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Creator(newVal int) *__Chat_Updater {
-	up := updateCol{" Creator = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) MyLastDeliveredMsgId(newVal int) *__Chat_Updater {
+	up := updateCol{" MyLastDeliveredMsgId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Creator = " + u.nextDollar()] = newVal
+	// u.updates[" MyLastDeliveredMsgId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) Creator_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) MyLastDeliveredMsgId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" Creator = Creator+ " + u.nextDollar(), count}
+		up := updateCol{" MyLastDeliveredMsgId = MyLastDeliveredMsgId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Creator = Creator+ " + u.nextDollar()] = count
+		//u.updates[" MyLastDeliveredMsgId = MyLastDeliveredMsgId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Creator = Creator- " + u.nextDollar(), count}
+		up := updateCol{" MyLastDeliveredMsgId = MyLastDeliveredMsgId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Creator = Creator- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" MyLastDeliveredMsgId = MyLastDeliveredMsgId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9449,24 +11318,24 @@ func (u *__Chat_Updater) Creator_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Kicked(newVal int) *__Chat_Updater {
-	up := updateCol{" Kicked = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) PeerLastDeliveredMsgId(newVal int) *__Chat_Updater {
+	up := updateCol{" PeerLastDeliveredMsgId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Kicked = " + u.nextDollar()] = newVal
+	// u.updates[" PeerLastDeliveredMsgId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) Kicked_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) PeerLastDeliveredMsgId_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" Kicked = Kicked+ " + u.nextDollar(), count}
+		up := updateCol{" PeerLastDeliveredMsgId = PeerLastDeliveredMsgId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Kicked = Kicked+ " + u.nextDollar()] = count
+		//u.updates[" PeerLastDeliveredMsgId = PeerLastDeliveredMsgId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Kicked = Kicked- " + u.nextDollar(), count}
+		up := updateCol{" PeerLastDeliveredMsgId = PeerLastDeliveredMsgId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Kicked = Kicked- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PeerLastDeliveredMsgId = PeerLastDeliveredMsgId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9476,24 +11345,24 @@ func (u *__Chat_Updater) Kicked_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Admin(newVal int) *__Chat_Updater {
-	up := updateCol{" Admin = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) IsActive(newVal int) *__Chat_Updater {
+	up := updateCol{" IsActive = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Admin = " + u.nextDollar()] = newVal
+	// u.updates[" IsActive = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) Admin_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) IsActive_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" Admin = Admin+ " + u.nextDollar(), count}
+		up := updateCol{" IsActive = IsActive+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Admin = Admin+ " + u.nextDollar()] = count
+		//u.updates[" IsActive = IsActive+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Admin = Admin- " + u.nextDollar(), count}
+		up := updateCol{" IsActive = IsActive- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Admin = Admin- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsActive = IsActive- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9503,24 +11372,24 @@ func (u *__Chat_Updater) Admin_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) Deactivated(newVal int) *__Chat_Updater {
-	up := updateCol{" Deactivated = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) IsLeft(newVal int) *__Chat_Updater {
+	up := updateCol{" IsLeft = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Deactivated = " + u.nextDollar()] = newVal
+	// u.updates[" IsLeft = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) Deactivated_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) IsLeft_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" Deactivated = Deactivated+ " + u.nextDollar(), count}
+		up := updateCol{" IsLeft = IsLeft+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Deactivated = Deactivated+ " + u.nextDollar()] = count
+		//u.updates[" IsLeft = IsLeft+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Deactivated = Deactivated- " + u.nextDollar(), count}
+		up := updateCol{" IsLeft = IsLeft- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Deactivated = Deactivated- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsLeft = IsLeft- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9530,24 +11399,213 @@ func (u *__Chat_Updater) Deactivated_Increment(count int) *__Chat_Updater {
 
 //ints
 
-func (u *__Chat_Updater) VersionTime(newVal int) *__Chat_Updater {
-	up := updateCol{" VersionTime = " + u.nextDollar(), newVal}
+func (u *__Chat_Updater) IsCreator(newVal int) *__Chat_Updater {
+	up := updateCol{" IsCreator = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" VersionTime = " + u.nextDollar()] = newVal
+	// u.updates[" IsCreator = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Chat_Updater) VersionTime_Increment(count int) *__Chat_Updater {
+func (u *__Chat_Updater) IsCreator_Increment(count int) *__Chat_Updater {
 	if count > 0 {
-		up := updateCol{" VersionTime = VersionTime+ " + u.nextDollar(), count}
+		up := updateCol{" IsCreator = IsCreator+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" VersionTime = VersionTime+ " + u.nextDollar()] = count
+		//u.updates[" IsCreator = IsCreator+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" VersionTime = VersionTime- " + u.nextDollar(), count}
+		up := updateCol{" IsCreator = IsCreator- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" VersionTime = VersionTime- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" IsCreator = IsCreator- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) IsKicked(newVal int) *__Chat_Updater {
+	up := updateCol{" IsKicked = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsKicked = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) IsKicked_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" IsKicked = IsKicked+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsKicked = IsKicked+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsKicked = IsKicked- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsKicked = IsKicked- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) IsAdmin(newVal int) *__Chat_Updater {
+	up := updateCol{" IsAdmin = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsAdmin = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) IsAdmin_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" IsAdmin = IsAdmin+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsAdmin = IsAdmin+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsAdmin = IsAdmin- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsAdmin = IsAdmin- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) IsDeactivated(newVal int) *__Chat_Updater {
+	up := updateCol{" IsDeactivated = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsDeactivated = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) IsDeactivated_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" IsDeactivated = IsDeactivated+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsDeactivated = IsDeactivated+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsDeactivated = IsDeactivated- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsDeactivated = IsDeactivated- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) IsMuted(newVal int) *__Chat_Updater {
+	up := updateCol{" IsMuted = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsMuted = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) IsMuted_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" IsMuted = IsMuted+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsMuted = IsMuted+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsMuted = IsMuted- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsMuted = IsMuted- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) MuteUntil(newVal int) *__Chat_Updater {
+	up := updateCol{" MuteUntil = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" MuteUntil = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) MuteUntil_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" MuteUntil = MuteUntil+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" MuteUntil = MuteUntil+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" MuteUntil = MuteUntil- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" MuteUntil = MuteUntil- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) VersionTimeMs(newVal int) *__Chat_Updater {
+	up := updateCol{" VersionTimeMs = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" VersionTimeMs = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) VersionTimeMs_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" VersionTimeMs = VersionTimeMs+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" VersionTimeMs = VersionTimeMs+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" VersionTimeMs = VersionTimeMs- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" VersionTimeMs = VersionTimeMs- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Chat_Updater) VersionSeq(newVal int) *__Chat_Updater {
+	up := updateCol{" VersionSeq = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" VersionSeq = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Chat_Updater) VersionSeq_Increment(count int) *__Chat_Updater {
+	if count > 0 {
+		up := updateCol{" VersionSeq = VersionSeq+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" VersionSeq = VersionSeq+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" VersionSeq = VersionSeq- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" VersionSeq = VersionSeq- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -9771,21 +11829,6 @@ func (u *__Chat_Selector) Select_HashTagId() *__Chat_Selector {
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_StartedByMe_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY StartedByMe DESC "
-	return u
-}
-
-func (u *__Chat_Selector) OrderBy_StartedByMe_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY StartedByMe ASC "
-	return u
-}
-
-func (u *__Chat_Selector) Select_StartedByMe() *__Chat_Selector {
-	u.selectCol = "StartedByMe"
-	return u
-}
-
 func (u *__Chat_Selector) OrderBy_Title_Desc() *__Chat_Selector {
 	u.orderBy = " ORDER BY Title DESC "
 	return u
@@ -9801,18 +11844,18 @@ func (u *__Chat_Selector) Select_Title() *__Chat_Selector {
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_PinTime_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY PinTime DESC "
+func (u *__Chat_Selector) OrderBy_PinTimeMs_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PinTimeMs DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_PinTime_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY PinTime ASC "
+func (u *__Chat_Selector) OrderBy_PinTimeMs_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PinTimeMs ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_PinTime() *__Chat_Selector {
-	u.selectCol = "PinTime"
+func (u *__Chat_Selector) Select_PinTimeMs() *__Chat_Selector {
+	u.selectCol = "PinTimeMs"
 	return u
 }
 
@@ -9831,21 +11874,6 @@ func (u *__Chat_Selector) Select_FromMsgId() *__Chat_Selector {
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Seq_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Seq DESC "
-	return u
-}
-
-func (u *__Chat_Selector) OrderBy_Seq_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Seq ASC "
-	return u
-}
-
-func (u *__Chat_Selector) Select_Seq() *__Chat_Selector {
-	u.selectCol = "Seq"
-	return u
-}
-
 func (u *__Chat_Selector) OrderBy_UnseenCount_Desc() *__Chat_Selector {
 	u.orderBy = " ORDER BY UnseenCount DESC "
 	return u
@@ -9858,6 +11886,21 @@ func (u *__Chat_Selector) OrderBy_UnseenCount_Asc() *__Chat_Selector {
 
 func (u *__Chat_Selector) Select_UnseenCount() *__Chat_Selector {
 	u.selectCol = "UnseenCount"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_Seq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY Seq DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_Seq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY Seq ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_Seq() *__Chat_Selector {
+	u.selectCol = "Seq"
 	return u
 }
 
@@ -9876,153 +11919,258 @@ func (u *__Chat_Selector) Select_LastMsgId() *__Chat_Selector {
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMsgStatus_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMsgStatus DESC "
+func (u *__Chat_Selector) OrderBy_LastMyMsgStatus_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY LastMyMsgStatus DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMsgStatus_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMsgStatus ASC "
+func (u *__Chat_Selector) OrderBy_LastMyMsgStatus_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY LastMyMsgStatus ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_LastMsgStatus() *__Chat_Selector {
-	u.selectCol = "LastMsgStatus"
+func (u *__Chat_Selector) Select_LastMyMsgStatus() *__Chat_Selector {
+	u.selectCol = "LastMyMsgStatus"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_SeenSeq_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY SeenSeq DESC "
+func (u *__Chat_Selector) OrderBy_MyLastSeenSeq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastSeenSeq DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_SeenSeq_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY SeenSeq ASC "
+func (u *__Chat_Selector) OrderBy_MyLastSeenSeq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastSeenSeq ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_SeenSeq() *__Chat_Selector {
-	u.selectCol = "SeenSeq"
+func (u *__Chat_Selector) Select_MyLastSeenSeq() *__Chat_Selector {
+	u.selectCol = "MyLastSeenSeq"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_SeenMsgId_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY SeenMsgId DESC "
+func (u *__Chat_Selector) OrderBy_MyLastSeenMsgId_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastSeenMsgId DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_SeenMsgId_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY SeenMsgId ASC "
+func (u *__Chat_Selector) OrderBy_MyLastSeenMsgId_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastSeenMsgId ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_SeenMsgId() *__Chat_Selector {
-	u.selectCol = "SeenMsgId"
+func (u *__Chat_Selector) Select_MyLastSeenMsgId() *__Chat_Selector {
+	u.selectCol = "MyLastSeenMsgId"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMsgIdRecived_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMsgIdRecived DESC "
+func (u *__Chat_Selector) OrderBy_PeerLastSeenMsgId_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PeerLastSeenMsgId DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_LastMsgIdRecived_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY LastMsgIdRecived ASC "
+func (u *__Chat_Selector) OrderBy_PeerLastSeenMsgId_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PeerLastSeenMsgId ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_LastMsgIdRecived() *__Chat_Selector {
-	u.selectCol = "LastMsgIdRecived"
+func (u *__Chat_Selector) Select_PeerLastSeenMsgId() *__Chat_Selector {
+	u.selectCol = "PeerLastSeenMsgId"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Left_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Left DESC "
+func (u *__Chat_Selector) OrderBy_MyLastDeliveredSeq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastDeliveredSeq DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Left_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Left ASC "
+func (u *__Chat_Selector) OrderBy_MyLastDeliveredSeq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastDeliveredSeq ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_Left() *__Chat_Selector {
-	u.selectCol = "Left"
+func (u *__Chat_Selector) Select_MyLastDeliveredSeq() *__Chat_Selector {
+	u.selectCol = "MyLastDeliveredSeq"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Creator_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Creator DESC "
+func (u *__Chat_Selector) OrderBy_MyLastDeliveredMsgId_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastDeliveredMsgId DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Creator_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Creator ASC "
+func (u *__Chat_Selector) OrderBy_MyLastDeliveredMsgId_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MyLastDeliveredMsgId ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_Creator() *__Chat_Selector {
-	u.selectCol = "Creator"
+func (u *__Chat_Selector) Select_MyLastDeliveredMsgId() *__Chat_Selector {
+	u.selectCol = "MyLastDeliveredMsgId"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Kicked_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Kicked DESC "
+func (u *__Chat_Selector) OrderBy_PeerLastDeliveredMsgId_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PeerLastDeliveredMsgId DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Kicked_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Kicked ASC "
+func (u *__Chat_Selector) OrderBy_PeerLastDeliveredMsgId_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY PeerLastDeliveredMsgId ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_Kicked() *__Chat_Selector {
-	u.selectCol = "Kicked"
+func (u *__Chat_Selector) Select_PeerLastDeliveredMsgId() *__Chat_Selector {
+	u.selectCol = "PeerLastDeliveredMsgId"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Admin_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Admin DESC "
+func (u *__Chat_Selector) OrderBy_IsActive_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsActive DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Admin_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Admin ASC "
+func (u *__Chat_Selector) OrderBy_IsActive_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsActive ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_Admin() *__Chat_Selector {
-	u.selectCol = "Admin"
+func (u *__Chat_Selector) Select_IsActive() *__Chat_Selector {
+	u.selectCol = "IsActive"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Deactivated_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Deactivated DESC "
+func (u *__Chat_Selector) OrderBy_IsLeft_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsLeft DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_Deactivated_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY Deactivated ASC "
+func (u *__Chat_Selector) OrderBy_IsLeft_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsLeft ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_Deactivated() *__Chat_Selector {
-	u.selectCol = "Deactivated"
+func (u *__Chat_Selector) Select_IsLeft() *__Chat_Selector {
+	u.selectCol = "IsLeft"
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_VersionTime_Desc() *__Chat_Selector {
-	u.orderBy = " ORDER BY VersionTime DESC "
+func (u *__Chat_Selector) OrderBy_IsCreator_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsCreator DESC "
 	return u
 }
 
-func (u *__Chat_Selector) OrderBy_VersionTime_Asc() *__Chat_Selector {
-	u.orderBy = " ORDER BY VersionTime ASC "
+func (u *__Chat_Selector) OrderBy_IsCreator_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsCreator ASC "
 	return u
 }
 
-func (u *__Chat_Selector) Select_VersionTime() *__Chat_Selector {
-	u.selectCol = "VersionTime"
+func (u *__Chat_Selector) Select_IsCreator() *__Chat_Selector {
+	u.selectCol = "IsCreator"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsKicked_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsKicked DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsKicked_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsKicked ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_IsKicked() *__Chat_Selector {
+	u.selectCol = "IsKicked"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsAdmin_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsAdmin DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsAdmin_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsAdmin ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_IsAdmin() *__Chat_Selector {
+	u.selectCol = "IsAdmin"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsDeactivated_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsDeactivated DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsDeactivated_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsDeactivated ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_IsDeactivated() *__Chat_Selector {
+	u.selectCol = "IsDeactivated"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsMuted_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsMuted DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_IsMuted_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY IsMuted ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_IsMuted() *__Chat_Selector {
+	u.selectCol = "IsMuted"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_MuteUntil_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MuteUntil DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_MuteUntil_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY MuteUntil ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_MuteUntil() *__Chat_Selector {
+	u.selectCol = "MuteUntil"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_VersionTimeMs_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY VersionTimeMs DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_VersionTimeMs_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY VersionTimeMs ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_VersionTimeMs() *__Chat_Selector {
+	u.selectCol = "VersionTimeMs"
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_VersionSeq_Desc() *__Chat_Selector {
+	u.orderBy = " ORDER BY VersionSeq DESC "
+	return u
+}
+
+func (u *__Chat_Selector) OrderBy_VersionSeq_Asc() *__Chat_Selector {
+	u.orderBy = " ORDER BY VersionSeq ASC "
+	return u
+}
+
+func (u *__Chat_Selector) Select_VersionSeq() *__Chat_Selector {
+	u.selectCol = "VersionSeq"
 	return u
 }
 
@@ -10406,10 +12554,10 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(29, ln, true)
+	insVals := helper.SqlManyDollars(35, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun_chat.chat (" +
-		"ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, StartedByMe, Title, PinTime, FromMsgId, Seq, UnseenCount, LastMsgId, LastMsgStatus, SeenSeq, SeenMsgId, LastMsgIdRecived, Left, Creator, Kicked, Admin, Deactivated, VersionTime, OrderTime, CreatedTime, DraftText, DratReplyToMsgId" +
+		"ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, Title, PinTimeMs, FromMsgId, UnseenCount, Seq, LastMsgId, LastMyMsgStatus, MyLastSeenSeq, MyLastSeenMsgId, PeerLastSeenMsgId, MyLastDeliveredSeq, MyLastDeliveredMsgId, PeerLastDeliveredMsgId, IsActive, IsLeft, IsCreator, IsKicked, IsAdmin, IsDeactivated, IsMuted, MuteUntil, VersionTimeMs, VersionSeq, OrderTime, CreatedTime, DraftText, DratReplyToMsgId" +
 		") VALUES " + insVals
 
 	// run query
@@ -10425,23 +12573,29 @@ func MassInsert_Chat(rows []Chat, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.GroupId)
 		vals = append(vals, row.HashTagId)
-		vals = append(vals, row.StartedByMe)
 		vals = append(vals, row.Title)
-		vals = append(vals, row.PinTime)
+		vals = append(vals, row.PinTimeMs)
 		vals = append(vals, row.FromMsgId)
-		vals = append(vals, row.Seq)
 		vals = append(vals, row.UnseenCount)
+		vals = append(vals, row.Seq)
 		vals = append(vals, row.LastMsgId)
-		vals = append(vals, row.LastMsgStatus)
-		vals = append(vals, row.SeenSeq)
-		vals = append(vals, row.SeenMsgId)
-		vals = append(vals, row.LastMsgIdRecived)
-		vals = append(vals, row.Left)
-		vals = append(vals, row.Creator)
-		vals = append(vals, row.Kicked)
-		vals = append(vals, row.Admin)
-		vals = append(vals, row.Deactivated)
-		vals = append(vals, row.VersionTime)
+		vals = append(vals, row.LastMyMsgStatus)
+		vals = append(vals, row.MyLastSeenSeq)
+		vals = append(vals, row.MyLastSeenMsgId)
+		vals = append(vals, row.PeerLastSeenMsgId)
+		vals = append(vals, row.MyLastDeliveredSeq)
+		vals = append(vals, row.MyLastDeliveredMsgId)
+		vals = append(vals, row.PeerLastDeliveredMsgId)
+		vals = append(vals, row.IsActive)
+		vals = append(vals, row.IsLeft)
+		vals = append(vals, row.IsCreator)
+		vals = append(vals, row.IsKicked)
+		vals = append(vals, row.IsAdmin)
+		vals = append(vals, row.IsDeactivated)
+		vals = append(vals, row.IsMuted)
+		vals = append(vals, row.MuteUntil)
+		vals = append(vals, row.VersionTimeMs)
+		vals = append(vals, row.VersionSeq)
 		vals = append(vals, row.OrderTime)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.DraftText)
@@ -10471,10 +12625,10 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(29, ln, true)
+	insVals := helper.SqlManyDollars(35, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun_chat.chat (" +
-		"ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, StartedByMe, Title, PinTime, FromMsgId, Seq, UnseenCount, LastMsgId, LastMsgStatus, SeenSeq, SeenMsgId, LastMsgIdRecived, Left, Creator, Kicked, Admin, Deactivated, VersionTime, OrderTime, CreatedTime, DraftText, DratReplyToMsgId" +
+		"ChatId, ChatKey, RoomKey, RoomType, UserId, PeerUserId, GroupId, HashTagId, Title, PinTimeMs, FromMsgId, UnseenCount, Seq, LastMsgId, LastMyMsgStatus, MyLastSeenSeq, MyLastSeenMsgId, PeerLastSeenMsgId, MyLastDeliveredSeq, MyLastDeliveredMsgId, PeerLastDeliveredMsgId, IsActive, IsLeft, IsCreator, IsKicked, IsAdmin, IsDeactivated, IsMuted, MuteUntil, VersionTimeMs, VersionSeq, OrderTime, CreatedTime, DraftText, DratReplyToMsgId" +
 		") VALUES " + insVals
 
 	// run query
@@ -10490,23 +12644,29 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.GroupId)
 		vals = append(vals, row.HashTagId)
-		vals = append(vals, row.StartedByMe)
 		vals = append(vals, row.Title)
-		vals = append(vals, row.PinTime)
+		vals = append(vals, row.PinTimeMs)
 		vals = append(vals, row.FromMsgId)
-		vals = append(vals, row.Seq)
 		vals = append(vals, row.UnseenCount)
+		vals = append(vals, row.Seq)
 		vals = append(vals, row.LastMsgId)
-		vals = append(vals, row.LastMsgStatus)
-		vals = append(vals, row.SeenSeq)
-		vals = append(vals, row.SeenMsgId)
-		vals = append(vals, row.LastMsgIdRecived)
-		vals = append(vals, row.Left)
-		vals = append(vals, row.Creator)
-		vals = append(vals, row.Kicked)
-		vals = append(vals, row.Admin)
-		vals = append(vals, row.Deactivated)
-		vals = append(vals, row.VersionTime)
+		vals = append(vals, row.LastMyMsgStatus)
+		vals = append(vals, row.MyLastSeenSeq)
+		vals = append(vals, row.MyLastSeenMsgId)
+		vals = append(vals, row.PeerLastSeenMsgId)
+		vals = append(vals, row.MyLastDeliveredSeq)
+		vals = append(vals, row.MyLastDeliveredMsgId)
+		vals = append(vals, row.PeerLastDeliveredMsgId)
+		vals = append(vals, row.IsActive)
+		vals = append(vals, row.IsLeft)
+		vals = append(vals, row.IsCreator)
+		vals = append(vals, row.IsKicked)
+		vals = append(vals, row.IsAdmin)
+		vals = append(vals, row.IsDeactivated)
+		vals = append(vals, row.IsMuted)
+		vals = append(vals, row.MuteUntil)
+		vals = append(vals, row.VersionTimeMs)
+		vals = append(vals, row.VersionSeq)
 		vals = append(vals, row.OrderTime)
 		vals = append(vals, row.CreatedTime)
 		vals = append(vals, row.DraftText)
@@ -10530,6 +12690,18 @@ func MassReplace_Chat(rows []Chat, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
+
+//
+
+//
 
 //
 

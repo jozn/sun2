@@ -15,14 +15,14 @@ import (
 
 // Manualy copy this to project
 type Action__ struct {
-	ActionId       int `json:"ActionId"`       // ActionId -
-	ActorUserId    int `json:"ActorUserId"`    // ActorUserId -
-	ActionTypeEnum int `json:"ActionTypeEnum"` // ActionTypeEnum -
-	PeerUserId     int `json:"PeerUserId"`     // PeerUserId -
-	PostId         int `json:"PostId"`         // PostId -
-	CommentId      int `json:"CommentId"`      // CommentId -
-	Murmur64Hash   int `json:"Murmur64Hash"`   // Murmur64Hash -
-	CreatedTime    int `json:"CreatedTime"`    // CreatedTime -
+	ActionId     int `json:"ActionId"`     // ActionId -
+	ActorUserId  int `json:"ActorUserId"`  // ActorUserId -
+	ActionType   int `json:"ActionType"`   // ActionType -
+	PeerUserId   int `json:"PeerUserId"`   // PeerUserId -
+	PostId       int `json:"PostId"`       // PostId -
+	CommentId    int `json:"CommentId"`    // CommentId -
+	Murmur64Hash int `json:"Murmur64Hash"` // Murmur64Hash -
+	CreatedTime  int `json:"CreatedTime"`  // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -48,16 +48,16 @@ func (a *Action) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.action (` +
-		`ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
+		`ActionId, ActorUserId, ActionType, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Action {
-		XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+		XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -77,16 +77,16 @@ func (a *Action) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.action (` +
-		`ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
+		`ActionId, ActorUserId, ActionType, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Action {
-		XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+		XOLog(sqlstr, a.ActionId, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
+	_, err = db.Exec(sqlstr, a.ActionId, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Action {
 			XOLogErr(err)
@@ -117,14 +117,14 @@ func (a *Action) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.action SET ` +
-		`ActorUserId = ?, ActionTypeEnum = ?, PeerUserId = ?, PostId = ?, CommentId = ?, Murmur64Hash = ?, CreatedTime = ?` +
+		`ActorUserId = ?, ActionType = ?, PeerUserId = ?, PostId = ?, CommentId = ?, Murmur64Hash = ?, CreatedTime = ?` +
 		` WHERE ActionId = ?`
 
 	// run query
 	if LogTableSqlReq.Action {
-		XOLog(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
+		XOLog(sqlstr, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
 	}
-	_, err = db.Exec(sqlstr, a.ActorUserId, a.ActionTypeEnum, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
+	_, err = db.Exec(sqlstr, a.ActorUserId, a.ActionType, a.PeerUserId, a.PostId, a.CommentId, a.Murmur64Hash, a.CreatedTime, a.ActionId)
 
 	if LogTableSqlReq.Action {
 		XOLogErr(err)
@@ -475,106 +475,106 @@ func (d *__Action_Deleter) ActorUserId_GE(val int) *__Action_Deleter {
 	return d
 }
 
-func (u *__Action_Deleter) ActionTypeEnum_In(ins []int) *__Action_Deleter {
+func (u *__Action_Deleter) ActionType_In(ins []int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Deleter) ActionTypeEnum_Ins(ins ...int) *__Action_Deleter {
+func (u *__Action_Deleter) ActionType_Ins(ins ...int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Deleter) ActionTypeEnum_NotIn(ins []int) *__Action_Deleter {
+func (u *__Action_Deleter) ActionType_NotIn(ins []int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_Eq(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_Eq(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum = " + d.nextDollar()
+	w.condition = " ActionType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_NotEq(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_NotEq(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum != " + d.nextDollar()
+	w.condition = " ActionType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_LT(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_LT(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum < " + d.nextDollar()
+	w.condition = " ActionType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_LE(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_LE(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum <= " + d.nextDollar()
+	w.condition = " ActionType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_GT(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_GT(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum > " + d.nextDollar()
+	w.condition = " ActionType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Deleter) ActionTypeEnum_GE(val int) *__Action_Deleter {
+func (d *__Action_Deleter) ActionType_GE(val int) *__Action_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum >= " + d.nextDollar()
+	w.condition = " ActionType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1334,106 +1334,106 @@ func (d *__Action_Updater) ActorUserId_GE(val int) *__Action_Updater {
 	return d
 }
 
-func (u *__Action_Updater) ActionTypeEnum_In(ins []int) *__Action_Updater {
+func (u *__Action_Updater) ActionType_In(ins []int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Updater) ActionTypeEnum_Ins(ins ...int) *__Action_Updater {
+func (u *__Action_Updater) ActionType_Ins(ins ...int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Updater) ActionTypeEnum_NotIn(ins []int) *__Action_Updater {
+func (u *__Action_Updater) ActionType_NotIn(ins []int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Action_Updater) ActionTypeEnum_Eq(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_Eq(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum = " + d.nextDollar()
+	w.condition = " ActionType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Updater) ActionTypeEnum_NotEq(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_NotEq(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum != " + d.nextDollar()
+	w.condition = " ActionType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Updater) ActionTypeEnum_LT(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_LT(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum < " + d.nextDollar()
+	w.condition = " ActionType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Updater) ActionTypeEnum_LE(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_LE(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum <= " + d.nextDollar()
+	w.condition = " ActionType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Updater) ActionTypeEnum_GT(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_GT(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum > " + d.nextDollar()
+	w.condition = " ActionType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Updater) ActionTypeEnum_GE(val int) *__Action_Updater {
+func (d *__Action_Updater) ActionType_GE(val int) *__Action_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum >= " + d.nextDollar()
+	w.condition = " ActionType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2193,106 +2193,106 @@ func (d *__Action_Selector) ActorUserId_GE(val int) *__Action_Selector {
 	return d
 }
 
-func (u *__Action_Selector) ActionTypeEnum_In(ins []int) *__Action_Selector {
+func (u *__Action_Selector) ActionType_In(ins []int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Selector) ActionTypeEnum_Ins(ins ...int) *__Action_Selector {
+func (u *__Action_Selector) ActionType_Ins(ins ...int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Action_Selector) ActionTypeEnum_NotIn(ins []int) *__Action_Selector {
+func (u *__Action_Selector) ActionType_NotIn(ins []int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " ActionTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ActionType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Action_Selector) ActionTypeEnum_Eq(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_Eq(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum = " + d.nextDollar()
+	w.condition = " ActionType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Selector) ActionTypeEnum_NotEq(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_NotEq(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum != " + d.nextDollar()
+	w.condition = " ActionType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Selector) ActionTypeEnum_LT(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_LT(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum < " + d.nextDollar()
+	w.condition = " ActionType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Selector) ActionTypeEnum_LE(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_LE(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum <= " + d.nextDollar()
+	w.condition = " ActionType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Selector) ActionTypeEnum_GT(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_GT(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum > " + d.nextDollar()
+	w.condition = " ActionType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Action_Selector) ActionTypeEnum_GE(val int) *__Action_Selector {
+func (d *__Action_Selector) ActionType_GE(val int) *__Action_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " ActionTypeEnum >= " + d.nextDollar()
+	w.condition = " ActionType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2891,24 +2891,24 @@ func (u *__Action_Updater) ActorUserId_Increment(count int) *__Action_Updater {
 
 //ints
 
-func (u *__Action_Updater) ActionTypeEnum(newVal int) *__Action_Updater {
-	up := updateCol{" ActionTypeEnum = " + u.nextDollar(), newVal}
+func (u *__Action_Updater) ActionType(newVal int) *__Action_Updater {
+	up := updateCol{" ActionType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" ActionTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" ActionType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Action_Updater) ActionTypeEnum_Increment(count int) *__Action_Updater {
+func (u *__Action_Updater) ActionType_Increment(count int) *__Action_Updater {
 	if count > 0 {
-		up := updateCol{" ActionTypeEnum = ActionTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" ActionType = ActionType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" ActionTypeEnum = ActionTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" ActionType = ActionType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" ActionTypeEnum = ActionTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" ActionType = ActionType- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" ActionTypeEnum = ActionTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" ActionType = ActionType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3086,18 +3086,18 @@ func (u *__Action_Selector) Select_ActorUserId() *__Action_Selector {
 	return u
 }
 
-func (u *__Action_Selector) OrderBy_ActionTypeEnum_Desc() *__Action_Selector {
-	u.orderBy = " ORDER BY ActionTypeEnum DESC "
+func (u *__Action_Selector) OrderBy_ActionType_Desc() *__Action_Selector {
+	u.orderBy = " ORDER BY ActionType DESC "
 	return u
 }
 
-func (u *__Action_Selector) OrderBy_ActionTypeEnum_Asc() *__Action_Selector {
-	u.orderBy = " ORDER BY ActionTypeEnum ASC "
+func (u *__Action_Selector) OrderBy_ActionType_Asc() *__Action_Selector {
+	u.orderBy = " ORDER BY ActionType ASC "
 	return u
 }
 
-func (u *__Action_Selector) Select_ActionTypeEnum() *__Action_Selector {
-	u.selectCol = "ActionTypeEnum"
+func (u *__Action_Selector) Select_ActionType() *__Action_Selector {
+	u.selectCol = "ActionType"
 	return u
 }
 
@@ -3499,7 +3499,7 @@ func MassInsert_Action(rows []Action, db XODB) error {
 	insVals := helper.SqlManyDollars(8, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.action (" +
-		"ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
+		"ActionId, ActorUserId, ActionType, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3509,7 +3509,7 @@ func MassInsert_Action(rows []Action, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.ActionTypeEnum)
+		vals = append(vals, row.ActionType)
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
@@ -3543,7 +3543,7 @@ func MassReplace_Action(rows []Action, db XODB) error {
 	insVals := helper.SqlManyDollars(8, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.action (" +
-		"ActionId, ActorUserId, ActionTypeEnum, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
+		"ActionId, ActorUserId, ActionType, PeerUserId, PostId, CommentId, Murmur64Hash, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3553,7 +3553,7 @@ func MassReplace_Action(rows []Action, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.ActionId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.ActionTypeEnum)
+		vals = append(vals, row.ActionType)
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)

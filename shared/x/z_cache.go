@@ -54,6 +54,54 @@ func (c _StoreImpl) PreLoadActionByActionIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetBlockedById(Id int) (*Blocked, bool) {
+	o, ok := RowCache.Get("Blocked:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Blocked); ok {
+			return obj, true
+		}
+	}
+	obj2, err := BlockedById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.Blocked {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetBlockedById_JustCache(Id int) (*Blocked, bool) {
+	o, ok := RowCache.Get("Blocked:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Blocked); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Blocked {
+		XOLogErr(errors.New("_JustCache is empty for Blocked: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadBlockedByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Blocked:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewBlocked_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
 func (c _StoreImpl) GetCommentByCommentId(CommentId int) (*Comment, bool) {
 	o, ok := RowCache.Get("Comment:" + strconv.Itoa(CommentId))
 	if ok {
@@ -193,6 +241,54 @@ func (c _StoreImpl) PreLoadEventByEventIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewEvent_Selector().EventId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetFollowedById(Id int) (*Followed, bool) {
+	o, ok := RowCache.Get("Followed:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Followed); ok {
+			return obj, true
+		}
+	}
+	obj2, err := FollowedById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.Followed {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetFollowedById_JustCache(Id int) (*Followed, bool) {
+	o, ok := RowCache.Get("Followed:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Followed); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Followed {
+		XOLogErr(errors.New("_JustCache is empty for Followed: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadFollowedByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Followed:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewFollowed_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -822,54 +918,6 @@ func (c _StoreImpl) PreLoadSessionByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSettingClientByUserId(UserId int) (*SettingClient, bool) {
-	o, ok := RowCache.Get("SettingClient:" + strconv.Itoa(UserId))
-	if ok {
-		if obj, ok := o.(*SettingClient); ok {
-			return obj, true
-		}
-	}
-	obj2, err := SettingClientByUserId(base.DB, UserId)
-	if err == nil {
-		return obj2, true
-	}
-	if LogTableSqlReq.SettingClient {
-		XOLogErr(err)
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) GetSettingClientByUserId_JustCache(UserId int) (*SettingClient, bool) {
-	o, ok := RowCache.Get("SettingClient:" + strconv.Itoa(UserId))
-	if ok {
-		if obj, ok := o.(*SettingClient); ok {
-			return obj, true
-		}
-	}
-
-	if LogTableSqlReq.SettingClient {
-		XOLogErr(errors.New("_JustCache is empty for SettingClient: " + strconv.Itoa(UserId)))
-	}
-	return nil, false
-}
-
-func (c _StoreImpl) PreLoadSettingClientByUserIds(ids []int) {
-	not_cached := make([]int, 0, len(ids))
-
-	for _, id := range ids {
-		_, ok := RowCache.Get("SettingClient:" + strconv.Itoa(id))
-		if !ok {
-			not_cached = append(not_cached, id)
-		}
-	}
-
-	if len(not_cached) > 0 {
-		NewSettingClient_Selector().UserId_In(not_cached).GetRows(base.DB)
-	}
-}
-
-// yes 222 int
-
 func (c _StoreImpl) GetSettingNotificationByUserId(UserId int) (*SettingNotification, bool) {
 	o, ok := RowCache.Get("SettingNotification:" + strconv.Itoa(UserId))
 	if ok {
@@ -917,6 +965,8 @@ func (c _StoreImpl) PreLoadSettingNotificationByUserIds(ids []int) {
 }
 
 // yes 222 int
+
+// yes 222 uint
 
 func (c _StoreImpl) GetTagByTagId(TagId int) (*Tag, bool) {
 	o, ok := RowCache.Get("Tag:" + strconv.Itoa(TagId))
@@ -1206,6 +1256,54 @@ func (c _StoreImpl) PreLoadChatByChatIds(ids []int) {
 
 // yes 222 int
 
+func (c _StoreImpl) GetChatDeletedByRoomKey(RoomKey string) (*ChatDeleted, bool) {
+	o, ok := RowCache.Get("ChatDeleted:" + RoomKey)
+	if ok {
+		if obj, ok := o.(*ChatDeleted); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ChatDeletedByRoomKey(base.DB, RoomKey)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.ChatDeleted {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetChatDeletedByRoomKey_JustCache(RoomKey string) (*ChatDeleted, bool) {
+	o, ok := RowCache.Get("ChatDeleted:" + RoomKey)
+	if ok {
+		if obj, ok := o.(*ChatDeleted); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ChatDeleted {
+		XOLogErr(errors.New("_JustCache is empty for ChatDeleted: " + RoomKey))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChatDeletedByRoomKeys(ids []string) {
+	not_cached := make([]string, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ChatDeleted:" + id)
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewChatDeleted_Selector().RoomKey_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 string
+
 func (c _StoreImpl) GetChatLastMessageByChatIdGroupId(ChatIdGroupId string) (*ChatLastMessage, bool) {
 	o, ok := RowCache.Get("ChatLastMessage:" + ChatIdGroupId)
 	if ok {
@@ -1254,49 +1352,49 @@ func (c _StoreImpl) PreLoadChatLastMessageByChatIdGroupIds(ids []string) {
 
 // yes 222 string
 
-func (c _StoreImpl) GetChatVersionOrderByVersionTime(VersionTime int) (*ChatVersionOrder, bool) {
-	o, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(VersionTime))
+func (c _StoreImpl) GetChatUserVersionByVersionTimeNano(VersionTimeNano int) (*ChatUserVersion, bool) {
+	o, ok := RowCache.Get("ChatUserVersion:" + strconv.Itoa(VersionTimeNano))
 	if ok {
-		if obj, ok := o.(*ChatVersionOrder); ok {
+		if obj, ok := o.(*ChatUserVersion); ok {
 			return obj, true
 		}
 	}
-	obj2, err := ChatVersionOrderByVersionTime(base.DB, VersionTime)
+	obj2, err := ChatUserVersionByVersionTimeNano(base.DB, VersionTimeNano)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.ChatVersionOrder {
+	if LogTableSqlReq.ChatUserVersion {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetChatVersionOrderByVersionTime_JustCache(VersionTime int) (*ChatVersionOrder, bool) {
-	o, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(VersionTime))
+func (c _StoreImpl) GetChatUserVersionByVersionTimeNano_JustCache(VersionTimeNano int) (*ChatUserVersion, bool) {
+	o, ok := RowCache.Get("ChatUserVersion:" + strconv.Itoa(VersionTimeNano))
 	if ok {
-		if obj, ok := o.(*ChatVersionOrder); ok {
+		if obj, ok := o.(*ChatUserVersion); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.ChatVersionOrder {
-		XOLogErr(errors.New("_JustCache is empty for ChatVersionOrder: " + strconv.Itoa(VersionTime)))
+	if LogTableSqlReq.ChatUserVersion {
+		XOLogErr(errors.New("_JustCache is empty for ChatUserVersion: " + strconv.Itoa(VersionTimeNano)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadChatVersionOrderByVersionTimes(ids []int) {
+func (c _StoreImpl) PreLoadChatUserVersionByVersionTimeNanos(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("ChatVersionOrder:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("ChatUserVersion:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewChatVersionOrder_Selector().VersionTime_In(not_cached).GetRows(base.DB)
+		NewChatUserVersion_Selector().VersionTimeNano_In(not_cached).GetRows(base.DB)
 	}
 }
 

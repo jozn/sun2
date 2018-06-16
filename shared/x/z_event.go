@@ -29,6 +29,30 @@ func OnAction_LoadMany(rows []*Action) {
 	}
 }
 
+//Blocked Events
+
+func OnBlocked_AfterInsert(row *Blocked) {
+	RowCache.Set("Blocked:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnBlocked_AfterUpdate(row *Blocked) {
+	RowCache.Set("Blocked:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnBlocked_AfterDelete(row *Blocked) {
+	RowCache.Delete("Blocked:" + strconv.Itoa(row.Id))
+}
+
+func OnBlocked_LoadOne(row *Blocked) {
+	RowCache.Set("Blocked:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnBlocked_LoadMany(rows []*Blocked) {
+	for _, row := range rows {
+		RowCache.Set("Blocked:"+strconv.Itoa(row.Id), row, time.Hour*0)
+	}
+}
+
 //Comment Events
 
 func OnComment_AfterInsert(row *Comment) {
@@ -98,6 +122,30 @@ func OnEvent_LoadOne(row *Event) {
 func OnEvent_LoadMany(rows []*Event) {
 	for _, row := range rows {
 		RowCache.Set("Event:"+strconv.Itoa(row.EventId), row, time.Hour*0)
+	}
+}
+
+//Followed Events
+
+func OnFollowed_AfterInsert(row *Followed) {
+	RowCache.Set("Followed:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFollowed_AfterUpdate(row *Followed) {
+	RowCache.Set("Followed:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFollowed_AfterDelete(row *Followed) {
+	RowCache.Delete("Followed:" + strconv.Itoa(row.Id))
+}
+
+func OnFollowed_LoadOne(row *Followed) {
+	RowCache.Set("Followed:"+strconv.Itoa(row.Id), row, time.Hour*0)
+}
+
+func OnFollowed_LoadMany(rows []*Followed) {
+	for _, row := range rows {
+		RowCache.Set("Followed:"+strconv.Itoa(row.Id), row, time.Hour*0)
 	}
 }
 
@@ -413,30 +461,6 @@ func OnSession_LoadMany(rows []*Session) {
 	}
 }
 
-//SettingClient Events
-
-func OnSettingClient_AfterInsert(row *SettingClient) {
-	RowCache.Set("SettingClient:"+strconv.Itoa(row.UserId), row, time.Hour*0)
-}
-
-func OnSettingClient_AfterUpdate(row *SettingClient) {
-	RowCache.Set("SettingClient:"+strconv.Itoa(row.UserId), row, time.Hour*0)
-}
-
-func OnSettingClient_AfterDelete(row *SettingClient) {
-	RowCache.Delete("SettingClient:" + strconv.Itoa(row.UserId))
-}
-
-func OnSettingClient_LoadOne(row *SettingClient) {
-	RowCache.Set("SettingClient:"+strconv.Itoa(row.UserId), row, time.Hour*0)
-}
-
-func OnSettingClient_LoadMany(rows []*SettingClient) {
-	for _, row := range rows {
-		RowCache.Set("SettingClient:"+strconv.Itoa(row.UserId), row, time.Hour*0)
-	}
-}
-
 //SettingNotification Events
 
 func OnSettingNotification_AfterInsert(row *SettingNotification) {
@@ -460,6 +484,8 @@ func OnSettingNotification_LoadMany(rows []*SettingNotification) {
 		RowCache.Set("SettingNotification:"+strconv.Itoa(row.UserId), row, time.Hour*0)
 	}
 }
+
+//Sm Events
 
 //Tag Events
 
@@ -605,6 +631,30 @@ func OnChat_LoadMany(rows []*Chat) {
 	}
 }
 
+//ChatDeleted Events
+
+func OnChatDeleted_AfterInsert(row *ChatDeleted) {
+	RowCache.Set("ChatDeleted:"+row.RoomKey, row, time.Hour*0)
+}
+
+func OnChatDeleted_AfterUpdate(row *ChatDeleted) {
+	RowCache.Set("ChatDeleted:"+row.RoomKey, row, time.Hour*0)
+}
+
+func OnChatDeleted_AfterDelete(row *ChatDeleted) {
+	RowCache.Delete("ChatDeleted:" + row.RoomKey)
+}
+
+func OnChatDeleted_LoadOne(row *ChatDeleted) {
+	RowCache.Set("ChatDeleted:"+row.RoomKey, row, time.Hour*0)
+}
+
+func OnChatDeleted_LoadMany(rows []*ChatDeleted) {
+	for _, row := range rows {
+		RowCache.Set("ChatDeleted:"+row.RoomKey, row, time.Hour*0)
+	}
+}
+
 //ChatLastMessage Events
 
 func OnChatLastMessage_AfterInsert(row *ChatLastMessage) {
@@ -629,27 +679,27 @@ func OnChatLastMessage_LoadMany(rows []*ChatLastMessage) {
 	}
 }
 
-//ChatVersionOrder Events
+//ChatUserVersion Events
 
-func OnChatVersionOrder_AfterInsert(row *ChatVersionOrder) {
-	RowCache.Set("ChatVersionOrder:"+strconv.Itoa(row.VersionTime), row, time.Hour*0)
+func OnChatUserVersion_AfterInsert(row *ChatUserVersion) {
+	RowCache.Set("ChatUserVersion:"+strconv.Itoa(row.VersionTimeNano), row, time.Hour*0)
 }
 
-func OnChatVersionOrder_AfterUpdate(row *ChatVersionOrder) {
-	RowCache.Set("ChatVersionOrder:"+strconv.Itoa(row.VersionTime), row, time.Hour*0)
+func OnChatUserVersion_AfterUpdate(row *ChatUserVersion) {
+	RowCache.Set("ChatUserVersion:"+strconv.Itoa(row.VersionTimeNano), row, time.Hour*0)
 }
 
-func OnChatVersionOrder_AfterDelete(row *ChatVersionOrder) {
-	RowCache.Delete("ChatVersionOrder:" + strconv.Itoa(row.VersionTime))
+func OnChatUserVersion_AfterDelete(row *ChatUserVersion) {
+	RowCache.Delete("ChatUserVersion:" + strconv.Itoa(row.VersionTimeNano))
 }
 
-func OnChatVersionOrder_LoadOne(row *ChatVersionOrder) {
-	RowCache.Set("ChatVersionOrder:"+strconv.Itoa(row.VersionTime), row, time.Hour*0)
+func OnChatUserVersion_LoadOne(row *ChatUserVersion) {
+	RowCache.Set("ChatUserVersion:"+strconv.Itoa(row.VersionTimeNano), row, time.Hour*0)
 }
 
-func OnChatVersionOrder_LoadMany(rows []*ChatVersionOrder) {
+func OnChatUserVersion_LoadMany(rows []*ChatUserVersion) {
 	for _, row := range rows {
-		RowCache.Set("ChatVersionOrder:"+strconv.Itoa(row.VersionTime), row, time.Hour*0)
+		RowCache.Set("ChatUserVersion:"+strconv.Itoa(row.VersionTimeNano), row, time.Hour*0)
 	}
 }
 

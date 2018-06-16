@@ -15,16 +15,16 @@ import (
 
 // Manualy copy this to project
 type Notify__ struct {
-	NotifyId       int `json:"NotifyId"`       // NotifyId -
-	ForUserId      int `json:"ForUserId"`      // ForUserId -
-	ActorUserId    int `json:"ActorUserId"`    // ActorUserId -
-	NotifyTypeEnum int `json:"NotifyTypeEnum"` // NotifyTypeEnum -
-	PostId         int `json:"PostId"`         // PostId -
-	CommentId      int `json:"CommentId"`      // CommentId -
-	PeerUserId     int `json:"PeerUserId"`     // PeerUserId -
-	Murmur64Hash   int `json:"Murmur64Hash"`   // Murmur64Hash -
-	SeenStatus     int `json:"SeenStatus"`     // SeenStatus -
-	CreatedTime    int `json:"CreatedTime"`    // CreatedTime -
+	NotifyId     int `json:"NotifyId"`     // NotifyId -
+	ForUserId    int `json:"ForUserId"`    // ForUserId -
+	ActorUserId  int `json:"ActorUserId"`  // ActorUserId -
+	NotifyType   int `json:"NotifyType"`   // NotifyType -
+	PostId       int `json:"PostId"`       // PostId -
+	CommentId    int `json:"CommentId"`    // CommentId -
+	PeerUserId   int `json:"PeerUserId"`   // PeerUserId -
+	Murmur64Hash int `json:"Murmur64Hash"` // Murmur64Hash -
+	SeenStatus   int `json:"SeenStatus"`   // SeenStatus -
+	CreatedTime  int `json:"CreatedTime"`  // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -50,16 +50,16 @@ func (n *Notify) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.notify (` +
-		`NotifyId, ForUserId, ActorUserId, NotifyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
+		`NotifyId, ForUserId, ActorUserId, NotifyType, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Notify {
-		XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+		XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -79,16 +79,16 @@ func (n *Notify) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.notify (` +
-		`NotifyId, ForUserId, ActorUserId, NotifyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
+		`NotifyId, ForUserId, ActorUserId, NotifyType, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Notify {
-		XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+		XOLog(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
+	_, err = db.Exec(sqlstr, n.NotifyId, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Notify {
 			XOLogErr(err)
@@ -119,14 +119,14 @@ func (n *Notify) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.notify SET ` +
-		`ForUserId = ?, ActorUserId = ?, NotifyTypeEnum = ?, PostId = ?, CommentId = ?, PeerUserId = ?, Murmur64Hash = ?, SeenStatus = ?, CreatedTime = ?` +
+		`ForUserId = ?, ActorUserId = ?, NotifyType = ?, PostId = ?, CommentId = ?, PeerUserId = ?, Murmur64Hash = ?, SeenStatus = ?, CreatedTime = ?` +
 		` WHERE NotifyId = ?`
 
 	// run query
 	if LogTableSqlReq.Notify {
-		XOLog(sqlstr, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
+		XOLog(sqlstr, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
 	}
-	_, err = db.Exec(sqlstr, n.ForUserId, n.ActorUserId, n.NotifyTypeEnum, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
+	_, err = db.Exec(sqlstr, n.ForUserId, n.ActorUserId, n.NotifyType, n.PostId, n.CommentId, n.PeerUserId, n.Murmur64Hash, n.SeenStatus, n.CreatedTime, n.NotifyId)
 
 	if LogTableSqlReq.Notify {
 		XOLogErr(err)
@@ -582,106 +582,106 @@ func (d *__Notify_Deleter) ActorUserId_GE(val int) *__Notify_Deleter {
 	return d
 }
 
-func (u *__Notify_Deleter) NotifyTypeEnum_In(ins []int) *__Notify_Deleter {
+func (u *__Notify_Deleter) NotifyType_In(ins []int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Deleter) NotifyTypeEnum_Ins(ins ...int) *__Notify_Deleter {
+func (u *__Notify_Deleter) NotifyType_Ins(ins ...int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Deleter) NotifyTypeEnum_NotIn(ins []int) *__Notify_Deleter {
+func (u *__Notify_Deleter) NotifyType_NotIn(ins []int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_Eq(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_Eq(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum = " + d.nextDollar()
+	w.condition = " NotifyType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_NotEq(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_NotEq(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum != " + d.nextDollar()
+	w.condition = " NotifyType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_LT(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_LT(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum < " + d.nextDollar()
+	w.condition = " NotifyType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_LE(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_LE(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum <= " + d.nextDollar()
+	w.condition = " NotifyType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_GT(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_GT(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum > " + d.nextDollar()
+	w.condition = " NotifyType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Deleter) NotifyTypeEnum_GE(val int) *__Notify_Deleter {
+func (d *__Notify_Deleter) NotifyType_GE(val int) *__Notify_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum >= " + d.nextDollar()
+	w.condition = " NotifyType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1651,106 +1651,106 @@ func (d *__Notify_Updater) ActorUserId_GE(val int) *__Notify_Updater {
 	return d
 }
 
-func (u *__Notify_Updater) NotifyTypeEnum_In(ins []int) *__Notify_Updater {
+func (u *__Notify_Updater) NotifyType_In(ins []int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Updater) NotifyTypeEnum_Ins(ins ...int) *__Notify_Updater {
+func (u *__Notify_Updater) NotifyType_Ins(ins ...int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Updater) NotifyTypeEnum_NotIn(ins []int) *__Notify_Updater {
+func (u *__Notify_Updater) NotifyType_NotIn(ins []int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_Eq(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_Eq(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum = " + d.nextDollar()
+	w.condition = " NotifyType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_NotEq(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_NotEq(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum != " + d.nextDollar()
+	w.condition = " NotifyType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_LT(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_LT(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum < " + d.nextDollar()
+	w.condition = " NotifyType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_LE(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_LE(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum <= " + d.nextDollar()
+	w.condition = " NotifyType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_GT(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_GT(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum > " + d.nextDollar()
+	w.condition = " NotifyType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Updater) NotifyTypeEnum_GE(val int) *__Notify_Updater {
+func (d *__Notify_Updater) NotifyType_GE(val int) *__Notify_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum >= " + d.nextDollar()
+	w.condition = " NotifyType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2720,106 +2720,106 @@ func (d *__Notify_Selector) ActorUserId_GE(val int) *__Notify_Selector {
 	return d
 }
 
-func (u *__Notify_Selector) NotifyTypeEnum_In(ins []int) *__Notify_Selector {
+func (u *__Notify_Selector) NotifyType_In(ins []int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Selector) NotifyTypeEnum_Ins(ins ...int) *__Notify_Selector {
+func (u *__Notify_Selector) NotifyType_Ins(ins ...int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Notify_Selector) NotifyTypeEnum_NotIn(ins []int) *__Notify_Selector {
+func (u *__Notify_Selector) NotifyType_NotIn(ins []int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " NotifyType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_Eq(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_Eq(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum = " + d.nextDollar()
+	w.condition = " NotifyType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_NotEq(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_NotEq(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum != " + d.nextDollar()
+	w.condition = " NotifyType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_LT(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_LT(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum < " + d.nextDollar()
+	w.condition = " NotifyType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_LE(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_LE(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum <= " + d.nextDollar()
+	w.condition = " NotifyType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_GT(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_GT(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum > " + d.nextDollar()
+	w.condition = " NotifyType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Notify_Selector) NotifyTypeEnum_GE(val int) *__Notify_Selector {
+func (d *__Notify_Selector) NotifyType_GE(val int) *__Notify_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " NotifyTypeEnum >= " + d.nextDollar()
+	w.condition = " NotifyType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3550,24 +3550,24 @@ func (u *__Notify_Updater) ActorUserId_Increment(count int) *__Notify_Updater {
 
 //ints
 
-func (u *__Notify_Updater) NotifyTypeEnum(newVal int) *__Notify_Updater {
-	up := updateCol{" NotifyTypeEnum = " + u.nextDollar(), newVal}
+func (u *__Notify_Updater) NotifyType(newVal int) *__Notify_Updater {
+	up := updateCol{" NotifyType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" NotifyTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" NotifyType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Notify_Updater) NotifyTypeEnum_Increment(count int) *__Notify_Updater {
+func (u *__Notify_Updater) NotifyType_Increment(count int) *__Notify_Updater {
 	if count > 0 {
-		up := updateCol{" NotifyTypeEnum = NotifyTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" NotifyType = NotifyType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" NotifyTypeEnum = NotifyTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" NotifyType = NotifyType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" NotifyTypeEnum = NotifyTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" NotifyType = NotifyType- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" NotifyTypeEnum = NotifyTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" NotifyType = NotifyType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3787,18 +3787,18 @@ func (u *__Notify_Selector) Select_ActorUserId() *__Notify_Selector {
 	return u
 }
 
-func (u *__Notify_Selector) OrderBy_NotifyTypeEnum_Desc() *__Notify_Selector {
-	u.orderBy = " ORDER BY NotifyTypeEnum DESC "
+func (u *__Notify_Selector) OrderBy_NotifyType_Desc() *__Notify_Selector {
+	u.orderBy = " ORDER BY NotifyType DESC "
 	return u
 }
 
-func (u *__Notify_Selector) OrderBy_NotifyTypeEnum_Asc() *__Notify_Selector {
-	u.orderBy = " ORDER BY NotifyTypeEnum ASC "
+func (u *__Notify_Selector) OrderBy_NotifyType_Asc() *__Notify_Selector {
+	u.orderBy = " ORDER BY NotifyType ASC "
 	return u
 }
 
-func (u *__Notify_Selector) Select_NotifyTypeEnum() *__Notify_Selector {
-	u.selectCol = "NotifyTypeEnum"
+func (u *__Notify_Selector) Select_NotifyType() *__Notify_Selector {
+	u.selectCol = "NotifyType"
 	return u
 }
 
@@ -4215,7 +4215,7 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 	insVals := helper.SqlManyDollars(10, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.notify (" +
-		"NotifyId, ForUserId, ActorUserId, NotifyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
+		"NotifyId, ForUserId, ActorUserId, NotifyType, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4226,7 +4226,7 @@ func MassInsert_Notify(rows []Notify, db XODB) error {
 		vals = append(vals, row.NotifyId)
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.NotifyTypeEnum)
+		vals = append(vals, row.NotifyType)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.PeerUserId)
@@ -4261,7 +4261,7 @@ func MassReplace_Notify(rows []Notify, db XODB) error {
 	insVals := helper.SqlManyDollars(10, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.notify (" +
-		"NotifyId, ForUserId, ActorUserId, NotifyTypeEnum, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
+		"NotifyId, ForUserId, ActorUserId, NotifyType, PostId, CommentId, PeerUserId, Murmur64Hash, SeenStatus, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -4272,7 +4272,7 @@ func MassReplace_Notify(rows []Notify, db XODB) error {
 		vals = append(vals, row.NotifyId)
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.ActorUserId)
-		vals = append(vals, row.NotifyTypeEnum)
+		vals = append(vals, row.NotifyType)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
 		vals = append(vals, row.PeerUserId)

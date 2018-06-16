@@ -10,6 +10,82 @@ option go_package = "x";
 import "pb_tables.proto";
 import "pb_enum.proto";
 
+message PB_MediaView {
+
+}
+
+message PB_ActionView {
+    int64 ActionId = 1;
+    int32 ActorUserId = 2;
+    int32 ActionTypeEnum = 3;
+    int32 PeerUserId = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int64 Murmur64Hash = 7;
+    int32 CreatedTime = 8;
+
+    PB_UserView ActorUserView = 100;
+    PB_PostView PostView   = 101;
+    PB_CommentView CommentView = 102;
+    PB_UserView FollowedUserView = 103;
+    PB_UserView ContentOwenerUserView = 104;
+}
+
+message PB_NotifyView {
+    int64 NotifyId = 1;
+    int32 ForUserId = 2;
+    int32 ActorUserId = 3;
+    int32 NotiyTypeEnum = 4;
+    int64 PostId = 5;
+    int64 CommentId = 6;
+    int32 PeerUserId = 7;
+    int64 Murmur64Hash = 8;
+    int32 SeenStatus = 9;
+    int32 CreatedTime = 10;
+
+    PB_UserView ActorUserView = 100;
+    PB_PostView PostView = 101;
+    PB_CommentView CommentView = 102;
+}
+
+message PB_CommentView {
+    int64 CommentId = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    string Text = 4;
+    int32 LikesCount = 5;
+    int32 CreatedTime = 6;
+
+    PB_UserView SenderUserView = 15;
+}
+
+
+message PB_PostView {
+    int64 PostId = 1;
+    int32 UserId = 2;
+    PostTypeEnum PostTypeEnum = 3;
+    string Text = 4;
+    string RichText = 5;
+    int32 MediaCount = 6;
+    int32 SharedTo = 7;
+    int32 DisableComment = 8;
+    int32 HasTag = 9;
+    int32 CommentsCount = 10;
+    int32 LikesCount = 11;
+    int32 ViewsCount = 12;
+    int32 EditedTime = 13;
+    int32 CreatedTime = 14;
+    int64 ReSharedPostId = 15;
+
+    //With me
+    bool DidILiked = 50;
+    bool DidIReShared = 51;
+
+    PB_UserView SenderUserView = 100;
+    PB_UserView ReSharedUserView = 101;
+    PB_MediaView MediaView = 102;
+    repeated PB_MediaView MediaViewList = 103;
+}
 
 message PB_ChatView {
     int64 ChatId = 1;
@@ -164,6 +240,15 @@ message PB_PostViewRowify {
     PB_PostView PostView = 10;
 }
 
+//////////// Tags /////////////
+message PB_TagView {
+    int64 TagId = 1;
+    string Name = 2;
+    int32 Count = 3;
+    int32 TagStatusEnum = 4;
+    int32 CreatedTime = 5;
+}
+
 message PB_TopTagWithSamplePosts {
     PB_TagView TagView = 1;
     repeated PB_PostView PostViewList = 2;
@@ -174,11 +259,11 @@ message PB_SelfUserView {
     PB_UserView UserView = 1;
 
     //30-50 privacy
-    int ProfilePrivacy = 30;
-    int OnlinePrivacy = 32;
-    int CallPrivacy = 33;
-    int AddToGroupPrivacy = 34;
-    int SeenMessagePrivacy = 35;
+    int32 ProfilePrivacy = 30;
+    int32 OnlinePrivacy = 32;
+    int32 CallPrivacy = 33;
+    int32 AddToGroupPrivacy = 34;
+    int32 SeenMessagePrivacy = 35;
 
     // 100 other views
     PB_SettingNotificationView SettingNotification = 100;
@@ -188,13 +273,14 @@ message PB_SelfUserView {
 }
 
 
-enum PB_Error {
+message PB_Error {
     ServerErrors Error = 1;
-     bool ShowError = 2;
+    bool ShowError = 2;
      string ErrorMessage = 3;
 }
 
 enum ServerErrors {
+    UNKNOWN_ERR = 0;
     ERR_CLIENT_IS_DEPRECATED = 1;
     ERR_SERVER_UPGRADING = 2;
     

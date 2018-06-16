@@ -28,6 +28,30 @@ func ActionByActionId(db *sqlx.DB, actionId int) (*Action, error) {
 	return &a, nil
 }
 
+// BlockedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.blocked' as a Blocked.
+func BlockedById(db *sqlx.DB, id int) (*Blocked, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.blocked ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	b := Blocked{
+		_exists: true,
+	}
+
+	err = db.Get(&b, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnBlocked_LoadOne(&b)
+
+	return &b, nil
+}
+
 // CommentByCommentId Generated from index 'PRIMARY' -- retrieves a row from 'sun.comment' as a Comment.
 func CommentByCommentId(db *sqlx.DB, commentId int) (*Comment, error) {
 	var err error
@@ -98,6 +122,30 @@ func EventByEventId(db *sqlx.DB, eventId int) (*Event, error) {
 	OnEvent_LoadOne(&e)
 
 	return &e, nil
+}
+
+// FollowedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.followed' as a Followed.
+func FollowedById(db *sqlx.DB, id int) (*Followed, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.followed ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	f := Followed{
+		_exists: true,
+	}
+
+	err = db.Get(&f, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnFollowed_LoadOne(&f)
+
+	return &f, nil
 }
 
 // LikeById Generated from index 'PRIMARY' -- retrieves a row from 'sun.likes' as a Like.
@@ -412,30 +460,6 @@ func SessionById(db *sqlx.DB, id int) (*Session, error) {
 	return &s, nil
 }
 
-// SettingClientByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_client' as a SettingClient.
-func SettingClientByUserId(db *sqlx.DB, userId int) (*SettingClient, error) {
-	var err error
-
-	const sqlstr = `SELECT * ` +
-		`FROM sun.setting_client ` +
-		`WHERE UserId = ?`
-
-	XOLog(sqlstr, userId)
-	sc := SettingClient{
-		_exists: true,
-	}
-
-	err = db.Get(&sc, sqlstr, userId)
-	if err != nil {
-		XOLogErr(err)
-		return nil, err
-	}
-
-	OnSettingClient_LoadOne(&sc)
-
-	return &sc, nil
-}
-
 // SettingNotificationByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_notifications' as a SettingNotification.
 func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification, error) {
 	var err error
@@ -458,6 +482,30 @@ func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification,
 	OnSettingNotification_LoadOne(&sn)
 
 	return &sn, nil
+}
+
+// SmById Generated from index 'PRIMARY' -- retrieves a row from 'sun.sms' as a Sm.
+func SmById(db *sqlx.DB, id uint) (*Sm, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.sms ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	s := Sm{
+		_exists: true,
+	}
+
+	err = db.Get(&s, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnSm_LoadOne(&s)
+
+	return &s, nil
 }
 
 // TagByTagId Generated from index 'PRIMARY' -- retrieves a row from 'sun.tag' as a Tag.
@@ -604,6 +652,30 @@ func ChatByChatId(db *sqlx.DB, chatId int) (*Chat, error) {
 	return &c, nil
 }
 
+// ChatDeletedByChatIdAndRoomKey Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_deleted' as a ChatDeleted.
+func ChatDeletedByChatIdAndRoomKey(db *sqlx.DB, chatId int, roomKey string) (*ChatDeleted, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun_chat.chat_deleted ` +
+		`WHERE ChatId = ? AND RoomKey = ?`
+
+	XOLog(sqlstr, chatId, roomKey)
+	cd := ChatDeleted{
+		_exists: true,
+	}
+
+	err = db.Get(&cd, sqlstr, chatId, roomKey)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnChatDeleted_LoadOne(&cd)
+
+	return &cd, nil
+}
+
 // ChatLastMessageByChatIdGroupId Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_last_message' as a ChatLastMessage.
 func ChatLastMessageByChatIdGroupId(db *sqlx.DB, chatIdGroupId string) (*ChatLastMessage, error) {
 	var err error
@@ -628,28 +700,28 @@ func ChatLastMessageByChatIdGroupId(db *sqlx.DB, chatIdGroupId string) (*ChatLas
 	return &clm, nil
 }
 
-// ChatVersionOrderByVersionTime Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_version_order' as a ChatVersionOrder.
-func ChatVersionOrderByVersionTime(db *sqlx.DB, versionTime int) (*ChatVersionOrder, error) {
+// ChatUserVersionByVersionTimeNano Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_user_version' as a ChatUserVersion.
+func ChatUserVersionByVersionTimeNano(db *sqlx.DB, versionTimeNano int) (*ChatUserVersion, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM sun_chat.chat_version_order ` +
-		`WHERE VersionTime = ?`
+		`FROM sun_chat.chat_user_version ` +
+		`WHERE VersionTimeNano = ?`
 
-	XOLog(sqlstr, versionTime)
-	cvo := ChatVersionOrder{
+	XOLog(sqlstr, versionTimeNano)
+	cuv := ChatUserVersion{
 		_exists: true,
 	}
 
-	err = db.Get(&cvo, sqlstr, versionTime)
+	err = db.Get(&cuv, sqlstr, versionTimeNano)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
 	}
 
-	OnChatVersionOrder_LoadOne(&cvo)
+	OnChatUserVersion_LoadOne(&cuv)
 
-	return &cvo, nil
+	return &cuv, nil
 }
 
 // GroupByGroupId Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.group' as a Group.

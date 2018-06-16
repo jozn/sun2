@@ -3,11 +3,19 @@
 CREATE TABLE IF NOT EXISTS sun.action (
     action_id int PRIMARY KEY NOT NULL ,
     actor_user_id int NOT NULL ,
-    action_type_enum int NOT NULL ,
+    action_type int NOT NULL ,
     peer_user_id int NOT NULL ,
     post_id int NOT NULL ,
     comment_id int NOT NULL ,
     murmur64_hash int NOT NULL ,
+    created_time int NOT NULL ,
+);
+
+/*Table: blocked  */
+CREATE TABLE IF NOT EXISTS sun.blocked (
+    id int PRIMARY KEY NOT NULL ,
+    user_id int NOT NULL ,
+    blocked_user_id int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -18,6 +26,7 @@ CREATE TABLE IF NOT EXISTS sun.comment (
     post_id int NOT NULL ,
     text string NOT NULL ,
     likes_count int NOT NULL ,
+    is_edited int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -42,6 +51,14 @@ CREATE TABLE IF NOT EXISTS sun.event (
     re_shared_id int NOT NULL ,
 );
 
+/*Table: followed  */
+CREATE TABLE IF NOT EXISTS sun.followed (
+    id int PRIMARY KEY NOT NULL ,
+    user_id int NOT NULL ,
+    followed_user_id int NOT NULL ,
+    created_time int NOT NULL ,
+);
+
 /*Table: likes  */
 CREATE TABLE IF NOT EXISTS sun.likes (
     id int PRIMARY KEY NOT NULL ,
@@ -57,7 +74,7 @@ CREATE TABLE IF NOT EXISTS sun.notify (
     notify_id int PRIMARY KEY NOT NULL ,
     for_user_id int NOT NULL ,
     actor_user_id int NOT NULL ,
-    notify_type_enum int NOT NULL ,
+    notify_type int NOT NULL ,
     post_id int NOT NULL ,
     comment_id int NOT NULL ,
     peer_user_id int NOT NULL ,
@@ -161,19 +178,16 @@ CREATE TABLE IF NOT EXISTS sun.post_mentioned (
     for_user_id int NOT NULL ,
     post_id int NOT NULL ,
     post_user_id int NOT NULL ,
-    post_type_enum int NOT NULL ,
-    post_category_enum int NOT NULL ,
+    post_type int NOT NULL ,
     created_time int NOT NULL ,
 );
 
 /*Table: post_reshared  */
 CREATE TABLE IF NOT EXISTS sun.post_reshared (
     reshared_id int PRIMARY KEY NOT NULL ,
-    by_user_id int NOT NULL ,
     post_id int NOT NULL ,
+    by_user_id int NOT NULL ,
     post_user_id int NOT NULL ,
-    post_type_enum int NOT NULL ,
-    post_category_enum int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -186,30 +200,6 @@ CREATE TABLE IF NOT EXISTS sun.session (
     app_version int NOT NULL ,
     active_time int NOT NULL ,
     created_time int NOT NULL ,
-);
-
-/*Table: setting_client  */
-CREATE TABLE IF NOT EXISTS sun.setting_client (
-    user_id int PRIMARY KEY NOT NULL ,
-    auto_download_wifi_voice int NOT NULL ,
-    auto_download_wifi_image int NOT NULL ,
-    auto_download_wifi_video int NOT NULL ,
-    auto_download_wifi_file int NOT NULL ,
-    auto_download_wifi_music int NOT NULL ,
-    auto_download_wifi_gif int NOT NULL ,
-    auto_download_cellular_voice int NOT NULL ,
-    auto_download_cellular_image int NOT NULL ,
-    auto_download_cellular_video int NOT NULL ,
-    auto_download_cellular_file int NOT NULL ,
-    auto_download_cellular_music int NOT NULL ,
-    auto_download_cellular_gif int NOT NULL ,
-    auto_download_roaming_voice int NOT NULL ,
-    auto_download_roaming_image int NOT NULL ,
-    auto_download_roaming_video int NOT NULL ,
-    auto_download_roaming_file int NOT NULL ,
-    auto_download_roaming_music int NOT NULL ,
-    auto_download_roaming_gif int NOT NULL ,
-    save_to_gallery int NOT NULL ,
 );
 
 /*Table: setting_notifications  */
@@ -234,6 +224,23 @@ CREATE TABLE IF NOT EXISTS sun.setting_notifications (
     direct_popup int NOT NULL ,
     direct_sound int NOT NULL ,
     direct_priority int NOT NULL ,
+);
+
+/*Table: sms  */
+CREATE TABLE IF NOT EXISTS sun.sms (
+    id UNKNOWN_sqlToGo__ PRIMARY KEY NOT NULL ,
+    hash string NOT NULL ,
+    client_phone string NOT NULL ,
+    genrated_code int NOT NULL ,
+    sms_sender_number string NOT NULL ,
+    sms_send_statues string NOT NULL ,
+    carrier string NOT NULL ,
+    country bytes NOT NULL ,
+    is_valid_phone int NOT NULL ,
+    is_confirmed int NOT NULL ,
+    is_login int NOT NULL ,
+    is_register int NOT NULL ,
+    retried_count int NOT NULL ,
 );
 
 /*Table: tag  */
@@ -276,6 +283,9 @@ CREATE TABLE IF NOT EXISTS sun.user (
     avatar_id int NOT NULL ,
     profile_privacy int NOT NULL ,
     online_privacy int NOT NULL ,
+    call_privacy int NOT NULL ,
+    add_to_group_privacy int NOT NULL ,
+    seen_message_privacy int NOT NULL ,
     phone int NOT NULL ,
     email string UNIQUE NOT NULL ,
     about string NOT NULL ,
@@ -327,27 +337,39 @@ CREATE TABLE IF NOT EXISTS sun_chat.chat (
     peer_user_id int NOT NULL ,
     group_id int NOT NULL ,
     hash_tag_id int NOT NULL ,
-    started_by_me int NOT NULL ,
     title string NOT NULL ,
-    pin_time int NOT NULL ,
+    pin_time_ms int NOT NULL ,
     from_msg_id int NOT NULL ,
-    seq int NOT NULL ,
     unseen_count int NOT NULL ,
+    seq int NOT NULL ,
     last_msg_id int NOT NULL ,
-    last_msg_status int NOT NULL ,
-    seen_seq int NOT NULL ,
-    seen_msg_id int NOT NULL ,
-    last_msg_id_recived int NOT NULL ,
-    left int NOT NULL ,
-    creator int NOT NULL ,
-    kicked int NOT NULL ,
-    admin int NOT NULL ,
-    deactivated int NOT NULL ,
-    version_time int NOT NULL ,
+    last_my_msg_status int NOT NULL ,
+    my_last_seen_seq int NOT NULL ,
+    my_last_seen_msg_id int NOT NULL ,
+    peer_last_seen_msg_id int NOT NULL ,
+    my_last_delivered_seq int NOT NULL ,
+    my_last_delivered_msg_id int NOT NULL ,
+    peer_last_delivered_msg_id int NOT NULL ,
+    is_active int NOT NULL ,
+    is_left int NOT NULL ,
+    is_creator int NOT NULL ,
+    is_kicked int NOT NULL ,
+    is_admin int NOT NULL ,
+    is_deactivated int NOT NULL ,
+    is_muted int NOT NULL ,
+    mute_until int NOT NULL ,
+    version_time_ms int NOT NULL ,
+    version_seq int NOT NULL ,
     order_time int NOT NULL ,
     created_time int NOT NULL ,
     draft_text string NOT NULL ,
     drat_reply_to_msg_id int NOT NULL ,
+);
+
+/*Table: chat_deleted  */
+CREATE TABLE IF NOT EXISTS sun_chat.chat_deleted (
+    chat_id int PRIMARY KEY NOT NULL ,
+    room_key string PRIMARY KEY NOT NULL ,
 );
 
 /*Table: chat_last_message  */
@@ -356,12 +378,11 @@ CREATE TABLE IF NOT EXISTS sun_chat.chat_last_message (
     last_msg_pb bytes NOT NULL ,
 );
 
-/*Table: chat_version_order  */
-CREATE TABLE IF NOT EXISTS sun_chat.chat_version_order (
-    version_time int PRIMARY KEY NOT NULL ,
+/*Table: chat_user_version  */
+CREATE TABLE IF NOT EXISTS sun_chat.chat_user_version (
     user_id int NOT NULL ,
     chat_id int NOT NULL ,
-    order_time int NOT NULL ,
+    version_time_nano int PRIMARY KEY NOT NULL ,
 );
 
 /*Table: group  */
@@ -381,11 +402,15 @@ CREATE TABLE IF NOT EXISTS sun_chat.group (
     avatar_ref_id int NOT NULL ,
     avatar_count int NOT NULL ,
     about string NOT NULL ,
-    invite_link string NOT NULL ,
+    invite_link_hash string NOT NULL ,
     members_count int NOT NULL ,
+    admins_count int NOT NULL ,
+    moderator_counts int NOT NULL ,
     sort_time int NOT NULL ,
     created_time int NOT NULL ,
     is_mute int NOT NULL ,
+    is_deleted int NOT NULL ,
+    is_banned int NOT NULL ,
 );
 
 /*Table: group_member  */
@@ -402,7 +427,7 @@ CREATE TABLE IF NOT EXISTS sun_chat.group_member (
 CREATE TABLE IF NOT EXISTS sun_chat.group_orderd_user (
     order_id int PRIMARY KEY NOT NULL ,
     group_id int NOT NULL ,
-    user_id int ,
+    user_id int NOT NULL ,
 );
 
 /*Table: group_pined_msg  */

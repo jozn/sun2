@@ -14,41 +14,44 @@ import (
 
 // Manualy copy this to project
 type User__ struct {
-	UserId         int    `json:"UserId"`         // UserId -
-	UserName       string `json:"UserName"`       // UserName -
-	UserNameLower  string `json:"UserNameLower"`  // UserNameLower -
-	FirstName      string `json:"FirstName"`      // FirstName -
-	LastName       string `json:"LastName"`       // LastName -
-	IsVerified     int    `json:"IsVerified"`     // IsVerified -
-	AvatarId       int    `json:"AvatarId"`       // AvatarId -
-	ProfilePrivacy int    `json:"ProfilePrivacy"` // ProfilePrivacy -
-	OnlinePrivacy  int    `json:"OnlinePrivacy"`  // OnlinePrivacy -
-	Phone          int    `json:"Phone"`          // Phone -
-	Email          string `json:"Email"`          // Email -
-	About          string `json:"About"`          // About -
-	PasswordHash   string `json:"PasswordHash"`   // PasswordHash -
-	PasswordSalt   string `json:"PasswordSalt"`   // PasswordSalt -
-	PostSeq        int    `json:"PostSeq"`        // PostSeq -
-	FollowersCount int    `json:"FollowersCount"` // FollowersCount -
-	FollowingCount int    `json:"FollowingCount"` // FollowingCount -
-	PostsCount     int    `json:"PostsCount"`     // PostsCount -
-	MediaCount     int    `json:"MediaCount"`     // MediaCount -
-	PhotoCount     int    `json:"PhotoCount"`     // PhotoCount -
-	VideoCount     int    `json:"VideoCount"`     // VideoCount -
-	GifCount       int    `json:"GifCount"`       // GifCount -
-	AudioCount     int    `json:"AudioCount"`     // AudioCount -
-	VoiceCount     int    `json:"VoiceCount"`     // VoiceCount -
-	FileCount      int    `json:"FileCount"`      // FileCount -
-	LinkCount      int    `json:"LinkCount"`      // LinkCount -
-	BoardCount     int    `json:"BoardCount"`     // BoardCount -
-	PinedCount     int    `json:"PinedCount"`     // PinedCount -
-	LikesCount     int    `json:"LikesCount"`     // LikesCount -
-	ResharedCount  int    `json:"ResharedCount"`  // ResharedCount -
-	LastPostTime   int    `json:"LastPostTime"`   // LastPostTime -
-	CreatedTime    int    `json:"CreatedTime"`    // CreatedTime -
-	VersionTime    int    `json:"VersionTime"`    // VersionTime -
-	IsDeleted      int    `json:"IsDeleted"`      // IsDeleted -
-	IsBanned       int    `json:"IsBanned"`       // IsBanned -
+	UserId             int    `json:"UserId"`             // UserId -
+	UserName           string `json:"UserName"`           // UserName -
+	UserNameLower      string `json:"UserNameLower"`      // UserNameLower -
+	FirstName          string `json:"FirstName"`          // FirstName -
+	LastName           string `json:"LastName"`           // LastName -
+	IsVerified         int    `json:"IsVerified"`         // IsVerified -
+	AvatarId           int    `json:"AvatarId"`           // AvatarId -
+	ProfilePrivacy     int    `json:"ProfilePrivacy"`     // ProfilePrivacy -
+	OnlinePrivacy      int    `json:"OnlinePrivacy"`      // OnlinePrivacy -
+	CallPrivacy        int    `json:"CallPrivacy"`        // CallPrivacy -
+	AddToGroupPrivacy  int    `json:"AddToGroupPrivacy"`  // AddToGroupPrivacy -
+	SeenMessagePrivacy int    `json:"SeenMessagePrivacy"` // SeenMessagePrivacy -
+	Phone              int    `json:"Phone"`              // Phone -
+	Email              string `json:"Email"`              // Email -
+	About              string `json:"About"`              // About -
+	PasswordHash       string `json:"PasswordHash"`       // PasswordHash -
+	PasswordSalt       string `json:"PasswordSalt"`       // PasswordSalt -
+	PostSeq            int    `json:"PostSeq"`            // PostSeq -
+	FollowersCount     int    `json:"FollowersCount"`     // FollowersCount -
+	FollowingCount     int    `json:"FollowingCount"`     // FollowingCount -
+	PostsCount         int    `json:"PostsCount"`         // PostsCount -
+	MediaCount         int    `json:"MediaCount"`         // MediaCount -
+	PhotoCount         int    `json:"PhotoCount"`         // PhotoCount -
+	VideoCount         int    `json:"VideoCount"`         // VideoCount -
+	GifCount           int    `json:"GifCount"`           // GifCount -
+	AudioCount         int    `json:"AudioCount"`         // AudioCount -
+	VoiceCount         int    `json:"VoiceCount"`         // VoiceCount -
+	FileCount          int    `json:"FileCount"`          // FileCount -
+	LinkCount          int    `json:"LinkCount"`          // LinkCount -
+	BoardCount         int    `json:"BoardCount"`         // BoardCount -
+	PinedCount         int    `json:"PinedCount"`         // PinedCount -
+	LikesCount         int    `json:"LikesCount"`         // LikesCount -
+	ResharedCount      int    `json:"ResharedCount"`      // ResharedCount -
+	LastPostTime       int    `json:"LastPostTime"`       // LastPostTime -
+	CreatedTime        int    `json:"CreatedTime"`        // CreatedTime -
+	VersionTime        int    `json:"VersionTime"`        // VersionTime -
+	IsDeleted          int    `json:"IsDeleted"`          // IsDeleted -
+	IsBanned           int    `json:"IsBanned"`           // IsBanned -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -74,16 +77,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -116,16 +119,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -167,14 +170,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, Phone = ?, Email = ?, About = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, CallPrivacy = ?, AddToGroupPrivacy = ?, SeenMessagePrivacy = ?, Phone = ?, Email = ?, About = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -835,6 +838,321 @@ func (d *__User_Deleter) OnlinePrivacy_GE(val int) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " OnlinePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) CallPrivacy_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) CallPrivacy_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) CallPrivacy_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) CallPrivacy_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) CallPrivacy_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) CallPrivacy_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) CallPrivacy_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) CallPrivacy_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) CallPrivacy_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) AddToGroupPrivacy_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AddToGroupPrivacy_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AddToGroupPrivacy_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AddToGroupPrivacy_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) SeenMessagePrivacy_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) SeenMessagePrivacy_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) SeenMessagePrivacy_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) SeenMessagePrivacy_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3694,6 +4012,321 @@ func (d *__User_Updater) OnlinePrivacy_GE(val int) *__User_Updater {
 	return d
 }
 
+func (u *__User_Updater) CallPrivacy_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) CallPrivacy_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) CallPrivacy_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) CallPrivacy_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) CallPrivacy_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) CallPrivacy_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) CallPrivacy_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) CallPrivacy_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) CallPrivacy_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) AddToGroupPrivacy_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AddToGroupPrivacy_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AddToGroupPrivacy_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AddToGroupPrivacy_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) SeenMessagePrivacy_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) SeenMessagePrivacy_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) SeenMessagePrivacy_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) SeenMessagePrivacy_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Updater) Phone_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -6543,6 +7176,321 @@ func (d *__User_Selector) OnlinePrivacy_GE(val int) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " OnlinePrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) CallPrivacy_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) CallPrivacy_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) CallPrivacy_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " CallPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) CallPrivacy_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) CallPrivacy_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) CallPrivacy_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) CallPrivacy_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) CallPrivacy_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) CallPrivacy_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " CallPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) AddToGroupPrivacy_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AddToGroupPrivacy_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AddToGroupPrivacy_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AddToGroupPrivacy_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AddToGroupPrivacy >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) SeenMessagePrivacy_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) SeenMessagePrivacy_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) SeenMessagePrivacy_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) SeenMessagePrivacy_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10487,6 +11435,87 @@ func (u *__User_Updater) OnlinePrivacy_Increment(count int) *__User_Updater {
 
 //ints
 
+func (u *__User_Updater) CallPrivacy(newVal int) *__User_Updater {
+	up := updateCol{" CallPrivacy = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" CallPrivacy = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__User_Updater) CallPrivacy_Increment(count int) *__User_Updater {
+	if count > 0 {
+		up := updateCol{" CallPrivacy = CallPrivacy+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" CallPrivacy = CallPrivacy+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" CallPrivacy = CallPrivacy- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" CallPrivacy = CallPrivacy- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) AddToGroupPrivacy(newVal int) *__User_Updater {
+	up := updateCol{" AddToGroupPrivacy = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AddToGroupPrivacy = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__User_Updater) AddToGroupPrivacy_Increment(count int) *__User_Updater {
+	if count > 0 {
+		up := updateCol{" AddToGroupPrivacy = AddToGroupPrivacy+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AddToGroupPrivacy = AddToGroupPrivacy+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" AddToGroupPrivacy = AddToGroupPrivacy- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AddToGroupPrivacy = AddToGroupPrivacy- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__User_Updater) SeenMessagePrivacy(newVal int) *__User_Updater {
+	up := updateCol{" SeenMessagePrivacy = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SeenMessagePrivacy = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__User_Updater) SeenMessagePrivacy_Increment(count int) *__User_Updater {
+	if count > 0 {
+		up := updateCol{" SeenMessagePrivacy = SeenMessagePrivacy+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" SeenMessagePrivacy = SeenMessagePrivacy+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" SeenMessagePrivacy = SeenMessagePrivacy- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" SeenMessagePrivacy = SeenMessagePrivacy- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__User_Updater) Phone(newVal int) *__User_Updater {
 	up := updateCol{" Phone = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -11259,6 +12288,51 @@ func (u *__User_Selector) Select_OnlinePrivacy() *__User_Selector {
 	return u
 }
 
+func (u *__User_Selector) OrderBy_CallPrivacy_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY CallPrivacy DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_CallPrivacy_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY CallPrivacy ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_CallPrivacy() *__User_Selector {
+	u.selectCol = "CallPrivacy"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_AddToGroupPrivacy_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY AddToGroupPrivacy DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_AddToGroupPrivacy_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY AddToGroupPrivacy ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_AddToGroupPrivacy() *__User_Selector {
+	u.selectCol = "AddToGroupPrivacy"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_SeenMessagePrivacy_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY SeenMessagePrivacy DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_SeenMessagePrivacy_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY SeenMessagePrivacy ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_SeenMessagePrivacy() *__User_Selector {
+	u.selectCol = "SeenMessagePrivacy"
+	return u
+}
+
 func (u *__User_Selector) OrderBy_Phone_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY Phone DESC "
 	return u
@@ -11966,12 +13040,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -11987,6 +13061,9 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.AvatarId)
 		vals = append(vals, row.ProfilePrivacy)
 		vals = append(vals, row.OnlinePrivacy)
+		vals = append(vals, row.CallPrivacy)
+		vals = append(vals, row.AddToGroupPrivacy)
+		vals = append(vals, row.SeenMessagePrivacy)
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
@@ -12033,12 +13110,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -12054,6 +13131,9 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.AvatarId)
 		vals = append(vals, row.ProfilePrivacy)
 		vals = append(vals, row.OnlinePrivacy)
+		vals = append(vals, row.CallPrivacy)
+		vals = append(vals, row.AddToGroupPrivacy)
+		vals = append(vals, row.SeenMessagePrivacy)
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
@@ -12098,6 +13178,12 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
 
 //
 

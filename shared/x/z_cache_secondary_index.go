@@ -12,6 +12,8 @@ import (
 
 // Action - ActorUserId
 
+// Blocked - PRIMARY
+
 // Comment - PRIMARY
 
 //field//field//field
@@ -70,6 +72,8 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 // CommentDeleted - PRIMARY
 
 // Event - PRIMARY
+
+// Followed - PRIMARY
 
 // Like - PRIMARY
 
@@ -686,9 +690,9 @@ func (c _StoreImpl) PreLoadSession_BySessionUuids(SessionUuids []string) {
 	}
 }
 
-// SettingClient - PRIMARY
-
 // SettingNotification - PRIMARY
+
+// Sm - PRIMARY
 
 // Tag - PRIMARY
 
@@ -916,9 +920,11 @@ func (c _StoreImpl) PreLoadUser_ByEmails(Emails []string) {
 
 // Chat - PRIMARY
 
+// ChatDeleted - PRIMARY
+
 // ChatLastMessage - PRIMARY
 
-// ChatVersionOrder - PRIMARY
+// ChatUserVersion - PRIMARY
 
 // Group - PRIMARY
 

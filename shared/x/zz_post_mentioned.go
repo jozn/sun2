@@ -15,13 +15,12 @@ import (
 
 // Manualy copy this to project
 type PostMentioned__ struct {
-	MentionedId      int `json:"MentionedId"`      // MentionedId -
-	ForUserId        int `json:"ForUserId"`        // ForUserId -
-	PostId           int `json:"PostId"`           // PostId -
-	PostUserId       int `json:"PostUserId"`       // PostUserId -
-	PostTypeEnum     int `json:"PostTypeEnum"`     // PostTypeEnum -
-	PostCategoryEnum int `json:"PostCategoryEnum"` // PostCategoryEnum -
-	CreatedTime      int `json:"CreatedTime"`      // CreatedTime -
+	MentionedId int `json:"MentionedId"` // MentionedId -
+	ForUserId   int `json:"ForUserId"`   // ForUserId -
+	PostId      int `json:"PostId"`      // PostId -
+	PostUserId  int `json:"PostUserId"`  // PostUserId -
+	PostType    int `json:"PostType"`    // PostType -
+	CreatedTime int `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -47,16 +46,16 @@ func (pm *PostMentioned) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post_mentioned (` +
-		`MentionedId, ForUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime` +
+		`MentionedId, ForUserId, PostId, PostUserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostMentioned {
-		XOLog(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime)
+		XOLog(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -76,16 +75,16 @@ func (pm *PostMentioned) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post_mentioned (` +
-		`MentionedId, ForUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime` +
+		`MentionedId, ForUserId, PostId, PostUserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostMentioned {
-		XOLog(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime)
+		XOLog(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.MentionedId, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.PostMentioned {
 			XOLogErr(err)
@@ -116,14 +115,14 @@ func (pm *PostMentioned) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_mentioned SET ` +
-		`ForUserId = ?, PostId = ?, PostUserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, CreatedTime = ?` +
+		`ForUserId = ?, PostId = ?, PostUserId = ?, PostType = ?, CreatedTime = ?` +
 		` WHERE MentionedId = ?`
 
 	// run query
 	if LogTableSqlReq.PostMentioned {
-		XOLog(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.MentionedId)
+		XOLog(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime, pm.MentionedId)
 	}
-	_, err = db.Exec(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostTypeEnum, pm.PostCategoryEnum, pm.CreatedTime, pm.MentionedId)
+	_, err = db.Exec(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime, pm.MentionedId)
 
 	if LogTableSqlReq.PostMentioned {
 		XOLogErr(err)
@@ -684,211 +683,106 @@ func (d *__PostMentioned_Deleter) PostUserId_GE(val int) *__PostMentioned_Delete
 	return d
 }
 
-func (u *__PostMentioned_Deleter) PostTypeEnum_In(ins []int) *__PostMentioned_Deleter {
+func (u *__PostMentioned_Deleter) PostType_In(ins []int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Deleter) PostTypeEnum_Ins(ins ...int) *__PostMentioned_Deleter {
+func (u *__PostMentioned_Deleter) PostType_Ins(ins ...int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Deleter) PostTypeEnum_NotIn(ins []int) *__PostMentioned_Deleter {
+func (u *__PostMentioned_Deleter) PostType_NotIn(ins []int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_Eq(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_Eq(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_NotEq(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_NotEq(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_LT(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_LT(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_LE(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_LE(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_GT(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_GT(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Deleter) PostTypeEnum_GE(val int) *__PostMentioned_Deleter {
+func (d *__PostMentioned_Deleter) PostType_GE(val int) *__PostMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PostMentioned_Deleter) PostCategoryEnum_In(ins []int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Deleter) PostCategoryEnum_Ins(ins ...int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Deleter) PostCategoryEnum_NotIn(ins []int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_Eq(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_NotEq(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_LT(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_LE(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_GT(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Deleter) PostCategoryEnum_GE(val int) *__PostMentioned_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1438,211 +1332,106 @@ func (d *__PostMentioned_Updater) PostUserId_GE(val int) *__PostMentioned_Update
 	return d
 }
 
-func (u *__PostMentioned_Updater) PostTypeEnum_In(ins []int) *__PostMentioned_Updater {
+func (u *__PostMentioned_Updater) PostType_In(ins []int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Updater) PostTypeEnum_Ins(ins ...int) *__PostMentioned_Updater {
+func (u *__PostMentioned_Updater) PostType_Ins(ins ...int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Updater) PostTypeEnum_NotIn(ins []int) *__PostMentioned_Updater {
+func (u *__PostMentioned_Updater) PostType_NotIn(ins []int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_Eq(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_Eq(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_NotEq(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_NotEq(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_LT(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_LT(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_LE(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_LE(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_GT(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_GT(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Updater) PostTypeEnum_GE(val int) *__PostMentioned_Updater {
+func (d *__PostMentioned_Updater) PostType_GE(val int) *__PostMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PostMentioned_Updater) PostCategoryEnum_In(ins []int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Updater) PostCategoryEnum_Ins(ins ...int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Updater) PostCategoryEnum_NotIn(ins []int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_Eq(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_NotEq(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_LT(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_LE(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_GT(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Updater) PostCategoryEnum_GE(val int) *__PostMentioned_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2192,211 +1981,106 @@ func (d *__PostMentioned_Selector) PostUserId_GE(val int) *__PostMentioned_Selec
 	return d
 }
 
-func (u *__PostMentioned_Selector) PostTypeEnum_In(ins []int) *__PostMentioned_Selector {
+func (u *__PostMentioned_Selector) PostType_In(ins []int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Selector) PostTypeEnum_Ins(ins ...int) *__PostMentioned_Selector {
+func (u *__PostMentioned_Selector) PostType_Ins(ins ...int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__PostMentioned_Selector) PostTypeEnum_NotIn(ins []int) *__PostMentioned_Selector {
+func (u *__PostMentioned_Selector) PostType_NotIn(ins []int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_Eq(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_Eq(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_NotEq(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_NotEq(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_LT(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_LT(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_LE(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_LE(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_GT(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_GT(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__PostMentioned_Selector) PostTypeEnum_GE(val int) *__PostMentioned_Selector {
+func (d *__PostMentioned_Selector) PostType_GE(val int) *__PostMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__PostMentioned_Selector) PostCategoryEnum_In(ins []int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Selector) PostCategoryEnum_Ins(ins ...int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__PostMentioned_Selector) PostCategoryEnum_NotIn(ins []int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_Eq(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_NotEq(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_LT(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_LE(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_GT(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__PostMentioned_Selector) PostCategoryEnum_GE(val int) *__PostMentioned_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2629,51 +2313,24 @@ func (u *__PostMentioned_Updater) PostUserId_Increment(count int) *__PostMention
 
 //ints
 
-func (u *__PostMentioned_Updater) PostTypeEnum(newVal int) *__PostMentioned_Updater {
-	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
+func (u *__PostMentioned_Updater) PostType(newVal int) *__PostMentioned_Updater {
+	up := updateCol{" PostType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" PostType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__PostMentioned_Updater) PostTypeEnum_Increment(count int) *__PostMentioned_Updater {
+func (u *__PostMentioned_Updater) PostType_Increment(count int) *__PostMentioned_Updater {
 	if count > 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" PostType = PostType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__PostMentioned_Updater) PostCategoryEnum(newVal int) *__PostMentioned_Updater {
-	up := updateCol{" PostCategoryEnum = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" PostCategoryEnum = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__PostMentioned_Updater) PostCategoryEnum_Increment(count int) *__PostMentioned_Updater {
-	if count > 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PostType = PostType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2773,33 +2430,18 @@ func (u *__PostMentioned_Selector) Select_PostUserId() *__PostMentioned_Selector
 	return u
 }
 
-func (u *__PostMentioned_Selector) OrderBy_PostTypeEnum_Desc() *__PostMentioned_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum DESC "
+func (u *__PostMentioned_Selector) OrderBy_PostType_Desc() *__PostMentioned_Selector {
+	u.orderBy = " ORDER BY PostType DESC "
 	return u
 }
 
-func (u *__PostMentioned_Selector) OrderBy_PostTypeEnum_Asc() *__PostMentioned_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum ASC "
+func (u *__PostMentioned_Selector) OrderBy_PostType_Asc() *__PostMentioned_Selector {
+	u.orderBy = " ORDER BY PostType ASC "
 	return u
 }
 
-func (u *__PostMentioned_Selector) Select_PostTypeEnum() *__PostMentioned_Selector {
-	u.selectCol = "PostTypeEnum"
-	return u
-}
-
-func (u *__PostMentioned_Selector) OrderBy_PostCategoryEnum_Desc() *__PostMentioned_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum DESC "
-	return u
-}
-
-func (u *__PostMentioned_Selector) OrderBy_PostCategoryEnum_Asc() *__PostMentioned_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum ASC "
-	return u
-}
-
-func (u *__PostMentioned_Selector) Select_PostCategoryEnum() *__PostMentioned_Selector {
-	u.selectCol = "PostCategoryEnum"
+func (u *__PostMentioned_Selector) Select_PostType() *__PostMentioned_Selector {
+	u.selectCol = "PostType"
 	return u
 }
 
@@ -3138,10 +2780,10 @@ func MassInsert_PostMentioned(rows []PostMentioned, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(7, ln, true)
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post_mentioned (" +
-		"MentionedId, ForUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime" +
+		"MentionedId, ForUserId, PostId, PostUserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3153,8 +2795,7 @@ func MassInsert_PostMentioned(rows []PostMentioned, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostUserId)
-		vals = append(vals, row.PostTypeEnum)
-		vals = append(vals, row.PostCategoryEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -3181,10 +2822,10 @@ func MassReplace_PostMentioned(rows []PostMentioned, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(7, ln, true)
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_mentioned (" +
-		"MentionedId, ForUserId, PostId, PostUserId, PostTypeEnum, PostCategoryEnum, CreatedTime" +
+		"MentionedId, ForUserId, PostId, PostUserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -3196,8 +2837,7 @@ func MassReplace_PostMentioned(rows []PostMentioned, db XODB) error {
 		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostUserId)
-		vals = append(vals, row.PostTypeEnum)
-		vals = append(vals, row.PostCategoryEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -3218,8 +2858,6 @@ func MassReplace_PostMentioned(rows []PostMentioned, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 
