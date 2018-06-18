@@ -13,22 +13,22 @@ const (
 	Event_TableGo                  = "Event"
 	Followed_Table                 = "followed"
 	Followed_TableGo               = "Followed"
-	Like_Table                     = "likes"
-	Like_TableGo                   = "Like"
+	Likes_Table                    = "likes"
+	Likes_TableGo                  = "Likes"
 	Notify_Table                   = "notify"
 	Notify_TableGo                 = "Notify"
 	NotifyRemoved_Table            = "notify_removed"
 	NotifyRemoved_TableGo          = "NotifyRemoved"
-	PhoneContact_Table             = "phone_contacts"
-	PhoneContact_TableGo           = "PhoneContact"
+	PhoneContacts_Table            = "phone_contacts"
+	PhoneContacts_TableGo          = "PhoneContacts"
 	Post_Table                     = "post"
 	Post_TableGo                   = "Post"
 	PostCount_Table                = "post_count"
 	PostCount_TableGo              = "PostCount"
 	PostDeleted_Table              = "post_deleted"
 	PostDeleted_TableGo            = "PostDeleted"
-	PostKey_Table                  = "post_keys"
-	PostKey_TableGo                = "PostKey"
+	PostKeys_Table                 = "post_keys"
+	PostKeys_TableGo               = "PostKeys"
 	PostLink_Table                 = "post_link"
 	PostLink_TableGo               = "PostLink"
 	PostMedia_Table                = "post_media"
@@ -39,10 +39,10 @@ const (
 	PostReshared_TableGo           = "PostReshared"
 	Session_Table                  = "session"
 	Session_TableGo                = "Session"
-	SettingNotification_Table      = "setting_notifications"
-	SettingNotification_TableGo    = "SettingNotification"
-	Sm_Table                       = "sms"
-	Sm_TableGo                     = "Sm"
+	SettingNotifications_Table     = "setting_notifications"
+	SettingNotifications_TableGo   = "SettingNotifications"
+	Sms_Table                      = "sms"
+	Sms_TableGo                    = "Sms"
 	Tag_Table                      = "tag"
 	Tag_TableGo                    = "Tag"
 	TagPost_Table                  = "tag_post"
@@ -77,8 +77,8 @@ const (
 	ActionFanout_TableGo           = "ActionFanout"
 	HomeFanout_Table               = "home_fanout"
 	HomeFanout_TableGo             = "HomeFanout"
-	SuggestedTopPost_Table         = "suggested_top_posts"
-	SuggestedTopPost_TableGo       = "SuggestedTopPost"
+	SuggestedTopPosts_Table        = "suggested_top_posts"
+	SuggestedTopPosts_TableGo      = "SuggestedTopPosts"
 	SuggestedUser_Table            = "suggested_user"
 	SuggestedUser_TableGo          = "SuggestedUser"
 	PushChat_Table                 = "push_chat"
@@ -199,7 +199,7 @@ var Followed = struct {
 	CreatedTime:    "CreatedTime",
 }
 
-var Like = struct {
+var Likes = struct {
 	Id           string
 	PostId       string
 	PostTypeEnum string
@@ -252,7 +252,7 @@ var NotifyRemoved = struct {
 	Id:           "Id",
 }
 
-var PhoneContact = struct {
+var PhoneContacts = struct {
 	Id        string
 	UserId    string
 	ClientId  string
@@ -340,7 +340,7 @@ var PostDeleted = struct {
 	UserId: "UserId",
 }
 
-var PostKey = struct {
+var PostKeys = struct {
 	Id         string
 	PostKeyStr string
 	Used       string
@@ -446,7 +446,7 @@ var Session = struct {
 	CreatedTime:   "CreatedTime",
 }
 
-var SettingNotification = struct {
+var SettingNotifications = struct {
 	UserId                   string
 	SocialLedOn              string
 	SocialLedColor           string
@@ -491,13 +491,16 @@ var SettingNotification = struct {
 	DirectPriority:           "DirectPriority",
 }
 
-var Sm = struct {
+var Sms = struct {
 	Id              string
 	Hash            string
+	AppUuid         string
 	ClientPhone     string
 	GenratedCode    string
 	SmsSenderNumber string
 	SmsSendStatues  string
+	SmsHttpBody     string
+	Err             string
 	Carrier         string
 	Country         string
 	IsValidPhone    string
@@ -505,14 +508,18 @@ var Sm = struct {
 	IsLogin         string
 	IsRegister      string
 	RetriedCount    string
+	TTL             string
 }{
 
 	Id:              "Id",
 	Hash:            "Hash",
+	AppUuid:         "AppUuid",
 	ClientPhone:     "ClientPhone",
 	GenratedCode:    "GenratedCode",
 	SmsSenderNumber: "SmsSenderNumber",
 	SmsSendStatues:  "SmsSendStatues",
+	SmsHttpBody:     "SmsHttpBody",
+	Err:             "Err",
 	Carrier:         "Carrier",
 	Country:         "Country",
 	IsValidPhone:    "IsValidPhone",
@@ -520,6 +527,7 @@ var Sm = struct {
 	IsLogin:         "IsLogin",
 	IsRegister:      "IsRegister",
 	RetriedCount:    "RetriedCount",
+	TTL:             "TTL",
 }
 
 var Tag = struct {
@@ -579,6 +587,7 @@ var User = struct {
 	LastName           string
 	IsVerified         string
 	AvatarId           string
+	AccessHash         string
 	ProfilePrivacy     string
 	OnlinePrivacy      string
 	CallPrivacy        string
@@ -587,6 +596,7 @@ var User = struct {
 	Phone              string
 	Email              string
 	About              string
+	DefaultUserName    string
 	PasswordHash       string
 	PasswordSalt       string
 	PostSeq            string
@@ -619,6 +629,7 @@ var User = struct {
 	LastName:           "LastName",
 	IsVerified:         "IsVerified",
 	AvatarId:           "AvatarId",
+	AccessHash:         "AccessHash",
 	ProfilePrivacy:     "ProfilePrivacy",
 	OnlinePrivacy:      "OnlinePrivacy",
 	CallPrivacy:        "CallPrivacy",
@@ -627,6 +638,7 @@ var User = struct {
 	Phone:              "Phone",
 	Email:              "Email",
 	About:              "About",
+	DefaultUserName:    "DefaultUserName",
 	PasswordHash:       "PasswordHash",
 	PasswordSalt:       "PasswordSalt",
 	PostSeq:            "PostSeq",
@@ -943,7 +955,7 @@ var HomeFanout = struct {
 	ResharedId: "ResharedId",
 }
 
-var SuggestedTopPost = struct {
+var SuggestedTopPosts = struct {
 	Id     string
 	PostId string
 }{

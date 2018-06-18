@@ -242,18 +242,18 @@ type __HTTPRPCLog_Selector struct {
 }
 
 func NewHTTPRPCLog_Deleter() *__HTTPRPCLog_Deleter {
-	d := __HTTPRPCLog_Deleter{whereSep: " AND "}
+	d := __HTTPRPCLog_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewHTTPRPCLog_Updater() *__HTTPRPCLog_Updater {
-	u := __HTTPRPCLog_Updater{whereSep: " AND "}
+	u := __HTTPRPCLog_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewHTTPRPCLog_Selector() *__HTTPRPCLog_Selector {
-	u := __HTTPRPCLog_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __HTTPRPCLog_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

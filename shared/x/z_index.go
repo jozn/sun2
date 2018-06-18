@@ -148,8 +148,8 @@ func FollowedById(db *sqlx.DB, id int) (*Followed, error) {
 	return &f, nil
 }
 
-// LikeById Generated from index 'PRIMARY' -- retrieves a row from 'sun.likes' as a Like.
-func LikeById(db *sqlx.DB, id int) (*Like, error) {
+// LikesById Generated from index 'PRIMARY' -- retrieves a row from 'sun.likes' as a Likes.
+func LikesById(db *sqlx.DB, id int) (*Likes, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -157,7 +157,7 @@ func LikeById(db *sqlx.DB, id int) (*Like, error) {
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	l := Like{
+	l := Likes{
 		_exists: true,
 	}
 
@@ -167,7 +167,7 @@ func LikeById(db *sqlx.DB, id int) (*Like, error) {
 		return nil, err
 	}
 
-	OnLike_LoadOne(&l)
+	OnLikes_LoadOne(&l)
 
 	return &l, nil
 }
@@ -220,8 +220,8 @@ func NotifyRemovedById(db *sqlx.DB, id int) (*NotifyRemoved, error) {
 	return &nr, nil
 }
 
-// PhoneContactById Generated from index 'PRIMARY' -- retrieves a row from 'sun.phone_contacts' as a PhoneContact.
-func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
+// PhoneContactsById Generated from index 'PRIMARY' -- retrieves a row from 'sun.phone_contacts' as a PhoneContacts.
+func PhoneContactsById(db *sqlx.DB, id int) (*PhoneContacts, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -229,7 +229,7 @@ func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	pc := PhoneContact{
+	pc := PhoneContacts{
 		_exists: true,
 	}
 
@@ -239,7 +239,7 @@ func PhoneContactById(db *sqlx.DB, id int) (*PhoneContact, error) {
 		return nil, err
 	}
 
-	OnPhoneContact_LoadOne(&pc)
+	OnPhoneContacts_LoadOne(&pc)
 
 	return &pc, nil
 }
@@ -316,8 +316,8 @@ func PostDeletedByPostId(db *sqlx.DB, postId int) (*PostDeleted, error) {
 	return &pd, nil
 }
 
-// PostKeyById Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_keys' as a PostKey.
-func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
+// PostKeysById Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_keys' as a PostKeys.
+func PostKeysById(db *sqlx.DB, id int) (*PostKeys, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -325,7 +325,7 @@ func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	pk := PostKey{
+	pk := PostKeys{
 		_exists: true,
 	}
 
@@ -335,7 +335,7 @@ func PostKeyById(db *sqlx.DB, id int) (*PostKey, error) {
 		return nil, err
 	}
 
-	OnPostKey_LoadOne(&pk)
+	OnPostKeys_LoadOne(&pk)
 
 	return &pk, nil
 }
@@ -460,8 +460,8 @@ func SessionById(db *sqlx.DB, id int) (*Session, error) {
 	return &s, nil
 }
 
-// SettingNotificationByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_notifications' as a SettingNotification.
-func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification, error) {
+// SettingNotificationsByUserId Generated from index 'PRIMARY' -- retrieves a row from 'sun.setting_notifications' as a SettingNotifications.
+func SettingNotificationsByUserId(db *sqlx.DB, userId int) (*SettingNotifications, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -469,7 +469,7 @@ func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification,
 		`WHERE UserId = ?`
 
 	XOLog(sqlstr, userId)
-	sn := SettingNotification{
+	sn := SettingNotifications{
 		_exists: true,
 	}
 
@@ -479,13 +479,13 @@ func SettingNotificationByUserId(db *sqlx.DB, userId int) (*SettingNotification,
 		return nil, err
 	}
 
-	OnSettingNotification_LoadOne(&sn)
+	OnSettingNotifications_LoadOne(&sn)
 
 	return &sn, nil
 }
 
-// SmById Generated from index 'PRIMARY' -- retrieves a row from 'sun.sms' as a Sm.
-func SmById(db *sqlx.DB, id uint) (*Sm, error) {
+// SmsById Generated from index 'PRIMARY' -- retrieves a row from 'sun.sms' as a Sms.
+func SmsById(db *sqlx.DB, id int) (*Sms, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -493,7 +493,7 @@ func SmById(db *sqlx.DB, id uint) (*Sm, error) {
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	s := Sm{
+	s := Sms{
 		_exists: true,
 	}
 
@@ -503,7 +503,7 @@ func SmById(db *sqlx.DB, id uint) (*Sm, error) {
 		return nil, err
 	}
 
-	OnSm_LoadOne(&s)
+	OnSms_LoadOne(&s)
 
 	return &s, nil
 }
@@ -652,20 +652,20 @@ func ChatByChatId(db *sqlx.DB, chatId int) (*Chat, error) {
 	return &c, nil
 }
 
-// ChatDeletedByChatIdAndRoomKey Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_deleted' as a ChatDeleted.
-func ChatDeletedByChatIdAndRoomKey(db *sqlx.DB, chatId int, roomKey string) (*ChatDeleted, error) {
+// ChatDeletedByChatId Generated from index 'PRIMARY' -- retrieves a row from 'sun_chat.chat_deleted' as a ChatDeleted.
+func ChatDeletedByChatId(db *sqlx.DB, chatId int) (*ChatDeleted, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
 		`FROM sun_chat.chat_deleted ` +
-		`WHERE ChatId = ? AND RoomKey = ?`
+		`WHERE ChatId = ?`
 
-	XOLog(sqlstr, chatId, roomKey)
+	XOLog(sqlstr, chatId)
 	cd := ChatDeleted{
 		_exists: true,
 	}
 
-	err = db.Get(&cd, sqlstr, chatId, roomKey)
+	err = db.Get(&cd, sqlstr, chatId)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
@@ -916,8 +916,8 @@ func HomeFanoutByOrderId(db *sqlx.DB, orderId int) (*HomeFanout, error) {
 	return &hf, nil
 }
 
-// SuggestedTopPostById Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.suggested_top_posts' as a SuggestedTopPost.
-func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
+// SuggestedTopPostsById Generated from index 'PRIMARY' -- retrieves a row from 'sun_meta.suggested_top_posts' as a SuggestedTopPosts.
+func SuggestedTopPostsById(db *sqlx.DB, id int) (*SuggestedTopPosts, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
@@ -925,7 +925,7 @@ func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
 		`WHERE Id = ?`
 
 	XOLog(sqlstr, id)
-	stp := SuggestedTopPost{
+	stp := SuggestedTopPosts{
 		_exists: true,
 	}
 
@@ -935,7 +935,7 @@ func SuggestedTopPostById(db *sqlx.DB, id int) (*SuggestedTopPost, error) {
 		return nil, err
 	}
 
-	OnSuggestedTopPost_LoadOne(&stp)
+	OnSuggestedTopPosts_LoadOne(&stp)
 
 	return &stp, nil
 }

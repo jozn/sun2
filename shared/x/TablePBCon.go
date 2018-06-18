@@ -151,8 +151,8 @@ func PBConvPB_Followed_To_Followed ( o *Followed) *PB_Followed {
 }
 */
 /*
-func PBConvPB__Like_To_Like( o *PB_Like) *Like {
-     n := &Like{
+func PBConvPB__Likes_To_Likes( o *PB_Likes) *Likes {
+     n := &Likes{
       Id: int ( o.Id ),
       PostId: int ( o.PostId ),
       PostTypeEnum: int ( o.PostTypeEnum ),
@@ -163,8 +163,8 @@ func PBConvPB__Like_To_Like( o *PB_Like) *Like {
     return n
 }
 
-func PBConvPB_Like_To_Like ( o *Like) *PB_Like {
-     n := &PB_Like{
+func PBConvPB_Likes_To_Likes ( o *Likes) *PB_Likes {
+     n := &PB_Likes{
       Id: int64 ( o.Id ),
       PostId: int64 ( o.PostId ),
       PostTypeEnum: int32 ( o.PostTypeEnum ),
@@ -228,8 +228,8 @@ func PBConvPB_NotifyRemoved_To_NotifyRemoved ( o *NotifyRemoved) *PB_NotifyRemov
 }
 */
 /*
-func PBConvPB__PhoneContact_To_PhoneContact( o *PB_PhoneContact) *PhoneContact {
-     n := &PhoneContact{
+func PBConvPB__PhoneContacts_To_PhoneContacts( o *PB_PhoneContacts) *PhoneContacts {
+     n := &PhoneContacts{
       Id: int ( o.Id ),
       UserId: int ( o.UserId ),
       ClientId: int ( o.ClientId ),
@@ -240,8 +240,8 @@ func PBConvPB__PhoneContact_To_PhoneContact( o *PB_PhoneContact) *PhoneContact {
     return n
 }
 
-func PBConvPB_PhoneContact_To_PhoneContact ( o *PhoneContact) *PB_PhoneContact {
-     n := &PB_PhoneContact{
+func PBConvPB_PhoneContacts_To_PhoneContacts ( o *PhoneContacts) *PB_PhoneContacts {
+     n := &PB_PhoneContacts{
       Id: int64 ( o.Id ),
       UserId: int32 ( o.UserId ),
       ClientId: int64 ( o.ClientId ),
@@ -348,8 +348,8 @@ func PBConvPB_PostDeleted_To_PostDeleted ( o *PostDeleted) *PB_PostDeleted {
 }
 */
 /*
-func PBConvPB__PostKey_To_PostKey( o *PB_PostKey) *PostKey {
-     n := &PostKey{
+func PBConvPB__PostKeys_To_PostKeys( o *PB_PostKeys) *PostKeys {
+     n := &PostKeys{
       Id: int ( o.Id ),
       PostKeyStr: string ( o.PostKeyStr ),
       Used: int ( o.Used ),
@@ -357,8 +357,8 @@ func PBConvPB__PostKey_To_PostKey( o *PB_PostKey) *PostKey {
     return n
 }
 
-func PBConvPB_PostKey_To_PostKey ( o *PostKey) *PB_PostKey {
-     n := &PB_PostKey{
+func PBConvPB_PostKeys_To_PostKeys ( o *PostKeys) *PB_PostKeys {
+     n := &PB_PostKeys{
       Id: int32 ( o.Id ),
       PostKeyStr: string ( o.PostKeyStr ),
       Used: int32 ( o.Used ),
@@ -502,8 +502,8 @@ func PBConvPB_Session_To_Session ( o *Session) *PB_Session {
 }
 */
 /*
-func PBConvPB__SettingNotification_To_SettingNotification( o *PB_SettingNotification) *SettingNotification {
-     n := &SettingNotification{
+func PBConvPB__SettingNotifications_To_SettingNotifications( o *PB_SettingNotifications) *SettingNotifications {
+     n := &SettingNotifications{
       UserId: int ( o.UserId ),
       SocialLedOn: int ( o.SocialLedOn ),
       SocialLedColor: string ( o.SocialLedColor ),
@@ -528,8 +528,8 @@ func PBConvPB__SettingNotification_To_SettingNotification( o *PB_SettingNotifica
     return n
 }
 
-func PBConvPB_SettingNotification_To_SettingNotification ( o *SettingNotification) *PB_SettingNotification {
-     n := &PB_SettingNotification{
+func PBConvPB_SettingNotifications_To_SettingNotifications ( o *SettingNotifications) *PB_SettingNotifications {
+     n := &PB_SettingNotifications{
       UserId: int32 ( o.UserId ),
       SocialLedOn: int32 ( o.SocialLedOn ),
       SocialLedColor: string ( o.SocialLedColor ),
@@ -555,14 +555,17 @@ func PBConvPB_SettingNotification_To_SettingNotification ( o *SettingNotificatio
 }
 */
 /*
-func PBConvPB__Sm_To_Sm( o *PB_Sm) *Sm {
-     n := &Sm{
+func PBConvPB__Sms_To_Sms( o *PB_Sms) *Sms {
+     n := &Sms{
       Id: int ( o.Id ),
       Hash: string ( o.Hash ),
+      AppUuid: string ( o.AppUuid ),
       ClientPhone: string ( o.ClientPhone ),
       GenratedCode: int ( o.GenratedCode ),
       SmsSenderNumber: string ( o.SmsSenderNumber ),
       SmsSendStatues: string ( o.SmsSendStatues ),
+      SmsHttpBody: string ( o.SmsHttpBody ),
+      Err: string ( o.Err ),
       Carrier: string ( o.Carrier ),
       Country: []byte ( o.Country ),
       IsValidPhone: int ( o.IsValidPhone ),
@@ -570,18 +573,22 @@ func PBConvPB__Sm_To_Sm( o *PB_Sm) *Sm {
       IsLogin: int ( o.IsLogin ),
       IsRegister: int ( o.IsRegister ),
       RetriedCount: int ( o.RetriedCount ),
+      TTL: int ( o.TTL ),
     }
     return n
 }
 
-func PBConvPB_Sm_To_Sm ( o *Sm) *PB_Sm {
-     n := &PB_Sm{
+func PBConvPB_Sms_To_Sms ( o *Sms) *PB_Sms {
+     n := &PB_Sms{
       Id: int32 ( o.Id ),
       Hash: string ( o.Hash ),
+      AppUuid: string ( o.AppUuid ),
       ClientPhone: string ( o.ClientPhone ),
       GenratedCode: int32 ( o.GenratedCode ),
       SmsSenderNumber: string ( o.SmsSenderNumber ),
       SmsSendStatues: string ( o.SmsSendStatues ),
+      SmsHttpBody: string ( o.SmsHttpBody ),
+      Err: string ( o.Err ),
       Carrier: string ( o.Carrier ),
       Country: []byte ( o.Country ),
       IsValidPhone: int32 ( o.IsValidPhone ),
@@ -589,6 +596,7 @@ func PBConvPB_Sm_To_Sm ( o *Sm) *PB_Sm {
       IsLogin: int32 ( o.IsLogin ),
       IsRegister: int32 ( o.IsRegister ),
       RetriedCount: int32 ( o.RetriedCount ),
+      TTL: int32 ( o.TTL ),
     }
     return n
 }
@@ -676,14 +684,16 @@ func PBConvPB__User_To_User( o *PB_User) *User {
       LastName: string ( o.LastName ),
       IsVerified: int ( o.IsVerified ),
       AvatarId: int ( o.AvatarId ),
+      AccessHash: int ( o.AccessHash ),
       ProfilePrivacy: int ( o.ProfilePrivacy ),
       OnlinePrivacy: int ( o.OnlinePrivacy ),
       CallPrivacy: int ( o.CallPrivacy ),
       AddToGroupPrivacy: int ( o.AddToGroupPrivacy ),
       SeenMessagePrivacy: int ( o.SeenMessagePrivacy ),
-      Phone: int ( o.Phone ),
+      Phone: string ( o.Phone ),
       Email: string ( o.Email ),
       About: string ( o.About ),
+      DefaultUserName: string ( o.DefaultUserName ),
       PasswordHash: string ( o.PasswordHash ),
       PasswordSalt: string ( o.PasswordSalt ),
       PostSeq: int ( o.PostSeq ),
@@ -720,14 +730,16 @@ func PBConvPB_User_To_User ( o *User) *PB_User {
       LastName: string ( o.LastName ),
       IsVerified: int32 ( o.IsVerified ),
       AvatarId: int64 ( o.AvatarId ),
+      AccessHash: int32 ( o.AccessHash ),
       ProfilePrivacy: int32 ( o.ProfilePrivacy ),
       OnlinePrivacy: int32 ( o.OnlinePrivacy ),
       CallPrivacy: int32 ( o.CallPrivacy ),
       AddToGroupPrivacy: int32 ( o.AddToGroupPrivacy ),
       SeenMessagePrivacy: int32 ( o.SeenMessagePrivacy ),
-      Phone: int64 ( o.Phone ),
+      Phone: string ( o.Phone ),
       Email: string ( o.Email ),
       About: string ( o.About ),
+      DefaultUserName: string ( o.DefaultUserName ),
       PasswordHash: string ( o.PasswordHash ),
       PasswordSalt: string ( o.PasswordSalt ),
       PostSeq: int32 ( o.PostSeq ),
@@ -1151,16 +1163,16 @@ func PBConvPB_HomeFanout_To_HomeFanout ( o *HomeFanout) *PB_HomeFanout {
 }
 */
 /*
-func PBConvPB__SuggestedTopPost_To_SuggestedTopPost( o *PB_SuggestedTopPost) *SuggestedTopPost {
-     n := &SuggestedTopPost{
+func PBConvPB__SuggestedTopPosts_To_SuggestedTopPosts( o *PB_SuggestedTopPosts) *SuggestedTopPosts {
+     n := &SuggestedTopPosts{
       Id: int ( o.Id ),
       PostId: int ( o.PostId ),
     }
     return n
 }
 
-func PBConvPB_SuggestedTopPost_To_SuggestedTopPost ( o *SuggestedTopPost) *PB_SuggestedTopPost {
-     n := &PB_SuggestedTopPost{
+func PBConvPB_SuggestedTopPosts_To_SuggestedTopPosts ( o *SuggestedTopPosts) *PB_SuggestedTopPosts {
+     n := &PB_SuggestedTopPosts{
       Id: int64 ( o.Id ),
       PostId: int64 ( o.PostId ),
     }

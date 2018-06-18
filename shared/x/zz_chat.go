@@ -241,18 +241,18 @@ type __Chat_Selector struct {
 }
 
 func NewChat_Deleter() *__Chat_Deleter {
-	d := __Chat_Deleter{whereSep: " AND "}
+	d := __Chat_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewChat_Updater() *__Chat_Updater {
-	u := __Chat_Updater{whereSep: " AND "}
+	u := __Chat_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewChat_Selector() *__Chat_Selector {
-	u := __Chat_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Chat_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

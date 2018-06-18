@@ -230,18 +230,18 @@ type __Group_Selector struct {
 }
 
 func NewGroup_Deleter() *__Group_Deleter {
-	d := __Group_Deleter{whereSep: " AND "}
+	d := __Group_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewGroup_Updater() *__Group_Updater {
-	u := __Group_Updater{whereSep: " AND "}
+	u := __Group_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewGroup_Selector() *__Group_Selector {
-	u := __Group_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Group_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

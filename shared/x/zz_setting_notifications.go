@@ -11,10 +11,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotification represents a row from 'sun.setting_notifications'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// SettingNotifications represents a row from 'sun.setting_notifications'.
 
 // Manualy copy this to project
-type SettingNotification__ struct {
+type SettingNotifications__ struct {
 	UserId                   int    `json:"UserId"`                   // UserId -
 	SocialLedOn              int    `json:"SocialLedOn"`              // SocialLedOn -
 	SocialLedColor           string `json:"SocialLedColor"`           // SocialLedColor -
@@ -39,18 +39,18 @@ type SettingNotification__ struct {
 	_exists, _deleted bool
 }
 
-// Exists determines if the SettingNotification exists in the database.
-func (sn *SettingNotification) Exists() bool {
+// Exists determines if the SettingNotifications exists in the database.
+func (sn *SettingNotifications) Exists() bool {
 	return sn._exists
 }
 
-// Deleted provides information if the SettingNotification has been deleted from the database.
-func (sn *SettingNotification) Deleted() bool {
+// Deleted provides information if the SettingNotifications has been deleted from the database.
+func (sn *SettingNotifications) Deleted() bool {
 	return sn._deleted
 }
 
-// Insert inserts the SettingNotification to the database.
-func (sn *SettingNotification) Insert(db XODB) error {
+// Insert inserts the SettingNotifications to the database.
+func (sn *SettingNotifications) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
@@ -66,7 +66,7 @@ func (sn *SettingNotification) Insert(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
 	}
 	_, err = db.Exec(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
@@ -77,13 +77,13 @@ func (sn *SettingNotification) Insert(db XODB) error {
 	// set existence
 	sn._exists = true
 
-	OnSettingNotification_AfterInsert(sn)
+	OnSettingNotifications_AfterInsert(sn)
 
 	return nil
 }
 
-// Insert inserts the SettingNotification to the database.
-func (sn *SettingNotification) Replace(db XODB) error {
+// Insert inserts the SettingNotifications to the database.
+func (sn *SettingNotifications) Replace(db XODB) error {
 	var err error
 
 	// sql query
@@ -95,12 +95,12 @@ func (sn *SettingNotification) Replace(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
 	}
 	_, err = db.Exec(sqlstr, sn.UserId, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return err
@@ -108,13 +108,13 @@ func (sn *SettingNotification) Replace(db XODB) error {
 
 	sn._exists = true
 
-	OnSettingNotification_AfterInsert(sn)
+	OnSettingNotifications_AfterInsert(sn)
 
 	return nil
 }
 
-// Update updates the SettingNotification in the database.
-func (sn *SettingNotification) Update(db XODB) error {
+// Update updates the SettingNotifications in the database.
+func (sn *SettingNotifications) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -133,21 +133,21 @@ func (sn *SettingNotification) Update(db XODB) error {
 		` WHERE UserId = ?`
 
 	// run query
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority, sn.UserId)
 	}
 	_, err = db.Exec(sqlstr, sn.SocialLedOn, sn.SocialLedColor, sn.ReqestToFollowYou, sn.FollowedYou, sn.AccptedYourFollowRequest, sn.YourPostLiked, sn.YourPostCommented, sn.MenthenedYouInPost, sn.MenthenedYouInComment, sn.YourContactsJoined, sn.DirectMessage, sn.DirectAlert, sn.DirectPerview, sn.DirectLedOn, sn.DirectLedColor, sn.DirectVibrate, sn.DirectPopup, sn.DirectSound, sn.DirectPriority, sn.UserId)
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLogErr(err)
 	}
-	OnSettingNotification_AfterUpdate(sn)
+	OnSettingNotifications_AfterUpdate(sn)
 
 	return err
 }
 
-// Save saves the SettingNotification to the database.
-func (sn *SettingNotification) Save(db XODB) error {
+// Save saves the SettingNotifications to the database.
+func (sn *SettingNotifications) Save(db XODB) error {
 	if sn.Exists() {
 		return sn.Update(db)
 	}
@@ -155,8 +155,8 @@ func (sn *SettingNotification) Save(db XODB) error {
 	return sn.Replace(db)
 }
 
-// Delete deletes the SettingNotification from the database.
-func (sn *SettingNotification) Delete(db XODB) error {
+// Delete deletes the SettingNotifications from the database.
+func (sn *SettingNotifications) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -173,12 +173,12 @@ func (sn *SettingNotification) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.setting_notifications WHERE UserId = ?`
 
 	// run query
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, sn.UserId)
 	}
 	_, err = db.Exec(sqlstr, sn.UserId)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return err
@@ -187,7 +187,7 @@ func (sn *SettingNotification) Delete(db XODB) error {
 	// set deleted
 	sn._deleted = true
 
-	OnSettingNotification_AfterDelete(sn)
+	OnSettingNotifications_AfterDelete(sn)
 
 	return nil
 }
@@ -198,14 +198,14 @@ func (sn *SettingNotification) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __SettingNotification_Deleter struct {
+type __SettingNotifications_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __SettingNotification_Updater struct {
+type __SettingNotifications_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -214,7 +214,7 @@ type __SettingNotification_Updater struct {
 	isMysql     bool
 }
 
-type __SettingNotification_Selector struct {
+type __SettingNotifications_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -225,30 +225,30 @@ type __SettingNotification_Selector struct {
 	isMysql     bool
 }
 
-func NewSettingNotification_Deleter() *__SettingNotification_Deleter {
-	d := __SettingNotification_Deleter{whereSep: " AND "}
+func NewSettingNotifications_Deleter() *__SettingNotifications_Deleter {
+	d := __SettingNotifications_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewSettingNotification_Updater() *__SettingNotification_Updater {
-	u := __SettingNotification_Updater{whereSep: " AND "}
+func NewSettingNotifications_Updater() *__SettingNotifications_Updater {
+	u := __SettingNotifications_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewSettingNotification_Selector() *__SettingNotification_Selector {
-	u := __SettingNotification_Selector{whereSep: " AND ", selectCol: "*"}
+func NewSettingNotifications_Selector() *__SettingNotifications_Selector {
+	u := __SettingNotifications_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__SettingNotification_Selector)nextDollars(size int) string  {
+func (m *__SettingNotifications_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__SettingNotification_Selector)nextDollar() string  {
+func (m *__SettingNotifications_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -259,25 +259,25 @@ func (m *__SettingNotification_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__SettingNotification_Deleter) nextDollars(size int) string {
+func (m *__SettingNotifications_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__SettingNotification_Deleter) nextDollar() string {
+func (m *__SettingNotifications_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__SettingNotification_Deleter) Or() *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) Or() *__SettingNotifications_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SettingNotification_Deleter) UserId_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) UserId_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -290,7 +290,7 @@ func (u *__SettingNotification_Deleter) UserId_In(ins []int) *__SettingNotificat
 	return u
 }
 
-func (u *__SettingNotification_Deleter) UserId_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) UserId_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -303,7 +303,7 @@ func (u *__SettingNotification_Deleter) UserId_Ins(ins ...int) *__SettingNotific
 	return u
 }
 
-func (u *__SettingNotification_Deleter) UserId_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) UserId_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -316,7 +316,7 @@ func (u *__SettingNotification_Deleter) UserId_NotIn(ins []int) *__SettingNotifi
 	return u
 }
 
-func (d *__SettingNotification_Deleter) UserId_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -327,7 +327,7 @@ func (d *__SettingNotification_Deleter) UserId_Eq(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Deleter) UserId_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -338,7 +338,7 @@ func (d *__SettingNotification_Deleter) UserId_NotEq(val int) *__SettingNotifica
 	return d
 }
 
-func (d *__SettingNotification_Deleter) UserId_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -349,7 +349,7 @@ func (d *__SettingNotification_Deleter) UserId_LT(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Deleter) UserId_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -360,7 +360,7 @@ func (d *__SettingNotification_Deleter) UserId_LE(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Deleter) UserId_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -371,7 +371,7 @@ func (d *__SettingNotification_Deleter) UserId_GT(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Deleter) UserId_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) UserId_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -382,7 +382,7 @@ func (d *__SettingNotification_Deleter) UserId_GE(val int) *__SettingNotificatio
 	return d
 }
 
-func (u *__SettingNotification_Deleter) SocialLedOn_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedOn_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -395,7 +395,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) SocialLedOn_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedOn_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -408,7 +408,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) SocialLedOn_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedOn_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -421,7 +421,7 @@ func (u *__SettingNotification_Deleter) SocialLedOn_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -432,7 +432,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -443,7 +443,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -454,7 +454,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -465,7 +465,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -476,7 +476,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedOn_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedOn_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -487,7 +487,7 @@ func (d *__SettingNotification_Deleter) SocialLedOn_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) ReqestToFollowYou_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) ReqestToFollowYou_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -500,7 +500,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_In(ins []int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) ReqestToFollowYou_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) ReqestToFollowYou_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -513,7 +513,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_Ins(ins ...int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Deleter) ReqestToFollowYou_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) ReqestToFollowYou_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -526,7 +526,7 @@ func (u *__SettingNotification_Deleter) ReqestToFollowYou_NotIn(ins []int) *__Se
 	return u
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -537,7 +537,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_Eq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -548,7 +548,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_NotEq(val int) *__Sett
 	return d
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -559,7 +559,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_LT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -570,7 +570,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_LE(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -581,7 +581,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_GT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) ReqestToFollowYou_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) ReqestToFollowYou_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -592,7 +592,7 @@ func (d *__SettingNotification_Deleter) ReqestToFollowYou_GE(val int) *__Setting
 	return d
 }
 
-func (u *__SettingNotification_Deleter) FollowedYou_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) FollowedYou_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -605,7 +605,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) FollowedYou_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) FollowedYou_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -618,7 +618,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) FollowedYou_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) FollowedYou_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -631,7 +631,7 @@ func (u *__SettingNotification_Deleter) FollowedYou_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -642,7 +642,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -653,7 +653,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -664,7 +664,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -675,7 +675,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -686,7 +686,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) FollowedYou_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) FollowedYou_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -697,7 +697,7 @@ func (d *__SettingNotification_Deleter) FollowedYou_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) AccptedYourFollowRequest_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -710,7 +710,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_In(ins []int) *
 	return u
 }
 
-func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -723,7 +723,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_Ins(ins ...int)
 	return u
 }
 
-func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -736,7 +736,7 @@ func (u *__SettingNotification_Deleter) AccptedYourFollowRequest_NotIn(ins []int
 	return u
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -747,7 +747,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_Eq(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -758,7 +758,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_NotEq(val int) 
 	return d
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -769,7 +769,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LT(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -780,7 +780,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_LE(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -791,7 +791,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GT(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) AccptedYourFollowRequest_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -802,7 +802,7 @@ func (d *__SettingNotification_Deleter) AccptedYourFollowRequest_GE(val int) *__
 	return d
 }
 
-func (u *__SettingNotification_Deleter) YourPostLiked_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostLiked_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -815,7 +815,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourPostLiked_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostLiked_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -828,7 +828,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourPostLiked_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostLiked_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -841,7 +841,7 @@ func (u *__SettingNotification_Deleter) YourPostLiked_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -852,7 +852,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -863,7 +863,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -874,7 +874,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -885,7 +885,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -896,7 +896,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostLiked_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostLiked_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -907,7 +907,7 @@ func (d *__SettingNotification_Deleter) YourPostLiked_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Deleter) YourPostCommented_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostCommented_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -920,7 +920,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_In(ins []int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourPostCommented_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostCommented_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -933,7 +933,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_Ins(ins ...int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourPostCommented_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourPostCommented_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -946,7 +946,7 @@ func (u *__SettingNotification_Deleter) YourPostCommented_NotIn(ins []int) *__Se
 	return u
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -957,7 +957,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_Eq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -968,7 +968,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_NotEq(val int) *__Sett
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -979,7 +979,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_LT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -990,7 +990,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_LE(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1001,7 +1001,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_GT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourPostCommented_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourPostCommented_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1012,7 +1012,7 @@ func (d *__SettingNotification_Deleter) YourPostCommented_GE(val int) *__Setting
 	return d
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInPost_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInPost_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1025,7 +1025,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInPost_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInPost_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1038,7 +1038,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInPost_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInPost_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1051,7 +1051,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInPost_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1062,7 +1062,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1073,7 +1073,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1084,7 +1084,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1095,7 +1095,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1106,7 +1106,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInPost_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInPost_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1117,7 +1117,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInPost_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInComment_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInComment_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1130,7 +1130,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_In(ins []int) *__S
 	return u
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInComment_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInComment_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1143,7 +1143,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_Ins(ins ...int) *_
 	return u
 }
 
-func (u *__SettingNotification_Deleter) MenthenedYouInComment_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) MenthenedYouInComment_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1156,7 +1156,7 @@ func (u *__SettingNotification_Deleter) MenthenedYouInComment_NotIn(ins []int) *
 	return u
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1167,7 +1167,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_Eq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1178,7 +1178,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_NotEq(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1189,7 +1189,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_LT(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1200,7 +1200,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_LE(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1211,7 +1211,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_GT(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) MenthenedYouInComment_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) MenthenedYouInComment_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1222,7 +1222,7 @@ func (d *__SettingNotification_Deleter) MenthenedYouInComment_GE(val int) *__Set
 	return d
 }
 
-func (u *__SettingNotification_Deleter) YourContactsJoined_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourContactsJoined_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1235,7 +1235,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourContactsJoined_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourContactsJoined_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1248,7 +1248,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Deleter) YourContactsJoined_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) YourContactsJoined_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1261,7 +1261,7 @@ func (u *__SettingNotification_Deleter) YourContactsJoined_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1272,7 +1272,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1283,7 +1283,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1294,7 +1294,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1305,7 +1305,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1316,7 +1316,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Deleter) YourContactsJoined_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) YourContactsJoined_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1327,7 +1327,7 @@ func (d *__SettingNotification_Deleter) YourContactsJoined_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectMessage_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectMessage_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1340,7 +1340,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectMessage_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectMessage_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1353,7 +1353,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectMessage_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectMessage_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1366,7 +1366,7 @@ func (u *__SettingNotification_Deleter) DirectMessage_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1377,7 +1377,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1388,7 +1388,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1399,7 +1399,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1410,7 +1410,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1421,7 +1421,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectMessage_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectMessage_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1432,7 +1432,7 @@ func (d *__SettingNotification_Deleter) DirectMessage_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectAlert_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectAlert_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1445,7 +1445,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectAlert_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectAlert_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1458,7 +1458,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectAlert_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectAlert_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1471,7 +1471,7 @@ func (u *__SettingNotification_Deleter) DirectAlert_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1482,7 +1482,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1493,7 +1493,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1504,7 +1504,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1515,7 +1515,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1526,7 +1526,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectAlert_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectAlert_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1537,7 +1537,7 @@ func (d *__SettingNotification_Deleter) DirectAlert_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectPerview_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPerview_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1550,7 +1550,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPerview_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPerview_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1563,7 +1563,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPerview_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPerview_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1576,7 +1576,7 @@ func (u *__SettingNotification_Deleter) DirectPerview_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1587,7 +1587,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1598,7 +1598,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1609,7 +1609,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1620,7 +1620,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1631,7 +1631,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPerview_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPerview_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1642,7 +1642,7 @@ func (d *__SettingNotification_Deleter) DirectPerview_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectLedOn_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedOn_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1655,7 +1655,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectLedOn_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedOn_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1668,7 +1668,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectLedOn_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedOn_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1681,7 +1681,7 @@ func (u *__SettingNotification_Deleter) DirectLedOn_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1692,7 +1692,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1703,7 +1703,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1714,7 +1714,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1725,7 +1725,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1736,7 +1736,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedOn_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedOn_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1747,7 +1747,7 @@ func (d *__SettingNotification_Deleter) DirectLedOn_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectLedColor_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedColor_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1760,7 +1760,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectLedColor_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedColor_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1773,7 +1773,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectLedColor_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectLedColor_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1786,7 +1786,7 @@ func (u *__SettingNotification_Deleter) DirectLedColor_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1797,7 +1797,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1808,7 +1808,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1819,7 +1819,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1830,7 +1830,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1841,7 +1841,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectLedColor_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectLedColor_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1852,7 +1852,7 @@ func (d *__SettingNotification_Deleter) DirectLedColor_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectVibrate_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectVibrate_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1865,7 +1865,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectVibrate_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectVibrate_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1878,7 +1878,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectVibrate_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectVibrate_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1891,7 +1891,7 @@ func (u *__SettingNotification_Deleter) DirectVibrate_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1902,7 +1902,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1913,7 +1913,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1924,7 +1924,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1935,7 +1935,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1946,7 +1946,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectVibrate_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectVibrate_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1957,7 +1957,7 @@ func (d *__SettingNotification_Deleter) DirectVibrate_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectPopup_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPopup_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1970,7 +1970,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPopup_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPopup_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1983,7 +1983,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPopup_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPopup_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1996,7 +1996,7 @@ func (u *__SettingNotification_Deleter) DirectPopup_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2007,7 +2007,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2018,7 +2018,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2029,7 +2029,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2040,7 +2040,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2051,7 +2051,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPopup_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPopup_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2062,7 +2062,7 @@ func (d *__SettingNotification_Deleter) DirectPopup_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectSound_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectSound_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2075,7 +2075,7 @@ func (u *__SettingNotification_Deleter) DirectSound_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectSound_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectSound_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2088,7 +2088,7 @@ func (u *__SettingNotification_Deleter) DirectSound_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectSound_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectSound_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2101,7 +2101,7 @@ func (u *__SettingNotification_Deleter) DirectSound_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2112,7 +2112,7 @@ func (d *__SettingNotification_Deleter) DirectSound_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2123,7 +2123,7 @@ func (d *__SettingNotification_Deleter) DirectSound_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2134,7 +2134,7 @@ func (d *__SettingNotification_Deleter) DirectSound_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2145,7 +2145,7 @@ func (d *__SettingNotification_Deleter) DirectSound_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2156,7 +2156,7 @@ func (d *__SettingNotification_Deleter) DirectSound_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectSound_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectSound_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2167,7 +2167,7 @@ func (d *__SettingNotification_Deleter) DirectSound_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Deleter) DirectPriority_In(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPriority_In(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2180,7 +2180,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPriority_Ins(ins ...int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPriority_Ins(ins ...int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2193,7 +2193,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Deleter) DirectPriority_NotIn(ins []int) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) DirectPriority_NotIn(ins []int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2206,7 +2206,7 @@ func (u *__SettingNotification_Deleter) DirectPriority_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_Eq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_Eq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2217,7 +2217,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_NotEq(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_NotEq(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2228,7 +2228,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_LT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_LT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2239,7 +2239,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_LE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_LE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2250,7 +2250,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_GT(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_GT(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2261,7 +2261,7 @@ func (d *__SettingNotification_Deleter) DirectPriority_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Deleter) DirectPriority_GE(val int) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) DirectPriority_GE(val int) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2273,25 +2273,25 @@ func (d *__SettingNotification_Deleter) DirectPriority_GE(val int) *__SettingNot
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__SettingNotification_Updater) nextDollars(size int) string {
+func (m *__SettingNotifications_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__SettingNotification_Updater) nextDollar() string {
+func (m *__SettingNotifications_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__SettingNotification_Updater) Or() *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) Or() *__SettingNotifications_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SettingNotification_Updater) UserId_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) UserId_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2304,7 +2304,7 @@ func (u *__SettingNotification_Updater) UserId_In(ins []int) *__SettingNotificat
 	return u
 }
 
-func (u *__SettingNotification_Updater) UserId_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) UserId_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2317,7 +2317,7 @@ func (u *__SettingNotification_Updater) UserId_Ins(ins ...int) *__SettingNotific
 	return u
 }
 
-func (u *__SettingNotification_Updater) UserId_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) UserId_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2330,7 +2330,7 @@ func (u *__SettingNotification_Updater) UserId_NotIn(ins []int) *__SettingNotifi
 	return u
 }
 
-func (d *__SettingNotification_Updater) UserId_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2341,7 +2341,7 @@ func (d *__SettingNotification_Updater) UserId_Eq(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Updater) UserId_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2352,7 +2352,7 @@ func (d *__SettingNotification_Updater) UserId_NotEq(val int) *__SettingNotifica
 	return d
 }
 
-func (d *__SettingNotification_Updater) UserId_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2363,7 +2363,7 @@ func (d *__SettingNotification_Updater) UserId_LT(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Updater) UserId_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2374,7 +2374,7 @@ func (d *__SettingNotification_Updater) UserId_LE(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Updater) UserId_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2385,7 +2385,7 @@ func (d *__SettingNotification_Updater) UserId_GT(val int) *__SettingNotificatio
 	return d
 }
 
-func (d *__SettingNotification_Updater) UserId_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) UserId_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2396,7 +2396,7 @@ func (d *__SettingNotification_Updater) UserId_GE(val int) *__SettingNotificatio
 	return d
 }
 
-func (u *__SettingNotification_Updater) SocialLedOn_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedOn_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2409,7 +2409,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) SocialLedOn_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedOn_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2422,7 +2422,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) SocialLedOn_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedOn_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2435,7 +2435,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2446,7 +2446,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2457,7 +2457,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2468,7 +2468,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2479,7 +2479,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2490,7 +2490,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedOn_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedOn_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2501,7 +2501,7 @@ func (d *__SettingNotification_Updater) SocialLedOn_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) ReqestToFollowYou_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) ReqestToFollowYou_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2514,7 +2514,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_In(ins []int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Updater) ReqestToFollowYou_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) ReqestToFollowYou_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2527,7 +2527,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_Ins(ins ...int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Updater) ReqestToFollowYou_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) ReqestToFollowYou_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2540,7 +2540,7 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_NotIn(ins []int) *__Se
 	return u
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2551,7 +2551,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_Eq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2562,7 +2562,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_NotEq(val int) *__Sett
 	return d
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2573,7 +2573,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_LT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2584,7 +2584,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_LE(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2595,7 +2595,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_GT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) ReqestToFollowYou_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) ReqestToFollowYou_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2606,7 +2606,7 @@ func (d *__SettingNotification_Updater) ReqestToFollowYou_GE(val int) *__Setting
 	return d
 }
 
-func (u *__SettingNotification_Updater) FollowedYou_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) FollowedYou_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2619,7 +2619,7 @@ func (u *__SettingNotification_Updater) FollowedYou_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) FollowedYou_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) FollowedYou_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2632,7 +2632,7 @@ func (u *__SettingNotification_Updater) FollowedYou_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) FollowedYou_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) FollowedYou_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2645,7 +2645,7 @@ func (u *__SettingNotification_Updater) FollowedYou_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2656,7 +2656,7 @@ func (d *__SettingNotification_Updater) FollowedYou_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2667,7 +2667,7 @@ func (d *__SettingNotification_Updater) FollowedYou_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2678,7 +2678,7 @@ func (d *__SettingNotification_Updater) FollowedYou_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2689,7 +2689,7 @@ func (d *__SettingNotification_Updater) FollowedYou_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2700,7 +2700,7 @@ func (d *__SettingNotification_Updater) FollowedYou_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) FollowedYou_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) FollowedYou_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2711,7 +2711,7 @@ func (d *__SettingNotification_Updater) FollowedYou_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) AccptedYourFollowRequest_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) AccptedYourFollowRequest_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2724,7 +2724,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_In(ins []int) *
 	return u
 }
 
-func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2737,7 +2737,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Ins(ins ...int)
 	return u
 }
 
-func (u *__SettingNotification_Updater) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2750,7 +2750,7 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_NotIn(ins []int
 	return u
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2761,7 +2761,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_Eq(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2772,7 +2772,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_NotEq(val int) 
 	return d
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2783,7 +2783,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LT(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2794,7 +2794,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_LE(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2805,7 +2805,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GT(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) AccptedYourFollowRequest_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2816,7 +2816,7 @@ func (d *__SettingNotification_Updater) AccptedYourFollowRequest_GE(val int) *__
 	return d
 }
 
-func (u *__SettingNotification_Updater) YourPostLiked_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostLiked_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2829,7 +2829,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostLiked_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostLiked_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2842,7 +2842,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostLiked_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostLiked_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2855,7 +2855,7 @@ func (u *__SettingNotification_Updater) YourPostLiked_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2866,7 +2866,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2877,7 +2877,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2888,7 +2888,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2899,7 +2899,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2910,7 +2910,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostLiked_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostLiked_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2921,7 +2921,7 @@ func (d *__SettingNotification_Updater) YourPostLiked_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Updater) YourPostCommented_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostCommented_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2934,7 +2934,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_In(ins []int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostCommented_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostCommented_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2947,7 +2947,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_Ins(ins ...int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostCommented_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostCommented_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2960,7 +2960,7 @@ func (u *__SettingNotification_Updater) YourPostCommented_NotIn(ins []int) *__Se
 	return u
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2971,7 +2971,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_Eq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2982,7 +2982,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_NotEq(val int) *__Sett
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2993,7 +2993,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_LT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3004,7 +3004,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_LE(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3015,7 +3015,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_GT(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourPostCommented_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourPostCommented_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3026,7 +3026,7 @@ func (d *__SettingNotification_Updater) YourPostCommented_GE(val int) *__Setting
 	return d
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInPost_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInPost_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3039,7 +3039,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInPost_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInPost_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3052,7 +3052,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInPost_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInPost_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3065,7 +3065,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3076,7 +3076,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3087,7 +3087,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3098,7 +3098,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3109,7 +3109,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3120,7 +3120,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInPost_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInPost_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3131,7 +3131,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInPost_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInComment_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInComment_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3144,7 +3144,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_In(ins []int) *__S
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInComment_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInComment_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3157,7 +3157,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_Ins(ins ...int) *_
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInComment_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInComment_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3170,7 +3170,7 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_NotIn(ins []int) *
 	return u
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3181,7 +3181,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_Eq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3192,7 +3192,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_NotEq(val int) *__
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3203,7 +3203,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_LT(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3214,7 +3214,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_LE(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3225,7 +3225,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_GT(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) MenthenedYouInComment_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) MenthenedYouInComment_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3236,7 +3236,7 @@ func (d *__SettingNotification_Updater) MenthenedYouInComment_GE(val int) *__Set
 	return d
 }
 
-func (u *__SettingNotification_Updater) YourContactsJoined_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourContactsJoined_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3249,7 +3249,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourContactsJoined_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourContactsJoined_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3262,7 +3262,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourContactsJoined_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourContactsJoined_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3275,7 +3275,7 @@ func (u *__SettingNotification_Updater) YourContactsJoined_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3286,7 +3286,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3297,7 +3297,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3308,7 +3308,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3319,7 +3319,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3330,7 +3330,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Updater) YourContactsJoined_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) YourContactsJoined_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3341,7 +3341,7 @@ func (d *__SettingNotification_Updater) YourContactsJoined_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectMessage_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectMessage_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3354,7 +3354,7 @@ func (u *__SettingNotification_Updater) DirectMessage_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectMessage_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectMessage_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3367,7 +3367,7 @@ func (u *__SettingNotification_Updater) DirectMessage_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectMessage_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectMessage_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3380,7 +3380,7 @@ func (u *__SettingNotification_Updater) DirectMessage_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3391,7 +3391,7 @@ func (d *__SettingNotification_Updater) DirectMessage_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3402,7 +3402,7 @@ func (d *__SettingNotification_Updater) DirectMessage_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3413,7 +3413,7 @@ func (d *__SettingNotification_Updater) DirectMessage_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3424,7 +3424,7 @@ func (d *__SettingNotification_Updater) DirectMessage_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3435,7 +3435,7 @@ func (d *__SettingNotification_Updater) DirectMessage_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectMessage_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectMessage_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3446,7 +3446,7 @@ func (d *__SettingNotification_Updater) DirectMessage_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectAlert_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectAlert_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3459,7 +3459,7 @@ func (u *__SettingNotification_Updater) DirectAlert_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectAlert_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectAlert_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3472,7 +3472,7 @@ func (u *__SettingNotification_Updater) DirectAlert_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectAlert_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectAlert_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3485,7 +3485,7 @@ func (u *__SettingNotification_Updater) DirectAlert_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3496,7 +3496,7 @@ func (d *__SettingNotification_Updater) DirectAlert_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3507,7 +3507,7 @@ func (d *__SettingNotification_Updater) DirectAlert_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3518,7 +3518,7 @@ func (d *__SettingNotification_Updater) DirectAlert_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3529,7 +3529,7 @@ func (d *__SettingNotification_Updater) DirectAlert_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3540,7 +3540,7 @@ func (d *__SettingNotification_Updater) DirectAlert_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectAlert_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectAlert_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3551,7 +3551,7 @@ func (d *__SettingNotification_Updater) DirectAlert_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectPerview_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPerview_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3564,7 +3564,7 @@ func (u *__SettingNotification_Updater) DirectPerview_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPerview_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPerview_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3577,7 +3577,7 @@ func (u *__SettingNotification_Updater) DirectPerview_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPerview_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPerview_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3590,7 +3590,7 @@ func (u *__SettingNotification_Updater) DirectPerview_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3601,7 +3601,7 @@ func (d *__SettingNotification_Updater) DirectPerview_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3612,7 +3612,7 @@ func (d *__SettingNotification_Updater) DirectPerview_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3623,7 +3623,7 @@ func (d *__SettingNotification_Updater) DirectPerview_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3634,7 +3634,7 @@ func (d *__SettingNotification_Updater) DirectPerview_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3645,7 +3645,7 @@ func (d *__SettingNotification_Updater) DirectPerview_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPerview_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPerview_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3656,7 +3656,7 @@ func (d *__SettingNotification_Updater) DirectPerview_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectLedOn_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedOn_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3669,7 +3669,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedOn_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedOn_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3682,7 +3682,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedOn_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedOn_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3695,7 +3695,7 @@ func (u *__SettingNotification_Updater) DirectLedOn_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3706,7 +3706,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3717,7 +3717,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3728,7 +3728,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3739,7 +3739,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3750,7 +3750,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedOn_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedOn_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3761,7 +3761,7 @@ func (d *__SettingNotification_Updater) DirectLedOn_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectLedColor_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedColor_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3774,7 +3774,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedColor_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedColor_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3787,7 +3787,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedColor_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedColor_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3800,7 +3800,7 @@ func (u *__SettingNotification_Updater) DirectLedColor_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3811,7 +3811,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3822,7 +3822,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3833,7 +3833,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3844,7 +3844,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3855,7 +3855,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectLedColor_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectLedColor_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3866,7 +3866,7 @@ func (d *__SettingNotification_Updater) DirectLedColor_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectVibrate_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectVibrate_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3879,7 +3879,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_In(ins []int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectVibrate_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectVibrate_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3892,7 +3892,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_Ins(ins ...int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectVibrate_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectVibrate_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3905,7 +3905,7 @@ func (u *__SettingNotification_Updater) DirectVibrate_NotIn(ins []int) *__Settin
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3916,7 +3916,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_Eq(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3927,7 +3927,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_NotEq(val int) *__SettingN
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3938,7 +3938,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_LT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3949,7 +3949,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_LE(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3960,7 +3960,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_GT(val int) *__SettingNoti
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectVibrate_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectVibrate_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3971,7 +3971,7 @@ func (d *__SettingNotification_Updater) DirectVibrate_GE(val int) *__SettingNoti
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectPopup_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPopup_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3984,7 +3984,7 @@ func (u *__SettingNotification_Updater) DirectPopup_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPopup_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPopup_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3997,7 +3997,7 @@ func (u *__SettingNotification_Updater) DirectPopup_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPopup_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPopup_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4010,7 +4010,7 @@ func (u *__SettingNotification_Updater) DirectPopup_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4021,7 +4021,7 @@ func (d *__SettingNotification_Updater) DirectPopup_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4032,7 +4032,7 @@ func (d *__SettingNotification_Updater) DirectPopup_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4043,7 +4043,7 @@ func (d *__SettingNotification_Updater) DirectPopup_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4054,7 +4054,7 @@ func (d *__SettingNotification_Updater) DirectPopup_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4065,7 +4065,7 @@ func (d *__SettingNotification_Updater) DirectPopup_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPopup_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPopup_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4076,7 +4076,7 @@ func (d *__SettingNotification_Updater) DirectPopup_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectSound_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectSound_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4089,7 +4089,7 @@ func (u *__SettingNotification_Updater) DirectSound_In(ins []int) *__SettingNoti
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectSound_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectSound_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4102,7 +4102,7 @@ func (u *__SettingNotification_Updater) DirectSound_Ins(ins ...int) *__SettingNo
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectSound_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectSound_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4115,7 +4115,7 @@ func (u *__SettingNotification_Updater) DirectSound_NotIn(ins []int) *__SettingN
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectSound_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4126,7 +4126,7 @@ func (d *__SettingNotification_Updater) DirectSound_Eq(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectSound_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4137,7 +4137,7 @@ func (d *__SettingNotification_Updater) DirectSound_NotEq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectSound_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4148,7 +4148,7 @@ func (d *__SettingNotification_Updater) DirectSound_LT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectSound_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4159,7 +4159,7 @@ func (d *__SettingNotification_Updater) DirectSound_LE(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectSound_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4170,7 +4170,7 @@ func (d *__SettingNotification_Updater) DirectSound_GT(val int) *__SettingNotifi
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectSound_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectSound_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4181,7 +4181,7 @@ func (d *__SettingNotification_Updater) DirectSound_GE(val int) *__SettingNotifi
 	return d
 }
 
-func (u *__SettingNotification_Updater) DirectPriority_In(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPriority_In(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4194,7 +4194,7 @@ func (u *__SettingNotification_Updater) DirectPriority_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPriority_Ins(ins ...int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPriority_Ins(ins ...int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4207,7 +4207,7 @@ func (u *__SettingNotification_Updater) DirectPriority_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPriority_NotIn(ins []int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPriority_NotIn(ins []int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4220,7 +4220,7 @@ func (u *__SettingNotification_Updater) DirectPriority_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_Eq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_Eq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4231,7 +4231,7 @@ func (d *__SettingNotification_Updater) DirectPriority_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_NotEq(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_NotEq(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4242,7 +4242,7 @@ func (d *__SettingNotification_Updater) DirectPriority_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_LT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_LT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4253,7 +4253,7 @@ func (d *__SettingNotification_Updater) DirectPriority_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_LE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_LE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4264,7 +4264,7 @@ func (d *__SettingNotification_Updater) DirectPriority_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_GT(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_GT(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4275,7 +4275,7 @@ func (d *__SettingNotification_Updater) DirectPriority_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Updater) DirectPriority_GE(val int) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) DirectPriority_GE(val int) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4287,25 +4287,25 @@ func (d *__SettingNotification_Updater) DirectPriority_GE(val int) *__SettingNot
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__SettingNotification_Selector) nextDollars(size int) string {
+func (m *__SettingNotifications_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__SettingNotification_Selector) nextDollar() string {
+func (m *__SettingNotifications_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__SettingNotification_Selector) Or() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Or() *__SettingNotifications_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__SettingNotification_Selector) UserId_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) UserId_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4318,7 +4318,7 @@ func (u *__SettingNotification_Selector) UserId_In(ins []int) *__SettingNotifica
 	return u
 }
 
-func (u *__SettingNotification_Selector) UserId_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) UserId_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4331,7 +4331,7 @@ func (u *__SettingNotification_Selector) UserId_Ins(ins ...int) *__SettingNotifi
 	return u
 }
 
-func (u *__SettingNotification_Selector) UserId_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) UserId_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4344,7 +4344,7 @@ func (u *__SettingNotification_Selector) UserId_NotIn(ins []int) *__SettingNotif
 	return u
 }
 
-func (d *__SettingNotification_Selector) UserId_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4355,7 +4355,7 @@ func (d *__SettingNotification_Selector) UserId_Eq(val int) *__SettingNotificati
 	return d
 }
 
-func (d *__SettingNotification_Selector) UserId_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4366,7 +4366,7 @@ func (d *__SettingNotification_Selector) UserId_NotEq(val int) *__SettingNotific
 	return d
 }
 
-func (d *__SettingNotification_Selector) UserId_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4377,7 +4377,7 @@ func (d *__SettingNotification_Selector) UserId_LT(val int) *__SettingNotificati
 	return d
 }
 
-func (d *__SettingNotification_Selector) UserId_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4388,7 +4388,7 @@ func (d *__SettingNotification_Selector) UserId_LE(val int) *__SettingNotificati
 	return d
 }
 
-func (d *__SettingNotification_Selector) UserId_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4399,7 +4399,7 @@ func (d *__SettingNotification_Selector) UserId_GT(val int) *__SettingNotificati
 	return d
 }
 
-func (d *__SettingNotification_Selector) UserId_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) UserId_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4410,7 +4410,7 @@ func (d *__SettingNotification_Selector) UserId_GE(val int) *__SettingNotificati
 	return d
 }
 
-func (u *__SettingNotification_Selector) SocialLedOn_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedOn_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4423,7 +4423,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) SocialLedOn_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedOn_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4436,7 +4436,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) SocialLedOn_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedOn_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4449,7 +4449,7 @@ func (u *__SettingNotification_Selector) SocialLedOn_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4460,7 +4460,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4471,7 +4471,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4482,7 +4482,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4493,7 +4493,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4504,7 +4504,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedOn_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedOn_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4515,7 +4515,7 @@ func (d *__SettingNotification_Selector) SocialLedOn_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) ReqestToFollowYou_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) ReqestToFollowYou_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4528,7 +4528,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Selector) ReqestToFollowYou_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) ReqestToFollowYou_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4541,7 +4541,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Selector) ReqestToFollowYou_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) ReqestToFollowYou_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4554,7 +4554,7 @@ func (u *__SettingNotification_Selector) ReqestToFollowYou_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4565,7 +4565,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4576,7 +4576,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4587,7 +4587,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4598,7 +4598,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4609,7 +4609,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) ReqestToFollowYou_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) ReqestToFollowYou_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4620,7 +4620,7 @@ func (d *__SettingNotification_Selector) ReqestToFollowYou_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Selector) FollowedYou_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) FollowedYou_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4633,7 +4633,7 @@ func (u *__SettingNotification_Selector) FollowedYou_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) FollowedYou_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) FollowedYou_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4646,7 +4646,7 @@ func (u *__SettingNotification_Selector) FollowedYou_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) FollowedYou_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) FollowedYou_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4659,7 +4659,7 @@ func (u *__SettingNotification_Selector) FollowedYou_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4670,7 +4670,7 @@ func (d *__SettingNotification_Selector) FollowedYou_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4681,7 +4681,7 @@ func (d *__SettingNotification_Selector) FollowedYou_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4692,7 +4692,7 @@ func (d *__SettingNotification_Selector) FollowedYou_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4703,7 +4703,7 @@ func (d *__SettingNotification_Selector) FollowedYou_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4714,7 +4714,7 @@ func (d *__SettingNotification_Selector) FollowedYou_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) FollowedYou_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) FollowedYou_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4725,7 +4725,7 @@ func (d *__SettingNotification_Selector) FollowedYou_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) AccptedYourFollowRequest_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) AccptedYourFollowRequest_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4738,7 +4738,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_In(ins []int) 
 	return u
 }
 
-func (u *__SettingNotification_Selector) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) AccptedYourFollowRequest_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4751,7 +4751,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_Ins(ins ...int
 	return u
 }
 
-func (u *__SettingNotification_Selector) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) AccptedYourFollowRequest_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4764,7 +4764,7 @@ func (u *__SettingNotification_Selector) AccptedYourFollowRequest_NotIn(ins []in
 	return u
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4775,7 +4775,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_Eq(val int) *_
 	return d
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4786,7 +4786,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_NotEq(val int)
 	return d
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4797,7 +4797,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LT(val int) *_
 	return d
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4808,7 +4808,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_LE(val int) *_
 	return d
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4819,7 +4819,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GT(val int) *_
 	return d
 }
 
-func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) AccptedYourFollowRequest_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4830,7 +4830,7 @@ func (d *__SettingNotification_Selector) AccptedYourFollowRequest_GE(val int) *_
 	return d
 }
 
-func (u *__SettingNotification_Selector) YourPostLiked_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostLiked_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4843,7 +4843,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourPostLiked_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostLiked_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4856,7 +4856,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourPostLiked_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostLiked_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4869,7 +4869,7 @@ func (u *__SettingNotification_Selector) YourPostLiked_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4880,7 +4880,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4891,7 +4891,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4902,7 +4902,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4913,7 +4913,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4924,7 +4924,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostLiked_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostLiked_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4935,7 +4935,7 @@ func (d *__SettingNotification_Selector) YourPostLiked_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Selector) YourPostCommented_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostCommented_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4948,7 +4948,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_In(ins []int) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourPostCommented_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostCommented_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4961,7 +4961,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_Ins(ins ...int) *__Se
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourPostCommented_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourPostCommented_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -4974,7 +4974,7 @@ func (u *__SettingNotification_Selector) YourPostCommented_NotIn(ins []int) *__S
 	return u
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4985,7 +4985,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_Eq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -4996,7 +4996,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_NotEq(val int) *__Set
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5007,7 +5007,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_LT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5018,7 +5018,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_LE(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5029,7 +5029,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_GT(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourPostCommented_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourPostCommented_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5040,7 +5040,7 @@ func (d *__SettingNotification_Selector) YourPostCommented_GE(val int) *__Settin
 	return d
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInPost_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInPost_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5053,7 +5053,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_In(ins []int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInPost_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInPost_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5066,7 +5066,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_Ins(ins ...int) *__S
 	return u
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInPost_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInPost_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5079,7 +5079,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInPost_NotIn(ins []int) *__
 	return u
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5090,7 +5090,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_Eq(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5101,7 +5101,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_NotEq(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5112,7 +5112,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_LT(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5123,7 +5123,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_LE(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5134,7 +5134,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_GT(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInPost_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInPost_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5145,7 +5145,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInPost_GE(val int) *__Setti
 	return d
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInComment_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInComment_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5158,7 +5158,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_In(ins []int) *__
 	return u
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInComment_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInComment_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5171,7 +5171,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_Ins(ins ...int) *
 	return u
 }
 
-func (u *__SettingNotification_Selector) MenthenedYouInComment_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) MenthenedYouInComment_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5184,7 +5184,7 @@ func (u *__SettingNotification_Selector) MenthenedYouInComment_NotIn(ins []int) 
 	return u
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5195,7 +5195,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_Eq(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5206,7 +5206,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_NotEq(val int) *_
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5217,7 +5217,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_LT(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5228,7 +5228,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_LE(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5239,7 +5239,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_GT(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) MenthenedYouInComment_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) MenthenedYouInComment_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5250,7 +5250,7 @@ func (d *__SettingNotification_Selector) MenthenedYouInComment_GE(val int) *__Se
 	return d
 }
 
-func (u *__SettingNotification_Selector) YourContactsJoined_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourContactsJoined_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5263,7 +5263,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_In(ins []int) *__Set
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourContactsJoined_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourContactsJoined_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5276,7 +5276,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_Ins(ins ...int) *__S
 	return u
 }
 
-func (u *__SettingNotification_Selector) YourContactsJoined_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) YourContactsJoined_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5289,7 +5289,7 @@ func (u *__SettingNotification_Selector) YourContactsJoined_NotIn(ins []int) *__
 	return u
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5300,7 +5300,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_Eq(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5311,7 +5311,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_NotEq(val int) *__Se
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5322,7 +5322,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_LT(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5333,7 +5333,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_LE(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5344,7 +5344,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_GT(val int) *__Setti
 	return d
 }
 
-func (d *__SettingNotification_Selector) YourContactsJoined_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) YourContactsJoined_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5355,7 +5355,7 @@ func (d *__SettingNotification_Selector) YourContactsJoined_GE(val int) *__Setti
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectMessage_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectMessage_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5368,7 +5368,7 @@ func (u *__SettingNotification_Selector) DirectMessage_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectMessage_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectMessage_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5381,7 +5381,7 @@ func (u *__SettingNotification_Selector) DirectMessage_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectMessage_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectMessage_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5394,7 +5394,7 @@ func (u *__SettingNotification_Selector) DirectMessage_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5405,7 +5405,7 @@ func (d *__SettingNotification_Selector) DirectMessage_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5416,7 +5416,7 @@ func (d *__SettingNotification_Selector) DirectMessage_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5427,7 +5427,7 @@ func (d *__SettingNotification_Selector) DirectMessage_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5438,7 +5438,7 @@ func (d *__SettingNotification_Selector) DirectMessage_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5449,7 +5449,7 @@ func (d *__SettingNotification_Selector) DirectMessage_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectMessage_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectMessage_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5460,7 +5460,7 @@ func (d *__SettingNotification_Selector) DirectMessage_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectAlert_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectAlert_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5473,7 +5473,7 @@ func (u *__SettingNotification_Selector) DirectAlert_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectAlert_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectAlert_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5486,7 +5486,7 @@ func (u *__SettingNotification_Selector) DirectAlert_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectAlert_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectAlert_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5499,7 +5499,7 @@ func (u *__SettingNotification_Selector) DirectAlert_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5510,7 +5510,7 @@ func (d *__SettingNotification_Selector) DirectAlert_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5521,7 +5521,7 @@ func (d *__SettingNotification_Selector) DirectAlert_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5532,7 +5532,7 @@ func (d *__SettingNotification_Selector) DirectAlert_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5543,7 +5543,7 @@ func (d *__SettingNotification_Selector) DirectAlert_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5554,7 +5554,7 @@ func (d *__SettingNotification_Selector) DirectAlert_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectAlert_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectAlert_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5565,7 +5565,7 @@ func (d *__SettingNotification_Selector) DirectAlert_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectPerview_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPerview_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5578,7 +5578,7 @@ func (u *__SettingNotification_Selector) DirectPerview_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPerview_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPerview_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5591,7 +5591,7 @@ func (u *__SettingNotification_Selector) DirectPerview_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPerview_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPerview_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5604,7 +5604,7 @@ func (u *__SettingNotification_Selector) DirectPerview_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5615,7 +5615,7 @@ func (d *__SettingNotification_Selector) DirectPerview_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5626,7 +5626,7 @@ func (d *__SettingNotification_Selector) DirectPerview_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5637,7 +5637,7 @@ func (d *__SettingNotification_Selector) DirectPerview_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5648,7 +5648,7 @@ func (d *__SettingNotification_Selector) DirectPerview_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5659,7 +5659,7 @@ func (d *__SettingNotification_Selector) DirectPerview_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPerview_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPerview_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5670,7 +5670,7 @@ func (d *__SettingNotification_Selector) DirectPerview_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectLedOn_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedOn_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5683,7 +5683,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectLedOn_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedOn_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5696,7 +5696,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectLedOn_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedOn_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5709,7 +5709,7 @@ func (u *__SettingNotification_Selector) DirectLedOn_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5720,7 +5720,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5731,7 +5731,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5742,7 +5742,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5753,7 +5753,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5764,7 +5764,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedOn_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedOn_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5775,7 +5775,7 @@ func (d *__SettingNotification_Selector) DirectLedOn_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectLedColor_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedColor_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5788,7 +5788,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_In(ins []int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectLedColor_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedColor_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5801,7 +5801,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_Ins(ins ...int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectLedColor_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectLedColor_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5814,7 +5814,7 @@ func (u *__SettingNotification_Selector) DirectLedColor_NotIn(ins []int) *__Sett
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5825,7 +5825,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_Eq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5836,7 +5836,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_NotEq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5847,7 +5847,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_LT(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5858,7 +5858,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_LE(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5869,7 +5869,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_GT(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectLedColor_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectLedColor_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5880,7 +5880,7 @@ func (d *__SettingNotification_Selector) DirectLedColor_GE(val int) *__SettingNo
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectVibrate_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectVibrate_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5893,7 +5893,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_In(ins []int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectVibrate_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectVibrate_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5906,7 +5906,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_Ins(ins ...int) *__Settin
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectVibrate_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectVibrate_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5919,7 +5919,7 @@ func (u *__SettingNotification_Selector) DirectVibrate_NotIn(ins []int) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5930,7 +5930,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_Eq(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5941,7 +5941,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_NotEq(val int) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5952,7 +5952,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_LT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5963,7 +5963,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_LE(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5974,7 +5974,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_GT(val int) *__SettingNot
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectVibrate_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectVibrate_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -5985,7 +5985,7 @@ func (d *__SettingNotification_Selector) DirectVibrate_GE(val int) *__SettingNot
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectPopup_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPopup_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -5998,7 +5998,7 @@ func (u *__SettingNotification_Selector) DirectPopup_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPopup_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPopup_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6011,7 +6011,7 @@ func (u *__SettingNotification_Selector) DirectPopup_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPopup_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPopup_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6024,7 +6024,7 @@ func (u *__SettingNotification_Selector) DirectPopup_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6035,7 +6035,7 @@ func (d *__SettingNotification_Selector) DirectPopup_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6046,7 +6046,7 @@ func (d *__SettingNotification_Selector) DirectPopup_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6057,7 +6057,7 @@ func (d *__SettingNotification_Selector) DirectPopup_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6068,7 +6068,7 @@ func (d *__SettingNotification_Selector) DirectPopup_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6079,7 +6079,7 @@ func (d *__SettingNotification_Selector) DirectPopup_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPopup_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPopup_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6090,7 +6090,7 @@ func (d *__SettingNotification_Selector) DirectPopup_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectSound_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectSound_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6103,7 +6103,7 @@ func (u *__SettingNotification_Selector) DirectSound_In(ins []int) *__SettingNot
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectSound_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectSound_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6116,7 +6116,7 @@ func (u *__SettingNotification_Selector) DirectSound_Ins(ins ...int) *__SettingN
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectSound_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectSound_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6129,7 +6129,7 @@ func (u *__SettingNotification_Selector) DirectSound_NotIn(ins []int) *__Setting
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectSound_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6140,7 +6140,7 @@ func (d *__SettingNotification_Selector) DirectSound_Eq(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectSound_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6151,7 +6151,7 @@ func (d *__SettingNotification_Selector) DirectSound_NotEq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectSound_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6162,7 +6162,7 @@ func (d *__SettingNotification_Selector) DirectSound_LT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectSound_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6173,7 +6173,7 @@ func (d *__SettingNotification_Selector) DirectSound_LE(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectSound_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6184,7 +6184,7 @@ func (d *__SettingNotification_Selector) DirectSound_GT(val int) *__SettingNotif
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectSound_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectSound_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6195,7 +6195,7 @@ func (d *__SettingNotification_Selector) DirectSound_GE(val int) *__SettingNotif
 	return d
 }
 
-func (u *__SettingNotification_Selector) DirectPriority_In(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPriority_In(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6208,7 +6208,7 @@ func (u *__SettingNotification_Selector) DirectPriority_In(ins []int) *__Setting
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPriority_Ins(ins ...int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPriority_Ins(ins ...int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6221,7 +6221,7 @@ func (u *__SettingNotification_Selector) DirectPriority_Ins(ins ...int) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Selector) DirectPriority_NotIn(ins []int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) DirectPriority_NotIn(ins []int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6234,7 +6234,7 @@ func (u *__SettingNotification_Selector) DirectPriority_NotIn(ins []int) *__Sett
 	return u
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_Eq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_Eq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6245,7 +6245,7 @@ func (d *__SettingNotification_Selector) DirectPriority_Eq(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_NotEq(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_NotEq(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6256,7 +6256,7 @@ func (d *__SettingNotification_Selector) DirectPriority_NotEq(val int) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_LT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_LT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6267,7 +6267,7 @@ func (d *__SettingNotification_Selector) DirectPriority_LT(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_LE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_LE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6278,7 +6278,7 @@ func (d *__SettingNotification_Selector) DirectPriority_LE(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_GT(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_GT(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6289,7 +6289,7 @@ func (d *__SettingNotification_Selector) DirectPriority_GT(val int) *__SettingNo
 	return d
 }
 
-func (d *__SettingNotification_Selector) DirectPriority_GE(val int) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) DirectPriority_GE(val int) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6304,7 +6304,7 @@ func (d *__SettingNotification_Selector) DirectPriority_GE(val int) *__SettingNo
 
 ////////ints
 
-func (u *__SettingNotification_Deleter) SocialLedColor_In(ins []string) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedColor_In(ins []string) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6317,7 +6317,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_In(ins []string) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Deleter) SocialLedColor_NotIn(ins []string) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedColor_NotIn(ins []string) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6331,7 +6331,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_NotIn(ins []string) *__Se
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__SettingNotification_Deleter) SocialLedColor_Like(val string) *__SettingNotification_Deleter {
+func (u *__SettingNotifications_Deleter) SocialLedColor_Like(val string) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6342,7 +6342,7 @@ func (u *__SettingNotification_Deleter) SocialLedColor_Like(val string) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Deleter) SocialLedColor_Eq(val string) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedColor_Eq(val string) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6353,7 +6353,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_Eq(val string) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Deleter) SocialLedColor_NotEq(val string) *__SettingNotification_Deleter {
+func (d *__SettingNotifications_Deleter) SocialLedColor_NotEq(val string) *__SettingNotifications_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6366,7 +6366,7 @@ func (d *__SettingNotification_Deleter) SocialLedColor_NotEq(val string) *__Sett
 
 ////////ints
 
-func (u *__SettingNotification_Updater) SocialLedColor_In(ins []string) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedColor_In(ins []string) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6379,7 +6379,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_In(ins []string) *__Setti
 	return u
 }
 
-func (u *__SettingNotification_Updater) SocialLedColor_NotIn(ins []string) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedColor_NotIn(ins []string) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6393,7 +6393,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_NotIn(ins []string) *__Se
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__SettingNotification_Updater) SocialLedColor_Like(val string) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedColor_Like(val string) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6404,7 +6404,7 @@ func (u *__SettingNotification_Updater) SocialLedColor_Like(val string) *__Setti
 	return u
 }
 
-func (d *__SettingNotification_Updater) SocialLedColor_Eq(val string) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedColor_Eq(val string) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6415,7 +6415,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_Eq(val string) *__Setting
 	return d
 }
 
-func (d *__SettingNotification_Updater) SocialLedColor_NotEq(val string) *__SettingNotification_Updater {
+func (d *__SettingNotifications_Updater) SocialLedColor_NotEq(val string) *__SettingNotifications_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6428,7 +6428,7 @@ func (d *__SettingNotification_Updater) SocialLedColor_NotEq(val string) *__Sett
 
 ////////ints
 
-func (u *__SettingNotification_Selector) SocialLedColor_In(ins []string) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedColor_In(ins []string) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6441,7 +6441,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_In(ins []string) *__Sett
 	return u
 }
 
-func (u *__SettingNotification_Selector) SocialLedColor_NotIn(ins []string) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedColor_NotIn(ins []string) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -6455,7 +6455,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_NotIn(ins []string) *__S
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__SettingNotification_Selector) SocialLedColor_Like(val string) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) SocialLedColor_Like(val string) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6466,7 +6466,7 @@ func (u *__SettingNotification_Selector) SocialLedColor_Like(val string) *__Sett
 	return u
 }
 
-func (d *__SettingNotification_Selector) SocialLedColor_Eq(val string) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedColor_Eq(val string) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6477,7 +6477,7 @@ func (d *__SettingNotification_Selector) SocialLedColor_Eq(val string) *__Settin
 	return d
 }
 
-func (d *__SettingNotification_Selector) SocialLedColor_NotEq(val string) *__SettingNotification_Selector {
+func (d *__SettingNotifications_Selector) SocialLedColor_NotEq(val string) *__SettingNotifications_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -6494,14 +6494,14 @@ func (d *__SettingNotification_Selector) SocialLedColor_NotEq(val string) *__Set
 
 //ints
 
-func (u *__SettingNotification_Updater) UserId(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) UserId(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) UserId_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) UserId_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6521,14 +6521,14 @@ func (u *__SettingNotification_Updater) UserId_Increment(count int) *__SettingNo
 
 //ints
 
-func (u *__SettingNotification_Updater) SocialLedOn(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedOn(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" SocialLedOn = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SocialLedOn = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) SocialLedOn_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedOn_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" SocialLedOn = SocialLedOn+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6549,7 +6549,7 @@ func (u *__SettingNotification_Updater) SocialLedOn_Increment(count int) *__Sett
 //ints
 
 //string
-func (u *__SettingNotification_Updater) SocialLedColor(newVal string) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) SocialLedColor(newVal string) *__SettingNotifications_Updater {
 	up := updateCol{"SocialLedColor = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SocialLedColor = "+ u.nextDollar()] = newVal
@@ -6558,14 +6558,14 @@ func (u *__SettingNotification_Updater) SocialLedColor(newVal string) *__Setting
 
 //ints
 
-func (u *__SettingNotification_Updater) ReqestToFollowYou(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) ReqestToFollowYou(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" ReqestToFollowYou = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ReqestToFollowYou = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) ReqestToFollowYou_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) ReqestToFollowYou_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" ReqestToFollowYou = ReqestToFollowYou+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6585,14 +6585,14 @@ func (u *__SettingNotification_Updater) ReqestToFollowYou_Increment(count int) *
 
 //ints
 
-func (u *__SettingNotification_Updater) FollowedYou(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) FollowedYou(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" FollowedYou = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" FollowedYou = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) FollowedYou_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) FollowedYou_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" FollowedYou = FollowedYou+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6612,14 +6612,14 @@ func (u *__SettingNotification_Updater) FollowedYou_Increment(count int) *__Sett
 
 //ints
 
-func (u *__SettingNotification_Updater) AccptedYourFollowRequest(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) AccptedYourFollowRequest(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" AccptedYourFollowRequest = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" AccptedYourFollowRequest = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) AccptedYourFollowRequest_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" AccptedYourFollowRequest = AccptedYourFollowRequest+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6639,14 +6639,14 @@ func (u *__SettingNotification_Updater) AccptedYourFollowRequest_Increment(count
 
 //ints
 
-func (u *__SettingNotification_Updater) YourPostLiked(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostLiked(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" YourPostLiked = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" YourPostLiked = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostLiked_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostLiked_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" YourPostLiked = YourPostLiked+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6666,14 +6666,14 @@ func (u *__SettingNotification_Updater) YourPostLiked_Increment(count int) *__Se
 
 //ints
 
-func (u *__SettingNotification_Updater) YourPostCommented(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostCommented(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" YourPostCommented = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" YourPostCommented = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourPostCommented_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourPostCommented_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" YourPostCommented = YourPostCommented+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6693,14 +6693,14 @@ func (u *__SettingNotification_Updater) YourPostCommented_Increment(count int) *
 
 //ints
 
-func (u *__SettingNotification_Updater) MenthenedYouInPost(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInPost(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" MenthenedYouInPost = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MenthenedYouInPost = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInPost_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInPost_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" MenthenedYouInPost = MenthenedYouInPost+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6720,14 +6720,14 @@ func (u *__SettingNotification_Updater) MenthenedYouInPost_Increment(count int) 
 
 //ints
 
-func (u *__SettingNotification_Updater) MenthenedYouInComment(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInComment(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" MenthenedYouInComment = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" MenthenedYouInComment = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) MenthenedYouInComment_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) MenthenedYouInComment_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" MenthenedYouInComment = MenthenedYouInComment+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6747,14 +6747,14 @@ func (u *__SettingNotification_Updater) MenthenedYouInComment_Increment(count in
 
 //ints
 
-func (u *__SettingNotification_Updater) YourContactsJoined(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourContactsJoined(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" YourContactsJoined = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" YourContactsJoined = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) YourContactsJoined_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) YourContactsJoined_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" YourContactsJoined = YourContactsJoined+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6774,14 +6774,14 @@ func (u *__SettingNotification_Updater) YourContactsJoined_Increment(count int) 
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectMessage(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectMessage(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectMessage = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectMessage = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectMessage_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectMessage_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectMessage = DirectMessage+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6801,14 +6801,14 @@ func (u *__SettingNotification_Updater) DirectMessage_Increment(count int) *__Se
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectAlert(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectAlert(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectAlert = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectAlert = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectAlert_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectAlert_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectAlert = DirectAlert+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6828,14 +6828,14 @@ func (u *__SettingNotification_Updater) DirectAlert_Increment(count int) *__Sett
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectPerview(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPerview(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectPerview = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectPerview = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPerview_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPerview_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectPerview = DirectPerview+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6855,14 +6855,14 @@ func (u *__SettingNotification_Updater) DirectPerview_Increment(count int) *__Se
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectLedOn(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedOn(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectLedOn = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectLedOn = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedOn_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedOn_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectLedOn = DirectLedOn+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6882,14 +6882,14 @@ func (u *__SettingNotification_Updater) DirectLedOn_Increment(count int) *__Sett
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectLedColor(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedColor(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectLedColor = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectLedColor = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectLedColor_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectLedColor_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectLedColor = DirectLedColor+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6909,14 +6909,14 @@ func (u *__SettingNotification_Updater) DirectLedColor_Increment(count int) *__S
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectVibrate(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectVibrate(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectVibrate = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectVibrate = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectVibrate_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectVibrate_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectVibrate = DirectVibrate+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6936,14 +6936,14 @@ func (u *__SettingNotification_Updater) DirectVibrate_Increment(count int) *__Se
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectPopup(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPopup(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectPopup = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectPopup = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPopup_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPopup_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectPopup = DirectPopup+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6963,14 +6963,14 @@ func (u *__SettingNotification_Updater) DirectPopup_Increment(count int) *__Sett
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectSound(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectSound(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectSound = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectSound = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectSound_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectSound_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectSound = DirectSound+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -6990,14 +6990,14 @@ func (u *__SettingNotification_Updater) DirectSound_Increment(count int) *__Sett
 
 //ints
 
-func (u *__SettingNotification_Updater) DirectPriority(newVal int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPriority(newVal int) *__SettingNotifications_Updater {
 	up := updateCol{" DirectPriority = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" DirectPriority = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__SettingNotification_Updater) DirectPriority_Increment(count int) *__SettingNotification_Updater {
+func (u *__SettingNotifications_Updater) DirectPriority_Increment(count int) *__SettingNotifications_Updater {
 	if count > 0 {
 		up := updateCol{" DirectPriority = DirectPriority+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -7020,323 +7020,323 @@ func (u *__SettingNotification_Updater) DirectPriority_Increment(count int) *__S
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__SettingNotification_Selector) OrderBy_UserId_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_UserId_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_UserId_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_UserId_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_UserId() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_UserId() *__SettingNotifications_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_SocialLedOn_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_SocialLedOn_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY SocialLedOn DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_SocialLedOn_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_SocialLedOn_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY SocialLedOn ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_SocialLedOn() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_SocialLedOn() *__SettingNotifications_Selector {
 	u.selectCol = "SocialLedOn"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_SocialLedColor_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_SocialLedColor_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY SocialLedColor DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_SocialLedColor_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_SocialLedColor_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY SocialLedColor ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_SocialLedColor() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_SocialLedColor() *__SettingNotifications_Selector {
 	u.selectCol = "SocialLedColor"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_ReqestToFollowYou_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_ReqestToFollowYou_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY ReqestToFollowYou DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_ReqestToFollowYou_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_ReqestToFollowYou_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY ReqestToFollowYou ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_ReqestToFollowYou() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_ReqestToFollowYou() *__SettingNotifications_Selector {
 	u.selectCol = "ReqestToFollowYou"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_FollowedYou_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_FollowedYou_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY FollowedYou DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_FollowedYou_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_FollowedYou_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY FollowedYou ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_FollowedYou() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_FollowedYou() *__SettingNotifications_Selector {
 	u.selectCol = "FollowedYou"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_AccptedYourFollowRequest_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_AccptedYourFollowRequest_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY AccptedYourFollowRequest DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_AccptedYourFollowRequest_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_AccptedYourFollowRequest_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY AccptedYourFollowRequest ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_AccptedYourFollowRequest() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_AccptedYourFollowRequest() *__SettingNotifications_Selector {
 	u.selectCol = "AccptedYourFollowRequest"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourPostLiked_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourPostLiked_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourPostLiked DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourPostLiked_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourPostLiked_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourPostLiked ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_YourPostLiked() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_YourPostLiked() *__SettingNotifications_Selector {
 	u.selectCol = "YourPostLiked"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourPostCommented_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourPostCommented_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourPostCommented DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourPostCommented_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourPostCommented_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourPostCommented ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_YourPostCommented() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_YourPostCommented() *__SettingNotifications_Selector {
 	u.selectCol = "YourPostCommented"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_MenthenedYouInPost_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_MenthenedYouInPost_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY MenthenedYouInPost DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_MenthenedYouInPost_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_MenthenedYouInPost_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY MenthenedYouInPost ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_MenthenedYouInPost() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_MenthenedYouInPost() *__SettingNotifications_Selector {
 	u.selectCol = "MenthenedYouInPost"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_MenthenedYouInComment_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_MenthenedYouInComment_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY MenthenedYouInComment DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_MenthenedYouInComment_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_MenthenedYouInComment_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY MenthenedYouInComment ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_MenthenedYouInComment() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_MenthenedYouInComment() *__SettingNotifications_Selector {
 	u.selectCol = "MenthenedYouInComment"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourContactsJoined_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourContactsJoined_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourContactsJoined DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_YourContactsJoined_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_YourContactsJoined_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY YourContactsJoined ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_YourContactsJoined() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_YourContactsJoined() *__SettingNotifications_Selector {
 	u.selectCol = "YourContactsJoined"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectMessage_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectMessage_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectMessage DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectMessage_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectMessage_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectMessage ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectMessage() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectMessage() *__SettingNotifications_Selector {
 	u.selectCol = "DirectMessage"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectAlert_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectAlert_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectAlert DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectAlert_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectAlert_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectAlert ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectAlert() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectAlert() *__SettingNotifications_Selector {
 	u.selectCol = "DirectAlert"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPerview_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPerview_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPerview DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPerview_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPerview_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPerview ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectPerview() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectPerview() *__SettingNotifications_Selector {
 	u.selectCol = "DirectPerview"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectLedOn_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectLedOn_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectLedOn DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectLedOn_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectLedOn_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectLedOn ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectLedOn() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectLedOn() *__SettingNotifications_Selector {
 	u.selectCol = "DirectLedOn"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectLedColor_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectLedColor_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectLedColor DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectLedColor_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectLedColor_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectLedColor ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectLedColor() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectLedColor() *__SettingNotifications_Selector {
 	u.selectCol = "DirectLedColor"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectVibrate_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectVibrate_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectVibrate DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectVibrate_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectVibrate_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectVibrate ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectVibrate() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectVibrate() *__SettingNotifications_Selector {
 	u.selectCol = "DirectVibrate"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPopup_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPopup_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPopup DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPopup_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPopup_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPopup ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectPopup() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectPopup() *__SettingNotifications_Selector {
 	u.selectCol = "DirectPopup"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectSound_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectSound_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectSound DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectSound_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectSound_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectSound ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectSound() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectSound() *__SettingNotifications_Selector {
 	u.selectCol = "DirectSound"
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPriority_Desc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPriority_Desc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPriority DESC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) OrderBy_DirectPriority_Asc() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) OrderBy_DirectPriority_Asc() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY DirectPriority ASC "
 	return u
 }
 
-func (u *__SettingNotification_Selector) Select_DirectPriority() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Select_DirectPriority() *__SettingNotifications_Selector {
 	u.selectCol = "DirectPriority"
 	return u
 }
 
-func (u *__SettingNotification_Selector) Limit(num int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Limit(num int) *__SettingNotifications_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__SettingNotification_Selector) Offset(num int) *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Offset(num int) *__SettingNotifications_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__SettingNotification_Selector) Order_Rand() *__SettingNotification_Selector {
+func (u *__SettingNotifications_Selector) Order_Rand() *__SettingNotifications_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__SettingNotification_Selector) _stoSql() (string, []interface{}) {
+func (u *__SettingNotifications_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
 	sqlstr := "SELECT " + u.selectCol + " FROM sun.setting_notifications"
@@ -7359,20 +7359,20 @@ func (u *__SettingNotification_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__SettingNotification_Selector) GetRow(db *sqlx.DB) (*SettingNotification, error) {
+func (u *__SettingNotifications_Selector) GetRow(db *sqlx.DB) (*SettingNotifications, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &SettingNotification{}
+	row := &SettingNotifications{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7380,25 +7380,25 @@ func (u *__SettingNotification_Selector) GetRow(db *sqlx.DB) (*SettingNotificati
 
 	row._exists = true
 
-	OnSettingNotification_LoadOne(row)
+	OnSettingNotifications_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__SettingNotification_Selector) GetRows(db *sqlx.DB) ([]*SettingNotification, error) {
+func (u *__SettingNotifications_Selector) GetRows(db *sqlx.DB) ([]*SettingNotifications, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*SettingNotification
+	var rows []*SettingNotifications
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7412,25 +7412,25 @@ func (u *__SettingNotification_Selector) GetRows(db *sqlx.DB) ([]*SettingNotific
 		rows[i]._exists = true
 	}
 
-	OnSettingNotification_LoadMany(rows)
+	OnSettingNotifications_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__SettingNotification_Selector) GetRows2(db *sqlx.DB) ([]SettingNotification, error) {
+func (u *__SettingNotifications_Selector) GetRows2(db *sqlx.DB) ([]SettingNotifications, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*SettingNotification
+	var rows []*SettingNotifications
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7444,9 +7444,9 @@ func (u *__SettingNotification_Selector) GetRows2(db *sqlx.DB) ([]SettingNotific
 		rows[i]._exists = true
 	}
 
-	OnSettingNotification_LoadMany(rows)
+	OnSettingNotifications_LoadMany(rows)
 
-	rows2 := make([]SettingNotification, len(rows))
+	rows2 := make([]SettingNotifications, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -7455,12 +7455,12 @@ func (u *__SettingNotification_Selector) GetRows2(db *sqlx.DB) ([]SettingNotific
 	return rows2, nil
 }
 
-func (u *__SettingNotification_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__SettingNotifications_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -7468,7 +7468,7 @@ func (u *__SettingNotification_Selector) GetString(db *sqlx.DB) (string, error) 
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return "", err
@@ -7477,19 +7477,19 @@ func (u *__SettingNotification_Selector) GetString(db *sqlx.DB) (string, error) 
 	return res, nil
 }
 
-func (u *__SettingNotification_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__SettingNotifications_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7498,19 +7498,19 @@ func (u *__SettingNotification_Selector) GetStringSlice(db *sqlx.DB) ([]string, 
 	return rows, nil
 }
 
-func (u *__SettingNotification_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__SettingNotifications_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -7519,19 +7519,19 @@ func (u *__SettingNotification_Selector) GetIntSlice(db *sqlx.DB) ([]int, error)
 	return rows, nil
 }
 
-func (u *__SettingNotification_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__SettingNotifications_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7541,7 +7541,7 @@ func (u *__SettingNotification_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
+func (u *__SettingNotifications_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -7568,12 +7568,12 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7581,7 +7581,7 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7590,7 +7590,7 @@ func (u *__SettingNotification_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
+func (d *__SettingNotifications_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -7606,12 +7606,12 @@ func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.setting_notifications WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7620,7 +7620,7 @@ func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -7629,9 +7629,9 @@ func (d *__SettingNotification_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  SettingNotification ////////////////
+///////////////////////// Mass insert - replace for  SettingNotifications ////////////////
 
-func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
+func MassInsert_SettingNotifications(rows []SettingNotifications, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -7674,12 +7674,12 @@ func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return err
@@ -7688,7 +7688,7 @@ func MassInsert_SettingNotification(rows []SettingNotification, db XODB) error {
 	return nil
 }
 
-func MassReplace_SettingNotification(rows []SettingNotification, db XODB) error {
+func MassReplace_SettingNotifications(rows []SettingNotifications, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -7730,12 +7730,12 @@ func MassReplace_SettingNotification(rows []SettingNotification, db XODB) error 
 
 	}
 
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.SettingNotification {
+		if LogTableSqlReq.SettingNotifications {
 			XOLogErr(err)
 		}
 		return err

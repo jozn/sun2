@@ -10,10 +10,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostKey represents a row from 'sun.post_keys'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// PostKeys represents a row from 'sun.post_keys'.
 
 // Manualy copy this to project
-type PostKey__ struct {
+type PostKeys__ struct {
 	Id         int    `json:"Id"`         // Id -
 	PostKeyStr string `json:"PostKeyStr"` // PostKeyStr -
 	Used       int    `json:"Used"`       // Used -
@@ -21,18 +21,18 @@ type PostKey__ struct {
 	_exists, _deleted bool
 }
 
-// Exists determines if the PostKey exists in the database.
-func (pk *PostKey) Exists() bool {
+// Exists determines if the PostKeys exists in the database.
+func (pk *PostKeys) Exists() bool {
 	return pk._exists
 }
 
-// Deleted provides information if the PostKey has been deleted from the database.
-func (pk *PostKey) Deleted() bool {
+// Deleted provides information if the PostKeys has been deleted from the database.
+func (pk *PostKeys) Deleted() bool {
 	return pk._deleted
 }
 
-// Insert inserts the PostKey to the database.
-func (pk *PostKey) Insert(db XODB) error {
+// Insert inserts the PostKeys to the database.
+func (pk *PostKeys) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
@@ -48,12 +48,12 @@ func (pk *PostKey) Insert(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
 	}
 	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -62,7 +62,7 @@ func (pk *PostKey) Insert(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -72,13 +72,13 @@ func (pk *PostKey) Insert(db XODB) error {
 	pk.Id = int(id)
 	pk._exists = true
 
-	OnPostKey_AfterInsert(pk)
+	OnPostKeys_AfterInsert(pk)
 
 	return nil
 }
 
-// Insert inserts the PostKey to the database.
-func (pk *PostKey) Replace(db XODB) error {
+// Insert inserts the PostKeys to the database.
+func (pk *PostKeys) Replace(db XODB) error {
 	var err error
 
 	// sql query
@@ -90,12 +90,12 @@ func (pk *PostKey) Replace(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
 	}
 	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -104,7 +104,7 @@ func (pk *PostKey) Replace(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -114,13 +114,13 @@ func (pk *PostKey) Replace(db XODB) error {
 	pk.Id = int(id)
 	pk._exists = true
 
-	OnPostKey_AfterInsert(pk)
+	OnPostKeys_AfterInsert(pk)
 
 	return nil
 }
 
-// Update updates the PostKey in the database.
-func (pk *PostKey) Update(db XODB) error {
+// Update updates the PostKeys in the database.
+func (pk *PostKeys) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -139,21 +139,21 @@ func (pk *PostKey) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
 	}
 	_, err = db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLogErr(err)
 	}
-	OnPostKey_AfterUpdate(pk)
+	OnPostKeys_AfterUpdate(pk)
 
 	return err
 }
 
-// Save saves the PostKey to the database.
-func (pk *PostKey) Save(db XODB) error {
+// Save saves the PostKeys to the database.
+func (pk *PostKeys) Save(db XODB) error {
 	if pk.Exists() {
 		return pk.Update(db)
 	}
@@ -161,8 +161,8 @@ func (pk *PostKey) Save(db XODB) error {
 	return pk.Replace(db)
 }
 
-// Delete deletes the PostKey from the database.
-func (pk *PostKey) Delete(db XODB) error {
+// Delete deletes the PostKeys from the database.
+func (pk *PostKeys) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -179,12 +179,12 @@ func (pk *PostKey) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.post_keys WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, pk.Id)
 	}
 	_, err = db.Exec(sqlstr, pk.Id)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -193,7 +193,7 @@ func (pk *PostKey) Delete(db XODB) error {
 	// set deleted
 	pk._deleted = true
 
-	OnPostKey_AfterDelete(pk)
+	OnPostKeys_AfterDelete(pk)
 
 	return nil
 }
@@ -204,14 +204,14 @@ func (pk *PostKey) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __PostKey_Deleter struct {
+type __PostKeys_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __PostKey_Updater struct {
+type __PostKeys_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -220,7 +220,7 @@ type __PostKey_Updater struct {
 	isMysql     bool
 }
 
-type __PostKey_Selector struct {
+type __PostKeys_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -231,30 +231,30 @@ type __PostKey_Selector struct {
 	isMysql     bool
 }
 
-func NewPostKey_Deleter() *__PostKey_Deleter {
-	d := __PostKey_Deleter{whereSep: " AND "}
+func NewPostKeys_Deleter() *__PostKeys_Deleter {
+	d := __PostKeys_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewPostKey_Updater() *__PostKey_Updater {
-	u := __PostKey_Updater{whereSep: " AND "}
+func NewPostKeys_Updater() *__PostKeys_Updater {
+	u := __PostKeys_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewPostKey_Selector() *__PostKey_Selector {
-	u := __PostKey_Selector{whereSep: " AND ", selectCol: "*"}
+func NewPostKeys_Selector() *__PostKeys_Selector {
+	u := __PostKeys_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__PostKey_Selector)nextDollars(size int) string  {
+func (m *__PostKeys_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__PostKey_Selector)nextDollar() string  {
+func (m *__PostKeys_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -265,25 +265,25 @@ func (m *__PostKey_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__PostKey_Deleter) nextDollars(size int) string {
+func (m *__PostKeys_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__PostKey_Deleter) nextDollar() string {
+func (m *__PostKeys_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__PostKey_Deleter) Or() *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Or() *__PostKeys_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PostKey_Deleter) Id_In(ins []int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Id_In(ins []int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -296,7 +296,7 @@ func (u *__PostKey_Deleter) Id_In(ins []int) *__PostKey_Deleter {
 	return u
 }
 
-func (u *__PostKey_Deleter) Id_Ins(ins ...int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Id_Ins(ins ...int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -309,7 +309,7 @@ func (u *__PostKey_Deleter) Id_Ins(ins ...int) *__PostKey_Deleter {
 	return u
 }
 
-func (u *__PostKey_Deleter) Id_NotIn(ins []int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Id_NotIn(ins []int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -322,7 +322,7 @@ func (u *__PostKey_Deleter) Id_NotIn(ins []int) *__PostKey_Deleter {
 	return u
 }
 
-func (d *__PostKey_Deleter) Id_Eq(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_Eq(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -333,7 +333,7 @@ func (d *__PostKey_Deleter) Id_Eq(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Id_NotEq(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_NotEq(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -344,7 +344,7 @@ func (d *__PostKey_Deleter) Id_NotEq(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Id_LT(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_LT(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -355,7 +355,7 @@ func (d *__PostKey_Deleter) Id_LT(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Id_LE(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_LE(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -366,7 +366,7 @@ func (d *__PostKey_Deleter) Id_LE(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Id_GT(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_GT(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -377,7 +377,7 @@ func (d *__PostKey_Deleter) Id_GT(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Id_GE(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Id_GE(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -388,7 +388,7 @@ func (d *__PostKey_Deleter) Id_GE(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (u *__PostKey_Deleter) Used_In(ins []int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Used_In(ins []int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -401,7 +401,7 @@ func (u *__PostKey_Deleter) Used_In(ins []int) *__PostKey_Deleter {
 	return u
 }
 
-func (u *__PostKey_Deleter) Used_Ins(ins ...int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Used_Ins(ins ...int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -414,7 +414,7 @@ func (u *__PostKey_Deleter) Used_Ins(ins ...int) *__PostKey_Deleter {
 	return u
 }
 
-func (u *__PostKey_Deleter) Used_NotIn(ins []int) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) Used_NotIn(ins []int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -427,7 +427,7 @@ func (u *__PostKey_Deleter) Used_NotIn(ins []int) *__PostKey_Deleter {
 	return u
 }
 
-func (d *__PostKey_Deleter) Used_Eq(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_Eq(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -438,7 +438,7 @@ func (d *__PostKey_Deleter) Used_Eq(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Used_NotEq(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_NotEq(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -449,7 +449,7 @@ func (d *__PostKey_Deleter) Used_NotEq(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Used_LT(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_LT(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -460,7 +460,7 @@ func (d *__PostKey_Deleter) Used_LT(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Used_LE(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_LE(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -471,7 +471,7 @@ func (d *__PostKey_Deleter) Used_LE(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Used_GT(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_GT(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -482,7 +482,7 @@ func (d *__PostKey_Deleter) Used_GT(val int) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) Used_GE(val int) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) Used_GE(val int) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -494,25 +494,25 @@ func (d *__PostKey_Deleter) Used_GE(val int) *__PostKey_Deleter {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__PostKey_Updater) nextDollars(size int) string {
+func (m *__PostKeys_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__PostKey_Updater) nextDollar() string {
+func (m *__PostKeys_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__PostKey_Updater) Or() *__PostKey_Updater {
+func (u *__PostKeys_Updater) Or() *__PostKeys_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PostKey_Updater) Id_In(ins []int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Id_In(ins []int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -525,7 +525,7 @@ func (u *__PostKey_Updater) Id_In(ins []int) *__PostKey_Updater {
 	return u
 }
 
-func (u *__PostKey_Updater) Id_Ins(ins ...int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Id_Ins(ins ...int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -538,7 +538,7 @@ func (u *__PostKey_Updater) Id_Ins(ins ...int) *__PostKey_Updater {
 	return u
 }
 
-func (u *__PostKey_Updater) Id_NotIn(ins []int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Id_NotIn(ins []int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -551,7 +551,7 @@ func (u *__PostKey_Updater) Id_NotIn(ins []int) *__PostKey_Updater {
 	return u
 }
 
-func (d *__PostKey_Updater) Id_Eq(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_Eq(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -562,7 +562,7 @@ func (d *__PostKey_Updater) Id_Eq(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Id_NotEq(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_NotEq(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -573,7 +573,7 @@ func (d *__PostKey_Updater) Id_NotEq(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Id_LT(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_LT(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -584,7 +584,7 @@ func (d *__PostKey_Updater) Id_LT(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Id_LE(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_LE(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -595,7 +595,7 @@ func (d *__PostKey_Updater) Id_LE(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Id_GT(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_GT(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -606,7 +606,7 @@ func (d *__PostKey_Updater) Id_GT(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Id_GE(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Id_GE(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -617,7 +617,7 @@ func (d *__PostKey_Updater) Id_GE(val int) *__PostKey_Updater {
 	return d
 }
 
-func (u *__PostKey_Updater) Used_In(ins []int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Used_In(ins []int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -630,7 +630,7 @@ func (u *__PostKey_Updater) Used_In(ins []int) *__PostKey_Updater {
 	return u
 }
 
-func (u *__PostKey_Updater) Used_Ins(ins ...int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Used_Ins(ins ...int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -643,7 +643,7 @@ func (u *__PostKey_Updater) Used_Ins(ins ...int) *__PostKey_Updater {
 	return u
 }
 
-func (u *__PostKey_Updater) Used_NotIn(ins []int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Used_NotIn(ins []int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -656,7 +656,7 @@ func (u *__PostKey_Updater) Used_NotIn(ins []int) *__PostKey_Updater {
 	return u
 }
 
-func (d *__PostKey_Updater) Used_Eq(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_Eq(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -667,7 +667,7 @@ func (d *__PostKey_Updater) Used_Eq(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Used_NotEq(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_NotEq(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -678,7 +678,7 @@ func (d *__PostKey_Updater) Used_NotEq(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Used_LT(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_LT(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -689,7 +689,7 @@ func (d *__PostKey_Updater) Used_LT(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Used_LE(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_LE(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -700,7 +700,7 @@ func (d *__PostKey_Updater) Used_LE(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Used_GT(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_GT(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -711,7 +711,7 @@ func (d *__PostKey_Updater) Used_GT(val int) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) Used_GE(val int) *__PostKey_Updater {
+func (d *__PostKeys_Updater) Used_GE(val int) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -723,25 +723,25 @@ func (d *__PostKey_Updater) Used_GE(val int) *__PostKey_Updater {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__PostKey_Selector) nextDollars(size int) string {
+func (m *__PostKeys_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__PostKey_Selector) nextDollar() string {
+func (m *__PostKeys_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__PostKey_Selector) Or() *__PostKey_Selector {
+func (u *__PostKeys_Selector) Or() *__PostKeys_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__PostKey_Selector) Id_In(ins []int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Id_In(ins []int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -754,7 +754,7 @@ func (u *__PostKey_Selector) Id_In(ins []int) *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) Id_Ins(ins ...int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Id_Ins(ins ...int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -767,7 +767,7 @@ func (u *__PostKey_Selector) Id_Ins(ins ...int) *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) Id_NotIn(ins []int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Id_NotIn(ins []int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -780,7 +780,7 @@ func (u *__PostKey_Selector) Id_NotIn(ins []int) *__PostKey_Selector {
 	return u
 }
 
-func (d *__PostKey_Selector) Id_Eq(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_Eq(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -791,7 +791,7 @@ func (d *__PostKey_Selector) Id_Eq(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Id_NotEq(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_NotEq(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -802,7 +802,7 @@ func (d *__PostKey_Selector) Id_NotEq(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Id_LT(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_LT(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -813,7 +813,7 @@ func (d *__PostKey_Selector) Id_LT(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Id_LE(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_LE(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -824,7 +824,7 @@ func (d *__PostKey_Selector) Id_LE(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Id_GT(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_GT(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -835,7 +835,7 @@ func (d *__PostKey_Selector) Id_GT(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Id_GE(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Id_GE(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -846,7 +846,7 @@ func (d *__PostKey_Selector) Id_GE(val int) *__PostKey_Selector {
 	return d
 }
 
-func (u *__PostKey_Selector) Used_In(ins []int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Used_In(ins []int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -859,7 +859,7 @@ func (u *__PostKey_Selector) Used_In(ins []int) *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) Used_Ins(ins ...int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Used_Ins(ins ...int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -872,7 +872,7 @@ func (u *__PostKey_Selector) Used_Ins(ins ...int) *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) Used_NotIn(ins []int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Used_NotIn(ins []int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -885,7 +885,7 @@ func (u *__PostKey_Selector) Used_NotIn(ins []int) *__PostKey_Selector {
 	return u
 }
 
-func (d *__PostKey_Selector) Used_Eq(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_Eq(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -896,7 +896,7 @@ func (d *__PostKey_Selector) Used_Eq(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Used_NotEq(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_NotEq(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -907,7 +907,7 @@ func (d *__PostKey_Selector) Used_NotEq(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Used_LT(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_LT(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -918,7 +918,7 @@ func (d *__PostKey_Selector) Used_LT(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Used_LE(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_LE(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -929,7 +929,7 @@ func (d *__PostKey_Selector) Used_LE(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Used_GT(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_GT(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -940,7 +940,7 @@ func (d *__PostKey_Selector) Used_GT(val int) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) Used_GE(val int) *__PostKey_Selector {
+func (d *__PostKeys_Selector) Used_GE(val int) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -955,7 +955,7 @@ func (d *__PostKey_Selector) Used_GE(val int) *__PostKey_Selector {
 
 ////////ints
 
-func (u *__PostKey_Deleter) PostKeyStr_In(ins []string) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) PostKeyStr_In(ins []string) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -968,7 +968,7 @@ func (u *__PostKey_Deleter) PostKeyStr_In(ins []string) *__PostKey_Deleter {
 	return u
 }
 
-func (u *__PostKey_Deleter) PostKeyStr_NotIn(ins []string) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) PostKeyStr_NotIn(ins []string) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -982,7 +982,7 @@ func (u *__PostKey_Deleter) PostKeyStr_NotIn(ins []string) *__PostKey_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Deleter) PostKeyStr_Like(val string) *__PostKey_Deleter {
+func (u *__PostKeys_Deleter) PostKeyStr_Like(val string) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -993,7 +993,7 @@ func (u *__PostKey_Deleter) PostKeyStr_Like(val string) *__PostKey_Deleter {
 	return u
 }
 
-func (d *__PostKey_Deleter) PostKeyStr_Eq(val string) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) PostKeyStr_Eq(val string) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1004,7 +1004,7 @@ func (d *__PostKey_Deleter) PostKeyStr_Eq(val string) *__PostKey_Deleter {
 	return d
 }
 
-func (d *__PostKey_Deleter) PostKeyStr_NotEq(val string) *__PostKey_Deleter {
+func (d *__PostKeys_Deleter) PostKeyStr_NotEq(val string) *__PostKeys_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1017,7 +1017,7 @@ func (d *__PostKey_Deleter) PostKeyStr_NotEq(val string) *__PostKey_Deleter {
 
 ////////ints
 
-func (u *__PostKey_Updater) PostKeyStr_In(ins []string) *__PostKey_Updater {
+func (u *__PostKeys_Updater) PostKeyStr_In(ins []string) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1030,7 +1030,7 @@ func (u *__PostKey_Updater) PostKeyStr_In(ins []string) *__PostKey_Updater {
 	return u
 }
 
-func (u *__PostKey_Updater) PostKeyStr_NotIn(ins []string) *__PostKey_Updater {
+func (u *__PostKeys_Updater) PostKeyStr_NotIn(ins []string) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1044,7 +1044,7 @@ func (u *__PostKey_Updater) PostKeyStr_NotIn(ins []string) *__PostKey_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Updater) PostKeyStr_Like(val string) *__PostKey_Updater {
+func (u *__PostKeys_Updater) PostKeyStr_Like(val string) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1055,7 +1055,7 @@ func (u *__PostKey_Updater) PostKeyStr_Like(val string) *__PostKey_Updater {
 	return u
 }
 
-func (d *__PostKey_Updater) PostKeyStr_Eq(val string) *__PostKey_Updater {
+func (d *__PostKeys_Updater) PostKeyStr_Eq(val string) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1066,7 +1066,7 @@ func (d *__PostKey_Updater) PostKeyStr_Eq(val string) *__PostKey_Updater {
 	return d
 }
 
-func (d *__PostKey_Updater) PostKeyStr_NotEq(val string) *__PostKey_Updater {
+func (d *__PostKeys_Updater) PostKeyStr_NotEq(val string) *__PostKeys_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1079,7 +1079,7 @@ func (d *__PostKey_Updater) PostKeyStr_NotEq(val string) *__PostKey_Updater {
 
 ////////ints
 
-func (u *__PostKey_Selector) PostKeyStr_In(ins []string) *__PostKey_Selector {
+func (u *__PostKeys_Selector) PostKeyStr_In(ins []string) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1092,7 +1092,7 @@ func (u *__PostKey_Selector) PostKeyStr_In(ins []string) *__PostKey_Selector {
 	return u
 }
 
-func (u *__PostKey_Selector) PostKeyStr_NotIn(ins []string) *__PostKey_Selector {
+func (u *__PostKeys_Selector) PostKeyStr_NotIn(ins []string) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1106,7 +1106,7 @@ func (u *__PostKey_Selector) PostKeyStr_NotIn(ins []string) *__PostKey_Selector 
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__PostKey_Selector) PostKeyStr_Like(val string) *__PostKey_Selector {
+func (u *__PostKeys_Selector) PostKeyStr_Like(val string) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1117,7 +1117,7 @@ func (u *__PostKey_Selector) PostKeyStr_Like(val string) *__PostKey_Selector {
 	return u
 }
 
-func (d *__PostKey_Selector) PostKeyStr_Eq(val string) *__PostKey_Selector {
+func (d *__PostKeys_Selector) PostKeyStr_Eq(val string) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1128,7 +1128,7 @@ func (d *__PostKey_Selector) PostKeyStr_Eq(val string) *__PostKey_Selector {
 	return d
 }
 
-func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
+func (d *__PostKeys_Selector) PostKeyStr_NotEq(val string) *__PostKeys_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1145,14 +1145,14 @@ func (d *__PostKey_Selector) PostKeyStr_NotEq(val string) *__PostKey_Selector {
 
 //ints
 
-func (u *__PostKey_Updater) Id(newVal int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Id(newVal int) *__PostKeys_Updater {
 	up := updateCol{" Id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Id_Increment(count int) *__PostKeys_Updater {
 	if count > 0 {
 		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1173,7 +1173,7 @@ func (u *__PostKey_Updater) Id_Increment(count int) *__PostKey_Updater {
 //ints
 
 //string
-func (u *__PostKey_Updater) PostKeyStr(newVal string) *__PostKey_Updater {
+func (u *__PostKeys_Updater) PostKeyStr(newVal string) *__PostKeys_Updater {
 	up := updateCol{"PostKeyStr = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostKeyStr = "+ u.nextDollar()] = newVal
@@ -1182,14 +1182,14 @@ func (u *__PostKey_Updater) PostKeyStr(newVal string) *__PostKey_Updater {
 
 //ints
 
-func (u *__PostKey_Updater) Used(newVal int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Used(newVal int) *__PostKeys_Updater {
 	up := updateCol{" Used = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Used = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__PostKey_Updater) Used_Increment(count int) *__PostKey_Updater {
+func (u *__PostKeys_Updater) Used_Increment(count int) *__PostKeys_Updater {
 	if count > 0 {
 		up := updateCol{" Used = Used+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1212,68 +1212,68 @@ func (u *__PostKey_Updater) Used_Increment(count int) *__PostKey_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__PostKey_Selector) OrderBy_Id_Desc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_Id_Desc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_Id_Asc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_Id_Asc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__PostKey_Selector) Select_Id() *__PostKey_Selector {
+func (u *__PostKeys_Selector) Select_Id() *__PostKeys_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_PostKeyStr_Desc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_PostKeyStr_Desc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY PostKeyStr DESC "
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_PostKeyStr_Asc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_PostKeyStr_Asc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY PostKeyStr ASC "
 	return u
 }
 
-func (u *__PostKey_Selector) Select_PostKeyStr() *__PostKey_Selector {
+func (u *__PostKeys_Selector) Select_PostKeyStr() *__PostKeys_Selector {
 	u.selectCol = "PostKeyStr"
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_Used_Desc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_Used_Desc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY Used DESC "
 	return u
 }
 
-func (u *__PostKey_Selector) OrderBy_Used_Asc() *__PostKey_Selector {
+func (u *__PostKeys_Selector) OrderBy_Used_Asc() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY Used ASC "
 	return u
 }
 
-func (u *__PostKey_Selector) Select_Used() *__PostKey_Selector {
+func (u *__PostKeys_Selector) Select_Used() *__PostKeys_Selector {
 	u.selectCol = "Used"
 	return u
 }
 
-func (u *__PostKey_Selector) Limit(num int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Limit(num int) *__PostKeys_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__PostKey_Selector) Offset(num int) *__PostKey_Selector {
+func (u *__PostKeys_Selector) Offset(num int) *__PostKeys_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__PostKey_Selector) Order_Rand() *__PostKey_Selector {
+func (u *__PostKeys_Selector) Order_Rand() *__PostKeys_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__PostKey_Selector) _stoSql() (string, []interface{}) {
+func (u *__PostKeys_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
 	sqlstr := "SELECT " + u.selectCol + " FROM sun.post_keys"
@@ -1296,20 +1296,20 @@ func (u *__PostKey_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__PostKey_Selector) GetRow(db *sqlx.DB) (*PostKey, error) {
+func (u *__PostKeys_Selector) GetRow(db *sqlx.DB) (*PostKeys, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &PostKey{}
+	row := &PostKeys{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1317,25 +1317,25 @@ func (u *__PostKey_Selector) GetRow(db *sqlx.DB) (*PostKey, error) {
 
 	row._exists = true
 
-	OnPostKey_LoadOne(row)
+	OnPostKeys_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__PostKey_Selector) GetRows(db *sqlx.DB) ([]*PostKey, error) {
+func (u *__PostKeys_Selector) GetRows(db *sqlx.DB) ([]*PostKeys, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*PostKey
+	var rows []*PostKeys
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1349,25 +1349,25 @@ func (u *__PostKey_Selector) GetRows(db *sqlx.DB) ([]*PostKey, error) {
 		rows[i]._exists = true
 	}
 
-	OnPostKey_LoadMany(rows)
+	OnPostKeys_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__PostKey_Selector) GetRows2(db *sqlx.DB) ([]PostKey, error) {
+func (u *__PostKeys_Selector) GetRows2(db *sqlx.DB) ([]PostKeys, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*PostKey
+	var rows []*PostKeys
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1381,9 +1381,9 @@ func (u *__PostKey_Selector) GetRows2(db *sqlx.DB) ([]PostKey, error) {
 		rows[i]._exists = true
 	}
 
-	OnPostKey_LoadMany(rows)
+	OnPostKeys_LoadMany(rows)
 
-	rows2 := make([]PostKey, len(rows))
+	rows2 := make([]PostKeys, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -1392,12 +1392,12 @@ func (u *__PostKey_Selector) GetRows2(db *sqlx.DB) ([]PostKey, error) {
 	return rows2, nil
 }
 
-func (u *__PostKey_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__PostKeys_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -1405,7 +1405,7 @@ func (u *__PostKey_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return "", err
@@ -1414,19 +1414,19 @@ func (u *__PostKey_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__PostKey_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__PostKeys_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1435,19 +1435,19 @@ func (u *__PostKey_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__PostKey_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__PostKeys_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -1456,19 +1456,19 @@ func (u *__PostKey_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__PostKey_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__PostKeys_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1478,7 +1478,7 @@ func (u *__PostKey_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__PostKey_Updater) Update(db XODB) (int, error) {
+func (u *__PostKeys_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -1505,12 +1505,12 @@ func (u *__PostKey_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1518,7 +1518,7 @@ func (u *__PostKey_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1527,7 +1527,7 @@ func (u *__PostKey_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__PostKey_Deleter) Delete(db XODB) (int, error) {
+func (d *__PostKeys_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -1543,12 +1543,12 @@ func (d *__PostKey_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.post_keys WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1557,7 +1557,7 @@ func (d *__PostKey_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -1566,9 +1566,9 @@ func (d *__PostKey_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  PostKey ////////////////
+///////////////////////// Mass insert - replace for  PostKeys ////////////////
 
-func MassInsert_PostKey(rows []PostKey, db XODB) error {
+func MassInsert_PostKeys(rows []PostKeys, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -1592,12 +1592,12 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err
@@ -1606,7 +1606,7 @@ func MassInsert_PostKey(rows []PostKey, db XODB) error {
 	return nil
 }
 
-func MassReplace_PostKey(rows []PostKey, db XODB) error {
+func MassReplace_PostKeys(rows []PostKeys, db XODB) error {
 	var err error
 	ln := len(rows)
 	s := "(?,?)," //`(?, ?, ?, ?),`
@@ -1627,12 +1627,12 @@ func MassReplace_PostKey(rows []PostKey, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.PostKey {
+		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
 		}
 		return err

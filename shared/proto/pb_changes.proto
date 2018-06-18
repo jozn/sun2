@@ -54,7 +54,8 @@ message PB_RoomsChanges {
         int64 PinTime = 31; //milisecond
     }
 
-    repeated PB_ChatView rooms = 2;
+    repeated Chat Chats = 2;
+    repeated PB_ChatView rooms = 3;//not needed
 
 }
 

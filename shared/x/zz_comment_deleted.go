@@ -208,18 +208,18 @@ type __CommentDeleted_Selector struct {
 }
 
 func NewCommentDeleted_Deleter() *__CommentDeleted_Deleter {
-	d := __CommentDeleted_Deleter{whereSep: " AND "}
+	d := __CommentDeleted_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewCommentDeleted_Updater() *__CommentDeleted_Updater {
-	u := __CommentDeleted_Updater{whereSep: " AND "}
+	u := __CommentDeleted_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewCommentDeleted_Selector() *__CommentDeleted_Selector {
-	u := __CommentDeleted_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __CommentDeleted_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -233,18 +233,18 @@ type __Blocked_Selector struct {
 }
 
 func NewBlocked_Deleter() *__Blocked_Deleter {
-	d := __Blocked_Deleter{whereSep: " AND "}
+	d := __Blocked_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewBlocked_Updater() *__Blocked_Updater {
-	u := __Blocked_Updater{whereSep: " AND "}
+	u := __Blocked_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewBlocked_Selector() *__Blocked_Selector {
-	u := __Blocked_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Blocked_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

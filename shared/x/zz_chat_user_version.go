@@ -209,18 +209,18 @@ type __ChatUserVersion_Selector struct {
 }
 
 func NewChatUserVersion_Deleter() *__ChatUserVersion_Deleter {
-	d := __ChatUserVersion_Deleter{whereSep: " AND "}
+	d := __ChatUserVersion_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewChatUserVersion_Updater() *__ChatUserVersion_Updater {
-	u := __ChatUserVersion_Updater{whereSep: " AND "}
+	u := __ChatUserVersion_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewChatUserVersion_Selector() *__ChatUserVersion_Selector {
-	u := __ChatUserVersion_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __ChatUserVersion_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

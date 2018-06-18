@@ -75,24 +75,24 @@ func (c _StoreImpl) PreLoadComment_ByPostIds(PostIds []int) {
 
 // Followed - PRIMARY
 
-// Like - PRIMARY
+// Likes - PRIMARY
 
-// Like - PostId
+// Likes - PostId
 
 //field//field//field
 
 ///// Generated from index 'Id'.
-func (c _StoreImpl) Like_ById(Id int) (*Like, bool) {
-	o, ok := RowCacheIndex.Get("Like_Id:" + fmt.Sprintf("%v", Id))
+func (c _StoreImpl) Likes_ById(Id int) (*Likes, bool) {
+	o, ok := RowCacheIndex.Get("Likes_Id:" + fmt.Sprintf("%v", Id))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewLike_Selector().Id_Eq(Id).GetRow(base.DB)
+	row, err := NewLikes_Selector().Id_Eq(Id).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("Like_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+		RowCacheIndex.Set("Likes_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
 		return row, true
 	}
 
@@ -100,33 +100,33 @@ func (c _StoreImpl) Like_ById(Id int) (*Like, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) Like_ById_JustCache(Id int) (*Like, bool) {
-	o, ok := RowCacheIndex.Get("Like_Id:" + fmt.Sprintf("%v", Id))
+func (c _StoreImpl) Likes_ById_JustCache(Id int) (*Likes, bool) {
+	o, ok := RowCacheIndex.Get("Likes_Id:" + fmt.Sprintf("%v", Id))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Like_Id:" + fmt.Sprintf("%v", Id)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Likes_Id:" + fmt.Sprintf("%v", Id)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadLike_ByIds(Ids []int) {
+func (c _StoreImpl) PreLoadLikes_ByIds(Ids []int) {
 	not_cached := make([]int, 0, len(Ids))
 
 	for _, id := range Ids {
-		_, ok := RowCacheIndex.Get("Like_Id:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("Likes_Id:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewLike_Selector().Id_In(not_cached).GetRows(base.DB)
+		rows, err := NewLikes_Selector().Id_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("Like_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
+				RowCacheIndex.Set("Likes_Id:"+fmt.Sprintf("%v", row.Id), row, 0)
 			}
 		}
 	}
@@ -135,17 +135,17 @@ func (c _StoreImpl) PreLoadLike_ByIds(Ids []int) {
 //field//field//field
 
 ///// Generated from index 'PostId_2'.
-func (c _StoreImpl) Like_ByPostId(PostId int) (*Like, bool) {
-	o, ok := RowCacheIndex.Get("Like_PostId_2:" + fmt.Sprintf("%v", PostId))
+func (c _StoreImpl) Likes_ByPostId(PostId int) (*Likes, bool) {
+	o, ok := RowCacheIndex.Get("Likes_PostId_2:" + fmt.Sprintf("%v", PostId))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewLike_Selector().PostId_Eq(PostId).GetRow(base.DB)
+	row, err := NewLikes_Selector().PostId_Eq(PostId).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("Like_PostId_2:"+fmt.Sprintf("%v", row.PostId), row, 0)
+		RowCacheIndex.Set("Likes_PostId_2:"+fmt.Sprintf("%v", row.PostId), row, 0)
 		return row, true
 	}
 
@@ -153,33 +153,33 @@ func (c _StoreImpl) Like_ByPostId(PostId int) (*Like, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) Like_ByPostId_JustCache(PostId int) (*Like, bool) {
-	o, ok := RowCacheIndex.Get("Like_PostId_2:" + fmt.Sprintf("%v", PostId))
+func (c _StoreImpl) Likes_ByPostId_JustCache(PostId int) (*Likes, bool) {
+	o, ok := RowCacheIndex.Get("Likes_PostId_2:" + fmt.Sprintf("%v", PostId))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Like_PostId_2:" + fmt.Sprintf("%v", PostId)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Likes_PostId_2:" + fmt.Sprintf("%v", PostId)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadLike_ByPostIds(PostIds []int) {
+func (c _StoreImpl) PreLoadLikes_ByPostIds(PostIds []int) {
 	not_cached := make([]int, 0, len(PostIds))
 
 	for _, id := range PostIds {
-		_, ok := RowCacheIndex.Get("Like_PostId_2:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("Likes_PostId_2:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewLike_Selector().PostId_In(not_cached).GetRows(base.DB)
+		rows, err := NewLikes_Selector().PostId_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("Like_PostId_2:"+fmt.Sprintf("%v", row.PostId), row, 0)
+				RowCacheIndex.Set("Likes_PostId_2:"+fmt.Sprintf("%v", row.PostId), row, 0)
 			}
 		}
 	}
@@ -191,7 +191,7 @@ func (c _StoreImpl) PreLoadLike_ByPostIds(PostIds []int) {
 
 // NotifyRemoved - PRIMARY
 
-// PhoneContact - PRIMARY
+// PhoneContacts - PRIMARY
 
 // Post - PRIMARY
 
@@ -252,22 +252,22 @@ func (c _StoreImpl) PreLoadPost_ByUserIds(UserIds []int) {
 
 // PostDeleted - PRIMARY
 
-// PostKey - PRIMARY
+// PostKeys - PRIMARY
 
 //field//field//field
 
 ///// Generated from index 'PostKey'.
-func (c _StoreImpl) PostKey_ByPostKeyStr(PostKeyStr string) (*PostKey, bool) {
-	o, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
+func (c _StoreImpl) PostKeys_ByPostKeyStr(PostKeyStr string) (*PostKeys, bool) {
+	o, ok := RowCacheIndex.Get("PostKeys_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewPostKey_Selector().PostKeyStr_Eq(PostKeyStr).GetRow(base.DB)
+	row, err := NewPostKeys_Selector().PostKeyStr_Eq(PostKeyStr).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("PostKey_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
+		RowCacheIndex.Set("PostKeys_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
 		return row, true
 	}
 
@@ -275,33 +275,33 @@ func (c _StoreImpl) PostKey_ByPostKeyStr(PostKeyStr string) (*PostKey, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) PostKey_ByPostKeyStr_JustCache(PostKeyStr string) (*PostKey, bool) {
-	o, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
+func (c _StoreImpl) PostKeys_ByPostKeyStr_JustCache(PostKeyStr string) (*PostKeys, bool) {
+	o, ok := RowCacheIndex.Get("PostKeys_PostKey:" + fmt.Sprintf("%v", PostKeyStr))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKey_PostKey:" + fmt.Sprintf("%v", PostKeyStr)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKeys_PostKey:" + fmt.Sprintf("%v", PostKeyStr)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPostKey_ByPostKeyStrs(PostKeyStrs []string) {
+func (c _StoreImpl) PreLoadPostKeys_ByPostKeyStrs(PostKeyStrs []string) {
 	not_cached := make([]string, 0, len(PostKeyStrs))
 
 	for _, id := range PostKeyStrs {
-		_, ok := RowCacheIndex.Get("PostKey_PostKey:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("PostKeys_PostKey:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewPostKey_Selector().PostKeyStr_In(not_cached).GetRows(base.DB)
+		rows, err := NewPostKeys_Selector().PostKeyStr_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("PostKey_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
+				RowCacheIndex.Set("PostKeys_PostKey:"+fmt.Sprintf("%v", row.PostKeyStr), row, 0)
 			}
 		}
 	}
@@ -310,17 +310,17 @@ func (c _StoreImpl) PreLoadPostKey_ByPostKeyStrs(PostKeyStrs []string) {
 //field//field//field
 
 ///// Generated from index 'Used'.
-func (c _StoreImpl) PostKey_ByUsed(Used int) (*PostKey, bool) {
-	o, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", Used))
+func (c _StoreImpl) PostKeys_ByUsed(Used int) (*PostKeys, bool) {
+	o, ok := RowCacheIndex.Get("PostKeys_Used:" + fmt.Sprintf("%v", Used))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
 
-	row, err := NewPostKey_Selector().Used_Eq(Used).GetRow(base.DB)
+	row, err := NewPostKeys_Selector().Used_Eq(Used).GetRow(base.DB)
 	if err == nil {
-		RowCacheIndex.Set("PostKey_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
+		RowCacheIndex.Set("PostKeys_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
 		return row, true
 	}
 
@@ -328,33 +328,33 @@ func (c _StoreImpl) PostKey_ByUsed(Used int) (*PostKey, bool) {
 	return nil, false
 }
 
-func (c _StoreImpl) PostKey_ByUsed_JustCache(Used int) (*PostKey, bool) {
-	o, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", Used))
+func (c _StoreImpl) PostKeys_ByUsed_JustCache(Used int) (*PostKeys, bool) {
+	o, ok := RowCacheIndex.Get("PostKeys_Used:" + fmt.Sprintf("%v", Used))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
 
-	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKey_Used:" + fmt.Sprintf("%v", Used)))
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "PostKeys_Used:" + fmt.Sprintf("%v", Used)))
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPostKey_ByUseds(Useds []int) {
+func (c _StoreImpl) PreLoadPostKeys_ByUseds(Useds []int) {
 	not_cached := make([]int, 0, len(Useds))
 
 	for _, id := range Useds {
-		_, ok := RowCacheIndex.Get("PostKey_Used:" + fmt.Sprintf("%v", id))
+		_, ok := RowCacheIndex.Get("PostKeys_Used:" + fmt.Sprintf("%v", id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		rows, err := NewPostKey_Selector().Used_In(not_cached).GetRows(base.DB)
+		rows, err := NewPostKeys_Selector().Used_In(not_cached).GetRows(base.DB)
 		if err == nil {
 			for _, row := range rows {
-				RowCacheIndex.Set("PostKey_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
+				RowCacheIndex.Set("PostKeys_Used:"+fmt.Sprintf("%v", row.Used), row, 0)
 			}
 		}
 	}
@@ -690,9 +690,9 @@ func (c _StoreImpl) PreLoadSession_BySessionUuids(SessionUuids []string) {
 	}
 }
 
-// SettingNotification - PRIMARY
+// SettingNotifications - PRIMARY
 
-// Sm - PRIMARY
+// Sms - PRIMARY
 
 // Tag - PRIMARY
 
@@ -865,6 +865,112 @@ func (c _StoreImpl) PreLoadUser_ByUserNames(UserNames []string) {
 
 //field//field//field
 
+///// Generated from index 'Phone'.
+func (c _StoreImpl) User_ByPhone(Phone string) (*User, bool) {
+	o, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", Phone))
+	if ok {
+		if obj, ok := o.(*User); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewUser_Selector().Phone_Eq(Phone).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("User_Phone:"+fmt.Sprintf("%v", row.Phone), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) User_ByPhone_JustCache(Phone string) (*User, bool) {
+	o, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", Phone))
+	if ok {
+		if obj, ok := o.(*User); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "User_Phone:" + fmt.Sprintf("%v", Phone)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadUser_ByPhones(Phones []string) {
+	not_cached := make([]string, 0, len(Phones))
+
+	for _, id := range Phones {
+		_, ok := RowCacheIndex.Get("User_Phone:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewUser_Selector().Phone_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("User_Phone:"+fmt.Sprintf("%v", row.Phone), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
+///// Generated from index 'UserNameLower'.
+func (c _StoreImpl) User_ByUserNameLower(UserNameLower string) (*User, bool) {
+	o, ok := RowCacheIndex.Get("User_UserNameLower:" + fmt.Sprintf("%v", UserNameLower))
+	if ok {
+		if obj, ok := o.(*User); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewUser_Selector().UserNameLower_Eq(UserNameLower).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("User_UserNameLower:"+fmt.Sprintf("%v", row.UserNameLower), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) User_ByUserNameLower_JustCache(UserNameLower string) (*User, bool) {
+	o, ok := RowCacheIndex.Get("User_UserNameLower:" + fmt.Sprintf("%v", UserNameLower))
+	if ok {
+		if obj, ok := o.(*User); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "User_UserNameLower:" + fmt.Sprintf("%v", UserNameLower)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadUser_ByUserNameLowers(UserNameLowers []string) {
+	not_cached := make([]string, 0, len(UserNameLowers))
+
+	for _, id := range UserNameLowers {
+		_, ok := RowCacheIndex.Get("User_UserNameLower:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewUser_Selector().UserNameLower_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("User_UserNameLower:"+fmt.Sprintf("%v", row.UserNameLower), row, 0)
+			}
+		}
+	}
+}
+
+//field//field//field
+
 ///// Generated from index 'Email'.
 func (c _StoreImpl) User_ByEmail(Email string) (*User, bool) {
 	o, ok := RowCacheIndex.Get("User_Email:" + fmt.Sprintf("%v", Email))
@@ -920,7 +1026,62 @@ func (c _StoreImpl) PreLoadUser_ByEmails(Emails []string) {
 
 // Chat - PRIMARY
 
+//field//field//field
+
+///// Generated from index 'RoomKey'.
+func (c _StoreImpl) Chat_ByRoomKey(RoomKey string) (*Chat, bool) {
+	o, ok := RowCacheIndex.Get("Chat_RoomKey:" + fmt.Sprintf("%v", RoomKey))
+	if ok {
+		if obj, ok := o.(*Chat); ok {
+			return obj, true
+		}
+	}
+
+	row, err := NewChat_Selector().RoomKey_Eq(RoomKey).GetRow(base.DB)
+	if err == nil {
+		RowCacheIndex.Set("Chat_RoomKey:"+fmt.Sprintf("%v", row.RoomKey), row, 0)
+		return row, true
+	}
+
+	XOLogErr(err)
+	return nil, false
+}
+
+func (c _StoreImpl) Chat_ByRoomKey_JustCache(RoomKey string) (*Chat, bool) {
+	o, ok := RowCacheIndex.Get("Chat_RoomKey:" + fmt.Sprintf("%v", RoomKey))
+	if ok {
+		if obj, ok := o.(*Chat); ok {
+			return obj, true
+		}
+	}
+
+	XOLogErr(errors.New("_JustCache is empty for secondry index " + "Chat_RoomKey:" + fmt.Sprintf("%v", RoomKey)))
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadChat_ByRoomKeys(RoomKeys []string) {
+	not_cached := make([]string, 0, len(RoomKeys))
+
+	for _, id := range RoomKeys {
+		_, ok := RowCacheIndex.Get("Chat_RoomKey:" + fmt.Sprintf("%v", id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		rows, err := NewChat_Selector().RoomKey_In(not_cached).GetRows(base.DB)
+		if err == nil {
+			for _, row := range rows {
+				RowCacheIndex.Set("Chat_RoomKey:"+fmt.Sprintf("%v", row.RoomKey), row, 0)
+			}
+		}
+	}
+}
+
 // ChatDeleted - PRIMARY
+
+// ChatDeleted - ChatId
 
 // ChatLastMessage - PRIMARY
 
@@ -1213,7 +1374,7 @@ func (c _StoreImpl) PreLoadHomeFanout_ByForUserIds(ForUserIds []int) {
 	}
 }
 
-// SuggestedTopPost - PRIMARY
+// SuggestedTopPosts - PRIMARY
 
 // SuggestedUser - PRIMARY
 

@@ -208,18 +208,18 @@ type __ChatLastMessage_Selector struct {
 }
 
 func NewChatLastMessage_Deleter() *__ChatLastMessage_Deleter {
-	d := __ChatLastMessage_Deleter{whereSep: " AND "}
+	d := __ChatLastMessage_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewChatLastMessage_Updater() *__ChatLastMessage_Updater {
-	u := __ChatLastMessage_Updater{whereSep: " AND "}
+	u := __ChatLastMessage_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewChatLastMessage_Selector() *__ChatLastMessage_Selector {
-	u := __ChatLastMessage_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __ChatLastMessage_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

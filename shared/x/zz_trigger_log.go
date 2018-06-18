@@ -235,18 +235,18 @@ type __TriggerLog_Selector struct {
 }
 
 func NewTriggerLog_Deleter() *__TriggerLog_Deleter {
-	d := __TriggerLog_Deleter{whereSep: " AND "}
+	d := __TriggerLog_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewTriggerLog_Updater() *__TriggerLog_Updater {
-	u := __TriggerLog_Updater{whereSep: " AND "}
+	u := __TriggerLog_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewTriggerLog_Selector() *__TriggerLog_Selector {
-	u := __TriggerLog_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __TriggerLog_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

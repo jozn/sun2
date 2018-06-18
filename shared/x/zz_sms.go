@@ -10,16 +10,19 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Sm represents a row from 'sun.sms'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Sms represents a row from 'sun.sms'.
 
 // Manualy copy this to project
-type Sm__ struct {
-	Id              uint   `json:"Id"`              // Id -
+type Sms__ struct {
+	Id              int    `json:"Id"`              // Id -
 	Hash            string `json:"Hash"`            // Hash -
+	AppUuid         string `json:"AppUuid"`         // AppUuid -
 	ClientPhone     string `json:"ClientPhone"`     // ClientPhone -
 	GenratedCode    int    `json:"GenratedCode"`    // GenratedCode -
 	SmsSenderNumber string `json:"SmsSenderNumber"` // SmsSenderNumber -
 	SmsSendStatues  string `json:"SmsSendStatues"`  // SmsSendStatues -
+	SmsHttpBody     string `json:"SmsHttpBody"`     // SmsHttpBody -
+	Err             string `json:"Err"`             // Err -
 	Carrier         string `json:"Carrier"`         // Carrier -
 	Country         []byte `json:"Country"`         // Country -
 	IsValidPhone    int    `json:"IsValidPhone"`    // IsValidPhone -
@@ -27,22 +30,23 @@ type Sm__ struct {
 	IsLogin         int    `json:"IsLogin"`         // IsLogin -
 	IsRegister      int    `json:"IsRegister"`      // IsRegister -
 	RetriedCount    int    `json:"RetriedCount"`    // RetriedCount -
+	TTL             int    `json:"TTL"`             // TTL -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the Sm exists in the database.
-func (s *Sm) Exists() bool {
+// Exists determines if the Sms exists in the database.
+func (s *Sms) Exists() bool {
 	return s._exists
 }
 
-// Deleted provides information if the Sm has been deleted from the database.
-func (s *Sm) Deleted() bool {
+// Deleted provides information if the Sms has been deleted from the database.
+func (s *Sms) Deleted() bool {
 	return s._deleted
 }
 
-// Insert inserts the Sm to the database.
-func (s *Sm) Insert(db XODB) error {
+// Insert inserts the Sms to the database.
+func (s *Sms) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
@@ -52,18 +56,18 @@ func (s *Sm) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.sms (` +
-		`Hash, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount` +
+		`Hash, AppUuid, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, SmsHttpBody, Err, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount, TTL` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.Sm {
-		XOLog(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount)
+	if LogTableSqlReq.Sms {
+		XOLog(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL)
 	}
-	res, err := db.Exec(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount)
+	res, err := db.Exec(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
@@ -72,40 +76,40 @@ func (s *Sm) Insert(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set primary key and existence
-	s.Id = uint(id)
+	s.Id = int(id)
 	s._exists = true
 
-	OnSm_AfterInsert(s)
+	OnSms_AfterInsert(s)
 
 	return nil
 }
 
-// Insert inserts the Sm to the database.
-func (s *Sm) Replace(db XODB) error {
+// Insert inserts the Sms to the database.
+func (s *Sms) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.sms (` +
-		`Hash, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount` +
+		`Hash, AppUuid, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, SmsHttpBody, Err, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount, TTL` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.Sm {
-		XOLog(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount)
+	if LogTableSqlReq.Sms {
+		XOLog(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL)
 	}
-	res, err := db.Exec(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount)
+	res, err := db.Exec(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
@@ -114,23 +118,23 @@ func (s *Sm) Replace(db XODB) error {
 	// retrieve id
 	id, err := res.LastInsertId()
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set primary key and existence
-	s.Id = uint(id)
+	s.Id = int(id)
 	s._exists = true
 
-	OnSm_AfterInsert(s)
+	OnSms_AfterInsert(s)
 
 	return nil
 }
 
-// Update updates the Sm in the database.
-func (s *Sm) Update(db XODB) error {
+// Update updates the Sms in the database.
+func (s *Sms) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -145,25 +149,25 @@ func (s *Sm) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.sms SET ` +
-		`Hash = ?, ClientPhone = ?, GenratedCode = ?, SmsSenderNumber = ?, SmsSendStatues = ?, Carrier = ?, Country = ?, IsValidPhone = ?, IsConfirmed = ?, IsLogin = ?, IsRegister = ?, RetriedCount = ?` +
+		`Hash = ?, AppUuid = ?, ClientPhone = ?, GenratedCode = ?, SmsSenderNumber = ?, SmsSendStatues = ?, SmsHttpBody = ?, Err = ?, Carrier = ?, Country = ?, IsValidPhone = ?, IsConfirmed = ?, IsLogin = ?, IsRegister = ?, RetriedCount = ?, TTL = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.Sm {
-		XOLog(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.Id)
+	if LogTableSqlReq.Sms {
+		XOLog(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL, s.Id)
 	}
-	_, err = db.Exec(sqlstr, s.Hash, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.Id)
+	_, err = db.Exec(sqlstr, s.Hash, s.AppUuid, s.ClientPhone, s.GenratedCode, s.SmsSenderNumber, s.SmsSendStatues, s.SmsHttpBody, s.Err, s.Carrier, s.Country, s.IsValidPhone, s.IsConfirmed, s.IsLogin, s.IsRegister, s.RetriedCount, s.TTL, s.Id)
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLogErr(err)
 	}
-	OnSm_AfterUpdate(s)
+	OnSms_AfterUpdate(s)
 
 	return err
 }
 
-// Save saves the Sm to the database.
-func (s *Sm) Save(db XODB) error {
+// Save saves the Sms to the database.
+func (s *Sms) Save(db XODB) error {
 	if s.Exists() {
 		return s.Update(db)
 	}
@@ -171,8 +175,8 @@ func (s *Sm) Save(db XODB) error {
 	return s.Replace(db)
 }
 
-// Delete deletes the Sm from the database.
-func (s *Sm) Delete(db XODB) error {
+// Delete deletes the Sms from the database.
+func (s *Sms) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -189,12 +193,12 @@ func (s *Sm) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.sms WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, s.Id)
 	}
 	_, err = db.Exec(sqlstr, s.Id)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
@@ -203,7 +207,7 @@ func (s *Sm) Delete(db XODB) error {
 	// set deleted
 	s._deleted = true
 
-	OnSm_AfterDelete(s)
+	OnSms_AfterDelete(s)
 
 	return nil
 }
@@ -214,14 +218,14 @@ func (s *Sm) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Sm_Deleter struct {
+type __Sms_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __Sm_Updater struct {
+type __Sms_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -230,7 +234,7 @@ type __Sm_Updater struct {
 	isMysql     bool
 }
 
-type __Sm_Selector struct {
+type __Sms_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -241,30 +245,30 @@ type __Sm_Selector struct {
 	isMysql     bool
 }
 
-func NewSm_Deleter() *__Sm_Deleter {
-	d := __Sm_Deleter{whereSep: " AND "}
+func NewSms_Deleter() *__Sms_Deleter {
+	d := __Sms_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewSm_Updater() *__Sm_Updater {
-	u := __Sm_Updater{whereSep: " AND "}
+func NewSms_Updater() *__Sms_Updater {
+	u := __Sms_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewSm_Selector() *__Sm_Selector {
-	u := __Sm_Selector{whereSep: " AND ", selectCol: "*"}
+func NewSms_Selector() *__Sms_Selector {
+	u := __Sms_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__Sm_Selector)nextDollars(size int) string  {
+func (m *__Sms_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__Sm_Selector)nextDollar() string  {
+func (m *__Sms_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -275,25 +279,130 @@ func (m *__Sm_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Sm_Deleter) nextDollars(size int) string {
+func (m *__Sms_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Sm_Deleter) nextDollar() string {
+func (m *__Sms_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Sm_Deleter) Or() *__Sm_Deleter {
+func (u *__Sms_Deleter) Or() *__Sms_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Sm_Deleter) GenratedCode_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) Id_In(ins []int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) Id_Ins(ins ...int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) Id_NotIn(ins []int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Deleter) Id_Eq(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Id_NotEq(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Id_LT(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Id_LE(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Id_GT(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Id_GE(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Deleter) GenratedCode_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -306,7 +415,7 @@ func (u *__Sm_Deleter) GenratedCode_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) GenratedCode_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) GenratedCode_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -319,7 +428,7 @@ func (u *__Sm_Deleter) GenratedCode_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) GenratedCode_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) GenratedCode_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -332,7 +441,7 @@ func (u *__Sm_Deleter) GenratedCode_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) GenratedCode_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -343,7 +452,7 @@ func (d *__Sm_Deleter) GenratedCode_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) GenratedCode_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -354,7 +463,7 @@ func (d *__Sm_Deleter) GenratedCode_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) GenratedCode_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -365,7 +474,7 @@ func (d *__Sm_Deleter) GenratedCode_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) GenratedCode_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -376,7 +485,7 @@ func (d *__Sm_Deleter) GenratedCode_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) GenratedCode_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -387,7 +496,7 @@ func (d *__Sm_Deleter) GenratedCode_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) GenratedCode_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) GenratedCode_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -398,7 +507,7 @@ func (d *__Sm_Deleter) GenratedCode_GE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) IsValidPhone_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsValidPhone_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -411,7 +520,7 @@ func (u *__Sm_Deleter) IsValidPhone_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsValidPhone_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsValidPhone_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -424,7 +533,7 @@ func (u *__Sm_Deleter) IsValidPhone_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsValidPhone_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsValidPhone_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -437,7 +546,7 @@ func (u *__Sm_Deleter) IsValidPhone_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) IsValidPhone_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -448,7 +557,7 @@ func (d *__Sm_Deleter) IsValidPhone_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsValidPhone_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -459,7 +568,7 @@ func (d *__Sm_Deleter) IsValidPhone_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsValidPhone_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -470,7 +579,7 @@ func (d *__Sm_Deleter) IsValidPhone_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsValidPhone_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -481,7 +590,7 @@ func (d *__Sm_Deleter) IsValidPhone_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsValidPhone_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -492,7 +601,7 @@ func (d *__Sm_Deleter) IsValidPhone_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsValidPhone_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsValidPhone_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -503,7 +612,7 @@ func (d *__Sm_Deleter) IsValidPhone_GE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) IsConfirmed_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsConfirmed_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -516,7 +625,7 @@ func (u *__Sm_Deleter) IsConfirmed_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsConfirmed_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsConfirmed_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -529,7 +638,7 @@ func (u *__Sm_Deleter) IsConfirmed_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsConfirmed_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsConfirmed_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -542,7 +651,7 @@ func (u *__Sm_Deleter) IsConfirmed_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) IsConfirmed_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -553,7 +662,7 @@ func (d *__Sm_Deleter) IsConfirmed_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsConfirmed_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -564,7 +673,7 @@ func (d *__Sm_Deleter) IsConfirmed_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsConfirmed_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -575,7 +684,7 @@ func (d *__Sm_Deleter) IsConfirmed_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsConfirmed_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -586,7 +695,7 @@ func (d *__Sm_Deleter) IsConfirmed_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsConfirmed_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -597,7 +706,7 @@ func (d *__Sm_Deleter) IsConfirmed_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsConfirmed_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsConfirmed_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -608,7 +717,7 @@ func (d *__Sm_Deleter) IsConfirmed_GE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) IsLogin_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsLogin_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -621,7 +730,7 @@ func (u *__Sm_Deleter) IsLogin_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsLogin_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsLogin_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -634,7 +743,7 @@ func (u *__Sm_Deleter) IsLogin_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsLogin_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsLogin_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -647,7 +756,7 @@ func (u *__Sm_Deleter) IsLogin_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) IsLogin_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -658,7 +767,7 @@ func (d *__Sm_Deleter) IsLogin_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsLogin_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -669,7 +778,7 @@ func (d *__Sm_Deleter) IsLogin_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsLogin_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -680,7 +789,7 @@ func (d *__Sm_Deleter) IsLogin_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsLogin_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -691,7 +800,7 @@ func (d *__Sm_Deleter) IsLogin_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsLogin_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -702,7 +811,7 @@ func (d *__Sm_Deleter) IsLogin_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsLogin_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsLogin_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -713,7 +822,7 @@ func (d *__Sm_Deleter) IsLogin_GE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) IsRegister_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsRegister_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -726,7 +835,7 @@ func (u *__Sm_Deleter) IsRegister_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsRegister_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsRegister_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -739,7 +848,7 @@ func (u *__Sm_Deleter) IsRegister_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) IsRegister_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) IsRegister_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -752,7 +861,7 @@ func (u *__Sm_Deleter) IsRegister_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) IsRegister_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -763,7 +872,7 @@ func (d *__Sm_Deleter) IsRegister_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsRegister_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -774,7 +883,7 @@ func (d *__Sm_Deleter) IsRegister_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsRegister_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -785,7 +894,7 @@ func (d *__Sm_Deleter) IsRegister_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsRegister_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -796,7 +905,7 @@ func (d *__Sm_Deleter) IsRegister_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsRegister_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -807,7 +916,7 @@ func (d *__Sm_Deleter) IsRegister_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) IsRegister_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) IsRegister_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -818,7 +927,7 @@ func (d *__Sm_Deleter) IsRegister_GE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) RetriedCount_In(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) RetriedCount_In(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -831,7 +940,7 @@ func (u *__Sm_Deleter) RetriedCount_In(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) RetriedCount_Ins(ins ...int) *__Sm_Deleter {
+func (u *__Sms_Deleter) RetriedCount_Ins(ins ...int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -844,7 +953,7 @@ func (u *__Sm_Deleter) RetriedCount_Ins(ins ...int) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) RetriedCount_NotIn(ins []int) *__Sm_Deleter {
+func (u *__Sms_Deleter) RetriedCount_NotIn(ins []int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -857,7 +966,7 @@ func (u *__Sm_Deleter) RetriedCount_NotIn(ins []int) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) RetriedCount_Eq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_Eq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -868,7 +977,7 @@ func (d *__Sm_Deleter) RetriedCount_Eq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) RetriedCount_NotEq(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_NotEq(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -879,7 +988,7 @@ func (d *__Sm_Deleter) RetriedCount_NotEq(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) RetriedCount_LT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_LT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -890,7 +999,7 @@ func (d *__Sm_Deleter) RetriedCount_LT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) RetriedCount_LE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_LE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -901,7 +1010,7 @@ func (d *__Sm_Deleter) RetriedCount_LE(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) RetriedCount_GT(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_GT(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -912,37 +1021,247 @@ func (d *__Sm_Deleter) RetriedCount_GT(val int) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) RetriedCount_GE(val int) *__Sm_Deleter {
+func (d *__Sms_Deleter) RetriedCount_GE(val int) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " RetriedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Deleter) TTL_In(ins []int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) TTL_Ins(ins ...int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) TTL_NotIn(ins []int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Deleter) TTL_Eq(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) TTL_NotEq(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) TTL_LT(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) TTL_LE(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) TTL_GT(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) TTL_GE(val int) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Sm_Updater) nextDollars(size int) string {
+func (m *__Sms_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Sm_Updater) nextDollar() string {
+func (m *__Sms_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Sm_Updater) Or() *__Sm_Updater {
+func (u *__Sms_Updater) Or() *__Sms_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Sm_Updater) GenratedCode_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) Id_In(ins []int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) Id_Ins(ins ...int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) Id_NotIn(ins []int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Updater) Id_Eq(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Id_NotEq(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Id_LT(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Id_LE(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Id_GT(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Id_GE(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Updater) GenratedCode_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -955,7 +1274,7 @@ func (u *__Sm_Updater) GenratedCode_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) GenratedCode_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) GenratedCode_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -968,7 +1287,7 @@ func (u *__Sm_Updater) GenratedCode_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) GenratedCode_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) GenratedCode_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -981,7 +1300,7 @@ func (u *__Sm_Updater) GenratedCode_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) GenratedCode_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -992,7 +1311,7 @@ func (d *__Sm_Updater) GenratedCode_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) GenratedCode_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1003,7 +1322,7 @@ func (d *__Sm_Updater) GenratedCode_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) GenratedCode_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1014,7 +1333,7 @@ func (d *__Sm_Updater) GenratedCode_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) GenratedCode_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1025,7 +1344,7 @@ func (d *__Sm_Updater) GenratedCode_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) GenratedCode_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1036,7 +1355,7 @@ func (d *__Sm_Updater) GenratedCode_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) GenratedCode_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) GenratedCode_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1047,7 +1366,7 @@ func (d *__Sm_Updater) GenratedCode_GE(val int) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) IsValidPhone_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsValidPhone_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1060,7 +1379,7 @@ func (u *__Sm_Updater) IsValidPhone_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsValidPhone_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) IsValidPhone_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1073,7 +1392,7 @@ func (u *__Sm_Updater) IsValidPhone_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsValidPhone_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsValidPhone_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1086,7 +1405,7 @@ func (u *__Sm_Updater) IsValidPhone_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) IsValidPhone_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1097,7 +1416,7 @@ func (d *__Sm_Updater) IsValidPhone_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsValidPhone_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1108,7 +1427,7 @@ func (d *__Sm_Updater) IsValidPhone_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsValidPhone_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1119,7 +1438,7 @@ func (d *__Sm_Updater) IsValidPhone_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsValidPhone_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1130,7 +1449,7 @@ func (d *__Sm_Updater) IsValidPhone_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsValidPhone_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1141,7 +1460,7 @@ func (d *__Sm_Updater) IsValidPhone_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsValidPhone_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsValidPhone_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1152,7 +1471,7 @@ func (d *__Sm_Updater) IsValidPhone_GE(val int) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) IsConfirmed_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsConfirmed_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1165,7 +1484,7 @@ func (u *__Sm_Updater) IsConfirmed_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsConfirmed_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) IsConfirmed_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1178,7 +1497,7 @@ func (u *__Sm_Updater) IsConfirmed_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsConfirmed_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsConfirmed_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1191,7 +1510,7 @@ func (u *__Sm_Updater) IsConfirmed_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) IsConfirmed_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1202,7 +1521,7 @@ func (d *__Sm_Updater) IsConfirmed_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsConfirmed_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1213,7 +1532,7 @@ func (d *__Sm_Updater) IsConfirmed_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsConfirmed_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1224,7 +1543,7 @@ func (d *__Sm_Updater) IsConfirmed_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsConfirmed_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1235,7 +1554,7 @@ func (d *__Sm_Updater) IsConfirmed_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsConfirmed_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1246,7 +1565,7 @@ func (d *__Sm_Updater) IsConfirmed_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsConfirmed_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsConfirmed_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1257,7 +1576,7 @@ func (d *__Sm_Updater) IsConfirmed_GE(val int) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) IsLogin_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsLogin_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1270,7 +1589,7 @@ func (u *__Sm_Updater) IsLogin_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsLogin_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) IsLogin_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1283,7 +1602,7 @@ func (u *__Sm_Updater) IsLogin_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsLogin_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsLogin_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1296,7 +1615,7 @@ func (u *__Sm_Updater) IsLogin_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) IsLogin_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1307,7 +1626,7 @@ func (d *__Sm_Updater) IsLogin_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsLogin_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1318,7 +1637,7 @@ func (d *__Sm_Updater) IsLogin_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsLogin_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1329,7 +1648,7 @@ func (d *__Sm_Updater) IsLogin_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsLogin_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1340,7 +1659,7 @@ func (d *__Sm_Updater) IsLogin_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsLogin_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1351,7 +1670,7 @@ func (d *__Sm_Updater) IsLogin_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsLogin_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsLogin_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1362,7 +1681,7 @@ func (d *__Sm_Updater) IsLogin_GE(val int) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) IsRegister_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsRegister_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1375,7 +1694,7 @@ func (u *__Sm_Updater) IsRegister_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsRegister_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) IsRegister_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1388,7 +1707,7 @@ func (u *__Sm_Updater) IsRegister_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) IsRegister_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) IsRegister_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1401,7 +1720,7 @@ func (u *__Sm_Updater) IsRegister_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) IsRegister_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1412,7 +1731,7 @@ func (d *__Sm_Updater) IsRegister_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsRegister_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1423,7 +1742,7 @@ func (d *__Sm_Updater) IsRegister_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsRegister_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1434,7 +1753,7 @@ func (d *__Sm_Updater) IsRegister_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsRegister_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1445,7 +1764,7 @@ func (d *__Sm_Updater) IsRegister_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsRegister_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1456,7 +1775,7 @@ func (d *__Sm_Updater) IsRegister_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) IsRegister_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) IsRegister_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1467,7 +1786,7 @@ func (d *__Sm_Updater) IsRegister_GE(val int) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) RetriedCount_In(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) RetriedCount_In(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1480,7 +1799,7 @@ func (u *__Sm_Updater) RetriedCount_In(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) RetriedCount_Ins(ins ...int) *__Sm_Updater {
+func (u *__Sms_Updater) RetriedCount_Ins(ins ...int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1493,7 +1812,7 @@ func (u *__Sm_Updater) RetriedCount_Ins(ins ...int) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) RetriedCount_NotIn(ins []int) *__Sm_Updater {
+func (u *__Sms_Updater) RetriedCount_NotIn(ins []int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1506,7 +1825,7 @@ func (u *__Sm_Updater) RetriedCount_NotIn(ins []int) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) RetriedCount_Eq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_Eq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1517,7 +1836,7 @@ func (d *__Sm_Updater) RetriedCount_Eq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) RetriedCount_NotEq(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_NotEq(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1528,7 +1847,7 @@ func (d *__Sm_Updater) RetriedCount_NotEq(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) RetriedCount_LT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_LT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1539,7 +1858,7 @@ func (d *__Sm_Updater) RetriedCount_LT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) RetriedCount_LE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_LE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1550,7 +1869,7 @@ func (d *__Sm_Updater) RetriedCount_LE(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) RetriedCount_GT(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_GT(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1561,37 +1880,247 @@ func (d *__Sm_Updater) RetriedCount_GT(val int) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) RetriedCount_GE(val int) *__Sm_Updater {
+func (d *__Sms_Updater) RetriedCount_GE(val int) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " RetriedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Updater) TTL_In(ins []int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) TTL_Ins(ins ...int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) TTL_NotIn(ins []int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Updater) TTL_Eq(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) TTL_NotEq(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) TTL_LT(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) TTL_LE(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) TTL_GT(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) TTL_GE(val int) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Sm_Selector) nextDollars(size int) string {
+func (m *__Sms_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Sm_Selector) nextDollar() string {
+func (m *__Sms_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Sm_Selector) Or() *__Sm_Selector {
+func (u *__Sms_Selector) Or() *__Sms_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Sm_Selector) GenratedCode_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) Id_In(ins []int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) Id_Ins(ins ...int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) Id_NotIn(ins []int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Id NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Selector) Id_Eq(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Id_NotEq(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Id_LT(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Id_LE(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Id_GT(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Id_GE(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Id >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Selector) GenratedCode_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1604,7 +2133,7 @@ func (u *__Sm_Selector) GenratedCode_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) GenratedCode_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) GenratedCode_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1617,7 +2146,7 @@ func (u *__Sm_Selector) GenratedCode_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) GenratedCode_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) GenratedCode_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1630,7 +2159,7 @@ func (u *__Sm_Selector) GenratedCode_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) GenratedCode_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1641,7 +2170,7 @@ func (d *__Sm_Selector) GenratedCode_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) GenratedCode_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1652,7 +2181,7 @@ func (d *__Sm_Selector) GenratedCode_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) GenratedCode_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1663,7 +2192,7 @@ func (d *__Sm_Selector) GenratedCode_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) GenratedCode_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1674,7 +2203,7 @@ func (d *__Sm_Selector) GenratedCode_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) GenratedCode_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1685,7 +2214,7 @@ func (d *__Sm_Selector) GenratedCode_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) GenratedCode_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) GenratedCode_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1696,7 +2225,7 @@ func (d *__Sm_Selector) GenratedCode_GE(val int) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) IsValidPhone_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsValidPhone_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1709,7 +2238,7 @@ func (u *__Sm_Selector) IsValidPhone_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsValidPhone_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) IsValidPhone_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1722,7 +2251,7 @@ func (u *__Sm_Selector) IsValidPhone_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsValidPhone_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsValidPhone_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1735,7 +2264,7 @@ func (u *__Sm_Selector) IsValidPhone_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) IsValidPhone_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1746,7 +2275,7 @@ func (d *__Sm_Selector) IsValidPhone_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsValidPhone_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1757,7 +2286,7 @@ func (d *__Sm_Selector) IsValidPhone_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsValidPhone_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1768,7 +2297,7 @@ func (d *__Sm_Selector) IsValidPhone_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsValidPhone_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1779,7 +2308,7 @@ func (d *__Sm_Selector) IsValidPhone_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsValidPhone_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1790,7 +2319,7 @@ func (d *__Sm_Selector) IsValidPhone_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsValidPhone_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsValidPhone_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1801,7 +2330,7 @@ func (d *__Sm_Selector) IsValidPhone_GE(val int) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) IsConfirmed_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsConfirmed_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1814,7 +2343,7 @@ func (u *__Sm_Selector) IsConfirmed_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsConfirmed_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) IsConfirmed_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1827,7 +2356,7 @@ func (u *__Sm_Selector) IsConfirmed_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsConfirmed_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsConfirmed_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1840,7 +2369,7 @@ func (u *__Sm_Selector) IsConfirmed_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) IsConfirmed_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1851,7 +2380,7 @@ func (d *__Sm_Selector) IsConfirmed_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsConfirmed_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1862,7 +2391,7 @@ func (d *__Sm_Selector) IsConfirmed_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsConfirmed_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1873,7 +2402,7 @@ func (d *__Sm_Selector) IsConfirmed_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsConfirmed_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1884,7 +2413,7 @@ func (d *__Sm_Selector) IsConfirmed_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsConfirmed_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1895,7 +2424,7 @@ func (d *__Sm_Selector) IsConfirmed_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsConfirmed_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsConfirmed_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1906,7 +2435,7 @@ func (d *__Sm_Selector) IsConfirmed_GE(val int) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) IsLogin_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsLogin_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1919,7 +2448,7 @@ func (u *__Sm_Selector) IsLogin_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsLogin_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) IsLogin_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1932,7 +2461,7 @@ func (u *__Sm_Selector) IsLogin_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsLogin_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsLogin_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1945,7 +2474,7 @@ func (u *__Sm_Selector) IsLogin_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) IsLogin_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1956,7 +2485,7 @@ func (d *__Sm_Selector) IsLogin_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsLogin_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1967,7 +2496,7 @@ func (d *__Sm_Selector) IsLogin_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsLogin_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1978,7 +2507,7 @@ func (d *__Sm_Selector) IsLogin_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsLogin_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1989,7 +2518,7 @@ func (d *__Sm_Selector) IsLogin_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsLogin_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2000,7 +2529,7 @@ func (d *__Sm_Selector) IsLogin_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsLogin_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsLogin_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2011,7 +2540,7 @@ func (d *__Sm_Selector) IsLogin_GE(val int) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) IsRegister_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsRegister_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2024,7 +2553,7 @@ func (u *__Sm_Selector) IsRegister_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsRegister_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) IsRegister_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2037,7 +2566,7 @@ func (u *__Sm_Selector) IsRegister_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) IsRegister_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) IsRegister_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2050,7 +2579,7 @@ func (u *__Sm_Selector) IsRegister_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) IsRegister_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2061,7 +2590,7 @@ func (d *__Sm_Selector) IsRegister_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsRegister_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2072,7 +2601,7 @@ func (d *__Sm_Selector) IsRegister_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsRegister_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2083,7 +2612,7 @@ func (d *__Sm_Selector) IsRegister_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsRegister_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2094,7 +2623,7 @@ func (d *__Sm_Selector) IsRegister_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsRegister_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2105,7 +2634,7 @@ func (d *__Sm_Selector) IsRegister_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) IsRegister_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) IsRegister_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2116,7 +2645,7 @@ func (d *__Sm_Selector) IsRegister_GE(val int) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) RetriedCount_In(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) RetriedCount_In(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2129,7 +2658,7 @@ func (u *__Sm_Selector) RetriedCount_In(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) RetriedCount_Ins(ins ...int) *__Sm_Selector {
+func (u *__Sms_Selector) RetriedCount_Ins(ins ...int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2142,7 +2671,7 @@ func (u *__Sm_Selector) RetriedCount_Ins(ins ...int) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) RetriedCount_NotIn(ins []int) *__Sm_Selector {
+func (u *__Sms_Selector) RetriedCount_NotIn(ins []int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2155,7 +2684,7 @@ func (u *__Sm_Selector) RetriedCount_NotIn(ins []int) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) RetriedCount_Eq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_Eq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2166,7 +2695,7 @@ func (d *__Sm_Selector) RetriedCount_Eq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) RetriedCount_NotEq(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_NotEq(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2177,7 +2706,7 @@ func (d *__Sm_Selector) RetriedCount_NotEq(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) RetriedCount_LT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_LT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2188,7 +2717,7 @@ func (d *__Sm_Selector) RetriedCount_LT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) RetriedCount_LE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_LE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2199,7 +2728,7 @@ func (d *__Sm_Selector) RetriedCount_LE(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) RetriedCount_GT(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_GT(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2210,12 +2739,117 @@ func (d *__Sm_Selector) RetriedCount_GT(val int) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) RetriedCount_GE(val int) *__Sm_Selector {
+func (d *__Sms_Selector) RetriedCount_GE(val int) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " RetriedCount >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Selector) TTL_In(ins []int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) TTL_Ins(ins ...int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) TTL_NotIn(ins []int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " TTL NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Selector) TTL_Eq(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) TTL_NotEq(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) TTL_LT(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) TTL_LE(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) TTL_GT(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) TTL_GE(val int) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " TTL >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2225,7 +2859,7 @@ func (d *__Sm_Selector) RetriedCount_GE(val int) *__Sm_Selector {
 
 ////////ints
 
-func (u *__Sm_Deleter) Hash_In(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) Hash_In(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2238,7 +2872,7 @@ func (u *__Sm_Deleter) Hash_In(ins []string) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) Hash_NotIn(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) Hash_NotIn(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2252,7 +2886,7 @@ func (u *__Sm_Deleter) Hash_NotIn(ins []string) *__Sm_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Deleter) Hash_Like(val string) *__Sm_Deleter {
+func (u *__Sms_Deleter) Hash_Like(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2263,7 +2897,7 @@ func (u *__Sm_Deleter) Hash_Like(val string) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) Hash_Eq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) Hash_Eq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2274,7 +2908,7 @@ func (d *__Sm_Deleter) Hash_Eq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) Hash_NotEq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) Hash_NotEq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2285,7 +2919,67 @@ func (d *__Sm_Deleter) Hash_NotEq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) ClientPhone_In(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) AppUuid_In(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) AppUuid_NotIn(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Deleter) AppUuid_Like(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Deleter) AppUuid_Eq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) AppUuid_NotEq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Deleter) ClientPhone_In(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2298,7 +2992,7 @@ func (u *__Sm_Deleter) ClientPhone_In(ins []string) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) ClientPhone_NotIn(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) ClientPhone_NotIn(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2312,7 +3006,7 @@ func (u *__Sm_Deleter) ClientPhone_NotIn(ins []string) *__Sm_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Deleter) ClientPhone_Like(val string) *__Sm_Deleter {
+func (u *__Sms_Deleter) ClientPhone_Like(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2323,7 +3017,7 @@ func (u *__Sm_Deleter) ClientPhone_Like(val string) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) ClientPhone_Eq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) ClientPhone_Eq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2334,7 +3028,7 @@ func (d *__Sm_Deleter) ClientPhone_Eq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) ClientPhone_NotEq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) ClientPhone_NotEq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2345,7 +3039,7 @@ func (d *__Sm_Deleter) ClientPhone_NotEq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) SmsSenderNumber_In(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSenderNumber_In(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2358,7 +3052,7 @@ func (u *__Sm_Deleter) SmsSenderNumber_In(ins []string) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) SmsSenderNumber_NotIn(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSenderNumber_NotIn(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2372,7 +3066,7 @@ func (u *__Sm_Deleter) SmsSenderNumber_NotIn(ins []string) *__Sm_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Deleter) SmsSenderNumber_Like(val string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSenderNumber_Like(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2383,7 +3077,7 @@ func (u *__Sm_Deleter) SmsSenderNumber_Like(val string) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) SmsSenderNumber_Eq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) SmsSenderNumber_Eq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2394,7 +3088,7 @@ func (d *__Sm_Deleter) SmsSenderNumber_Eq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) SmsSenderNumber_NotEq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) SmsSenderNumber_NotEq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2405,7 +3099,7 @@ func (d *__Sm_Deleter) SmsSenderNumber_NotEq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) SmsSendStatues_In(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSendStatues_In(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2418,7 +3112,7 @@ func (u *__Sm_Deleter) SmsSendStatues_In(ins []string) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) SmsSendStatues_NotIn(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSendStatues_NotIn(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2432,7 +3126,7 @@ func (u *__Sm_Deleter) SmsSendStatues_NotIn(ins []string) *__Sm_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Deleter) SmsSendStatues_Like(val string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsSendStatues_Like(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2443,7 +3137,7 @@ func (u *__Sm_Deleter) SmsSendStatues_Like(val string) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) SmsSendStatues_Eq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) SmsSendStatues_Eq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2454,7 +3148,7 @@ func (d *__Sm_Deleter) SmsSendStatues_Eq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) SmsSendStatues_NotEq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) SmsSendStatues_NotEq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2465,7 +3159,127 @@ func (d *__Sm_Deleter) SmsSendStatues_NotEq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (u *__Sm_Deleter) Carrier_In(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) SmsHttpBody_In(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) SmsHttpBody_NotIn(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Deleter) SmsHttpBody_Like(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Deleter) SmsHttpBody_Eq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) SmsHttpBody_NotEq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Deleter) Err_In(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Deleter) Err_NotIn(ins []string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Deleter) Err_Like(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Deleter) Err_Eq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Deleter) Err_NotEq(val string) *__Sms_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Deleter) Carrier_In(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2478,7 +3292,7 @@ func (u *__Sm_Deleter) Carrier_In(ins []string) *__Sm_Deleter {
 	return u
 }
 
-func (u *__Sm_Deleter) Carrier_NotIn(ins []string) *__Sm_Deleter {
+func (u *__Sms_Deleter) Carrier_NotIn(ins []string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2492,7 +3306,7 @@ func (u *__Sm_Deleter) Carrier_NotIn(ins []string) *__Sm_Deleter {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Deleter) Carrier_Like(val string) *__Sm_Deleter {
+func (u *__Sms_Deleter) Carrier_Like(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2503,7 +3317,7 @@ func (u *__Sm_Deleter) Carrier_Like(val string) *__Sm_Deleter {
 	return u
 }
 
-func (d *__Sm_Deleter) Carrier_Eq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) Carrier_Eq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2514,7 +3328,7 @@ func (d *__Sm_Deleter) Carrier_Eq(val string) *__Sm_Deleter {
 	return d
 }
 
-func (d *__Sm_Deleter) Carrier_NotEq(val string) *__Sm_Deleter {
+func (d *__Sms_Deleter) Carrier_NotEq(val string) *__Sms_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2527,7 +3341,7 @@ func (d *__Sm_Deleter) Carrier_NotEq(val string) *__Sm_Deleter {
 
 ////////ints
 
-func (u *__Sm_Updater) Hash_In(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) Hash_In(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2540,7 +3354,7 @@ func (u *__Sm_Updater) Hash_In(ins []string) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) Hash_NotIn(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) Hash_NotIn(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2554,7 +3368,7 @@ func (u *__Sm_Updater) Hash_NotIn(ins []string) *__Sm_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Updater) Hash_Like(val string) *__Sm_Updater {
+func (u *__Sms_Updater) Hash_Like(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2565,7 +3379,7 @@ func (u *__Sm_Updater) Hash_Like(val string) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) Hash_Eq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) Hash_Eq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2576,7 +3390,7 @@ func (d *__Sm_Updater) Hash_Eq(val string) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) Hash_NotEq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) Hash_NotEq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2587,7 +3401,67 @@ func (d *__Sm_Updater) Hash_NotEq(val string) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) ClientPhone_In(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) AppUuid_In(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) AppUuid_NotIn(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Updater) AppUuid_Like(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Updater) AppUuid_Eq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) AppUuid_NotEq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Updater) ClientPhone_In(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2600,7 +3474,7 @@ func (u *__Sm_Updater) ClientPhone_In(ins []string) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) ClientPhone_NotIn(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) ClientPhone_NotIn(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2614,7 +3488,7 @@ func (u *__Sm_Updater) ClientPhone_NotIn(ins []string) *__Sm_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Updater) ClientPhone_Like(val string) *__Sm_Updater {
+func (u *__Sms_Updater) ClientPhone_Like(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2625,7 +3499,7 @@ func (u *__Sm_Updater) ClientPhone_Like(val string) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) ClientPhone_Eq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) ClientPhone_Eq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2636,7 +3510,7 @@ func (d *__Sm_Updater) ClientPhone_Eq(val string) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) ClientPhone_NotEq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) ClientPhone_NotEq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2647,7 +3521,7 @@ func (d *__Sm_Updater) ClientPhone_NotEq(val string) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) SmsSenderNumber_In(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSenderNumber_In(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2660,7 +3534,7 @@ func (u *__Sm_Updater) SmsSenderNumber_In(ins []string) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) SmsSenderNumber_NotIn(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSenderNumber_NotIn(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2674,7 +3548,7 @@ func (u *__Sm_Updater) SmsSenderNumber_NotIn(ins []string) *__Sm_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Updater) SmsSenderNumber_Like(val string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSenderNumber_Like(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2685,7 +3559,7 @@ func (u *__Sm_Updater) SmsSenderNumber_Like(val string) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) SmsSenderNumber_Eq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) SmsSenderNumber_Eq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2696,7 +3570,7 @@ func (d *__Sm_Updater) SmsSenderNumber_Eq(val string) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) SmsSenderNumber_NotEq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) SmsSenderNumber_NotEq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2707,7 +3581,7 @@ func (d *__Sm_Updater) SmsSenderNumber_NotEq(val string) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) SmsSendStatues_In(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSendStatues_In(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2720,7 +3594,7 @@ func (u *__Sm_Updater) SmsSendStatues_In(ins []string) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) SmsSendStatues_NotIn(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSendStatues_NotIn(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2734,7 +3608,7 @@ func (u *__Sm_Updater) SmsSendStatues_NotIn(ins []string) *__Sm_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Updater) SmsSendStatues_Like(val string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSendStatues_Like(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2745,7 +3619,7 @@ func (u *__Sm_Updater) SmsSendStatues_Like(val string) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) SmsSendStatues_Eq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) SmsSendStatues_Eq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2756,7 +3630,7 @@ func (d *__Sm_Updater) SmsSendStatues_Eq(val string) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) SmsSendStatues_NotEq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) SmsSendStatues_NotEq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2767,7 +3641,127 @@ func (d *__Sm_Updater) SmsSendStatues_NotEq(val string) *__Sm_Updater {
 	return d
 }
 
-func (u *__Sm_Updater) Carrier_In(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsHttpBody_In(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) SmsHttpBody_NotIn(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Updater) SmsHttpBody_Like(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Updater) SmsHttpBody_Eq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) SmsHttpBody_NotEq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Updater) Err_In(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Updater) Err_NotIn(ins []string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Updater) Err_Like(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Updater) Err_Eq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Updater) Err_NotEq(val string) *__Sms_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Updater) Carrier_In(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2780,7 +3774,7 @@ func (u *__Sm_Updater) Carrier_In(ins []string) *__Sm_Updater {
 	return u
 }
 
-func (u *__Sm_Updater) Carrier_NotIn(ins []string) *__Sm_Updater {
+func (u *__Sms_Updater) Carrier_NotIn(ins []string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2794,7 +3788,7 @@ func (u *__Sm_Updater) Carrier_NotIn(ins []string) *__Sm_Updater {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Updater) Carrier_Like(val string) *__Sm_Updater {
+func (u *__Sms_Updater) Carrier_Like(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2805,7 +3799,7 @@ func (u *__Sm_Updater) Carrier_Like(val string) *__Sm_Updater {
 	return u
 }
 
-func (d *__Sm_Updater) Carrier_Eq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) Carrier_Eq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2816,7 +3810,7 @@ func (d *__Sm_Updater) Carrier_Eq(val string) *__Sm_Updater {
 	return d
 }
 
-func (d *__Sm_Updater) Carrier_NotEq(val string) *__Sm_Updater {
+func (d *__Sms_Updater) Carrier_NotEq(val string) *__Sms_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2829,7 +3823,7 @@ func (d *__Sm_Updater) Carrier_NotEq(val string) *__Sm_Updater {
 
 ////////ints
 
-func (u *__Sm_Selector) Hash_In(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) Hash_In(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2842,7 +3836,7 @@ func (u *__Sm_Selector) Hash_In(ins []string) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) Hash_NotIn(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) Hash_NotIn(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2856,7 +3850,7 @@ func (u *__Sm_Selector) Hash_NotIn(ins []string) *__Sm_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Selector) Hash_Like(val string) *__Sm_Selector {
+func (u *__Sms_Selector) Hash_Like(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2867,7 +3861,7 @@ func (u *__Sm_Selector) Hash_Like(val string) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) Hash_Eq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) Hash_Eq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2878,7 +3872,7 @@ func (d *__Sm_Selector) Hash_Eq(val string) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) Hash_NotEq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) Hash_NotEq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2889,7 +3883,67 @@ func (d *__Sm_Selector) Hash_NotEq(val string) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) ClientPhone_In(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) AppUuid_In(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) AppUuid_NotIn(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AppUuid NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Selector) AppUuid_Like(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Selector) AppUuid_Eq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) AppUuid_NotEq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AppUuid != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Selector) ClientPhone_In(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2902,7 +3956,7 @@ func (u *__Sm_Selector) ClientPhone_In(ins []string) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) ClientPhone_NotIn(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) ClientPhone_NotIn(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2916,7 +3970,7 @@ func (u *__Sm_Selector) ClientPhone_NotIn(ins []string) *__Sm_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Selector) ClientPhone_Like(val string) *__Sm_Selector {
+func (u *__Sms_Selector) ClientPhone_Like(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2927,7 +3981,7 @@ func (u *__Sm_Selector) ClientPhone_Like(val string) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) ClientPhone_Eq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) ClientPhone_Eq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2938,7 +3992,7 @@ func (d *__Sm_Selector) ClientPhone_Eq(val string) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) ClientPhone_NotEq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) ClientPhone_NotEq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2949,7 +4003,7 @@ func (d *__Sm_Selector) ClientPhone_NotEq(val string) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) SmsSenderNumber_In(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSenderNumber_In(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2962,7 +4016,7 @@ func (u *__Sm_Selector) SmsSenderNumber_In(ins []string) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) SmsSenderNumber_NotIn(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSenderNumber_NotIn(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2976,7 +4030,7 @@ func (u *__Sm_Selector) SmsSenderNumber_NotIn(ins []string) *__Sm_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Selector) SmsSenderNumber_Like(val string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSenderNumber_Like(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2987,7 +4041,7 @@ func (u *__Sm_Selector) SmsSenderNumber_Like(val string) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) SmsSenderNumber_Eq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) SmsSenderNumber_Eq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2998,7 +4052,7 @@ func (d *__Sm_Selector) SmsSenderNumber_Eq(val string) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) SmsSenderNumber_NotEq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) SmsSenderNumber_NotEq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3009,7 +4063,7 @@ func (d *__Sm_Selector) SmsSenderNumber_NotEq(val string) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) SmsSendStatues_In(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSendStatues_In(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3022,7 +4076,7 @@ func (u *__Sm_Selector) SmsSendStatues_In(ins []string) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) SmsSendStatues_NotIn(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSendStatues_NotIn(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3036,7 +4090,7 @@ func (u *__Sm_Selector) SmsSendStatues_NotIn(ins []string) *__Sm_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Selector) SmsSendStatues_Like(val string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsSendStatues_Like(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3047,7 +4101,7 @@ func (u *__Sm_Selector) SmsSendStatues_Like(val string) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) SmsSendStatues_Eq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) SmsSendStatues_Eq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3058,7 +4112,7 @@ func (d *__Sm_Selector) SmsSendStatues_Eq(val string) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) SmsSendStatues_NotEq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) SmsSendStatues_NotEq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3069,7 +4123,127 @@ func (d *__Sm_Selector) SmsSendStatues_NotEq(val string) *__Sm_Selector {
 	return d
 }
 
-func (u *__Sm_Selector) Carrier_In(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) SmsHttpBody_In(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) SmsHttpBody_NotIn(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " SmsHttpBody NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Selector) SmsHttpBody_Like(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Selector) SmsHttpBody_Eq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) SmsHttpBody_NotEq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " SmsHttpBody != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Selector) Err_In(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Sms_Selector) Err_NotIn(ins []string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Err NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__Sms_Selector) Err_Like(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Sms_Selector) Err_Eq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Sms_Selector) Err_NotEq(val string) *__Sms_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Err != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Sms_Selector) Carrier_In(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3082,7 +4256,7 @@ func (u *__Sm_Selector) Carrier_In(ins []string) *__Sm_Selector {
 	return u
 }
 
-func (u *__Sm_Selector) Carrier_NotIn(ins []string) *__Sm_Selector {
+func (u *__Sms_Selector) Carrier_NotIn(ins []string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -3096,7 +4270,7 @@ func (u *__Sm_Selector) Carrier_NotIn(ins []string) *__Sm_Selector {
 }
 
 //must be used like: UserName_like("hamid%")
-func (u *__Sm_Selector) Carrier_Like(val string) *__Sm_Selector {
+func (u *__Sms_Selector) Carrier_Like(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3107,7 +4281,7 @@ func (u *__Sm_Selector) Carrier_Like(val string) *__Sm_Selector {
 	return u
 }
 
-func (d *__Sm_Selector) Carrier_Eq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) Carrier_Eq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3118,7 +4292,7 @@ func (d *__Sm_Selector) Carrier_Eq(val string) *__Sm_Selector {
 	return d
 }
 
-func (d *__Sm_Selector) Carrier_NotEq(val string) *__Sm_Selector {
+func (d *__Sms_Selector) Carrier_NotEq(val string) *__Sms_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -3135,12 +4309,35 @@ func (d *__Sm_Selector) Carrier_NotEq(val string) *__Sm_Selector {
 
 //ints
 
+func (u *__Sms_Updater) Id(newVal int) *__Sms_Updater {
+	up := updateCol{" Id = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Id = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Sms_Updater) Id_Increment(count int) *__Sms_Updater {
+	if count > 0 {
+		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Id = Id+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" Id = Id- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Id = Id- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
 //string
 
 //ints
 
 //string
-func (u *__Sm_Updater) Hash(newVal string) *__Sm_Updater {
+func (u *__Sms_Updater) Hash(newVal string) *__Sms_Updater {
 	up := updateCol{"Hash = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Hash = "+ u.nextDollar()] = newVal
@@ -3150,7 +4347,17 @@ func (u *__Sm_Updater) Hash(newVal string) *__Sm_Updater {
 //ints
 
 //string
-func (u *__Sm_Updater) ClientPhone(newVal string) *__Sm_Updater {
+func (u *__Sms_Updater) AppUuid(newVal string) *__Sms_Updater {
+	up := updateCol{"AppUuid = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AppUuid = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__Sms_Updater) ClientPhone(newVal string) *__Sms_Updater {
 	up := updateCol{"ClientPhone = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" ClientPhone = "+ u.nextDollar()] = newVal
@@ -3159,14 +4366,14 @@ func (u *__Sm_Updater) ClientPhone(newVal string) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) GenratedCode(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) GenratedCode(newVal int) *__Sms_Updater {
 	up := updateCol{" GenratedCode = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" GenratedCode = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) GenratedCode_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) GenratedCode_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" GenratedCode = GenratedCode+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3187,7 +4394,7 @@ func (u *__Sm_Updater) GenratedCode_Increment(count int) *__Sm_Updater {
 //ints
 
 //string
-func (u *__Sm_Updater) SmsSenderNumber(newVal string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSenderNumber(newVal string) *__Sms_Updater {
 	up := updateCol{"SmsSenderNumber = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SmsSenderNumber = "+ u.nextDollar()] = newVal
@@ -3197,7 +4404,7 @@ func (u *__Sm_Updater) SmsSenderNumber(newVal string) *__Sm_Updater {
 //ints
 
 //string
-func (u *__Sm_Updater) SmsSendStatues(newVal string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsSendStatues(newVal string) *__Sms_Updater {
 	up := updateCol{"SmsSendStatues = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" SmsSendStatues = "+ u.nextDollar()] = newVal
@@ -3207,7 +4414,27 @@ func (u *__Sm_Updater) SmsSendStatues(newVal string) *__Sm_Updater {
 //ints
 
 //string
-func (u *__Sm_Updater) Carrier(newVal string) *__Sm_Updater {
+func (u *__Sms_Updater) SmsHttpBody(newVal string) *__Sms_Updater {
+	up := updateCol{"SmsHttpBody = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" SmsHttpBody = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__Sms_Updater) Err(newVal string) *__Sms_Updater {
+	up := updateCol{"Err = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Err = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__Sms_Updater) Carrier(newVal string) *__Sms_Updater {
 	up := updateCol{"Carrier = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Carrier = "+ u.nextDollar()] = newVal
@@ -3220,14 +4447,14 @@ func (u *__Sm_Updater) Carrier(newVal string) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) IsValidPhone(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) IsValidPhone(newVal int) *__Sms_Updater {
 	up := updateCol{" IsValidPhone = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" IsValidPhone = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) IsValidPhone_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) IsValidPhone_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" IsValidPhone = IsValidPhone+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3247,14 +4474,14 @@ func (u *__Sm_Updater) IsValidPhone_Increment(count int) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) IsConfirmed(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) IsConfirmed(newVal int) *__Sms_Updater {
 	up := updateCol{" IsConfirmed = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" IsConfirmed = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) IsConfirmed_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) IsConfirmed_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" IsConfirmed = IsConfirmed+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3274,14 +4501,14 @@ func (u *__Sm_Updater) IsConfirmed_Increment(count int) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) IsLogin(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) IsLogin(newVal int) *__Sms_Updater {
 	up := updateCol{" IsLogin = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" IsLogin = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) IsLogin_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) IsLogin_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" IsLogin = IsLogin+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3301,14 +4528,14 @@ func (u *__Sm_Updater) IsLogin_Increment(count int) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) IsRegister(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) IsRegister(newVal int) *__Sms_Updater {
 	up := updateCol{" IsRegister = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" IsRegister = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) IsRegister_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) IsRegister_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" IsRegister = IsRegister+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3328,14 +4555,14 @@ func (u *__Sm_Updater) IsRegister_Increment(count int) *__Sm_Updater {
 
 //ints
 
-func (u *__Sm_Updater) RetriedCount(newVal int) *__Sm_Updater {
+func (u *__Sms_Updater) RetriedCount(newVal int) *__Sms_Updater {
 	up := updateCol{" RetriedCount = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" RetriedCount = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Sm_Updater) RetriedCount_Increment(count int) *__Sm_Updater {
+func (u *__Sms_Updater) RetriedCount_Increment(count int) *__Sms_Updater {
 	if count > 0 {
 		up := updateCol{" RetriedCount = RetriedCount+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -3353,223 +4580,310 @@ func (u *__Sm_Updater) RetriedCount_Increment(count int) *__Sm_Updater {
 
 //string
 
+//ints
+
+func (u *__Sms_Updater) TTL(newVal int) *__Sms_Updater {
+	up := updateCol{" TTL = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" TTL = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Sms_Updater) TTL_Increment(count int) *__Sms_Updater {
+	if count > 0 {
+		up := updateCol{" TTL = TTL+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" TTL = TTL+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" TTL = TTL- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" TTL = TTL- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Sm_Selector) OrderBy_Id_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Id_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Id_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Id_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_Id() *__Sm_Selector {
+func (u *__Sms_Selector) Select_Id() *__Sms_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Hash_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Hash_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Hash DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Hash_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Hash_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Hash ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_Hash() *__Sm_Selector {
+func (u *__Sms_Selector) Select_Hash() *__Sms_Selector {
 	u.selectCol = "Hash"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_ClientPhone_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_AppUuid_Desc() *__Sms_Selector {
+	u.orderBy = " ORDER BY AppUuid DESC "
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_AppUuid_Asc() *__Sms_Selector {
+	u.orderBy = " ORDER BY AppUuid ASC "
+	return u
+}
+
+func (u *__Sms_Selector) Select_AppUuid() *__Sms_Selector {
+	u.selectCol = "AppUuid"
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_ClientPhone_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY ClientPhone DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_ClientPhone_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_ClientPhone_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY ClientPhone ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_ClientPhone() *__Sm_Selector {
+func (u *__Sms_Selector) Select_ClientPhone() *__Sms_Selector {
 	u.selectCol = "ClientPhone"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_GenratedCode_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_GenratedCode_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY GenratedCode DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_GenratedCode_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_GenratedCode_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY GenratedCode ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_GenratedCode() *__Sm_Selector {
+func (u *__Sms_Selector) Select_GenratedCode() *__Sms_Selector {
 	u.selectCol = "GenratedCode"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_SmsSenderNumber_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_SmsSenderNumber_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY SmsSenderNumber DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_SmsSenderNumber_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_SmsSenderNumber_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY SmsSenderNumber ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_SmsSenderNumber() *__Sm_Selector {
+func (u *__Sms_Selector) Select_SmsSenderNumber() *__Sms_Selector {
 	u.selectCol = "SmsSenderNumber"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_SmsSendStatues_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_SmsSendStatues_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY SmsSendStatues DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_SmsSendStatues_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_SmsSendStatues_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY SmsSendStatues ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_SmsSendStatues() *__Sm_Selector {
+func (u *__Sms_Selector) Select_SmsSendStatues() *__Sms_Selector {
 	u.selectCol = "SmsSendStatues"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Carrier_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_SmsHttpBody_Desc() *__Sms_Selector {
+	u.orderBy = " ORDER BY SmsHttpBody DESC "
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_SmsHttpBody_Asc() *__Sms_Selector {
+	u.orderBy = " ORDER BY SmsHttpBody ASC "
+	return u
+}
+
+func (u *__Sms_Selector) Select_SmsHttpBody() *__Sms_Selector {
+	u.selectCol = "SmsHttpBody"
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_Err_Desc() *__Sms_Selector {
+	u.orderBy = " ORDER BY Err DESC "
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_Err_Asc() *__Sms_Selector {
+	u.orderBy = " ORDER BY Err ASC "
+	return u
+}
+
+func (u *__Sms_Selector) Select_Err() *__Sms_Selector {
+	u.selectCol = "Err"
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_Carrier_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Carrier DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Carrier_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Carrier_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Carrier ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_Carrier() *__Sm_Selector {
+func (u *__Sms_Selector) Select_Carrier() *__Sms_Selector {
 	u.selectCol = "Carrier"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Country_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Country_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Country DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_Country_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_Country_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY Country ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_Country() *__Sm_Selector {
+func (u *__Sms_Selector) Select_Country() *__Sms_Selector {
 	u.selectCol = "Country"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsValidPhone_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsValidPhone_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsValidPhone DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsValidPhone_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsValidPhone_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsValidPhone ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_IsValidPhone() *__Sm_Selector {
+func (u *__Sms_Selector) Select_IsValidPhone() *__Sms_Selector {
 	u.selectCol = "IsValidPhone"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsConfirmed_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsConfirmed_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsConfirmed DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsConfirmed_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsConfirmed_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsConfirmed ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_IsConfirmed() *__Sm_Selector {
+func (u *__Sms_Selector) Select_IsConfirmed() *__Sms_Selector {
 	u.selectCol = "IsConfirmed"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsLogin_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsLogin_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsLogin DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsLogin_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsLogin_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsLogin ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_IsLogin() *__Sm_Selector {
+func (u *__Sms_Selector) Select_IsLogin() *__Sms_Selector {
 	u.selectCol = "IsLogin"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsRegister_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsRegister_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsRegister DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_IsRegister_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_IsRegister_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY IsRegister ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_IsRegister() *__Sm_Selector {
+func (u *__Sms_Selector) Select_IsRegister() *__Sms_Selector {
 	u.selectCol = "IsRegister"
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_RetriedCount_Desc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_RetriedCount_Desc() *__Sms_Selector {
 	u.orderBy = " ORDER BY RetriedCount DESC "
 	return u
 }
 
-func (u *__Sm_Selector) OrderBy_RetriedCount_Asc() *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_RetriedCount_Asc() *__Sms_Selector {
 	u.orderBy = " ORDER BY RetriedCount ASC "
 	return u
 }
 
-func (u *__Sm_Selector) Select_RetriedCount() *__Sm_Selector {
+func (u *__Sms_Selector) Select_RetriedCount() *__Sms_Selector {
 	u.selectCol = "RetriedCount"
 	return u
 }
 
-func (u *__Sm_Selector) Limit(num int) *__Sm_Selector {
+func (u *__Sms_Selector) OrderBy_TTL_Desc() *__Sms_Selector {
+	u.orderBy = " ORDER BY TTL DESC "
+	return u
+}
+
+func (u *__Sms_Selector) OrderBy_TTL_Asc() *__Sms_Selector {
+	u.orderBy = " ORDER BY TTL ASC "
+	return u
+}
+
+func (u *__Sms_Selector) Select_TTL() *__Sms_Selector {
+	u.selectCol = "TTL"
+	return u
+}
+
+func (u *__Sms_Selector) Limit(num int) *__Sms_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Sm_Selector) Offset(num int) *__Sm_Selector {
+func (u *__Sms_Selector) Offset(num int) *__Sms_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__Sm_Selector) Order_Rand() *__Sm_Selector {
+func (u *__Sms_Selector) Order_Rand() *__Sms_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Sm_Selector) _stoSql() (string, []interface{}) {
+func (u *__Sms_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
 	sqlstr := "SELECT " + u.selectCol + " FROM sun.sms"
@@ -3592,20 +4906,20 @@ func (u *__Sm_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Sm_Selector) GetRow(db *sqlx.DB) (*Sm, error) {
+func (u *__Sms_Selector) GetRow(db *sqlx.DB) (*Sms, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &Sm{}
+	row := &Sms{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3613,25 +4927,25 @@ func (u *__Sm_Selector) GetRow(db *sqlx.DB) (*Sm, error) {
 
 	row._exists = true
 
-	OnSm_LoadOne(row)
+	OnSms_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Sm_Selector) GetRows(db *sqlx.DB) ([]*Sm, error) {
+func (u *__Sms_Selector) GetRows(db *sqlx.DB) ([]*Sms, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*Sm
+	var rows []*Sms
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3645,25 +4959,25 @@ func (u *__Sm_Selector) GetRows(db *sqlx.DB) ([]*Sm, error) {
 		rows[i]._exists = true
 	}
 
-	OnSm_LoadMany(rows)
+	OnSms_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Sm_Selector) GetRows2(db *sqlx.DB) ([]Sm, error) {
+func (u *__Sms_Selector) GetRows2(db *sqlx.DB) ([]Sms, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*Sm
+	var rows []*Sms
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3677,9 +4991,9 @@ func (u *__Sm_Selector) GetRows2(db *sqlx.DB) ([]Sm, error) {
 		rows[i]._exists = true
 	}
 
-	OnSm_LoadMany(rows)
+	OnSms_LoadMany(rows)
 
-	rows2 := make([]Sm, len(rows))
+	rows2 := make([]Sms, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -3688,12 +5002,12 @@ func (u *__Sm_Selector) GetRows2(db *sqlx.DB) ([]Sm, error) {
 	return rows2, nil
 }
 
-func (u *__Sm_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__Sms_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -3701,7 +5015,7 @@ func (u *__Sm_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return "", err
@@ -3710,19 +5024,19 @@ func (u *__Sm_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Sm_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__Sms_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3731,19 +5045,19 @@ func (u *__Sm_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Sm_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__Sms_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -3752,19 +5066,19 @@ func (u *__Sm_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Sm_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__Sms_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3774,7 +5088,7 @@ func (u *__Sm_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Sm_Updater) Update(db XODB) (int, error) {
+func (u *__Sms_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -3801,12 +5115,12 @@ func (u *__Sm_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3814,7 +5128,7 @@ func (u *__Sm_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3823,7 +5137,7 @@ func (u *__Sm_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Sm_Deleter) Delete(db XODB) (int, error) {
+func (d *__Sms_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -3839,12 +5153,12 @@ func (d *__Sm_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.sms WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3853,7 +5167,7 @@ func (d *__Sm_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -3862,20 +5176,20 @@ func (d *__Sm_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Sm ////////////////
+///////////////////////// Mass insert - replace for  Sms ////////////////
 
-func MassInsert_Sm(rows []Sm, db XODB) error {
+func MassInsert_Sms(rows []Sms, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.sms (" +
-		"Hash, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount" +
+		"Hash, AppUuid, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, SmsHttpBody, Err, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount, TTL" +
 		") VALUES " + insVals
 
 	// run query
@@ -3884,10 +5198,13 @@ func MassInsert_Sm(rows []Sm, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Hash)
+		vals = append(vals, row.AppUuid)
 		vals = append(vals, row.ClientPhone)
 		vals = append(vals, row.GenratedCode)
 		vals = append(vals, row.SmsSenderNumber)
 		vals = append(vals, row.SmsSendStatues)
+		vals = append(vals, row.SmsHttpBody)
+		vals = append(vals, row.Err)
 		vals = append(vals, row.Carrier)
 		vals = append(vals, row.Country)
 		vals = append(vals, row.IsValidPhone)
@@ -3895,15 +5212,16 @@ func MassInsert_Sm(rows []Sm, db XODB) error {
 		vals = append(vals, row.IsLogin)
 		vals = append(vals, row.IsRegister)
 		vals = append(vals, row.RetriedCount)
+		vals = append(vals, row.TTL)
 
 	}
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
@@ -3912,15 +5230,15 @@ func MassInsert_Sm(rows []Sm, db XODB) error {
 	return nil
 }
 
-func MassReplace_Sm(rows []Sm, db XODB) error {
+func MassReplace_Sms(rows []Sms, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.sms (" +
-		"Hash, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount" +
+		"Hash, AppUuid, ClientPhone, GenratedCode, SmsSenderNumber, SmsSendStatues, SmsHttpBody, Err, Carrier, Country, IsValidPhone, IsConfirmed, IsLogin, IsRegister, RetriedCount, TTL" +
 		") VALUES " + insVals
 
 	// run query
@@ -3929,10 +5247,13 @@ func MassReplace_Sm(rows []Sm, db XODB) error {
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Hash)
+		vals = append(vals, row.AppUuid)
 		vals = append(vals, row.ClientPhone)
 		vals = append(vals, row.GenratedCode)
 		vals = append(vals, row.SmsSenderNumber)
 		vals = append(vals, row.SmsSendStatues)
+		vals = append(vals, row.SmsHttpBody)
+		vals = append(vals, row.Err)
 		vals = append(vals, row.Carrier)
 		vals = append(vals, row.Country)
 		vals = append(vals, row.IsValidPhone)
@@ -3940,15 +5261,16 @@ func MassReplace_Sm(rows []Sm, db XODB) error {
 		vals = append(vals, row.IsLogin)
 		vals = append(vals, row.IsRegister)
 		vals = append(vals, row.RetriedCount)
+		vals = append(vals, row.TTL)
 
 	}
 
-	if LogTableSqlReq.Sm {
+	if LogTableSqlReq.Sms {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Sm {
+		if LogTableSqlReq.Sms {
 			XOLogErr(err)
 		}
 		return err
@@ -3958,6 +5280,14 @@ func MassReplace_Sm(rows []Sm, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
+
+//
 
 //
 

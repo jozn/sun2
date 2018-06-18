@@ -5,8 +5,24 @@ import (
 	"ms/sun/shared/x"
 )
 
+func SelfUserView(UserId int) *x.PB_SelfUserView {
+	user, ok := x.Store.GetUserByUserId(UserId)
+	_ = user
+	if !ok {
+		return &x.PB_SelfUserView{}
+	}
+	view := &x.PB_SelfUserView{
+		UserView: &x.PB_UserView{
+			UserName: "sample",
+		},
+	}
+
+	return view
+}
+
 func UserViewAndMe(UserId, MeId int) *x.PB_UserView {
 	user, ok := x.Store.GetUserByUserId(UserId)
+	_ = user
 	if !ok {
 		return &x.PB_UserView{
 			UserId:    int32(0),
@@ -17,21 +33,21 @@ func UserViewAndMe(UserId, MeId int) *x.PB_UserView {
 	}
 
 	view := &x.PB_UserView{
-		UserId:             int32(user.UserId),
-		UserName:           user.UserName,
-		FirstName:          user.FirstName,
-		LastName:           user.LastName,
-		AvatarId:           int64(user.AvatarId),
-		ProfilePrivacyEnum: int32(user.ProfilePrivacyEnum),
-		Phone:              int64(user.Phone),
-		About:              user.About,
-		FollowersCount:     int32(user.FollowersCount),
-		FollowingCount:     int32(user.FollowingCount),
-		PostsCount:         int32(user.PostsCount),
-		MediaCount:         int32(user.MediaCount),
-		LikesCount:         int32(user.LikesCount),
-		ResharedCount:      int32(user.ResharedCount),
-		//LastActiveTime: int32(user.LastActiveTime),
+	/*UserId:             int32(user.UserId),
+	UserName:           user.UserName,
+	FirstName:          user.FirstName,
+	LastName:           user.LastName,
+	AvatarId:           int64(user.AvatarId),
+	ProfilePrivacyEnum: int32(user.ProfilePrivacyEnum),
+	Phone:              int64(user.Phone),
+	About:              user.About,
+	FollowersCount:     int32(user.FollowersCount),
+	FollowingCount:     int32(user.FollowingCount),
+	PostsCount:         int32(user.PostsCount),
+	MediaCount:         int32(user.MediaCount),
+	LikesCount:         int32(user.LikesCount),
+	ResharedCount:      int32(user.ResharedCount),*/
+	//LastActiveTime: int32(user.LastActiveTime),
 	}
 
 	view.MyFollwing = memcache_service.DoesUserFollows(MeId, UserId)

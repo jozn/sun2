@@ -22,7 +22,7 @@ enum RPC_Chat_Enum {
     SetRoomActionDoing = 7576;
     GetChatList = 2677;
     GetChatHistory = 4793;
-    PushRoomsChange = 7471;
+    AddRoomsChange = 1632;
     GetRoomsChange = 4724;
 }
 enum RPC_General_Enum {

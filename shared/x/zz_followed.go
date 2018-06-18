@@ -233,18 +233,18 @@ type __Followed_Selector struct {
 }
 
 func NewFollowed_Deleter() *__Followed_Deleter {
-	d := __Followed_Deleter{whereSep: " AND "}
+	d := __Followed_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewFollowed_Updater() *__Followed_Updater {
-	u := __Followed_Updater{whereSep: " AND "}
+	u := __Followed_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewFollowed_Selector() *__Followed_Selector {
-	u := __Followed_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Followed_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

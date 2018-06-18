@@ -232,18 +232,18 @@ type __NotifyRemoved_Selector struct {
 }
 
 func NewNotifyRemoved_Deleter() *__NotifyRemoved_Deleter {
-	d := __NotifyRemoved_Deleter{whereSep: " AND "}
+	d := __NotifyRemoved_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewNotifyRemoved_Updater() *__NotifyRemoved_Updater {
-	u := __NotifyRemoved_Updater{whereSep: " AND "}
+	u := __NotifyRemoved_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewNotifyRemoved_Selector() *__NotifyRemoved_Selector {
-	u := __NotifyRemoved_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __NotifyRemoved_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

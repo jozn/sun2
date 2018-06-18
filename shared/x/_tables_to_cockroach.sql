@@ -228,12 +228,15 @@ CREATE TABLE IF NOT EXISTS sun.setting_notifications (
 
 /*Table: sms  */
 CREATE TABLE IF NOT EXISTS sun.sms (
-    id UNKNOWN_sqlToGo__ PRIMARY KEY NOT NULL ,
+    id int PRIMARY KEY NOT NULL ,
     hash string NOT NULL ,
+    app_uuid string NOT NULL ,
     client_phone string NOT NULL ,
     genrated_code int NOT NULL ,
     sms_sender_number string NOT NULL ,
     sms_send_statues string NOT NULL ,
+    sms_http_body string NOT NULL ,
+    err string NOT NULL ,
     carrier string NOT NULL ,
     country bytes NOT NULL ,
     is_valid_phone int NOT NULL ,
@@ -241,6 +244,7 @@ CREATE TABLE IF NOT EXISTS sun.sms (
     is_login int NOT NULL ,
     is_register int NOT NULL ,
     retried_count int NOT NULL ,
+    ttl int NOT NULL ,
 );
 
 /*Table: tag  */
@@ -281,14 +285,16 @@ CREATE TABLE IF NOT EXISTS sun.user (
     last_name string NOT NULL ,
     is_verified int NOT NULL ,
     avatar_id int NOT NULL ,
+    access_hash int NOT NULL ,
     profile_privacy int NOT NULL ,
     online_privacy int NOT NULL ,
     call_privacy int NOT NULL ,
     add_to_group_privacy int NOT NULL ,
     seen_message_privacy int NOT NULL ,
-    phone int NOT NULL ,
-    email string UNIQUE NOT NULL ,
+    phone string NOT NULL ,
+    email string NOT NULL ,
     about string NOT NULL ,
+    default_user_name string NOT NULL ,
     password_hash string NOT NULL ,
     password_salt string NOT NULL ,
     post_seq int NOT NULL ,
@@ -369,7 +375,7 @@ CREATE TABLE IF NOT EXISTS sun_chat.chat (
 /*Table: chat_deleted  */
 CREATE TABLE IF NOT EXISTS sun_chat.chat_deleted (
     chat_id int PRIMARY KEY NOT NULL ,
-    room_key string PRIMARY KEY NOT NULL ,
+    room_key string NOT NULL ,
 );
 
 /*Table: chat_last_message  */

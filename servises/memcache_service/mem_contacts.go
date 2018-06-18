@@ -87,14 +87,14 @@ func getContactKey(UserId int) string {
 }
 
 func fillContactsCacheForUser(userId int) *go_map.ConcurrentIntMap {
-	phones, err := x.NewPhoneContact_Selector().Select_Phone().UserId_Eq(userId).GetIntSlice(base.DB)
+	phones, err := x.NewPhoneContacts_Selector().Select_Phone().UserId_Eq(userId).GetStringSlice(base.DB)
 	if err != nil && len(phones) == 0 {
 		//just return something not to painc
 		return go_map.NewConcurrentIntMap(0)
 	}
 	userIds, err := x.NewUser_Selector().Select_UserId().Phone_In(phones).GetIntSlice(base.DB)
 	m := go_map.NewConcurrentIntMap(len(userIds))
-	m.SetKeys(phones, 1)
+	//m.SetKeys(phones, 1)
 	contactsCache.Set(getContactKey(userId), m, 0)
 	return m
 }

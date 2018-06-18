@@ -212,18 +212,18 @@ type __XfileServiceRequestLog_Selector struct {
 }
 
 func NewXfileServiceRequestLog_Deleter() *__XfileServiceRequestLog_Deleter {
-	d := __XfileServiceRequestLog_Deleter{whereSep: " AND "}
+	d := __XfileServiceRequestLog_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewXfileServiceRequestLog_Updater() *__XfileServiceRequestLog_Updater {
-	u := __XfileServiceRequestLog_Updater{whereSep: " AND "}
+	u := __XfileServiceRequestLog_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewXfileServiceRequestLog_Selector() *__XfileServiceRequestLog_Selector {
-	u := __XfileServiceRequestLog_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __XfileServiceRequestLog_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -4,24 +4,28 @@ public class PBFlatTypes {
 
 	public class PB_RoomsChanges {
 	   public long VersionTime;
+	   public Chat Chats;
 	   public PB_ChatView rooms;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_RoomsChanges t = new PBFlatTypes.PB_RoomsChanges();
     t.setVersionTime();
+    t.setChats();
     t.setrooms();
 	*/
 
 	/*
 	PBFlatTypes.PB_RoomsChanges t = new PBFlatTypes.PB_RoomsChanges();
 	t.VersionTime = ;
+	t.Chats = ;
 	t.rooms = ;
 	*/
 
 	/*
 	PB_RoomsChanges t = new PB_RoomsChanges();
 	t.VersionTime = m.getVersionTime() ;
+	t.Chats = m.getChats() ;
 	t.rooms = m.getrooms() ;
 	*/
 
@@ -515,7 +519,7 @@ public class PBFlatTypes {
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
-	public class PB_Like {
+	public class PB_Likes {
 	   public long Id;
 	   public long PostId;
 	   public int PostTypeEnum;
@@ -525,7 +529,7 @@ public class PBFlatTypes {
 	}
 	/*
 	folding
-	PBFlatTypes.PB_Like t = new PBFlatTypes.PB_Like();
+	PBFlatTypes.PB_Likes t = new PBFlatTypes.PB_Likes();
     t.setId();
     t.setPostId();
     t.setPostTypeEnum();
@@ -535,7 +539,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PBFlatTypes.PB_Like t = new PBFlatTypes.PB_Like();
+	PBFlatTypes.PB_Likes t = new PBFlatTypes.PB_Likes();
 	t.Id = ;
 	t.PostId = ;
 	t.PostTypeEnum = ;
@@ -545,7 +549,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PB_Like t = new PB_Like();
+	PB_Likes t = new PB_Likes();
 	t.Id = m.getId() ;
 	t.PostId = m.getPostId() ;
 	t.PostTypeEnum = m.getPostTypeEnum() ;
@@ -636,7 +640,7 @@ public class PBFlatTypes {
 	t.Id = m.getId() ;
 	*/
 
-	public class PB_PhoneContact {
+	public class PB_PhoneContacts {
 	   public long Id;
 	   public int UserId;
 	   public long ClientId;
@@ -646,7 +650,7 @@ public class PBFlatTypes {
 	}
 	/*
 	folding
-	PBFlatTypes.PB_PhoneContact t = new PBFlatTypes.PB_PhoneContact();
+	PBFlatTypes.PB_PhoneContacts t = new PBFlatTypes.PB_PhoneContacts();
     t.setId();
     t.setUserId();
     t.setClientId();
@@ -656,7 +660,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PBFlatTypes.PB_PhoneContact t = new PBFlatTypes.PB_PhoneContact();
+	PBFlatTypes.PB_PhoneContacts t = new PBFlatTypes.PB_PhoneContacts();
 	t.Id = ;
 	t.UserId = ;
 	t.ClientId = ;
@@ -666,7 +670,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PB_PhoneContact t = new PB_PhoneContact();
+	PB_PhoneContacts t = new PB_PhoneContacts();
 	t.Id = m.getId() ;
 	t.UserId = m.getUserId() ;
 	t.ClientId = m.getClientId() ;
@@ -832,28 +836,28 @@ public class PBFlatTypes {
 	t.UserId = m.getUserId() ;
 	*/
 
-	public class PB_PostKey {
+	public class PB_PostKeys {
 	   public int Id;
 	   public String PostKeyStr;
 	   public int Used;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_PostKey t = new PBFlatTypes.PB_PostKey();
+	PBFlatTypes.PB_PostKeys t = new PBFlatTypes.PB_PostKeys();
     t.setId();
     t.setPostKeyStr();
     t.setUsed();
 	*/
 
 	/*
-	PBFlatTypes.PB_PostKey t = new PBFlatTypes.PB_PostKey();
+	PBFlatTypes.PB_PostKeys t = new PBFlatTypes.PB_PostKeys();
 	t.Id = ;
 	t.PostKeyStr = ;
 	t.Used = ;
 	*/
 
 	/*
-	PB_PostKey t = new PB_PostKey();
+	PB_PostKeys t = new PB_PostKeys();
 	t.Id = m.getId() ;
 	t.PostKeyStr = m.getPostKeyStr() ;
 	t.Used = m.getUsed() ;
@@ -1074,7 +1078,7 @@ public class PBFlatTypes {
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
-	public class PB_SettingNotification {
+	public class PB_SettingNotifications {
 	   public int UserId;
 	   public int SocialLedOn;
 	   public String SocialLedColor;
@@ -1098,7 +1102,7 @@ public class PBFlatTypes {
 	}
 	/*
 	folding
-	PBFlatTypes.PB_SettingNotification t = new PBFlatTypes.PB_SettingNotification();
+	PBFlatTypes.PB_SettingNotifications t = new PBFlatTypes.PB_SettingNotifications();
     t.setUserId();
     t.setSocialLedOn();
     t.setSocialLedColor();
@@ -1122,7 +1126,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PBFlatTypes.PB_SettingNotification t = new PBFlatTypes.PB_SettingNotification();
+	PBFlatTypes.PB_SettingNotifications t = new PBFlatTypes.PB_SettingNotifications();
 	t.UserId = ;
 	t.SocialLedOn = ;
 	t.SocialLedColor = ;
@@ -1146,7 +1150,7 @@ public class PBFlatTypes {
 	*/
 
 	/*
-	PB_SettingNotification t = new PB_SettingNotification();
+	PB_SettingNotifications t = new PB_SettingNotifications();
 	t.UserId = m.getUserId() ;
 	t.SocialLedOn = m.getSocialLedOn() ;
 	t.SocialLedColor = m.getSocialLedColor() ;
@@ -1167,6 +1171,89 @@ public class PBFlatTypes {
 	t.DirectPopup = m.getDirectPopup() ;
 	t.DirectSound = m.getDirectSound() ;
 	t.DirectPriority = m.getDirectPriority() ;
+	*/
+
+	public class PB_Sms {
+	   public int Id;
+	   public String Hash;
+	   public String AppUuid;
+	   public String ClientPhone;
+	   public int GenratedCode;
+	   public String SmsSenderNumber;
+	   public String SmsSendStatues;
+	   public String SmsHttpBody;
+	   public String Err;
+	   public String Carrier;
+	   public byte[] Country;
+	   public int IsValidPhone;
+	   public int IsConfirmed;
+	   public int IsLogin;
+	   public int IsRegister;
+	   public int RetriedCount;
+	   public int TTL;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_Sms t = new PBFlatTypes.PB_Sms();
+    t.setId();
+    t.setHash();
+    t.setAppUuid();
+    t.setClientPhone();
+    t.setGenratedCode();
+    t.setSmsSenderNumber();
+    t.setSmsSendStatues();
+    t.setSmsHttpBody();
+    t.setErr();
+    t.setCarrier();
+    t.setCountry();
+    t.setIsValidPhone();
+    t.setIsConfirmed();
+    t.setIsLogin();
+    t.setIsRegister();
+    t.setRetriedCount();
+    t.setTTL();
+	*/
+
+	/*
+	PBFlatTypes.PB_Sms t = new PBFlatTypes.PB_Sms();
+	t.Id = ;
+	t.Hash = ;
+	t.AppUuid = ;
+	t.ClientPhone = ;
+	t.GenratedCode = ;
+	t.SmsSenderNumber = ;
+	t.SmsSendStatues = ;
+	t.SmsHttpBody = ;
+	t.Err = ;
+	t.Carrier = ;
+	t.Country = ;
+	t.IsValidPhone = ;
+	t.IsConfirmed = ;
+	t.IsLogin = ;
+	t.IsRegister = ;
+	t.RetriedCount = ;
+	t.TTL = ;
+	*/
+
+	/*
+	PB_Sms t = new PB_Sms();
+	t.Id = m.getId() ;
+	t.Hash = m.getHash() ;
+	t.AppUuid = m.getAppUuid() ;
+	t.ClientPhone = m.getClientPhone() ;
+	t.GenratedCode = m.getGenratedCode() ;
+	t.SmsSenderNumber = m.getSmsSenderNumber() ;
+	t.SmsSendStatues = m.getSmsSendStatues() ;
+	t.SmsHttpBody = m.getSmsHttpBody() ;
+	t.Err = m.getErr() ;
+	t.Carrier = m.getCarrier() ;
+	t.Country = m.getCountry() ;
+	t.IsValidPhone = m.getIsValidPhone() ;
+	t.IsConfirmed = m.getIsConfirmed() ;
+	t.IsLogin = m.getIsLogin() ;
+	t.IsRegister = m.getIsRegister() ;
+	t.RetriedCount = m.getRetriedCount() ;
+	t.TTL = m.getTTL() ;
 	*/
 
 	public class PB_Tag {
@@ -1290,14 +1377,16 @@ public class PBFlatTypes {
 	   public String LastName;
 	   public int IsVerified;
 	   public long AvatarId;
+	   public int AccessHash;
 	   public int ProfilePrivacy;
 	   public int OnlinePrivacy;
 	   public int CallPrivacy;
 	   public int AddToGroupPrivacy;
 	   public int SeenMessagePrivacy;
-	   public long Phone;
+	   public String Phone;
 	   public String Email;
 	   public String About;
+	   public String DefaultUserName;
 	   public String PasswordHash;
 	   public String PasswordSalt;
 	   public int PostSeq;
@@ -1332,6 +1421,7 @@ public class PBFlatTypes {
     t.setLastName();
     t.setIsVerified();
     t.setAvatarId();
+    t.setAccessHash();
     t.setProfilePrivacy();
     t.setOnlinePrivacy();
     t.setCallPrivacy();
@@ -1340,6 +1430,7 @@ public class PBFlatTypes {
     t.setPhone();
     t.setEmail();
     t.setAbout();
+    t.setDefaultUserName();
     t.setPasswordHash();
     t.setPasswordSalt();
     t.setPostSeq();
@@ -1374,6 +1465,7 @@ public class PBFlatTypes {
 	t.LastName = ;
 	t.IsVerified = ;
 	t.AvatarId = ;
+	t.AccessHash = ;
 	t.ProfilePrivacy = ;
 	t.OnlinePrivacy = ;
 	t.CallPrivacy = ;
@@ -1382,6 +1474,7 @@ public class PBFlatTypes {
 	t.Phone = ;
 	t.Email = ;
 	t.About = ;
+	t.DefaultUserName = ;
 	t.PasswordHash = ;
 	t.PasswordSalt = ;
 	t.PostSeq = ;
@@ -1416,6 +1509,7 @@ public class PBFlatTypes {
 	t.LastName = m.getLastName() ;
 	t.IsVerified = m.getIsVerified() ;
 	t.AvatarId = m.getAvatarId() ;
+	t.AccessHash = m.getAccessHash() ;
 	t.ProfilePrivacy = m.getProfilePrivacy() ;
 	t.OnlinePrivacy = m.getOnlinePrivacy() ;
 	t.CallPrivacy = m.getCallPrivacy() ;
@@ -1424,6 +1518,7 @@ public class PBFlatTypes {
 	t.Phone = m.getPhone() ;
 	t.Email = m.getEmail() ;
 	t.About = m.getAbout() ;
+	t.DefaultUserName = m.getDefaultUserName() ;
 	t.PasswordHash = m.getPasswordHash() ;
 	t.PasswordSalt = m.getPasswordSalt() ;
 	t.PostSeq = m.getPostSeq() ;
@@ -2096,25 +2191,25 @@ public class PBFlatTypes {
 	t.ResharedId = m.getResharedId() ;
 	*/
 
-	public class PB_SuggestedTopPost {
+	public class PB_SuggestedTopPosts {
 	   public long Id;
 	   public long PostId;
 	}
 	/*
 	folding
-	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
+	PBFlatTypes.PB_SuggestedTopPosts t = new PBFlatTypes.PB_SuggestedTopPosts();
     t.setId();
     t.setPostId();
 	*/
 
 	/*
-	PBFlatTypes.PB_SuggestedTopPost t = new PBFlatTypes.PB_SuggestedTopPost();
+	PBFlatTypes.PB_SuggestedTopPosts t = new PBFlatTypes.PB_SuggestedTopPosts();
 	t.Id = ;
 	t.PostId = ;
 	*/
 
 	/*
-	PB_SuggestedTopPost t = new PB_SuggestedTopPost();
+	PB_SuggestedTopPosts t = new PB_SuggestedTopPosts();
 	t.Id = m.getId() ;
 	t.PostId = m.getPostId() ;
 	*/

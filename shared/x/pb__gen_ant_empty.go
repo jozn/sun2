@@ -40,7 +40,7 @@ func (EmptyRPC_RPC_Chat) GetChatList(i *PB_RPC_Chat_Types_GetChatList_Param, p R
 func (EmptyRPC_RPC_Chat) GetChatHistory(i *PB_RPC_Chat_Types_GetChatHistory_Param, p RPC_UserParam) (*PB_RPC_Chat_Types_GetChatHistory_Response, error) {
 	return nil, nil
 }
-func (EmptyRPC_RPC_Chat) PushRoomsChange(i *PB_RPC_Chat_Types_PushRoomsChange_Param, p RPC_UserParam) (*PB_RPC_Chat_Types_PushRoomsChange_Response, error) {
+func (EmptyRPC_RPC_Chat) AddRoomsChange(i *PB_RPC_Chat_Types_AddRoomsChange_Param, p RPC_UserParam) (*PB_RPC_Chat_Types_AddRoomsChange_Response, error) {
 	return nil, nil
 }
 func (EmptyRPC_RPC_Chat) GetRoomsChange(i *PB_RPC_Chat_Types_GetRoomsChange_Param, p RPC_UserParam) (*PB_RPC_Chat_Types_GetRoomsChange_Response, error) {

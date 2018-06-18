@@ -30,9 +30,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	cnt := 17000000
+	cnt := 19261000
 	max := 20000000
-	step := 1000
+	step := 10
 	for i := cnt; i < max; i += step {
 
 		<-buff

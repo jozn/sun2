@@ -216,18 +216,18 @@ type __Notify_Selector struct {
 }
 
 func NewNotify_Deleter() *__Notify_Deleter {
-	d := __Notify_Deleter{whereSep: " AND "}
+	d := __Notify_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewNotify_Updater() *__Notify_Updater {
-	u := __Notify_Updater{whereSep: " AND "}
+	u := __Notify_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewNotify_Selector() *__Notify_Selector {
-	u := __Notify_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Notify_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

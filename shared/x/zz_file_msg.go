@@ -215,18 +215,18 @@ type __FileMsg_Selector struct {
 }
 
 func NewFileMsg_Deleter() *__FileMsg_Deleter {
-	d := __FileMsg_Deleter{whereSep: " AND "}
+	d := __FileMsg_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewFileMsg_Updater() *__FileMsg_Updater {
-	u := __FileMsg_Updater{whereSep: " AND "}
+	u := __FileMsg_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewFileMsg_Selector() *__FileMsg_Selector {
-	u := __FileMsg_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __FileMsg_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -235,18 +235,18 @@ type __TagPost_Selector struct {
 }
 
 func NewTagPost_Deleter() *__TagPost_Deleter {
-	d := __TagPost_Deleter{whereSep: " AND "}
+	d := __TagPost_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewTagPost_Updater() *__TagPost_Updater {
-	u := __TagPost_Updater{whereSep: " AND "}
+	u := __TagPost_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewTagPost_Selector() *__TagPost_Selector {
-	u := __TagPost_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __TagPost_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

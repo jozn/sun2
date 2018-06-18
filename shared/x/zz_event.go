@@ -217,18 +217,18 @@ type __Event_Selector struct {
 }
 
 func NewEvent_Deleter() *__Event_Deleter {
-	d := __Event_Deleter{whereSep: " AND "}
+	d := __Event_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewEvent_Updater() *__Event_Updater {
-	u := __Event_Updater{whereSep: " AND "}
+	u := __Event_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewEvent_Selector() *__Event_Selector {
-	u := __Event_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Event_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

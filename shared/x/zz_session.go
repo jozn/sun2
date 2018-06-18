@@ -236,18 +236,18 @@ type __Session_Selector struct {
 }
 
 func NewSession_Deleter() *__Session_Deleter {
-	d := __Session_Deleter{whereSep: " AND "}
+	d := __Session_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewSession_Updater() *__Session_Updater {
-	u := __Session_Updater{whereSep: " AND "}
+	u := __Session_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewSession_Selector() *__Session_Selector {
-	u := __Session_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Session_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

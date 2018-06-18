@@ -55,7 +55,7 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class Like {//oridnal: 6
+	public static class Likes {//oridnal: 6
 		public int Id; //Id
 		public int PostId; //PostId
 		public int PostTypeEnum; //PostTypeEnum
@@ -83,7 +83,7 @@ public class J {
 		public int Id; //Id
 	}
 
-	public static class PhoneContact {//oridnal: 9
+	public static class PhoneContacts {//oridnal: 9
 		public int Id; //Id
 		public int UserId; //UserId
 		public int ClientId; //ClientId
@@ -129,7 +129,7 @@ public class J {
 		public int UserId; //UserId
 	}
 
-	public static class PostKey {//oridnal: 13
+	public static class PostKeys {//oridnal: 13
 		public int Id; //Id
 		public String PostKeyStr; //PostKeyStr
 		public int Used; //Used
@@ -185,7 +185,7 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class SettingNotification {//oridnal: 19
+	public static class SettingNotifications {//oridnal: 19
 		public int UserId; //UserId
 		public int SocialLedOn; //SocialLedOn
 		public String SocialLedColor; //SocialLedColor
@@ -208,13 +208,16 @@ public class J {
 		public int DirectPriority; //DirectPriority
 	}
 
-	public static class Sm {//oridnal: 20
-		public UNKNOWN Id; //Id
+	public static class Sms {//oridnal: 20
+		public int Id; //Id
 		public String Hash; //Hash
+		public String AppUuid; //AppUuid
 		public String ClientPhone; //ClientPhone
 		public int GenratedCode; //GenratedCode
 		public String SmsSenderNumber; //SmsSenderNumber
 		public String SmsSendStatues; //SmsSendStatues
+		public String SmsHttpBody; //SmsHttpBody
+		public String Err; //Err
 		public String Carrier; //Carrier
 		public UNKNOWN Country; //Country
 		public int IsValidPhone; //IsValidPhone
@@ -222,6 +225,7 @@ public class J {
 		public int IsLogin; //IsLogin
 		public int IsRegister; //IsRegister
 		public int RetriedCount; //RetriedCount
+		public int TTL; //TTL
 	}
 
 	public static class Tag {//oridnal: 21
@@ -258,14 +262,16 @@ public class J {
 		public String LastName; //LastName
 		public int IsVerified; //IsVerified
 		public int AvatarId; //AvatarId
+		public int AccessHash; //AccessHash
 		public int ProfilePrivacy; //ProfilePrivacy
 		public int OnlinePrivacy; //OnlinePrivacy
 		public int CallPrivacy; //CallPrivacy
 		public int AddToGroupPrivacy; //AddToGroupPrivacy
 		public int SeenMessagePrivacy; //SeenMessagePrivacy
-		public int Phone; //Phone
+		public String Phone; //Phone
 		public String Email; //Email
 		public String About; //About
+		public String DefaultUserName; //DefaultUserName
 		public String PasswordHash; //PasswordHash
 		public String PasswordSalt; //PasswordSalt
 		public int PostSeq; //PostSeq
@@ -443,7 +449,7 @@ public class J {
 		public int ResharedId; //ResharedId
 	}
 
-	public static class SuggestedTopPost {//oridnal: 38
+	public static class SuggestedTopPosts {//oridnal: 38
 		public int Id; //Id
 		public int PostId; //PostId
 	}

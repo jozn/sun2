@@ -214,18 +214,18 @@ type __Action_Selector struct {
 }
 
 func NewAction_Deleter() *__Action_Deleter {
-	d := __Action_Deleter{whereSep: " AND "}
+	d := __Action_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewAction_Updater() *__Action_Updater {
-	u := __Action_Updater{whereSep: " AND "}
+	u := __Action_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewAction_Selector() *__Action_Selector {
-	u := __Action_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Action_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

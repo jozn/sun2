@@ -126,8 +126,8 @@ type Followed struct {
 	FollowedUserId: 0,
 	CreatedTime: 0,
 */
-// likes 'Like'.
-type Like struct {
+// likes 'Likes'.
+type Likes struct {
 	Id           int `db:"Id"`
 	PostId       int `db:"PostId"`
 	PostTypeEnum int `db:"PostTypeEnum"`
@@ -139,7 +139,7 @@ type Like struct {
 }
 
 /*
-:= &x.Like {
+:= &x.Likes {
 	Id: 0,
 	PostId: 0,
 	PostTypeEnum: 0,
@@ -191,8 +191,8 @@ type NotifyRemoved struct {
 	ForUserId: 0,
 	Id: 0,
 */
-// phone_contacts 'PhoneContact'.
-type PhoneContact struct {
+// phone_contacts 'PhoneContacts'.
+type PhoneContacts struct {
 	Id        int    `db:"Id"`
 	UserId    int    `db:"UserId"`
 	ClientId  int    `db:"ClientId"`
@@ -204,7 +204,7 @@ type PhoneContact struct {
 }
 
 /*
-:= &x.PhoneContact {
+:= &x.PhoneContacts {
 	Id: 0,
 	UserId: 0,
 	ClientId: 0,
@@ -295,8 +295,8 @@ type PostDeleted struct {
 	PostId: 0,
 	UserId: 0,
 */
-// post_keys 'PostKey'.
-type PostKey struct {
+// post_keys 'PostKeys'.
+type PostKeys struct {
 	Id         int    `db:"Id"`
 	PostKeyStr string `db:"PostKeyStr"`
 	Used       int    `db:"Used"`
@@ -305,7 +305,7 @@ type PostKey struct {
 }
 
 /*
-:= &x.PostKey {
+:= &x.PostKeys {
 	Id: 0,
 	PostKeyStr: "",
 	Used: 0,
@@ -425,8 +425,8 @@ type Session struct {
 	ActiveTime: 0,
 	CreatedTime: 0,
 */
-// setting_notifications 'SettingNotification'.
-type SettingNotification struct {
+// setting_notifications 'SettingNotifications'.
+type SettingNotifications struct {
 	UserId                   int    `db:"UserId"`
 	SocialLedOn              int    `db:"SocialLedOn"`
 	SocialLedColor           string `db:"SocialLedColor"`
@@ -452,7 +452,7 @@ type SettingNotification struct {
 }
 
 /*
-:= &x.SettingNotification {
+:= &x.SettingNotifications {
 	UserId: 0,
 	SocialLedOn: 0,
 	SocialLedColor: "",
@@ -474,14 +474,17 @@ type SettingNotification struct {
 	DirectSound: 0,
 	DirectPriority: 0,
 */
-// sms 'Sm'.
-type Sm struct {
-	Id              uint   `db:"Id"`
+// sms 'Sms'.
+type Sms struct {
+	Id              int    `db:"Id"`
 	Hash            string `db:"Hash"`
+	AppUuid         string `db:"AppUuid"`
 	ClientPhone     string `db:"ClientPhone"`
 	GenratedCode    int    `db:"GenratedCode"`
 	SmsSenderNumber string `db:"SmsSenderNumber"`
 	SmsSendStatues  string `db:"SmsSendStatues"`
+	SmsHttpBody     string `db:"SmsHttpBody"`
+	Err             string `db:"Err"`
 	Carrier         string `db:"Carrier"`
 	Country         []byte `db:"Country"`
 	IsValidPhone    int    `db:"IsValidPhone"`
@@ -489,18 +492,22 @@ type Sm struct {
 	IsLogin         int    `db:"IsLogin"`
 	IsRegister      int    `db:"IsRegister"`
 	RetriedCount    int    `db:"RetriedCount"`
+	TTL             int    `db:"TTL"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &x.Sm {
-	Id: UNKNOWN,
+:= &x.Sms {
+	Id: 0,
 	Hash: "",
+	AppUuid: "",
 	ClientPhone: "",
 	GenratedCode: 0,
 	SmsSenderNumber: "",
 	SmsSendStatues: "",
+	SmsHttpBody: "",
+	Err: "",
 	Carrier: "",
 	Country: []byte{},
 	IsValidPhone: 0,
@@ -508,6 +515,7 @@ type Sm struct {
 	IsLogin: 0,
 	IsRegister: 0,
 	RetriedCount: 0,
+	TTL: 0,
 */
 // tag 'Tag'.
 type Tag struct {
@@ -579,14 +587,16 @@ type User struct {
 	LastName           string `db:"LastName"`
 	IsVerified         int    `db:"IsVerified"`
 	AvatarId           int    `db:"AvatarId"`
+	AccessHash         int    `db:"AccessHash"`
 	ProfilePrivacy     int    `db:"ProfilePrivacy"`
 	OnlinePrivacy      int    `db:"OnlinePrivacy"`
 	CallPrivacy        int    `db:"CallPrivacy"`
 	AddToGroupPrivacy  int    `db:"AddToGroupPrivacy"`
 	SeenMessagePrivacy int    `db:"SeenMessagePrivacy"`
-	Phone              int    `db:"Phone"`
+	Phone              string `db:"Phone"`
 	Email              string `db:"Email"`
 	About              string `db:"About"`
+	DefaultUserName    string `db:"DefaultUserName"`
 	PasswordHash       string `db:"PasswordHash"`
 	PasswordSalt       string `db:"PasswordSalt"`
 	PostSeq            int    `db:"PostSeq"`
@@ -623,14 +633,16 @@ type User struct {
 	LastName: "",
 	IsVerified: 0,
 	AvatarId: 0,
+	AccessHash: 0,
 	ProfilePrivacy: 0,
 	OnlinePrivacy: 0,
 	CallPrivacy: 0,
 	AddToGroupPrivacy: 0,
 	SeenMessagePrivacy: 0,
-	Phone: 0,
+	Phone: "",
 	Email: "",
 	About: "",
+	DefaultUserName: "",
 	PasswordHash: "",
 	PasswordSalt: "",
 	PostSeq: 0,
@@ -998,8 +1010,8 @@ type HomeFanout struct {
 	PostUserId: 0,
 	ResharedId: 0,
 */
-// suggested_top_posts 'SuggestedTopPost'.
-type SuggestedTopPost struct {
+// suggested_top_posts 'SuggestedTopPosts'.
+type SuggestedTopPosts struct {
 	Id     int `db:"Id"`
 	PostId int `db:"PostId"`
 
@@ -1007,7 +1019,7 @@ type SuggestedTopPost struct {
 }
 
 /*
-:= &x.SuggestedTopPost {
+:= &x.SuggestedTopPosts {
 	Id: 0,
 	PostId: 0,
 */
@@ -1200,21 +1212,21 @@ type LogTableSql struct {
 	CommentDeleted         bool
 	Event                  bool
 	Followed               bool
-	Like                   bool
+	Likes                  bool
 	Notify                 bool
 	NotifyRemoved          bool
-	PhoneContact           bool
+	PhoneContacts          bool
 	Post                   bool
 	PostCount              bool
 	PostDeleted            bool
-	PostKey                bool
+	PostKeys               bool
 	PostLink               bool
 	PostMedia              bool
 	PostMentioned          bool
 	PostReshared           bool
 	Session                bool
-	SettingNotification    bool
-	Sm                     bool
+	SettingNotifications   bool
+	Sms                    bool
 	Tag                    bool
 	TagPost                bool
 	TriggerLog             bool
@@ -1232,7 +1244,7 @@ type LogTableSql struct {
 	FilePost               bool
 	ActionFanout           bool
 	HomeFanout             bool
-	SuggestedTopPost       bool
+	SuggestedTopPosts      bool
 	SuggestedUser          bool
 	PushChat               bool
 	HTTPRPCLog             bool
@@ -1251,21 +1263,21 @@ var LogTableSqlReq = LogTableSql{
 	CommentDeleted:         true,
 	Event:                  true,
 	Followed:               true,
-	Like:                   true,
+	Likes:                  true,
 	Notify:                 true,
 	NotifyRemoved:          true,
-	PhoneContact:           true,
+	PhoneContacts:          true,
 	Post:                   true,
 	PostCount:              true,
 	PostDeleted:            true,
-	PostKey:                true,
+	PostKeys:               true,
 	PostLink:               true,
 	PostMedia:              true,
 	PostMentioned:          true,
 	PostReshared:           true,
 	Session:                true,
-	SettingNotification:    true,
-	Sm:                     true,
+	SettingNotifications:   true,
+	Sms:                    true,
 	Tag:                    true,
 	TagPost:                true,
 	TriggerLog:             true,
@@ -1283,7 +1295,7 @@ var LogTableSqlReq = LogTableSql{
 	FilePost:               true,
 	ActionFanout:           true,
 	HomeFanout:             true,
-	SuggestedTopPost:       true,
+	SuggestedTopPosts:      true,
 	SuggestedUser:          true,
 	PushChat:               true,
 	HTTPRPCLog:             true,

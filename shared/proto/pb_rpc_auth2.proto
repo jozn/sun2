@@ -17,7 +17,8 @@ message RPC_Auth_Types {
         message Param {
             string Hash = 1;
             string Phone = 2; // 98... 989015132328
-            bool Resend = 3;
+            string CountryCode = 3;
+            bool Resend = 4;
         }
 
         enum SendConfirmCodeTypeEnum {
@@ -29,7 +30,7 @@ message RPC_Auth_Types {
             bool Done =1;
             string ErrorMessage =2;
             bool JustEmailRegister = 3 ;
-            repeated uint64 SmsNumbers = 4;
+            repeated string SmsNumbers = 4;
             bool IsLogin = 5;
         }
     }
@@ -44,7 +45,8 @@ message RPC_Auth_Types {
 
         message Response {
             bool Done =1;
-            PB_Error Error = 2;
+            string ErrorMessage = 2;
+//            PB_Error Error = 2;
             PB_SelfUserView SelfUserView = 3; //if it is login
         }
     }
@@ -53,14 +55,16 @@ message RPC_Auth_Types {
         message Param {
             string Hash = 1;
             string FirstName = 2;
-            string LastName = 3; // 98... 989015132328
-            string UserName = 4; // 98... 989015132328
-            string Email = 5; // 98... 989015132328
+            string LastName = 3;
+            string UserName = 4;
+            string Phone = 5;
+            string Email = 6;
         }
 
         message Response {
             bool Done =1;
-            PB_Error Error = 2;
+            string ErrorMessage = 2;
+//            PB_Error Error = 2;
             PB_SelfUserView SelfUserView = 3;
         }
     }
@@ -73,7 +77,8 @@ message RPC_Auth_Types {
 
         message Response {
            bool Done =1;
-           PB_Error Error = 2;
+//           PB_Error Error = 2;
+           string ErrorMessage = 2;
            PB_SelfUserView SelfUserView = 3;
         }
     }
@@ -85,7 +90,8 @@ message RPC_Auth_Types {
 
         message Response {
             bool Done =1;
-            PB_Error Error =2;
+            string ErrorMessage =2;
+//            PB_Error Error =2;
         }
     }
 }

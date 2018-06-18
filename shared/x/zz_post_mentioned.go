@@ -212,18 +212,18 @@ type __PostMentioned_Selector struct {
 }
 
 func NewPostMentioned_Deleter() *__PostMentioned_Deleter {
-	d := __PostMentioned_Deleter{whereSep: " AND "}
+	d := __PostMentioned_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostMentioned_Updater() *__PostMentioned_Updater {
-	u := __PostMentioned_Updater{whereSep: " AND "}
+	u := __PostMentioned_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostMentioned_Selector() *__PostMentioned_Selector {
-	u := __PostMentioned_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostMentioned_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

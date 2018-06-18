@@ -56,7 +56,7 @@ message PB_RPC_Chat_Types{
         }
     }
 
-    message PushRoomsChange {
+    message AddRoomsChange {
         message Param {
             PB_RoomsChanges RoomsChanges = 1;
         }
@@ -86,7 +86,7 @@ service RPC_Chat {
     rpc SetRoomActionDoing (PB_RPC_Chat_Types.SetRoomActionDoing.Param) returns (PB_RPC_Chat_Types.SetRoomActionDoing.Response);
     rpc GetChatList (PB_RPC_Chat_Types.GetChatList.Param) returns (PB_RPC_Chat_Types.GetChatList.Response);
     rpc GetChatHistory (PB_RPC_Chat_Types.GetChatHistory.Param) returns (PB_RPC_Chat_Types.GetChatHistory.Response);
-    rpc PushRoomsChange (PB_RPC_Chat_Types.PushRoomsChange.Param) returns (PB_RPC_Chat_Types.PushRoomsChange.Response);
+    rpc AddRoomsChange (PB_RPC_Chat_Types.AddRoomsChange.Param) returns (PB_RPC_Chat_Types.AddRoomsChange.Response);
     rpc GetRoomsChange (PB_RPC_Chat_Types.GetRoomsChange.Param) returns (PB_RPC_Chat_Types.GetRoomsChange.Response);
 }
 

@@ -210,18 +210,18 @@ type __XfileServiceInfoLog_Selector struct {
 }
 
 func NewXfileServiceInfoLog_Deleter() *__XfileServiceInfoLog_Deleter {
-	d := __XfileServiceInfoLog_Deleter{whereSep: " AND "}
+	d := __XfileServiceInfoLog_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewXfileServiceInfoLog_Updater() *__XfileServiceInfoLog_Updater {
-	u := __XfileServiceInfoLog_Updater{whereSep: " AND "}
+	u := __XfileServiceInfoLog_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewXfileServiceInfoLog_Selector() *__XfileServiceInfoLog_Selector {
-	u := __XfileServiceInfoLog_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __XfileServiceInfoLog_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -208,18 +208,18 @@ type __PostDeleted_Selector struct {
 }
 
 func NewPostDeleted_Deleter() *__PostDeleted_Deleter {
-	d := __PostDeleted_Deleter{whereSep: " AND "}
+	d := __PostDeleted_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostDeleted_Updater() *__PostDeleted_Updater {
-	u := __PostDeleted_Updater{whereSep: " AND "}
+	u := __PostDeleted_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostDeleted_Selector() *__PostDeleted_Selector {
-	u := __PostDeleted_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostDeleted_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

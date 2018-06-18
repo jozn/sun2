@@ -18,7 +18,7 @@ public interface RPC_Chat {
     void SetRoomActionDoing( PB_RPC_Chat_Types.SetRoomActionDoing.Response pb, boolean handled);
     void GetChatList( PB_RPC_Chat_Types.GetChatList.Response pb, boolean handled);
     void GetChatHistory( PB_RPC_Chat_Types.GetChatHistory.Response pb, boolean handled);
-    void PushRoomsChange( PB_RPC_Chat_Types.PushRoomsChange.Response pb, boolean handled);
+    void AddRoomsChange( PB_RPC_Chat_Types.AddRoomsChange.Response pb, boolean handled);
     void GetRoomsChange( PB_RPC_Chat_Types.GetRoomsChange.Response pb, boolean handled);
 }
 public interface RPC_General {
@@ -110,8 +110,8 @@ public interface RPC_User {
     	Log.d("RPC", " default empty handler for RPC 'RPC_Chat.GetChatHistory' ");
     }
   	@Override
-    public void PushRoomsChange( PB_RPC_Chat_Types.PushRoomsChange.Response pb, boolean handled){
-    	Log.d("RPC", " default empty handler for RPC 'RPC_Chat.PushRoomsChange' ");
+    public void AddRoomsChange( PB_RPC_Chat_Types.AddRoomsChange.Response pb, boolean handled){
+    	Log.d("RPC", " default empty handler for RPC 'RPC_Chat.AddRoomsChange' ");
     }
   	@Override
     public void GetRoomsChange( PB_RPC_Chat_Types.GetRoomsChange.Response pb, boolean handled){
@@ -379,11 +379,11 @@ public interface RPC_User {
 				}
 			});
 	  
-			router.put("RPC_Chat.PushRoomsChange", (pb, handled)->{
-				if(pb instanceof PB_RPC_Chat_Types.PushRoomsChange.Response){
-					RPC_Chat_Default_Handler.PushRoomsChange((PB_RPC_Chat_Types.PushRoomsChange.Response) pb, handled);
+			router.put("RPC_Chat.AddRoomsChange", (pb, handled)->{
+				if(pb instanceof PB_RPC_Chat_Types.AddRoomsChange.Response){
+					RPC_Chat_Default_Handler.AddRoomsChange((PB_RPC_Chat_Types.AddRoomsChange.Response) pb, handled);
 				}else{
-					Log.d("RPC", " can not convert response object to PB_RPC_Chat_Types.PushRoomsChange.Response in rpc: .PushRoomsChange -- class: " + pb );//.getClass().getName());
+					Log.d("RPC", " can not convert response object to PB_RPC_Chat_Types.AddRoomsChange.Response in rpc: .AddRoomsChange -- class: " + pb );//.getClass().getName());
 				}
 			});
 	  

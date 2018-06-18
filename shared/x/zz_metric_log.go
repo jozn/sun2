@@ -236,18 +236,18 @@ type __MetricLog_Selector struct {
 }
 
 func NewMetricLog_Deleter() *__MetricLog_Deleter {
-	d := __MetricLog_Deleter{whereSep: " AND "}
+	d := __MetricLog_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewMetricLog_Updater() *__MetricLog_Updater {
-	u := __MetricLog_Updater{whereSep: " AND "}
+	u := __MetricLog_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewMetricLog_Selector() *__MetricLog_Selector {
-	u := __MetricLog_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __MetricLog_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -215,18 +215,18 @@ type __UserRelation_Selector struct {
 }
 
 func NewUserRelation_Deleter() *__UserRelation_Deleter {
-	d := __UserRelation_Deleter{whereSep: " AND "}
+	d := __UserRelation_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewUserRelation_Updater() *__UserRelation_Updater {
-	u := __UserRelation_Updater{whereSep: " AND "}
+	u := __UserRelation_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewUserRelation_Selector() *__UserRelation_Selector {
-	u := __UserRelation_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __UserRelation_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

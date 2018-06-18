@@ -45,69 +45,69 @@ type RPC_AllHandlersInteract struct {
 /////////////// Interfaces ////////////////
 
 type RPC_Auth interface {
-	SendConfirmCode(param *RPC_Auth_Types_SendConfirmCode_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SendConfirmCode_Response, err error)
-	ConfirmCode(param *RPC_Auth_Types_ConfirmCode_Param, userParam RPC_UserParam) (res RPC_Auth_Types_ConfirmCode_Response, err error)
-	SingUp(param *RPC_Auth_Types_SingUp_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SingUp_Response, err error)
-	SingIn(param *RPC_Auth_Types_SingIn_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SingIn_Response, err error)
-	LogOut(param *RPC_Auth_Types_LogOut_Param, userParam RPC_UserParam) (res RPC_Auth_Types_LogOut_Response, err error)
+	SendConfirmCode(param *RPC_Auth_Types_SendConfirmCode_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SendConfirmCode_Response, errRes error)
+	ConfirmCode(param *RPC_Auth_Types_ConfirmCode_Param, userParam RPC_UserParam) (res RPC_Auth_Types_ConfirmCode_Response, errRes error)
+	SingUp(param *RPC_Auth_Types_SingUp_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SingUp_Response, errRes error)
+	SingIn(param *RPC_Auth_Types_SingIn_Param, userParam RPC_UserParam) (res RPC_Auth_Types_SingIn_Response, errRes error)
+	LogOut(param *RPC_Auth_Types_LogOut_Param, userParam RPC_UserParam) (res RPC_Auth_Types_LogOut_Response, errRes error)
 }
 
 type RPC_Chat interface {
-	AddNewMessage(param *PB_RPC_Chat_Types_AddNewMessage_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_AddNewMessage_Response, err error)
-	SetRoomActionDoing(param *PB_RPC_Chat_Types_SetRoomActionDoing_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_SetRoomActionDoing_Response, err error)
-	GetChatList(param *PB_RPC_Chat_Types_GetChatList_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetChatList_Response, err error)
-	GetChatHistory(param *PB_RPC_Chat_Types_GetChatHistory_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetChatHistory_Response, err error)
-	PushRoomsChange(param *PB_RPC_Chat_Types_PushRoomsChange_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_PushRoomsChange_Response, err error)
-	GetRoomsChange(param *PB_RPC_Chat_Types_GetRoomsChange_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetRoomsChange_Response, err error)
+	AddNewMessage(param *PB_RPC_Chat_Types_AddNewMessage_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_AddNewMessage_Response, errRes error)
+	SetRoomActionDoing(param *PB_RPC_Chat_Types_SetRoomActionDoing_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_SetRoomActionDoing_Response, errRes error)
+	GetChatList(param *PB_RPC_Chat_Types_GetChatList_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetChatList_Response, errRes error)
+	GetChatHistory(param *PB_RPC_Chat_Types_GetChatHistory_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetChatHistory_Response, errRes error)
+	AddRoomsChange(param *PB_RPC_Chat_Types_AddRoomsChange_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_AddRoomsChange_Response, errRes error)
+	GetRoomsChange(param *PB_RPC_Chat_Types_GetRoomsChange_Param, userParam RPC_UserParam) (res PB_RPC_Chat_Types_GetRoomsChange_Response, errRes error)
 }
 
 type RPC_General interface {
-	Echo(param *RPC_General_Types_Echo_Param, userParam RPC_UserParam) (res RPC_General_Types_Echo_Response, err error)
-	CheckUserName(param *RPC_General_Types_CheckUserName_Param, userParam RPC_UserParam) (res RPC_General_Types_CheckUserName_Response, err error)
+	Echo(param *RPC_General_Types_Echo_Param, userParam RPC_UserParam) (res RPC_General_Types_Echo_Response, errRes error)
+	CheckUserName(param *RPC_General_Types_CheckUserName_Param, userParam RPC_UserParam) (res RPC_General_Types_CheckUserName_Response, errRes error)
 }
 
 type RPC_Page interface {
-	GetCommentsPage(param *RPC_Page_Types_GetCommentsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetCommentsPage_Response, err error)
-	GetHomePage(param *RPC_Page_Types_GetHomePage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetHomePage_Response, err error)
-	GetProfileAbout(param *RPC_Page_Types_GetProfileAbout_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileAbout_Response, err error)
-	GetProfileAllShared(param *RPC_Page_Types_GetProfileAllShared_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileAllShared_Response, err error)
-	GetProfileByCategoryPage(param *RPC_Page_Types_GetProfileByCategoryPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileByCategoryPage_Response, err error)
-	GetLikesPage(param *RPC_Page_Types_GetLikesPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLikesPage_Response, err error)
-	GetFollowersPage(param *RPC_Page_Types_GetFollowersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetFollowersPage_Response, err error)
-	GetFollowingsPage(param *RPC_Page_Types_GetFollowingsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetFollowingsPage_Response, err error)
-	GetNotifiesPage(param *RPC_Page_Types_GetNotifiesPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetNotifiesPage_Response, err error)
-	GetUserActionsPage(param *RPC_Page_Types_GetUserActionsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetUserActionsPage_Response, err error)
-	GetPromotedPostsPage(param *RPC_Page_Types_GetPromotedPostsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetPromotedPostsPage_Response, err error)
-	GetSuggestedUsersPage(param *RPC_Page_Types_GetSuggestedUsersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetSuggestedUsersPage_Response, err error)
-	GetSuggestedTagsPage(param *RPC_Page_Types_GetSuggestedTagsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetSuggestedTagsPage_Response, err error)
-	GetLastPostsPage(param *RPC_Page_Types_GetLastPostsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLastPostsPage_Response, err error)
-	GetLastTagPage(param *RPC_Page_Types_GetLastTagPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLastTagPage_Response, err error)
-	SearchTagsPage(param *RPC_Page_Types_SearchTagsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_SearchTagsPage_Response, err error)
-	SearchUsersPage(param *RPC_Page_Types_SearchUsersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_SearchUsersPage_Response, err error)
+	GetCommentsPage(param *RPC_Page_Types_GetCommentsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetCommentsPage_Response, errRes error)
+	GetHomePage(param *RPC_Page_Types_GetHomePage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetHomePage_Response, errRes error)
+	GetProfileAbout(param *RPC_Page_Types_GetProfileAbout_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileAbout_Response, errRes error)
+	GetProfileAllShared(param *RPC_Page_Types_GetProfileAllShared_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileAllShared_Response, errRes error)
+	GetProfileByCategoryPage(param *RPC_Page_Types_GetProfileByCategoryPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetProfileByCategoryPage_Response, errRes error)
+	GetLikesPage(param *RPC_Page_Types_GetLikesPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLikesPage_Response, errRes error)
+	GetFollowersPage(param *RPC_Page_Types_GetFollowersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetFollowersPage_Response, errRes error)
+	GetFollowingsPage(param *RPC_Page_Types_GetFollowingsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetFollowingsPage_Response, errRes error)
+	GetNotifiesPage(param *RPC_Page_Types_GetNotifiesPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetNotifiesPage_Response, errRes error)
+	GetUserActionsPage(param *RPC_Page_Types_GetUserActionsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetUserActionsPage_Response, errRes error)
+	GetPromotedPostsPage(param *RPC_Page_Types_GetPromotedPostsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetPromotedPostsPage_Response, errRes error)
+	GetSuggestedUsersPage(param *RPC_Page_Types_GetSuggestedUsersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetSuggestedUsersPage_Response, errRes error)
+	GetSuggestedTagsPage(param *RPC_Page_Types_GetSuggestedTagsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetSuggestedTagsPage_Response, errRes error)
+	GetLastPostsPage(param *RPC_Page_Types_GetLastPostsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLastPostsPage_Response, errRes error)
+	GetLastTagPage(param *RPC_Page_Types_GetLastTagPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_GetLastTagPage_Response, errRes error)
+	SearchTagsPage(param *RPC_Page_Types_SearchTagsPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_SearchTagsPage_Response, errRes error)
+	SearchUsersPage(param *RPC_Page_Types_SearchUsersPage_Param, userParam RPC_UserParam) (res RPC_Page_Types_SearchUsersPage_Response, errRes error)
 }
 
 type RPC_Social interface {
-	AddComment(param *RPC_Social_Types_AddComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddComment_Response, err error)
-	DeleteComment(param *RPC_Social_Types_DeleteComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeleteComment_Response, err error)
-	EditComment(param *RPC_Social_Types_EditComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditComment_Response, err error)
-	AddPost(param *RPC_Social_Types_AddPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddPost_Response, err error)
-	EditPost(param *RPC_Social_Types_EditPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditPost_Response, err error)
-	DeletePost(param *RPC_Social_Types_DeletePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeletePost_Response, err error)
-	ArchivePost(param *RPC_Social_Types_ArchivePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_ArchivePost_Response, err error)
-	LikePost(param *RPC_Social_Types_LikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_LikePost_Response, err error)
-	UnLikePost(param *RPC_Social_Types_UnLikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnLikePost_Response, err error)
-	FollowUser(param *RPC_Social_Types_FollowUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_FollowUser_Response, err error)
-	UnFollowUser(param *RPC_Social_Types_UnFollowUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnFollowUser_Response, err error)
-	BlockUser(param *RPC_Social_Types_BlockUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_BlockUser_Response, err error)
-	UnBlockUser(param *RPC_Social_Types_UnBlockUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnBlockUser_Response, err error)
-	AddSeenPosts(param *RPC_Social_Types_AddSeenPosts_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddSeenPosts_Response, err error)
+	AddComment(param *RPC_Social_Types_AddComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddComment_Response, errRes error)
+	DeleteComment(param *RPC_Social_Types_DeleteComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeleteComment_Response, errRes error)
+	EditComment(param *RPC_Social_Types_EditComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditComment_Response, errRes error)
+	AddPost(param *RPC_Social_Types_AddPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddPost_Response, errRes error)
+	EditPost(param *RPC_Social_Types_EditPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditPost_Response, errRes error)
+	DeletePost(param *RPC_Social_Types_DeletePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeletePost_Response, errRes error)
+	ArchivePost(param *RPC_Social_Types_ArchivePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_ArchivePost_Response, errRes error)
+	LikePost(param *RPC_Social_Types_LikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_LikePost_Response, errRes error)
+	UnLikePost(param *RPC_Social_Types_UnLikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnLikePost_Response, errRes error)
+	FollowUser(param *RPC_Social_Types_FollowUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_FollowUser_Response, errRes error)
+	UnFollowUser(param *RPC_Social_Types_UnFollowUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnFollowUser_Response, errRes error)
+	BlockUser(param *RPC_Social_Types_BlockUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_BlockUser_Response, errRes error)
+	UnBlockUser(param *RPC_Social_Types_UnBlockUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnBlockUser_Response, errRes error)
+	AddSeenPosts(param *RPC_Social_Types_AddSeenPosts_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddSeenPosts_Response, errRes error)
 }
 
 type RPC_User interface {
-	UpdateAbout(param *RPC_User_Types_UpdateAbout_Param, userParam RPC_UserParam) (res RPC_User_Types_UpdateAbout_Response, err error)
-	UpdateUserName(param *RPC_User_Types_UpdateUserName_Param, userParam RPC_UserParam) (res RPC_User_Types_UpdateUserName_Response, err error)
-	ChangePrivacy(param *RPC_User_Types_ChangePrivacy_Param, userParam RPC_UserParam) (res RPC_User_Types_ChangePrivacy_Response, err error)
-	ChangeAvatar(param *RPC_User_Types_ChangeAvatar_Param, userParam RPC_UserParam) (res RPC_User_Types_ChangeAvatar_Response, err error)
+	UpdateAbout(param *RPC_User_Types_UpdateAbout_Param, userParam RPC_UserParam) (res RPC_User_Types_UpdateAbout_Response, errRes error)
+	UpdateUserName(param *RPC_User_Types_UpdateUserName_Param, userParam RPC_UserParam) (res RPC_User_Types_UpdateUserName_Response, errRes error)
+	ChangePrivacy(param *RPC_User_Types_ChangePrivacy_Param, userParam RPC_UserParam) (res RPC_User_Types_ChangePrivacy_Response, errRes error)
+	ChangeAvatar(param *RPC_User_Types_ChangeAvatar_Param, userParam RPC_UserParam) (res RPC_User_Types_ChangeAvatar_Response, errRes error)
 }
 
 func noDevErr(err error) {
@@ -384,21 +384,21 @@ var mpRpcMethods = map[string]func(p rpcParamHandler){
 			p.responseHandler.HandelError(err)
 		}
 	},
-	"RPC_Chat.PushRoomsChange": func(p rpcParamHandler) {
+	"RPC_Chat.AddRoomsChange": func(p rpcParamHandler) {
 		if p.rpcHandler.RPC_Chat == nil {
-			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.PushRoomsChange"))
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Chat.AddRoomsChange"))
 			return
 		}
-		load := &PB_RPC_Chat_Types_PushRoomsChange_Param{}
+		load := &PB_RPC_Chat_Types_AddRoomsChange_Param{}
 		err := proto.Unmarshal(p.cmd.Data, load)
 		if err == nil {
-			res, err := p.rpcHandler.RPC_Chat.PushRoomsChange(load, p.params)
+			res, err := p.rpcHandler.RPC_Chat.AddRoomsChange(load, p.params)
 			if err == nil {
 				out := RpcResponseOutput{
-					RpcName:         "RPC_Chat.PushRoomsChange",
+					RpcName:         "RPC_Chat.AddRoomsChange",
 					UserParam:       p.params,
 					CommandToServer: p.cmd,
-					PBClassName:     "PB_RPC_Chat_Types.PushRoomsChange.Response",
+					PBClassName:     "PB_RPC_Chat_Types.AddRoomsChange.Response",
 					ResponseData:    &res,
 					RpcParamPassed:  load,
 				}
@@ -1428,7 +1428,7 @@ var mpRpcMethods = map[string]func(p rpcParamHandler){
  RPC_Chat.SetRoomActionDoing
  RPC_Chat.GetChatList
  RPC_Chat.GetChatHistory
- RPC_Chat.PushRoomsChange
+ RPC_Chat.AddRoomsChange
  RPC_Chat.GetRoomsChange
 
 

@@ -211,18 +211,18 @@ type __HomeFanout_Selector struct {
 }
 
 func NewHomeFanout_Deleter() *__HomeFanout_Deleter {
-	d := __HomeFanout_Deleter{whereSep: " AND "}
+	d := __HomeFanout_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewHomeFanout_Updater() *__HomeFanout_Updater {
-	u := __HomeFanout_Updater{whereSep: " AND "}
+	u := __HomeFanout_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewHomeFanout_Selector() *__HomeFanout_Selector {
-	u := __HomeFanout_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __HomeFanout_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

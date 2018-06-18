@@ -212,18 +212,18 @@ type __PostCount_Selector struct {
 }
 
 func NewPostCount_Deleter() *__PostCount_Deleter {
-	d := __PostCount_Deleter{whereSep: " AND "}
+	d := __PostCount_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostCount_Updater() *__PostCount_Updater {
-	u := __PostCount_Updater{whereSep: " AND "}
+	u := __PostCount_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostCount_Selector() *__PostCount_Selector {
-	u := __PostCount_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostCount_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -210,18 +210,18 @@ type __ActionFanout_Selector struct {
 }
 
 func NewActionFanout_Deleter() *__ActionFanout_Deleter {
-	d := __ActionFanout_Deleter{whereSep: " AND "}
+	d := __ActionFanout_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewActionFanout_Updater() *__ActionFanout_Updater {
-	u := __ActionFanout_Updater{whereSep: " AND "}
+	u := __ActionFanout_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewActionFanout_Selector() *__ActionFanout_Selector {
-	u := __ActionFanout_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __ActionFanout_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

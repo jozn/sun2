@@ -208,18 +208,18 @@ type __PostLink_Selector struct {
 }
 
 func NewPostLink_Deleter() *__PostLink_Deleter {
-	d := __PostLink_Deleter{whereSep: " AND "}
+	d := __PostLink_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostLink_Updater() *__PostLink_Updater {
-	u := __PostLink_Updater{whereSep: " AND "}
+	u := __PostLink_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostLink_Selector() *__PostLink_Selector {
-	u := __PostLink_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostLink_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

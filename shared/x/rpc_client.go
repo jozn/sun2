@@ -117,9 +117,9 @@ func (RPC_Chat_Client) GetChatHistory(param *PB_RPC_Chat_Types_GetChatHistory_Pa
 	return nil, err
 }
 
-func (RPC_Chat_Client) PushRoomsChange(param *PB_RPC_Chat_Types_PushRoomsChange_Param, fn RPCClientHandler) (*PB_RPC_Chat_Types_PushRoomsChange_Response, error) {
-	out := &PB_RPC_Chat_Types_PushRoomsChange_Response{}
-	err := fn("RPC_Chat.PushRoomsChange", param, out)
+func (RPC_Chat_Client) AddRoomsChange(param *PB_RPC_Chat_Types_AddRoomsChange_Param, fn RPCClientHandler) (*PB_RPC_Chat_Types_AddRoomsChange_Response, error) {
+	out := &PB_RPC_Chat_Types_AddRoomsChange_Response{}
+	err := fn("RPC_Chat.AddRoomsChange", param, out)
 	if err == nil {
 		return out, nil
 	}

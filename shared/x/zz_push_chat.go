@@ -220,18 +220,18 @@ type __PushChat_Selector struct {
 }
 
 func NewPushChat_Deleter() *__PushChat_Deleter {
-	d := __PushChat_Deleter{whereSep: " AND "}
+	d := __PushChat_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPushChat_Updater() *__PushChat_Updater {
-	u := __PushChat_Updater{whereSep: " AND "}
+	u := __PushChat_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPushChat_Selector() *__PushChat_Selector {
-	u := __PushChat_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PushChat_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

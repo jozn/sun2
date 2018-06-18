@@ -80,3 +80,6 @@ func (s RPC_UserParam_Imple) GetUserId() int {
 func (s RPC_UserParam_Imple) IsUser() bool {
     return s.userId > 0
 }
+func (s RPC_UserParam_Imple) FailRequest(error x.PB_Error) {
+
+}

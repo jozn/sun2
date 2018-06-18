@@ -211,18 +211,18 @@ type __PostReshared_Selector struct {
 }
 
 func NewPostReshared_Deleter() *__PostReshared_Deleter {
-	d := __PostReshared_Deleter{whereSep: " AND "}
+	d := __PostReshared_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostReshared_Updater() *__PostReshared_Updater {
-	u := __PostReshared_Updater{whereSep: " AND "}
+	u := __PostReshared_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostReshared_Selector() *__PostReshared_Selector {
-	u := __PostReshared_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostReshared_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

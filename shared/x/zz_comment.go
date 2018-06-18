@@ -213,18 +213,18 @@ type __Comment_Selector struct {
 }
 
 func NewComment_Deleter() *__Comment_Deleter {
-	d := __Comment_Deleter{whereSep: " AND "}
+	d := __Comment_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewComment_Updater() *__Comment_Updater {
-	u := __Comment_Updater{whereSep: " AND "}
+	u := __Comment_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewComment_Selector() *__Comment_Selector {
-	u := __Comment_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Comment_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

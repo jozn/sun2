@@ -111,14 +111,14 @@ func (cd *ChatDeleted) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun_chat.chat_deleted SET ` +
-		`ChatId = ?` +
-		` WHERE RoomKey = ?`
+		`RoomKey = ?` +
+		` WHERE ChatId = ?`
 
 	// run query
 	if LogTableSqlReq.ChatDeleted {
-		XOLog(sqlstr, cd.ChatId, cd.RoomKey)
+		XOLog(sqlstr, cd.RoomKey, cd.ChatId)
 	}
-	_, err = db.Exec(sqlstr, cd.ChatId, cd.RoomKey)
+	_, err = db.Exec(sqlstr, cd.RoomKey, cd.ChatId)
 
 	if LogTableSqlReq.ChatDeleted {
 		XOLogErr(err)
@@ -152,13 +152,13 @@ func (cd *ChatDeleted) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun_chat.chat_deleted WHERE RoomKey = ?`
+	const sqlstr = `DELETE FROM sun_chat.chat_deleted WHERE ChatId = ?`
 
 	// run query
 	if LogTableSqlReq.ChatDeleted {
-		XOLog(sqlstr, cd.RoomKey)
+		XOLog(sqlstr, cd.ChatId)
 	}
-	_, err = db.Exec(sqlstr, cd.RoomKey)
+	_, err = db.Exec(sqlstr, cd.ChatId)
 	if err != nil {
 		if LogTableSqlReq.ChatDeleted {
 			XOLogErr(err)
@@ -208,18 +208,18 @@ type __ChatDeleted_Selector struct {
 }
 
 func NewChatDeleted_Deleter() *__ChatDeleted_Deleter {
-	d := __ChatDeleted_Deleter{whereSep: " AND "}
+	d := __ChatDeleted_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewChatDeleted_Updater() *__ChatDeleted_Updater {
-	u := __ChatDeleted_Updater{whereSep: " AND "}
+	u := __ChatDeleted_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewChatDeleted_Selector() *__ChatDeleted_Selector {
-	u := __ChatDeleted_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __ChatDeleted_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

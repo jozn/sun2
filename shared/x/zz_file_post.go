@@ -215,18 +215,18 @@ type __FilePost_Selector struct {
 }
 
 func NewFilePost_Deleter() *__FilePost_Deleter {
-	d := __FilePost_Deleter{whereSep: " AND "}
+	d := __FilePost_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewFilePost_Updater() *__FilePost_Updater {
-	u := __FilePost_Updater{whereSep: " AND "}
+	u := __FilePost_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewFilePost_Selector() *__FilePost_Selector {
-	u := __FilePost_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __FilePost_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

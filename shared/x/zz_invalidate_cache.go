@@ -208,18 +208,18 @@ type __InvalidateCache_Selector struct {
 }
 
 func NewInvalidateCache_Deleter() *__InvalidateCache_Deleter {
-	d := __InvalidateCache_Deleter{whereSep: " AND "}
+	d := __InvalidateCache_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewInvalidateCache_Updater() *__InvalidateCache_Updater {
-	u := __InvalidateCache_Updater{whereSep: " AND "}
+	u := __InvalidateCache_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewInvalidateCache_Selector() *__InvalidateCache_Selector {
-	u := __InvalidateCache_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __InvalidateCache_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -294,49 +294,49 @@ func (c _StoreImpl) PreLoadFollowedByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetLikeById(Id int) (*Like, bool) {
-	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetLikesById(Id int) (*Likes, bool) {
+	o, ok := RowCache.Get("Likes:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
-	obj2, err := LikeById(base.DB, Id)
+	obj2, err := LikesById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetLikeById_JustCache(Id int) (*Like, bool) {
-	o, ok := RowCache.Get("Like:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetLikesById_JustCache(Id int) (*Likes, bool) {
+	o, ok := RowCache.Get("Likes:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*Like); ok {
+		if obj, ok := o.(*Likes); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.Like {
-		XOLogErr(errors.New("_JustCache is empty for Like: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.Likes {
+		XOLogErr(errors.New("_JustCache is empty for Likes: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadLikeByIds(ids []int) {
+func (c _StoreImpl) PreLoadLikesByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("Like:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("Likes:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewLike_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewLikes_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -438,49 +438,49 @@ func (c _StoreImpl) PreLoadNotifyRemovedByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPhoneContactById(Id int) (*PhoneContact, bool) {
-	o, ok := RowCache.Get("PhoneContact:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetPhoneContactsById(Id int) (*PhoneContacts, bool) {
+	o, ok := RowCache.Get("PhoneContacts:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*PhoneContact); ok {
+		if obj, ok := o.(*PhoneContacts); ok {
 			return obj, true
 		}
 	}
-	obj2, err := PhoneContactById(base.DB, Id)
+	obj2, err := PhoneContactsById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.PhoneContact {
+	if LogTableSqlReq.PhoneContacts {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetPhoneContactById_JustCache(Id int) (*PhoneContact, bool) {
-	o, ok := RowCache.Get("PhoneContact:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetPhoneContactsById_JustCache(Id int) (*PhoneContacts, bool) {
+	o, ok := RowCache.Get("PhoneContacts:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*PhoneContact); ok {
+		if obj, ok := o.(*PhoneContacts); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.PhoneContact {
-		XOLogErr(errors.New("_JustCache is empty for PhoneContact: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.PhoneContacts {
+		XOLogErr(errors.New("_JustCache is empty for PhoneContacts: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPhoneContactByIds(ids []int) {
+func (c _StoreImpl) PreLoadPhoneContactsByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("PhoneContact:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("PhoneContacts:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewPhoneContact_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewPhoneContacts_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -630,49 +630,49 @@ func (c _StoreImpl) PreLoadPostDeletedByPostIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPostKeyById(Id int) (*PostKey, bool) {
-	o, ok := RowCache.Get("PostKey:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetPostKeysById(Id int) (*PostKeys, bool) {
+	o, ok := RowCache.Get("PostKeys:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
-	obj2, err := PostKeyById(base.DB, Id)
+	obj2, err := PostKeysById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.PostKey {
+	if LogTableSqlReq.PostKeys {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetPostKeyById_JustCache(Id int) (*PostKey, bool) {
-	o, ok := RowCache.Get("PostKey:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetPostKeysById_JustCache(Id int) (*PostKeys, bool) {
+	o, ok := RowCache.Get("PostKeys:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*PostKey); ok {
+		if obj, ok := o.(*PostKeys); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.PostKey {
-		XOLogErr(errors.New("_JustCache is empty for PostKey: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.PostKeys {
+		XOLogErr(errors.New("_JustCache is empty for PostKeys: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPostKeyByIds(ids []int) {
+func (c _StoreImpl) PreLoadPostKeysByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("PostKey:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("PostKeys:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewPostKey_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewPostKeys_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -918,55 +918,101 @@ func (c _StoreImpl) PreLoadSessionByIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSettingNotificationByUserId(UserId int) (*SettingNotification, bool) {
-	o, ok := RowCache.Get("SettingNotification:" + strconv.Itoa(UserId))
+func (c _StoreImpl) GetSettingNotificationsByUserId(UserId int) (*SettingNotifications, bool) {
+	o, ok := RowCache.Get("SettingNotifications:" + strconv.Itoa(UserId))
 	if ok {
-		if obj, ok := o.(*SettingNotification); ok {
+		if obj, ok := o.(*SettingNotifications); ok {
 			return obj, true
 		}
 	}
-	obj2, err := SettingNotificationByUserId(base.DB, UserId)
+	obj2, err := SettingNotificationsByUserId(base.DB, UserId)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.SettingNotification {
+	if LogTableSqlReq.SettingNotifications {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetSettingNotificationByUserId_JustCache(UserId int) (*SettingNotification, bool) {
-	o, ok := RowCache.Get("SettingNotification:" + strconv.Itoa(UserId))
+func (c _StoreImpl) GetSettingNotificationsByUserId_JustCache(UserId int) (*SettingNotifications, bool) {
+	o, ok := RowCache.Get("SettingNotifications:" + strconv.Itoa(UserId))
 	if ok {
-		if obj, ok := o.(*SettingNotification); ok {
+		if obj, ok := o.(*SettingNotifications); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.SettingNotification {
-		XOLogErr(errors.New("_JustCache is empty for SettingNotification: " + strconv.Itoa(UserId)))
+	if LogTableSqlReq.SettingNotifications {
+		XOLogErr(errors.New("_JustCache is empty for SettingNotifications: " + strconv.Itoa(UserId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadSettingNotificationByUserIds(ids []int) {
+func (c _StoreImpl) PreLoadSettingNotificationsByUserIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("SettingNotification:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("SettingNotifications:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewSettingNotification_Selector().UserId_In(not_cached).GetRows(base.DB)
+		NewSettingNotifications_Selector().UserId_In(not_cached).GetRows(base.DB)
 	}
 }
 
 // yes 222 int
 
-// yes 222 uint
+func (c _StoreImpl) GetSmsById(Id int) (*Sms, bool) {
+	o, ok := RowCache.Get("Sms:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Sms); ok {
+			return obj, true
+		}
+	}
+	obj2, err := SmsById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.Sms {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetSmsById_JustCache(Id int) (*Sms, bool) {
+	o, ok := RowCache.Get("Sms:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*Sms); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.Sms {
+		XOLogErr(errors.New("_JustCache is empty for Sms: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadSmsByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("Sms:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewSms_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
 
 func (c _StoreImpl) GetTagByTagId(TagId int) (*Tag, bool) {
 	o, ok := RowCache.Get("Tag:" + strconv.Itoa(TagId))
@@ -1256,14 +1302,14 @@ func (c _StoreImpl) PreLoadChatByChatIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetChatDeletedByRoomKey(RoomKey string) (*ChatDeleted, bool) {
-	o, ok := RowCache.Get("ChatDeleted:" + RoomKey)
+func (c _StoreImpl) GetChatDeletedByChatId(ChatId int) (*ChatDeleted, bool) {
+	o, ok := RowCache.Get("ChatDeleted:" + strconv.Itoa(ChatId))
 	if ok {
 		if obj, ok := o.(*ChatDeleted); ok {
 			return obj, true
 		}
 	}
-	obj2, err := ChatDeletedByRoomKey(base.DB, RoomKey)
+	obj2, err := ChatDeletedByChatId(base.DB, ChatId)
 	if err == nil {
 		return obj2, true
 	}
@@ -1273,8 +1319,8 @@ func (c _StoreImpl) GetChatDeletedByRoomKey(RoomKey string) (*ChatDeleted, bool)
 	return nil, false
 }
 
-func (c _StoreImpl) GetChatDeletedByRoomKey_JustCache(RoomKey string) (*ChatDeleted, bool) {
-	o, ok := RowCache.Get("ChatDeleted:" + RoomKey)
+func (c _StoreImpl) GetChatDeletedByChatId_JustCache(ChatId int) (*ChatDeleted, bool) {
+	o, ok := RowCache.Get("ChatDeleted:" + strconv.Itoa(ChatId))
 	if ok {
 		if obj, ok := o.(*ChatDeleted); ok {
 			return obj, true
@@ -1282,27 +1328,27 @@ func (c _StoreImpl) GetChatDeletedByRoomKey_JustCache(RoomKey string) (*ChatDele
 	}
 
 	if LogTableSqlReq.ChatDeleted {
-		XOLogErr(errors.New("_JustCache is empty for ChatDeleted: " + RoomKey))
+		XOLogErr(errors.New("_JustCache is empty for ChatDeleted: " + strconv.Itoa(ChatId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadChatDeletedByRoomKeys(ids []string) {
-	not_cached := make([]string, 0, len(ids))
+func (c _StoreImpl) PreLoadChatDeletedByChatIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("ChatDeleted:" + id)
+		_, ok := RowCache.Get("ChatDeleted:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewChatDeleted_Selector().RoomKey_In(not_cached).GetRows(base.DB)
+		NewChatDeleted_Selector().ChatId_In(not_cached).GetRows(base.DB)
 	}
 }
 
-// yes 222 string
+// yes 222 int
 
 func (c _StoreImpl) GetChatLastMessageByChatIdGroupId(ChatIdGroupId string) (*ChatLastMessage, bool) {
 	o, ok := RowCache.Get("ChatLastMessage:" + ChatIdGroupId)
@@ -1784,49 +1830,49 @@ func (c _StoreImpl) PreLoadHomeFanoutByOrderIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetSuggestedTopPostById(Id int) (*SuggestedTopPost, bool) {
-	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetSuggestedTopPostsById(Id int) (*SuggestedTopPosts, bool) {
+	o, ok := RowCache.Get("SuggestedTopPosts:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*SuggestedTopPost); ok {
+		if obj, ok := o.(*SuggestedTopPosts); ok {
 			return obj, true
 		}
 	}
-	obj2, err := SuggestedTopPostById(base.DB, Id)
+	obj2, err := SuggestedTopPostsById(base.DB, Id)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.SuggestedTopPost {
+	if LogTableSqlReq.SuggestedTopPosts {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetSuggestedTopPostById_JustCache(Id int) (*SuggestedTopPost, bool) {
-	o, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(Id))
+func (c _StoreImpl) GetSuggestedTopPostsById_JustCache(Id int) (*SuggestedTopPosts, bool) {
+	o, ok := RowCache.Get("SuggestedTopPosts:" + strconv.Itoa(Id))
 	if ok {
-		if obj, ok := o.(*SuggestedTopPost); ok {
+		if obj, ok := o.(*SuggestedTopPosts); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.SuggestedTopPost {
-		XOLogErr(errors.New("_JustCache is empty for SuggestedTopPost: " + strconv.Itoa(Id)))
+	if LogTableSqlReq.SuggestedTopPosts {
+		XOLogErr(errors.New("_JustCache is empty for SuggestedTopPosts: " + strconv.Itoa(Id)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadSuggestedTopPostByIds(ids []int) {
+func (c _StoreImpl) PreLoadSuggestedTopPostsByIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("SuggestedTopPost:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("SuggestedTopPosts:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewSuggestedTopPost_Selector().Id_In(not_cached).GetRows(base.DB)
+		NewSuggestedTopPosts_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

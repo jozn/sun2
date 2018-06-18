@@ -208,18 +208,18 @@ type __GroupPinedMsg_Selector struct {
 }
 
 func NewGroupPinedMsg_Deleter() *__GroupPinedMsg_Deleter {
-	d := __GroupPinedMsg_Deleter{whereSep: " AND "}
+	d := __GroupPinedMsg_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewGroupPinedMsg_Updater() *__GroupPinedMsg_Updater {
-	u := __GroupPinedMsg_Updater{whereSep: " AND "}
+	u := __GroupPinedMsg_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewGroupPinedMsg_Selector() *__GroupPinedMsg_Selector {
-	u := __GroupPinedMsg_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __GroupPinedMsg_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

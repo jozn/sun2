@@ -11,10 +11,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Like represents a row from 'sun.likes'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// Likes represents a row from 'sun.likes'.
 
 // Manualy copy this to project
-type Like__ struct {
+type Likes__ struct {
 	Id           int `json:"Id"`           // Id -
 	PostId       int `json:"PostId"`       // PostId -
 	PostTypeEnum int `json:"PostTypeEnum"` // PostTypeEnum -
@@ -25,18 +25,18 @@ type Like__ struct {
 	_exists, _deleted bool
 }
 
-// Exists determines if the Like exists in the database.
-func (l *Like) Exists() bool {
+// Exists determines if the Likes exists in the database.
+func (l *Likes) Exists() bool {
 	return l._exists
 }
 
-// Deleted provides information if the Like has been deleted from the database.
-func (l *Like) Deleted() bool {
+// Deleted provides information if the Likes has been deleted from the database.
+func (l *Likes) Deleted() bool {
 	return l._deleted
 }
 
-// Insert inserts the Like to the database.
-func (l *Like) Insert(db XODB) error {
+// Insert inserts the Likes to the database.
+func (l *Likes) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
@@ -52,7 +52,7 @@ func (l *Like) Insert(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
 	}
 	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
@@ -63,13 +63,13 @@ func (l *Like) Insert(db XODB) error {
 	// set existence
 	l._exists = true
 
-	OnLike_AfterInsert(l)
+	OnLikes_AfterInsert(l)
 
 	return nil
 }
 
-// Insert inserts the Like to the database.
-func (l *Like) Replace(db XODB) error {
+// Insert inserts the Likes to the database.
+func (l *Likes) Replace(db XODB) error {
 	var err error
 
 	// sql query
@@ -81,12 +81,12 @@ func (l *Like) Replace(db XODB) error {
 		`)`
 
 	// run query
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
 	}
 	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return err
@@ -94,13 +94,13 @@ func (l *Like) Replace(db XODB) error {
 
 	l._exists = true
 
-	OnLike_AfterInsert(l)
+	OnLikes_AfterInsert(l)
 
 	return nil
 }
 
-// Update updates the Like in the database.
-func (l *Like) Update(db XODB) error {
+// Update updates the Likes in the database.
+func (l *Likes) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -119,21 +119,21 @@ func (l *Like) Update(db XODB) error {
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime, l.Id)
 	}
 	_, err = db.Exec(sqlstr, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime, l.Id)
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLogErr(err)
 	}
-	OnLike_AfterUpdate(l)
+	OnLikes_AfterUpdate(l)
 
 	return err
 }
 
-// Save saves the Like to the database.
-func (l *Like) Save(db XODB) error {
+// Save saves the Likes to the database.
+func (l *Likes) Save(db XODB) error {
 	if l.Exists() {
 		return l.Update(db)
 	}
@@ -141,8 +141,8 @@ func (l *Like) Save(db XODB) error {
 	return l.Replace(db)
 }
 
-// Delete deletes the Like from the database.
-func (l *Like) Delete(db XODB) error {
+// Delete deletes the Likes from the database.
+func (l *Likes) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
@@ -159,12 +159,12 @@ func (l *Like) Delete(db XODB) error {
 	const sqlstr = `DELETE FROM sun.likes WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, l.Id)
 	}
 	_, err = db.Exec(sqlstr, l.Id)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return err
@@ -173,7 +173,7 @@ func (l *Like) Delete(db XODB) error {
 	// set deleted
 	l._deleted = true
 
-	OnLike_AfterDelete(l)
+	OnLikes_AfterDelete(l)
 
 	return nil
 }
@@ -184,14 +184,14 @@ func (l *Like) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __Like_Deleter struct {
+type __Likes_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __Like_Updater struct {
+type __Likes_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -200,7 +200,7 @@ type __Like_Updater struct {
 	isMysql     bool
 }
 
-type __Like_Selector struct {
+type __Likes_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -211,30 +211,30 @@ type __Like_Selector struct {
 	isMysql     bool
 }
 
-func NewLike_Deleter() *__Like_Deleter {
-	d := __Like_Deleter{whereSep: " AND "}
+func NewLikes_Deleter() *__Likes_Deleter {
+	d := __Likes_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewLike_Updater() *__Like_Updater {
-	u := __Like_Updater{whereSep: " AND "}
+func NewLikes_Updater() *__Likes_Updater {
+	u := __Likes_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewLike_Selector() *__Like_Selector {
-	u := __Like_Selector{whereSep: " AND ", selectCol: "*"}
+func NewLikes_Selector() *__Likes_Selector {
+	u := __Likes_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__Like_Selector)nextDollars(size int) string  {
+func (m *__Likes_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__Like_Selector)nextDollar() string  {
+func (m *__Likes_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -245,25 +245,25 @@ func (m *__Like_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Like_Deleter) nextDollars(size int) string {
+func (m *__Likes_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Like_Deleter) nextDollar() string {
+func (m *__Likes_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Like_Deleter) Or() *__Like_Deleter {
+func (u *__Likes_Deleter) Or() *__Likes_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Like_Deleter) Id_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) Id_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -276,7 +276,7 @@ func (u *__Like_Deleter) Id_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) Id_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) Id_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -289,7 +289,7 @@ func (u *__Like_Deleter) Id_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) Id_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) Id_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -302,7 +302,7 @@ func (u *__Like_Deleter) Id_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) Id_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -313,7 +313,7 @@ func (d *__Like_Deleter) Id_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) Id_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -324,7 +324,7 @@ func (d *__Like_Deleter) Id_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) Id_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -335,7 +335,7 @@ func (d *__Like_Deleter) Id_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) Id_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -346,7 +346,7 @@ func (d *__Like_Deleter) Id_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) Id_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -357,7 +357,7 @@ func (d *__Like_Deleter) Id_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) Id_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) Id_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -368,7 +368,7 @@ func (d *__Like_Deleter) Id_GE(val int) *__Like_Deleter {
 	return d
 }
 
-func (u *__Like_Deleter) PostId_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostId_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -381,7 +381,7 @@ func (u *__Like_Deleter) PostId_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) PostId_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostId_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -394,7 +394,7 @@ func (u *__Like_Deleter) PostId_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) PostId_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostId_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -407,7 +407,7 @@ func (u *__Like_Deleter) PostId_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) PostId_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -418,7 +418,7 @@ func (d *__Like_Deleter) PostId_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostId_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -429,7 +429,7 @@ func (d *__Like_Deleter) PostId_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostId_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -440,7 +440,7 @@ func (d *__Like_Deleter) PostId_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostId_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -451,7 +451,7 @@ func (d *__Like_Deleter) PostId_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostId_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -462,7 +462,7 @@ func (d *__Like_Deleter) PostId_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostId_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostId_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -473,7 +473,7 @@ func (d *__Like_Deleter) PostId_GE(val int) *__Like_Deleter {
 	return d
 }
 
-func (u *__Like_Deleter) PostTypeEnum_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostTypeEnum_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -486,7 +486,7 @@ func (u *__Like_Deleter) PostTypeEnum_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) PostTypeEnum_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostTypeEnum_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -499,7 +499,7 @@ func (u *__Like_Deleter) PostTypeEnum_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) PostTypeEnum_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) PostTypeEnum_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -512,7 +512,7 @@ func (u *__Like_Deleter) PostTypeEnum_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) PostTypeEnum_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -523,7 +523,7 @@ func (d *__Like_Deleter) PostTypeEnum_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostTypeEnum_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -534,7 +534,7 @@ func (d *__Like_Deleter) PostTypeEnum_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostTypeEnum_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -545,7 +545,7 @@ func (d *__Like_Deleter) PostTypeEnum_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostTypeEnum_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -556,7 +556,7 @@ func (d *__Like_Deleter) PostTypeEnum_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostTypeEnum_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -567,7 +567,7 @@ func (d *__Like_Deleter) PostTypeEnum_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) PostTypeEnum_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) PostTypeEnum_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -578,7 +578,7 @@ func (d *__Like_Deleter) PostTypeEnum_GE(val int) *__Like_Deleter {
 	return d
 }
 
-func (u *__Like_Deleter) UserId_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) UserId_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -591,7 +591,7 @@ func (u *__Like_Deleter) UserId_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) UserId_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) UserId_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -604,7 +604,7 @@ func (u *__Like_Deleter) UserId_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) UserId_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) UserId_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -617,7 +617,7 @@ func (u *__Like_Deleter) UserId_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) UserId_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -628,7 +628,7 @@ func (d *__Like_Deleter) UserId_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) UserId_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -639,7 +639,7 @@ func (d *__Like_Deleter) UserId_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) UserId_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -650,7 +650,7 @@ func (d *__Like_Deleter) UserId_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) UserId_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -661,7 +661,7 @@ func (d *__Like_Deleter) UserId_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) UserId_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -672,7 +672,7 @@ func (d *__Like_Deleter) UserId_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) UserId_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) UserId_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -683,7 +683,7 @@ func (d *__Like_Deleter) UserId_GE(val int) *__Like_Deleter {
 	return d
 }
 
-func (u *__Like_Deleter) LikeEnum_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) LikeEnum_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -696,7 +696,7 @@ func (u *__Like_Deleter) LikeEnum_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) LikeEnum_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) LikeEnum_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -709,7 +709,7 @@ func (u *__Like_Deleter) LikeEnum_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) LikeEnum_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) LikeEnum_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -722,7 +722,7 @@ func (u *__Like_Deleter) LikeEnum_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) LikeEnum_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -733,7 +733,7 @@ func (d *__Like_Deleter) LikeEnum_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) LikeEnum_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -744,7 +744,7 @@ func (d *__Like_Deleter) LikeEnum_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) LikeEnum_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -755,7 +755,7 @@ func (d *__Like_Deleter) LikeEnum_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) LikeEnum_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -766,7 +766,7 @@ func (d *__Like_Deleter) LikeEnum_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) LikeEnum_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -777,7 +777,7 @@ func (d *__Like_Deleter) LikeEnum_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) LikeEnum_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) LikeEnum_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -788,7 +788,7 @@ func (d *__Like_Deleter) LikeEnum_GE(val int) *__Like_Deleter {
 	return d
 }
 
-func (u *__Like_Deleter) CreatedTime_In(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) CreatedTime_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -801,7 +801,7 @@ func (u *__Like_Deleter) CreatedTime_In(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) CreatedTime_Ins(ins ...int) *__Like_Deleter {
+func (u *__Likes_Deleter) CreatedTime_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -814,7 +814,7 @@ func (u *__Like_Deleter) CreatedTime_Ins(ins ...int) *__Like_Deleter {
 	return u
 }
 
-func (u *__Like_Deleter) CreatedTime_NotIn(ins []int) *__Like_Deleter {
+func (u *__Likes_Deleter) CreatedTime_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -827,7 +827,7 @@ func (u *__Like_Deleter) CreatedTime_NotIn(ins []int) *__Like_Deleter {
 	return u
 }
 
-func (d *__Like_Deleter) CreatedTime_Eq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -838,7 +838,7 @@ func (d *__Like_Deleter) CreatedTime_Eq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) CreatedTime_NotEq(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -849,7 +849,7 @@ func (d *__Like_Deleter) CreatedTime_NotEq(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) CreatedTime_LT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -860,7 +860,7 @@ func (d *__Like_Deleter) CreatedTime_LT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) CreatedTime_LE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -871,7 +871,7 @@ func (d *__Like_Deleter) CreatedTime_LE(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) CreatedTime_GT(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -882,7 +882,7 @@ func (d *__Like_Deleter) CreatedTime_GT(val int) *__Like_Deleter {
 	return d
 }
 
-func (d *__Like_Deleter) CreatedTime_GE(val int) *__Like_Deleter {
+func (d *__Likes_Deleter) CreatedTime_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -894,25 +894,25 @@ func (d *__Like_Deleter) CreatedTime_GE(val int) *__Like_Deleter {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Like_Updater) nextDollars(size int) string {
+func (m *__Likes_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Like_Updater) nextDollar() string {
+func (m *__Likes_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Like_Updater) Or() *__Like_Updater {
+func (u *__Likes_Updater) Or() *__Likes_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Like_Updater) Id_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) Id_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -925,7 +925,7 @@ func (u *__Like_Updater) Id_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) Id_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) Id_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -938,7 +938,7 @@ func (u *__Like_Updater) Id_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) Id_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) Id_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -951,7 +951,7 @@ func (u *__Like_Updater) Id_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) Id_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -962,7 +962,7 @@ func (d *__Like_Updater) Id_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) Id_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -973,7 +973,7 @@ func (d *__Like_Updater) Id_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) Id_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -984,7 +984,7 @@ func (d *__Like_Updater) Id_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) Id_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -995,7 +995,7 @@ func (d *__Like_Updater) Id_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) Id_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1006,7 +1006,7 @@ func (d *__Like_Updater) Id_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) Id_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) Id_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1017,7 +1017,7 @@ func (d *__Like_Updater) Id_GE(val int) *__Like_Updater {
 	return d
 }
 
-func (u *__Like_Updater) PostId_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) PostId_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1030,7 +1030,7 @@ func (u *__Like_Updater) PostId_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) PostId_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) PostId_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1043,7 +1043,7 @@ func (u *__Like_Updater) PostId_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) PostId_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) PostId_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1056,7 +1056,7 @@ func (u *__Like_Updater) PostId_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) PostId_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1067,7 +1067,7 @@ func (d *__Like_Updater) PostId_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostId_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1078,7 +1078,7 @@ func (d *__Like_Updater) PostId_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostId_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1089,7 +1089,7 @@ func (d *__Like_Updater) PostId_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostId_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1100,7 +1100,7 @@ func (d *__Like_Updater) PostId_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostId_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1111,7 +1111,7 @@ func (d *__Like_Updater) PostId_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostId_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostId_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1122,7 +1122,7 @@ func (d *__Like_Updater) PostId_GE(val int) *__Like_Updater {
 	return d
 }
 
-func (u *__Like_Updater) PostTypeEnum_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) PostTypeEnum_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1135,7 +1135,7 @@ func (u *__Like_Updater) PostTypeEnum_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) PostTypeEnum_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) PostTypeEnum_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1148,7 +1148,7 @@ func (u *__Like_Updater) PostTypeEnum_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) PostTypeEnum_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) PostTypeEnum_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1161,7 +1161,7 @@ func (u *__Like_Updater) PostTypeEnum_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) PostTypeEnum_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1172,7 +1172,7 @@ func (d *__Like_Updater) PostTypeEnum_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostTypeEnum_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1183,7 +1183,7 @@ func (d *__Like_Updater) PostTypeEnum_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostTypeEnum_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1194,7 +1194,7 @@ func (d *__Like_Updater) PostTypeEnum_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostTypeEnum_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1205,7 +1205,7 @@ func (d *__Like_Updater) PostTypeEnum_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostTypeEnum_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1216,7 +1216,7 @@ func (d *__Like_Updater) PostTypeEnum_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) PostTypeEnum_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) PostTypeEnum_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1227,7 +1227,7 @@ func (d *__Like_Updater) PostTypeEnum_GE(val int) *__Like_Updater {
 	return d
 }
 
-func (u *__Like_Updater) UserId_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) UserId_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1240,7 +1240,7 @@ func (u *__Like_Updater) UserId_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) UserId_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) UserId_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1253,7 +1253,7 @@ func (u *__Like_Updater) UserId_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) UserId_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) UserId_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1266,7 +1266,7 @@ func (u *__Like_Updater) UserId_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) UserId_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1277,7 +1277,7 @@ func (d *__Like_Updater) UserId_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) UserId_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1288,7 +1288,7 @@ func (d *__Like_Updater) UserId_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) UserId_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1299,7 +1299,7 @@ func (d *__Like_Updater) UserId_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) UserId_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1310,7 +1310,7 @@ func (d *__Like_Updater) UserId_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) UserId_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1321,7 +1321,7 @@ func (d *__Like_Updater) UserId_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) UserId_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) UserId_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1332,7 +1332,7 @@ func (d *__Like_Updater) UserId_GE(val int) *__Like_Updater {
 	return d
 }
 
-func (u *__Like_Updater) LikeEnum_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) LikeEnum_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1345,7 +1345,7 @@ func (u *__Like_Updater) LikeEnum_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) LikeEnum_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) LikeEnum_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1358,7 +1358,7 @@ func (u *__Like_Updater) LikeEnum_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) LikeEnum_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) LikeEnum_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1371,7 +1371,7 @@ func (u *__Like_Updater) LikeEnum_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) LikeEnum_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1382,7 +1382,7 @@ func (d *__Like_Updater) LikeEnum_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) LikeEnum_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1393,7 +1393,7 @@ func (d *__Like_Updater) LikeEnum_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) LikeEnum_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1404,7 +1404,7 @@ func (d *__Like_Updater) LikeEnum_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) LikeEnum_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1415,7 +1415,7 @@ func (d *__Like_Updater) LikeEnum_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) LikeEnum_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1426,7 +1426,7 @@ func (d *__Like_Updater) LikeEnum_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) LikeEnum_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) LikeEnum_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1437,7 +1437,7 @@ func (d *__Like_Updater) LikeEnum_GE(val int) *__Like_Updater {
 	return d
 }
 
-func (u *__Like_Updater) CreatedTime_In(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) CreatedTime_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1450,7 +1450,7 @@ func (u *__Like_Updater) CreatedTime_In(ins []int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) CreatedTime_Ins(ins ...int) *__Like_Updater {
+func (u *__Likes_Updater) CreatedTime_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1463,7 +1463,7 @@ func (u *__Like_Updater) CreatedTime_Ins(ins ...int) *__Like_Updater {
 	return u
 }
 
-func (u *__Like_Updater) CreatedTime_NotIn(ins []int) *__Like_Updater {
+func (u *__Likes_Updater) CreatedTime_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1476,7 +1476,7 @@ func (u *__Like_Updater) CreatedTime_NotIn(ins []int) *__Like_Updater {
 	return u
 }
 
-func (d *__Like_Updater) CreatedTime_Eq(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1487,7 +1487,7 @@ func (d *__Like_Updater) CreatedTime_Eq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) CreatedTime_NotEq(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1498,7 +1498,7 @@ func (d *__Like_Updater) CreatedTime_NotEq(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) CreatedTime_LT(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1509,7 +1509,7 @@ func (d *__Like_Updater) CreatedTime_LT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) CreatedTime_LE(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1520,7 +1520,7 @@ func (d *__Like_Updater) CreatedTime_LE(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) CreatedTime_GT(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1531,7 +1531,7 @@ func (d *__Like_Updater) CreatedTime_GT(val int) *__Like_Updater {
 	return d
 }
 
-func (d *__Like_Updater) CreatedTime_GE(val int) *__Like_Updater {
+func (d *__Likes_Updater) CreatedTime_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1543,25 +1543,25 @@ func (d *__Like_Updater) CreatedTime_GE(val int) *__Like_Updater {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__Like_Selector) nextDollars(size int) string {
+func (m *__Likes_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__Like_Selector) nextDollar() string {
+func (m *__Likes_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__Like_Selector) Or() *__Like_Selector {
+func (u *__Likes_Selector) Or() *__Likes_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__Like_Selector) Id_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) Id_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1574,7 +1574,7 @@ func (u *__Like_Selector) Id_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) Id_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) Id_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1587,7 +1587,7 @@ func (u *__Like_Selector) Id_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) Id_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) Id_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1600,7 +1600,7 @@ func (u *__Like_Selector) Id_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) Id_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1611,7 +1611,7 @@ func (d *__Like_Selector) Id_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) Id_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1622,7 +1622,7 @@ func (d *__Like_Selector) Id_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) Id_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1633,7 +1633,7 @@ func (d *__Like_Selector) Id_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) Id_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1644,7 +1644,7 @@ func (d *__Like_Selector) Id_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) Id_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1655,7 +1655,7 @@ func (d *__Like_Selector) Id_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) Id_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) Id_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1666,7 +1666,7 @@ func (d *__Like_Selector) Id_GE(val int) *__Like_Selector {
 	return d
 }
 
-func (u *__Like_Selector) PostId_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) PostId_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1679,7 +1679,7 @@ func (u *__Like_Selector) PostId_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) PostId_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) PostId_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1692,7 +1692,7 @@ func (u *__Like_Selector) PostId_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) PostId_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) PostId_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1705,7 +1705,7 @@ func (u *__Like_Selector) PostId_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) PostId_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1716,7 +1716,7 @@ func (d *__Like_Selector) PostId_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostId_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1727,7 +1727,7 @@ func (d *__Like_Selector) PostId_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostId_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1738,7 +1738,7 @@ func (d *__Like_Selector) PostId_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostId_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1749,7 +1749,7 @@ func (d *__Like_Selector) PostId_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostId_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1760,7 +1760,7 @@ func (d *__Like_Selector) PostId_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostId_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostId_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1771,7 +1771,7 @@ func (d *__Like_Selector) PostId_GE(val int) *__Like_Selector {
 	return d
 }
 
-func (u *__Like_Selector) PostTypeEnum_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) PostTypeEnum_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1784,7 +1784,7 @@ func (u *__Like_Selector) PostTypeEnum_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) PostTypeEnum_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) PostTypeEnum_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1797,7 +1797,7 @@ func (u *__Like_Selector) PostTypeEnum_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) PostTypeEnum_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) PostTypeEnum_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1810,7 +1810,7 @@ func (u *__Like_Selector) PostTypeEnum_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) PostTypeEnum_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1821,7 +1821,7 @@ func (d *__Like_Selector) PostTypeEnum_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostTypeEnum_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1832,7 +1832,7 @@ func (d *__Like_Selector) PostTypeEnum_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostTypeEnum_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1843,7 +1843,7 @@ func (d *__Like_Selector) PostTypeEnum_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostTypeEnum_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1854,7 +1854,7 @@ func (d *__Like_Selector) PostTypeEnum_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostTypeEnum_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1865,7 +1865,7 @@ func (d *__Like_Selector) PostTypeEnum_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) PostTypeEnum_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) PostTypeEnum_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1876,7 +1876,7 @@ func (d *__Like_Selector) PostTypeEnum_GE(val int) *__Like_Selector {
 	return d
 }
 
-func (u *__Like_Selector) UserId_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) UserId_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1889,7 +1889,7 @@ func (u *__Like_Selector) UserId_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) UserId_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) UserId_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1902,7 +1902,7 @@ func (u *__Like_Selector) UserId_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) UserId_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) UserId_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1915,7 +1915,7 @@ func (u *__Like_Selector) UserId_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) UserId_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1926,7 +1926,7 @@ func (d *__Like_Selector) UserId_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) UserId_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1937,7 +1937,7 @@ func (d *__Like_Selector) UserId_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) UserId_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1948,7 +1948,7 @@ func (d *__Like_Selector) UserId_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) UserId_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1959,7 +1959,7 @@ func (d *__Like_Selector) UserId_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) UserId_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1970,7 +1970,7 @@ func (d *__Like_Selector) UserId_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) UserId_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) UserId_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1981,7 +1981,7 @@ func (d *__Like_Selector) UserId_GE(val int) *__Like_Selector {
 	return d
 }
 
-func (u *__Like_Selector) LikeEnum_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) LikeEnum_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1994,7 +1994,7 @@ func (u *__Like_Selector) LikeEnum_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) LikeEnum_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) LikeEnum_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2007,7 +2007,7 @@ func (u *__Like_Selector) LikeEnum_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) LikeEnum_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) LikeEnum_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2020,7 +2020,7 @@ func (u *__Like_Selector) LikeEnum_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) LikeEnum_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2031,7 +2031,7 @@ func (d *__Like_Selector) LikeEnum_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) LikeEnum_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2042,7 +2042,7 @@ func (d *__Like_Selector) LikeEnum_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) LikeEnum_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2053,7 +2053,7 @@ func (d *__Like_Selector) LikeEnum_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) LikeEnum_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2064,7 +2064,7 @@ func (d *__Like_Selector) LikeEnum_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) LikeEnum_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2075,7 +2075,7 @@ func (d *__Like_Selector) LikeEnum_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) LikeEnum_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) LikeEnum_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2086,7 +2086,7 @@ func (d *__Like_Selector) LikeEnum_GE(val int) *__Like_Selector {
 	return d
 }
 
-func (u *__Like_Selector) CreatedTime_In(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) CreatedTime_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2099,7 +2099,7 @@ func (u *__Like_Selector) CreatedTime_In(ins []int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) CreatedTime_Ins(ins ...int) *__Like_Selector {
+func (u *__Likes_Selector) CreatedTime_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2112,7 +2112,7 @@ func (u *__Like_Selector) CreatedTime_Ins(ins ...int) *__Like_Selector {
 	return u
 }
 
-func (u *__Like_Selector) CreatedTime_NotIn(ins []int) *__Like_Selector {
+func (u *__Likes_Selector) CreatedTime_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -2125,7 +2125,7 @@ func (u *__Like_Selector) CreatedTime_NotIn(ins []int) *__Like_Selector {
 	return u
 }
 
-func (d *__Like_Selector) CreatedTime_Eq(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2136,7 +2136,7 @@ func (d *__Like_Selector) CreatedTime_Eq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) CreatedTime_NotEq(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2147,7 +2147,7 @@ func (d *__Like_Selector) CreatedTime_NotEq(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) CreatedTime_LT(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2158,7 +2158,7 @@ func (d *__Like_Selector) CreatedTime_LT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) CreatedTime_LE(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2169,7 +2169,7 @@ func (d *__Like_Selector) CreatedTime_LE(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) CreatedTime_GT(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2180,7 +2180,7 @@ func (d *__Like_Selector) CreatedTime_GT(val int) *__Like_Selector {
 	return d
 }
 
-func (d *__Like_Selector) CreatedTime_GE(val int) *__Like_Selector {
+func (d *__Likes_Selector) CreatedTime_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -2205,14 +2205,14 @@ func (d *__Like_Selector) CreatedTime_GE(val int) *__Like_Selector {
 
 //ints
 
-func (u *__Like_Updater) Id(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) Id(newVal int) *__Likes_Updater {
 	up := updateCol{" Id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) Id_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) Id_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2232,14 +2232,14 @@ func (u *__Like_Updater) Id_Increment(count int) *__Like_Updater {
 
 //ints
 
-func (u *__Like_Updater) PostId(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) PostId(newVal int) *__Likes_Updater {
 	up := updateCol{" PostId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) PostId_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) PostId_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2259,14 +2259,14 @@ func (u *__Like_Updater) PostId_Increment(count int) *__Like_Updater {
 
 //ints
 
-func (u *__Like_Updater) PostTypeEnum(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) PostTypeEnum(newVal int) *__Likes_Updater {
 	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) PostTypeEnum_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) PostTypeEnum_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2286,14 +2286,14 @@ func (u *__Like_Updater) PostTypeEnum_Increment(count int) *__Like_Updater {
 
 //ints
 
-func (u *__Like_Updater) UserId(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) UserId(newVal int) *__Likes_Updater {
 	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) UserId_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) UserId_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2313,14 +2313,14 @@ func (u *__Like_Updater) UserId_Increment(count int) *__Like_Updater {
 
 //ints
 
-func (u *__Like_Updater) LikeEnum(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) LikeEnum(newVal int) *__Likes_Updater {
 	up := updateCol{" LikeEnum = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" LikeEnum = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) LikeEnum_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) LikeEnum_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" LikeEnum = LikeEnum+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2340,14 +2340,14 @@ func (u *__Like_Updater) LikeEnum_Increment(count int) *__Like_Updater {
 
 //ints
 
-func (u *__Like_Updater) CreatedTime(newVal int) *__Like_Updater {
+func (u *__Likes_Updater) CreatedTime(newVal int) *__Likes_Updater {
 	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Like_Updater) CreatedTime_Increment(count int) *__Like_Updater {
+func (u *__Likes_Updater) CreatedTime_Increment(count int) *__Likes_Updater {
 	if count > 0 {
 		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2370,113 +2370,113 @@ func (u *__Like_Updater) CreatedTime_Increment(count int) *__Like_Updater {
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__Like_Selector) OrderBy_Id_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_Id_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_Id_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_Id_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_Id() *__Like_Selector {
+func (u *__Likes_Selector) Select_Id() *__Likes_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_PostId_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_PostId_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_PostId_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_PostId_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_PostId() *__Like_Selector {
+func (u *__Likes_Selector) Select_PostId() *__Likes_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_PostTypeEnum_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_PostTypeEnum_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_PostTypeEnum_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_PostTypeEnum_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY PostTypeEnum ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_PostTypeEnum() *__Like_Selector {
+func (u *__Likes_Selector) Select_PostTypeEnum() *__Likes_Selector {
 	u.selectCol = "PostTypeEnum"
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_UserId_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_UserId_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_UserId_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_UserId_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_UserId() *__Like_Selector {
+func (u *__Likes_Selector) Select_UserId() *__Likes_Selector {
 	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_LikeEnum_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_LikeEnum_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY LikeEnum DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_LikeEnum_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_LikeEnum_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY LikeEnum ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_LikeEnum() *__Like_Selector {
+func (u *__Likes_Selector) Select_LikeEnum() *__Likes_Selector {
 	u.selectCol = "LikeEnum"
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_CreatedTime_Desc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_CreatedTime_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__Like_Selector) OrderBy_CreatedTime_Asc() *__Like_Selector {
+func (u *__Likes_Selector) OrderBy_CreatedTime_Asc() *__Likes_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__Like_Selector) Select_CreatedTime() *__Like_Selector {
+func (u *__Likes_Selector) Select_CreatedTime() *__Likes_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__Like_Selector) Limit(num int) *__Like_Selector {
+func (u *__Likes_Selector) Limit(num int) *__Likes_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__Like_Selector) Offset(num int) *__Like_Selector {
+func (u *__Likes_Selector) Offset(num int) *__Likes_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__Like_Selector) Order_Rand() *__Like_Selector {
+func (u *__Likes_Selector) Order_Rand() *__Likes_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__Like_Selector) _stoSql() (string, []interface{}) {
+func (u *__Likes_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
 	sqlstr := "SELECT " + u.selectCol + " FROM sun.likes"
@@ -2499,20 +2499,20 @@ func (u *__Like_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__Like_Selector) GetRow(db *sqlx.DB) (*Like, error) {
+func (u *__Likes_Selector) GetRow(db *sqlx.DB) (*Likes, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &Like{}
+	row := &Likes{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2520,25 +2520,25 @@ func (u *__Like_Selector) GetRow(db *sqlx.DB) (*Like, error) {
 
 	row._exists = true
 
-	OnLike_LoadOne(row)
+	OnLikes_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__Like_Selector) GetRows(db *sqlx.DB) ([]*Like, error) {
+func (u *__Likes_Selector) GetRows(db *sqlx.DB) ([]*Likes, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*Like
+	var rows []*Likes
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2552,25 +2552,25 @@ func (u *__Like_Selector) GetRows(db *sqlx.DB) ([]*Like, error) {
 		rows[i]._exists = true
 	}
 
-	OnLike_LoadMany(rows)
+	OnLikes_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__Like_Selector) GetRows2(db *sqlx.DB) ([]Like, error) {
+func (u *__Likes_Selector) GetRows2(db *sqlx.DB) ([]Likes, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*Like
+	var rows []*Likes
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2584,9 +2584,9 @@ func (u *__Like_Selector) GetRows2(db *sqlx.DB) ([]Like, error) {
 		rows[i]._exists = true
 	}
 
-	OnLike_LoadMany(rows)
+	OnLikes_LoadMany(rows)
 
-	rows2 := make([]Like, len(rows))
+	rows2 := make([]Likes, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -2595,12 +2595,12 @@ func (u *__Like_Selector) GetRows2(db *sqlx.DB) ([]Like, error) {
 	return rows2, nil
 }
 
-func (u *__Like_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__Likes_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -2608,7 +2608,7 @@ func (u *__Like_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return "", err
@@ -2617,19 +2617,19 @@ func (u *__Like_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__Like_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__Likes_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2638,19 +2638,19 @@ func (u *__Like_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__Like_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__Likes_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2659,19 +2659,19 @@ func (u *__Like_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__Like_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__Likes_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2681,7 +2681,7 @@ func (u *__Like_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__Like_Updater) Update(db XODB) (int, error) {
+func (u *__Likes_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -2708,12 +2708,12 @@ func (u *__Like_Updater) Update(db XODB) (int, error) {
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2721,7 +2721,7 @@ func (u *__Like_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2730,7 +2730,7 @@ func (u *__Like_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__Like_Deleter) Delete(db XODB) (int, error) {
+func (d *__Likes_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2746,12 +2746,12 @@ func (d *__Like_Deleter) Delete(db XODB) (int, error) {
 	sqlstr := "DELETE FROM sun.likes WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2760,7 +2760,7 @@ func (d *__Like_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2769,9 +2769,9 @@ func (d *__Like_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  Like ////////////////
+///////////////////////// Mass insert - replace for  Likes ////////////////
 
-func MassInsert_Like(rows []Like, db XODB) error {
+func MassInsert_Likes(rows []Likes, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -2800,12 +2800,12 @@ func MassInsert_Like(rows []Like, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return err
@@ -2814,7 +2814,7 @@ func MassInsert_Like(rows []Like, db XODB) error {
 	return nil
 }
 
-func MassReplace_Like(rows []Like, db XODB) error {
+func MassReplace_Likes(rows []Likes, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
@@ -2842,12 +2842,12 @@ func MassReplace_Like(rows []Like, db XODB) error {
 
 	}
 
-	if LogTableSqlReq.Like {
+	if LogTableSqlReq.Likes {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.Like {
+		if LogTableSqlReq.Likes {
 			XOLogErr(err)
 		}
 		return err

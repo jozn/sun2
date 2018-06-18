@@ -55,7 +55,7 @@ message PB_Followed {
     int32 FollowedUserId = 3;
     int32 CreatedTime = 4;
 }
-message PB_Like {
+message PB_Likes {
     int64 Id = 1;
     int64 PostId = 2;
     int32 PostTypeEnum = 3;
@@ -80,7 +80,7 @@ message PB_NotifyRemoved {
     int32 ForUserId = 2;
     int64 Id = 3;
 }
-message PB_PhoneContact {
+message PB_PhoneContacts {
     int64 Id = 1;
     int32 UserId = 2;
     int64 ClientId = 3;
@@ -122,7 +122,7 @@ message PB_PostDeleted {
     int64 PostId = 1;
     int32 UserId = 2;
 }
-message PB_PostKey {
+message PB_PostKeys {
     int32 Id = 1;
     string PostKeyStr = 2;
     int32 Used = 3;
@@ -172,7 +172,7 @@ message PB_Session {
     int32 ActiveTime = 6;
     int32 CreatedTime = 7;
 }
-message PB_SettingNotification {
+message PB_SettingNotifications {
     int32 UserId = 1;
     int32 SocialLedOn = 2;
     string SocialLedColor = 3;
@@ -194,20 +194,24 @@ message PB_SettingNotification {
     int32 DirectSound = 19;
     int32 DirectPriority = 20;
 }
-message PB_Sm {
+message PB_Sms {
     int32 Id = 1;
     string Hash = 2;
-    string ClientPhone = 3;
-    int32 GenratedCode = 4;
-    string SmsSenderNumber = 5;
-    string SmsSendStatues = 6;
-    string Carrier = 7;
-    bytes Country = 8;
-    int32 IsValidPhone = 9;
-    int32 IsConfirmed = 10;
-    int32 IsLogin = 11;
-    int32 IsRegister = 12;
-    int32 RetriedCount = 13;
+    string AppUuid = 3;
+    string ClientPhone = 4;
+    int32 GenratedCode = 5;
+    string SmsSenderNumber = 6;
+    string SmsSendStatues = 7;
+    string SmsHttpBody = 8;
+    string Err = 9;
+    string Carrier = 10;
+    bytes Country = 11;
+    int32 IsValidPhone = 12;
+    int32 IsConfirmed = 13;
+    int32 IsLogin = 14;
+    int32 IsRegister = 15;
+    int32 RetriedCount = 16;
+    int32 TTL = 17;
 }
 message PB_Tag {
     int64 TagId = 1;
@@ -240,37 +244,39 @@ message PB_User {
     string LastName = 5;
     int32 IsVerified = 6;
     int64 AvatarId = 7;
-    int32 ProfilePrivacy = 8;
-    int32 OnlinePrivacy = 9;
-    int32 CallPrivacy = 10;
-    int32 AddToGroupPrivacy = 11;
-    int32 SeenMessagePrivacy = 12;
-    int64 Phone = 13;
-    string Email = 14;
-    string About = 15;
-    string PasswordHash = 16;
-    string PasswordSalt = 17;
-    int32 PostSeq = 18;
-    int32 FollowersCount = 19;
-    int32 FollowingCount = 20;
-    int32 PostsCount = 21;
-    int32 MediaCount = 22;
-    int32 PhotoCount = 23;
-    int32 VideoCount = 24;
-    int32 GifCount = 25;
-    int32 AudioCount = 26;
-    int32 VoiceCount = 27;
-    int32 FileCount = 28;
-    int32 LinkCount = 29;
-    int32 BoardCount = 30;
-    int32 PinedCount = 31;
-    int32 LikesCount = 32;
-    int32 ResharedCount = 33;
-    int32 LastPostTime = 34;
-    int32 CreatedTime = 35;
-    int32 VersionTime = 36;
-    int32 IsDeleted = 37;
-    int32 IsBanned = 38;
+    int32 AccessHash = 8;
+    int32 ProfilePrivacy = 9;
+    int32 OnlinePrivacy = 10;
+    int32 CallPrivacy = 11;
+    int32 AddToGroupPrivacy = 12;
+    int32 SeenMessagePrivacy = 13;
+    string Phone = 14;
+    string Email = 15;
+    string About = 16;
+    string DefaultUserName = 17;
+    string PasswordHash = 18;
+    string PasswordSalt = 19;
+    int32 PostSeq = 20;
+    int32 FollowersCount = 21;
+    int32 FollowingCount = 22;
+    int32 PostsCount = 23;
+    int32 MediaCount = 24;
+    int32 PhotoCount = 25;
+    int32 VideoCount = 26;
+    int32 GifCount = 27;
+    int32 AudioCount = 28;
+    int32 VoiceCount = 29;
+    int32 FileCount = 30;
+    int32 LinkCount = 31;
+    int32 BoardCount = 32;
+    int32 PinedCount = 33;
+    int32 LikesCount = 34;
+    int32 ResharedCount = 35;
+    int32 LastPostTime = 36;
+    int32 CreatedTime = 37;
+    int32 VersionTime = 38;
+    int32 IsDeleted = 39;
+    int32 IsBanned = 40;
 }
 message PB_UserRelation {
     int64 RelNanoId = 1;
@@ -411,7 +417,7 @@ message PB_HomeFanout {
     int64 PostUserId = 4;
     int64 ResharedId = 5;
 }
-message PB_SuggestedTopPost {
+message PB_SuggestedTopPosts {
     int64 Id = 1;
     int64 PostId = 2;
 }

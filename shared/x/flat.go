@@ -2,6 +2,7 @@ package x
 
 type PB_RoomsChanges_Flat struct {
 	VersionTime int
+	Chats       []Chat
 	rooms       []PB_ChatView
 }
 
@@ -602,7 +603,7 @@ var PB_Followed__FOlD = &PB_Followed{
 	CreatedTime:    0,
 }
 
-type PB_Like_Flat struct {
+type PB_Likes_Flat struct {
 	Id           int
 	PostId       int
 	PostTypeEnum int
@@ -612,8 +613,8 @@ type PB_Like_Flat struct {
 }
 
 //ToPB
-func (m *PB_Like) ToFlat() *PB_Like_Flat {
-	r := &PB_Like_Flat{
+func (m *PB_Likes) ToFlat() *PB_Likes_Flat {
+	r := &PB_Likes_Flat{
 		Id:           int(m.Id),
 		PostId:       int(m.PostId),
 		PostTypeEnum: int(m.PostTypeEnum),
@@ -625,8 +626,8 @@ func (m *PB_Like) ToFlat() *PB_Like_Flat {
 }
 
 //ToPB
-func (m *PB_Like_Flat) ToPB() *PB_Like {
-	r := &PB_Like{
+func (m *PB_Likes_Flat) ToPB() *PB_Likes {
+	r := &PB_Likes{
 		Id:           int64(m.Id),
 		PostId:       int64(m.PostId),
 		PostTypeEnum: int32(m.PostTypeEnum),
@@ -638,7 +639,7 @@ func (m *PB_Like_Flat) ToPB() *PB_Like {
 }
 
 //folding
-var PB_Like__FOlD = &PB_Like{
+var PB_Likes__FOlD = &PB_Likes{
 	Id:           0,
 	PostId:       0,
 	PostTypeEnum: 0,
@@ -741,7 +742,7 @@ var PB_NotifyRemoved__FOlD = &PB_NotifyRemoved{
 	Id:           0,
 }
 
-type PB_PhoneContact_Flat struct {
+type PB_PhoneContacts_Flat struct {
 	Id        int
 	UserId    int
 	ClientId  int
@@ -751,8 +752,8 @@ type PB_PhoneContact_Flat struct {
 }
 
 //ToPB
-func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
-	r := &PB_PhoneContact_Flat{
+func (m *PB_PhoneContacts) ToFlat() *PB_PhoneContacts_Flat {
+	r := &PB_PhoneContacts_Flat{
 		Id:        int(m.Id),
 		UserId:    int(m.UserId),
 		ClientId:  int(m.ClientId),
@@ -764,8 +765,8 @@ func (m *PB_PhoneContact) ToFlat() *PB_PhoneContact_Flat {
 }
 
 //ToPB
-func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
-	r := &PB_PhoneContact{
+func (m *PB_PhoneContacts_Flat) ToPB() *PB_PhoneContacts {
+	r := &PB_PhoneContacts{
 		Id:        int64(m.Id),
 		UserId:    int32(m.UserId),
 		ClientId:  int64(m.ClientId),
@@ -777,7 +778,7 @@ func (m *PB_PhoneContact_Flat) ToPB() *PB_PhoneContact {
 }
 
 //folding
-var PB_PhoneContact__FOlD = &PB_PhoneContact{
+var PB_PhoneContacts__FOlD = &PB_PhoneContacts{
 	Id:        0,
 	UserId:    0,
 	ClientId:  0,
@@ -961,15 +962,15 @@ var PB_PostDeleted__FOlD = &PB_PostDeleted{
 	UserId: 0,
 }
 
-type PB_PostKey_Flat struct {
+type PB_PostKeys_Flat struct {
 	Id         int
 	PostKeyStr string
 	Used       int
 }
 
 //ToPB
-func (m *PB_PostKey) ToFlat() *PB_PostKey_Flat {
-	r := &PB_PostKey_Flat{
+func (m *PB_PostKeys) ToFlat() *PB_PostKeys_Flat {
+	r := &PB_PostKeys_Flat{
 		Id:         int(m.Id),
 		PostKeyStr: m.PostKeyStr,
 		Used:       int(m.Used),
@@ -978,8 +979,8 @@ func (m *PB_PostKey) ToFlat() *PB_PostKey_Flat {
 }
 
 //ToPB
-func (m *PB_PostKey_Flat) ToPB() *PB_PostKey {
-	r := &PB_PostKey{
+func (m *PB_PostKeys_Flat) ToPB() *PB_PostKeys {
+	r := &PB_PostKeys{
 		Id:         int32(m.Id),
 		PostKeyStr: m.PostKeyStr,
 		Used:       int32(m.Used),
@@ -988,7 +989,7 @@ func (m *PB_PostKey_Flat) ToPB() *PB_PostKey {
 }
 
 //folding
-var PB_PostKey__FOlD = &PB_PostKey{
+var PB_PostKeys__FOlD = &PB_PostKeys{
 	Id:         0,
 	PostKeyStr: "",
 	Used:       0,
@@ -1239,7 +1240,7 @@ var PB_Session__FOlD = &PB_Session{
 	CreatedTime:   0,
 }
 
-type PB_SettingNotification_Flat struct {
+type PB_SettingNotifications_Flat struct {
 	UserId                   int
 	SocialLedOn              int
 	SocialLedColor           string
@@ -1263,8 +1264,8 @@ type PB_SettingNotification_Flat struct {
 }
 
 //ToPB
-func (m *PB_SettingNotification) ToFlat() *PB_SettingNotification_Flat {
-	r := &PB_SettingNotification_Flat{
+func (m *PB_SettingNotifications) ToFlat() *PB_SettingNotifications_Flat {
+	r := &PB_SettingNotifications_Flat{
 		UserId:                   int(m.UserId),
 		SocialLedOn:              int(m.SocialLedOn),
 		SocialLedColor:           m.SocialLedColor,
@@ -1290,8 +1291,8 @@ func (m *PB_SettingNotification) ToFlat() *PB_SettingNotification_Flat {
 }
 
 //ToPB
-func (m *PB_SettingNotification_Flat) ToPB() *PB_SettingNotification {
-	r := &PB_SettingNotification{
+func (m *PB_SettingNotifications_Flat) ToPB() *PB_SettingNotifications {
+	r := &PB_SettingNotifications{
 		UserId:                   int32(m.UserId),
 		SocialLedOn:              int32(m.SocialLedOn),
 		SocialLedColor:           m.SocialLedColor,
@@ -1317,7 +1318,7 @@ func (m *PB_SettingNotification_Flat) ToPB() *PB_SettingNotification {
 }
 
 //folding
-var PB_SettingNotification__FOlD = &PB_SettingNotification{
+var PB_SettingNotifications__FOlD = &PB_SettingNotifications{
 	UserId:                   0,
 	SocialLedOn:              0,
 	SocialLedColor:           "",
@@ -1338,6 +1339,95 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
 	DirectPopup:              0,
 	DirectSound:              0,
 	DirectPriority:           0,
+}
+
+type PB_Sms_Flat struct {
+	Id              int
+	Hash            string
+	AppUuid         string
+	ClientPhone     string
+	GenratedCode    int
+	SmsSenderNumber string
+	SmsSendStatues  string
+	SmsHttpBody     string
+	Err             string
+	Carrier         string
+	Country         []byte
+	IsValidPhone    int
+	IsConfirmed     int
+	IsLogin         int
+	IsRegister      int
+	RetriedCount    int
+	TTL             int
+}
+
+//ToPB
+func (m *PB_Sms) ToFlat() *PB_Sms_Flat {
+	r := &PB_Sms_Flat{
+		Id:              int(m.Id),
+		Hash:            m.Hash,
+		AppUuid:         m.AppUuid,
+		ClientPhone:     m.ClientPhone,
+		GenratedCode:    int(m.GenratedCode),
+		SmsSenderNumber: m.SmsSenderNumber,
+		SmsSendStatues:  m.SmsSendStatues,
+		SmsHttpBody:     m.SmsHttpBody,
+		Err:             m.Err,
+		Carrier:         m.Carrier,
+		Country:         []byte(m.Country),
+		IsValidPhone:    int(m.IsValidPhone),
+		IsConfirmed:     int(m.IsConfirmed),
+		IsLogin:         int(m.IsLogin),
+		IsRegister:      int(m.IsRegister),
+		RetriedCount:    int(m.RetriedCount),
+		TTL:             int(m.TTL),
+	}
+	return r
+}
+
+//ToPB
+func (m *PB_Sms_Flat) ToPB() *PB_Sms {
+	r := &PB_Sms{
+		Id:              int32(m.Id),
+		Hash:            m.Hash,
+		AppUuid:         m.AppUuid,
+		ClientPhone:     m.ClientPhone,
+		GenratedCode:    int32(m.GenratedCode),
+		SmsSenderNumber: m.SmsSenderNumber,
+		SmsSendStatues:  m.SmsSendStatues,
+		SmsHttpBody:     m.SmsHttpBody,
+		Err:             m.Err,
+		Carrier:         m.Carrier,
+		Country:         m.Country,
+		IsValidPhone:    int32(m.IsValidPhone),
+		IsConfirmed:     int32(m.IsConfirmed),
+		IsLogin:         int32(m.IsLogin),
+		IsRegister:      int32(m.IsRegister),
+		RetriedCount:    int32(m.RetriedCount),
+		TTL:             int32(m.TTL),
+	}
+	return r
+}
+
+//folding
+var PB_Sms__FOlD = &PB_Sms{
+	Id:              0,
+	Hash:            "",
+	AppUuid:         "",
+	ClientPhone:     "",
+	GenratedCode:    0,
+	SmsSenderNumber: "",
+	SmsSendStatues:  "",
+	SmsHttpBody:     "",
+	Err:             "",
+	Carrier:         "",
+	Country:         []byte{},
+	IsValidPhone:    0,
+	IsConfirmed:     0,
+	IsLogin:         0,
+	IsRegister:      0,
+	RetriedCount:    0,
+	TTL:             0,
 }
 
 type PB_Tag_Flat struct {
@@ -1479,14 +1569,16 @@ type PB_User_Flat struct {
 	LastName           string
 	IsVerified         int
 	AvatarId           int
+	AccessHash         int
 	ProfilePrivacy     int
 	OnlinePrivacy      int
 	CallPrivacy        int
 	AddToGroupPrivacy  int
 	SeenMessagePrivacy int
-	Phone              int
+	Phone              string
 	Email              string
 	About              string
+	DefaultUserName    string
 	PasswordHash       string
 	PasswordSalt       string
 	PostSeq            int
@@ -1522,14 +1614,16 @@ func (m *PB_User) ToFlat() *PB_User_Flat {
 		LastName:           m.LastName,
 		IsVerified:         int(m.IsVerified),
 		AvatarId:           int(m.AvatarId),
+		AccessHash:         int(m.AccessHash),
 		ProfilePrivacy:     int(m.ProfilePrivacy),
 		OnlinePrivacy:      int(m.OnlinePrivacy),
 		CallPrivacy:        int(m.CallPrivacy),
 		AddToGroupPrivacy:  int(m.AddToGroupPrivacy),
 		SeenMessagePrivacy: int(m.SeenMessagePrivacy),
-		Phone:              int(m.Phone),
+		Phone:              m.Phone,
 		Email:              m.Email,
 		About:              m.About,
+		DefaultUserName:    m.DefaultUserName,
 		PasswordHash:       m.PasswordHash,
 		PasswordSalt:       m.PasswordSalt,
 		PostSeq:            int(m.PostSeq),
@@ -1567,14 +1661,16 @@ func (m *PB_User_Flat) ToPB() *PB_User {
 		LastName:           m.LastName,
 		IsVerified:         int32(m.IsVerified),
 		AvatarId:           int64(m.AvatarId),
+		AccessHash:         int32(m.AccessHash),
 		ProfilePrivacy:     int32(m.ProfilePrivacy),
 		OnlinePrivacy:      int32(m.OnlinePrivacy),
 		CallPrivacy:        int32(m.CallPrivacy),
 		AddToGroupPrivacy:  int32(m.AddToGroupPrivacy),
 		SeenMessagePrivacy: int32(m.SeenMessagePrivacy),
-		Phone:              int64(m.Phone),
+		Phone:              m.Phone,
 		Email:              m.Email,
 		About:              m.About,
+		DefaultUserName:    m.DefaultUserName,
 		PasswordHash:       m.PasswordHash,
 		PasswordSalt:       m.PasswordSalt,
 		PostSeq:            int32(m.PostSeq),
@@ -1611,14 +1707,16 @@ var PB_User__FOlD = &PB_User{
 	LastName:           "",
 	IsVerified:         0,
 	AvatarId:           0,
+	AccessHash:         0,
 	ProfilePrivacy:     0,
 	OnlinePrivacy:      0,
 	CallPrivacy:        0,
 	AddToGroupPrivacy:  0,
 	SeenMessagePrivacy: 0,
-	Phone:              0,
+	Phone:              "",
 	Email:              "",
 	About:              "",
+	DefaultUserName:    "",
 	PasswordHash:       "",
 	PasswordSalt:       "",
 	PostSeq:            0,
@@ -2369,14 +2467,14 @@ var PB_HomeFanout__FOlD = &PB_HomeFanout{
 	ResharedId: 0,
 }
 
-type PB_SuggestedTopPost_Flat struct {
+type PB_SuggestedTopPosts_Flat struct {
 	Id     int
 	PostId int
 }
 
 //ToPB
-func (m *PB_SuggestedTopPost) ToFlat() *PB_SuggestedTopPost_Flat {
-	r := &PB_SuggestedTopPost_Flat{
+func (m *PB_SuggestedTopPosts) ToFlat() *PB_SuggestedTopPosts_Flat {
+	r := &PB_SuggestedTopPosts_Flat{
 		Id:     int(m.Id),
 		PostId: int(m.PostId),
 	}
@@ -2384,8 +2482,8 @@ func (m *PB_SuggestedTopPost) ToFlat() *PB_SuggestedTopPost_Flat {
 }
 
 //ToPB
-func (m *PB_SuggestedTopPost_Flat) ToPB() *PB_SuggestedTopPost {
-	r := &PB_SuggestedTopPost{
+func (m *PB_SuggestedTopPosts_Flat) ToPB() *PB_SuggestedTopPosts {
+	r := &PB_SuggestedTopPosts{
 		Id:     int64(m.Id),
 		PostId: int64(m.PostId),
 	}
@@ -2393,7 +2491,7 @@ func (m *PB_SuggestedTopPost_Flat) ToPB() *PB_SuggestedTopPost {
 }
 
 //folding
-var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+var PB_SuggestedTopPosts__FOlD = &PB_SuggestedTopPosts{
 	Id:     0,
 	PostId: 0,
 }
@@ -3841,6 +3939,7 @@ func(m *PB_RoomsChanges)ToFlat() *PB_RoomsChanges_Flat {
 r := &PB_RoomsChanges_Flat{
     VersionTime:  int(m.VersionTime) ,
 
+
 }
 return r
 }
@@ -4008,8 +4107,8 @@ r := &PB_Followed_Flat{
 return r
 }
 
-func(m *PB_Like)ToFlat() *PB_Like_Flat {
-r := &PB_Like_Flat{
+func(m *PB_Likes)ToFlat() *PB_Likes_Flat {
+r := &PB_Likes_Flat{
     Id:  int(m.Id) ,
     PostId:  int(m.PostId) ,
     PostTypeEnum:  int(m.PostTypeEnum) ,
@@ -4045,8 +4144,8 @@ r := &PB_NotifyRemoved_Flat{
 return r
 }
 
-func(m *PB_PhoneContact)ToFlat() *PB_PhoneContact_Flat {
-r := &PB_PhoneContact_Flat{
+func(m *PB_PhoneContacts)ToFlat() *PB_PhoneContacts_Flat {
+r := &PB_PhoneContacts_Flat{
     Id:  int(m.Id) ,
     UserId:  int(m.UserId) ,
     ClientId:  int(m.ClientId) ,
@@ -4103,8 +4202,8 @@ r := &PB_PostDeleted_Flat{
 return r
 }
 
-func(m *PB_PostKey)ToFlat() *PB_PostKey_Flat {
-r := &PB_PostKey_Flat{
+func(m *PB_PostKeys)ToFlat() *PB_PostKeys_Flat {
+r := &PB_PostKeys_Flat{
     Id:  int(m.Id) ,
     PostKeyStr:  m.PostKeyStr ,
     Used:  int(m.Used) ,
@@ -4177,8 +4276,8 @@ r := &PB_Session_Flat{
 return r
 }
 
-func(m *PB_SettingNotification)ToFlat() *PB_SettingNotification_Flat {
-r := &PB_SettingNotification_Flat{
+func(m *PB_SettingNotifications)ToFlat() *PB_SettingNotifications_Flat {
+r := &PB_SettingNotifications_Flat{
     UserId:  int(m.UserId) ,
     SocialLedOn:  int(m.SocialLedOn) ,
     SocialLedColor:  m.SocialLedColor ,
@@ -4199,6 +4298,29 @@ r := &PB_SettingNotification_Flat{
     DirectPopup:  int(m.DirectPopup) ,
     DirectSound:  int(m.DirectSound) ,
     DirectPriority:  int(m.DirectPriority) ,
+}
+return r
+}
+
+func(m *PB_Sms)ToFlat() *PB_Sms_Flat {
+r := &PB_Sms_Flat{
+    Id:  int(m.Id) ,
+    Hash:  m.Hash ,
+    AppUuid:  m.AppUuid ,
+    ClientPhone:  m.ClientPhone ,
+    GenratedCode:  int(m.GenratedCode) ,
+    SmsSenderNumber:  m.SmsSenderNumber ,
+    SmsSendStatues:  m.SmsSendStatues ,
+    SmsHttpBody:  m.SmsHttpBody ,
+    Err:  m.Err ,
+    Carrier:  m.Carrier ,
+    Country:  []byte(m.Country) ,
+    IsValidPhone:  int(m.IsValidPhone) ,
+    IsConfirmed:  int(m.IsConfirmed) ,
+    IsLogin:  int(m.IsLogin) ,
+    IsRegister:  int(m.IsRegister) ,
+    RetriedCount:  int(m.RetriedCount) ,
+    TTL:  int(m.TTL) ,
 }
 return r
 }
@@ -4247,14 +4369,16 @@ r := &PB_User_Flat{
     LastName:  m.LastName ,
     IsVerified:  int(m.IsVerified) ,
     AvatarId:  int(m.AvatarId) ,
+    AccessHash:  int(m.AccessHash) ,
     ProfilePrivacy:  int(m.ProfilePrivacy) ,
     OnlinePrivacy:  int(m.OnlinePrivacy) ,
     CallPrivacy:  int(m.CallPrivacy) ,
     AddToGroupPrivacy:  int(m.AddToGroupPrivacy) ,
     SeenMessagePrivacy:  int(m.SeenMessagePrivacy) ,
-    Phone:  int(m.Phone) ,
+    Phone:  m.Phone ,
     Email:  m.Email ,
     About:  m.About ,
+    DefaultUserName:  m.DefaultUserName ,
     PasswordHash:  m.PasswordHash ,
     PasswordSalt:  m.PasswordSalt ,
     PostSeq:  int(m.PostSeq) ,
@@ -4473,8 +4597,8 @@ r := &PB_HomeFanout_Flat{
 return r
 }
 
-func(m *PB_SuggestedTopPost)ToFlat() *PB_SuggestedTopPost_Flat {
-r := &PB_SuggestedTopPost_Flat{
+func(m *PB_SuggestedTopPosts)ToFlat() *PB_SuggestedTopPosts_Flat {
+r := &PB_SuggestedTopPosts_Flat{
     Id:  int(m.Id) ,
     PostId:  int(m.PostId) ,
 }
@@ -4890,6 +5014,7 @@ func(m *PB_RoomsChanges_Flat)ToPB() *PB_RoomsChanges {
 r := &PB_RoomsChanges{
     VersionTime:  uint64(m.VersionTime) ,
 
+
 }
 return r
 }
@@ -5057,8 +5182,8 @@ r := &PB_Followed{
 return r
 }
 
-func(m *PB_Like_Flat)ToPB() *PB_Like {
-r := &PB_Like{
+func(m *PB_Likes_Flat)ToPB() *PB_Likes {
+r := &PB_Likes{
     Id:  int64(m.Id) ,
     PostId:  int64(m.PostId) ,
     PostTypeEnum:  int32(m.PostTypeEnum) ,
@@ -5094,8 +5219,8 @@ r := &PB_NotifyRemoved{
 return r
 }
 
-func(m *PB_PhoneContact_Flat)ToPB() *PB_PhoneContact {
-r := &PB_PhoneContact{
+func(m *PB_PhoneContacts_Flat)ToPB() *PB_PhoneContacts {
+r := &PB_PhoneContacts{
     Id:  int64(m.Id) ,
     UserId:  int32(m.UserId) ,
     ClientId:  int64(m.ClientId) ,
@@ -5152,8 +5277,8 @@ r := &PB_PostDeleted{
 return r
 }
 
-func(m *PB_PostKey_Flat)ToPB() *PB_PostKey {
-r := &PB_PostKey{
+func(m *PB_PostKeys_Flat)ToPB() *PB_PostKeys {
+r := &PB_PostKeys{
     Id:  int32(m.Id) ,
     PostKeyStr:  m.PostKeyStr ,
     Used:  int32(m.Used) ,
@@ -5226,8 +5351,8 @@ r := &PB_Session{
 return r
 }
 
-func(m *PB_SettingNotification_Flat)ToPB() *PB_SettingNotification {
-r := &PB_SettingNotification{
+func(m *PB_SettingNotifications_Flat)ToPB() *PB_SettingNotifications {
+r := &PB_SettingNotifications{
     UserId:  int32(m.UserId) ,
     SocialLedOn:  int32(m.SocialLedOn) ,
     SocialLedColor:  m.SocialLedColor ,
@@ -5248,6 +5373,29 @@ r := &PB_SettingNotification{
     DirectPopup:  int32(m.DirectPopup) ,
     DirectSound:  int32(m.DirectSound) ,
     DirectPriority:  int32(m.DirectPriority) ,
+}
+return r
+}
+
+func(m *PB_Sms_Flat)ToPB() *PB_Sms {
+r := &PB_Sms{
+    Id:  int32(m.Id) ,
+    Hash:  m.Hash ,
+    AppUuid:  m.AppUuid ,
+    ClientPhone:  m.ClientPhone ,
+    GenratedCode:  int32(m.GenratedCode) ,
+    SmsSenderNumber:  m.SmsSenderNumber ,
+    SmsSendStatues:  m.SmsSendStatues ,
+    SmsHttpBody:  m.SmsHttpBody ,
+    Err:  m.Err ,
+    Carrier:  m.Carrier ,
+    Country:  m.Country ,
+    IsValidPhone:  int32(m.IsValidPhone) ,
+    IsConfirmed:  int32(m.IsConfirmed) ,
+    IsLogin:  int32(m.IsLogin) ,
+    IsRegister:  int32(m.IsRegister) ,
+    RetriedCount:  int32(m.RetriedCount) ,
+    TTL:  int32(m.TTL) ,
 }
 return r
 }
@@ -5296,14 +5444,16 @@ r := &PB_User{
     LastName:  m.LastName ,
     IsVerified:  int32(m.IsVerified) ,
     AvatarId:  int64(m.AvatarId) ,
+    AccessHash:  int32(m.AccessHash) ,
     ProfilePrivacy:  int32(m.ProfilePrivacy) ,
     OnlinePrivacy:  int32(m.OnlinePrivacy) ,
     CallPrivacy:  int32(m.CallPrivacy) ,
     AddToGroupPrivacy:  int32(m.AddToGroupPrivacy) ,
     SeenMessagePrivacy:  int32(m.SeenMessagePrivacy) ,
-    Phone:  int64(m.Phone) ,
+    Phone:  m.Phone ,
     Email:  m.Email ,
     About:  m.About ,
+    DefaultUserName:  m.DefaultUserName ,
     PasswordHash:  m.PasswordHash ,
     PasswordSalt:  m.PasswordSalt ,
     PostSeq:  int32(m.PostSeq) ,
@@ -5522,8 +5672,8 @@ r := &PB_HomeFanout{
 return r
 }
 
-func(m *PB_SuggestedTopPost_Flat)ToPB() *PB_SuggestedTopPost {
-r := &PB_SuggestedTopPost{
+func(m *PB_SuggestedTopPosts_Flat)ToPB() *PB_SuggestedTopPosts {
+r := &PB_SuggestedTopPosts{
     Id:  int64(m.Id) ,
     PostId:  int64(m.PostId) ,
 }
@@ -5938,6 +6088,7 @@ return r
 var PB_RoomsChanges__FOlD = &PB_RoomsChanges{
         VersionTime:  0 ,
 
+
 }
 
 
@@ -6068,7 +6219,7 @@ var PB_Followed__FOlD = &PB_Followed{
 }
 
 
-var PB_Like__FOlD = &PB_Like{
+var PB_Likes__FOlD = &PB_Likes{
         Id:  0 ,
         PostId:  0 ,
         PostTypeEnum:  0 ,
@@ -6099,7 +6250,7 @@ var PB_NotifyRemoved__FOlD = &PB_NotifyRemoved{
 }
 
 
-var PB_PhoneContact__FOlD = &PB_PhoneContact{
+var PB_PhoneContacts__FOlD = &PB_PhoneContacts{
         Id:  0 ,
         UserId:  0 ,
         ClientId:  0 ,
@@ -6149,7 +6300,7 @@ var PB_PostDeleted__FOlD = &PB_PostDeleted{
 }
 
 
-var PB_PostKey__FOlD = &PB_PostKey{
+var PB_PostKeys__FOlD = &PB_PostKeys{
         Id:  0 ,
         PostKeyStr:  "" ,
         Used:  0 ,
@@ -6211,7 +6362,7 @@ var PB_Session__FOlD = &PB_Session{
 }
 
 
-var PB_SettingNotification__FOlD = &PB_SettingNotification{
+var PB_SettingNotifications__FOlD = &PB_SettingNotifications{
         UserId:  0 ,
         SocialLedOn:  0 ,
         SocialLedColor:  "" ,
@@ -6232,6 +6383,27 @@ var PB_SettingNotification__FOlD = &PB_SettingNotification{
         DirectPopup:  0 ,
         DirectSound:  0 ,
         DirectPriority:  0 ,
+}
+
+
+var PB_Sms__FOlD = &PB_Sms{
+        Id:  0 ,
+        Hash:  "" ,
+        AppUuid:  "" ,
+        ClientPhone:  "" ,
+        GenratedCode:  0 ,
+        SmsSenderNumber:  "" ,
+        SmsSendStatues:  "" ,
+        SmsHttpBody:  "" ,
+        Err:  "" ,
+        Carrier:  "" ,
+        Country:  []byte{} ,
+        IsValidPhone:  0 ,
+        IsConfirmed:  0 ,
+        IsLogin:  0 ,
+        IsRegister:  0 ,
+        RetriedCount:  0 ,
+        TTL:  0 ,
 }
 
 
@@ -6272,14 +6444,16 @@ var PB_User__FOlD = &PB_User{
         LastName:  "" ,
         IsVerified:  0 ,
         AvatarId:  0 ,
+        AccessHash:  0 ,
         ProfilePrivacy:  0 ,
         OnlinePrivacy:  0 ,
         CallPrivacy:  0 ,
         AddToGroupPrivacy:  0 ,
         SeenMessagePrivacy:  0 ,
-        Phone:  0 ,
+        Phone:  "" ,
         Email:  "" ,
         About:  "" ,
+        DefaultUserName:  "" ,
         PasswordHash:  "" ,
         PasswordSalt:  "" ,
         PostSeq:  0 ,
@@ -6471,7 +6645,7 @@ var PB_HomeFanout__FOlD = &PB_HomeFanout{
 }
 
 
-var PB_SuggestedTopPost__FOlD = &PB_SuggestedTopPost{
+var PB_SuggestedTopPosts__FOlD = &PB_SuggestedTopPosts{
         Id:  0 ,
         PostId:  0 ,
 }

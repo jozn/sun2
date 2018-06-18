@@ -28,7 +28,8 @@ message RPC_General_Types {
 
         message Response {
             bool IsAvailable =1;
-            string ShowMessage = 2;
+            string UserName = 2;
+            string ShowMessage = 3;
         }
     }
 }

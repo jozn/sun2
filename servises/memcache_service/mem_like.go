@@ -3,9 +3,7 @@ package memcache_service
 import (
 	"fmt"
 	c "github.com/patrickmn/go-cache"
-	"ms/sun_old/base"
 	"ms/sun/shared/golib/go_map"
-	"ms/sun/shared/x"
 	"time"
 )
 
@@ -68,7 +66,7 @@ func getLikeKey(UserId int) string {
 }
 
 func fillLikeCacheForUser(userId int) *go_map.ConcurrentIntMap {
-	postIds, err := x.NewLike_Selector().Select_PostId().UserId_Eq(userId).GetIntSlice(base.DB)
+	/*postIds, err := x.NewLike_Selector().Select_PostId().UserId_Eq(userId).GetIntSlice(base.DB)
 	if err != nil {
 		//just return something not to painc
 		return go_map.NewConcurrentIntMap(0)
@@ -76,5 +74,6 @@ func fillLikeCacheForUser(userId int) *go_map.ConcurrentIntMap {
 	m := go_map.NewConcurrentIntMap(len(postIds))
 	m.SetKeys(postIds, 1)
 	likeCache.Set(getLikeKey(userId), m, 0)
-	return m
+	return m*/
+	return nil
 }

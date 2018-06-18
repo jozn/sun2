@@ -226,18 +226,18 @@ type __Post_Selector struct {
 }
 
 func NewPost_Deleter() *__Post_Deleter {
-	d := __Post_Deleter{whereSep: " AND "}
+	d := __Post_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPost_Updater() *__Post_Updater {
-	u := __Post_Updater{whereSep: " AND "}
+	u := __Post_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPost_Selector() *__Post_Selector {
-	u := __Post_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __Post_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

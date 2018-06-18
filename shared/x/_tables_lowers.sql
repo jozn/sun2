@@ -187,12 +187,15 @@ ALTER TABLE sun.setting_notifications CHANGE COLUMN DirectSound direct_sound int
 ALTER TABLE sun.setting_notifications CHANGE COLUMN DirectPriority direct_priority int(11);
 
 /*Table: sms  */
-ALTER TABLE sun.sms CHANGE COLUMN Id id int(10) unsigned;
+ALTER TABLE sun.sms CHANGE COLUMN Id id int(10);
 ALTER TABLE sun.sms CHANGE COLUMN Hash hash varchar(50);
+ALTER TABLE sun.sms CHANGE COLUMN AppUuid app_uuid varchar(75);
 ALTER TABLE sun.sms CHANGE COLUMN ClientPhone client_phone varchar(50);
 ALTER TABLE sun.sms CHANGE COLUMN GenratedCode genrated_code int(11);
 ALTER TABLE sun.sms CHANGE COLUMN SmsSenderNumber sms_sender_number varchar(50);
 ALTER TABLE sun.sms CHANGE COLUMN SmsSendStatues sms_send_statues varchar(50);
+ALTER TABLE sun.sms CHANGE COLUMN SmsHttpBody sms_http_body varchar(5000);
+ALTER TABLE sun.sms CHANGE COLUMN Err err varchar(100);
 ALTER TABLE sun.sms CHANGE COLUMN Carrier carrier varchar(50);
 ALTER TABLE sun.sms CHANGE COLUMN Country country varbinary(50);
 ALTER TABLE sun.sms CHANGE COLUMN IsValidPhone is_valid_phone tinyint(4);
@@ -200,6 +203,7 @@ ALTER TABLE sun.sms CHANGE COLUMN IsConfirmed is_confirmed tinyint(4);
 ALTER TABLE sun.sms CHANGE COLUMN IsLogin is_login tinyint(4);
 ALTER TABLE sun.sms CHANGE COLUMN IsRegister is_register tinyint(4);
 ALTER TABLE sun.sms CHANGE COLUMN RetriedCount retried_count tinyint(4);
+ALTER TABLE sun.sms CHANGE COLUMN TTL ttl int(11);
 
 /*Table: tag  */
 ALTER TABLE sun.tag CHANGE COLUMN TagId tag_id bigint(11);
@@ -232,14 +236,16 @@ ALTER TABLE sun.user CHANGE COLUMN FirstName first_name varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN LastName last_name varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN IsVerified is_verified tinyint(4);
 ALTER TABLE sun.user CHANGE COLUMN AvatarId avatar_id bigint(20);
+ALTER TABLE sun.user CHANGE COLUMN AccessHash access_hash int(11);
 ALTER TABLE sun.user CHANGE COLUMN ProfilePrivacy profile_privacy int(10);
 ALTER TABLE sun.user CHANGE COLUMN OnlinePrivacy online_privacy int(11);
 ALTER TABLE sun.user CHANGE COLUMN CallPrivacy call_privacy int(4);
 ALTER TABLE sun.user CHANGE COLUMN AddToGroupPrivacy add_to_group_privacy int(11);
 ALTER TABLE sun.user CHANGE COLUMN SeenMessagePrivacy seen_message_privacy int(11);
-ALTER TABLE sun.user CHANGE COLUMN Phone phone bigint(20);
+ALTER TABLE sun.user CHANGE COLUMN Phone phone varchar(50);
 ALTER TABLE sun.user CHANGE COLUMN Email email varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN About about varchar(500);
+ALTER TABLE sun.user CHANGE COLUMN DefaultUserName default_user_name varchar(75);
 ALTER TABLE sun.user CHANGE COLUMN PasswordHash password_hash varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PasswordSalt password_salt varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PostSeq post_seq int(11);

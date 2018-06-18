@@ -234,18 +234,18 @@ type __SuggestedUser_Selector struct {
 }
 
 func NewSuggestedUser_Deleter() *__SuggestedUser_Deleter {
-	d := __SuggestedUser_Deleter{whereSep: " AND "}
+	d := __SuggestedUser_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewSuggestedUser_Updater() *__SuggestedUser_Updater {
-	u := __SuggestedUser_Updater{whereSep: " AND "}
+	u := __SuggestedUser_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewSuggestedUser_Selector() *__SuggestedUser_Selector {
-	u := __SuggestedUser_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __SuggestedUser_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

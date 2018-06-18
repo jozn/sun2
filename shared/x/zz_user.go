@@ -21,14 +21,16 @@ type User__ struct {
 	LastName           string `json:"LastName"`           // LastName -
 	IsVerified         int    `json:"IsVerified"`         // IsVerified -
 	AvatarId           int    `json:"AvatarId"`           // AvatarId -
+	AccessHash         int    `json:"AccessHash"`         // AccessHash -
 	ProfilePrivacy     int    `json:"ProfilePrivacy"`     // ProfilePrivacy -
 	OnlinePrivacy      int    `json:"OnlinePrivacy"`      // OnlinePrivacy -
 	CallPrivacy        int    `json:"CallPrivacy"`        // CallPrivacy -
 	AddToGroupPrivacy  int    `json:"AddToGroupPrivacy"`  // AddToGroupPrivacy -
 	SeenMessagePrivacy int    `json:"SeenMessagePrivacy"` // SeenMessagePrivacy -
-	Phone              int    `json:"Phone"`              // Phone -
+	Phone              string `json:"Phone"`              // Phone -
 	Email              string `json:"Email"`              // Email -
 	About              string `json:"About"`              // About -
+	DefaultUserName    string `json:"DefaultUserName"`    // DefaultUserName -
 	PasswordHash       string `json:"PasswordHash"`       // PasswordHash -
 	PasswordSalt       string `json:"PasswordSalt"`       // PasswordSalt -
 	PostSeq            int    `json:"PostSeq"`            // PostSeq -
@@ -77,16 +79,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -119,16 +121,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -170,14 +172,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, CallPrivacy = ?, AddToGroupPrivacy = ?, SeenMessagePrivacy = ?, Phone = ?, Email = ?, About = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, AccessHash = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, CallPrivacy = ?, AddToGroupPrivacy = ?, SeenMessagePrivacy = ?, Phone = ?, Email = ?, About = ?, DefaultUserName = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -267,18 +269,18 @@ type __User_Selector struct {
 }
 
 func NewUser_Deleter() *__User_Deleter {
-	d := __User_Deleter{whereSep: " AND "}
+	d := __User_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewUser_Updater() *__User_Updater {
-	u := __User_Updater{whereSep: " AND "}
+	u := __User_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewUser_Selector() *__User_Selector {
-	u := __User_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __User_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
@@ -628,6 +630,111 @@ func (d *__User_Deleter) AvatarId_GE(val int) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " AvatarId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) AccessHash_In(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AccessHash_Ins(ins ...int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) AccessHash_NotIn(ins []int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) AccessHash_Eq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AccessHash_NotEq(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AccessHash_LT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AccessHash_LE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AccessHash_GT(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) AccessHash_GE(val int) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1153,111 +1260,6 @@ func (d *__User_Deleter) SeenMessagePrivacy_GE(val int) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Deleter) Phone_In(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) Phone_Ins(ins ...int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) Phone_NotIn(ins []int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) Phone_Eq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone_NotEq(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone_LT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone_LE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone_GT(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) Phone_GE(val int) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3802,6 +3804,111 @@ func (d *__User_Updater) AvatarId_GE(val int) *__User_Updater {
 	return d
 }
 
+func (u *__User_Updater) AccessHash_In(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AccessHash_Ins(ins ...int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) AccessHash_NotIn(ins []int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) AccessHash_Eq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AccessHash_NotEq(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AccessHash_LT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AccessHash_LE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AccessHash_GT(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) AccessHash_GE(val int) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Updater) ProfilePrivacy_In(ins []int) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -4322,111 +4429,6 @@ func (d *__User_Updater) SeenMessagePrivacy_GE(val int) *__User_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Updater) Phone_In(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) Phone_Ins(ins ...int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) Phone_NotIn(ins []int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) Phone_Eq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone_NotEq(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone_LT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone_LE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone_GT(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) Phone_GE(val int) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -6971,6 +6973,111 @@ func (d *__User_Selector) AvatarId_GE(val int) *__User_Selector {
 	return d
 }
 
+func (u *__User_Selector) AccessHash_In(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AccessHash_Ins(ins ...int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) AccessHash_NotIn(ins []int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " AccessHash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) AccessHash_Eq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AccessHash_NotEq(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AccessHash_LT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AccessHash_LE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AccessHash_GT(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) AccessHash_GE(val int) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " AccessHash >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Selector) ProfilePrivacy_In(ins []int) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -7491,111 +7598,6 @@ func (d *__User_Selector) SeenMessagePrivacy_GE(val int) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " SeenMessagePrivacy >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Selector) Phone_In(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) Phone_Ins(ins ...int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) Phone_NotIn(ins []int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) Phone_Eq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone_NotEq(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone_LT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone_LE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone_GT(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) Phone_GE(val int) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " Phone >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10050,6 +10052,66 @@ func (d *__User_Deleter) LastName_NotEq(val string) *__User_Deleter {
 	return d
 }
 
+func (u *__User_Deleter) Phone_In(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) Phone_NotIn(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Deleter) Phone_Like(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) Phone_Eq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) Phone_NotEq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Deleter) Email_In(ins []string) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -10165,6 +10227,66 @@ func (d *__User_Deleter) About_NotEq(val string) *__User_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Deleter) DefaultUserName_In(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Deleter) DefaultUserName_NotIn(ins []string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Deleter) DefaultUserName_Like(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Deleter) DefaultUserName_Eq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Deleter) DefaultUserName_NotEq(val string) *__User_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -10532,6 +10654,66 @@ func (d *__User_Updater) LastName_NotEq(val string) *__User_Updater {
 	return d
 }
 
+func (u *__User_Updater) Phone_In(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) Phone_NotIn(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Updater) Phone_Like(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) Phone_Eq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) Phone_NotEq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Updater) Email_In(ins []string) *__User_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -10647,6 +10829,66 @@ func (d *__User_Updater) About_NotEq(val string) *__User_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Updater) DefaultUserName_In(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Updater) DefaultUserName_NotIn(ins []string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Updater) DefaultUserName_Like(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Updater) DefaultUserName_Eq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Updater) DefaultUserName_NotEq(val string) *__User_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11014,6 +11256,66 @@ func (d *__User_Selector) LastName_NotEq(val string) *__User_Selector {
 	return d
 }
 
+func (u *__User_Selector) Phone_In(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) Phone_NotIn(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Phone NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Selector) Phone_Like(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) Phone_Eq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) Phone_NotEq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Phone != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__User_Selector) Email_In(ins []string) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -11129,6 +11431,66 @@ func (d *__User_Selector) About_NotEq(val string) *__User_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " About != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__User_Selector) DefaultUserName_In(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__User_Selector) DefaultUserName_NotIn(ins []string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+//must be used like: UserName_like("hamid%")
+func (u *__User_Selector) DefaultUserName_Like(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName LIKE " + u.nextDollar()
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__User_Selector) DefaultUserName_Eq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__User_Selector) DefaultUserName_NotEq(val string) *__User_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " DefaultUserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11381,6 +11743,33 @@ func (u *__User_Updater) AvatarId_Increment(count int) *__User_Updater {
 
 //ints
 
+func (u *__User_Updater) AccessHash(newVal int) *__User_Updater {
+	up := updateCol{" AccessHash = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" AccessHash = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__User_Updater) AccessHash_Increment(count int) *__User_Updater {
+	if count > 0 {
+		up := updateCol{" AccessHash = AccessHash+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" AccessHash = AccessHash+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" AccessHash = AccessHash- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" AccessHash = AccessHash- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__User_Updater) ProfilePrivacy(newVal int) *__User_Updater {
 	up := updateCol{" ProfilePrivacy = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -11516,30 +11905,13 @@ func (u *__User_Updater) SeenMessagePrivacy_Increment(count int) *__User_Updater
 
 //ints
 
-func (u *__User_Updater) Phone(newVal int) *__User_Updater {
-	up := updateCol{" Phone = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" Phone = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__User_Updater) Phone_Increment(count int) *__User_Updater {
-	if count > 0 {
-		up := updateCol{" Phone = Phone+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" Phone = Phone+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" Phone = Phone- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" Phone = Phone- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
 //string
+func (u *__User_Updater) Phone(newVal string) *__User_Updater {
+	up := updateCol{"Phone = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Phone = "+ u.nextDollar()] = newVal
+	return u
+}
 
 //ints
 
@@ -11558,6 +11930,16 @@ func (u *__User_Updater) About(newVal string) *__User_Updater {
 	up := updateCol{"About = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" About = "+ u.nextDollar()] = newVal
+	return u
+}
+
+//ints
+
+//string
+func (u *__User_Updater) DefaultUserName(newVal string) *__User_Updater {
+	up := updateCol{"DefaultUserName = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" DefaultUserName = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -12258,6 +12640,21 @@ func (u *__User_Selector) Select_AvatarId() *__User_Selector {
 	return u
 }
 
+func (u *__User_Selector) OrderBy_AccessHash_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY AccessHash DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_AccessHash_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY AccessHash ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_AccessHash() *__User_Selector {
+	u.selectCol = "AccessHash"
+	return u
+}
+
 func (u *__User_Selector) OrderBy_ProfilePrivacy_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY ProfilePrivacy DESC "
 	return u
@@ -12375,6 +12772,21 @@ func (u *__User_Selector) OrderBy_About_Asc() *__User_Selector {
 
 func (u *__User_Selector) Select_About() *__User_Selector {
 	u.selectCol = "About"
+	return u
+}
+
+func (u *__User_Selector) OrderBy_DefaultUserName_Desc() *__User_Selector {
+	u.orderBy = " ORDER BY DefaultUserName DESC "
+	return u
+}
+
+func (u *__User_Selector) OrderBy_DefaultUserName_Asc() *__User_Selector {
+	u.orderBy = " ORDER BY DefaultUserName ASC "
+	return u
+}
+
+func (u *__User_Selector) Select_DefaultUserName() *__User_Selector {
+	u.selectCol = "DefaultUserName"
 	return u
 }
 
@@ -13040,12 +13452,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -13059,6 +13471,7 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.LastName)
 		vals = append(vals, row.IsVerified)
 		vals = append(vals, row.AvatarId)
+		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.ProfilePrivacy)
 		vals = append(vals, row.OnlinePrivacy)
 		vals = append(vals, row.CallPrivacy)
@@ -13067,6 +13480,7 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
+		vals = append(vals, row.DefaultUserName)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -13110,12 +13524,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -13129,6 +13543,7 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.LastName)
 		vals = append(vals, row.IsVerified)
 		vals = append(vals, row.AvatarId)
+		vals = append(vals, row.AccessHash)
 		vals = append(vals, row.ProfilePrivacy)
 		vals = append(vals, row.OnlinePrivacy)
 		vals = append(vals, row.CallPrivacy)
@@ -13137,6 +13552,7 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
+		vals = append(vals, row.DefaultUserName)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -13178,6 +13594,10 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
 
 //
 

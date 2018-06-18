@@ -209,18 +209,18 @@ type __GroupOrderdUser_Selector struct {
 }
 
 func NewGroupOrderdUser_Deleter() *__GroupOrderdUser_Deleter {
-	d := __GroupOrderdUser_Deleter{whereSep: " AND "}
+	d := __GroupOrderdUser_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewGroupOrderdUser_Updater() *__GroupOrderdUser_Updater {
-	u := __GroupOrderdUser_Updater{whereSep: " AND "}
+	u := __GroupOrderdUser_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewGroupOrderdUser_Selector() *__GroupOrderdUser_Selector {
-	u := __GroupOrderdUser_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __GroupOrderdUser_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 

@@ -221,18 +221,18 @@ type __PostMedia_Selector struct {
 }
 
 func NewPostMedia_Deleter() *__PostMedia_Deleter {
-	d := __PostMedia_Deleter{whereSep: " AND "}
+	d := __PostMedia_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
 func NewPostMedia_Updater() *__PostMedia_Updater {
-	u := __PostMedia_Updater{whereSep: " AND "}
+	u := __PostMedia_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
 func NewPostMedia_Selector() *__PostMedia_Selector {
-	u := __PostMedia_Selector{whereSep: " AND ", selectCol: "*"}
+	u := __PostMedia_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
