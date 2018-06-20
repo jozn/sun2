@@ -93,7 +93,7 @@ func on_Liked_Post(e event_service.GeneralEvent) {
 	act := x.Action{
 		ActionId:       e.EventId,
 		ActorUserId:    e.ByUserId,
-		ActionTypeEnum: int(x.ActionEnum_ACTION_POST_LIKED),
+		ActionType: int(x.ActionEnum_ACTION_POST_LIKED),
 		PostId:         e.PostId,
 		PeerUserId:     e.PeerUserId,
 		CommentId:      0,
@@ -117,7 +117,7 @@ func on_Commented_Post(e event_service.GeneralEvent) {
 	act := x.Action{
 		ActionId:       e.EventId,
 		ActorUserId:    e.Comment.UserId,
-		ActionTypeEnum: int(x.ActionEnum_ACTION_POST_COMMENTED),
+		ActionType: int(x.ActionEnum_ACTION_POST_COMMENTED),
 		PostId:         e.Post.PostId,
 		PeerUserId:     e.Post.UserId,
 		CommentId:      e.Comment.CommentId,
@@ -138,7 +138,7 @@ func on_Followed(e event_service.GeneralEvent) {
 	act := x.Action{
 		ActionId:       e.EventId,
 		ActorUserId:    e.ByUserId,
-		ActionTypeEnum: int(x.ActionEnum_ACTION_FOLLOWED_USER),
+		ActionType: int(x.ActionEnum_ACTION_FOLLOWED_USER),
 		PostId:         0,
 		PeerUserId:     e.PeerUserId,
 		CommentId:      0,

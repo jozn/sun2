@@ -576,9 +576,15 @@ func (c _StoreImpl) PreLoadPostMedia_ByPostIds(PostIds []int) {
 	}
 }
 
-// PostMentioned - PRIMARY
+// PostPromoted - PRIMARY
 
 // PostReshared - PRIMARY
+
+// ProfileAll - PRIMARY
+
+// ProfileMedia - PRIMARY
+
+// ProfileMentioned - PRIMARY
 
 // Session - PRIMARY
 

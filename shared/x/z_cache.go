@@ -774,49 +774,49 @@ func (c _StoreImpl) PreLoadPostMediaByMediaIds(ids []int) {
 
 // yes 222 int
 
-func (c _StoreImpl) GetPostMentionedByMentionedId(MentionedId int) (*PostMentioned, bool) {
-	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(MentionedId))
+func (c _StoreImpl) GetPostPromotedByPromoteId(PromoteId int) (*PostPromoted, bool) {
+	o, ok := RowCache.Get("PostPromoted:" + strconv.Itoa(PromoteId))
 	if ok {
-		if obj, ok := o.(*PostMentioned); ok {
+		if obj, ok := o.(*PostPromoted); ok {
 			return obj, true
 		}
 	}
-	obj2, err := PostMentionedByMentionedId(base.DB, MentionedId)
+	obj2, err := PostPromotedByPromoteId(base.DB, PromoteId)
 	if err == nil {
 		return obj2, true
 	}
-	if LogTableSqlReq.PostMentioned {
+	if LogTableSqlReq.PostPromoted {
 		XOLogErr(err)
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) GetPostMentionedByMentionedId_JustCache(MentionedId int) (*PostMentioned, bool) {
-	o, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(MentionedId))
+func (c _StoreImpl) GetPostPromotedByPromoteId_JustCache(PromoteId int) (*PostPromoted, bool) {
+	o, ok := RowCache.Get("PostPromoted:" + strconv.Itoa(PromoteId))
 	if ok {
-		if obj, ok := o.(*PostMentioned); ok {
+		if obj, ok := o.(*PostPromoted); ok {
 			return obj, true
 		}
 	}
 
-	if LogTableSqlReq.PostMentioned {
-		XOLogErr(errors.New("_JustCache is empty for PostMentioned: " + strconv.Itoa(MentionedId)))
+	if LogTableSqlReq.PostPromoted {
+		XOLogErr(errors.New("_JustCache is empty for PostPromoted: " + strconv.Itoa(PromoteId)))
 	}
 	return nil, false
 }
 
-func (c _StoreImpl) PreLoadPostMentionedByMentionedIds(ids []int) {
+func (c _StoreImpl) PreLoadPostPromotedByPromoteIds(ids []int) {
 	not_cached := make([]int, 0, len(ids))
 
 	for _, id := range ids {
-		_, ok := RowCache.Get("PostMentioned:" + strconv.Itoa(id))
+		_, ok := RowCache.Get("PostPromoted:" + strconv.Itoa(id))
 		if !ok {
 			not_cached = append(not_cached, id)
 		}
 	}
 
 	if len(not_cached) > 0 {
-		NewPostMentioned_Selector().MentionedId_In(not_cached).GetRows(base.DB)
+		NewPostPromoted_Selector().PromoteId_In(not_cached).GetRows(base.DB)
 	}
 }
 
@@ -865,6 +865,150 @@ func (c _StoreImpl) PreLoadPostResharedByResharedIds(ids []int) {
 
 	if len(not_cached) > 0 {
 		NewPostReshared_Selector().ResharedId_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetProfileAllById(Id int) (*ProfileAll, bool) {
+	o, ok := RowCache.Get("ProfileAll:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileAll); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ProfileAllById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.ProfileAll {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetProfileAllById_JustCache(Id int) (*ProfileAll, bool) {
+	o, ok := RowCache.Get("ProfileAll:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileAll); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ProfileAll {
+		XOLogErr(errors.New("_JustCache is empty for ProfileAll: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadProfileAllByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ProfileAll:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewProfileAll_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetProfileMediaById(Id int) (*ProfileMedia, bool) {
+	o, ok := RowCache.Get("ProfileMedia:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileMedia); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ProfileMediaById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.ProfileMedia {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetProfileMediaById_JustCache(Id int) (*ProfileMedia, bool) {
+	o, ok := RowCache.Get("ProfileMedia:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileMedia); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ProfileMedia {
+		XOLogErr(errors.New("_JustCache is empty for ProfileMedia: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadProfileMediaByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ProfileMedia:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewProfileMedia_Selector().Id_In(not_cached).GetRows(base.DB)
+	}
+}
+
+// yes 222 int
+
+func (c _StoreImpl) GetProfileMentionedById(Id int) (*ProfileMentioned, bool) {
+	o, ok := RowCache.Get("ProfileMentioned:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileMentioned); ok {
+			return obj, true
+		}
+	}
+	obj2, err := ProfileMentionedById(base.DB, Id)
+	if err == nil {
+		return obj2, true
+	}
+	if LogTableSqlReq.ProfileMentioned {
+		XOLogErr(err)
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) GetProfileMentionedById_JustCache(Id int) (*ProfileMentioned, bool) {
+	o, ok := RowCache.Get("ProfileMentioned:" + strconv.Itoa(Id))
+	if ok {
+		if obj, ok := o.(*ProfileMentioned); ok {
+			return obj, true
+		}
+	}
+
+	if LogTableSqlReq.ProfileMentioned {
+		XOLogErr(errors.New("_JustCache is empty for ProfileMentioned: " + strconv.Itoa(Id)))
+	}
+	return nil, false
+}
+
+func (c _StoreImpl) PreLoadProfileMentionedByIds(ids []int) {
+	not_cached := make([]int, 0, len(ids))
+
+	for _, id := range ids {
+		_, ok := RowCache.Get("ProfileMentioned:" + strconv.Itoa(id))
+		if !ok {
+			not_cached = append(not_cached, id)
+		}
+	}
+
+	if len(not_cached) > 0 {
+		NewProfileMentioned_Selector().Id_In(not_cached).GetRows(base.DB)
 	}
 }
 

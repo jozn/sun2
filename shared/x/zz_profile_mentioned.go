@@ -5,197 +5,175 @@ import (
 	"errors"
 	"strings"
 	//"time"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagPost represents a row from 'sun.tag_post'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ProfileMentioned represents a row from 'sun.profile_mentioned'.
 
 // Manualy copy this to project
-type TagPost__ struct {
+type ProfileMentioned__ struct {
 	Id          int `json:"Id"`          // Id -
-	TagId       int `json:"TagId"`       // TagId -
+	ForUserId   int `json:"ForUserId"`   // ForUserId -
 	PostId      int `json:"PostId"`      // PostId -
+	PostUserId  int `json:"PostUserId"`  // PostUserId -
 	PostType    int `json:"PostType"`    // PostType -
 	CreatedTime int `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the TagPost exists in the database.
-func (tp *TagPost) Exists() bool {
-	return tp._exists
+// Exists determines if the ProfileMentioned exists in the database.
+func (pm *ProfileMentioned) Exists() bool {
+	return pm._exists
 }
 
-// Deleted provides information if the TagPost has been deleted from the database.
-func (tp *TagPost) Deleted() bool {
-	return tp._deleted
+// Deleted provides information if the ProfileMentioned has been deleted from the database.
+func (pm *ProfileMentioned) Deleted() bool {
+	return pm._deleted
 }
 
-// Insert inserts the TagPost to the database.
-func (tp *TagPost) Insert(db XODB) error {
+// Insert inserts the ProfileMentioned to the database.
+func (pm *ProfileMentioned) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if tp._exists {
+	if pm._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.tag_post (` +
-		`TagId, PostId, PostType, CreatedTime` +
+	// sql insert query, primary key must be provided
+	const sqlstr = `INSERT INTO sun.profile_mentioned (` +
+		`Id, ForUserId, PostId, PostUserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	if LogTableSqlReq.ProfileMentioned {
+		XOLog(sqlstr, pm.Id, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.Id, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	// set existence
+	pm._exists = true
 
-	// set primary key and existence
-	tp.Id = int(id)
-	tp._exists = true
-
-	OnTagPost_AfterInsert(tp)
+	OnProfileMentioned_AfterInsert(pm)
 
 	return nil
 }
 
-// Insert inserts the TagPost to the database.
-func (tp *TagPost) Replace(db XODB) error {
+// Insert inserts the ProfileMentioned to the database.
+func (pm *ProfileMentioned) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.tag_post (` +
-		`TagId, PostId, PostType, CreatedTime` +
+	const sqlstr = `REPLACE INTO sun.profile_mentioned (` +
+		`Id, ForUserId, PostId, PostUserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	if LogTableSqlReq.ProfileMentioned {
+		XOLog(sqlstr, pm.Id, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.Id, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	pm._exists = true
 
-	// set primary key and existence
-	tp.Id = int(id)
-	tp._exists = true
-
-	OnTagPost_AfterInsert(tp)
+	OnProfileMentioned_AfterInsert(pm)
 
 	return nil
 }
 
-// Update updates the TagPost in the database.
-func (tp *TagPost) Update(db XODB) error {
+// Update updates the ProfileMentioned in the database.
+func (pm *ProfileMentioned) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !tp._exists {
+	if !pm._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if tp._deleted {
+	if pm._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.tag_post SET ` +
-		`TagId = ?, PostId = ?, PostType = ?, CreatedTime = ?` +
+	const sqlstr = `UPDATE sun.profile_mentioned SET ` +
+		`ForUserId = ?, PostId = ?, PostUserId = ?, PostType = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime, tp.Id)
+	if LogTableSqlReq.ProfileMentioned {
+		XOLog(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime, pm.Id)
 	}
-	_, err = db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime, tp.Id)
+	_, err = db.Exec(sqlstr, pm.ForUserId, pm.PostId, pm.PostUserId, pm.PostType, pm.CreatedTime, pm.Id)
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLogErr(err)
 	}
-	OnTagPost_AfterUpdate(tp)
+	OnProfileMentioned_AfterUpdate(pm)
 
 	return err
 }
 
-// Save saves the TagPost to the database.
-func (tp *TagPost) Save(db XODB) error {
-	if tp.Exists() {
-		return tp.Update(db)
+// Save saves the ProfileMentioned to the database.
+func (pm *ProfileMentioned) Save(db XODB) error {
+	if pm.Exists() {
+		return pm.Update(db)
 	}
 
-	return tp.Replace(db)
+	return pm.Replace(db)
 }
 
-// Delete deletes the TagPost from the database.
-func (tp *TagPost) Delete(db XODB) error {
+// Delete deletes the ProfileMentioned from the database.
+func (pm *ProfileMentioned) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !tp._exists {
+	if !pm._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if tp._deleted {
+	if pm._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.tag_post WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.profile_mentioned WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.Id)
+	if LogTableSqlReq.ProfileMentioned {
+		XOLog(sqlstr, pm.Id)
 	}
-	_, err = db.Exec(sqlstr, tp.Id)
+	_, err = db.Exec(sqlstr, pm.Id)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	tp._deleted = true
+	pm._deleted = true
 
-	OnTagPost_AfterDelete(tp)
+	OnProfileMentioned_AfterDelete(pm)
 
 	return nil
 }
@@ -206,14 +184,14 @@ func (tp *TagPost) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __TagPost_Deleter struct {
+type __ProfileMentioned_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __TagPost_Updater struct {
+type __ProfileMentioned_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -222,7 +200,7 @@ type __TagPost_Updater struct {
 	isMysql     bool
 }
 
-type __TagPost_Selector struct {
+type __ProfileMentioned_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -233,30 +211,30 @@ type __TagPost_Selector struct {
 	isMysql     bool
 }
 
-func NewTagPost_Deleter() *__TagPost_Deleter {
-	d := __TagPost_Deleter{whereSep: " AND ", isMysql: true}
+func NewProfileMentioned_Deleter() *__ProfileMentioned_Deleter {
+	d := __ProfileMentioned_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewTagPost_Updater() *__TagPost_Updater {
-	u := __TagPost_Updater{whereSep: " AND ", isMysql: true}
+func NewProfileMentioned_Updater() *__ProfileMentioned_Updater {
+	u := __ProfileMentioned_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewTagPost_Selector() *__TagPost_Selector {
-	u := __TagPost_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
+func NewProfileMentioned_Selector() *__ProfileMentioned_Selector {
+	u := __ProfileMentioned_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Selector)nextDollars(size int) string  {
+func (m *__ProfileMentioned_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__TagPost_Selector)nextDollar() string  {
+func (m *__ProfileMentioned_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -267,25 +245,25 @@ func (m *__TagPost_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Deleter) nextDollars(size int) string {
+func (m *__ProfileMentioned_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Deleter) nextDollar() string {
+func (m *__ProfileMentioned_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Deleter) Or() *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) Or() *__ProfileMentioned_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) Id_In(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -298,7 +276,7 @@ func (u *__TagPost_Deleter) Id_In(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) Id_Ins(ins ...int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -311,7 +289,7 @@ func (u *__TagPost_Deleter) Id_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) Id_NotIn(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -324,7 +302,7 @@ func (u *__TagPost_Deleter) Id_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) Id_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_Eq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -335,7 +313,7 @@ func (d *__TagPost_Deleter) Id_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_NotEq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -346,7 +324,7 @@ func (d *__TagPost_Deleter) Id_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_LT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -357,7 +335,7 @@ func (d *__TagPost_Deleter) Id_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_LE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -368,7 +346,7 @@ func (d *__TagPost_Deleter) Id_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_GT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -379,7 +357,7 @@ func (d *__TagPost_Deleter) Id_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) Id_GE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -390,125 +368,112 @@ func (d *__TagPost_Deleter) Id_GE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (u *__TagPost_Deleter) TagId_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) ForUserId_In(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Deleter) TagId_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) ForUserId_Ins(ins ...int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Deleter) TagId_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) ForUserId_NotIn(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Deleter) TagId_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_Eq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_NotEq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_LT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_LE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_GT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) ForUserId_GE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Deleter) PostId_In(ins []int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Deleter) PostId_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) PostId_In(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -521,7 +486,20 @@ func (u *__TagPost_Deleter) PostId_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostId_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) PostId_Ins(ins ...int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Deleter) PostId_NotIn(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -534,7 +512,7 @@ func (u *__TagPost_Deleter) PostId_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) PostId_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_Eq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -545,7 +523,7 @@ func (d *__TagPost_Deleter) PostId_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_NotEq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -556,7 +534,7 @@ func (d *__TagPost_Deleter) PostId_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_LT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -567,7 +545,7 @@ func (d *__TagPost_Deleter) PostId_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_LE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -578,7 +556,7 @@ func (d *__TagPost_Deleter) PostId_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_GT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -589,7 +567,7 @@ func (d *__TagPost_Deleter) PostId_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostId_GE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -600,7 +578,112 @@ func (d *__TagPost_Deleter) PostId_GE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (u *__TagPost_Deleter) PostType_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) PostUserId_In(ins []int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Deleter) PostUserId_Ins(ins ...int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Deleter) PostUserId_NotIn(ins []int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_Eq(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_NotEq(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_LT(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_LE(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_GT(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Deleter) PostUserId_GE(val int) *__ProfileMentioned_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ProfileMentioned_Deleter) PostType_In(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -613,7 +696,7 @@ func (u *__TagPost_Deleter) PostType_In(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostType_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) PostType_Ins(ins ...int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -626,7 +709,7 @@ func (u *__TagPost_Deleter) PostType_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostType_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) PostType_NotIn(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -639,7 +722,7 @@ func (u *__TagPost_Deleter) PostType_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) PostType_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_Eq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -650,7 +733,7 @@ func (d *__TagPost_Deleter) PostType_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_NotEq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -661,7 +744,7 @@ func (d *__TagPost_Deleter) PostType_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_LT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -672,7 +755,7 @@ func (d *__TagPost_Deleter) PostType_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_LE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -683,7 +766,7 @@ func (d *__TagPost_Deleter) PostType_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_GT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -694,7 +777,7 @@ func (d *__TagPost_Deleter) PostType_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) PostType_GE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -705,7 +788,7 @@ func (d *__TagPost_Deleter) PostType_GE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (u *__TagPost_Deleter) CreatedTime_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) CreatedTime_In(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -718,7 +801,7 @@ func (u *__TagPost_Deleter) CreatedTime_In(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) CreatedTime_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) CreatedTime_Ins(ins ...int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -731,7 +814,7 @@ func (u *__TagPost_Deleter) CreatedTime_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) CreatedTime_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMentioned_Deleter) CreatedTime_NotIn(ins []int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -744,7 +827,7 @@ func (u *__TagPost_Deleter) CreatedTime_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) CreatedTime_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_Eq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -755,7 +838,7 @@ func (d *__TagPost_Deleter) CreatedTime_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) CreatedTime_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_NotEq(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -766,7 +849,7 @@ func (d *__TagPost_Deleter) CreatedTime_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) CreatedTime_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_LT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -777,7 +860,7 @@ func (d *__TagPost_Deleter) CreatedTime_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) CreatedTime_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_LE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -788,7 +871,7 @@ func (d *__TagPost_Deleter) CreatedTime_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) CreatedTime_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_GT(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -799,7 +882,7 @@ func (d *__TagPost_Deleter) CreatedTime_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) CreatedTime_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMentioned_Deleter) CreatedTime_GE(val int) *__ProfileMentioned_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -811,25 +894,25 @@ func (d *__TagPost_Deleter) CreatedTime_GE(val int) *__TagPost_Deleter {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Updater) nextDollars(size int) string {
+func (m *__ProfileMentioned_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Updater) nextDollar() string {
+func (m *__ProfileMentioned_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Updater) Or() *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Or() *__ProfileMentioned_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Updater) Id_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Id_In(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -842,7 +925,7 @@ func (u *__TagPost_Updater) Id_In(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) Id_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Id_Ins(ins ...int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -855,7 +938,7 @@ func (u *__TagPost_Updater) Id_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) Id_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Id_NotIn(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -868,7 +951,7 @@ func (u *__TagPost_Updater) Id_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) Id_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_Eq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -879,7 +962,7 @@ func (d *__TagPost_Updater) Id_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_NotEq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -890,7 +973,7 @@ func (d *__TagPost_Updater) Id_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_LT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -901,7 +984,7 @@ func (d *__TagPost_Updater) Id_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_LE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -912,7 +995,7 @@ func (d *__TagPost_Updater) Id_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_GT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -923,7 +1006,7 @@ func (d *__TagPost_Updater) Id_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) Id_GE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -934,125 +1017,112 @@ func (d *__TagPost_Updater) Id_GE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (u *__TagPost_Updater) TagId_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) ForUserId_In(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) ForUserId_Ins(ins ...int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) ForUserId_NotIn(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Updater) TagId_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_Eq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_NotEq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_LT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_LE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_GT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) ForUserId_GE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Updater) PostId_In(ins []int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Updater) PostId_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostId_In(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1065,7 +1135,20 @@ func (u *__TagPost_Updater) PostId_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostId_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostId_Ins(ins ...int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Updater) PostId_NotIn(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1078,7 +1161,7 @@ func (u *__TagPost_Updater) PostId_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) PostId_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_Eq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1089,7 +1172,7 @@ func (d *__TagPost_Updater) PostId_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_NotEq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1100,7 +1183,7 @@ func (d *__TagPost_Updater) PostId_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_LT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1111,7 +1194,7 @@ func (d *__TagPost_Updater) PostId_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_LE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1122,7 +1205,7 @@ func (d *__TagPost_Updater) PostId_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_GT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1133,7 +1216,7 @@ func (d *__TagPost_Updater) PostId_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostId_GE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1144,7 +1227,112 @@ func (d *__TagPost_Updater) PostId_GE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (u *__TagPost_Updater) PostType_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostUserId_In(ins []int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Updater) PostUserId_Ins(ins ...int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Updater) PostUserId_NotIn(ins []int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_Eq(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_NotEq(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_LT(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_LE(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_GT(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Updater) PostUserId_GE(val int) *__ProfileMentioned_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ProfileMentioned_Updater) PostType_In(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1157,7 +1345,7 @@ func (u *__TagPost_Updater) PostType_In(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostType_Ins(ins ...int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1170,7 +1358,7 @@ func (u *__TagPost_Updater) PostType_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostType_NotIn(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1183,7 +1371,7 @@ func (u *__TagPost_Updater) PostType_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) PostType_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_Eq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1194,7 +1382,7 @@ func (d *__TagPost_Updater) PostType_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_NotEq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1205,7 +1393,7 @@ func (d *__TagPost_Updater) PostType_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_LT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1216,7 +1404,7 @@ func (d *__TagPost_Updater) PostType_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_LE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1227,7 +1415,7 @@ func (d *__TagPost_Updater) PostType_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_GT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1238,7 +1426,7 @@ func (d *__TagPost_Updater) PostType_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) PostType_GE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1249,7 +1437,7 @@ func (d *__TagPost_Updater) PostType_GE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (u *__TagPost_Updater) CreatedTime_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) CreatedTime_In(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1262,7 +1450,7 @@ func (u *__TagPost_Updater) CreatedTime_In(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) CreatedTime_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) CreatedTime_Ins(ins ...int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1275,7 +1463,7 @@ func (u *__TagPost_Updater) CreatedTime_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) CreatedTime_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) CreatedTime_NotIn(ins []int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1288,7 +1476,7 @@ func (u *__TagPost_Updater) CreatedTime_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) CreatedTime_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_Eq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1299,7 +1487,7 @@ func (d *__TagPost_Updater) CreatedTime_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) CreatedTime_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_NotEq(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1310,7 +1498,7 @@ func (d *__TagPost_Updater) CreatedTime_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) CreatedTime_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_LT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1321,7 +1509,7 @@ func (d *__TagPost_Updater) CreatedTime_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) CreatedTime_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_LE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1332,7 +1520,7 @@ func (d *__TagPost_Updater) CreatedTime_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) CreatedTime_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_GT(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1343,7 +1531,7 @@ func (d *__TagPost_Updater) CreatedTime_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) CreatedTime_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMentioned_Updater) CreatedTime_GE(val int) *__ProfileMentioned_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1355,25 +1543,25 @@ func (d *__TagPost_Updater) CreatedTime_GE(val int) *__TagPost_Updater {
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Selector) nextDollars(size int) string {
+func (m *__ProfileMentioned_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Selector) nextDollar() string {
+func (m *__ProfileMentioned_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Selector) Or() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Or() *__ProfileMentioned_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Selector) Id_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Id_In(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1386,7 +1574,7 @@ func (u *__TagPost_Selector) Id_In(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) Id_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Id_Ins(ins ...int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1399,7 +1587,7 @@ func (u *__TagPost_Selector) Id_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) Id_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Id_NotIn(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1412,7 +1600,7 @@ func (u *__TagPost_Selector) Id_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) Id_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_Eq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1423,7 +1611,7 @@ func (d *__TagPost_Selector) Id_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_NotEq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1434,7 +1622,7 @@ func (d *__TagPost_Selector) Id_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_LT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1445,7 +1633,7 @@ func (d *__TagPost_Selector) Id_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_LE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1456,7 +1644,7 @@ func (d *__TagPost_Selector) Id_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_GT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1467,7 +1655,7 @@ func (d *__TagPost_Selector) Id_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) Id_GE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1478,125 +1666,112 @@ func (d *__TagPost_Selector) Id_GE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (u *__TagPost_Selector) TagId_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) ForUserId_In(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Selector) TagId_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) ForUserId_Ins(ins ...int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Selector) TagId_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) ForUserId_NotIn(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ForUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Selector) TagId_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_Eq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " ForUserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_NotEq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " ForUserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_LT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " ForUserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_LE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " ForUserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_GT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " ForUserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) ForUserId_GE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " ForUserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Selector) PostId_In(ins []int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Selector) PostId_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) PostId_In(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1609,7 +1784,20 @@ func (u *__TagPost_Selector) PostId_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostId_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) PostId_Ins(ins ...int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) PostId_NotIn(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1622,7 +1810,7 @@ func (u *__TagPost_Selector) PostId_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) PostId_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_Eq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1633,7 +1821,7 @@ func (d *__TagPost_Selector) PostId_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_NotEq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1644,7 +1832,7 @@ func (d *__TagPost_Selector) PostId_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_LT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1655,7 +1843,7 @@ func (d *__TagPost_Selector) PostId_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_LE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1666,7 +1854,7 @@ func (d *__TagPost_Selector) PostId_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_GT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1677,7 +1865,7 @@ func (d *__TagPost_Selector) PostId_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostId_GE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1688,7 +1876,112 @@ func (d *__TagPost_Selector) PostId_GE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (u *__TagPost_Selector) PostType_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) PostUserId_In(ins []int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) PostUserId_Ins(ins ...int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) PostUserId_NotIn(ins []int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostUserId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_Eq(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_NotEq(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_LT(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_LE(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_GT(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__ProfileMentioned_Selector) PostUserId_GE(val int) *__ProfileMentioned_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " PostUserId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__ProfileMentioned_Selector) PostType_In(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1701,7 +1994,7 @@ func (u *__TagPost_Selector) PostType_In(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostType_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) PostType_Ins(ins ...int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1714,7 +2007,7 @@ func (u *__TagPost_Selector) PostType_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostType_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) PostType_NotIn(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1727,7 +2020,7 @@ func (u *__TagPost_Selector) PostType_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) PostType_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_Eq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1738,7 +2031,7 @@ func (d *__TagPost_Selector) PostType_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_NotEq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1749,7 +2042,7 @@ func (d *__TagPost_Selector) PostType_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_LT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1760,7 +2053,7 @@ func (d *__TagPost_Selector) PostType_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_LE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1771,7 +2064,7 @@ func (d *__TagPost_Selector) PostType_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_GT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1782,7 +2075,7 @@ func (d *__TagPost_Selector) PostType_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) PostType_GE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1793,7 +2086,7 @@ func (d *__TagPost_Selector) PostType_GE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (u *__TagPost_Selector) CreatedTime_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) CreatedTime_In(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1806,7 +2099,7 @@ func (u *__TagPost_Selector) CreatedTime_In(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) CreatedTime_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) CreatedTime_Ins(ins ...int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1819,7 +2112,7 @@ func (u *__TagPost_Selector) CreatedTime_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) CreatedTime_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) CreatedTime_NotIn(ins []int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1832,7 +2125,7 @@ func (u *__TagPost_Selector) CreatedTime_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) CreatedTime_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_Eq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1843,7 +2136,7 @@ func (d *__TagPost_Selector) CreatedTime_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) CreatedTime_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_NotEq(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1854,7 +2147,7 @@ func (d *__TagPost_Selector) CreatedTime_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) CreatedTime_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_LT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1865,7 +2158,7 @@ func (d *__TagPost_Selector) CreatedTime_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) CreatedTime_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_LE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1876,7 +2169,7 @@ func (d *__TagPost_Selector) CreatedTime_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) CreatedTime_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_GT(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1887,7 +2180,7 @@ func (d *__TagPost_Selector) CreatedTime_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) CreatedTime_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMentioned_Selector) CreatedTime_GE(val int) *__ProfileMentioned_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1912,14 +2205,14 @@ func (d *__TagPost_Selector) CreatedTime_GE(val int) *__TagPost_Selector {
 
 //ints
 
-func (u *__TagPost_Updater) Id(newVal int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Id(newVal int) *__ProfileMentioned_Updater {
 	up := updateCol{" Id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) Id_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) Id_Increment(count int) *__ProfileMentioned_Updater {
 	if count > 0 {
 		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1939,24 +2232,24 @@ func (u *__TagPost_Updater) Id_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) TagId(newVal int) *__TagPost_Updater {
-	up := updateCol{" TagId = " + u.nextDollar(), newVal}
+func (u *__ProfileMentioned_Updater) ForUserId(newVal int) *__ProfileMentioned_Updater {
+	up := updateCol{" ForUserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" TagId = " + u.nextDollar()] = newVal
+	// u.updates[" ForUserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) ForUserId_Increment(count int) *__ProfileMentioned_Updater {
 	if count > 0 {
-		up := updateCol{" TagId = TagId+ " + u.nextDollar(), count}
+		up := updateCol{" ForUserId = ForUserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" TagId = TagId+ " + u.nextDollar()] = count
+		//u.updates[" ForUserId = ForUserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" TagId = TagId- " + u.nextDollar(), count}
+		up := updateCol{" ForUserId = ForUserId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" TagId = TagId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" ForUserId = ForUserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1966,14 +2259,14 @@ func (u *__TagPost_Updater) TagId_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) PostId(newVal int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostId(newVal int) *__ProfileMentioned_Updater {
 	up := updateCol{" PostId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) PostId_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostId_Increment(count int) *__ProfileMentioned_Updater {
 	if count > 0 {
 		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1993,14 +2286,41 @@ func (u *__TagPost_Updater) PostId_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) PostType(newVal int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostUserId(newVal int) *__ProfileMentioned_Updater {
+	up := updateCol{" PostUserId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" PostUserId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__ProfileMentioned_Updater) PostUserId_Increment(count int) *__ProfileMentioned_Updater {
+	if count > 0 {
+		up := updateCol{" PostUserId = PostUserId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" PostUserId = PostUserId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" PostUserId = PostUserId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" PostUserId = PostUserId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__ProfileMentioned_Updater) PostType(newVal int) *__ProfileMentioned_Updater {
 	up := updateCol{" PostType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) PostType_Increment(count int) *__ProfileMentioned_Updater {
 	if count > 0 {
 		up := updateCol{" PostType = PostType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2020,14 +2340,14 @@ func (u *__TagPost_Updater) PostType_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) CreatedTime(newVal int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) CreatedTime(newVal int) *__ProfileMentioned_Updater {
 	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) CreatedTime_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMentioned_Updater) CreatedTime_Increment(count int) *__ProfileMentioned_Updater {
 	if count > 0 {
 		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2050,101 +2370,116 @@ func (u *__TagPost_Updater) CreatedTime_Increment(count int) *__TagPost_Updater 
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__TagPost_Selector) OrderBy_Id_Desc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_Id_Desc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_Id_Asc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_Id_Asc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_Id() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Select_Id() *__ProfileMentioned_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_TagId_Desc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY TagId DESC "
+func (u *__ProfileMentioned_Selector) OrderBy_ForUserId_Desc() *__ProfileMentioned_Selector {
+	u.orderBy = " ORDER BY ForUserId DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_TagId_Asc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY TagId ASC "
+func (u *__ProfileMentioned_Selector) OrderBy_ForUserId_Asc() *__ProfileMentioned_Selector {
+	u.orderBy = " ORDER BY ForUserId ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_TagId() *__TagPost_Selector {
-	u.selectCol = "TagId"
+func (u *__ProfileMentioned_Selector) Select_ForUserId() *__ProfileMentioned_Selector {
+	u.selectCol = "ForUserId"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostId_Desc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_PostId_Desc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostId_Asc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_PostId_Asc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_PostId() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Select_PostId() *__ProfileMentioned_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostType_Desc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_PostUserId_Desc() *__ProfileMentioned_Selector {
+	u.orderBy = " ORDER BY PostUserId DESC "
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) OrderBy_PostUserId_Asc() *__ProfileMentioned_Selector {
+	u.orderBy = " ORDER BY PostUserId ASC "
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) Select_PostUserId() *__ProfileMentioned_Selector {
+	u.selectCol = "PostUserId"
+	return u
+}
+
+func (u *__ProfileMentioned_Selector) OrderBy_PostType_Desc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY PostType DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostType_Asc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_PostType_Asc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY PostType ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_PostType() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Select_PostType() *__ProfileMentioned_Selector {
 	u.selectCol = "PostType"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_CreatedTime_Desc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_CreatedTime_Desc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY CreatedTime DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_CreatedTime_Asc() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) OrderBy_CreatedTime_Asc() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY CreatedTime ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_CreatedTime() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Select_CreatedTime() *__ProfileMentioned_Selector {
 	u.selectCol = "CreatedTime"
 	return u
 }
 
-func (u *__TagPost_Selector) Limit(num int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Limit(num int) *__ProfileMentioned_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__TagPost_Selector) Offset(num int) *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Offset(num int) *__ProfileMentioned_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__TagPost_Selector) Order_Rand() *__TagPost_Selector {
+func (u *__ProfileMentioned_Selector) Order_Rand() *__ProfileMentioned_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__TagPost_Selector) _stoSql() (string, []interface{}) {
+func (u *__ProfileMentioned_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.tag_post"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.profile_mentioned"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2164,20 +2499,20 @@ func (u *__TagPost_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__TagPost_Selector) GetRow(db *sqlx.DB) (*TagPost, error) {
+func (u *__ProfileMentioned_Selector) GetRow(db *sqlx.DB) (*ProfileMentioned, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &TagPost{}
+	row := &ProfileMentioned{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2185,25 +2520,25 @@ func (u *__TagPost_Selector) GetRow(db *sqlx.DB) (*TagPost, error) {
 
 	row._exists = true
 
-	OnTagPost_LoadOne(row)
+	OnProfileMentioned_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__TagPost_Selector) GetRows(db *sqlx.DB) ([]*TagPost, error) {
+func (u *__ProfileMentioned_Selector) GetRows(db *sqlx.DB) ([]*ProfileMentioned, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*TagPost
+	var rows []*ProfileMentioned
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2217,25 +2552,25 @@ func (u *__TagPost_Selector) GetRows(db *sqlx.DB) ([]*TagPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagPost_LoadMany(rows)
+	OnProfileMentioned_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
+func (u *__ProfileMentioned_Selector) GetRows2(db *sqlx.DB) ([]ProfileMentioned, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*TagPost
+	var rows []*ProfileMentioned
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2249,9 +2584,9 @@ func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagPost_LoadMany(rows)
+	OnProfileMentioned_LoadMany(rows)
 
-	rows2 := make([]TagPost, len(rows))
+	rows2 := make([]ProfileMentioned, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -2260,12 +2595,12 @@ func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
 	return rows2, nil
 }
 
-func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__ProfileMentioned_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -2273,7 +2608,7 @@ func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return "", err
@@ -2282,19 +2617,19 @@ func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__TagPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__ProfileMentioned_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2303,19 +2638,19 @@ func (u *__TagPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__TagPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__ProfileMentioned_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2324,19 +2659,19 @@ func (u *__TagPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__TagPost_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__ProfileMentioned_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2346,7 +2681,7 @@ func (u *__TagPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__TagPost_Updater) Update(db XODB) (int, error) {
+func (u *__ProfileMentioned_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -2367,18 +2702,18 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.tag_post SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.profile_mentioned SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2386,7 +2721,7 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2395,7 +2730,7 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
+func (d *__ProfileMentioned_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2408,15 +2743,15 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.tag_post WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.profile_mentioned WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2425,7 +2760,7 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2434,20 +2769,21 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  TagPost ////////////////
+///////////////////////// Mass insert - replace for  ProfileMentioned ////////////////
 
-func MassInsert_TagPost(rows []TagPost, db XODB) error {
+func MassInsert_ProfileMentioned(rows []ProfileMentioned, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
-	sqlstr := "INSERT INTO sun.tag_post (" +
-		"TagId, PostId, PostType, CreatedTime" +
+	sqlstr := "INSERT INTO sun.profile_mentioned (" +
+		"Id, ForUserId, PostId, PostUserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2455,19 +2791,21 @@ func MassInsert_TagPost(rows []TagPost, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.TagId)
+		vals = append(vals, row.Id)
+		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.PostUserId)
 		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return err
@@ -2476,15 +2814,18 @@ func MassInsert_TagPost(rows []TagPost, db XODB) error {
 	return nil
 }
 
-func MassReplace_TagPost(rows []TagPost, db XODB) error {
+func MassReplace_ProfileMentioned(rows []ProfileMentioned, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(6, ln, true)
 	// sql query
-	sqlstr := "REPLACE INTO sun.tag_post (" +
-		"TagId, PostId, PostType, CreatedTime" +
+	sqlstr := "REPLACE INTO sun.profile_mentioned (" +
+		"Id, ForUserId, PostId, PostUserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2492,28 +2833,33 @@ func MassReplace_TagPost(rows []TagPost, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.TagId)
+		vals = append(vals, row.Id)
+		vals = append(vals, row.ForUserId)
 		vals = append(vals, row.PostId)
+		vals = append(vals, row.PostUserId)
 		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMentioned {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMentioned {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

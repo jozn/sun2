@@ -2,8 +2,8 @@ package trigger_service
 
 import (
 	"fmt"
-	"ms/sun_old/base"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
 type postTrig int
@@ -50,5 +50,4 @@ func listen() {
 	x.ActivateTrigger = true
 
 	x.ArrTriggerListeners = append(x.ArrTriggerListeners, s)
-
 }

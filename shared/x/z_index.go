@@ -388,28 +388,28 @@ func PostMediaByMediaId(db *sqlx.DB, mediaId int) (*PostMedia, error) {
 	return &pm, nil
 }
 
-// PostMentionedByMentionedId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_mentioned' as a PostMentioned.
-func PostMentionedByMentionedId(db *sqlx.DB, mentionedId int) (*PostMentioned, error) {
+// PostPromotedByPromoteId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_promoted' as a PostPromoted.
+func PostPromotedByPromoteId(db *sqlx.DB, promoteId int) (*PostPromoted, error) {
 	var err error
 
 	const sqlstr = `SELECT * ` +
-		`FROM sun.post_mentioned ` +
-		`WHERE MentionedId = ?`
+		`FROM sun.post_promoted ` +
+		`WHERE PromoteId = ?`
 
-	XOLog(sqlstr, mentionedId)
-	pm := PostMentioned{
+	XOLog(sqlstr, promoteId)
+	pp := PostPromoted{
 		_exists: true,
 	}
 
-	err = db.Get(&pm, sqlstr, mentionedId)
+	err = db.Get(&pp, sqlstr, promoteId)
 	if err != nil {
 		XOLogErr(err)
 		return nil, err
 	}
 
-	OnPostMentioned_LoadOne(&pm)
+	OnPostPromoted_LoadOne(&pp)
 
-	return &pm, nil
+	return &pp, nil
 }
 
 // PostResharedByResharedId Generated from index 'PRIMARY' -- retrieves a row from 'sun.post_reshared' as a PostReshared.
@@ -434,6 +434,78 @@ func PostResharedByResharedId(db *sqlx.DB, resharedId int) (*PostReshared, error
 	OnPostReshared_LoadOne(&pr)
 
 	return &pr, nil
+}
+
+// ProfileAllById Generated from index 'PRIMARY' -- retrieves a row from 'sun.profile_all' as a ProfileAll.
+func ProfileAllById(db *sqlx.DB, id int) (*ProfileAll, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.profile_all ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	pa := ProfileAll{
+		_exists: true,
+	}
+
+	err = db.Get(&pa, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnProfileAll_LoadOne(&pa)
+
+	return &pa, nil
+}
+
+// ProfileMediaById Generated from index 'PRIMARY' -- retrieves a row from 'sun.profile_media' as a ProfileMedia.
+func ProfileMediaById(db *sqlx.DB, id int) (*ProfileMedia, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.profile_media ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	pm := ProfileMedia{
+		_exists: true,
+	}
+
+	err = db.Get(&pm, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnProfileMedia_LoadOne(&pm)
+
+	return &pm, nil
+}
+
+// ProfileMentionedById Generated from index 'PRIMARY' -- retrieves a row from 'sun.profile_mentioned' as a ProfileMentioned.
+func ProfileMentionedById(db *sqlx.DB, id int) (*ProfileMentioned, error) {
+	var err error
+
+	const sqlstr = `SELECT * ` +
+		`FROM sun.profile_mentioned ` +
+		`WHERE Id = ?`
+
+	XOLog(sqlstr, id)
+	pm := ProfileMentioned{
+		_exists: true,
+	}
+
+	err = db.Get(&pm, sqlstr, id)
+	if err != nil {
+		XOLogErr(err)
+		return nil, err
+	}
+
+	OnProfileMentioned_LoadOne(&pm)
+
+	return &pm, nil
 }
 
 // SessionById Generated from index 'PRIMARY' -- retrieves a row from 'sun.session' as a Session.

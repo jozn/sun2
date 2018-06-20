@@ -436,11 +436,14 @@ public class PBFlatTypes {
 	   public long PeerUserId;
 	   public long PostId;
 	   public long CommentId;
+	   public long HashTagId;
+	   public long GroupId;
 	   public long ActionId;
-	   public long Murmur64Hash;
+	   public long ChatId;
 	   public String ChatKey;
 	   public long MessageId;
 	   public long ReSharedId;
+	   public long Murmur64Hash;
 	}
 	/*
 	folding
@@ -451,11 +454,14 @@ public class PBFlatTypes {
     t.setPeerUserId();
     t.setPostId();
     t.setCommentId();
+    t.setHashTagId();
+    t.setGroupId();
     t.setActionId();
-    t.setMurmur64Hash();
+    t.setChatId();
     t.setChatKey();
     t.setMessageId();
     t.setReSharedId();
+    t.setMurmur64Hash();
 	*/
 
 	/*
@@ -466,11 +472,14 @@ public class PBFlatTypes {
 	t.PeerUserId = ;
 	t.PostId = ;
 	t.CommentId = ;
+	t.HashTagId = ;
+	t.GroupId = ;
 	t.ActionId = ;
-	t.Murmur64Hash = ;
+	t.ChatId = ;
 	t.ChatKey = ;
 	t.MessageId = ;
 	t.ReSharedId = ;
+	t.Murmur64Hash = ;
 	*/
 
 	/*
@@ -481,11 +490,14 @@ public class PBFlatTypes {
 	t.PeerUserId = m.getPeerUserId() ;
 	t.PostId = m.getPostId() ;
 	t.CommentId = m.getCommentId() ;
+	t.HashTagId = m.getHashTagId() ;
+	t.GroupId = m.getGroupId() ;
 	t.ActionId = m.getActionId() ;
-	t.Murmur64Hash = m.getMurmur64Hash() ;
+	t.ChatId = m.getChatId() ;
 	t.ChatKey = m.getChatKey() ;
 	t.MessageId = m.getMessageId() ;
 	t.ReSharedId = m.getReSharedId() ;
+	t.Murmur64Hash = m.getMurmur64Hash() ;
 	*/
 
 	public class PB_Followed {
@@ -522,9 +534,8 @@ public class PBFlatTypes {
 	public class PB_Likes {
 	   public long Id;
 	   public long PostId;
-	   public int PostTypeEnum;
 	   public int UserId;
-	   public int LikeEnum;
+	   public int PostType;
 	   public int CreatedTime;
 	}
 	/*
@@ -532,9 +543,8 @@ public class PBFlatTypes {
 	PBFlatTypes.PB_Likes t = new PBFlatTypes.PB_Likes();
     t.setId();
     t.setPostId();
-    t.setPostTypeEnum();
     t.setUserId();
-    t.setLikeEnum();
+    t.setPostType();
     t.setCreatedTime();
 	*/
 
@@ -542,9 +552,8 @@ public class PBFlatTypes {
 	PBFlatTypes.PB_Likes t = new PBFlatTypes.PB_Likes();
 	t.Id = ;
 	t.PostId = ;
-	t.PostTypeEnum = ;
 	t.UserId = ;
-	t.LikeEnum = ;
+	t.PostType = ;
 	t.CreatedTime = ;
 	*/
 
@@ -552,9 +561,8 @@ public class PBFlatTypes {
 	PB_Likes t = new PB_Likes();
 	t.Id = m.getId() ;
 	t.PostId = m.getPostId() ;
-	t.PostTypeEnum = m.getPostTypeEnum() ;
 	t.UserId = m.getUserId() ;
-	t.LikeEnum = m.getLikeEnum() ;
+	t.PostType = m.getPostType() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -682,96 +690,88 @@ public class PBFlatTypes {
 	public class PB_Post {
 	   public long PostId;
 	   public int UserId;
-	   public int PostTypeEnum;
-	   public int PostCategoryEnum;
+	   public int PostType;
 	   public long MediaId;
+	   public long FileRefId;
 	   public String PostKey;
 	   public String Text;
 	   public String RichText;
 	   public int MediaCount;
 	   public int SharedTo;
 	   public int DisableComment;
-	   public int Source;
-	   public int HasTag;
+	   public int Via;
 	   public int Seq;
 	   public int CommentsCount;
 	   public int LikesCount;
 	   public int ViewsCount;
 	   public int EditedTime;
 	   public int CreatedTime;
-	   public long ReSharedPostId;
 	}
 	/*
 	folding
 	PBFlatTypes.PB_Post t = new PBFlatTypes.PB_Post();
     t.setPostId();
     t.setUserId();
-    t.setPostTypeEnum();
-    t.setPostCategoryEnum();
+    t.setPostType();
     t.setMediaId();
+    t.setFileRefId();
     t.setPostKey();
     t.setText();
     t.setRichText();
     t.setMediaCount();
     t.setSharedTo();
     t.setDisableComment();
-    t.setSource();
-    t.setHasTag();
+    t.setVia();
     t.setSeq();
     t.setCommentsCount();
     t.setLikesCount();
     t.setViewsCount();
     t.setEditedTime();
     t.setCreatedTime();
-    t.setReSharedPostId();
 	*/
 
 	/*
 	PBFlatTypes.PB_Post t = new PBFlatTypes.PB_Post();
 	t.PostId = ;
 	t.UserId = ;
-	t.PostTypeEnum = ;
-	t.PostCategoryEnum = ;
+	t.PostType = ;
 	t.MediaId = ;
+	t.FileRefId = ;
 	t.PostKey = ;
 	t.Text = ;
 	t.RichText = ;
 	t.MediaCount = ;
 	t.SharedTo = ;
 	t.DisableComment = ;
-	t.Source = ;
-	t.HasTag = ;
+	t.Via = ;
 	t.Seq = ;
 	t.CommentsCount = ;
 	t.LikesCount = ;
 	t.ViewsCount = ;
 	t.EditedTime = ;
 	t.CreatedTime = ;
-	t.ReSharedPostId = ;
 	*/
 
 	/*
 	PB_Post t = new PB_Post();
 	t.PostId = m.getPostId() ;
 	t.UserId = m.getUserId() ;
-	t.PostTypeEnum = m.getPostTypeEnum() ;
-	t.PostCategoryEnum = m.getPostCategoryEnum() ;
+	t.PostType = m.getPostType() ;
 	t.MediaId = m.getMediaId() ;
+	t.FileRefId = m.getFileRefId() ;
 	t.PostKey = m.getPostKey() ;
 	t.Text = m.getText() ;
 	t.RichText = m.getRichText() ;
 	t.MediaCount = m.getMediaCount() ;
 	t.SharedTo = m.getSharedTo() ;
 	t.DisableComment = m.getDisableComment() ;
-	t.Source = m.getSource() ;
-	t.HasTag = m.getHasTag() ;
+	t.Via = m.getVia() ;
 	t.Seq = m.getSeq() ;
 	t.CommentsCount = m.getCommentsCount() ;
 	t.LikesCount = m.getLikesCount() ;
 	t.ViewsCount = m.getViewsCount() ;
 	t.EditedTime = m.getEditedTime() ;
 	t.CreatedTime = m.getCreatedTime() ;
-	t.ReSharedPostId = m.getReSharedPostId() ;
 	*/
 
 	public class PB_PostCount {
@@ -840,6 +840,7 @@ public class PBFlatTypes {
 	   public int Id;
 	   public String PostKeyStr;
 	   public int Used;
+	   public int RandShard;
 	}
 	/*
 	folding
@@ -847,6 +848,7 @@ public class PBFlatTypes {
     t.setId();
     t.setPostKeyStr();
     t.setUsed();
+    t.setRandShard();
 	*/
 
 	/*
@@ -854,6 +856,7 @@ public class PBFlatTypes {
 	t.Id = ;
 	t.PostKeyStr = ;
 	t.Used = ;
+	t.RandShard = ;
 	*/
 
 	/*
@@ -861,6 +864,7 @@ public class PBFlatTypes {
 	t.Id = m.getId() ;
 	t.PostKeyStr = m.getPostKeyStr() ;
 	t.Used = m.getUsed() ;
+	t.RandShard = m.getRandShard() ;
 	*/
 
 	public class PB_PostLink {
@@ -961,45 +965,6 @@ public class PBFlatTypes {
 	t.Extra = m.getExtra() ;
 	*/
 
-	public class PB_PostMentioned {
-	   public long MentionedId;
-	   public int ForUserId;
-	   public long PostId;
-	   public int PostUserId;
-	   public int PostType;
-	   public int CreatedTime;
-	}
-	/*
-	folding
-	PBFlatTypes.PB_PostMentioned t = new PBFlatTypes.PB_PostMentioned();
-    t.setMentionedId();
-    t.setForUserId();
-    t.setPostId();
-    t.setPostUserId();
-    t.setPostType();
-    t.setCreatedTime();
-	*/
-
-	/*
-	PBFlatTypes.PB_PostMentioned t = new PBFlatTypes.PB_PostMentioned();
-	t.MentionedId = ;
-	t.ForUserId = ;
-	t.PostId = ;
-	t.PostUserId = ;
-	t.PostType = ;
-	t.CreatedTime = ;
-	*/
-
-	/*
-	PB_PostMentioned t = new PB_PostMentioned();
-	t.MentionedId = m.getMentionedId() ;
-	t.ForUserId = m.getForUserId() ;
-	t.PostId = m.getPostId() ;
-	t.PostUserId = m.getPostUserId() ;
-	t.PostType = m.getPostType() ;
-	t.CreatedTime = m.getCreatedTime() ;
-	*/
-
 	public class PB_PostReshared {
 	   public long ResharedId;
 	   public long PostId;
@@ -1032,6 +997,107 @@ public class PBFlatTypes {
 	t.PostId = m.getPostId() ;
 	t.ByUserId = m.getByUserId() ;
 	t.PostUserId = m.getPostUserId() ;
+	t.CreatedTime = m.getCreatedTime() ;
+	*/
+
+	public class PB_ProfileAll {
+	   public long Id;
+	   public int UserId;
+	   public long PostId;
+	   public int IsReShared;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ProfileAll t = new PBFlatTypes.PB_ProfileAll();
+    t.setId();
+    t.setUserId();
+    t.setPostId();
+    t.setIsReShared();
+	*/
+
+	/*
+	PBFlatTypes.PB_ProfileAll t = new PBFlatTypes.PB_ProfileAll();
+	t.Id = ;
+	t.UserId = ;
+	t.PostId = ;
+	t.IsReShared = ;
+	*/
+
+	/*
+	PB_ProfileAll t = new PB_ProfileAll();
+	t.Id = m.getId() ;
+	t.UserId = m.getUserId() ;
+	t.PostId = m.getPostId() ;
+	t.IsReShared = m.getIsReShared() ;
+	*/
+
+	public class PB_ProfileMedia {
+	   public long Id;
+	   public int UserId;
+	   public long PostId;
+	   public int PostType;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ProfileMedia t = new PBFlatTypes.PB_ProfileMedia();
+    t.setId();
+    t.setUserId();
+    t.setPostId();
+    t.setPostType();
+	*/
+
+	/*
+	PBFlatTypes.PB_ProfileMedia t = new PBFlatTypes.PB_ProfileMedia();
+	t.Id = ;
+	t.UserId = ;
+	t.PostId = ;
+	t.PostType = ;
+	*/
+
+	/*
+	PB_ProfileMedia t = new PB_ProfileMedia();
+	t.Id = m.getId() ;
+	t.UserId = m.getUserId() ;
+	t.PostId = m.getPostId() ;
+	t.PostType = m.getPostType() ;
+	*/
+
+	public class PB_ProfileMentioned {
+	   public long Id;
+	   public int ForUserId;
+	   public long PostId;
+	   public int PostUserId;
+	   public int PostType;
+	   public int CreatedTime;
+	}
+	/*
+	folding
+	PBFlatTypes.PB_ProfileMentioned t = new PBFlatTypes.PB_ProfileMentioned();
+    t.setId();
+    t.setForUserId();
+    t.setPostId();
+    t.setPostUserId();
+    t.setPostType();
+    t.setCreatedTime();
+	*/
+
+	/*
+	PBFlatTypes.PB_ProfileMentioned t = new PBFlatTypes.PB_ProfileMentioned();
+	t.Id = ;
+	t.ForUserId = ;
+	t.PostId = ;
+	t.PostUserId = ;
+	t.PostType = ;
+	t.CreatedTime = ;
+	*/
+
+	/*
+	PB_ProfileMentioned t = new PB_ProfileMentioned();
+	t.Id = m.getId() ;
+	t.ForUserId = m.getForUserId() ;
+	t.PostId = m.getPostId() ;
+	t.PostUserId = m.getPostUserId() ;
+	t.PostType = m.getPostType() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -1261,6 +1327,8 @@ public class PBFlatTypes {
 	   public String Name;
 	   public int Count;
 	   public int TagStatusEnum;
+	   public int IsBlocked;
+	   public int GroupId;
 	   public int CreatedTime;
 	}
 	/*
@@ -1270,6 +1338,8 @@ public class PBFlatTypes {
     t.setName();
     t.setCount();
     t.setTagStatusEnum();
+    t.setIsBlocked();
+    t.setGroupId();
     t.setCreatedTime();
 	*/
 
@@ -1279,6 +1349,8 @@ public class PBFlatTypes {
 	t.Name = ;
 	t.Count = ;
 	t.TagStatusEnum = ;
+	t.IsBlocked = ;
+	t.GroupId = ;
 	t.CreatedTime = ;
 	*/
 
@@ -1288,6 +1360,8 @@ public class PBFlatTypes {
 	t.Name = m.getName() ;
 	t.Count = m.getCount() ;
 	t.TagStatusEnum = m.getTagStatusEnum() ;
+	t.IsBlocked = m.getIsBlocked() ;
+	t.GroupId = m.getGroupId() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -1295,8 +1369,7 @@ public class PBFlatTypes {
 	   public long Id;
 	   public int TagId;
 	   public int PostId;
-	   public int PostTypeEnum;
-	   public int PostCategoryEnum;
+	   public int PostType;
 	   public int CreatedTime;
 	}
 	/*
@@ -1305,8 +1378,7 @@ public class PBFlatTypes {
     t.setId();
     t.setTagId();
     t.setPostId();
-    t.setPostTypeEnum();
-    t.setPostCategoryEnum();
+    t.setPostType();
     t.setCreatedTime();
 	*/
 
@@ -1315,8 +1387,7 @@ public class PBFlatTypes {
 	t.Id = ;
 	t.TagId = ;
 	t.PostId = ;
-	t.PostTypeEnum = ;
-	t.PostCategoryEnum = ;
+	t.PostType = ;
 	t.CreatedTime = ;
 	*/
 
@@ -1325,8 +1396,7 @@ public class PBFlatTypes {
 	t.Id = m.getId() ;
 	t.TagId = m.getTagId() ;
 	t.PostId = m.getPostId() ;
-	t.PostTypeEnum = m.getPostTypeEnum() ;
-	t.PostCategoryEnum = m.getPostCategoryEnum() ;
+	t.PostType = m.getPostType() ;
 	t.CreatedTime = m.getCreatedTime() ;
 	*/
 
@@ -1386,7 +1456,6 @@ public class PBFlatTypes {
 	   public String Phone;
 	   public String Email;
 	   public String About;
-	   public String DefaultUserName;
 	   public String PasswordHash;
 	   public String PasswordSalt;
 	   public int PostSeq;
@@ -1430,7 +1499,6 @@ public class PBFlatTypes {
     t.setPhone();
     t.setEmail();
     t.setAbout();
-    t.setDefaultUserName();
     t.setPasswordHash();
     t.setPasswordSalt();
     t.setPostSeq();
@@ -1474,7 +1542,6 @@ public class PBFlatTypes {
 	t.Phone = ;
 	t.Email = ;
 	t.About = ;
-	t.DefaultUserName = ;
 	t.PasswordHash = ;
 	t.PasswordSalt = ;
 	t.PostSeq = ;
@@ -1518,7 +1585,6 @@ public class PBFlatTypes {
 	t.Phone = m.getPhone() ;
 	t.Email = m.getEmail() ;
 	t.About = m.getAbout() ;
-	t.DefaultUserName = m.getDefaultUserName() ;
 	t.PasswordHash = m.getPasswordHash() ;
 	t.PasswordSalt = m.getPasswordSalt() ;
 	t.PostSeq = m.getPostSeq() ;

@@ -339,6 +339,15 @@ func (RPC_Social_Client) EditComment(param *RPC_Social_Types_EditComment_Param, 
 	return nil, err
 }
 
+func (RPC_Social_Client) LikeComment(param *RPC_Social_Types_LikeComment_Param, fn RPCClientHandler) (*RPC_Social_Types_LikeComment_Response, error) {
+	out := &RPC_Social_Types_LikeComment_Response{}
+	err := fn("RPC_Social.LikeComment", param, out)
+	if err == nil {
+		return out, nil
+	}
+	return nil, err
+}
+
 func (RPC_Social_Client) AddPost(param *RPC_Social_Types_AddPost_Param, fn RPCClientHandler) (*RPC_Social_Types_AddPost_Response, error) {
 	out := &RPC_Social_Types_AddPost_Response{}
 	err := fn("RPC_Social.AddPost", param, out)
@@ -369,6 +378,15 @@ func (RPC_Social_Client) DeletePost(param *RPC_Social_Types_DeletePost_Param, fn
 func (RPC_Social_Client) ArchivePost(param *RPC_Social_Types_ArchivePost_Param, fn RPCClientHandler) (*RPC_Social_Types_ArchivePost_Response, error) {
 	out := &RPC_Social_Types_ArchivePost_Response{}
 	err := fn("RPC_Social.ArchivePost", param, out)
+	if err == nil {
+		return out, nil
+	}
+	return nil, err
+}
+
+func (RPC_Social_Client) PromotePost(param *RPC_Social_Types_PromotePost_Param, fn RPCClientHandler) (*RPC_Social_Types_PromotePost_Response, error) {
+	out := &RPC_Social_Types_PromotePost_Response{}
+	err := fn("RPC_Social.PromotePost", param, out)
 	if err == nil {
 		return out, nil
 	}

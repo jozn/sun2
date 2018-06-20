@@ -30,7 +30,6 @@ type User__ struct {
 	Phone              string `json:"Phone"`              // Phone -
 	Email              string `json:"Email"`              // Email -
 	About              string `json:"About"`              // About -
-	DefaultUserName    string `json:"DefaultUserName"`    // DefaultUserName -
 	PasswordHash       string `json:"PasswordHash"`       // PasswordHash -
 	PasswordSalt       string `json:"PasswordSalt"`       // PasswordSalt -
 	PostSeq            int    `json:"PostSeq"`            // PostSeq -
@@ -79,16 +78,16 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -121,16 +120,16 @@ func (u *User) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.user (` +
-		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
+		`UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	}
-	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
+	res, err := db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned)
 	if err != nil {
 		if LogTableSqlReq.User {
 			XOLogErr(err)
@@ -172,14 +171,14 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.user SET ` +
-		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, AccessHash = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, CallPrivacy = ?, AddToGroupPrivacy = ?, SeenMessagePrivacy = ?, Phone = ?, Email = ?, About = ?, DefaultUserName = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
+		`UserName = ?, UserNameLower = ?, FirstName = ?, LastName = ?, IsVerified = ?, AvatarId = ?, AccessHash = ?, ProfilePrivacy = ?, OnlinePrivacy = ?, CallPrivacy = ?, AddToGroupPrivacy = ?, SeenMessagePrivacy = ?, Phone = ?, Email = ?, About = ?, PasswordHash = ?, PasswordSalt = ?, PostSeq = ?, FollowersCount = ?, FollowingCount = ?, PostsCount = ?, MediaCount = ?, PhotoCount = ?, VideoCount = ?, GifCount = ?, AudioCount = ?, VoiceCount = ?, FileCount = ?, LinkCount = ?, BoardCount = ?, PinedCount = ?, LikesCount = ?, ResharedCount = ?, LastPostTime = ?, CreatedTime = ?, VersionTime = ?, IsDeleted = ?, IsBanned = ?` +
 		` WHERE UserId = ?`
 
 	// run query
 	if LogTableSqlReq.User {
-		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+		XOLog(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 	}
-	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.DefaultUserName, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
+	_, err = db.Exec(sqlstr, u.UserName, u.UserNameLower, u.FirstName, u.LastName, u.IsVerified, u.AvatarId, u.AccessHash, u.ProfilePrivacy, u.OnlinePrivacy, u.CallPrivacy, u.AddToGroupPrivacy, u.SeenMessagePrivacy, u.Phone, u.Email, u.About, u.PasswordHash, u.PasswordSalt, u.PostSeq, u.FollowersCount, u.FollowingCount, u.PostsCount, u.MediaCount, u.PhotoCount, u.VideoCount, u.GifCount, u.AudioCount, u.VoiceCount, u.FileCount, u.LinkCount, u.BoardCount, u.PinedCount, u.LikesCount, u.ResharedCount, u.LastPostTime, u.CreatedTime, u.VersionTime, u.IsDeleted, u.IsBanned, u.UserId)
 
 	if LogTableSqlReq.User {
 		XOLogErr(err)
@@ -10232,66 +10231,6 @@ func (d *__User_Deleter) About_NotEq(val string) *__User_Deleter {
 	return d
 }
 
-func (u *__User_Deleter) DefaultUserName_In(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Deleter) DefaultUserName_NotIn(ins []string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Deleter) DefaultUserName_Like(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Deleter) DefaultUserName_Eq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Deleter) DefaultUserName_NotEq(val string) *__User_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Deleter) PasswordHash_In(ins []string) *__User_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -10829,66 +10768,6 @@ func (d *__User_Updater) About_NotEq(val string) *__User_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " About != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__User_Updater) DefaultUserName_In(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Updater) DefaultUserName_NotIn(ins []string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Updater) DefaultUserName_Like(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Updater) DefaultUserName_Eq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Updater) DefaultUserName_NotEq(val string) *__User_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -11436,66 +11315,6 @@ func (d *__User_Selector) About_NotEq(val string) *__User_Selector {
 	return d
 }
 
-func (u *__User_Selector) DefaultUserName_In(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__User_Selector) DefaultUserName_NotIn(ins []string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " DefaultUserName NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-//must be used like: UserName_like("hamid%")
-func (u *__User_Selector) DefaultUserName_Like(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName LIKE " + u.nextDollar()
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__User_Selector) DefaultUserName_Eq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__User_Selector) DefaultUserName_NotEq(val string) *__User_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " DefaultUserName != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__User_Selector) PasswordHash_In(ins []string) *__User_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -11930,16 +11749,6 @@ func (u *__User_Updater) About(newVal string) *__User_Updater {
 	up := updateCol{"About = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" About = "+ u.nextDollar()] = newVal
-	return u
-}
-
-//ints
-
-//string
-func (u *__User_Updater) DefaultUserName(newVal string) *__User_Updater {
-	up := updateCol{"DefaultUserName = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" DefaultUserName = "+ u.nextDollar()] = newVal
 	return u
 }
 
@@ -12775,21 +12584,6 @@ func (u *__User_Selector) Select_About() *__User_Selector {
 	return u
 }
 
-func (u *__User_Selector) OrderBy_DefaultUserName_Desc() *__User_Selector {
-	u.orderBy = " ORDER BY DefaultUserName DESC "
-	return u
-}
-
-func (u *__User_Selector) OrderBy_DefaultUserName_Asc() *__User_Selector {
-	u.orderBy = " ORDER BY DefaultUserName ASC "
-	return u
-}
-
-func (u *__User_Selector) Select_DefaultUserName() *__User_Selector {
-	u.selectCol = "DefaultUserName"
-	return u
-}
-
 func (u *__User_Selector) OrderBy_PasswordHash_Desc() *__User_Selector {
 	u.orderBy = " ORDER BY PasswordHash DESC "
 	return u
@@ -13452,12 +13246,12 @@ func MassInsert_User(rows []User, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -13480,7 +13274,6 @@ func MassInsert_User(rows []User, db XODB) error {
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
-		vals = append(vals, row.DefaultUserName)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -13524,12 +13317,12 @@ func MassInsert_User(rows []User, db XODB) error {
 func MassReplace_User(rows []User, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.user (" +
-		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, DefaultUserName, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
+		"UserName, UserNameLower, FirstName, LastName, IsVerified, AvatarId, AccessHash, ProfilePrivacy, OnlinePrivacy, CallPrivacy, AddToGroupPrivacy, SeenMessagePrivacy, Phone, Email, About, PasswordHash, PasswordSalt, PostSeq, FollowersCount, FollowingCount, PostsCount, MediaCount, PhotoCount, VideoCount, GifCount, AudioCount, VoiceCount, FileCount, LinkCount, BoardCount, PinedCount, LikesCount, ResharedCount, LastPostTime, CreatedTime, VersionTime, IsDeleted, IsBanned" +
 		") VALUES " + insVals
 
 	// run query
@@ -13552,7 +13345,6 @@ func MassReplace_User(rows []User, db XODB) error {
 		vals = append(vals, row.Phone)
 		vals = append(vals, row.Email)
 		vals = append(vals, row.About)
-		vals = append(vals, row.DefaultUserName)
 		vals = append(vals, row.PasswordHash)
 		vals = append(vals, row.PasswordSalt)
 		vals = append(vals, row.PostSeq)
@@ -13594,8 +13386,6 @@ func MassReplace_User(rows []User, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

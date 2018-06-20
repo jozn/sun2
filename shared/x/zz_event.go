@@ -21,11 +21,14 @@ type Event__ struct {
 	PeerUserId   int    `json:"PeerUserId"`   // PeerUserId -
 	PostId       int    `json:"PostId"`       // PostId -
 	CommentId    int    `json:"CommentId"`    // CommentId -
+	HashTagId    int    `json:"HashTagId"`    // HashTagId -
+	GroupId      int    `json:"GroupId"`      // GroupId -
 	ActionId     int    `json:"ActionId"`     // ActionId -
-	Murmur64Hash int    `json:"Murmur64Hash"` // Murmur64Hash -
+	ChatId       int    `json:"ChatId"`       // ChatId -
 	ChatKey      string `json:"ChatKey"`      // ChatKey -
 	MessageId    int    `json:"MessageId"`    // MessageId -
 	ReSharedId   int    `json:"ReSharedId"`   // ReSharedId -
+	Murmur64Hash int    `json:"Murmur64Hash"` // Murmur64Hash -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -51,16 +54,16 @@ func (e *Event) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, HashTagId, GroupId, ActionId, ChatId, ChatKey, MessageId, ReSharedId, Murmur64Hash` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash)
 	if err != nil {
 		return err
 	}
@@ -80,16 +83,16 @@ func (e *Event) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.event (` +
-		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId` +
+		`EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, HashTagId, GroupId, ActionId, ChatId, ChatKey, MessageId, ReSharedId, Murmur64Hash` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
+		XOLog(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash)
 	}
-	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId)
+	_, err = db.Exec(sqlstr, e.EventId, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash)
 	if err != nil {
 		if LogTableSqlReq.Event {
 			XOLogErr(err)
@@ -120,14 +123,14 @@ func (e *Event) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.event SET ` +
-		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, ActionId = ?, Murmur64Hash = ?, ChatKey = ?, MessageId = ?, ReSharedId = ?` +
+		`EventType = ?, ByUserId = ?, PeerUserId = ?, PostId = ?, CommentId = ?, HashTagId = ?, GroupId = ?, ActionId = ?, ChatId = ?, ChatKey = ?, MessageId = ?, ReSharedId = ?, Murmur64Hash = ?` +
 		` WHERE EventId = ?`
 
 	// run query
 	if LogTableSqlReq.Event {
-		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId, e.EventId)
+		XOLog(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash, e.EventId)
 	}
-	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.ActionId, e.Murmur64Hash, e.ChatKey, e.MessageId, e.ReSharedId, e.EventId)
+	_, err = db.Exec(sqlstr, e.EventType, e.ByUserId, e.PeerUserId, e.PostId, e.CommentId, e.HashTagId, e.GroupId, e.ActionId, e.ChatId, e.ChatKey, e.MessageId, e.ReSharedId, e.Murmur64Hash, e.EventId)
 
 	if LogTableSqlReq.Event {
 		XOLogErr(err)
@@ -898,6 +901,216 @@ func (d *__Event_Deleter) CommentId_GE(val int) *__Event_Deleter {
 	return d
 }
 
+func (u *__Event_Deleter) HashTagId_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) HashTagId_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) HashTagId_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) HashTagId_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) HashTagId_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) HashTagId_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) HashTagId_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) HashTagId_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) HashTagId_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Deleter) GroupId_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) GroupId_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) GroupId_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) GroupId_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) GroupId_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) GroupId_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) GroupId_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) GroupId_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) GroupId_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Event_Deleter) ActionId_In(ins []int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1003,106 +1216,106 @@ func (d *__Event_Deleter) ActionId_GE(val int) *__Event_Deleter {
 	return d
 }
 
-func (u *__Event_Deleter) Murmur64Hash_In(ins []int) *__Event_Deleter {
+func (u *__Event_Deleter) ChatId_In(ins []int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Deleter) Murmur64Hash_Ins(ins ...int) *__Event_Deleter {
+func (u *__Event_Deleter) ChatId_Ins(ins ...int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Deleter) Murmur64Hash_NotIn(ins []int) *__Event_Deleter {
+func (u *__Event_Deleter) ChatId_NotIn(ins []int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Event_Deleter) Murmur64Hash_Eq(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_Eq(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Deleter) Murmur64Hash_NotEq(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_NotEq(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Deleter) Murmur64Hash_LT(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_LT(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Deleter) Murmur64Hash_LE(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_LE(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Deleter) Murmur64Hash_GT(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_GT(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Deleter) Murmur64Hash_GE(val int) *__Event_Deleter {
+func (d *__Event_Deleter) ChatId_GE(val int) *__Event_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1313,6 +1526,111 @@ func (d *__Event_Deleter) ReSharedId_GE(val int) *__Event_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ReSharedId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Deleter) Murmur64Hash_In(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) Murmur64Hash_Ins(ins ...int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Deleter) Murmur64Hash_NotIn(ins []int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Deleter) Murmur64Hash_Eq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_NotEq(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_LT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_LE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_GT(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Deleter) Murmur64Hash_GE(val int) *__Event_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1967,6 +2285,216 @@ func (d *__Event_Updater) CommentId_GE(val int) *__Event_Updater {
 	return d
 }
 
+func (u *__Event_Updater) HashTagId_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) HashTagId_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) HashTagId_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) HashTagId_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) HashTagId_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) HashTagId_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) HashTagId_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) HashTagId_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) HashTagId_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Updater) GroupId_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) GroupId_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) GroupId_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) GroupId_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) GroupId_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) GroupId_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) GroupId_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) GroupId_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) GroupId_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Event_Updater) ActionId_In(ins []int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -2072,106 +2600,106 @@ func (d *__Event_Updater) ActionId_GE(val int) *__Event_Updater {
 	return d
 }
 
-func (u *__Event_Updater) Murmur64Hash_In(ins []int) *__Event_Updater {
+func (u *__Event_Updater) ChatId_In(ins []int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Updater) Murmur64Hash_Ins(ins ...int) *__Event_Updater {
+func (u *__Event_Updater) ChatId_Ins(ins ...int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Updater) Murmur64Hash_NotIn(ins []int) *__Event_Updater {
+func (u *__Event_Updater) ChatId_NotIn(ins []int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Event_Updater) Murmur64Hash_Eq(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_Eq(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Updater) Murmur64Hash_NotEq(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_NotEq(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Updater) Murmur64Hash_LT(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_LT(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Updater) Murmur64Hash_LE(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_LE(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Updater) Murmur64Hash_GT(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_GT(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Updater) Murmur64Hash_GE(val int) *__Event_Updater {
+func (d *__Event_Updater) ChatId_GE(val int) *__Event_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2382,6 +2910,111 @@ func (d *__Event_Updater) ReSharedId_GE(val int) *__Event_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ReSharedId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Updater) Murmur64Hash_In(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_Ins(ins ...int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_NotIn(ins []int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Updater) Murmur64Hash_Eq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_NotEq(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_LT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_LE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_GT(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Updater) Murmur64Hash_GE(val int) *__Event_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3036,6 +3669,216 @@ func (d *__Event_Selector) CommentId_GE(val int) *__Event_Selector {
 	return d
 }
 
+func (u *__Event_Selector) HashTagId_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) HashTagId_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) HashTagId_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " HashTagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) HashTagId_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) HashTagId_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) HashTagId_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) HashTagId_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) HashTagId_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) HashTagId_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " HashTagId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Selector) GroupId_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) GroupId_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) GroupId_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) GroupId_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) GroupId_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) GroupId_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) GroupId_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) GroupId_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) GroupId_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Event_Selector) ActionId_In(ins []int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -3141,106 +3984,106 @@ func (d *__Event_Selector) ActionId_GE(val int) *__Event_Selector {
 	return d
 }
 
-func (u *__Event_Selector) Murmur64Hash_In(ins []int) *__Event_Selector {
+func (u *__Event_Selector) ChatId_In(ins []int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Selector) Murmur64Hash_Ins(ins ...int) *__Event_Selector {
+func (u *__Event_Selector) ChatId_Ins(ins ...int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Event_Selector) Murmur64Hash_NotIn(ins []int) *__Event_Selector {
+func (u *__Event_Selector) ChatId_NotIn(ins []int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " ChatId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Event_Selector) Murmur64Hash_Eq(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_Eq(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash = " + d.nextDollar()
+	w.condition = " ChatId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Selector) Murmur64Hash_NotEq(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_NotEq(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash != " + d.nextDollar()
+	w.condition = " ChatId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Selector) Murmur64Hash_LT(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_LT(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash < " + d.nextDollar()
+	w.condition = " ChatId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Selector) Murmur64Hash_LE(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_LE(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	w.condition = " ChatId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Selector) Murmur64Hash_GT(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_GT(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash > " + d.nextDollar()
+	w.condition = " ChatId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Event_Selector) Murmur64Hash_GE(val int) *__Event_Selector {
+func (d *__Event_Selector) ChatId_GE(val int) *__Event_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Murmur64Hash >= " + d.nextDollar()
+	w.condition = " ChatId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3451,6 +4294,111 @@ func (d *__Event_Selector) ReSharedId_GE(val int) *__Event_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " ReSharedId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Event_Selector) Murmur64Hash_In(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) Murmur64Hash_Ins(ins ...int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Event_Selector) Murmur64Hash_NotIn(ins []int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " Murmur64Hash NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Event_Selector) Murmur64Hash_Eq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_NotEq(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_LT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_LE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_GT(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Event_Selector) Murmur64Hash_GE(val int) *__Event_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " Murmur64Hash >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3812,6 +4760,60 @@ func (u *__Event_Updater) CommentId_Increment(count int) *__Event_Updater {
 
 //ints
 
+func (u *__Event_Updater) HashTagId(newVal int) *__Event_Updater {
+	up := updateCol{" HashTagId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" HashTagId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Event_Updater) HashTagId_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		up := updateCol{" HashTagId = HashTagId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" HashTagId = HashTagId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" HashTagId = HashTagId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" HashTagId = HashTagId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Event_Updater) GroupId(newVal int) *__Event_Updater {
+	up := updateCol{" GroupId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" GroupId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Event_Updater) GroupId_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		up := updateCol{" GroupId = GroupId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" GroupId = GroupId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" GroupId = GroupId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" GroupId = GroupId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Event_Updater) ActionId(newVal int) *__Event_Updater {
 	up := updateCol{" ActionId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -3839,24 +4841,24 @@ func (u *__Event_Updater) ActionId_Increment(count int) *__Event_Updater {
 
 //ints
 
-func (u *__Event_Updater) Murmur64Hash(newVal int) *__Event_Updater {
-	up := updateCol{" Murmur64Hash = " + u.nextDollar(), newVal}
+func (u *__Event_Updater) ChatId(newVal int) *__Event_Updater {
+	up := updateCol{" ChatId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Murmur64Hash = " + u.nextDollar()] = newVal
+	// u.updates[" ChatId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
+func (u *__Event_Updater) ChatId_Increment(count int) *__Event_Updater {
 	if count > 0 {
-		up := updateCol{" Murmur64Hash = Murmur64Hash+ " + u.nextDollar(), count}
+		up := updateCol{" ChatId = ChatId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Murmur64Hash = Murmur64Hash+ " + u.nextDollar()] = count
+		//u.updates[" ChatId = ChatId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Murmur64Hash = Murmur64Hash- " + u.nextDollar(), count}
+		up := updateCol{" ChatId = ChatId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Murmur64Hash = Murmur64Hash- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" ChatId = ChatId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -3921,6 +4923,33 @@ func (u *__Event_Updater) ReSharedId_Increment(count int) *__Event_Updater {
 		up := updateCol{" ReSharedId = ReSharedId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" ReSharedId = ReSharedId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Event_Updater) Murmur64Hash(newVal int) *__Event_Updater {
+	up := updateCol{" Murmur64Hash = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" Murmur64Hash = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Event_Updater) Murmur64Hash_Increment(count int) *__Event_Updater {
+	if count > 0 {
+		up := updateCol{" Murmur64Hash = Murmur64Hash+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" Murmur64Hash = Murmur64Hash+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" Murmur64Hash = Murmur64Hash- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" Murmur64Hash = Murmur64Hash- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -4023,6 +5052,36 @@ func (u *__Event_Selector) Select_CommentId() *__Event_Selector {
 	return u
 }
 
+func (u *__Event_Selector) OrderBy_HashTagId_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY HashTagId DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_HashTagId_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY HashTagId ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_HashTagId() *__Event_Selector {
+	u.selectCol = "HashTagId"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_GroupId_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY GroupId DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_GroupId_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY GroupId ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_GroupId() *__Event_Selector {
+	u.selectCol = "GroupId"
+	return u
+}
+
 func (u *__Event_Selector) OrderBy_ActionId_Desc() *__Event_Selector {
 	u.orderBy = " ORDER BY ActionId DESC "
 	return u
@@ -4038,18 +5097,18 @@ func (u *__Event_Selector) Select_ActionId() *__Event_Selector {
 	return u
 }
 
-func (u *__Event_Selector) OrderBy_Murmur64Hash_Desc() *__Event_Selector {
-	u.orderBy = " ORDER BY Murmur64Hash DESC "
+func (u *__Event_Selector) OrderBy_ChatId_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY ChatId DESC "
 	return u
 }
 
-func (u *__Event_Selector) OrderBy_Murmur64Hash_Asc() *__Event_Selector {
-	u.orderBy = " ORDER BY Murmur64Hash ASC "
+func (u *__Event_Selector) OrderBy_ChatId_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY ChatId ASC "
 	return u
 }
 
-func (u *__Event_Selector) Select_Murmur64Hash() *__Event_Selector {
-	u.selectCol = "Murmur64Hash"
+func (u *__Event_Selector) Select_ChatId() *__Event_Selector {
+	u.selectCol = "ChatId"
 	return u
 }
 
@@ -4095,6 +5154,21 @@ func (u *__Event_Selector) OrderBy_ReSharedId_Asc() *__Event_Selector {
 
 func (u *__Event_Selector) Select_ReSharedId() *__Event_Selector {
 	u.selectCol = "ReSharedId"
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_Murmur64Hash_Desc() *__Event_Selector {
+	u.orderBy = " ORDER BY Murmur64Hash DESC "
+	return u
+}
+
+func (u *__Event_Selector) OrderBy_Murmur64Hash_Asc() *__Event_Selector {
+	u.orderBy = " ORDER BY Murmur64Hash ASC "
+	return u
+}
+
+func (u *__Event_Selector) Select_Murmur64Hash() *__Event_Selector {
+	u.selectCol = "Murmur64Hash"
 	return u
 }
 
@@ -4418,10 +5492,10 @@ func MassInsert_Event(rows []Event, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(11, ln, true)
+	insVals := helper.SqlManyDollars(14, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, HashTagId, GroupId, ActionId, ChatId, ChatKey, MessageId, ReSharedId, Murmur64Hash" +
 		") VALUES " + insVals
 
 	// run query
@@ -4435,11 +5509,14 @@ func MassInsert_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
+		vals = append(vals, row.HashTagId)
+		vals = append(vals, row.GroupId)
 		vals = append(vals, row.ActionId)
-		vals = append(vals, row.Murmur64Hash)
+		vals = append(vals, row.ChatId)
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
 		vals = append(vals, row.ReSharedId)
+		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -4465,10 +5542,10 @@ func MassReplace_Event(rows []Event, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(11, ln, true)
+	insVals := helper.SqlManyDollars(14, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.event (" +
-		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, ActionId, Murmur64Hash, ChatKey, MessageId, ReSharedId" +
+		"EventId, EventType, ByUserId, PeerUserId, PostId, CommentId, HashTagId, GroupId, ActionId, ChatId, ChatKey, MessageId, ReSharedId, Murmur64Hash" +
 		") VALUES " + insVals
 
 	// run query
@@ -4482,11 +5559,14 @@ func MassReplace_Event(rows []Event, db XODB) error {
 		vals = append(vals, row.PeerUserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.CommentId)
+		vals = append(vals, row.HashTagId)
+		vals = append(vals, row.GroupId)
 		vals = append(vals, row.ActionId)
-		vals = append(vals, row.Murmur64Hash)
+		vals = append(vals, row.ChatId)
 		vals = append(vals, row.ChatKey)
 		vals = append(vals, row.MessageId)
 		vals = append(vals, row.ReSharedId)
+		vals = append(vals, row.Murmur64Hash)
 
 	}
 
@@ -4506,6 +5586,12 @@ func MassReplace_Event(rows []Event, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
+
+//
 
 //
 

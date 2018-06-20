@@ -6,6 +6,7 @@ import "ms/sun/shared/x"
 var RpcAll = x.RPC_AllHandlersInteract{
 	RPC_Auth:    rpc_auth(0),
 	RPC_General: rpc_general(0),
+	RPC_Social:  rpc_socila(0),
 	//RPC_Chat:  rpc_chat(0),
 	//RPC_Other: rpc_other(0),
 }

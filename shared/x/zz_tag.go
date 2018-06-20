@@ -19,6 +19,8 @@ type Tag__ struct {
 	Name          string `json:"Name"`          // Name -
 	Count         int    `json:"Count"`         // Count -
 	TagStatusEnum int    `json:"TagStatusEnum"` // TagStatusEnum -
+	IsBlocked     int    `json:"IsBlocked"`     // IsBlocked -
+	GroupId       int    `json:"GroupId"`       // GroupId -
 	CreatedTime   int    `json:"CreatedTime"`   // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
@@ -45,16 +47,16 @@ func (t *Tag) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.tag (` +
-		`TagId, Name, Count, TagStatusEnum, CreatedTime` +
+		`TagId, Name, Count, TagStatusEnum, IsBlocked, GroupId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Tag {
-		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -74,16 +76,16 @@ func (t *Tag) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.tag (` +
-		`TagId, Name, Count, TagStatusEnum, CreatedTime` +
+		`TagId, Name, Count, TagStatusEnum, IsBlocked, GroupId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Tag {
-		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+		XOLog(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime)
+	_, err = db.Exec(sqlstr, t.TagId, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Tag {
 			XOLogErr(err)
@@ -114,14 +116,14 @@ func (t *Tag) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.tag SET ` +
-		`Name = ?, Count = ?, TagStatusEnum = ?, CreatedTime = ?` +
+		`Name = ?, Count = ?, TagStatusEnum = ?, IsBlocked = ?, GroupId = ?, CreatedTime = ?` +
 		` WHERE TagId = ?`
 
 	// run query
 	if LogTableSqlReq.Tag {
-		XOLog(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime, t.TagId)
+		XOLog(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime, t.TagId)
 	}
-	_, err = db.Exec(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.CreatedTime, t.TagId)
+	_, err = db.Exec(sqlstr, t.Name, t.Count, t.TagStatusEnum, t.IsBlocked, t.GroupId, t.CreatedTime, t.TagId)
 
 	if LogTableSqlReq.Tag {
 		XOLogErr(err)
@@ -577,6 +579,216 @@ func (d *__Tag_Deleter) TagStatusEnum_GE(val int) *__Tag_Deleter {
 	return d
 }
 
+func (u *__Tag_Deleter) IsBlocked_In(ins []int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Deleter) IsBlocked_Ins(ins ...int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Deleter) IsBlocked_NotIn(ins []int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Deleter) IsBlocked_Eq(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) IsBlocked_NotEq(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) IsBlocked_LT(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) IsBlocked_LE(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) IsBlocked_GT(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) IsBlocked_GE(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Tag_Deleter) GroupId_In(ins []int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Deleter) GroupId_Ins(ins ...int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Deleter) GroupId_NotIn(ins []int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Deleter) GroupId_Eq(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) GroupId_NotEq(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) GroupId_LT(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) GroupId_LE(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) GroupId_GT(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Deleter) GroupId_GE(val int) *__Tag_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Tag_Deleter) CreatedTime_In(ins []int) *__Tag_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1011,6 +1223,216 @@ func (d *__Tag_Updater) TagStatusEnum_GE(val int) *__Tag_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " TagStatusEnum >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Tag_Updater) IsBlocked_In(ins []int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Updater) IsBlocked_Ins(ins ...int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Updater) IsBlocked_NotIn(ins []int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Updater) IsBlocked_Eq(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) IsBlocked_NotEq(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) IsBlocked_LT(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) IsBlocked_LE(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) IsBlocked_GT(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) IsBlocked_GE(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Tag_Updater) GroupId_In(ins []int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Updater) GroupId_Ins(ins ...int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Updater) GroupId_NotIn(ins []int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Updater) GroupId_Eq(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) GroupId_NotEq(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) GroupId_LT(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) GroupId_LE(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) GroupId_GT(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Updater) GroupId_GE(val int) *__Tag_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1455,6 +1877,216 @@ func (d *__Tag_Selector) TagStatusEnum_GE(val int) *__Tag_Selector {
 	return d
 }
 
+func (u *__Tag_Selector) IsBlocked_In(ins []int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Selector) IsBlocked_Ins(ins ...int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Selector) IsBlocked_NotIn(ins []int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " IsBlocked NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Selector) IsBlocked_Eq(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) IsBlocked_NotEq(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) IsBlocked_LT(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) IsBlocked_LE(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) IsBlocked_GT(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) IsBlocked_GE(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " IsBlocked >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Tag_Selector) GroupId_In(ins []int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Selector) GroupId_Ins(ins ...int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Tag_Selector) GroupId_NotIn(ins []int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " GroupId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Tag_Selector) GroupId_Eq(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) GroupId_NotEq(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) GroupId_LT(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) GroupId_LE(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) GroupId_GT(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Tag_Selector) GroupId_GE(val int) *__Tag_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " GroupId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 func (u *__Tag_Selector) CreatedTime_In(ins []int) *__Tag_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1845,6 +2477,60 @@ func (u *__Tag_Updater) TagStatusEnum_Increment(count int) *__Tag_Updater {
 
 //ints
 
+func (u *__Tag_Updater) IsBlocked(newVal int) *__Tag_Updater {
+	up := updateCol{" IsBlocked = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" IsBlocked = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Tag_Updater) IsBlocked_Increment(count int) *__Tag_Updater {
+	if count > 0 {
+		up := updateCol{" IsBlocked = IsBlocked+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" IsBlocked = IsBlocked+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" IsBlocked = IsBlocked- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" IsBlocked = IsBlocked- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Tag_Updater) GroupId(newVal int) *__Tag_Updater {
+	up := updateCol{" GroupId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" GroupId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Tag_Updater) GroupId_Increment(count int) *__Tag_Updater {
+	if count > 0 {
+		up := updateCol{" GroupId = GroupId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" GroupId = GroupId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" GroupId = GroupId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" GroupId = GroupId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
 func (u *__Tag_Updater) CreatedTime(newVal int) *__Tag_Updater {
 	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -1932,6 +2618,36 @@ func (u *__Tag_Selector) OrderBy_TagStatusEnum_Asc() *__Tag_Selector {
 
 func (u *__Tag_Selector) Select_TagStatusEnum() *__Tag_Selector {
 	u.selectCol = "TagStatusEnum"
+	return u
+}
+
+func (u *__Tag_Selector) OrderBy_IsBlocked_Desc() *__Tag_Selector {
+	u.orderBy = " ORDER BY IsBlocked DESC "
+	return u
+}
+
+func (u *__Tag_Selector) OrderBy_IsBlocked_Asc() *__Tag_Selector {
+	u.orderBy = " ORDER BY IsBlocked ASC "
+	return u
+}
+
+func (u *__Tag_Selector) Select_IsBlocked() *__Tag_Selector {
+	u.selectCol = "IsBlocked"
+	return u
+}
+
+func (u *__Tag_Selector) OrderBy_GroupId_Desc() *__Tag_Selector {
+	u.orderBy = " ORDER BY GroupId DESC "
+	return u
+}
+
+func (u *__Tag_Selector) OrderBy_GroupId_Asc() *__Tag_Selector {
+	u.orderBy = " ORDER BY GroupId ASC "
+	return u
+}
+
+func (u *__Tag_Selector) Select_GroupId() *__Tag_Selector {
+	u.selectCol = "GroupId"
 	return u
 }
 
@@ -2270,10 +2986,10 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(5, ln, true)
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.tag (" +
-		"TagId, Name, Count, TagStatusEnum, CreatedTime" +
+		"TagId, Name, Count, TagStatusEnum, IsBlocked, GroupId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2285,6 +3001,8 @@ func MassInsert_Tag(rows []Tag, db XODB) error {
 		vals = append(vals, row.Name)
 		vals = append(vals, row.Count)
 		vals = append(vals, row.TagStatusEnum)
+		vals = append(vals, row.IsBlocked)
+		vals = append(vals, row.GroupId)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2311,10 +3029,10 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(5, ln, true)
+	insVals := helper.SqlManyDollars(7, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.tag (" +
-		"TagId, Name, Count, TagStatusEnum, CreatedTime" +
+		"TagId, Name, Count, TagStatusEnum, IsBlocked, GroupId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2326,6 +3044,8 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 		vals = append(vals, row.Name)
 		vals = append(vals, row.Count)
 		vals = append(vals, row.TagStatusEnum)
+		vals = append(vals, row.IsBlocked)
+		vals = append(vals, row.GroupId)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2346,6 +3066,10 @@ func MassReplace_Tag(rows []Tag, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
+
+//
 
 //
 

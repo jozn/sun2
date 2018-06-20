@@ -86,11 +86,14 @@ type Event struct {
 	PeerUserId   int    `db:"PeerUserId"`
 	PostId       int    `db:"PostId"`
 	CommentId    int    `db:"CommentId"`
+	HashTagId    int    `db:"HashTagId"`
+	GroupId      int    `db:"GroupId"`
 	ActionId     int    `db:"ActionId"`
-	Murmur64Hash int    `db:"Murmur64Hash"`
+	ChatId       int    `db:"ChatId"`
 	ChatKey      string `db:"ChatKey"`
 	MessageId    int    `db:"MessageId"`
 	ReSharedId   int    `db:"ReSharedId"`
+	Murmur64Hash int    `db:"Murmur64Hash"`
 
 	_exists, _deleted bool
 }
@@ -103,11 +106,14 @@ type Event struct {
 	PeerUserId: 0,
 	PostId: 0,
 	CommentId: 0,
+	HashTagId: 0,
+	GroupId: 0,
 	ActionId: 0,
-	Murmur64Hash: 0,
+	ChatId: 0,
 	ChatKey: "",
 	MessageId: 0,
 	ReSharedId: 0,
+	Murmur64Hash: 0,
 */
 // followed 'Followed'.
 type Followed struct {
@@ -128,12 +134,11 @@ type Followed struct {
 */
 // likes 'Likes'.
 type Likes struct {
-	Id           int `db:"Id"`
-	PostId       int `db:"PostId"`
-	PostTypeEnum int `db:"PostTypeEnum"`
-	UserId       int `db:"UserId"`
-	LikeEnum     int `db:"LikeEnum"`
-	CreatedTime  int `db:"CreatedTime"`
+	Id          int `db:"Id"`
+	PostId      int `db:"PostId"`
+	UserId      int `db:"UserId"`
+	PostType    int `db:"PostType"`
+	CreatedTime int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -142,9 +147,8 @@ type Likes struct {
 := &x.Likes {
 	Id: 0,
 	PostId: 0,
-	PostTypeEnum: 0,
 	UserId: 0,
-	LikeEnum: 0,
+	PostType: 0,
 	CreatedTime: 0,
 */
 // notify 'Notify'.
@@ -214,26 +218,24 @@ type PhoneContacts struct {
 */
 // post 'Post'.
 type Post struct {
-	PostId           int    `db:"PostId"`
-	UserId           int    `db:"UserId"`
-	PostTypeEnum     int    `db:"PostTypeEnum"`
-	PostCategoryEnum int    `db:"PostCategoryEnum"`
-	MediaId          int    `db:"MediaId"`
-	PostKey          string `db:"PostKey"`
-	Text             string `db:"Text"`
-	RichText         string `db:"RichText"`
-	MediaCount       int    `db:"MediaCount"`
-	SharedTo         int    `db:"SharedTo"`
-	DisableComment   int    `db:"DisableComment"`
-	Source           int    `db:"Source"`
-	HasTag           int    `db:"HasTag"`
-	Seq              int    `db:"Seq"`
-	CommentsCount    int    `db:"CommentsCount"`
-	LikesCount       int    `db:"LikesCount"`
-	ViewsCount       int    `db:"ViewsCount"`
-	EditedTime       int    `db:"EditedTime"`
-	CreatedTime      int    `db:"CreatedTime"`
-	ReSharedPostId   int    `db:"ReSharedPostId"`
+	PostId         int    `db:"PostId"`
+	UserId         int    `db:"UserId"`
+	PostType       int    `db:"PostType"`
+	MediaId        int    `db:"MediaId"`
+	FileRefId      int    `db:"FileRefId"`
+	PostKey        string `db:"PostKey"`
+	Text           string `db:"Text"`
+	RichText       string `db:"RichText"`
+	MediaCount     int    `db:"MediaCount"`
+	SharedTo       int    `db:"SharedTo"`
+	DisableComment int    `db:"DisableComment"`
+	Via            int    `db:"Via"`
+	Seq            int    `db:"Seq"`
+	CommentsCount  int    `db:"CommentsCount"`
+	LikesCount     int    `db:"LikesCount"`
+	ViewsCount     int    `db:"ViewsCount"`
+	EditedTime     int    `db:"EditedTime"`
+	CreatedTime    int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -242,24 +244,22 @@ type Post struct {
 := &x.Post {
 	PostId: 0,
 	UserId: 0,
-	PostTypeEnum: 0,
-	PostCategoryEnum: 0,
+	PostType: 0,
 	MediaId: 0,
+	FileRefId: 0,
 	PostKey: "",
 	Text: "",
 	RichText: "",
 	MediaCount: 0,
 	SharedTo: 0,
 	DisableComment: 0,
-	Source: 0,
-	HasTag: 0,
+	Via: 0,
 	Seq: 0,
 	CommentsCount: 0,
 	LikesCount: 0,
 	ViewsCount: 0,
 	EditedTime: 0,
 	CreatedTime: 0,
-	ReSharedPostId: 0,
 */
 // post_count 'PostCount'.
 type PostCount struct {
@@ -300,6 +300,7 @@ type PostKeys struct {
 	Id         int    `db:"Id"`
 	PostKeyStr string `db:"PostKeyStr"`
 	Used       int    `db:"Used"`
+	RandShard  int    `db:"RandShard"` //1-10000
 
 	_exists, _deleted bool
 }
@@ -309,6 +310,7 @@ type PostKeys struct {
 	Id: 0,
 	PostKeyStr: "",
 	Used: 0,
+	RandShard: 0,
 */
 // post_link 'PostLink'.
 type PostLink struct {
@@ -362,25 +364,29 @@ type PostMedia struct {
 	ViewCount: 0,
 	Extra: "",
 */
-// post_mentioned 'PostMentioned'.
-type PostMentioned struct {
-	MentionedId int `db:"MentionedId"`
-	ForUserId   int `db:"ForUserId"`
-	PostId      int `db:"PostId"`
-	PostUserId  int `db:"PostUserId"`
-	PostType    int `db:"PostType"`
-	CreatedTime int `db:"CreatedTime"`
+// post_promoted 'PostPromoted'.
+type PostPromoted struct {
+	PromoteId   int    `db:"PromoteId"`
+	PostId      int    `db:"PostId"`
+	ByUserId    int    `db:"ByUserId"`
+	PostUserId  int    `db:"PostUserId"`
+	BazzarUuid  string `db:"BazzarUuid"`
+	Package     string `db:"Package"`
+	EndTime     int    `db:"EndTime"`
+	CreatedTime int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
 
 /*
-:= &x.PostMentioned {
-	MentionedId: 0,
-	ForUserId: 0,
+:= &x.PostPromoted {
+	PromoteId: 0,
 	PostId: 0,
+	ByUserId: 0,
 	PostUserId: 0,
-	PostType: 0,
+	BazzarUuid: "",
+	Package: "",
+	EndTime: 0,
 	CreatedTime: 0,
 */
 // post_reshared 'PostReshared'.
@@ -400,6 +406,61 @@ type PostReshared struct {
 	PostId: 0,
 	ByUserId: 0,
 	PostUserId: 0,
+	CreatedTime: 0,
+*/
+// profile_all 'ProfileAll'.
+type ProfileAll struct {
+	Id         int `db:"Id"`
+	UserId     int `db:"UserId"`
+	PostId     int `db:"PostId"`
+	IsReShared int `db:"IsReShared"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ProfileAll {
+	Id: 0,
+	UserId: 0,
+	PostId: 0,
+	IsReShared: 0,
+*/
+// profile_media 'ProfileMedia'.
+type ProfileMedia struct {
+	Id       int `db:"Id"`
+	UserId   int `db:"UserId"`
+	PostId   int `db:"PostId"`
+	PostType int `db:"PostType"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ProfileMedia {
+	Id: 0,
+	UserId: 0,
+	PostId: 0,
+	PostType: 0,
+*/
+// profile_mentioned 'ProfileMentioned'.
+type ProfileMentioned struct {
+	Id          int `db:"Id"`
+	ForUserId   int `db:"ForUserId"`
+	PostId      int `db:"PostId"`
+	PostUserId  int `db:"PostUserId"`
+	PostType    int `db:"PostType"`
+	CreatedTime int `db:"CreatedTime"`
+
+	_exists, _deleted bool
+}
+
+/*
+:= &x.ProfileMentioned {
+	Id: 0,
+	ForUserId: 0,
+	PostId: 0,
+	PostUserId: 0,
+	PostType: 0,
 	CreatedTime: 0,
 */
 // session 'Session'.
@@ -522,7 +583,9 @@ type Tag struct {
 	TagId         int    `db:"TagId"`
 	Name          string `db:"Name"`
 	Count         int    `db:"Count"`
-	TagStatusEnum int    `db:"TagStatusEnum"`
+	TagStatusEnum int    `db:"TagStatusEnum"` //del
+	IsBlocked     int    `db:"IsBlocked"`
+	GroupId       int    `db:"GroupId"`
 	CreatedTime   int    `db:"CreatedTime"`
 
 	_exists, _deleted bool
@@ -534,16 +597,17 @@ type Tag struct {
 	Name: "",
 	Count: 0,
 	TagStatusEnum: 0,
+	IsBlocked: 0,
+	GroupId: 0,
 	CreatedTime: 0,
 */
 // tag_post 'TagPost'.
 type TagPost struct {
-	Id               int `db:"Id"`
-	TagId            int `db:"TagId"`
-	PostId           int `db:"PostId"`
-	PostTypeEnum     int `db:"PostTypeEnum"`
-	PostCategoryEnum int `db:"PostCategoryEnum"`
-	CreatedTime      int `db:"CreatedTime"`
+	Id          int `db:"Id"`
+	TagId       int `db:"TagId"`
+	PostId      int `db:"PostId"`
+	PostType    int `db:"PostType"`
+	CreatedTime int `db:"CreatedTime"`
 
 	_exists, _deleted bool
 }
@@ -553,8 +617,7 @@ type TagPost struct {
 	Id: 0,
 	TagId: 0,
 	PostId: 0,
-	PostTypeEnum: 0,
-	PostCategoryEnum: 0,
+	PostType: 0,
 	CreatedTime: 0,
 */
 // trigger_log 'TriggerLog'.
@@ -596,7 +659,6 @@ type User struct {
 	Phone              string `db:"Phone"`
 	Email              string `db:"Email"`
 	About              string `db:"About"`
-	DefaultUserName    string `db:"DefaultUserName"`
 	PasswordHash       string `db:"PasswordHash"`
 	PasswordSalt       string `db:"PasswordSalt"`
 	PostSeq            int    `db:"PostSeq"`
@@ -642,7 +704,6 @@ type User struct {
 	Phone: "",
 	Email: "",
 	About: "",
-	DefaultUserName: "",
 	PasswordHash: "",
 	PasswordSalt: "",
 	PostSeq: 0,
@@ -1222,8 +1283,11 @@ type LogTableSql struct {
 	PostKeys               bool
 	PostLink               bool
 	PostMedia              bool
-	PostMentioned          bool
+	PostPromoted           bool
 	PostReshared           bool
+	ProfileAll             bool
+	ProfileMedia           bool
+	ProfileMentioned       bool
 	Session                bool
 	SettingNotifications   bool
 	Sms                    bool
@@ -1273,8 +1337,11 @@ var LogTableSqlReq = LogTableSql{
 	PostKeys:               true,
 	PostLink:               true,
 	PostMedia:              true,
-	PostMentioned:          true,
+	PostPromoted:           true,
 	PostReshared:           true,
+	ProfileAll:             true,
+	ProfileMedia:           true,
+	ProfileMentioned:       true,
 	Session:                true,
 	SettingNotifications:   true,
 	Sms:                    true,

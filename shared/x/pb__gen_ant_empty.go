@@ -130,6 +130,9 @@ func (EmptyRPC_RPC_Social) DeleteComment(i *RPC_Social_Types_DeleteComment_Param
 func (EmptyRPC_RPC_Social) EditComment(i *RPC_Social_Types_EditComment_Param, p RPC_UserParam) (*RPC_Social_Types_EditComment_Response, error) {
 	return nil, nil
 }
+func (EmptyRPC_RPC_Social) LikeComment(i *RPC_Social_Types_LikeComment_Param, p RPC_UserParam) (*RPC_Social_Types_LikeComment_Response, error) {
+	return nil, nil
+}
 func (EmptyRPC_RPC_Social) AddPost(i *RPC_Social_Types_AddPost_Param, p RPC_UserParam) (*RPC_Social_Types_AddPost_Response, error) {
 	return nil, nil
 }
@@ -140,6 +143,9 @@ func (EmptyRPC_RPC_Social) DeletePost(i *RPC_Social_Types_DeletePost_Param, p RP
 	return nil, nil
 }
 func (EmptyRPC_RPC_Social) ArchivePost(i *RPC_Social_Types_ArchivePost_Param, p RPC_UserParam) (*RPC_Social_Types_ArchivePost_Response, error) {
+	return nil, nil
+}
+func (EmptyRPC_RPC_Social) PromotePost(i *RPC_Social_Types_PromotePost_Param, p RPC_UserParam) (*RPC_Social_Types_PromotePost_Response, error) {
 	return nil, nil
 }
 func (EmptyRPC_RPC_Social) LikePost(i *RPC_Social_Types_LikePost_Param, p RPC_UserParam) (*RPC_Social_Types_LikePost_Response, error) {

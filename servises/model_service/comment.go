@@ -1,14 +1,26 @@
 package model_service
 
 import (
-	"ms/sun_old/base"
-	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
-func Comment_Add(UserId, PostId int, Text string) x.Comment {
-	cmt := x.Comment{
+func Comment_Add(UserId, PostId int, Text string) (*x.Comment, bool) {
+
+	if len(Text) == 0 || PostId < 1 {
+		return nil, false
+	}
+	post, ok := x.Store.GetPostByPostId(int(PostId))
+	if !ok {
+		return nil, false
+	}
+	blocked := IsIBlockedUser(post.UserId, UserId)
+	if blocked {
+		return nil, false
+	}
+	cmt := &x.Comment{
 		CommentId:   helper.NextRowsSeqId(),
 		UserId:      UserId,
 		PostId:      PostId,
@@ -19,25 +31,25 @@ func Comment_Add(UserId, PostId int, Text string) x.Comment {
 
 	err := cmt.Insert(base.DB)
 
-	if err == nil {
-		Counter.IncerPostCommentsCount(PostId, 1)
-		post, ok := x.Store.GetPostByPostId(PostId)
-		if ok {
-			hash := hashPostCommented(cmt.PostId, cmt.CommentId)
-			event := x.Event{
-				ByUserId:     UserId,
-				PeerUserId:   post.UserId,
-				PostId:       cmt.PostId,
-				CommentId:    cmt.CommentId,
-				ActionId:     helper.NextRowsSeqId(),
-				Murmur64Hash: hash,
-			}
-
-			event_service.SaveEvent(event_service.COMMENTED_POST_EVENT, event)
-		}
+	if err != nil {
+		return nil, false
 	}
 
-	return cmt
+	Counter.IncerPostCommentsCount(PostId, 1)
+
+	hash := hashPostCommented(cmt.PostId, cmt.CommentId)
+	event := x.Event{
+		ByUserId:     UserId,
+		PeerUserId:   post.UserId,
+		PostId:       cmt.PostId,
+		CommentId:    cmt.CommentId,
+		ActionId:     helper.NextRowsSeqId(),
+		Murmur64Hash: hash,
+	}
+
+	event_service.SaveEvent(event_service.COMMENTED_POST_EVENT, event)
+
+	return cmt, true
 }
 
 func Comment_Delete(UserId, PostId, CommentId int) bool {
@@ -59,12 +71,12 @@ func Comment_Delete(UserId, PostId, CommentId int) bool {
 		}
 
 		cd := x.CommentDeleted{
-		    CommentId: cmt.CommentId,
-		    UserId: cmt.UserId,
-        }
-        cd.Save(base.DB)
+			CommentId: cmt.CommentId,
+			UserId:    cmt.UserId,
+		}
+		cd.Save(base.DB)
 
-        comment_Delete_Meta([]int{cmt.CommentId})
+		comment_Delete_Meta([]int{cmt.CommentId})
 
 		event_service.SaveEvent(event_service.UNCOMMENTED_POST_EVENT, event)
 		return true
@@ -73,11 +85,11 @@ func Comment_Delete(UserId, PostId, CommentId int) bool {
 	return false
 }
 
-func comment_Delete_Meta(CommentIds []int)  {
-    if len(CommentIds) == 0 {
-        return
-    }
+func comment_Delete_Meta(CommentIds []int) {
+	if len(CommentIds) == 0 {
+		return
+	}
 
-    x.NewAction_Deleter().CommentId_In(CommentIds).Delete(base.DB)
-    x.NewNotify_Deleter().CommentId_In(CommentIds).Delete(base.DB)
+	x.NewAction_Deleter().CommentId_In(CommentIds).Delete(base.DB)
+	x.NewNotify_Deleter().CommentId_In(CommentIds).Delete(base.DB)
 }

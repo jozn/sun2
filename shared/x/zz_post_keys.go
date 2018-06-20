@@ -17,6 +17,7 @@ type PostKeys__ struct {
 	Id         int    `json:"Id"`         // Id -
 	PostKeyStr string `json:"PostKeyStr"` // PostKeyStr -
 	Used       int    `json:"Used"`       // Used -
+	RandShard  int    `json:"RandShard"`  // RandShard -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -42,16 +43,16 @@ func (pk *PostKeys) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO sun.post_keys (` +
-		`PostKeyStr, Used` +
+		`PostKeyStr, Used, RandShard` +
 		`) VALUES (` +
-		`?, ?` +
+		`?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostKeys {
-		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard)
 	}
-	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
+	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard)
 	if err != nil {
 		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
@@ -84,16 +85,16 @@ func (pk *PostKeys) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post_keys (` +
-		`PostKeyStr, Used` +
+		`PostKeyStr, Used, RandShard` +
 		`) VALUES (` +
-		`?, ?` +
+		`?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.PostKeys {
-		XOLog(sqlstr, pk.PostKeyStr, pk.Used)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard)
 	}
-	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used)
+	res, err := db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard)
 	if err != nil {
 		if LogTableSqlReq.PostKeys {
 			XOLogErr(err)
@@ -135,14 +136,14 @@ func (pk *PostKeys) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post_keys SET ` +
-		`PostKeyStr = ?, Used = ?` +
+		`PostKeyStr = ?, Used = ?, RandShard = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.PostKeys {
-		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
+		XOLog(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard, pk.Id)
 	}
-	_, err = db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.Id)
+	_, err = db.Exec(sqlstr, pk.PostKeyStr, pk.Used, pk.RandShard, pk.Id)
 
 	if LogTableSqlReq.PostKeys {
 		XOLogErr(err)
@@ -493,6 +494,111 @@ func (d *__PostKeys_Deleter) Used_GE(val int) *__PostKeys_Deleter {
 	return d
 }
 
+func (u *__PostKeys_Deleter) RandShard_In(ins []int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Deleter) RandShard_Ins(ins ...int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Deleter) RandShard_NotIn(ins []int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKeys_Deleter) RandShard_Eq(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Deleter) RandShard_NotEq(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Deleter) RandShard_LT(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Deleter) RandShard_LE(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Deleter) RandShard_GT(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Deleter) RandShard_GE(val int) *__PostKeys_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 /// mysql or cockroach ? or $1 handlers
 func (m *__PostKeys_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
@@ -722,6 +828,111 @@ func (d *__PostKeys_Updater) Used_GE(val int) *__PostKeys_Updater {
 	return d
 }
 
+func (u *__PostKeys_Updater) RandShard_In(ins []int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Updater) RandShard_Ins(ins ...int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Updater) RandShard_NotIn(ins []int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKeys_Updater) RandShard_Eq(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Updater) RandShard_NotEq(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Updater) RandShard_LT(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Updater) RandShard_LE(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Updater) RandShard_GT(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Updater) RandShard_GE(val int) *__PostKeys_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
 /// mysql or cockroach ? or $1 handlers
 func (m *__PostKeys_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
@@ -946,6 +1157,111 @@ func (d *__PostKeys_Selector) Used_GE(val int) *__PostKeys_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " Used >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__PostKeys_Selector) RandShard_In(ins []int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Selector) RandShard_Ins(ins ...int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__PostKeys_Selector) RandShard_NotIn(ins []int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " RandShard NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__PostKeys_Selector) RandShard_Eq(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Selector) RandShard_NotEq(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Selector) RandShard_LT(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Selector) RandShard_LE(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Selector) RandShard_GT(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__PostKeys_Selector) RandShard_GE(val int) *__PostKeys_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " RandShard >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1207,6 +1523,33 @@ func (u *__PostKeys_Updater) Used_Increment(count int) *__PostKeys_Updater {
 
 //string
 
+//ints
+
+func (u *__PostKeys_Updater) RandShard(newVal int) *__PostKeys_Updater {
+	up := updateCol{" RandShard = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" RandShard = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__PostKeys_Updater) RandShard_Increment(count int) *__PostKeys_Updater {
+	if count > 0 {
+		up := updateCol{" RandShard = RandShard+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" RandShard = RandShard+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" RandShard = RandShard- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" RandShard = RandShard- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -1254,6 +1597,21 @@ func (u *__PostKeys_Selector) OrderBy_Used_Asc() *__PostKeys_Selector {
 
 func (u *__PostKeys_Selector) Select_Used() *__PostKeys_Selector {
 	u.selectCol = "Used"
+	return u
+}
+
+func (u *__PostKeys_Selector) OrderBy_RandShard_Desc() *__PostKeys_Selector {
+	u.orderBy = " ORDER BY RandShard DESC "
+	return u
+}
+
+func (u *__PostKeys_Selector) OrderBy_RandShard_Asc() *__PostKeys_Selector {
+	u.orderBy = " ORDER BY RandShard ASC "
+	return u
+}
+
+func (u *__PostKeys_Selector) Select_RandShard() *__PostKeys_Selector {
+	u.selectCol = "RandShard"
 	return u
 }
 
@@ -1574,12 +1932,12 @@ func MassInsert_PostKeys(rows []PostKeys, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "INSERT INTO sun.post_keys (" +
-		"PostKeyStr, Used" +
+		"PostKeyStr, Used, RandShard" +
 		") VALUES " + insVals
 
 	// run query
@@ -1589,6 +1947,7 @@ func MassInsert_PostKeys(rows []PostKeys, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostKeyStr)
 		vals = append(vals, row.Used)
+		vals = append(vals, row.RandShard)
 
 	}
 
@@ -1609,12 +1968,12 @@ func MassInsert_PostKeys(rows []PostKeys, db XODB) error {
 func MassReplace_PostKeys(rows []PostKeys, db XODB) error {
 	var err error
 	ln := len(rows)
-	s := "(?,?)," //`(?, ?, ?, ?),`
+	s := "(?,?,?)," //`(?, ?, ?, ?),`
 	insVals_ := strings.Repeat(s, ln)
 	insVals := insVals_[0 : len(insVals_)-1]
 	// sql query
 	sqlstr := "REPLACE INTO sun.post_keys (" +
-		"PostKeyStr, Used" +
+		"PostKeyStr, Used, RandShard" +
 		") VALUES " + insVals
 
 	// run query
@@ -1624,6 +1983,7 @@ func MassReplace_PostKeys(rows []PostKeys, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostKeyStr)
 		vals = append(vals, row.Used)
+		vals = append(vals, row.RandShard)
 
 	}
 
@@ -1642,6 +2002,8 @@ func MassReplace_PostKeys(rows []PostKeys, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
+
+//
 
 //
 

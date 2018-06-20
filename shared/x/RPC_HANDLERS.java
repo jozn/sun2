@@ -48,10 +48,12 @@ public interface RPC_Social {
     void AddComment( RPC_Social_Types.AddComment.Response pb, boolean handled);
     void DeleteComment( RPC_Social_Types.DeleteComment.Response pb, boolean handled);
     void EditComment( RPC_Social_Types.EditComment.Response pb, boolean handled);
+    void LikeComment( RPC_Social_Types.LikeComment.Response pb, boolean handled);
     void AddPost( RPC_Social_Types.AddPost.Response pb, boolean handled);
     void EditPost( RPC_Social_Types.EditPost.Response pb, boolean handled);
     void DeletePost( RPC_Social_Types.DeletePost.Response pb, boolean handled);
     void ArchivePost( RPC_Social_Types.ArchivePost.Response pb, boolean handled);
+    void PromotePost( RPC_Social_Types.PromotePost.Response pb, boolean handled);
     void LikePost( RPC_Social_Types.LikePost.Response pb, boolean handled);
     void UnLikePost( RPC_Social_Types.UnLikePost.Response pb, boolean handled);
     void FollowUser( RPC_Social_Types.FollowUser.Response pb, boolean handled);
@@ -215,6 +217,10 @@ public interface RPC_User {
     	Log.d("RPC", " default empty handler for RPC 'RPC_Social.EditComment' ");
     }
   	@Override
+    public void LikeComment( RPC_Social_Types.LikeComment.Response pb, boolean handled){
+    	Log.d("RPC", " default empty handler for RPC 'RPC_Social.LikeComment' ");
+    }
+  	@Override
     public void AddPost( RPC_Social_Types.AddPost.Response pb, boolean handled){
     	Log.d("RPC", " default empty handler for RPC 'RPC_Social.AddPost' ");
     }
@@ -229,6 +235,10 @@ public interface RPC_User {
   	@Override
     public void ArchivePost( RPC_Social_Types.ArchivePost.Response pb, boolean handled){
     	Log.d("RPC", " default empty handler for RPC 'RPC_Social.ArchivePost' ");
+    }
+  	@Override
+    public void PromotePost( RPC_Social_Types.PromotePost.Response pb, boolean handled){
+    	Log.d("RPC", " default empty handler for RPC 'RPC_Social.PromotePost' ");
     }
   	@Override
     public void LikePost( RPC_Social_Types.LikePost.Response pb, boolean handled){
@@ -574,6 +584,14 @@ public interface RPC_User {
 				}
 			});
 	  
+			router.put("RPC_Social.LikeComment", (pb, handled)->{
+				if(pb instanceof RPC_Social_Types.LikeComment.Response){
+					RPC_Social_Default_Handler.LikeComment((RPC_Social_Types.LikeComment.Response) pb, handled);
+				}else{
+					Log.d("RPC", " can not convert response object to RPC_Social_Types.LikeComment.Response in rpc: .LikeComment -- class: " + pb );//.getClass().getName());
+				}
+			});
+	  
 			router.put("RPC_Social.AddPost", (pb, handled)->{
 				if(pb instanceof RPC_Social_Types.AddPost.Response){
 					RPC_Social_Default_Handler.AddPost((RPC_Social_Types.AddPost.Response) pb, handled);
@@ -603,6 +621,14 @@ public interface RPC_User {
 					RPC_Social_Default_Handler.ArchivePost((RPC_Social_Types.ArchivePost.Response) pb, handled);
 				}else{
 					Log.d("RPC", " can not convert response object to RPC_Social_Types.ArchivePost.Response in rpc: .ArchivePost -- class: " + pb );//.getClass().getName());
+				}
+			});
+	  
+			router.put("RPC_Social.PromotePost", (pb, handled)->{
+				if(pb instanceof RPC_Social_Types.PromotePost.Response){
+					RPC_Social_Default_Handler.PromotePost((RPC_Social_Types.PromotePost.Response) pb, handled);
+				}else{
+					Log.d("RPC", " can not convert response object to RPC_Social_Types.PromotePost.Response in rpc: .PromotePost -- class: " + pb );//.getClass().getName());
 				}
 			});
 	  

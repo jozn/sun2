@@ -2,11 +2,11 @@ package notify_saver_service
 
 import (
 	"log"
-	"ms/sun_old/base"
-	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
 	"ms/sun/shared/config"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
 var newNotify = make(chan x.Notify, 1000)
@@ -42,7 +42,7 @@ func listernAndSaverNotifys() {
 		for {
 			var e event_service.GeneralEvent
 			select {
-            case e = <-sub.Deleted_Post_Event:
+			case e = <-sub.Deleted_Post_Event:
 
 			case e = <-sub.Deleted_Post_Event:
 				on_Deleted_Post(e)
@@ -79,15 +79,15 @@ func on_Liked_Post(e event_service.GeneralEvent) {
 		return
 	}
 	act := x.Notify{
-		NotifyId:       e.EventId,
-		ForUserId:      e.Post.PostId,
-		ActorUserId:    e.ByUserId,
-		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_LIKED),
-		PostId:         e.PostId,
-		PeerUserId:     0,
-		CommentId:      0,
-		Murmur64Hash:   e.Murmur64Hash,
-		CreatedTime:    helper.TimeNow(),
+		NotifyId:     e.EventId,
+		ForUserId:    e.Post.PostId,
+		ActorUserId:  e.ByUserId,
+		NotifyType:   int(x.NotifyEnum_NOTIFY_POST_LIKED),
+		PostId:       e.PostId,
+		PeerUserId:   0,
+		CommentId:    0,
+		Murmur64Hash: e.Murmur64Hash,
+		CreatedTime:  helper.TimeNow(),
 	}
 	newNotify <- act
 }
@@ -103,15 +103,15 @@ func on_Commented_Post(e event_service.GeneralEvent) {
 		return
 	}
 	not := x.Notify{
-		NotifyId:       e.EventId,
-		ForUserId:      e.Post.PostId,
-		ActorUserId:    e.ByUserId,
-		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_POST_COMMENTED),
-		PostId:         e.Post.PostId,
-		PeerUserId:     0,
-		CommentId:      e.Comment.CommentId,
-		Murmur64Hash:   e.Event.Murmur64Hash,
-		CreatedTime:    helper.TimeNow(),
+		NotifyId:     e.EventId,
+		ForUserId:    e.Post.PostId,
+		ActorUserId:  e.ByUserId,
+		NotifyType:   int(x.NotifyEnum_NOTIFY_POST_COMMENTED),
+		PostId:       e.Post.PostId,
+		PeerUserId:   0,
+		CommentId:    e.Comment.CommentId,
+		Murmur64Hash: e.Event.Murmur64Hash,
+		CreatedTime:  helper.TimeNow(),
 	}
 	newNotify <- not
 }
@@ -124,15 +124,15 @@ func on_UnCommented(e event_service.GeneralEvent) {
 
 func on_Followed(e event_service.GeneralEvent) {
 	not := x.Notify{
-		NotifyId:       e.EventId,
-		ForUserId:      e.PeerUserId,
-		ActorUserId:    e.ByUserId,
-		NotifyTypeEnum: int(x.NotifyEnum_NOTIFY_FOLLOWED_YOU),
-		PostId:         0,
-		PeerUserId:     0,
-		CommentId:      0,
-		Murmur64Hash:   e.Event.Murmur64Hash,
-		CreatedTime:    helper.TimeNow(),
+		NotifyId:     e.EventId,
+		ForUserId:    e.PeerUserId,
+		ActorUserId:  e.ByUserId,
+		NotifyType:   int(x.NotifyEnum_NOTIFY_FOLLOWED_YOU),
+		PostId:       0,
+		PeerUserId:   0,
+		CommentId:    0,
+		Murmur64Hash: e.Event.Murmur64Hash,
+		CreatedTime:  helper.TimeNow(),
 	}
 	newNotify <- not
 }

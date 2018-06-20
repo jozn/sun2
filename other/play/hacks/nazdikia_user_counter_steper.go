@@ -12,7 +12,7 @@ import (
 //result betewn : 800k to 1400k -- 17500k to 18900k
 func main() {
 	const NUM = 1000
-	const BUFF = 40
+	const BUFF = 1
 
 	var r404 = 0 //most of them are private, few are deleted - nazikia showes private as deleted
 	var r200 = 0
@@ -30,7 +30,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	cnt := 19261000
+	cnt := 19265000
 	max := 20000000
 	step := 10
 	for i := cnt; i < max; i += step {

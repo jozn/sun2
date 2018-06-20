@@ -90,10 +90,12 @@ type RPC_Social interface {
 	AddComment(param *RPC_Social_Types_AddComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddComment_Response, errRes error)
 	DeleteComment(param *RPC_Social_Types_DeleteComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeleteComment_Response, errRes error)
 	EditComment(param *RPC_Social_Types_EditComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditComment_Response, errRes error)
+	LikeComment(param *RPC_Social_Types_LikeComment_Param, userParam RPC_UserParam) (res RPC_Social_Types_LikeComment_Response, errRes error)
 	AddPost(param *RPC_Social_Types_AddPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_AddPost_Response, errRes error)
 	EditPost(param *RPC_Social_Types_EditPost_Param, userParam RPC_UserParam) (res RPC_Social_Types_EditPost_Response, errRes error)
 	DeletePost(param *RPC_Social_Types_DeletePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_DeletePost_Response, errRes error)
 	ArchivePost(param *RPC_Social_Types_ArchivePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_ArchivePost_Response, errRes error)
+	PromotePost(param *RPC_Social_Types_PromotePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_PromotePost_Response, errRes error)
 	LikePost(param *RPC_Social_Types_LikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_LikePost_Response, errRes error)
 	UnLikePost(param *RPC_Social_Types_UnLikePost_Param, userParam RPC_UserParam) (res RPC_Social_Types_UnLikePost_Response, errRes error)
 	FollowUser(param *RPC_Social_Types_FollowUser_Param, userParam RPC_UserParam) (res RPC_Social_Types_FollowUser_Response, errRes error)
@@ -1017,6 +1019,32 @@ var mpRpcMethods = map[string]func(p rpcParamHandler){
 			p.responseHandler.HandelError(err)
 		}
 	},
+	"RPC_Social.LikeComment": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.LikeComment"))
+			return
+		}
+		load := &RPC_Social_Types_LikeComment_Param{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.LikeComment(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.LikeComment",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "RPC_Social_Types.LikeComment.Response",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
 	"RPC_Social.AddPost": func(p rpcParamHandler) {
 		if p.rpcHandler.RPC_Social == nil {
 			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.AddPost"))
@@ -1110,6 +1138,32 @@ var mpRpcMethods = map[string]func(p rpcParamHandler){
 					UserParam:       p.params,
 					CommandToServer: p.cmd,
 					PBClassName:     "RPC_Social_Types.ArchivePost.Response",
+					ResponseData:    &res,
+					RpcParamPassed:  load,
+				}
+				p.responseHandler.HandleOfflineResult(out)
+			} else {
+				p.responseHandler.HandelError(err)
+			}
+		} else {
+			p.responseHandler.HandelError(err)
+		}
+	},
+	"RPC_Social.PromotePost": func(p rpcParamHandler) {
+		if p.rpcHandler.RPC_Social == nil {
+			noDevErr(errors.New("rpc service is null for: p.rpcHandler.RPC_Social.PromotePost"))
+			return
+		}
+		load := &RPC_Social_Types_PromotePost_Param{}
+		err := proto.Unmarshal(p.cmd.Data, load)
+		if err == nil {
+			res, err := p.rpcHandler.RPC_Social.PromotePost(load, p.params)
+			if err == nil {
+				out := RpcResponseOutput{
+					RpcName:         "RPC_Social.PromotePost",
+					UserParam:       p.params,
+					CommandToServer: p.cmd,
+					PBClassName:     "RPC_Social_Types.PromotePost.Response",
 					ResponseData:    &res,
 					RpcParamPassed:  load,
 				}
@@ -1461,10 +1515,12 @@ var mpRpcMethods = map[string]func(p rpcParamHandler){
  RPC_Social.AddComment
  RPC_Social.DeleteComment
  RPC_Social.EditComment
+ RPC_Social.LikeComment
  RPC_Social.AddPost
  RPC_Social.EditPost
  RPC_Social.DeletePost
  RPC_Social.ArchivePost
+ RPC_Social.PromotePost
  RPC_Social.LikePost
  RPC_Social.UnLikePost
  RPC_Social.FollowUser

@@ -55,10 +55,12 @@ enum RPC_Social_Enum {
     AddComment = 9155;
     DeleteComment = 6918;
     EditComment = 9736;
+    LikeComment = 3818;
     AddPost = 7124;
     EditPost = 5977;
     DeletePost = 5039;
     ArchivePost = 5257;
+    PromotePost = 7803;
     LikePost = 9730;
     UnLikePost = 8919;
     FollowUser = 9755;

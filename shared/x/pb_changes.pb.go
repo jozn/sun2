@@ -47,8 +47,10 @@ It has these top-level messages:
 	PB_PostKeys
 	PB_PostLink
 	PB_PostMedia
-	PB_PostMentioned
 	PB_PostReshared
+	PB_ProfileAll
+	PB_ProfileMedia
+	PB_ProfileMentioned
 	PB_Session
 	PB_SettingNotifications
 	PB_Sms

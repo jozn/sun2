@@ -43,11 +43,14 @@ message PB_Event {
     int64 PeerUserId = 4;
     int64 PostId = 5;
     int64 CommentId = 6;
-    int64 ActionId = 7;
-    int64 Murmur64Hash = 8;
-    string ChatKey = 9;
-    int64 MessageId = 10;
-    int64 ReSharedId = 11;
+    int64 HashTagId = 7;
+    int64 GroupId = 8;
+    int64 ActionId = 9;
+    int64 ChatId = 10;
+    string ChatKey = 11;
+    int64 MessageId = 12;
+    int64 ReSharedId = 13;
+    int64 Murmur64Hash = 14;
 }
 message PB_Followed {
     int64 Id = 1;
@@ -58,10 +61,9 @@ message PB_Followed {
 message PB_Likes {
     int64 Id = 1;
     int64 PostId = 2;
-    int32 PostTypeEnum = 3;
-    int32 UserId = 4;
-    int32 LikeEnum = 5;
-    int32 CreatedTime = 6;
+    int32 UserId = 3;
+    int32 PostType = 4;
+    int32 CreatedTime = 5;
 }
 message PB_Notify {
     int64 NotifyId = 1;
@@ -91,24 +93,22 @@ message PB_PhoneContacts {
 message PB_Post {
     int64 PostId = 1;
     int32 UserId = 2;
-    int32 PostTypeEnum = 3;
-    int32 PostCategoryEnum = 4;
-    int64 MediaId = 5;
+    int32 PostType = 3;
+    int64 MediaId = 4;
+    int64 FileRefId = 5;
     string PostKey = 6;
     string Text = 7;
     string RichText = 8;
     int32 MediaCount = 9;
     int32 SharedTo = 10;
     int32 DisableComment = 11;
-    int32 Source = 12;
-    int32 HasTag = 13;
-    int32 Seq = 14;
-    int32 CommentsCount = 15;
-    int32 LikesCount = 16;
-    int32 ViewsCount = 17;
-    int32 EditedTime = 18;
-    int32 CreatedTime = 19;
-    int64 ReSharedPostId = 20;
+    int32 Via = 12;
+    int32 Seq = 13;
+    int32 CommentsCount = 14;
+    int32 LikesCount = 15;
+    int32 ViewsCount = 16;
+    int32 EditedTime = 17;
+    int32 CreatedTime = 18;
 }
 message PB_PostCount {
     int64 PostId = 1;
@@ -126,6 +126,7 @@ message PB_PostKeys {
     int32 Id = 1;
     string PostKeyStr = 2;
     int32 Used = 3;
+    int32 RandShard = 4;
 }
 message PB_PostLink {
     int64 LinkId = 1;
@@ -148,13 +149,15 @@ message PB_PostMedia {
     int32 ViewCount = 14;
     string Extra = 15;
 }
-message PB_PostMentioned {
-    int64 MentionedId = 1;
-    int32 ForUserId = 2;
-    int64 PostId = 3;
+message PB_PostPromoted {
+    int32 PromoteId = 1;
+    int64 PostId = 2;
+    int32 ByUserId = 3;
     int32 PostUserId = 4;
-    int32 PostType = 5;
-    int32 CreatedTime = 6;
+    string BazzarUuid = 5;
+    string Package = 6;
+    int32 EndTime = 7;
+    int32 CreatedTime = 8;
 }
 message PB_PostReshared {
     int64 ResharedId = 1;
@@ -162,6 +165,26 @@ message PB_PostReshared {
     int32 ByUserId = 3;
     int32 PostUserId = 4;
     int32 CreatedTime = 5;
+}
+message PB_ProfileAll {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 IsReShared = 4;
+}
+message PB_ProfileMedia {
+    int64 Id = 1;
+    int32 UserId = 2;
+    int64 PostId = 3;
+    int32 PostType = 4;
+}
+message PB_ProfileMentioned {
+    int64 Id = 1;
+    int32 ForUserId = 2;
+    int64 PostId = 3;
+    int32 PostUserId = 4;
+    int32 PostType = 5;
+    int32 CreatedTime = 6;
 }
 message PB_Session {
     int64 Id = 1;
@@ -218,15 +241,16 @@ message PB_Tag {
     string Name = 2;
     int32 Count = 3;
     int32 TagStatusEnum = 4;
-    int32 CreatedTime = 5;
+    int32 IsBlocked = 5;
+    int32 GroupId = 6;
+    int32 CreatedTime = 7;
 }
 message PB_TagPost {
     int64 Id = 1;
     int32 TagId = 2;
     int32 PostId = 3;
-    int32 PostTypeEnum = 4;
-    int32 PostCategoryEnum = 5;
-    int32 CreatedTime = 6;
+    int32 PostType = 4;
+    int32 CreatedTime = 5;
 }
 message PB_TriggerLog {
     int64 Id = 1;
@@ -253,30 +277,29 @@ message PB_User {
     string Phone = 14;
     string Email = 15;
     string About = 16;
-    string DefaultUserName = 17;
-    string PasswordHash = 18;
-    string PasswordSalt = 19;
-    int32 PostSeq = 20;
-    int32 FollowersCount = 21;
-    int32 FollowingCount = 22;
-    int32 PostsCount = 23;
-    int32 MediaCount = 24;
-    int32 PhotoCount = 25;
-    int32 VideoCount = 26;
-    int32 GifCount = 27;
-    int32 AudioCount = 28;
-    int32 VoiceCount = 29;
-    int32 FileCount = 30;
-    int32 LinkCount = 31;
-    int32 BoardCount = 32;
-    int32 PinedCount = 33;
-    int32 LikesCount = 34;
-    int32 ResharedCount = 35;
-    int32 LastPostTime = 36;
-    int32 CreatedTime = 37;
-    int32 VersionTime = 38;
-    int32 IsDeleted = 39;
-    int32 IsBanned = 40;
+    string PasswordHash = 17;
+    string PasswordSalt = 18;
+    int32 PostSeq = 19;
+    int32 FollowersCount = 20;
+    int32 FollowingCount = 21;
+    int32 PostsCount = 22;
+    int32 MediaCount = 23;
+    int32 PhotoCount = 24;
+    int32 VideoCount = 25;
+    int32 GifCount = 26;
+    int32 AudioCount = 27;
+    int32 VoiceCount = 28;
+    int32 FileCount = 29;
+    int32 LinkCount = 30;
+    int32 BoardCount = 31;
+    int32 PinedCount = 32;
+    int32 LikesCount = 33;
+    int32 ResharedCount = 34;
+    int32 LastPostTime = 35;
+    int32 CreatedTime = 36;
+    int32 VersionTime = 37;
+    int32 IsDeleted = 38;
+    int32 IsBanned = 39;
 }
 message PB_UserRelation {
     int64 RelNanoId = 1;

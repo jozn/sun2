@@ -33,10 +33,16 @@ const (
 	PostLink_TableGo               = "PostLink"
 	PostMedia_Table                = "post_media"
 	PostMedia_TableGo              = "PostMedia"
-	PostMentioned_Table            = "post_mentioned"
-	PostMentioned_TableGo          = "PostMentioned"
+	PostPromoted_Table             = "post_promoted"
+	PostPromoted_TableGo           = "PostPromoted"
 	PostReshared_Table             = "post_reshared"
 	PostReshared_TableGo           = "PostReshared"
+	ProfileAll_Table               = "profile_all"
+	ProfileAll_TableGo             = "ProfileAll"
+	ProfileMedia_Table             = "profile_media"
+	ProfileMedia_TableGo           = "ProfileMedia"
+	ProfileMentioned_Table         = "profile_mentioned"
+	ProfileMentioned_TableGo       = "ProfileMentioned"
 	Session_Table                  = "session"
 	Session_TableGo                = "Session"
 	SettingNotifications_Table     = "setting_notifications"
@@ -166,11 +172,14 @@ var Event = struct {
 	PeerUserId   string
 	PostId       string
 	CommentId    string
+	HashTagId    string
+	GroupId      string
 	ActionId     string
-	Murmur64Hash string
+	ChatId       string
 	ChatKey      string
 	MessageId    string
 	ReSharedId   string
+	Murmur64Hash string
 }{
 
 	EventId:      "EventId",
@@ -179,11 +188,14 @@ var Event = struct {
 	PeerUserId:   "PeerUserId",
 	PostId:       "PostId",
 	CommentId:    "CommentId",
+	HashTagId:    "HashTagId",
+	GroupId:      "GroupId",
 	ActionId:     "ActionId",
-	Murmur64Hash: "Murmur64Hash",
+	ChatId:       "ChatId",
 	ChatKey:      "ChatKey",
 	MessageId:    "MessageId",
 	ReSharedId:   "ReSharedId",
+	Murmur64Hash: "Murmur64Hash",
 }
 
 var Followed = struct {
@@ -200,20 +212,18 @@ var Followed = struct {
 }
 
 var Likes = struct {
-	Id           string
-	PostId       string
-	PostTypeEnum string
-	UserId       string
-	LikeEnum     string
-	CreatedTime  string
+	Id          string
+	PostId      string
+	UserId      string
+	PostType    string
+	CreatedTime string
 }{
 
-	Id:           "Id",
-	PostId:       "PostId",
-	PostTypeEnum: "PostTypeEnum",
-	UserId:       "UserId",
-	LikeEnum:     "LikeEnum",
-	CreatedTime:  "CreatedTime",
+	Id:          "Id",
+	PostId:      "PostId",
+	UserId:      "UserId",
+	PostType:    "PostType",
+	CreatedTime: "CreatedTime",
 }
 
 var Notify = struct {
@@ -270,48 +280,44 @@ var PhoneContacts = struct {
 }
 
 var Post = struct {
-	PostId           string
-	UserId           string
-	PostTypeEnum     string
-	PostCategoryEnum string
-	MediaId          string
-	PostKey          string
-	Text             string
-	RichText         string
-	MediaCount       string
-	SharedTo         string
-	DisableComment   string
-	Source           string
-	HasTag           string
-	Seq              string
-	CommentsCount    string
-	LikesCount       string
-	ViewsCount       string
-	EditedTime       string
-	CreatedTime      string
-	ReSharedPostId   string
+	PostId         string
+	UserId         string
+	PostType       string
+	MediaId        string
+	FileRefId      string
+	PostKey        string
+	Text           string
+	RichText       string
+	MediaCount     string
+	SharedTo       string
+	DisableComment string
+	Via            string
+	Seq            string
+	CommentsCount  string
+	LikesCount     string
+	ViewsCount     string
+	EditedTime     string
+	CreatedTime    string
 }{
 
-	PostId:           "PostId",
-	UserId:           "UserId",
-	PostTypeEnum:     "PostTypeEnum",
-	PostCategoryEnum: "PostCategoryEnum",
-	MediaId:          "MediaId",
-	PostKey:          "PostKey",
-	Text:             "Text",
-	RichText:         "RichText",
-	MediaCount:       "MediaCount",
-	SharedTo:         "SharedTo",
-	DisableComment:   "DisableComment",
-	Source:           "Source",
-	HasTag:           "HasTag",
-	Seq:              "Seq",
-	CommentsCount:    "CommentsCount",
-	LikesCount:       "LikesCount",
-	ViewsCount:       "ViewsCount",
-	EditedTime:       "EditedTime",
-	CreatedTime:      "CreatedTime",
-	ReSharedPostId:   "ReSharedPostId",
+	PostId:         "PostId",
+	UserId:         "UserId",
+	PostType:       "PostType",
+	MediaId:        "MediaId",
+	FileRefId:      "FileRefId",
+	PostKey:        "PostKey",
+	Text:           "Text",
+	RichText:       "RichText",
+	MediaCount:     "MediaCount",
+	SharedTo:       "SharedTo",
+	DisableComment: "DisableComment",
+	Via:            "Via",
+	Seq:            "Seq",
+	CommentsCount:  "CommentsCount",
+	LikesCount:     "LikesCount",
+	ViewsCount:     "ViewsCount",
+	EditedTime:     "EditedTime",
+	CreatedTime:    "CreatedTime",
 }
 
 var PostCount = struct {
@@ -344,11 +350,13 @@ var PostKeys = struct {
 	Id         string
 	PostKeyStr string
 	Used       string
+	RandShard  string
 }{
 
 	Id:         "Id",
 	PostKeyStr: "PostKeyStr",
 	Used:       "Used",
+	RandShard:  "RandShard",
 }
 
 var PostLink = struct {
@@ -395,20 +403,24 @@ var PostMedia = struct {
 	Extra:         "Extra",
 }
 
-var PostMentioned = struct {
-	MentionedId string
-	ForUserId   string
+var PostPromoted = struct {
+	PromoteId   string
 	PostId      string
+	ByUserId    string
 	PostUserId  string
-	PostType    string
+	BazzarUuid  string
+	Package     string
+	EndTime     string
 	CreatedTime string
 }{
 
-	MentionedId: "MentionedId",
-	ForUserId:   "ForUserId",
+	PromoteId:   "PromoteId",
 	PostId:      "PostId",
+	ByUserId:    "ByUserId",
 	PostUserId:  "PostUserId",
-	PostType:    "PostType",
+	BazzarUuid:  "BazzarUuid",
+	Package:     "Package",
+	EndTime:     "EndTime",
 	CreatedTime: "CreatedTime",
 }
 
@@ -424,6 +436,49 @@ var PostReshared = struct {
 	PostId:      "PostId",
 	ByUserId:    "ByUserId",
 	PostUserId:  "PostUserId",
+	CreatedTime: "CreatedTime",
+}
+
+var ProfileAll = struct {
+	Id         string
+	UserId     string
+	PostId     string
+	IsReShared string
+}{
+
+	Id:         "Id",
+	UserId:     "UserId",
+	PostId:     "PostId",
+	IsReShared: "IsReShared",
+}
+
+var ProfileMedia = struct {
+	Id       string
+	UserId   string
+	PostId   string
+	PostType string
+}{
+
+	Id:       "Id",
+	UserId:   "UserId",
+	PostId:   "PostId",
+	PostType: "PostType",
+}
+
+var ProfileMentioned = struct {
+	Id          string
+	ForUserId   string
+	PostId      string
+	PostUserId  string
+	PostType    string
+	CreatedTime string
+}{
+
+	Id:          "Id",
+	ForUserId:   "ForUserId",
+	PostId:      "PostId",
+	PostUserId:  "PostUserId",
+	PostType:    "PostType",
 	CreatedTime: "CreatedTime",
 }
 
@@ -535,6 +590,8 @@ var Tag = struct {
 	Name          string
 	Count         string
 	TagStatusEnum string
+	IsBlocked     string
+	GroupId       string
 	CreatedTime   string
 }{
 
@@ -542,24 +599,24 @@ var Tag = struct {
 	Name:          "Name",
 	Count:         "Count",
 	TagStatusEnum: "TagStatusEnum",
+	IsBlocked:     "IsBlocked",
+	GroupId:       "GroupId",
 	CreatedTime:   "CreatedTime",
 }
 
 var TagPost = struct {
-	Id               string
-	TagId            string
-	PostId           string
-	PostTypeEnum     string
-	PostCategoryEnum string
-	CreatedTime      string
+	Id          string
+	TagId       string
+	PostId      string
+	PostType    string
+	CreatedTime string
 }{
 
-	Id:               "Id",
-	TagId:            "TagId",
-	PostId:           "PostId",
-	PostTypeEnum:     "PostTypeEnum",
-	PostCategoryEnum: "PostCategoryEnum",
-	CreatedTime:      "CreatedTime",
+	Id:          "Id",
+	TagId:       "TagId",
+	PostId:      "PostId",
+	PostType:    "PostType",
+	CreatedTime: "CreatedTime",
 }
 
 var TriggerLog = struct {
@@ -596,7 +653,6 @@ var User = struct {
 	Phone              string
 	Email              string
 	About              string
-	DefaultUserName    string
 	PasswordHash       string
 	PasswordSalt       string
 	PostSeq            string
@@ -638,7 +694,6 @@ var User = struct {
 	Phone:              "Phone",
 	Email:              "Email",
 	About:              "About",
-	DefaultUserName:    "DefaultUserName",
 	PasswordHash:       "PasswordHash",
 	PasswordSalt:       "PasswordSalt",
 	PostSeq:            "PostSeq",

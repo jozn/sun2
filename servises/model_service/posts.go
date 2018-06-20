@@ -1,11 +1,8 @@
 package model_service
 
 import (
-	"bytes"
-	"image"
 	"ms/sun_old/base"
 	"ms/sun/shared/helper"
-	"ms/sun/servises/file_service_old"
 	"ms/sun/shared/x"
 )
 
@@ -26,8 +23,7 @@ func AddPost(pp PostAddParam) (int, error) {
 	post := &x.Post{
 		PostId:           helper.NextRowsSeqId(),
 		UserId:           pp.UserId,
-		PostTypeEnum:     int(x.PostTypeEnum_POST_TEXT),
-		PostCategoryEnum: int(x.PostCategoryEnum_PostCat_Text),
+		PostType:     int(x.PostTypeEnum_POST_TEXT),
 		MediaId:          0,
 		PostKey:          <-nextPostKey,
 		Text:             pp.Text,
@@ -35,16 +31,14 @@ func AddPost(pp PostAddParam) (int, error) {
 		MediaCount:       0,
 		SharedTo:         0,
 		DisableComment:   0,
-		HasTag:           0,
 		Seq:              user.PostSeq,
 		CommentsCount:    0,
 		LikesCount:       0,
 		ViewsCount:       1,
 		EditedTime:       0,
 		CreatedTime:      helper.TimeNow(),
-		ReSharedPostId:   0,
 	}
-	if len(pp.MediaBytes) > 0 {
+	/*if len(pp.MediaBytes) > 0 {
 		reader := bytes.NewBuffer(pp.MediaBytes)
 		img, imgType, err := image.Decode(reader)
 		if err != nil {
@@ -71,6 +65,7 @@ func AddPost(pp PostAddParam) (int, error) {
 			FileType:  int(file_service_old.IMAGE),
 			Extension: "." + imageTypeToExt(imgType),
 		}
+		file_store.SavaFile()
 		file_service_old.SavePostFile(rowCassndra)
 		err = media.Save(base.DB)
 		if err != nil {
@@ -78,7 +73,7 @@ func AddPost(pp PostAddParam) (int, error) {
 		}
 		post.PostTypeEnum = int(x.PostTypeEnum_POST_PHOTO)
 		post.MediaId = media.MediaId
-	}
+	}*/
 	postCount := &x.PostCount{
 		PostId:     post.PostId,
 		ViewsCount: 0,
@@ -95,17 +90,13 @@ func AddPost(pp PostAddParam) (int, error) {
 	return post.PostId, nil
 }
 
-func imageTypeToExt(typ string) string {
-	if typ == "jpeg" {
-		return "jpg"
-	}
-	return typ
-}
-
 //todo update post counter
 func DeletePostFully(userId, postId int) {
+    Counter.UpdateUserPostsCounts(userId,-1)
 	DeletePostsFully([]int{postId})
 }
+
+
 
 //todo: remove from cassandra too
 func DeletePostsFully(postIds []int) {
@@ -118,19 +109,23 @@ func DeletePostsFully(postIds []int) {
 	//related posts types: comments,likes,...
 	x.NewAction_Deleter().PostId_In(postIds).Delete(base.DB)
 	x.NewComment_Deleter().PostId_In(postIds).Delete(base.DB)
-	x.NewLike_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewLikes_Deleter().PostId_In(postIds).Delete(base.DB)
 	x.NewNotify_Deleter().PostId_In(postIds).Delete(base.DB)
 
 	//post
 	x.NewPostCount_Deleter().PostId_In(postIds).Delete(base.DB)
 	x.NewPostMedia_Deleter().PostId_In(postIds).Delete(base.DB)
-	x.NewPostMentioned_Deleter().PostId_In(postIds).Delete(base.DB)
 	x.NewPostReshared_Deleter().PostId_In(postIds).Delete(base.DB)
 	x.NewTagPost_Deleter().PostId_In(postIds).Delete(base.DB)
 
+	//profile
+    x.NewProfileAll_Deleter().PostId_In(postIds).Delete(base.DB)
+    x.NewProfileMedia_Deleter().PostId_In(postIds).Delete(base.DB)
+    x.NewProfileMentioned_Deleter().PostId_In(postIds).Delete(base.DB)
+
 	//metas
 	x.NewHomeFanout_Deleter().PostId_In(postIds).Delete(base.DB)
-	x.NewSuggestedTopPost_Deleter().PostId_In(postIds).Delete(base.DB)
+	x.NewSuggestedTopPosts_Deleter().PostId_In(postIds).Delete(base.DB)
 
 	var arr []x.PostDeleted
 	for _, id := range postIds {
@@ -141,3 +136,11 @@ func DeletePostsFully(postIds []int) {
 	}
 	x.MassReplace_PostDeleted(arr, base.DB)
 }
+
+/*func imageTypeToExt(typ string) string {
+    if typ == "jpeg" {
+        return "jpg"
+    }
+    return typ
+}
+*/

@@ -35,11 +35,14 @@ ALTER TABLE sun.event CHANGE COLUMN ByUserId by_user_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN PeerUserId peer_user_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN PostId post_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN CommentId comment_id bigint(20);
+ALTER TABLE sun.event CHANGE COLUMN HashTagId hash_tag_id bigint(20);
+ALTER TABLE sun.event CHANGE COLUMN GroupId group_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN ActionId action_id bigint(20);
-ALTER TABLE sun.event CHANGE COLUMN Murmur64Hash murmur64_hash bigint(20);
+ALTER TABLE sun.event CHANGE COLUMN ChatId chat_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN ChatKey chat_key varchar(100);
 ALTER TABLE sun.event CHANGE COLUMN MessageId message_id bigint(20);
 ALTER TABLE sun.event CHANGE COLUMN ReSharedId re_shared_id bigint(20);
+ALTER TABLE sun.event CHANGE COLUMN Murmur64Hash murmur64_hash bigint(20);
 
 /*Table: followed  */
 ALTER TABLE sun.followed CHANGE COLUMN Id id bigint(20);
@@ -50,9 +53,8 @@ ALTER TABLE sun.followed CHANGE COLUMN CreatedTime created_time int(11);
 /*Table: likes  */
 ALTER TABLE sun.likes CHANGE COLUMN Id id bigint(11);
 ALTER TABLE sun.likes CHANGE COLUMN PostId post_id bigint(11);
-ALTER TABLE sun.likes CHANGE COLUMN PostTypeEnum post_type_enum tinyint(4);
 ALTER TABLE sun.likes CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.likes CHANGE COLUMN LikeEnum like_enum tinyint(4);
+ALTER TABLE sun.likes CHANGE COLUMN PostType post_type tinyint(4);
 ALTER TABLE sun.likes CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: notify  */
@@ -83,24 +85,22 @@ ALTER TABLE sun.phone_contacts CHANGE COLUMN LastName last_name varchar(50);
 /*Table: post  */
 ALTER TABLE sun.post CHANGE COLUMN PostId post_id bigint(20);
 ALTER TABLE sun.post CHANGE COLUMN UserId user_id int(11);
-ALTER TABLE sun.post CHANGE COLUMN PostTypeEnum post_type_enum int(4);
-ALTER TABLE sun.post CHANGE COLUMN PostCategoryEnum post_category_enum int(11);
+ALTER TABLE sun.post CHANGE COLUMN PostType post_type int(4);
 ALTER TABLE sun.post CHANGE COLUMN MediaId media_id bigint(11);
+ALTER TABLE sun.post CHANGE COLUMN FileRefId file_ref_id bigint(20);
 ALTER TABLE sun.post CHANGE COLUMN PostKey post_key varchar(50);
 ALTER TABLE sun.post CHANGE COLUMN Text text text;
 ALTER TABLE sun.post CHANGE COLUMN RichText rich_text text;
 ALTER TABLE sun.post CHANGE COLUMN MediaCount media_count tinyint(4);
 ALTER TABLE sun.post CHANGE COLUMN SharedTo shared_to int(11);
 ALTER TABLE sun.post CHANGE COLUMN DisableComment disable_comment tinyint(1);
-ALTER TABLE sun.post CHANGE COLUMN Source source int(11);
-ALTER TABLE sun.post CHANGE COLUMN HasTag has_tag int(11);
+ALTER TABLE sun.post CHANGE COLUMN Via via tinyint(11);
 ALTER TABLE sun.post CHANGE COLUMN Seq seq int(11);
 ALTER TABLE sun.post CHANGE COLUMN CommentsCount comments_count int(11);
 ALTER TABLE sun.post CHANGE COLUMN LikesCount likes_count int(11);
 ALTER TABLE sun.post CHANGE COLUMN ViewsCount views_count int(11);
 ALTER TABLE sun.post CHANGE COLUMN EditedTime edited_time int(11);
 ALTER TABLE sun.post CHANGE COLUMN CreatedTime created_time int(11);
-ALTER TABLE sun.post CHANGE COLUMN ReSharedPostId re_shared_post_id bigint(20);
 
 /*Table: post_count  */
 ALTER TABLE sun.post_count CHANGE COLUMN PostId post_id bigint(20);
@@ -118,6 +118,7 @@ ALTER TABLE sun.post_deleted CHANGE COLUMN UserId user_id int(11);
 ALTER TABLE sun.post_keys CHANGE COLUMN Id id int(11);
 ALTER TABLE sun.post_keys CHANGE COLUMN PostKeyStr post_key_str varchar(50);
 ALTER TABLE sun.post_keys CHANGE COLUMN Used used tinyint(4);
+ALTER TABLE sun.post_keys CHANGE COLUMN RandShard rand_shard int(11);
 
 /*Table: post_link  */
 ALTER TABLE sun.post_link CHANGE COLUMN LinkId link_id bigint(20);
@@ -140,13 +141,15 @@ ALTER TABLE sun.post_media CHANGE COLUMN CreatedTime created_time int(11);
 ALTER TABLE sun.post_media CHANGE COLUMN ViewCount view_count int(11);
 ALTER TABLE sun.post_media CHANGE COLUMN Extra extra varchar(2000);
 
-/*Table: post_mentioned  */
-ALTER TABLE sun.post_mentioned CHANGE COLUMN MentionedId mentioned_id bigint(20);
-ALTER TABLE sun.post_mentioned CHANGE COLUMN ForUserId for_user_id int(11);
-ALTER TABLE sun.post_mentioned CHANGE COLUMN PostId post_id bigint(20);
-ALTER TABLE sun.post_mentioned CHANGE COLUMN PostUserId post_user_id int(11);
-ALTER TABLE sun.post_mentioned CHANGE COLUMN PostType post_type tinyint(11);
-ALTER TABLE sun.post_mentioned CHANGE COLUMN CreatedTime created_time int(11);
+/*Table: post_promoted  */
+ALTER TABLE sun.post_promoted CHANGE COLUMN PromoteId promote_id int(11);
+ALTER TABLE sun.post_promoted CHANGE COLUMN PostId post_id bigint(20);
+ALTER TABLE sun.post_promoted CHANGE COLUMN ByUserId by_user_id int(11);
+ALTER TABLE sun.post_promoted CHANGE COLUMN PostUserId post_user_id int(11);
+ALTER TABLE sun.post_promoted CHANGE COLUMN BazzarUuid bazzar_uuid varchar(100);
+ALTER TABLE sun.post_promoted CHANGE COLUMN Package package varchar(50);
+ALTER TABLE sun.post_promoted CHANGE COLUMN EndTime end_time int(11);
+ALTER TABLE sun.post_promoted CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: post_reshared  */
 ALTER TABLE sun.post_reshared CHANGE COLUMN ResharedId reshared_id bigint(20);
@@ -154,6 +157,26 @@ ALTER TABLE sun.post_reshared CHANGE COLUMN PostId post_id bigint(20);
 ALTER TABLE sun.post_reshared CHANGE COLUMN ByUserId by_user_id int(11);
 ALTER TABLE sun.post_reshared CHANGE COLUMN PostUserId post_user_id int(11);
 ALTER TABLE sun.post_reshared CHANGE COLUMN CreatedTime created_time int(11);
+
+/*Table: profile_all  */
+ALTER TABLE sun.profile_all CHANGE COLUMN Id id bigint(20);
+ALTER TABLE sun.profile_all CHANGE COLUMN UserId user_id int(11);
+ALTER TABLE sun.profile_all CHANGE COLUMN PostId post_id bigint(20);
+ALTER TABLE sun.profile_all CHANGE COLUMN IsReShared is_re_shared tinyint(4);
+
+/*Table: profile_media  */
+ALTER TABLE sun.profile_media CHANGE COLUMN Id id bigint(20);
+ALTER TABLE sun.profile_media CHANGE COLUMN UserId user_id int(11);
+ALTER TABLE sun.profile_media CHANGE COLUMN PostId post_id bigint(20);
+ALTER TABLE sun.profile_media CHANGE COLUMN PostType post_type tinyint(4);
+
+/*Table: profile_mentioned  */
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN Id id bigint(20);
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN ForUserId for_user_id int(11);
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN PostId post_id bigint(20);
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN PostUserId post_user_id int(11);
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN PostType post_type tinyint(11);
+ALTER TABLE sun.profile_mentioned CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: session  */
 ALTER TABLE sun.session CHANGE COLUMN Id id bigint(20);
@@ -210,14 +233,15 @@ ALTER TABLE sun.tag CHANGE COLUMN TagId tag_id bigint(11);
 ALTER TABLE sun.tag CHANGE COLUMN Name name varchar(100);
 ALTER TABLE sun.tag CHANGE COLUMN Count count int(11);
 ALTER TABLE sun.tag CHANGE COLUMN TagStatusEnum tag_status_enum int(1);
+ALTER TABLE sun.tag CHANGE COLUMN IsBlocked is_blocked tinyint(4);
+ALTER TABLE sun.tag CHANGE COLUMN GroupId group_id tinyint(4);
 ALTER TABLE sun.tag CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: tag_post  */
 ALTER TABLE sun.tag_post CHANGE COLUMN Id id bigint(11);
 ALTER TABLE sun.tag_post CHANGE COLUMN TagId tag_id int(11);
 ALTER TABLE sun.tag_post CHANGE COLUMN PostId post_id int(11);
-ALTER TABLE sun.tag_post CHANGE COLUMN PostTypeEnum post_type_enum int(11);
-ALTER TABLE sun.tag_post CHANGE COLUMN PostCategoryEnum post_category_enum int(11);
+ALTER TABLE sun.tag_post CHANGE COLUMN PostType post_type int(11);
 ALTER TABLE sun.tag_post CHANGE COLUMN CreatedTime created_time int(11);
 
 /*Table: trigger_log  */
@@ -245,7 +269,6 @@ ALTER TABLE sun.user CHANGE COLUMN SeenMessagePrivacy seen_message_privacy int(1
 ALTER TABLE sun.user CHANGE COLUMN Phone phone varchar(50);
 ALTER TABLE sun.user CHANGE COLUMN Email email varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN About about varchar(500);
-ALTER TABLE sun.user CHANGE COLUMN DefaultUserName default_user_name varchar(75);
 ALTER TABLE sun.user CHANGE COLUMN PasswordHash password_hash varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PasswordSalt password_salt varchar(250);
 ALTER TABLE sun.user CHANGE COLUMN PostSeq post_seq int(11);

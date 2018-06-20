@@ -463,30 +463,30 @@ $$
 
 
  #### delimiter ;*/
-################################ PostMentioned ######################################
+################################ PostPromoted ######################################
 
 /* #### delimiter $$
-DROP TRIGGER IF EXISTS post_mentioned_OnCreateLogger $$
-CREATE TRIGGER post_mentioned_OnCreateLogger AFTER INSERT ON post_mentioned
+DROP TRIGGER IF EXISTS post_promoted_OnCreateLogger $$
+CREATE TRIGGER post_promoted_OnCreateLogger AFTER INSERT ON post_promoted
   FOR EACH ROW
   BEGIN
-    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","INSERT",NEW.MentionedId, UNIX_TIMESTAMP(NOW()) );
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostPromoted","INSERT",NEW.PromoteId, UNIX_TIMESTAMP(NOW()) );
   END;
 $$
 
-DROP TRIGGER IF EXISTS post_mentioned_OnUpdateLogger $$
-CREATE TRIGGER post_mentioned_OnUpdateLogger AFTER UPDATE ON post_mentioned
+DROP TRIGGER IF EXISTS post_promoted_OnUpdateLogger $$
+CREATE TRIGGER post_promoted_OnUpdateLogger AFTER UPDATE ON post_promoted
   FOR EACH ROW
   BEGIN
-  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","UPDATE",NEW.MentionedId, UNIX_TIMESTAMP(NOW()));
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostPromoted","UPDATE",NEW.PromoteId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
-DROP TRIGGER IF EXISTS post_mentioned_OnDeleteLogger $$
-CREATE TRIGGER post_mentioned_OnDeleteLogger AFTER DELETE ON post_mentioned
+DROP TRIGGER IF EXISTS post_promoted_OnDeleteLogger $$
+CREATE TRIGGER post_promoted_OnDeleteLogger AFTER DELETE ON post_promoted
   FOR EACH ROW
   BEGIN
-   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostMentioned","DELETE",OLD.MentionedId, UNIX_TIMESTAMP(NOW()));
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostPromoted","DELETE",OLD.PromoteId, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -516,6 +516,93 @@ CREATE TRIGGER post_reshared_OnDeleteLogger AFTER DELETE ON post_reshared
   FOR EACH ROW
   BEGIN
    	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("PostReshared","DELETE",OLD.ResharedId, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ ProfileAll ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS profile_all_OnCreateLogger $$
+CREATE TRIGGER profile_all_OnCreateLogger AFTER INSERT ON profile_all
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileAll","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_all_OnUpdateLogger $$
+CREATE TRIGGER profile_all_OnUpdateLogger AFTER UPDATE ON profile_all
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileAll","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_all_OnDeleteLogger $$
+CREATE TRIGGER profile_all_OnDeleteLogger AFTER DELETE ON profile_all
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileAll","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ ProfileMedia ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS profile_media_OnCreateLogger $$
+CREATE TRIGGER profile_media_OnCreateLogger AFTER INSERT ON profile_media
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMedia","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_media_OnUpdateLogger $$
+CREATE TRIGGER profile_media_OnUpdateLogger AFTER UPDATE ON profile_media
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMedia","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_media_OnDeleteLogger $$
+CREATE TRIGGER profile_media_OnDeleteLogger AFTER DELETE ON profile_media
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMedia","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+
+ #### delimiter ;*/
+################################ ProfileMentioned ######################################
+
+/* #### delimiter $$
+DROP TRIGGER IF EXISTS profile_mentioned_OnCreateLogger $$
+CREATE TRIGGER profile_mentioned_OnCreateLogger AFTER INSERT ON profile_mentioned
+  FOR EACH ROW
+  BEGIN
+    INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMentioned","INSERT",NEW.Id, UNIX_TIMESTAMP(NOW()) );
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_mentioned_OnUpdateLogger $$
+CREATE TRIGGER profile_mentioned_OnUpdateLogger AFTER UPDATE ON profile_mentioned
+  FOR EACH ROW
+  BEGIN
+  	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMentioned","UPDATE",NEW.Id, UNIX_TIMESTAMP(NOW()));
+  END;
+$$
+
+DROP TRIGGER IF EXISTS profile_mentioned_OnDeleteLogger $$
+CREATE TRIGGER profile_mentioned_OnDeleteLogger AFTER DELETE ON profile_mentioned
+  FOR EACH ROW
+  BEGIN
+   	INSERT INTO trigger_log (ModelName,ChangeType,TargetId,CreatedSe) VALUES ("ProfileMentioned","DELETE",OLD.Id, UNIX_TIMESTAMP(NOW()));
   END;
 $$
 
@@ -1431,14 +1518,26 @@ DROP TRIGGER IF EXISTS post_link_OnDeleteLogger ;
 DROP TRIGGER IF EXISTS post_media_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_media_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_media_OnDeleteLogger ;
-### PostMentioned ##
-DROP TRIGGER IF EXISTS post_mentioned_OnCreateLogger ;
-DROP TRIGGER IF EXISTS post_mentioned_OnUpdateLogger ;
-DROP TRIGGER IF EXISTS post_mentioned_OnDeleteLogger ;
+### PostPromoted ##
+DROP TRIGGER IF EXISTS post_promoted_OnCreateLogger ;
+DROP TRIGGER IF EXISTS post_promoted_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS post_promoted_OnDeleteLogger ;
 ### PostReshared ##
 DROP TRIGGER IF EXISTS post_reshared_OnCreateLogger ;
 DROP TRIGGER IF EXISTS post_reshared_OnUpdateLogger ;
 DROP TRIGGER IF EXISTS post_reshared_OnDeleteLogger ;
+### ProfileAll ##
+DROP TRIGGER IF EXISTS profile_all_OnCreateLogger ;
+DROP TRIGGER IF EXISTS profile_all_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS profile_all_OnDeleteLogger ;
+### ProfileMedia ##
+DROP TRIGGER IF EXISTS profile_media_OnCreateLogger ;
+DROP TRIGGER IF EXISTS profile_media_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS profile_media_OnDeleteLogger ;
+### ProfileMentioned ##
+DROP TRIGGER IF EXISTS profile_mentioned_OnCreateLogger ;
+DROP TRIGGER IF EXISTS profile_mentioned_OnUpdateLogger ;
+DROP TRIGGER IF EXISTS profile_mentioned_OnDeleteLogger ;
 ### Session ##
 DROP TRIGGER IF EXISTS session_OnCreateLogger ;
 DROP TRIGGER IF EXISTS session_OnUpdateLogger ;

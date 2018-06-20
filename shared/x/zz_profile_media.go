@@ -5,197 +5,173 @@ import (
 	"errors"
 	"strings"
 	//"time"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
 )
 
-// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// TagPost represents a row from 'sun.tag_post'.
+// (shortname .TableNameGo "err" "res" "sqlstr" "db" "XOLog") -}}//(schema .Schema .Table.TableName) -}}// .TableNameGo}}// ProfileMedia represents a row from 'sun.profile_media'.
 
 // Manualy copy this to project
-type TagPost__ struct {
-	Id          int `json:"Id"`          // Id -
-	TagId       int `json:"TagId"`       // TagId -
-	PostId      int `json:"PostId"`      // PostId -
-	PostType    int `json:"PostType"`    // PostType -
-	CreatedTime int `json:"CreatedTime"` // CreatedTime -
+type ProfileMedia__ struct {
+	Id       int `json:"Id"`       // Id -
+	UserId   int `json:"UserId"`   // UserId -
+	PostId   int `json:"PostId"`   // PostId -
+	PostType int `json:"PostType"` // PostType -
 	// xo fields
 	_exists, _deleted bool
 }
 
-// Exists determines if the TagPost exists in the database.
-func (tp *TagPost) Exists() bool {
-	return tp._exists
+// Exists determines if the ProfileMedia exists in the database.
+func (pm *ProfileMedia) Exists() bool {
+	return pm._exists
 }
 
-// Deleted provides information if the TagPost has been deleted from the database.
-func (tp *TagPost) Deleted() bool {
-	return tp._deleted
+// Deleted provides information if the ProfileMedia has been deleted from the database.
+func (pm *ProfileMedia) Deleted() bool {
+	return pm._deleted
 }
 
-// Insert inserts the TagPost to the database.
-func (tp *TagPost) Insert(db XODB) error {
+// Insert inserts the ProfileMedia to the database.
+func (pm *ProfileMedia) Insert(db XODB) error {
 	var err error
 
 	// if already exist, bail
-	if tp._exists {
+	if pm._exists {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO sun.tag_post (` +
-		`TagId, PostId, PostType, CreatedTime` +
+	// sql insert query, primary key must be provided
+	const sqlstr = `INSERT INTO sun.profile_media (` +
+		`Id, UserId, PostId, PostType` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	if LogTableSqlReq.ProfileMedia {
+		XOLog(sqlstr, pm.Id, pm.UserId, pm.PostId, pm.PostType)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.Id, pm.UserId, pm.PostId, pm.PostType)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	// set existence
+	pm._exists = true
 
-	// set primary key and existence
-	tp.Id = int(id)
-	tp._exists = true
-
-	OnTagPost_AfterInsert(tp)
+	OnProfileMedia_AfterInsert(pm)
 
 	return nil
 }
 
-// Insert inserts the TagPost to the database.
-func (tp *TagPost) Replace(db XODB) error {
+// Insert inserts the ProfileMedia to the database.
+func (pm *ProfileMedia) Replace(db XODB) error {
 	var err error
 
 	// sql query
 
-	const sqlstr = `REPLACE INTO sun.tag_post (` +
-		`TagId, PostId, PostType, CreatedTime` +
+	const sqlstr = `REPLACE INTO sun.profile_media (` +
+		`Id, UserId, PostId, PostType` +
 		`) VALUES (` +
 		`?, ?, ?, ?` +
 		`)`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	if LogTableSqlReq.ProfileMedia {
+		XOLog(sqlstr, pm.Id, pm.UserId, pm.PostId, pm.PostType)
 	}
-	res, err := db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime)
+	_, err = db.Exec(sqlstr, pm.Id, pm.UserId, pm.PostId, pm.PostType)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.TagPost {
-			XOLogErr(err)
-		}
-		return err
-	}
+	pm._exists = true
 
-	// set primary key and existence
-	tp.Id = int(id)
-	tp._exists = true
-
-	OnTagPost_AfterInsert(tp)
+	OnProfileMedia_AfterInsert(pm)
 
 	return nil
 }
 
-// Update updates the TagPost in the database.
-func (tp *TagPost) Update(db XODB) error {
+// Update updates the ProfileMedia in the database.
+func (pm *ProfileMedia) Update(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !tp._exists {
+	if !pm._exists {
 		return errors.New("update failed: does not exist")
 	}
 
 	// if deleted, bail
-	if tp._deleted {
+	if pm._deleted {
 		return errors.New("update failed: marked for deletion")
 	}
 
 	// sql query
-	const sqlstr = `UPDATE sun.tag_post SET ` +
-		`TagId = ?, PostId = ?, PostType = ?, CreatedTime = ?` +
+	const sqlstr = `UPDATE sun.profile_media SET ` +
+		`UserId = ?, PostId = ?, PostType = ?` +
 		` WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime, tp.Id)
+	if LogTableSqlReq.ProfileMedia {
+		XOLog(sqlstr, pm.UserId, pm.PostId, pm.PostType, pm.Id)
 	}
-	_, err = db.Exec(sqlstr, tp.TagId, tp.PostId, tp.PostType, tp.CreatedTime, tp.Id)
+	_, err = db.Exec(sqlstr, pm.UserId, pm.PostId, pm.PostType, pm.Id)
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLogErr(err)
 	}
-	OnTagPost_AfterUpdate(tp)
+	OnProfileMedia_AfterUpdate(pm)
 
 	return err
 }
 
-// Save saves the TagPost to the database.
-func (tp *TagPost) Save(db XODB) error {
-	if tp.Exists() {
-		return tp.Update(db)
+// Save saves the ProfileMedia to the database.
+func (pm *ProfileMedia) Save(db XODB) error {
+	if pm.Exists() {
+		return pm.Update(db)
 	}
 
-	return tp.Replace(db)
+	return pm.Replace(db)
 }
 
-// Delete deletes the TagPost from the database.
-func (tp *TagPost) Delete(db XODB) error {
+// Delete deletes the ProfileMedia from the database.
+func (pm *ProfileMedia) Delete(db XODB) error {
 	var err error
 
 	// if doesn't exist, bail
-	if !tp._exists {
+	if !pm._exists {
 		return nil
 	}
 
 	// if deleted, bail
-	if tp._deleted {
+	if pm._deleted {
 		return nil
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM sun.tag_post WHERE Id = ?`
+	const sqlstr = `DELETE FROM sun.profile_media WHERE Id = ?`
 
 	// run query
-	if LogTableSqlReq.TagPost {
-		XOLog(sqlstr, tp.Id)
+	if LogTableSqlReq.ProfileMedia {
+		XOLog(sqlstr, pm.Id)
 	}
-	_, err = db.Exec(sqlstr, tp.Id)
+	_, err = db.Exec(sqlstr, pm.Id)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	// set deleted
-	tp._deleted = true
+	pm._deleted = true
 
-	OnTagPost_AfterDelete(tp)
+	OnProfileMedia_AfterDelete(pm)
 
 	return nil
 }
@@ -206,14 +182,14 @@ func (tp *TagPost) Delete(db XODB) error {
 // _Deleter, _Updater
 
 // orma types
-type __TagPost_Deleter struct {
+type __ProfileMedia_Deleter struct {
 	wheres      []whereClause
 	whereSep    string
 	dollarIndex int
 	isMysql     bool
 }
 
-type __TagPost_Updater struct {
+type __ProfileMedia_Updater struct {
 	wheres []whereClause
 	// updates   map[string]interface{}
 	updates     []updateCol
@@ -222,7 +198,7 @@ type __TagPost_Updater struct {
 	isMysql     bool
 }
 
-type __TagPost_Selector struct {
+type __ProfileMedia_Selector struct {
 	wheres      []whereClause
 	selectCol   string
 	whereSep    string
@@ -233,30 +209,30 @@ type __TagPost_Selector struct {
 	isMysql     bool
 }
 
-func NewTagPost_Deleter() *__TagPost_Deleter {
-	d := __TagPost_Deleter{whereSep: " AND ", isMysql: true}
+func NewProfileMedia_Deleter() *__ProfileMedia_Deleter {
+	d := __ProfileMedia_Deleter{whereSep: " AND ", isMysql: true}
 	return &d
 }
 
-func NewTagPost_Updater() *__TagPost_Updater {
-	u := __TagPost_Updater{whereSep: " AND ", isMysql: true}
+func NewProfileMedia_Updater() *__ProfileMedia_Updater {
+	u := __ProfileMedia_Updater{whereSep: " AND ", isMysql: true}
 	//u.updates =  make(map[string]interface{},10)
 	return &u
 }
 
-func NewTagPost_Selector() *__TagPost_Selector {
-	u := __TagPost_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
+func NewProfileMedia_Selector() *__ProfileMedia_Selector {
+	u := __ProfileMedia_Selector{whereSep: " AND ", selectCol: "*", isMysql: true}
 	return &u
 }
 
 /*/// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Selector)nextDollars(size int) string  {
+func (m *__ProfileMedia_Selector)nextDollars(size int) string  {
     r := DollarsForSqlIn(size,m.dollarIndex,m.isMysql)
     m.dollarIndex += size
     return r
 }
 
-func (m *__TagPost_Selector)nextDollar() string  {
+func (m *__ProfileMedia_Selector)nextDollar() string  {
     r := DollarsForSqlIn(1,m.dollarIndex,m.isMysql)
     m.dollarIndex += 1
     return r
@@ -267,25 +243,25 @@ func (m *__TagPost_Selector)nextDollar() string  {
 //// for ints all selector updater, deleter
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Deleter) nextDollars(size int) string {
+func (m *__ProfileMedia_Deleter) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Deleter) nextDollar() string {
+func (m *__ProfileMedia_Deleter) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Deleter) Or() *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) Or() *__ProfileMedia_Deleter {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) Id_In(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -298,7 +274,7 @@ func (u *__TagPost_Deleter) Id_In(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) Id_Ins(ins ...int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -311,7 +287,7 @@ func (u *__TagPost_Deleter) Id_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) Id_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) Id_NotIn(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -324,7 +300,7 @@ func (u *__TagPost_Deleter) Id_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) Id_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_Eq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -335,7 +311,7 @@ func (d *__TagPost_Deleter) Id_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_NotEq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -346,7 +322,7 @@ func (d *__TagPost_Deleter) Id_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_LT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -357,7 +333,7 @@ func (d *__TagPost_Deleter) Id_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_LE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -368,7 +344,7 @@ func (d *__TagPost_Deleter) Id_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_GT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -379,7 +355,7 @@ func (d *__TagPost_Deleter) Id_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) Id_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) Id_GE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -390,125 +366,112 @@ func (d *__TagPost_Deleter) Id_GE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (u *__TagPost_Deleter) TagId_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) UserId_In(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Deleter) TagId_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) UserId_Ins(ins ...int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Deleter) TagId_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) UserId_NotIn(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Deleter) TagId_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_Eq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_NotEq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_LT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_LE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_GT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Deleter) TagId_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) UserId_GE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Deleter) PostId_In(ins []int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Deleter) PostId_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) PostId_In(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -521,7 +484,20 @@ func (u *__TagPost_Deleter) PostId_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostId_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) PostId_Ins(ins ...int) *__ProfileMedia_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMedia_Deleter) PostId_NotIn(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -534,7 +510,7 @@ func (u *__TagPost_Deleter) PostId_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) PostId_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_Eq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -545,7 +521,7 @@ func (d *__TagPost_Deleter) PostId_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_NotEq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -556,7 +532,7 @@ func (d *__TagPost_Deleter) PostId_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_LT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -567,7 +543,7 @@ func (d *__TagPost_Deleter) PostId_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_LE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -578,7 +554,7 @@ func (d *__TagPost_Deleter) PostId_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_GT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -589,7 +565,7 @@ func (d *__TagPost_Deleter) PostId_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostId_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostId_GE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -600,7 +576,7 @@ func (d *__TagPost_Deleter) PostId_GE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (u *__TagPost_Deleter) PostType_In(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) PostType_In(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -613,7 +589,7 @@ func (u *__TagPost_Deleter) PostType_In(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostType_Ins(ins ...int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) PostType_Ins(ins ...int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -626,7 +602,7 @@ func (u *__TagPost_Deleter) PostType_Ins(ins ...int) *__TagPost_Deleter {
 	return u
 }
 
-func (u *__TagPost_Deleter) PostType_NotIn(ins []int) *__TagPost_Deleter {
+func (u *__ProfileMedia_Deleter) PostType_NotIn(ins []int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -639,7 +615,7 @@ func (u *__TagPost_Deleter) PostType_NotIn(ins []int) *__TagPost_Deleter {
 	return u
 }
 
-func (d *__TagPost_Deleter) PostType_Eq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_Eq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -650,7 +626,7 @@ func (d *__TagPost_Deleter) PostType_Eq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_NotEq(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_NotEq(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -661,7 +637,7 @@ func (d *__TagPost_Deleter) PostType_NotEq(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_LT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_LT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -672,7 +648,7 @@ func (d *__TagPost_Deleter) PostType_LT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_LE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_LE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -683,7 +659,7 @@ func (d *__TagPost_Deleter) PostType_LE(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_GT(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_GT(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -694,142 +670,37 @@ func (d *__TagPost_Deleter) PostType_GT(val int) *__TagPost_Deleter {
 	return d
 }
 
-func (d *__TagPost_Deleter) PostType_GE(val int) *__TagPost_Deleter {
+func (d *__ProfileMedia_Deleter) PostType_GE(val int) *__ProfileMedia_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostType >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__TagPost_Deleter) CreatedTime_In(ins []int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Deleter) CreatedTime_Ins(ins ...int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Deleter) CreatedTime_NotIn(ins []int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__TagPost_Deleter) CreatedTime_Eq(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Deleter) CreatedTime_NotEq(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Deleter) CreatedTime_LT(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Deleter) CreatedTime_LE(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Deleter) CreatedTime_GT(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Deleter) CreatedTime_GE(val int) *__TagPost_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Updater) nextDollars(size int) string {
+func (m *__ProfileMedia_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Updater) nextDollar() string {
+func (m *__ProfileMedia_Updater) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Updater) Or() *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Or() *__ProfileMedia_Updater {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Updater) Id_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Id_In(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -842,7 +713,7 @@ func (u *__TagPost_Updater) Id_In(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) Id_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Id_Ins(ins ...int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -855,7 +726,7 @@ func (u *__TagPost_Updater) Id_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) Id_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Id_NotIn(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -868,7 +739,7 @@ func (u *__TagPost_Updater) Id_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) Id_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_Eq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -879,7 +750,7 @@ func (d *__TagPost_Updater) Id_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_NotEq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -890,7 +761,7 @@ func (d *__TagPost_Updater) Id_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_LT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -901,7 +772,7 @@ func (d *__TagPost_Updater) Id_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_LE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -912,7 +783,7 @@ func (d *__TagPost_Updater) Id_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_GT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -923,7 +794,7 @@ func (d *__TagPost_Updater) Id_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) Id_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) Id_GE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -934,125 +805,112 @@ func (d *__TagPost_Updater) Id_GE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (u *__TagPost_Updater) TagId_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) UserId_In(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) UserId_Ins(ins ...int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) UserId_NotIn(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Updater) TagId_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_Eq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_NotEq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_LT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_LE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_GT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Updater) TagId_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) UserId_GE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Updater) PostId_In(ins []int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Updater) PostId_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostId_In(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1065,7 +923,20 @@ func (u *__TagPost_Updater) PostId_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostId_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostId_Ins(ins ...int) *__ProfileMedia_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMedia_Updater) PostId_NotIn(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1078,7 +949,7 @@ func (u *__TagPost_Updater) PostId_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) PostId_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_Eq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1089,7 +960,7 @@ func (d *__TagPost_Updater) PostId_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_NotEq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1100,7 +971,7 @@ func (d *__TagPost_Updater) PostId_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_LT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1111,7 +982,7 @@ func (d *__TagPost_Updater) PostId_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_LE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1122,7 +993,7 @@ func (d *__TagPost_Updater) PostId_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_GT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1133,7 +1004,7 @@ func (d *__TagPost_Updater) PostId_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostId_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostId_GE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1144,7 +1015,7 @@ func (d *__TagPost_Updater) PostId_GE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (u *__TagPost_Updater) PostType_In(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostType_In(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1157,7 +1028,7 @@ func (u *__TagPost_Updater) PostType_In(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_Ins(ins ...int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostType_Ins(ins ...int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1170,7 +1041,7 @@ func (u *__TagPost_Updater) PostType_Ins(ins ...int) *__TagPost_Updater {
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_NotIn(ins []int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostType_NotIn(ins []int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1183,7 +1054,7 @@ func (u *__TagPost_Updater) PostType_NotIn(ins []int) *__TagPost_Updater {
 	return u
 }
 
-func (d *__TagPost_Updater) PostType_Eq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_Eq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1194,7 +1065,7 @@ func (d *__TagPost_Updater) PostType_Eq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_NotEq(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_NotEq(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1205,7 +1076,7 @@ func (d *__TagPost_Updater) PostType_NotEq(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_LT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_LT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1216,7 +1087,7 @@ func (d *__TagPost_Updater) PostType_LT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_LE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_LE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1227,7 +1098,7 @@ func (d *__TagPost_Updater) PostType_LE(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_GT(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_GT(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1238,142 +1109,37 @@ func (d *__TagPost_Updater) PostType_GT(val int) *__TagPost_Updater {
 	return d
 }
 
-func (d *__TagPost_Updater) PostType_GE(val int) *__TagPost_Updater {
+func (d *__ProfileMedia_Updater) PostType_GE(val int) *__ProfileMedia_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostType >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__TagPost_Updater) CreatedTime_In(ins []int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Updater) CreatedTime_Ins(ins ...int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Updater) CreatedTime_NotIn(ins []int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__TagPost_Updater) CreatedTime_Eq(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Updater) CreatedTime_NotEq(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Updater) CreatedTime_LT(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Updater) CreatedTime_LE(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Updater) CreatedTime_GT(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Updater) CreatedTime_GE(val int) *__TagPost_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
 /// mysql or cockroach ? or $1 handlers
-func (m *__TagPost_Selector) nextDollars(size int) string {
+func (m *__ProfileMedia_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
 	m.dollarIndex += size
 	return r
 }
 
-func (m *__TagPost_Selector) nextDollar() string {
+func (m *__ProfileMedia_Selector) nextDollar() string {
 	r := DollarsForSqlIn(1, m.dollarIndex, m.isMysql)
 	m.dollarIndex += 1
 	return r
 }
 
 ////////ints
-func (u *__TagPost_Selector) Or() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Or() *__ProfileMedia_Selector {
 	u.whereSep = " OR "
 	return u
 }
 
-func (u *__TagPost_Selector) Id_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Id_In(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1386,7 +1152,7 @@ func (u *__TagPost_Selector) Id_In(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) Id_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Id_Ins(ins ...int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1399,7 +1165,7 @@ func (u *__TagPost_Selector) Id_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) Id_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Id_NotIn(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1412,7 +1178,7 @@ func (u *__TagPost_Selector) Id_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) Id_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_Eq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1423,7 +1189,7 @@ func (d *__TagPost_Selector) Id_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_NotEq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1434,7 +1200,7 @@ func (d *__TagPost_Selector) Id_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_LT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1445,7 +1211,7 @@ func (d *__TagPost_Selector) Id_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_LE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1456,7 +1222,7 @@ func (d *__TagPost_Selector) Id_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_GT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1467,7 +1233,7 @@ func (d *__TagPost_Selector) Id_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) Id_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) Id_GE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1478,125 +1244,112 @@ func (d *__TagPost_Selector) Id_GE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (u *__TagPost_Selector) TagId_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) UserId_In(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Selector) TagId_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) UserId_Ins(ins ...int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__TagPost_Selector) TagId_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) UserId_NotIn(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " TagId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " UserId NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__TagPost_Selector) TagId_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_Eq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId = " + d.nextDollar()
+	w.condition = " UserId = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_NotEq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId != " + d.nextDollar()
+	w.condition = " UserId != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_LT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId < " + d.nextDollar()
+	w.condition = " UserId < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_LE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId <= " + d.nextDollar()
+	w.condition = " UserId <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_GT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId > " + d.nextDollar()
+	w.condition = " UserId > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__TagPost_Selector) TagId_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) UserId_GE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " TagId >= " + d.nextDollar()
+	w.condition = " UserId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (u *__TagPost_Selector) PostId_In(ins []int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Selector) PostId_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) PostId_In(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1609,7 +1362,20 @@ func (u *__TagPost_Selector) PostId_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostId_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) PostId_Ins(ins ...int) *__ProfileMedia_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " PostId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__ProfileMedia_Selector) PostId_NotIn(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1622,7 +1388,7 @@ func (u *__TagPost_Selector) PostId_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) PostId_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_Eq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1633,7 +1399,7 @@ func (d *__TagPost_Selector) PostId_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_NotEq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1644,7 +1410,7 @@ func (d *__TagPost_Selector) PostId_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_LT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1655,7 +1421,7 @@ func (d *__TagPost_Selector) PostId_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_LE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1666,7 +1432,7 @@ func (d *__TagPost_Selector) PostId_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_GT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1677,7 +1443,7 @@ func (d *__TagPost_Selector) PostId_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostId_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostId_GE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1688,7 +1454,7 @@ func (d *__TagPost_Selector) PostId_GE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (u *__TagPost_Selector) PostType_In(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) PostType_In(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1701,7 +1467,7 @@ func (u *__TagPost_Selector) PostType_In(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostType_Ins(ins ...int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) PostType_Ins(ins ...int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1714,7 +1480,7 @@ func (u *__TagPost_Selector) PostType_Ins(ins ...int) *__TagPost_Selector {
 	return u
 }
 
-func (u *__TagPost_Selector) PostType_NotIn(ins []int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) PostType_NotIn(ins []int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
@@ -1727,7 +1493,7 @@ func (u *__TagPost_Selector) PostType_NotIn(ins []int) *__TagPost_Selector {
 	return u
 }
 
-func (d *__TagPost_Selector) PostType_Eq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_Eq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1738,7 +1504,7 @@ func (d *__TagPost_Selector) PostType_Eq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_NotEq(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_NotEq(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1749,7 +1515,7 @@ func (d *__TagPost_Selector) PostType_NotEq(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_LT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_LT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1760,7 +1526,7 @@ func (d *__TagPost_Selector) PostType_LT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_LE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_LE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1771,7 +1537,7 @@ func (d *__TagPost_Selector) PostType_LE(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_GT(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_GT(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
@@ -1782,117 +1548,12 @@ func (d *__TagPost_Selector) PostType_GT(val int) *__TagPost_Selector {
 	return d
 }
 
-func (d *__TagPost_Selector) PostType_GE(val int) *__TagPost_Selector {
+func (d *__ProfileMedia_Selector) PostType_GE(val int) *__ProfileMedia_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " PostType >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__TagPost_Selector) CreatedTime_In(ins []int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Selector) CreatedTime_Ins(ins ...int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__TagPost_Selector) CreatedTime_NotIn(ins []int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " CreatedTime NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__TagPost_Selector) CreatedTime_Eq(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Selector) CreatedTime_NotEq(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Selector) CreatedTime_LT(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Selector) CreatedTime_LE(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Selector) CreatedTime_GT(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__TagPost_Selector) CreatedTime_GE(val int) *__TagPost_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " CreatedTime >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1912,14 +1573,14 @@ func (d *__TagPost_Selector) CreatedTime_GE(val int) *__TagPost_Selector {
 
 //ints
 
-func (u *__TagPost_Updater) Id(newVal int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Id(newVal int) *__ProfileMedia_Updater {
 	up := updateCol{" Id = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" Id = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) Id_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) Id_Increment(count int) *__ProfileMedia_Updater {
 	if count > 0 {
 		up := updateCol{" Id = Id+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1939,24 +1600,24 @@ func (u *__TagPost_Updater) Id_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) TagId(newVal int) *__TagPost_Updater {
-	up := updateCol{" TagId = " + u.nextDollar(), newVal}
+func (u *__ProfileMedia_Updater) UserId(newVal int) *__ProfileMedia_Updater {
+	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" TagId = " + u.nextDollar()] = newVal
+	// u.updates[" UserId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) TagId_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) UserId_Increment(count int) *__ProfileMedia_Updater {
 	if count > 0 {
-		up := updateCol{" TagId = TagId+ " + u.nextDollar(), count}
+		up := updateCol{" UserId = UserId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" TagId = TagId+ " + u.nextDollar()] = count
+		//u.updates[" UserId = UserId+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" TagId = TagId- " + u.nextDollar(), count}
+		up := updateCol{" UserId = UserId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" TagId = TagId- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" UserId = UserId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -1966,14 +1627,14 @@ func (u *__TagPost_Updater) TagId_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) PostId(newVal int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostId(newVal int) *__ProfileMedia_Updater {
 	up := updateCol{" PostId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostId = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) PostId_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostId_Increment(count int) *__ProfileMedia_Updater {
 	if count > 0 {
 		up := updateCol{" PostId = PostId+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -1993,14 +1654,14 @@ func (u *__TagPost_Updater) PostId_Increment(count int) *__TagPost_Updater {
 
 //ints
 
-func (u *__TagPost_Updater) PostType(newVal int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostType(newVal int) *__ProfileMedia_Updater {
 	up := updateCol{" PostType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
 	// u.updates[" PostType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__TagPost_Updater) PostType_Increment(count int) *__TagPost_Updater {
+func (u *__ProfileMedia_Updater) PostType_Increment(count int) *__ProfileMedia_Updater {
 	if count > 0 {
 		up := updateCol{" PostType = PostType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
@@ -2018,133 +1679,91 @@ func (u *__TagPost_Updater) PostType_Increment(count int) *__TagPost_Updater {
 
 //string
 
-//ints
-
-func (u *__TagPost_Updater) CreatedTime(newVal int) *__TagPost_Updater {
-	up := updateCol{" CreatedTime = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" CreatedTime = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__TagPost_Updater) CreatedTime_Increment(count int) *__TagPost_Updater {
-	if count > 0 {
-		up := updateCol{" CreatedTime = CreatedTime+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" CreatedTime = CreatedTime+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" CreatedTime = CreatedTime- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" CreatedTime = CreatedTime- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
 //Select_* can just be used with: .GetString() , .GetStringSlice(), .GetInt() ..GetIntSlice()
 
-func (u *__TagPost_Selector) OrderBy_Id_Desc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_Id_Desc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY Id DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_Id_Asc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_Id_Asc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY Id ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_Id() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Select_Id() *__ProfileMedia_Selector {
 	u.selectCol = "Id"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_TagId_Desc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY TagId DESC "
+func (u *__ProfileMedia_Selector) OrderBy_UserId_Desc() *__ProfileMedia_Selector {
+	u.orderBy = " ORDER BY UserId DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_TagId_Asc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY TagId ASC "
+func (u *__ProfileMedia_Selector) OrderBy_UserId_Asc() *__ProfileMedia_Selector {
+	u.orderBy = " ORDER BY UserId ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_TagId() *__TagPost_Selector {
-	u.selectCol = "TagId"
+func (u *__ProfileMedia_Selector) Select_UserId() *__ProfileMedia_Selector {
+	u.selectCol = "UserId"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostId_Desc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_PostId_Desc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY PostId DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostId_Asc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_PostId_Asc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY PostId ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_PostId() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Select_PostId() *__ProfileMedia_Selector {
 	u.selectCol = "PostId"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostType_Desc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_PostType_Desc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY PostType DESC "
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_PostType_Asc() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) OrderBy_PostType_Asc() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY PostType ASC "
 	return u
 }
 
-func (u *__TagPost_Selector) Select_PostType() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Select_PostType() *__ProfileMedia_Selector {
 	u.selectCol = "PostType"
 	return u
 }
 
-func (u *__TagPost_Selector) OrderBy_CreatedTime_Desc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY CreatedTime DESC "
-	return u
-}
-
-func (u *__TagPost_Selector) OrderBy_CreatedTime_Asc() *__TagPost_Selector {
-	u.orderBy = " ORDER BY CreatedTime ASC "
-	return u
-}
-
-func (u *__TagPost_Selector) Select_CreatedTime() *__TagPost_Selector {
-	u.selectCol = "CreatedTime"
-	return u
-}
-
-func (u *__TagPost_Selector) Limit(num int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Limit(num int) *__ProfileMedia_Selector {
 	u.limit = num
 	return u
 }
 
-func (u *__TagPost_Selector) Offset(num int) *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Offset(num int) *__ProfileMedia_Selector {
 	u.offset = num
 	return u
 }
 
-func (u *__TagPost_Selector) Order_Rand() *__TagPost_Selector {
+func (u *__ProfileMedia_Selector) Order_Rand() *__ProfileMedia_Selector {
 	u.orderBy = " ORDER BY RAND() "
 	return u
 }
 
 /////////////////////////  Queryer Selector  //////////////////////////////////
-func (u *__TagPost_Selector) _stoSql() (string, []interface{}) {
+func (u *__ProfileMedia_Selector) _stoSql() (string, []interface{}) {
 	sqlWherrs, whereArgs := whereClusesToSql(u.wheres, u.whereSep)
 
-	sqlstr := "SELECT " + u.selectCol + " FROM sun.tag_post"
+	sqlstr := "SELECT " + u.selectCol + " FROM sun.profile_media"
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
@@ -2164,20 +1783,20 @@ func (u *__TagPost_Selector) _stoSql() (string, []interface{}) {
 	return sqlstr, whereArgs
 }
 
-func (u *__TagPost_Selector) GetRow(db *sqlx.DB) (*TagPost, error) {
+func (u *__ProfileMedia_Selector) GetRow(db *sqlx.DB) (*ProfileMedia, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	row := &TagPost{}
+	row := &ProfileMedia{}
 	//by Sqlx
 	err = db.Get(row, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2185,25 +1804,25 @@ func (u *__TagPost_Selector) GetRow(db *sqlx.DB) (*TagPost, error) {
 
 	row._exists = true
 
-	OnTagPost_LoadOne(row)
+	OnProfileMedia_LoadOne(row)
 
 	return row, nil
 }
 
-func (u *__TagPost_Selector) GetRows(db *sqlx.DB) ([]*TagPost, error) {
+func (u *__ProfileMedia_Selector) GetRows(db *sqlx.DB) ([]*ProfileMedia, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 
-	var rows []*TagPost
+	var rows []*ProfileMedia
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2217,25 +1836,25 @@ func (u *__TagPost_Selector) GetRows(db *sqlx.DB) ([]*TagPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagPost_LoadMany(rows)
+	OnProfileMedia_LoadMany(rows)
 
 	return rows, nil
 }
 
 //dep use GetRows()
-func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
+func (u *__ProfileMedia_Selector) GetRows2(db *sqlx.DB) ([]ProfileMedia, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
-	var rows []*TagPost
+	var rows []*ProfileMedia
 	//by Sqlx
 	err = db.Unsafe().Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2249,9 +1868,9 @@ func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
 		rows[i]._exists = true
 	}
 
-	OnTagPost_LoadMany(rows)
+	OnProfileMedia_LoadMany(rows)
 
-	rows2 := make([]TagPost, len(rows))
+	rows2 := make([]ProfileMedia, len(rows))
 	for i := 0; i < len(rows); i++ {
 		cp := *rows[i]
 		rows2[i] = cp
@@ -2260,12 +1879,12 @@ func (u *__TagPost_Selector) GetRows2(db *sqlx.DB) ([]TagPost, error) {
 	return rows2, nil
 }
 
-func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
+func (u *__ProfileMedia_Selector) GetString(db *sqlx.DB) (string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 
@@ -2273,7 +1892,7 @@ func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return "", err
@@ -2282,19 +1901,19 @@ func (u *__TagPost_Selector) GetString(db *sqlx.DB) (string, error) {
 	return res, nil
 }
 
-func (u *__TagPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
+func (u *__ProfileMedia_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []string
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2303,19 +1922,19 @@ func (u *__TagPost_Selector) GetStringSlice(db *sqlx.DB) ([]string, error) {
 	return rows, nil
 }
 
-func (u *__TagPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
+func (u *__ProfileMedia_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 	var rows []int
 	//by Sqlx
 	err = db.Select(&rows, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return nil, err
@@ -2324,19 +1943,19 @@ func (u *__TagPost_Selector) GetIntSlice(db *sqlx.DB) ([]int, error) {
 	return rows, nil
 }
 
-func (u *__TagPost_Selector) GetInt(db *sqlx.DB) (int, error) {
+func (u *__ProfileMedia_Selector) GetInt(db *sqlx.DB) (int, error) {
 	var err error
 
 	sqlstr, whereArgs := u._stoSql()
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, whereArgs)
 	}
 	var res int
 	//by Sqlx
 	err = db.Get(&res, sqlstr, whereArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2346,7 +1965,7 @@ func (u *__TagPost_Selector) GetInt(db *sqlx.DB) (int, error) {
 }
 
 /////////////////////////  Queryer Update Delete //////////////////////////////////
-func (u *__TagPost_Updater) Update(db XODB) (int, error) {
+func (u *__ProfileMedia_Updater) Update(db XODB) (int, error) {
 	var err error
 
 	var updateArgs []interface{}
@@ -2367,18 +1986,18 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 	allArgs = append(allArgs, updateArgs...)
 	allArgs = append(allArgs, whereArgs...)
 
-	sqlstr := `UPDATE sun.tag_post SET ` + sqlUpdate
+	sqlstr := `UPDATE sun.profile_media SET ` + sqlUpdate
 
 	if len(strings.Trim(sqlWherrs, " ")) > 0 { //2 for safty
 		sqlstr += " WHERE " + sqlWherrs
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, allArgs)
 	}
 	res, err := db.Exec(sqlstr, allArgs...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2386,7 +2005,7 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2395,7 +2014,7 @@ func (u *__TagPost_Updater) Update(db XODB) (int, error) {
 	return int(num), nil
 }
 
-func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
+func (d *__ProfileMedia_Deleter) Delete(db XODB) (int, error) {
 	var err error
 	var wheresArr []string
 	for _, w := range d.wheres {
@@ -2408,15 +2027,15 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 		args = append(args, w.args...)
 	}
 
-	sqlstr := "DELETE FROM sun.tag_post WHERE " + wheresStr
+	sqlstr := "DELETE FROM sun.profile_media WHERE " + wheresStr
 
 	// run query
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, args)
 	}
 	res, err := db.Exec(sqlstr, args...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2425,7 +2044,7 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 	// retrieve id
 	num, err := res.RowsAffected()
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return 0, err
@@ -2434,20 +2053,21 @@ func (d *__TagPost_Deleter) Delete(db XODB) (int, error) {
 	return int(num), nil
 }
 
-///////////////////////// Mass insert - replace for  TagPost ////////////////
+///////////////////////// Mass insert - replace for  ProfileMedia ////////////////
 
-func MassInsert_TagPost(rows []TagPost, db XODB) error {
+func MassInsert_ProfileMedia(rows []ProfileMedia, db XODB) error {
 	if len(rows) == 0 {
 		return errors.New("rows slice should not be empty - inserted nothing")
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
-	sqlstr := "INSERT INTO sun.tag_post (" +
-		"TagId, PostId, PostType, CreatedTime" +
+	sqlstr := "INSERT INTO sun.profile_media (" +
+		"Id, UserId, PostId, PostType" +
 		") VALUES " + insVals
 
 	// run query
@@ -2455,19 +2075,19 @@ func MassInsert_TagPost(rows []TagPost, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.TagId)
+		vals = append(vals, row.Id)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostType)
-		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, " MassInsert len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return err
@@ -2476,15 +2096,18 @@ func MassInsert_TagPost(rows []TagPost, db XODB) error {
 	return nil
 }
 
-func MassReplace_TagPost(rows []TagPost, db XODB) error {
+func MassReplace_ProfileMedia(rows []ProfileMedia, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
-	sqlstr := "REPLACE INTO sun.tag_post (" +
-		"TagId, PostId, PostType, CreatedTime" +
+	sqlstr := "REPLACE INTO sun.profile_media (" +
+		"Id, UserId, PostId, PostType" +
 		") VALUES " + insVals
 
 	// run query
@@ -2492,30 +2115,29 @@ func MassReplace_TagPost(rows []TagPost, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
-		vals = append(vals, row.TagId)
+		vals = append(vals, row.Id)
+		vals = append(vals, row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.PostType)
-		vals = append(vals, row.CreatedTime)
 
 	}
 
-	if LogTableSqlReq.TagPost {
+	if LogTableSqlReq.ProfileMedia {
 		XOLog(sqlstr, " MassReplace len = ", ln, vals)
 	}
 	_, err = db.Exec(sqlstr, vals...)
 	if err != nil {
-		if LogTableSqlReq.TagPost {
+		if LogTableSqlReq.ProfileMedia {
 			XOLogErr(err)
 		}
 		return err
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

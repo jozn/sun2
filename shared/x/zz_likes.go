@@ -15,12 +15,11 @@ import (
 
 // Manualy copy this to project
 type Likes__ struct {
-	Id           int `json:"Id"`           // Id -
-	PostId       int `json:"PostId"`       // PostId -
-	PostTypeEnum int `json:"PostTypeEnum"` // PostTypeEnum -
-	UserId       int `json:"UserId"`       // UserId -
-	LikeEnum     int `json:"LikeEnum"`     // LikeEnum -
-	CreatedTime  int `json:"CreatedTime"`  // CreatedTime -
+	Id          int `json:"Id"`          // Id -
+	PostId      int `json:"PostId"`      // PostId -
+	UserId      int `json:"UserId"`      // UserId -
+	PostType    int `json:"PostType"`    // PostType -
+	CreatedTime int `json:"CreatedTime"` // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -46,16 +45,16 @@ func (l *Likes) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.likes (` +
-		`Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime` +
+		`Id, PostId, UserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Likes {
-		XOLog(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
+		XOLog(sqlstr, l.Id, l.PostId, l.UserId, l.PostType, l.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
+	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.UserId, l.PostType, l.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -75,16 +74,16 @@ func (l *Likes) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.likes (` +
-		`Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime` +
+		`Id, PostId, UserId, PostType, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Likes {
-		XOLog(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
+		XOLog(sqlstr, l.Id, l.PostId, l.UserId, l.PostType, l.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime)
+	_, err = db.Exec(sqlstr, l.Id, l.PostId, l.UserId, l.PostType, l.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Likes {
 			XOLogErr(err)
@@ -115,14 +114,14 @@ func (l *Likes) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.likes SET ` +
-		`PostId = ?, PostTypeEnum = ?, UserId = ?, LikeEnum = ?, CreatedTime = ?` +
+		`PostId = ?, UserId = ?, PostType = ?, CreatedTime = ?` +
 		` WHERE Id = ?`
 
 	// run query
 	if LogTableSqlReq.Likes {
-		XOLog(sqlstr, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime, l.Id)
+		XOLog(sqlstr, l.PostId, l.UserId, l.PostType, l.CreatedTime, l.Id)
 	}
-	_, err = db.Exec(sqlstr, l.PostId, l.PostTypeEnum, l.UserId, l.LikeEnum, l.CreatedTime, l.Id)
+	_, err = db.Exec(sqlstr, l.PostId, l.UserId, l.PostType, l.CreatedTime, l.Id)
 
 	if LogTableSqlReq.Likes {
 		XOLogErr(err)
@@ -473,111 +472,6 @@ func (d *__Likes_Deleter) PostId_GE(val int) *__Likes_Deleter {
 	return d
 }
 
-func (u *__Likes_Deleter) PostTypeEnum_In(ins []int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Deleter) PostTypeEnum_Ins(ins ...int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Deleter) PostTypeEnum_NotIn(ins []int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_Eq(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_NotEq(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_LT(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_LE(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_GT(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Deleter) PostTypeEnum_GE(val int) *__Likes_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Likes_Deleter) UserId_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -683,106 +577,106 @@ func (d *__Likes_Deleter) UserId_GE(val int) *__Likes_Deleter {
 	return d
 }
 
-func (u *__Likes_Deleter) LikeEnum_In(ins []int) *__Likes_Deleter {
+func (u *__Likes_Deleter) PostType_In(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Deleter) LikeEnum_Ins(ins ...int) *__Likes_Deleter {
+func (u *__Likes_Deleter) PostType_Ins(ins ...int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Deleter) LikeEnum_NotIn(ins []int) *__Likes_Deleter {
+func (u *__Likes_Deleter) PostType_NotIn(ins []int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Likes_Deleter) LikeEnum_Eq(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_Eq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Deleter) LikeEnum_NotEq(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_NotEq(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Deleter) LikeEnum_LT(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_LT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Deleter) LikeEnum_LE(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_LE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Deleter) LikeEnum_GT(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_GT(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Deleter) LikeEnum_GE(val int) *__Likes_Deleter {
+func (d *__Likes_Deleter) PostType_GE(val int) *__Likes_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1122,111 +1016,6 @@ func (d *__Likes_Updater) PostId_GE(val int) *__Likes_Updater {
 	return d
 }
 
-func (u *__Likes_Updater) PostTypeEnum_In(ins []int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Updater) PostTypeEnum_Ins(ins ...int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Updater) PostTypeEnum_NotIn(ins []int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Likes_Updater) PostTypeEnum_Eq(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Updater) PostTypeEnum_NotEq(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Updater) PostTypeEnum_LT(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Updater) PostTypeEnum_LE(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Updater) PostTypeEnum_GT(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Updater) PostTypeEnum_GE(val int) *__Likes_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Likes_Updater) UserId_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1332,106 +1121,106 @@ func (d *__Likes_Updater) UserId_GE(val int) *__Likes_Updater {
 	return d
 }
 
-func (u *__Likes_Updater) LikeEnum_In(ins []int) *__Likes_Updater {
+func (u *__Likes_Updater) PostType_In(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Updater) LikeEnum_Ins(ins ...int) *__Likes_Updater {
+func (u *__Likes_Updater) PostType_Ins(ins ...int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Updater) LikeEnum_NotIn(ins []int) *__Likes_Updater {
+func (u *__Likes_Updater) PostType_NotIn(ins []int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Likes_Updater) LikeEnum_Eq(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_Eq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Updater) LikeEnum_NotEq(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_NotEq(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Updater) LikeEnum_LT(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_LT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Updater) LikeEnum_LE(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_LE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Updater) LikeEnum_GT(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_GT(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Updater) LikeEnum_GE(val int) *__Likes_Updater {
+func (d *__Likes_Updater) PostType_GE(val int) *__Likes_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1771,111 +1560,6 @@ func (d *__Likes_Selector) PostId_GE(val int) *__Likes_Selector {
 	return d
 }
 
-func (u *__Likes_Selector) PostTypeEnum_In(ins []int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Selector) PostTypeEnum_Ins(ins ...int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Likes_Selector) PostTypeEnum_NotIn(ins []int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Likes_Selector) PostTypeEnum_Eq(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Selector) PostTypeEnum_NotEq(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Selector) PostTypeEnum_LT(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Selector) PostTypeEnum_LE(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Selector) PostTypeEnum_GT(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Likes_Selector) PostTypeEnum_GE(val int) *__Likes_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 func (u *__Likes_Selector) UserId_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
@@ -1981,106 +1665,106 @@ func (d *__Likes_Selector) UserId_GE(val int) *__Likes_Selector {
 	return d
 }
 
-func (u *__Likes_Selector) LikeEnum_In(ins []int) *__Likes_Selector {
+func (u *__Likes_Selector) PostType_In(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Selector) LikeEnum_Ins(ins ...int) *__Likes_Selector {
+func (u *__Likes_Selector) PostType_Ins(ins ...int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Likes_Selector) LikeEnum_NotIn(ins []int) *__Likes_Selector {
+func (u *__Likes_Selector) PostType_NotIn(ins []int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " LikeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Likes_Selector) LikeEnum_Eq(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_Eq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Selector) LikeEnum_NotEq(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_NotEq(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Selector) LikeEnum_LT(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_LT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Selector) LikeEnum_LE(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_LE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Selector) LikeEnum_GT(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_GT(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Likes_Selector) LikeEnum_GE(val int) *__Likes_Selector {
+func (d *__Likes_Selector) PostType_GE(val int) *__Likes_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " LikeEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2259,33 +1943,6 @@ func (u *__Likes_Updater) PostId_Increment(count int) *__Likes_Updater {
 
 //ints
 
-func (u *__Likes_Updater) PostTypeEnum(newVal int) *__Likes_Updater {
-	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Likes_Updater) PostTypeEnum_Increment(count int) *__Likes_Updater {
-	if count > 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
 func (u *__Likes_Updater) UserId(newVal int) *__Likes_Updater {
 	up := updateCol{" UserId = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
@@ -2313,24 +1970,24 @@ func (u *__Likes_Updater) UserId_Increment(count int) *__Likes_Updater {
 
 //ints
 
-func (u *__Likes_Updater) LikeEnum(newVal int) *__Likes_Updater {
-	up := updateCol{" LikeEnum = " + u.nextDollar(), newVal}
+func (u *__Likes_Updater) PostType(newVal int) *__Likes_Updater {
+	up := updateCol{" PostType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" LikeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" PostType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Likes_Updater) LikeEnum_Increment(count int) *__Likes_Updater {
+func (u *__Likes_Updater) PostType_Increment(count int) *__Likes_Updater {
 	if count > 0 {
-		up := updateCol{" LikeEnum = LikeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" LikeEnum = LikeEnum+ " + u.nextDollar()] = count
+		//u.updates[" PostType = PostType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" LikeEnum = LikeEnum- " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" LikeEnum = LikeEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PostType = PostType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -2400,21 +2057,6 @@ func (u *__Likes_Selector) Select_PostId() *__Likes_Selector {
 	return u
 }
 
-func (u *__Likes_Selector) OrderBy_PostTypeEnum_Desc() *__Likes_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum DESC "
-	return u
-}
-
-func (u *__Likes_Selector) OrderBy_PostTypeEnum_Asc() *__Likes_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum ASC "
-	return u
-}
-
-func (u *__Likes_Selector) Select_PostTypeEnum() *__Likes_Selector {
-	u.selectCol = "PostTypeEnum"
-	return u
-}
-
 func (u *__Likes_Selector) OrderBy_UserId_Desc() *__Likes_Selector {
 	u.orderBy = " ORDER BY UserId DESC "
 	return u
@@ -2430,18 +2072,18 @@ func (u *__Likes_Selector) Select_UserId() *__Likes_Selector {
 	return u
 }
 
-func (u *__Likes_Selector) OrderBy_LikeEnum_Desc() *__Likes_Selector {
-	u.orderBy = " ORDER BY LikeEnum DESC "
+func (u *__Likes_Selector) OrderBy_PostType_Desc() *__Likes_Selector {
+	u.orderBy = " ORDER BY PostType DESC "
 	return u
 }
 
-func (u *__Likes_Selector) OrderBy_LikeEnum_Asc() *__Likes_Selector {
-	u.orderBy = " ORDER BY LikeEnum ASC "
+func (u *__Likes_Selector) OrderBy_PostType_Asc() *__Likes_Selector {
+	u.orderBy = " ORDER BY PostType ASC "
 	return u
 }
 
-func (u *__Likes_Selector) Select_LikeEnum() *__Likes_Selector {
-	u.selectCol = "LikeEnum"
+func (u *__Likes_Selector) Select_PostType() *__Likes_Selector {
+	u.selectCol = "PostType"
 	return u
 }
 
@@ -2780,10 +2422,10 @@ func MassInsert_Likes(rows []Likes, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(6, ln, true)
+	insVals := helper.SqlManyDollars(5, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.likes (" +
-		"Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime" +
+		"Id, PostId, UserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2793,9 +2435,8 @@ func MassInsert_Likes(rows []Likes, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Id)
 		vals = append(vals, row.PostId)
-		vals = append(vals, row.PostTypeEnum)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.LikeEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2822,10 +2463,10 @@ func MassReplace_Likes(rows []Likes, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(6, ln, true)
+	insVals := helper.SqlManyDollars(5, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.likes (" +
-		"Id, PostId, PostTypeEnum, UserId, LikeEnum, CreatedTime" +
+		"Id, PostId, UserId, PostType, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2835,9 +2476,8 @@ func MassReplace_Likes(rows []Likes, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.Id)
 		vals = append(vals, row.PostId)
-		vals = append(vals, row.PostTypeEnum)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.LikeEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.CreatedTime)
 
 	}
@@ -2858,8 +2498,6 @@ func MassReplace_Likes(rows []Likes, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
 
 //
 

@@ -44,11 +44,14 @@ CREATE TABLE IF NOT EXISTS sun.event (
     peer_user_id int NOT NULL ,
     post_id int NOT NULL ,
     comment_id int NOT NULL ,
+    hash_tag_id int NOT NULL ,
+    group_id int NOT NULL ,
     action_id int NOT NULL ,
-    murmur64_hash int NOT NULL ,
+    chat_id int NOT NULL ,
     chat_key string NOT NULL ,
     message_id int NOT NULL ,
     re_shared_id int NOT NULL ,
+    murmur64_hash int NOT NULL ,
 );
 
 /*Table: followed  */
@@ -63,9 +66,8 @@ CREATE TABLE IF NOT EXISTS sun.followed (
 CREATE TABLE IF NOT EXISTS sun.likes (
     id int PRIMARY KEY NOT NULL ,
     post_id int NOT NULL ,
-    post_type_enum int NOT NULL ,
     user_id int NOT NULL ,
-    like_enum int NOT NULL ,
+    post_type int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -104,24 +106,22 @@ CREATE TABLE IF NOT EXISTS sun.phone_contacts (
 CREATE TABLE IF NOT EXISTS sun.post (
     post_id int PRIMARY KEY NOT NULL ,
     user_id int NOT NULL ,
-    post_type_enum int NOT NULL ,
-    post_category_enum int NOT NULL ,
+    post_type int NOT NULL ,
     media_id int NOT NULL ,
+    file_ref_id int NOT NULL ,
     post_key string NOT NULL ,
     text string NOT NULL ,
     rich_text string NOT NULL ,
     media_count int NOT NULL ,
     shared_to int NOT NULL ,
     disable_comment int NOT NULL ,
-    source int NOT NULL ,
-    has_tag int NOT NULL ,
+    via int NOT NULL ,
     seq int NOT NULL ,
     comments_count int NOT NULL ,
     likes_count int NOT NULL ,
     views_count int NOT NULL ,
     edited_time int NOT NULL ,
     created_time int NOT NULL ,
-    re_shared_post_id int NOT NULL ,
 );
 
 /*Table: post_count  */
@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS sun.post_keys (
     id int PRIMARY KEY NOT NULL ,
     post_key_str string UNIQUE NOT NULL ,
     used int NOT NULL ,
+    rand_shard int NOT NULL ,
 );
 
 /*Table: post_link  */
@@ -172,13 +173,15 @@ CREATE TABLE IF NOT EXISTS sun.post_media (
     extra string NOT NULL ,
 );
 
-/*Table: post_mentioned  */
-CREATE TABLE IF NOT EXISTS sun.post_mentioned (
-    mentioned_id int PRIMARY KEY NOT NULL ,
-    for_user_id int NOT NULL ,
+/*Table: post_promoted  */
+CREATE TABLE IF NOT EXISTS sun.post_promoted (
+    promote_id int PRIMARY KEY NOT NULL ,
     post_id int NOT NULL ,
+    by_user_id int NOT NULL ,
     post_user_id int NOT NULL ,
-    post_type int NOT NULL ,
+    bazzar_uuid string NOT NULL ,
+    package string NOT NULL ,
+    end_time int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -188,6 +191,32 @@ CREATE TABLE IF NOT EXISTS sun.post_reshared (
     post_id int NOT NULL ,
     by_user_id int NOT NULL ,
     post_user_id int NOT NULL ,
+    created_time int NOT NULL ,
+);
+
+/*Table: profile_all  */
+CREATE TABLE IF NOT EXISTS sun.profile_all (
+    id int PRIMARY KEY NOT NULL ,
+    user_id int NOT NULL ,
+    post_id int NOT NULL ,
+    is_re_shared int NOT NULL ,
+);
+
+/*Table: profile_media  */
+CREATE TABLE IF NOT EXISTS sun.profile_media (
+    id int PRIMARY KEY NOT NULL ,
+    user_id int NOT NULL ,
+    post_id int NOT NULL ,
+    post_type int NOT NULL ,
+);
+
+/*Table: profile_mentioned  */
+CREATE TABLE IF NOT EXISTS sun.profile_mentioned (
+    id int PRIMARY KEY NOT NULL ,
+    for_user_id int NOT NULL ,
+    post_id int NOT NULL ,
+    post_user_id int NOT NULL ,
+    post_type int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -253,6 +282,8 @@ CREATE TABLE IF NOT EXISTS sun.tag (
     name string UNIQUE NOT NULL ,
     count int NOT NULL ,
     tag_status_enum int NOT NULL ,
+    is_blocked int NOT NULL ,
+    group_id int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -261,8 +292,7 @@ CREATE TABLE IF NOT EXISTS sun.tag_post (
     id int PRIMARY KEY NOT NULL ,
     tag_id int NOT NULL ,
     post_id int NOT NULL ,
-    post_type_enum int NOT NULL ,
-    post_category_enum int NOT NULL ,
+    post_type int NOT NULL ,
     created_time int NOT NULL ,
 );
 
@@ -294,7 +324,6 @@ CREATE TABLE IF NOT EXISTS sun.user (
     phone string NOT NULL ,
     email string NOT NULL ,
     about string NOT NULL ,
-    default_user_name string NOT NULL ,
     password_hash string NOT NULL ,
     password_salt string NOT NULL ,
     post_seq int NOT NULL ,

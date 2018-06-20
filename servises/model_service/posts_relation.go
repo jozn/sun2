@@ -1,10 +1,9 @@
 package model_service
 
 import (
-	"ms/sun_old/base"
-	helper2 "ms/sun/shared/helper"
 	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
 func postSaveTags(post x.Post, parser helper.TextParser) {
@@ -17,17 +16,40 @@ func postSaveTags(post x.Post, parser helper.TextParser) {
 		tg, ok := x.Store.Tag_ByName(tagName)
 		if !ok {
 			tg = &x.Tag{
-				TagId:       helper2.NextRowsSeqId(),
+				TagId:       helper.NextRowsSeqId(),
 				Name:        tagName,
-				CreatedTime: helper2.TimeNow(),
+				CreatedTime: helper.TimeNow(),
 			}
 			tg.Save(base.DB)
 		}
+		//for general all queries
 		tgp := x.TagPost{
-			TagId:        tg.TagId,
-			PostId:       post.PostId,
-			PostTypeEnum: post.PostTypeEnum,
-			CreatedTime:  helper2.TimeNow(),
+			TagId:       tg.TagId,
+			PostId:      post.PostId,
+			PostType:    0,
+			CreatedTime: helper.TimeNow(),
+		}
+		tagPosts = append(tagPosts, tgp)
+
+		//for real types queries
+		tgp2 := x.TagPost{
+			TagId:       tg.TagId,
+			PostId:      post.PostId,
+			PostType:    post.PostType,
+			CreatedTime: helper.TimeNow(),
+		}
+		tagPosts = append(tagPosts, tgp2)
+
+		//if id medias
+		switch x.PostTypeEnum(post.PostType) {
+		case x.PostTypeEnum_POST_PHOTO, x.PostTypeEnum_POST_VIDEO, x.PostTypeEnum_POST_GIF:
+			tgp3 := x.TagPost{
+				TagId:       tg.TagId,
+				PostId:      post.PostId,
+				PostType:    int(x.PostTypeEnum_POST_MEDIA),
+				CreatedTime: helper.TimeNow(),
+			}
+			tagPosts = append(tagPosts, tgp3)
 		}
 
 		tags = append(tags, tg)
@@ -46,26 +68,27 @@ func postSaveTags(post x.Post, parser helper.TextParser) {
 func postSaveMentioned(post x.Post, parser helper.TextParser) {
 	x.Store.PreLoadUser_ByUserNames(parser.UserNames)
 
-	var arr []x.PostMentioned
+	var arr []x.ProfileMentioned
 	for _, username := range parser.UserNames {
 		otherUser, ok := x.Store.User_ByUserName_JustCache(username)
 		if !ok {
 			continue
 		}
-		pm := x.PostMentioned{
-			MentionedId:      helper2.NextRowsSeqId(),
-			ForUserId:        otherUser.UserId,
-			PostId:           post.PostId,
-			PostUserId:       post.UserId,
-			PostTypeEnum:     post.PostTypeEnum,
-			PostCategoryEnum: post.PostCategoryEnum,
-			CreatedTime:      helper2.TimeNow(),
+		pm := x.ProfileMentioned{
+			Id: helper.NextRowsSeqId(),
+			ForUserId:   otherUser.UserId,
+			PostId:      post.PostId,
+			PostUserId:  post.UserId,
+			PostType:    post.PostType,
+			CreatedTime: helper.TimeNow(),
 		}
 		arr = append(arr, pm)
 	}
 	if len(arr) > 0 {
-		x.MassReplace_PostMentioned(arr, base.DB)
+		x.MassReplace_ProfileMentioned(arr, base.DB)
 	}
+
+	//todo add mentioned notifications
 }
 
 //tags and menthed

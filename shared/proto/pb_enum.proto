@@ -61,15 +61,16 @@ enum UserOnlineStatusEnum{
 }
 
 enum PostTypeEnum{
-    POST_RESHARED = 0;
+    POST_Type_Unknown = 0;
     POST_TEXT = 1;
     POST_PHOTO = 2;
     POST_VIDEO = 3;
-    POST_GIFS = 4;
+    POST_GIF = 4;
     POST_AUDIO = 5;
-    POST_GIF = 6;
     POST_FILE = 7;
     POST_POLL = 8;
+
+    POST_MEDIA = 100; // photo, video, gif
 }
 
 enum CategoryEnum{

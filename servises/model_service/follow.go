@@ -1,11 +1,11 @@
 package model_service
 
 import (
-	"ms/sun_old/base"
-	"ms/sun/shared/helper"
 	"ms/sun/servises/event_service"
 	"ms/sun/servises/memcache_service"
+	"ms/sun/shared/helper"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
 /*
@@ -18,8 +18,10 @@ func Follow(UserId, FollowedPeerUserId int) int {
 		return 0
 	}
 
-	flm := x.FollowingListMember{
-		ListId:         UserId,
+	//todo add if blocked
+
+	flm := x.Followed{
+		Id:             helper.NanoRowIdSeq(),
 		UserId:         UserId,
 		FollowedUserId: FollowedPeerUserId,
 		CreatedTime:    helper.TimeNow(),
@@ -54,7 +56,7 @@ func UnFollow(UserId, FollowedPeerUserId int) {
 	}
 
 	memcache_service.DeleteFromUserFollwings(UserId, FollowedPeerUserId)
-	flm, err := x.NewFollowingListMember_Selector().UserId_Eq(UserId).FollowedUserId_Eq(FollowedPeerUserId).GetRow(base.DB)
+	flm, err := x.NewFollowed_Selector().UserId_Eq(UserId).FollowedUserId_Eq(FollowedPeerUserId).GetRow(base.DB)
 	if err != nil {
 		return
 	}

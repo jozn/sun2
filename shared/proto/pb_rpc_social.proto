@@ -52,6 +52,18 @@ message RPC_Social_Types {
         }
     }
 
+    message LikeComment {
+        message Param {
+            int64 PostId = 1;
+            int64 CommentId = 2;
+        }
+
+        message Response {
+            bool Done =1;
+            PB_Error Error = 2;
+        }
+    }
+
 
     //posts
     message AddPost {
@@ -104,6 +116,16 @@ message RPC_Social_Types {
         }
     }
 
+    message PromotePost {
+        message Param {
+            int64 PostId = 1;
+        }
+
+        message Response {
+            bool Done = 1;
+            PB_Error Error = 2;
+        }
+    }
 
     //likes
     message LikePost {
@@ -193,11 +215,13 @@ service RPC_Social {
     rpc AddComment (RPC_Social_Types.AddComment.Param) returns (RPC_Social_Types.AddComment.Response);
     rpc DeleteComment (RPC_Social_Types.DeleteComment.Param) returns (RPC_Social_Types.DeleteComment.Response);
     rpc EditComment (RPC_Social_Types.EditComment.Param) returns (RPC_Social_Types.EditComment.Response);
+    rpc LikeComment (RPC_Social_Types.LikeComment.Param) returns (RPC_Social_Types.LikeComment.Response);
     //posts
     rpc AddPost (RPC_Social_Types.AddPost.Param) returns (RPC_Social_Types.AddPost.Response);
     rpc EditPost (RPC_Social_Types.EditPost.Param) returns (RPC_Social_Types.EditPost.Response);
     rpc DeletePost (RPC_Social_Types.DeletePost.Param) returns (RPC_Social_Types.DeletePost.Response);
     rpc ArchivePost (RPC_Social_Types.ArchivePost.Param) returns (RPC_Social_Types.ArchivePost.Response);
+    rpc PromotePost (RPC_Social_Types.PromotePost.Param) returns (RPC_Social_Types.PromotePost.Response);
     //likes
     rpc LikePost (RPC_Social_Types.LikePost.Param) returns (RPC_Social_Types.LikePost.Response);
     rpc UnLikePost (RPC_Social_Types.UnLikePost.Param) returns (RPC_Social_Types.UnLikePost.Response);

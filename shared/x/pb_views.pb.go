@@ -380,7 +380,7 @@ func (m *PB_PostView) GetPostTypeEnum() PostTypeEnum {
 	if m != nil {
 		return m.PostTypeEnum
 	}
-	return PostTypeEnum_POST_RESHARED
+	return PostTypeEnum_POST_Type_Unknown
 }
 
 func (m *PB_PostView) GetText() string {

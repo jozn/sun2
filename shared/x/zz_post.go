@@ -15,26 +15,24 @@ import (
 
 // Manualy copy this to project
 type Post__ struct {
-	PostId           int    `json:"PostId"`           // PostId -
-	UserId           int    `json:"UserId"`           // UserId -
-	PostTypeEnum     int    `json:"PostTypeEnum"`     // PostTypeEnum -
-	PostCategoryEnum int    `json:"PostCategoryEnum"` // PostCategoryEnum -
-	MediaId          int    `json:"MediaId"`          // MediaId -
-	PostKey          string `json:"PostKey"`          // PostKey -
-	Text             string `json:"Text"`             // Text -
-	RichText         string `json:"RichText"`         // RichText -
-	MediaCount       int    `json:"MediaCount"`       // MediaCount -
-	SharedTo         int    `json:"SharedTo"`         // SharedTo -
-	DisableComment   int    `json:"DisableComment"`   // DisableComment -
-	Source           int    `json:"Source"`           // Source -
-	HasTag           int    `json:"HasTag"`           // HasTag -
-	Seq              int    `json:"Seq"`              // Seq -
-	CommentsCount    int    `json:"CommentsCount"`    // CommentsCount -
-	LikesCount       int    `json:"LikesCount"`       // LikesCount -
-	ViewsCount       int    `json:"ViewsCount"`       // ViewsCount -
-	EditedTime       int    `json:"EditedTime"`       // EditedTime -
-	CreatedTime      int    `json:"CreatedTime"`      // CreatedTime -
-	ReSharedPostId   int    `json:"ReSharedPostId"`   // ReSharedPostId -
+	PostId         int    `json:"PostId"`         // PostId -
+	UserId         int    `json:"UserId"`         // UserId -
+	PostType       int    `json:"PostType"`       // PostType -
+	MediaId        int    `json:"MediaId"`        // MediaId -
+	FileRefId      int    `json:"FileRefId"`      // FileRefId -
+	PostKey        string `json:"PostKey"`        // PostKey -
+	Text           string `json:"Text"`           // Text -
+	RichText       string `json:"RichText"`       // RichText -
+	MediaCount     int    `json:"MediaCount"`     // MediaCount -
+	SharedTo       int    `json:"SharedTo"`       // SharedTo -
+	DisableComment int    `json:"DisableComment"` // DisableComment -
+	Via            int    `json:"Via"`            // Via -
+	Seq            int    `json:"Seq"`            // Seq -
+	CommentsCount  int    `json:"CommentsCount"`  // CommentsCount -
+	LikesCount     int    `json:"LikesCount"`     // LikesCount -
+	ViewsCount     int    `json:"ViewsCount"`     // ViewsCount -
+	EditedTime     int    `json:"EditedTime"`     // EditedTime -
+	CreatedTime    int    `json:"CreatedTime"`    // CreatedTime -
 	// xo fields
 	_exists, _deleted bool
 }
@@ -60,16 +58,16 @@ func (p *Post) Insert(db XODB) error {
 
 	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostType, MediaId, FileRefId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Via, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime)
 	if err != nil {
 		return err
 	}
@@ -89,16 +87,16 @@ func (p *Post) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.post (` +
-		`PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId` +
+		`PostId, UserId, PostType, MediaId, FileRefId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Via, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+		XOLog(sqlstr, p.PostId, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime)
 	}
-	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId)
+	_, err = db.Exec(sqlstr, p.PostId, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Post {
 			XOLogErr(err)
@@ -129,14 +127,14 @@ func (p *Post) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE sun.post SET ` +
-		`UserId = ?, PostTypeEnum = ?, PostCategoryEnum = ?, MediaId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Source = ?, HasTag = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?, ReSharedPostId = ?` +
+		`UserId = ?, PostType = ?, MediaId = ?, FileRefId = ?, PostKey = ?, Text = ?, RichText = ?, MediaCount = ?, SharedTo = ?, DisableComment = ?, Via = ?, Seq = ?, CommentsCount = ?, LikesCount = ?, ViewsCount = ?, EditedTime = ?, CreatedTime = ?` +
 		` WHERE PostId = ?`
 
 	// run query
 	if LogTableSqlReq.Post {
-		XOLog(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+		XOLog(sqlstr, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.PostId)
 	}
-	_, err = db.Exec(sqlstr, p.UserId, p.PostTypeEnum, p.PostCategoryEnum, p.MediaId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Source, p.HasTag, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.ReSharedPostId, p.PostId)
+	_, err = db.Exec(sqlstr, p.UserId, p.PostType, p.MediaId, p.FileRefId, p.PostKey, p.Text, p.RichText, p.MediaCount, p.SharedTo, p.DisableComment, p.Via, p.Seq, p.CommentsCount, p.LikesCount, p.ViewsCount, p.EditedTime, p.CreatedTime, p.PostId)
 
 	if LogTableSqlReq.Post {
 		XOLogErr(err)
@@ -487,211 +485,106 @@ func (d *__Post_Deleter) UserId_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) PostTypeEnum_In(ins []int) *__Post_Deleter {
+func (u *__Post_Deleter) PostType_In(ins []int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_Ins(ins ...int) *__Post_Deleter {
+func (u *__Post_Deleter) PostType_Ins(ins ...int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) PostTypeEnum_NotIn(ins []int) *__Post_Deleter {
+func (u *__Post_Deleter) PostType_NotIn(ins []int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) PostTypeEnum_Eq(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_Eq(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_NotEq(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_NotEq(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LT(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_LT(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_LE(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_LE(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GT(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_GT(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) PostTypeEnum_GE(val int) *__Post_Deleter {
+func (d *__Post_Deleter) PostType_GE(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Deleter) PostCategoryEnum_In(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) PostCategoryEnum_Ins(ins ...int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) PostCategoryEnum_NotIn(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_Eq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_NotEq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_LT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_LE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_GT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) PostCategoryEnum_GE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -797,6 +690,111 @@ func (d *__Post_Deleter) MediaId_GE(val int) *__Post_Deleter {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " MediaId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Deleter) FileRefId_In(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) FileRefId_Ins(ins ...int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Deleter) FileRefId_NotIn(ins []int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Deleter) FileRefId_Eq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) FileRefId_NotEq(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) FileRefId_LT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) FileRefId_LE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) FileRefId_GT(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Deleter) FileRefId_GE(val int) *__Post_Deleter {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1117,211 +1115,106 @@ func (d *__Post_Deleter) DisableComment_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) Source_In(ins []int) *__Post_Deleter {
+func (u *__Post_Deleter) Via_In(ins []int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Source_Ins(ins ...int) *__Post_Deleter {
+func (u *__Post_Deleter) Via_Ins(ins ...int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Deleter) Source_NotIn(ins []int) *__Post_Deleter {
+func (u *__Post_Deleter) Via_NotIn(ins []int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Deleter) Source_Eq(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_Eq(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " Via = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_NotEq(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_NotEq(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " Via != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_LT(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_LT(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " Via < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_LE(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_LE(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " Via <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_GT(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_GT(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " Via > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Deleter) Source_GE(val int) *__Post_Deleter {
+func (d *__Post_Deleter) Via_GE(val int) *__Post_Deleter {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Deleter) HasTag_In(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) HasTag_Ins(ins ...int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) HasTag_NotIn(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Deleter) HasTag_Eq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) HasTag_NotEq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) HasTag_LT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) HasTag_LE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) HasTag_GT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) HasTag_GE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " Via >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -1957,111 +1850,6 @@ func (d *__Post_Deleter) CreatedTime_GE(val int) *__Post_Deleter {
 	return d
 }
 
-func (u *__Post_Deleter) ReSharedPostId_In(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) ReSharedPostId_Ins(ins ...int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Deleter) ReSharedPostId_NotIn(ins []int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Deleter) ReSharedPostId_Eq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) ReSharedPostId_NotEq(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) ReSharedPostId_LT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) ReSharedPostId_LE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) ReSharedPostId_GT(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Deleter) ReSharedPostId_GE(val int) *__Post_Deleter {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 /// mysql or cockroach ? or $1 handlers
 func (m *__Post_Updater) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
@@ -2291,211 +2079,106 @@ func (d *__Post_Updater) UserId_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) PostTypeEnum_In(ins []int) *__Post_Updater {
+func (u *__Post_Updater) PostType_In(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Ins(ins ...int) *__Post_Updater {
+func (u *__Post_Updater) PostType_Ins(ins ...int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_NotIn(ins []int) *__Post_Updater {
+func (u *__Post_Updater) PostType_NotIn(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) PostTypeEnum_Eq(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_Eq(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_NotEq(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_NotEq(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LT(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_LT(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_LE(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_LE(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GT(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_GT(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) PostTypeEnum_GE(val int) *__Post_Updater {
+func (d *__Post_Updater) PostType_GE(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Updater) PostCategoryEnum_In(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) PostCategoryEnum_Ins(ins ...int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) PostCategoryEnum_NotIn(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Updater) PostCategoryEnum_Eq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) PostCategoryEnum_NotEq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) PostCategoryEnum_LT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) PostCategoryEnum_LE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) PostCategoryEnum_GT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) PostCategoryEnum_GE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2601,6 +2284,111 @@ func (d *__Post_Updater) MediaId_GE(val int) *__Post_Updater {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " MediaId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Updater) FileRefId_In(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) FileRefId_Ins(ins ...int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Updater) FileRefId_NotIn(ins []int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Updater) FileRefId_Eq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) FileRefId_NotEq(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) FileRefId_LT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) FileRefId_LE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) FileRefId_GT(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Updater) FileRefId_GE(val int) *__Post_Updater {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -2921,211 +2709,106 @@ func (d *__Post_Updater) DisableComment_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) Source_In(ins []int) *__Post_Updater {
+func (u *__Post_Updater) Via_In(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Source_Ins(ins ...int) *__Post_Updater {
+func (u *__Post_Updater) Via_Ins(ins ...int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Updater) Source_NotIn(ins []int) *__Post_Updater {
+func (u *__Post_Updater) Via_NotIn(ins []int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Updater) Source_Eq(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_Eq(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " Via = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_NotEq(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_NotEq(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " Via != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_LT(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_LT(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " Via < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_LE(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_LE(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " Via <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_GT(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_GT(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " Via > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Updater) Source_GE(val int) *__Post_Updater {
+func (d *__Post_Updater) Via_GE(val int) *__Post_Updater {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Updater) HasTag_In(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) HasTag_Ins(ins ...int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) HasTag_NotIn(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Updater) HasTag_Eq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) HasTag_NotEq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) HasTag_LT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) HasTag_LE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) HasTag_GT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) HasTag_GE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " Via >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -3761,111 +3444,6 @@ func (d *__Post_Updater) CreatedTime_GE(val int) *__Post_Updater {
 	return d
 }
 
-func (u *__Post_Updater) ReSharedPostId_In(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) ReSharedPostId_Ins(ins ...int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Updater) ReSharedPostId_NotIn(ins []int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Updater) ReSharedPostId_Eq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) ReSharedPostId_NotEq(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) ReSharedPostId_LT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) ReSharedPostId_LE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) ReSharedPostId_GT(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Updater) ReSharedPostId_GE(val int) *__Post_Updater {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 /// mysql or cockroach ? or $1 handlers
 func (m *__Post_Selector) nextDollars(size int) string {
 	r := DollarsForSqlIn(size, m.dollarIndex, m.isMysql)
@@ -4095,211 +3673,106 @@ func (d *__Post_Selector) UserId_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) PostTypeEnum_In(ins []int) *__Post_Selector {
+func (u *__Post_Selector) PostType_In(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_Ins(ins ...int) *__Post_Selector {
+func (u *__Post_Selector) PostType_Ins(ins ...int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) PostTypeEnum_NotIn(ins []int) *__Post_Selector {
+func (u *__Post_Selector) PostType_NotIn(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " PostTypeEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " PostType NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) PostTypeEnum_Eq(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_Eq(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum = " + d.nextDollar()
+	w.condition = " PostType = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_NotEq(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_NotEq(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum != " + d.nextDollar()
+	w.condition = " PostType != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LT(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_LT(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum < " + d.nextDollar()
+	w.condition = " PostType < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_LE(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_LE(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum <= " + d.nextDollar()
+	w.condition = " PostType <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GT(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_GT(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum > " + d.nextDollar()
+	w.condition = " PostType > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) PostTypeEnum_GE(val int) *__Post_Selector {
+func (d *__Post_Selector) PostType_GE(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " PostTypeEnum >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Selector) PostCategoryEnum_In(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) PostCategoryEnum_Ins(ins ...int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) PostCategoryEnum_NotIn(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " PostCategoryEnum NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Selector) PostCategoryEnum_Eq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) PostCategoryEnum_NotEq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) PostCategoryEnum_LT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) PostCategoryEnum_LE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) PostCategoryEnum_GT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) PostCategoryEnum_GE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " PostCategoryEnum >= " + d.nextDollar()
+	w.condition = " PostType >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4405,6 +3878,111 @@ func (d *__Post_Selector) MediaId_GE(val int) *__Post_Selector {
 	insWhere = append(insWhere, val)
 	w.args = insWhere
 	w.condition = " MediaId >= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (u *__Post_Selector) FileRefId_In(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) FileRefId_Ins(ins ...int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (u *__Post_Selector) FileRefId_NotIn(ins []int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	for _, i := range ins {
+		insWhere = append(insWhere, i)
+	}
+	w.args = insWhere
+	w.condition = " FileRefId NOT IN(" + u.nextDollars(len(ins)) + ") "
+	u.wheres = append(u.wheres, w)
+
+	return u
+}
+
+func (d *__Post_Selector) FileRefId_Eq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId = " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) FileRefId_NotEq(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId != " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) FileRefId_LT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId < " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) FileRefId_LE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId <= " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) FileRefId_GT(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId > " + d.nextDollar()
+	d.wheres = append(d.wheres, w)
+
+	return d
+}
+
+func (d *__Post_Selector) FileRefId_GE(val int) *__Post_Selector {
+	w := whereClause{}
+	var insWhere []interface{}
+	insWhere = append(insWhere, val)
+	w.args = insWhere
+	w.condition = " FileRefId >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -4725,211 +4303,106 @@ func (d *__Post_Selector) DisableComment_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) Source_In(ins []int) *__Post_Selector {
+func (u *__Post_Selector) Via_In(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Source_Ins(ins ...int) *__Post_Selector {
+func (u *__Post_Selector) Via_Ins(ins ...int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (u *__Post_Selector) Source_NotIn(ins []int) *__Post_Selector {
+func (u *__Post_Selector) Via_NotIn(ins []int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	for _, i := range ins {
 		insWhere = append(insWhere, i)
 	}
 	w.args = insWhere
-	w.condition = " Source NOT IN(" + u.nextDollars(len(ins)) + ") "
+	w.condition = " Via NOT IN(" + u.nextDollars(len(ins)) + ") "
 	u.wheres = append(u.wheres, w)
 
 	return u
 }
 
-func (d *__Post_Selector) Source_Eq(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_Eq(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source = " + d.nextDollar()
+	w.condition = " Via = " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_NotEq(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_NotEq(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source != " + d.nextDollar()
+	w.condition = " Via != " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_LT(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_LT(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source < " + d.nextDollar()
+	w.condition = " Via < " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_LE(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_LE(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source <= " + d.nextDollar()
+	w.condition = " Via <= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_GT(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_GT(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source > " + d.nextDollar()
+	w.condition = " Via > " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
 }
 
-func (d *__Post_Selector) Source_GE(val int) *__Post_Selector {
+func (d *__Post_Selector) Via_GE(val int) *__Post_Selector {
 	w := whereClause{}
 	var insWhere []interface{}
 	insWhere = append(insWhere, val)
 	w.args = insWhere
-	w.condition = " Source >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (u *__Post_Selector) HasTag_In(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) HasTag_Ins(ins ...int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) HasTag_NotIn(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " HasTag NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Selector) HasTag_Eq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) HasTag_NotEq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) HasTag_LT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) HasTag_LE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) HasTag_GT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) HasTag_GE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " HasTag >= " + d.nextDollar()
+	w.condition = " Via >= " + d.nextDollar()
 	d.wheres = append(d.wheres, w)
 
 	return d
@@ -5565,111 +5038,6 @@ func (d *__Post_Selector) CreatedTime_GE(val int) *__Post_Selector {
 	return d
 }
 
-func (u *__Post_Selector) ReSharedPostId_In(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) ReSharedPostId_Ins(ins ...int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (u *__Post_Selector) ReSharedPostId_NotIn(ins []int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	for _, i := range ins {
-		insWhere = append(insWhere, i)
-	}
-	w.args = insWhere
-	w.condition = " ReSharedPostId NOT IN(" + u.nextDollars(len(ins)) + ") "
-	u.wheres = append(u.wheres, w)
-
-	return u
-}
-
-func (d *__Post_Selector) ReSharedPostId_Eq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId = " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) ReSharedPostId_NotEq(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId != " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) ReSharedPostId_LT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId < " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) ReSharedPostId_LE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId <= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) ReSharedPostId_GT(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId > " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
-func (d *__Post_Selector) ReSharedPostId_GE(val int) *__Post_Selector {
-	w := whereClause{}
-	var insWhere []interface{}
-	insWhere = append(insWhere, val)
-	w.args = insWhere
-	w.condition = " ReSharedPostId >= " + d.nextDollar()
-	d.wheres = append(d.wheres, w)
-
-	return d
-}
-
 ///// for strings //copy of above with type int -> string + rm if eq + $ms_str_cond
 
 ////////ints
@@ -6278,51 +5646,24 @@ func (u *__Post_Updater) UserId_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) PostTypeEnum(newVal int) *__Post_Updater {
-	up := updateCol{" PostTypeEnum = " + u.nextDollar(), newVal}
+func (u *__Post_Updater) PostType(newVal int) *__Post_Updater {
+	up := updateCol{" PostType = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" PostTypeEnum = " + u.nextDollar()] = newVal
+	// u.updates[" PostType = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) PostTypeEnum_Increment(count int) *__Post_Updater {
+func (u *__Post_Updater) PostType_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum+ " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" PostTypeEnum = PostTypeEnum+ " + u.nextDollar()] = count
+		//u.updates[" PostType = PostType+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" PostTypeEnum = PostTypeEnum- " + u.nextDollar(), count}
+		up := updateCol{" PostType = PostType- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" PostTypeEnum = PostTypeEnum- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__Post_Updater) PostCategoryEnum(newVal int) *__Post_Updater {
-	up := updateCol{" PostCategoryEnum = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" PostCategoryEnum = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Post_Updater) PostCategoryEnum_Increment(count int) *__Post_Updater {
-	if count > 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" PostCategoryEnum = PostCategoryEnum+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" PostCategoryEnum = PostCategoryEnum- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" PostType = PostType- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6350,6 +5691,33 @@ func (u *__Post_Updater) MediaId_Increment(count int) *__Post_Updater {
 		up := updateCol{" MediaId = MediaId- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
 		// u.updates[" MediaId = MediaId- " + u.nextDollar() ] = -(count) //make it positive
+	}
+
+	return u
+}
+
+//string
+
+//ints
+
+func (u *__Post_Updater) FileRefId(newVal int) *__Post_Updater {
+	up := updateCol{" FileRefId = " + u.nextDollar(), newVal}
+	u.updates = append(u.updates, up)
+	// u.updates[" FileRefId = " + u.nextDollar()] = newVal
+	return u
+}
+
+func (u *__Post_Updater) FileRefId_Increment(count int) *__Post_Updater {
+	if count > 0 {
+		up := updateCol{" FileRefId = FileRefId+ " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		//u.updates[" FileRefId = FileRefId+ " + u.nextDollar()] = count
+	}
+
+	if count < 0 {
+		up := updateCol{" FileRefId = FileRefId- " + u.nextDollar(), count}
+		u.updates = append(u.updates, up)
+		// u.updates[" FileRefId = FileRefId- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6470,51 +5838,24 @@ func (u *__Post_Updater) DisableComment_Increment(count int) *__Post_Updater {
 
 //ints
 
-func (u *__Post_Updater) Source(newVal int) *__Post_Updater {
-	up := updateCol{" Source = " + u.nextDollar(), newVal}
+func (u *__Post_Updater) Via(newVal int) *__Post_Updater {
+	up := updateCol{" Via = " + u.nextDollar(), newVal}
 	u.updates = append(u.updates, up)
-	// u.updates[" Source = " + u.nextDollar()] = newVal
+	// u.updates[" Via = " + u.nextDollar()] = newVal
 	return u
 }
 
-func (u *__Post_Updater) Source_Increment(count int) *__Post_Updater {
+func (u *__Post_Updater) Via_Increment(count int) *__Post_Updater {
 	if count > 0 {
-		up := updateCol{" Source = Source+ " + u.nextDollar(), count}
+		up := updateCol{" Via = Via+ " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		//u.updates[" Source = Source+ " + u.nextDollar()] = count
+		//u.updates[" Via = Via+ " + u.nextDollar()] = count
 	}
 
 	if count < 0 {
-		up := updateCol{" Source = Source- " + u.nextDollar(), count}
+		up := updateCol{" Via = Via- " + u.nextDollar(), count}
 		u.updates = append(u.updates, up)
-		// u.updates[" Source = Source- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
-//ints
-
-func (u *__Post_Updater) HasTag(newVal int) *__Post_Updater {
-	up := updateCol{" HasTag = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" HasTag = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Post_Updater) HasTag_Increment(count int) *__Post_Updater {
-	if count > 0 {
-		up := updateCol{" HasTag = HasTag+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" HasTag = HasTag+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" HasTag = HasTag- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" HasTag = HasTag- " + u.nextDollar() ] = -(count) //make it positive
+		// u.updates[" Via = Via- " + u.nextDollar() ] = -(count) //make it positive
 	}
 
 	return u
@@ -6684,33 +6025,6 @@ func (u *__Post_Updater) CreatedTime_Increment(count int) *__Post_Updater {
 
 //string
 
-//ints
-
-func (u *__Post_Updater) ReSharedPostId(newVal int) *__Post_Updater {
-	up := updateCol{" ReSharedPostId = " + u.nextDollar(), newVal}
-	u.updates = append(u.updates, up)
-	// u.updates[" ReSharedPostId = " + u.nextDollar()] = newVal
-	return u
-}
-
-func (u *__Post_Updater) ReSharedPostId_Increment(count int) *__Post_Updater {
-	if count > 0 {
-		up := updateCol{" ReSharedPostId = ReSharedPostId+ " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		//u.updates[" ReSharedPostId = ReSharedPostId+ " + u.nextDollar()] = count
-	}
-
-	if count < 0 {
-		up := updateCol{" ReSharedPostId = ReSharedPostId- " + u.nextDollar(), count}
-		u.updates = append(u.updates, up)
-		// u.updates[" ReSharedPostId = ReSharedPostId- " + u.nextDollar() ] = -(count) //make it positive
-	}
-
-	return u
-}
-
-//string
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////// Selector ///////////////////////////////////
 
@@ -6746,33 +6060,18 @@ func (u *__Post_Selector) Select_UserId() *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum DESC "
+func (u *__Post_Selector) OrderBy_PostType_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostType DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_PostTypeEnum_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostTypeEnum ASC "
+func (u *__Post_Selector) OrderBy_PostType_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY PostType ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_PostTypeEnum() *__Post_Selector {
-	u.selectCol = "PostTypeEnum"
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_PostCategoryEnum_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum DESC "
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_PostCategoryEnum_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY PostCategoryEnum ASC "
-	return u
-}
-
-func (u *__Post_Selector) Select_PostCategoryEnum() *__Post_Selector {
-	u.selectCol = "PostCategoryEnum"
+func (u *__Post_Selector) Select_PostType() *__Post_Selector {
+	u.selectCol = "PostType"
 	return u
 }
 
@@ -6788,6 +6087,21 @@ func (u *__Post_Selector) OrderBy_MediaId_Asc() *__Post_Selector {
 
 func (u *__Post_Selector) Select_MediaId() *__Post_Selector {
 	u.selectCol = "MediaId"
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_FileRefId_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY FileRefId DESC "
+	return u
+}
+
+func (u *__Post_Selector) OrderBy_FileRefId_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY FileRefId ASC "
+	return u
+}
+
+func (u *__Post_Selector) Select_FileRefId() *__Post_Selector {
+	u.selectCol = "FileRefId"
 	return u
 }
 
@@ -6881,33 +6195,18 @@ func (u *__Post_Selector) Select_DisableComment() *__Post_Selector {
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Source_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY Source DESC "
+func (u *__Post_Selector) OrderBy_Via_Desc() *__Post_Selector {
+	u.orderBy = " ORDER BY Via DESC "
 	return u
 }
 
-func (u *__Post_Selector) OrderBy_Source_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY Source ASC "
+func (u *__Post_Selector) OrderBy_Via_Asc() *__Post_Selector {
+	u.orderBy = " ORDER BY Via ASC "
 	return u
 }
 
-func (u *__Post_Selector) Select_Source() *__Post_Selector {
-	u.selectCol = "Source"
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_HasTag_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY HasTag DESC "
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_HasTag_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY HasTag ASC "
-	return u
-}
-
-func (u *__Post_Selector) Select_HasTag() *__Post_Selector {
-	u.selectCol = "HasTag"
+func (u *__Post_Selector) Select_Via() *__Post_Selector {
+	u.selectCol = "Via"
 	return u
 }
 
@@ -6998,21 +6297,6 @@ func (u *__Post_Selector) OrderBy_CreatedTime_Asc() *__Post_Selector {
 
 func (u *__Post_Selector) Select_CreatedTime() *__Post_Selector {
 	u.selectCol = "CreatedTime"
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Desc() *__Post_Selector {
-	u.orderBy = " ORDER BY ReSharedPostId DESC "
-	return u
-}
-
-func (u *__Post_Selector) OrderBy_ReSharedPostId_Asc() *__Post_Selector {
-	u.orderBy = " ORDER BY ReSharedPostId ASC "
-	return u
-}
-
-func (u *__Post_Selector) Select_ReSharedPostId() *__Post_Selector {
-	u.selectCol = "ReSharedPostId"
 	return u
 }
 
@@ -7336,10 +6620,10 @@ func MassInsert_Post(rows []Post, db XODB) error {
 
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(20, ln, true)
+	insVals := helper.SqlManyDollars(18, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostType, MediaId, FileRefId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Via, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -7349,24 +6633,22 @@ func MassInsert_Post(rows []Post, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.PostTypeEnum)
-		vals = append(vals, row.PostCategoryEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.MediaId)
+		vals = append(vals, row.FileRefId)
 		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.RichText)
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
-		vals = append(vals, row.Source)
-		vals = append(vals, row.HasTag)
+		vals = append(vals, row.Via)
 		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
 		vals = append(vals, row.EditedTime)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.ReSharedPostId)
 
 	}
 
@@ -7392,10 +6674,10 @@ func MassReplace_Post(rows []Post, db XODB) error {
 	ln := len(rows)
 	// insVals_:= strings.Repeat(s, ln)
 	// insVals := insVals_[0:len(insVals_)-1]
-	insVals := helper.SqlManyDollars(20, ln, true)
+	insVals := helper.SqlManyDollars(18, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.post (" +
-		"PostId, UserId, PostTypeEnum, PostCategoryEnum, MediaId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Source, HasTag, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime, ReSharedPostId" +
+		"PostId, UserId, PostType, MediaId, FileRefId, PostKey, Text, RichText, MediaCount, SharedTo, DisableComment, Via, Seq, CommentsCount, LikesCount, ViewsCount, EditedTime, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -7405,24 +6687,22 @@ func MassReplace_Post(rows []Post, db XODB) error {
 		// vals = append(vals,row.UserId)
 		vals = append(vals, row.PostId)
 		vals = append(vals, row.UserId)
-		vals = append(vals, row.PostTypeEnum)
-		vals = append(vals, row.PostCategoryEnum)
+		vals = append(vals, row.PostType)
 		vals = append(vals, row.MediaId)
+		vals = append(vals, row.FileRefId)
 		vals = append(vals, row.PostKey)
 		vals = append(vals, row.Text)
 		vals = append(vals, row.RichText)
 		vals = append(vals, row.MediaCount)
 		vals = append(vals, row.SharedTo)
 		vals = append(vals, row.DisableComment)
-		vals = append(vals, row.Source)
-		vals = append(vals, row.HasTag)
+		vals = append(vals, row.Via)
 		vals = append(vals, row.Seq)
 		vals = append(vals, row.CommentsCount)
 		vals = append(vals, row.LikesCount)
 		vals = append(vals, row.ViewsCount)
 		vals = append(vals, row.EditedTime)
 		vals = append(vals, row.CreatedTime)
-		vals = append(vals, row.ReSharedPostId)
 
 	}
 
@@ -7442,10 +6722,6 @@ func MassReplace_Post(rows []Post, db XODB) error {
 }
 
 //////////////////// Play ///////////////////////////////
-
-//
-
-//
 
 //
 

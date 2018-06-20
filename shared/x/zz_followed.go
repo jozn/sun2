@@ -5,6 +5,7 @@ import (
 	"errors"
 	"strings"
 	//"time"
+	"ms/sun/shared/helper"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -41,36 +42,23 @@ func (f *Followed) Insert(db XODB) error {
 		return errors.New("insert failed: already exists")
 	}
 
-	// sql insert query, primary key provided by autoincrement
+	// sql insert query, primary key must be provided
 	const sqlstr = `INSERT INTO sun.followed (` +
-		`UserId, FollowedUserId, CreatedTime` +
+		`Id, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Followed {
-		XOLog(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+		XOLog(sqlstr, f.Id, f.UserId, f.FollowedUserId, f.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+	_, err = db.Exec(sqlstr, f.Id, f.UserId, f.FollowedUserId, f.CreatedTime)
 	if err != nil {
-		if LogTableSqlReq.Followed {
-			XOLogErr(err)
-		}
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.Followed {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	f.Id = int(id)
+	// set existence
 	f._exists = true
 
 	OnFollowed_AfterInsert(f)
@@ -85,16 +73,16 @@ func (f *Followed) Replace(db XODB) error {
 	// sql query
 
 	const sqlstr = `REPLACE INTO sun.followed (` +
-		`UserId, FollowedUserId, CreatedTime` +
+		`Id, UserId, FollowedUserId, CreatedTime` +
 		`) VALUES (` +
-		`?, ?, ?` +
+		`?, ?, ?, ?` +
 		`)`
 
 	// run query
 	if LogTableSqlReq.Followed {
-		XOLog(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+		XOLog(sqlstr, f.Id, f.UserId, f.FollowedUserId, f.CreatedTime)
 	}
-	res, err := db.Exec(sqlstr, f.UserId, f.FollowedUserId, f.CreatedTime)
+	_, err = db.Exec(sqlstr, f.Id, f.UserId, f.FollowedUserId, f.CreatedTime)
 	if err != nil {
 		if LogTableSqlReq.Followed {
 			XOLogErr(err)
@@ -102,17 +90,6 @@ func (f *Followed) Replace(db XODB) error {
 		return err
 	}
 
-	// retrieve id
-	id, err := res.LastInsertId()
-	if err != nil {
-		if LogTableSqlReq.Followed {
-			XOLogErr(err)
-		}
-		return err
-	}
-
-	// set primary key and existence
-	f.Id = int(id)
 	f._exists = true
 
 	OnFollowed_AfterInsert(f)
@@ -2084,12 +2061,13 @@ func MassInsert_Followed(rows []Followed, db XODB) error {
 	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "INSERT INTO sun.followed (" +
-		"UserId, FollowedUserId, CreatedTime" +
+		"Id, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2097,6 +2075,7 @@ func MassInsert_Followed(rows []Followed, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.Id)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.FollowedUserId)
 		vals = append(vals, row.CreatedTime)
@@ -2118,14 +2097,17 @@ func MassInsert_Followed(rows []Followed, db XODB) error {
 }
 
 func MassReplace_Followed(rows []Followed, db XODB) error {
+	if len(rows) == 0 {
+		return errors.New("rows slice should not be empty - inserted nothing")
+	}
 	var err error
 	ln := len(rows)
-	s := "(?,?,?)," //`(?, ?, ?, ?),`
-	insVals_ := strings.Repeat(s, ln)
-	insVals := insVals_[0 : len(insVals_)-1]
+	// insVals_:= strings.Repeat(s, ln)
+	// insVals := insVals_[0:len(insVals_)-1]
+	insVals := helper.SqlManyDollars(4, ln, true)
 	// sql query
 	sqlstr := "REPLACE INTO sun.followed (" +
-		"UserId, FollowedUserId, CreatedTime" +
+		"Id, UserId, FollowedUserId, CreatedTime" +
 		") VALUES " + insVals
 
 	// run query
@@ -2133,6 +2115,7 @@ func MassReplace_Followed(rows []Followed, db XODB) error {
 
 	for _, row := range rows {
 		// vals = append(vals,row.UserId)
+		vals = append(vals, row.Id)
 		vals = append(vals, row.UserId)
 		vals = append(vals, row.FollowedUserId)
 		vals = append(vals, row.CreatedTime)
@@ -2151,6 +2134,7 @@ func MassReplace_Followed(rows []Followed, db XODB) error {
 	}
 
 	return nil
+
 }
 
 //////////////////// Play ///////////////////////////////

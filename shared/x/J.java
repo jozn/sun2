@@ -41,11 +41,14 @@ public class J {
 		public int PeerUserId; //PeerUserId
 		public int PostId; //PostId
 		public int CommentId; //CommentId
+		public int HashTagId; //HashTagId
+		public int GroupId; //GroupId
 		public int ActionId; //ActionId
-		public int Murmur64Hash; //Murmur64Hash
+		public int ChatId; //ChatId
 		public String ChatKey; //ChatKey
 		public int MessageId; //MessageId
 		public int ReSharedId; //ReSharedId
+		public int Murmur64Hash; //Murmur64Hash
 	}
 
 	public static class Followed {//oridnal: 5
@@ -58,9 +61,8 @@ public class J {
 	public static class Likes {//oridnal: 6
 		public int Id; //Id
 		public int PostId; //PostId
-		public int PostTypeEnum; //PostTypeEnum
 		public int UserId; //UserId
-		public int LikeEnum; //LikeEnum
+		public int PostType; //PostType
 		public int CreatedTime; //CreatedTime
 	}
 
@@ -95,24 +97,22 @@ public class J {
 	public static class Post {//oridnal: 10
 		public int PostId; //PostId
 		public int UserId; //UserId
-		public int PostTypeEnum; //PostTypeEnum
-		public int PostCategoryEnum; //PostCategoryEnum
+		public int PostType; //PostType
 		public int MediaId; //MediaId
+		public int FileRefId; //FileRefId
 		public String PostKey; //PostKey
 		public String Text; //Text
 		public String RichText; //RichText
 		public int MediaCount; //MediaCount
 		public int SharedTo; //SharedTo
 		public int DisableComment; //DisableComment
-		public int Source; //Source
-		public int HasTag; //HasTag
+		public int Via; //Via
 		public int Seq; //Seq
 		public int CommentsCount; //CommentsCount
 		public int LikesCount; //LikesCount
 		public int ViewsCount; //ViewsCount
 		public int EditedTime; //EditedTime
 		public int CreatedTime; //CreatedTime
-		public int ReSharedPostId; //ReSharedPostId
 	}
 
 	public static class PostCount {//oridnal: 11
@@ -133,6 +133,7 @@ public class J {
 		public int Id; //Id
 		public String PostKeyStr; //PostKeyStr
 		public int Used; //Used
+		public int RandShard; //RandShard
 	}
 
 	public static class PostLink {//oridnal: 14
@@ -158,12 +159,14 @@ public class J {
 		public String Extra; //Extra
 	}
 
-	public static class PostMentioned {//oridnal: 16
-		public int MentionedId; //MentionedId
-		public int ForUserId; //ForUserId
+	public static class PostPromoted {//oridnal: 16
+		public int PromoteId; //PromoteId
 		public int PostId; //PostId
+		public int ByUserId; //ByUserId
 		public int PostUserId; //PostUserId
-		public int PostType; //PostType
+		public String BazzarUuid; //BazzarUuid
+		public String Package; //Package
+		public int EndTime; //EndTime
 		public int CreatedTime; //CreatedTime
 	}
 
@@ -175,7 +178,30 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class Session {//oridnal: 18
+	public static class ProfileAll {//oridnal: 18
+		public int Id; //Id
+		public int UserId; //UserId
+		public int PostId; //PostId
+		public int IsReShared; //IsReShared
+	}
+
+	public static class ProfileMedia {//oridnal: 19
+		public int Id; //Id
+		public int UserId; //UserId
+		public int PostId; //PostId
+		public int PostType; //PostType
+	}
+
+	public static class ProfileMentioned {//oridnal: 20
+		public int Id; //Id
+		public int ForUserId; //ForUserId
+		public int PostId; //PostId
+		public int PostUserId; //PostUserId
+		public int PostType; //PostType
+		public int CreatedTime; //CreatedTime
+	}
+
+	public static class Session {//oridnal: 21
 		public int Id; //Id
 		public String SessionUuid; //SessionUuid
 		public int UserId; //UserId
@@ -185,7 +211,7 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class SettingNotifications {//oridnal: 19
+	public static class SettingNotifications {//oridnal: 22
 		public int UserId; //UserId
 		public int SocialLedOn; //SocialLedOn
 		public String SocialLedColor; //SocialLedColor
@@ -208,7 +234,7 @@ public class J {
 		public int DirectPriority; //DirectPriority
 	}
 
-	public static class Sms {//oridnal: 20
+	public static class Sms {//oridnal: 23
 		public int Id; //Id
 		public String Hash; //Hash
 		public String AppUuid; //AppUuid
@@ -228,24 +254,25 @@ public class J {
 		public int TTL; //TTL
 	}
 
-	public static class Tag {//oridnal: 21
+	public static class Tag {//oridnal: 24
 		public int TagId; //TagId
 		public String Name; //Name
 		public int Count; //Count
 		public int TagStatusEnum; //TagStatusEnum
+		public int IsBlocked; //IsBlocked
+		public int GroupId; //GroupId
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class TagPost {//oridnal: 22
+	public static class TagPost {//oridnal: 25
 		public int Id; //Id
 		public int TagId; //TagId
 		public int PostId; //PostId
-		public int PostTypeEnum; //PostTypeEnum
-		public int PostCategoryEnum; //PostCategoryEnum
+		public int PostType; //PostType
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class TriggerLog {//oridnal: 23
+	public static class TriggerLog {//oridnal: 26
 		public int Id; //Id
 		public String ModelName; //ModelName
 		public String ChangeType; //ChangeType
@@ -254,7 +281,7 @@ public class J {
 		public int CreatedSe; //CreatedSe
 	}
 
-	public static class User {//oridnal: 24
+	public static class User {//oridnal: 27
 		public int UserId; //UserId
 		public String UserName; //UserName
 		public String UserNameLower; //UserNameLower
@@ -271,7 +298,6 @@ public class J {
 		public String Phone; //Phone
 		public String Email; //Email
 		public String About; //About
-		public String DefaultUserName; //DefaultUserName
 		public String PasswordHash; //PasswordHash
 		public String PasswordSalt; //PasswordSalt
 		public int PostSeq; //PostSeq
@@ -297,7 +323,7 @@ public class J {
 		public int IsBanned; //IsBanned
 	}
 
-	public static class UserRelation {//oridnal: 25
+	public static class UserRelation {//oridnal: 28
 		public int RelNanoId; //RelNanoId
 		public int UserId; //UserId
 		public int PeerUserId; //PeerUserId
@@ -309,7 +335,7 @@ public class J {
 		public int Notify; //Notify
 	}
 
-	public static class Chat {//oridnal: 26
+	public static class Chat {//oridnal: 29
 		public int ChatId; //ChatId
 		public String ChatKey; //ChatKey
 		public String RoomKey; //RoomKey
@@ -347,23 +373,23 @@ public class J {
 		public int DratReplyToMsgId; //DratReplyToMsgId
 	}
 
-	public static class ChatDeleted {//oridnal: 27
+	public static class ChatDeleted {//oridnal: 30
 		public int ChatId; //ChatId
 		public String RoomKey; //RoomKey
 	}
 
-	public static class ChatLastMessage {//oridnal: 28
+	public static class ChatLastMessage {//oridnal: 31
 		public String ChatIdGroupId; //ChatIdGroupId
 		public UNKNOWN LastMsgPb; //LastMsgPb
 	}
 
-	public static class ChatUserVersion {//oridnal: 29
+	public static class ChatUserVersion {//oridnal: 32
 		public int UserId; //UserId
 		public int ChatId; //ChatId
 		public int VersionTimeNano; //VersionTimeNano
 	}
 
-	public static class Group {//oridnal: 30
+	public static class Group {//oridnal: 33
 		public int GroupId; //GroupId
 		public String GroupKey; //GroupKey
 		public String GroupName; //GroupName
@@ -390,7 +416,7 @@ public class J {
 		public int IsBanned; //IsBanned
 	}
 
-	public static class GroupMember {//oridnal: 31
+	public static class GroupMember {//oridnal: 34
 		public int OrderId; //OrderId
 		public int GroupId; //GroupId
 		public int UserId; //UserId
@@ -399,18 +425,18 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class GroupOrderdUser {//oridnal: 32
+	public static class GroupOrderdUser {//oridnal: 35
 		public int OrderId; //OrderId
 		public int GroupId; //GroupId
 		public int UserId; //UserId
 	}
 
-	public static class GroupPinedMsg {//oridnal: 33
+	public static class GroupPinedMsg {//oridnal: 36
 		public int MsgId; //MsgId
 		public UNKNOWN MsgPb; //MsgPb
 	}
 
-	public static class FileMsg {//oridnal: 34
+	public static class FileMsg {//oridnal: 37
 		public int Id; //Id
 		public int AccessHash; //AccessHash
 		public int FileType; //FileType
@@ -422,7 +448,7 @@ public class J {
 		public UNKNOWN Data; //Data
 	}
 
-	public static class FilePost {//oridnal: 35
+	public static class FilePost {//oridnal: 38
 		public int Id; //Id
 		public int AccessHash; //AccessHash
 		public int FileType; //FileType
@@ -434,14 +460,14 @@ public class J {
 		public UNKNOWN Data; //Data
 	}
 
-	public static class ActionFanout {//oridnal: 36
+	public static class ActionFanout {//oridnal: 39
 		public int OrderId; //OrderId
 		public int ForUserId; //ForUserId
 		public int ActionId; //ActionId
 		public int ActorUserId; //ActorUserId
 	}
 
-	public static class HomeFanout {//oridnal: 37
+	public static class HomeFanout {//oridnal: 40
 		public int OrderId; //OrderId
 		public int ForUserId; //ForUserId
 		public int PostId; //PostId
@@ -449,12 +475,12 @@ public class J {
 		public int ResharedId; //ResharedId
 	}
 
-	public static class SuggestedTopPosts {//oridnal: 38
+	public static class SuggestedTopPosts {//oridnal: 41
 		public int Id; //Id
 		public int PostId; //PostId
 	}
 
-	public static class SuggestedUser {//oridnal: 39
+	public static class SuggestedUser {//oridnal: 42
 		public int Id; //Id
 		public int UserId; //UserId
 		public int TargetId; //TargetId
@@ -462,7 +488,7 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class PushChat {//oridnal: 40
+	public static class PushChat {//oridnal: 43
 		public int PushId; //PushId
 		public int ToUserId; //ToUserId
 		public int PushTypeId; //PushTypeId
@@ -479,7 +505,7 @@ public class J {
 		public int CreatedTime; //CreatedTime
 	}
 
-	public static class HTTPRPCLog {//oridnal: 41
+	public static class HTTPRPCLog {//oridnal: 44
 		public int Id; //Id
 		public String Time; //Time
 		public String MethodFull; //MethodFull
@@ -495,7 +521,7 @@ public class J {
 		public String ResponseMsgJson; //ResponseMsgJson
 	}
 
-	public static class MetricLog {//oridnal: 42
+	public static class MetricLog {//oridnal: 45
 		public int Id; //Id
 		public int InstanceId; //InstanceId
 		public String StartFrom; //StartFrom
@@ -505,20 +531,20 @@ public class J {
 		public String MetericsJson; //MetericsJson
 	}
 
-	public static class XfileServiceInfoLog {//oridnal: 43
+	public static class XfileServiceInfoLog {//oridnal: 46
 		public int Id; //Id
 		public int InstanceId; //InstanceId
 		public String Url; //Url
 		public String CreatedTime; //CreatedTime
 	}
 
-	public static class XfileServiceMetricLog {//oridnal: 44
+	public static class XfileServiceMetricLog {//oridnal: 47
 		public int Id; //Id
 		public int InstanceId; //InstanceId
 		public String MetricJson; //MetricJson
 	}
 
-	public static class XfileServiceRequestLog {//oridnal: 45
+	public static class XfileServiceRequestLog {//oridnal: 48
 		public int Id; //Id
 		public int LocalSeq; //LocalSeq
 		public int InstanceId; //InstanceId
@@ -527,7 +553,7 @@ public class J {
 		public String CreatedTime; //CreatedTime
 	}
 
-	public static class InvalidateCache {//oridnal: 46
+	public static class InvalidateCache {//oridnal: 49
 		public int OrderId; //OrderId
 		public String CacheKey; //CacheKey
 	}

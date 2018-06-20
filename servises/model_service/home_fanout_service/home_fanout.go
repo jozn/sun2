@@ -71,7 +71,6 @@ func on_Added_Post(e event_service.GeneralEvent) {
 		}
 		saveHomeFans <- fan
 	}
-
 }
 
 func on_Deleted_Post(e event_service.GeneralEvent) {
