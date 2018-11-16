@@ -8,7 +8,7 @@ Websocket, Http, REST (not used anymore), Cassandra, MySQL, Custom RPC, protocol
 
 # Features
 + Like what needed for Instagram backend. post, like, comments, notifications, hot posts, personal suggestions, logging.
-+ Cassandra based file storage, with on fly converting and resizing of images then caches them, converting .gifs to .mp4 on fly and reducing a lot of its size. Highly scalable. Cached result in several discs.
++ Cassandra based file storage and file serving , with on fly converting and resizing of images then caching them on local disks, converting .gifs to .mp4 on fly and reducing a lot of its size. Highly scalable. Cached result in several discs.
 + Full Chat system with ability to push.
 
 # Guides:
