@@ -3,7 +3,11 @@
 This is backend for [android client](https://github.com/jozn/ms_native)
 
 +80% is completed.
+
+A note for small numbers of commits: I started fresh from old "sun" project, because my technology stack has evolved a lot and i started fresh and common copied the codes into this project and changed them as necessary.  
+
 # Technologies
+Service oriented. Small services with ability to bundle multi service at once into one executable file.
 Websocket, Http, REST (not used anymore), Cassandra, MySQL, Custom RPC, protocol buffers , a lot of code generators. Experimental CockroachDB.
 
 # Features
