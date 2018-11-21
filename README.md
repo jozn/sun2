@@ -1,4 +1,4 @@
-# Backend 
+# Sun2 - Backend  (A clean restart of old sun codebase with focus for modular and service ointed )
 
 This is backend for [android client](https://github.com/jozn/ms_native)
 
