@@ -7,6 +7,8 @@ A note for small numbers of commits: I started fresh from old "sun" project, bec
 # Technologies Used
 Service oriented. Small services with ability to bundle multi service at once into one executable file.
 Websocket, Http, REST (not used anymore), Cassandra, MySQL, Custom RPC, protocol buffers , a lot of code generators. Experimental CockroachDB.
+
+This app is event based. Every service stream events and listening to them and then process those event data. The event system is custom based on MySQL with batch processing in every few milliseconds to improve scalability. MySQL for this event system can be easily replaced with Kafka, but considering the performance of current implementation in MySQL is very high (10,000 - 100,000 events / sec on an average hardware) i choose to stick with MySQL for now and make it easier for deployment and less moving parts.  
 # Features
 + Similar to what needed for Instagram backend: post, like, comments, notifications, hot posts, personal suggestions, logging.
 + Cassandra based file storage and file serving , with on fly converting and resizing of images then caching them on local disks, converting .gifs to .mp4 on fly and reducing a lot of its size. Highly scalable. Cached result in several discs.
