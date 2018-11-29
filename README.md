@@ -2,6 +2,8 @@
 
 This is backend for [android client](https://github.com/jozn/ms_native)
 
+[First commit](https://github.com/jozn/sun2/commit/6c658d5c5be31e07c29056c9dc41222cb5938d86): a copy from old sun with changing significant architecture
+
 +80% is completed.
 A note for small numbers of commits: I started fresh from old "sun" project, because my technology stack has evolved a lot and i started fresh and common copied the codes into this project and changed them as necessary.  
 # Technologies Used
