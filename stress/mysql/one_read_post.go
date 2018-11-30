@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"ms/sun_old/base"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 )
 
 func main() {
@@ -25,18 +25,9 @@ func main() {
 		}
 	}
 
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
-	go work()
+	for i := 0; i < 9; i++ {
+		go work()
+	}
 	work()
 
 }

@@ -2,8 +2,8 @@ package main
 
 import (
 	"math/rand"
-	"ms/sun_old/base"
 	"ms/sun/shared/x"
+	"ms/sun_old/base"
 	"time"
 )
 
@@ -11,13 +11,10 @@ var i56 = 0
 
 func main() {
 	base.DefultConnectToMysql()
+	for i := 0; i < 6; i++ {
 
-	go f6()
-	go f6()
-	go f6()
-	go f6()
-	go f6()
-	go f6()
+		go f6()
+	}
 
 	time.Sleep(time.Hour)
 }

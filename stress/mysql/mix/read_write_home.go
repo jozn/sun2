@@ -16,14 +16,9 @@ var read =0
 func main() {
 	base.DefultConnectToMysql()
 
-	go all()
-	go all()
-	go all()
-	go all()
-	go all()
-	go all()
-	go all()
-	go all()
+	for i := 0; i < 10; i++ {
+		go all()
+	}
 
 	time.Sleep(time.Hour)
 }

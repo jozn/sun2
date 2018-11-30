@@ -31,18 +31,9 @@ func main() {
         }
     }
 
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
-    go work()
+	for i := 0; i < 9; i++ {
+		go work()
+	}
     work()
 
 }

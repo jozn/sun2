@@ -14,12 +14,10 @@ var i3 = 0
 func main() {
 	base.DefultConnectToMysql()
 
-	go f3()
-	go f3()
-	go f3()
-	go f3()
-	go f3()
-	go f3()
+	for i := 0; i < 6; i++ {
+		go f3()
+
+	}
 
 	time.Sleep(time.Hour)
 }

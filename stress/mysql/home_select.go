@@ -12,12 +12,10 @@ var i5 = 0
 func main() {
 	base.DefultConnectToMysql()
 
-	go f5()
-	go f5()
-	go f5()
-	go f5()
-	go f5()
-	go f5()
+	for i := 0; i < 6; i++ {
+
+		go f5()
+	}
 
 	time.Sleep(time.Hour)
 }
