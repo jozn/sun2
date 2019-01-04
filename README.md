@@ -7,7 +7,7 @@ This is backend for [android client](https://github.com/jozn/ms_native)
 Surpassed: https://github.com/jozn/sun
 
 +80% is completed.
-A note for small numbers of commits: I started fresh from old "sun" project, because my technology stack has evolved a lot and i started fresh and common copied the codes into this project and changed them as necessary. 
+A note for small numbers of commits: I started fresh from old "sun" project, because my technology stack has evolved a lot and i started fresh and copied shared codes into this project and changed them as necessary. 
 
 *note: there is just one developer in this project and this project was never meant to be shared so git's commit comments are not as thorough as it should be!*
 
